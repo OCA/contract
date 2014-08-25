@@ -23,15 +23,14 @@ import datetime
 import logging
 import time
 
-from openerp.osv import osv, fields
+from openerp.osv import orm, fields
 from openerp.tools.translate import _
-
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
 
-class account_analytic_invoice_line(osv.osv):
+class AccountAnalyticInvoiceLine(orm.Model):
     _name = "account.analytic.invoice.line"
 
     def _amount_line(
@@ -104,7 +103,7 @@ class account_analytic_invoice_line(osv.osv):
         return res_final
 
 
-class account_analytic_account(osv.osv):
+class AccountAnalyticAccount(orm.Model):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
 
@@ -132,6 +131,13 @@ class account_analytic_account(osv.osv):
         'recurring_rule_type': 'monthly'
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # Reset next invoice date
+        default['recurring_next_date'] = \
+            self._defaults['recurring_next_date']()
+        return super(AccountAnalyticAccount, self).copy(
+            cr, uid, id, default=default, context=context)
+
     def onchange_recurring_invoices(
             self, cr, uid, ids, recurring_invoices,
             date_start=False, context=None):
@@ -141,39 +147,36 @@ class account_analytic_account(osv.osv):
         return value
 
     def _prepare_invoice(self, cr, uid, contract, context=None):
-        context = context or {}
-
+        if context is None:
+            context = {}
         inv_obj = self.pool.get('account.invoice')
         journal_obj = self.pool.get('account.journal')
         fpos_obj = self.pool.get('account.fiscal.position')
         lang_obj = self.pool.get('res.lang')
-
         if not contract.partner_id:
-            raise osv.except_osv(
+            raise orm.except_orm(
                 _('No Customer Defined!'),
                 _("You must first select a Customer for Contract %s!") %
                 contract.name)
-
-        fpos = contract.partner_id.property_account_position or False
+        partner = contract.partner_id
+        fpos = partner.property_account_position or False
         journal_ids = journal_obj.search(
             cr, uid,
             [('type', '=', 'sale'),
              ('company_id', '=', contract.company_id.id or False)],
             limit=1)
         if not journal_ids:
-            raise osv.except_osv(
+            raise orm.except_orm(
                 _('Error!'),
                 _('Please define a sale journal for the company "%s".') %
                 (contract.company_id.name or '', ))
-
         partner_payment_term = contract.partner_id.property_payment_term.id
-
         inv_data = {
             'reference': contract.code or False,
-            'account_id': contract.partner_id.property_account_receivable.id,
+            'account_id': partner.property_account_receivable.id,
             'type': 'out_invoice',
-            'partner_id': contract.partner_id.id,
-            'currency_id': contract.partner_id.property_product_pricelist.id,
+            'partner_id': partner.id,
+            'currency_id': partner.property_product_pricelist.currency_id.id,
             'journal_id': len(journal_ids) and journal_ids[0] or False,
             'date_invoice': contract.recurring_next_date,
             'origin': contract.name,
@@ -182,18 +185,14 @@ class account_analytic_account(osv.osv):
             'company_id': contract.company_id.id or False,
         }
         invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
-
         for line in contract.recurring_invoice_line_ids:
-
             res = line.product_id
             account_id = res.property_account_income.id
             if not account_id:
                 account_id = res.categ_id.property_account_income_categ.id
             account_id = fpos_obj.map_account(cr, uid, fpos, account_id)
-
             taxes = res.taxes_id or False
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
-
             if 'old_date' in context:
                 lang_ids = lang_obj.search(
                     cr, uid, [('code', '=', contract.partner_id.lang)],
@@ -204,7 +203,6 @@ class account_analytic_account(osv.osv):
                     '#START#', context['old_date'].strftime(format))
                 line.name = line.name.replace(
                     '#END#', context['next_date'].strftime(format))
-
             invoice_line_vals = {
                 'name': line.name,
                 'account_id': account_id,
@@ -216,42 +214,35 @@ class account_analytic_account(osv.osv):
                 'invoice_id': invoice_id,
                 'invoice_line_tax_id': [(6, 0, tax_id)],
             }
-            self.pool.get('account.invoice.line').create(
+            self.pool['account.invoice.line'].create(
                 cr, uid, invoice_line_vals, context=context)
-
         inv_obj.button_compute(cr, uid, [invoice_id], context=context)
         return invoice_id
 
     def recurring_create_invoice(self, cr, uid, automatic=False, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         current_date = time.strftime('%Y-%m-%d')
-
         contract_ids = self.search(
             cr, uid,
             [('recurring_next_date', '<=', current_date),
              ('state', '=', 'open'),
              ('recurring_invoices', '=', True)])
         for contract in self.browse(cr, uid, contract_ids, context=context):
-
             next_date = datetime.datetime.strptime(
                 contract.recurring_next_date or current_date, "%Y-%m-%d")
             interval = contract.recurring_interval
+            old_date = next_date
             if contract.recurring_rule_type == 'daily':
-                old_date = next_date-relativedelta(days=+interval)
-                new_date = next_date+relativedelta(days=+interval)
+                new_date = next_date + relativedelta(days=+interval)
             elif contract.recurring_rule_type == 'weekly':
-                old_date = next_date-relativedelta(weeks=+interval)
-                new_date = next_date+relativedelta(weeks=+interval)
+                new_date = next_date + relativedelta(weeks=+interval)
             else:
-                old_date = next_date+relativedelta(months=+interval)
-                new_date = next_date+relativedelta(months=+interval)
-
+                new_date = next_date + relativedelta(months=+interval)
             context['old_date'] = old_date
-            context['next_date'] = datetime.datetime.strptime(
-                contract.recurring_next_date or current_date, "%Y-%m-%d")
+            context['next_date'] = new_date
             self._prepare_invoice(
                 cr, uid, contract, context=context)
-
             self.write(
                 cr, uid, [contract.id],
                 {'recurring_next_date': new_date.strftime('%Y-%m-%d')},
