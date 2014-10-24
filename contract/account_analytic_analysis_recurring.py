@@ -92,7 +92,7 @@ class AccountAnalyticInvoiceLine(orm.Model):
              'uom_id': uom_id or res.uom_id.id or False,
              'price_unit': res.list_price or 0.0})
         if res.description:
-            result['name'] += '\n'+res.description
+            result['name'] += '\n' + res.description
 
         res_final = {'value': result}
         if result['uom_id'] != res.uom_id.id:
@@ -169,7 +169,7 @@ class AccountAnalyticAccount(orm.Model):
             raise orm.except_orm(
                 _('Error!'),
                 _('Please define a sale journal for the company "%s".') %
-                (contract.company_id.name or '', ))
+                (contract.company_id.name or '',))
         partner_payment_term = contract.partner_id.property_payment_term.id
         inv_data = {
             'reference': contract.code or False,
@@ -234,17 +234,28 @@ class AccountAnalyticAccount(orm.Model):
             interval = contract.recurring_interval
             old_date = next_date
             if contract.recurring_rule_type == 'daily':
+                old_date = next_date - relativedelta(days=+interval)
                 new_date = next_date + relativedelta(days=+interval)
             elif contract.recurring_rule_type == 'weekly':
+                old_date = next_date - relativedelta(weeks=+interval)
                 new_date = next_date + relativedelta(weeks=+interval)
             else:
+                old_date = next_date + relativedelta(months=+interval)
                 new_date = next_date + relativedelta(months=+interval)
+
             context['old_date'] = old_date
-            context['next_date'] = new_date
+            context['next_date'] = datetime.datetime.strptime(
+                contract.recurring_next_date or current_date, "%Y-%m-%d")
+            # Force company for correct evaluate domain access rules
+            context['force_company'] = contract.company_id.id
+            # Re-read contract with correct company
+            contract = self.browse(cr, uid, contract.id, context=context)
             self._prepare_invoice(
-                cr, uid, contract, context=context)
+                cr, uid, contract, context=context
+            )
             self.write(
                 cr, uid, [contract.id],
                 {'recurring_next_date': new_date.strftime('%Y-%m-%d')},
-                context=context)
+                context=context
+            )
         return True
