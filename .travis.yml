@@ -1,0 +1,51 @@
+language: python
+sudo: false
+cache: pip
+
+python:
+  - "2.7"
+
+addons:
+  apt:
+# only add the two lines below if you need wkhtmltopdf for your tests
+#    sources:
+#      - pov-wkhtmltopdf
+    packages:
+      - expect-dev  # provides unbuffer utility
+      - python-lxml  # because pip installation is slow
+      - python-simplejson
+      - python-serial
+      - python-yaml
+#      - wkhtmltopdf  # only add if needed and check the before_install section below
+
+# set up an X server to run wkhtmltopdf.
+#before_install:
+#  - "export DISPLAY=:99.0"
+#  - "sh -e /etc/init.d/xvfb start"
+
+env:
+  global:
+  - VERSION="8.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
+  - TRANSIFEX_USER='transbot@odoo-community.org'
+  - secure: ArnbVaF5+ry6zVysZ7HA9xcnQrodo8FsXXcon9yINTYRfDC9QEr+/mTLAPRl+lVLdtWV2GuGuX0vPYzBxFWpY3LR0BpKqXzx0G51s94zR2WWEmizYFzFhpAuIxoU4CYNckHFSUaPAQJhwB/pYx9+H/W6bMjG/VnZBq+AmBJ2Kh0=
+
+  matrix:
+  - LINT_CHECK="1"
+  - TESTS="1" ODOO_REPO="odoo/odoo"
+  - TESTS="1" ODOO_REPO="odoo/odoo" UNIT_TEST="1"
+  - TESTS="1" ODOO_REPO="OCA/OCB"
+  - TRANSIFEX="1"
+
+virtualenv:
+  system_site_packages: true
+
+install:
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - travis_install_nightly
+
+script:
+  - travis_run_tests
+
+after_success:
+  - travis_after_tests_success
