@@ -1,0 +1,49 @@
+-
+  In order to test Contract Recurrent Invoice I create a new Contract with 25% discount
+-
+  !record {model: account.analytic.account, id: contract_main_25}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        discount: 25.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+      - quantity: 2.0
+        price_unit: 100.0
+        discount: 50.0
+        name: Database Administration 50
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I test the contract
+-
+  !python {model: account.analytic.account}: |
+    aid = ref('contract_discount.contract_main_25')
+    contract = self.browse(cr, uid, aid,context=context)
+    assert contract.recurring_invoice_line_ids[0].discount == 25, "The line discount (%s)is different than 25!"%(contract.recurring_invoice_line_ids[0].discount,)
+    assert contract.recurring_invoice_line_ids[0].price_subtotal == 150.0, "The price subtotal (%s)is different than 150!"%(contract.recurring_invoice_line_ids[0].price_subtotal,)
+    assert contract.recurring_invoice_line_ids[1].discount == 50, "The line discount (%s)is different than 50!"%(contract.recurring_invoice_line_ids[1].discount,)
+    assert contract.recurring_invoice_line_ids[1].price_subtotal == 100, "The price subtotal (%s)is different than 100!"%(contract.recurring_invoice_line_ids[1].price_subtotal,)
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the generated invoice
+-
+  !python {model: account.invoice}: |
+    aid = ref('contract_discount.contract_main_25')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.invoice_line[0].discount == 25, "The invoice discount (%s)is different than 25!"%(invoice.invoice_line[0].discount,)
+        assert invoice.invoice_line[1].discount == 50, "The invoice discount (%s)is different than 50!"%(invoice.invoice_line[1].discount,)
+        assert invoice.amount_untaxed == 250.0, "The invoice total (%s)is different than 250!"%(invoice.amount_untaxed,)
