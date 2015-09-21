@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_account_journal_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.journal.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='template_id']" position="before">
+                    <field name="journal_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherited Analytic Account list for contracts -->
+        <record id="view_account_analytic_account_journal_tree" model="ir.ui.view">
+            <field name="name">account.analytic.account.journal.list</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_list" />
+            <field name="arch" type="xml">
+                <field name="partner_id" position="before">
+                    <field name="journal_id" groups="account.group_account_user" />
+                </field>
+            </field>
+        </record>
+
+        <!-- Analytic Account search view for contract -->
+        <record id="view_account_analytic_account_journal_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.journal.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id"
+                ref="account_analytic_analysis.view_account_analytic_account_overdue_search" />
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="journal_id" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
