@@ -1,0 +1,84 @@
+-  
+  In order to test contract invoice journal create a contract with sale invoice journal
+-
+  !record {model: account.analytic.account, id: contract_sale_journal}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    journal_id: account.sales_journal
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I create a new custom journal
+-
+  !record {model: account.journal, id: custom_journal}:
+    name: Custom Sales Journal
+    code: CSAJ
+    type: sale
+    sequence_id: account.sequence_sale_journal
+    default_credit_account_id: account.a_sale
+    default_debit_account_id: account.a_sale
+    analytic_journal_id: account.analytic_journal_sale
+    user_id: base.user_root
+-  
+  Create a contract with custom invoice journal
+-
+  !record {model: account.analytic.account, id: contract_custom_journal}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    journal_id: contract_journal.custom_journal
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I test the sale contract
+-
+  !python {model: account.analytic.account}: |
+    aid = ref('contract_journal.contract_sale_journal')
+    contract = self.browse(cr, uid, aid,context=context)
+    assert contract.journal_id.id == ref('account.sales_journal'), "Sale Invoice Journal is not correct in contract"
+-
+  I test the custom contract
+-
+  !python {model: account.analytic.account}: |
+    aid = ref('contract_journal.contract_custom_journal')
+    contract = self.browse(cr, uid, aid,context=context)
+    assert contract.journal_id.id == ref('contract_journal.custom_journal'), "Custom Invoice Journal is not correct in contract"
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the generated invoice for sale journal contract
+-
+  !python {model: account.invoice}: |
+    aid = ref('contract_journal.contract_sale_journal')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the sale journal contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.journal_id.id == ref('account.sales_journal'), "Sale Invoice Journal is not correct in invoice"
+-
+  I test the generated invoice for custom journal contract
+-
+  !python {model: account.invoice}: |
+    aid = ref('contract_journal.contract_custom_journal')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the custom journal contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.journal_id.id == ref('contract_journal.custom_journal'), "Custom Invoice Journal is not correct in invoice"
+        
