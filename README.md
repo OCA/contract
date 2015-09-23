@@ -14,3 +14,12 @@ For Project related extensions please see the
 
 ## Translation Status
 [![Transifex Status](https://www.transifex.com/projects/p/OCA-$contract-8-0/chart/image_png)](https://www.transifex.com/projects/p/$OCA-contract-8-0)
+
+[//]: # (addons)
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[contract_discount](contract_discount/) | 8.0.1.0.0 | Discounts for contracts and their invoices
+
+[//]: # (end addons)
