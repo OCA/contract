@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="act_recurring_invoices" model="ir.actions.act_window">
+            <field name="context">{'search_default_contract_id':
+                [active_id],
+                'default_contract_id': active_id}
+            </field>
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_id" ref="account.invoice_tree" />
+            <field name="search_view_id" ref="account.view_account_invoice_filter" />
+        </record>
+
+        <record id="account_analytic_account_button_recurring_invoice"
+            model="ir.ui.view">
+            <field name="name">account.analytic.account.button.invoice
+            </field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form" />
+            <field name="arch" type="xml">
+                <button name="recurring_create_invoice" position="after">
+                    <button attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                        name="%(contract_show_recurring_invoice.act_recurring_invoices)d"
+                        string="⇒ show invoices" class="oe_link" type="action"/>
+                </button>
+            </field>
+        </record>
+
+    </data>
+</openerp>
