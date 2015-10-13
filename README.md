@@ -23,5 +23,6 @@ addon | version | summary
 [contract_discount](contract_discount/) | 8.0.1.0.0 | Discounts for contracts and their invoices
 [contract_journal](contract_journal/) | 8.0.1.0.0 | Invoice Journal in contracts and their invoices
 [contract_show_invoice](contract_show_invoice/) | 8.0.1.0.0 | Button in contracts to show their invoices
+[contract_show_recurring_invoice](contract_show_recurring_invoice/) | 8.0.1.0.0 | Button in contracts to show their recurring invoices
 
 [//]: # (end addons)
