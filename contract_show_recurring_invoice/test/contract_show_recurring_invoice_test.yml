@@ -1,0 +1,35 @@
+-
+  In order to test Contract Invoices Button I create a new Contract
+-
+  !record {model: account.analytic.account, id: contract_main}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I test the invoices button
+-
+  !python {model: account.invoice}: |
+    contract_id = ref('contract_show_recurring_invoice.contract_main')
+    invoices = self.search(cr, uid,[('contract_id','=',contract_id)],context=context)
+    assert len(invoices) == 0, "No invoices related this contract, but get (%s)"%(invoices,)
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the invoices button
+-
+  !python {model: account.invoice}: |
+    contract_id = ref('contract_show_recurring_invoice.contract_main')
+    invoices = self.search(cr, uid,[('contract_id','=',contract_id)],context=context)
+    assert len(invoices) == 1, "Must have one invoice related this contract, but get (%s)"%(invoices,)
