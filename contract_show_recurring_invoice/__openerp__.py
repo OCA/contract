@@ -35,6 +35,6 @@
         'test/contract_show_recurring_invoice_test.yml'
     ],
     "post_init_hook": "copy_recurring_invoice",
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

@@ -33,6 +33,6 @@
         'views/contract_view.xml',
     ],
     'test': ['test/contract_discount.yml'],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
