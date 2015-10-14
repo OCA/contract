@@ -1,0 +1,49 @@
+-  
+  In order to test payment mode in contract, I create a contract with custom payment mode.
+  Then, I generate Invoices from contract and test this payment mode.
+  First create custom payment mode.
+-
+  !record {model: payment.mode, id: custom_payment_mode}:
+    name: Custom Payment Mode
+    journal: account.bank_journal
+    bank_id: account_payment.partner_bank_1
+    company_id: base.main_company
+    type: account_banking_payment_export.manual_bank_tranfer
+-
+  I create a contract with custom payment mode
+-
+  !record {model: account.analytic.account, id: contract_custom_payment}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    payment_mode_id: custom_payment_mode
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I test the payment mode in contract
+-
+  !python {model: account.analytic.account}: |
+    aid = ref('contract_payment_mode.contract_custom_payment')
+    contract = self.browse(cr, uid, aid,context=context)
+    assert contract.payment_mode_id.id == ref('contract_payment_mode.custom_payment_mode'), "Payment Mode is not correct in contract"
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the generated invoice for custom payment contract
+-
+  !python {model: account.invoice}: |
+    aid = ref('contract_payment_mode.contract_custom_payment')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the custom paymetn mode contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.payment_mode_id.id == ref('contract_payment_mode.custom_payment_mode'), "Payment Mode is not correct in invoice"
