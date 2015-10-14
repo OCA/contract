@@ -33,6 +33,6 @@
     'test': [
         'test/contract_show_invoice_test.yml'
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
