@@ -13,7 +13,7 @@ For Project related extensions please see the
 
 
 ## Translation Status
-[![Transifex Status](https://www.transifex.com/projects/p/OCA-$contract-9-0/chart/image_png)](https://www.transifex.com/projects/p/$OCA-contract-9-0)
+[![Transifex Status](https://www.transifex.com/projects/p/OCA-contract-9-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-contract-9-0)
 
 [//]: # (addons)
 Unported addons
