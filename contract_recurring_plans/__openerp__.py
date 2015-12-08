@@ -6,7 +6,7 @@
     'name': 'Analytic plans on contracts recurring invoices',
     'version': '8.0.1.0.0',
     'category': 'Contract Management',
-    'author': 'Serv. Tecnolog. Avanzados - Pedro M. Baeza, '
+    'author': 'Serv. Tecnol. Avanzados - Pedro M. Baeza, '
               'Odoo Community Association (OCA)',
     'website': 'http://www.serviciosbaeza.com',
     'depends': [
