@@ -35,6 +35,7 @@
         'views/contract_view.xml',
     ],
     'test': ['test/contract_payment_mode.yml'],
+    'post_init_hook': 'post_init_hook',
     'installable': True,
     'auto_install': True,
 }
