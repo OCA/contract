@@ -34,6 +34,7 @@ Contributors
 ------------
 
 * Ángel Moya <angel.moya@domatix.com>
+* Antonio Espinosa <antonioea@antiun.com>
 
 
 Maintainer
