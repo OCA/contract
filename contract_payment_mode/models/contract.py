@@ -8,7 +8,7 @@ class AccountAnalyticAccount(models.Model):
     payment_mode_id = fields.Many2one(
         'payment.mode',
         string='Payment Mode',
-        domain="[('type', '=', 'sale')]")
+        domain="[('sale_ok', '=', True)]")
 
     @api.multi
     def on_change_partner_id(self, partner_id, name):
@@ -23,8 +23,7 @@ class AccountAnalyticAccount(models.Model):
     @api.model
     def _prepare_invoice_data(self, contract):
         invoice_vals = super(AccountAnalyticAccount, self).\
-            _prepare_invoice_data(
-            contract)
+            _prepare_invoice_data(contract)
         if contract.payment_mode_id:
             invoice_vals['payment_mode_id'] = contract.payment_mode_id.id
             invoice_vals['partner_bank_id'] = \
