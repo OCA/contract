@@ -31,9 +31,25 @@ class TestContractRecurringInvoicingMarker(common.TransactionCase):
                         'uom_id': self.uom.id})],
         })
 
-    def test_invoice_with_marker(self):
+    def test_monthly_invoice_with_marker(self):
         self.contract.recurring_create_invoice()
         invoice = self.env['account.invoice'].search(
             [('partner_id', '=', self.partner.id)])
         self.assertEqual(
             invoice.invoice_line[0].name, u'01/01/2016 - 01/31/2016')
+
+    def test_daily_invoice_with_marker(self):
+        self.contract.recurring_rule_type = 'daily'
+        self.contract.recurring_create_invoice()
+        invoice = self.env['account.invoice'].search(
+            [('partner_id', '=', self.partner.id)])
+        self.assertEqual(
+            invoice.invoice_line[0].name, u'01/01/2016 - 01/01/2016')
+
+    def test_weekly_invoice_with_marker(self):
+        self.contract.recurring_rule_type = 'weekly'
+        self.contract.recurring_create_invoice()
+        invoice = self.env['account.invoice'].search(
+            [('partner_id', '=', self.partner.id)])
+        self.assertEqual(
+            invoice.invoice_line[0].name, u'01/01/2016 - 01/07/2016')
