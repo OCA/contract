@@ -33,7 +33,7 @@ class AccountAnalyticAccount(models.Model):
             contract = line.analytic_account_id
             lang = lang_obj.search(
                 [('code', '=', contract.partner_id.lang)])
-            date_format = lang.date_format
+            date_format = lang.date_format or '%d/%M/%Y'
             res['name'] = res['name'].replace(
                 '#START#', self.env.context['old_date'].strftime(date_format))
             res['name'] = res['name'].replace(
