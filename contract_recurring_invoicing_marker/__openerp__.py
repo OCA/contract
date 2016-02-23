@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Serv. Tecnol. Avanzados - Pedro M. Baeza
+# © 2016 Serv. Tecnol. Avanzados - Pedro M. Baeza
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 {
@@ -12,6 +12,7 @@
     'depends': [
         'account_analytic_analysis',
     ],
+    'license': 'AGPL-3',
     'data': [
         'views/account_analytic_account_view.xml',
     ],
