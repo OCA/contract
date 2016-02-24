@@ -25,6 +25,12 @@ class AccountAnalyticAccount(models.Model):
         return super(AccountAnalyticAccount, obj)._prepare_invoice(contract)
 
     @api.model
+    def _insert_markers(self, line, date_start, date_end, date_format):
+        line = line.replace('#START#', date_start.strftime(date_format))
+        line = line.replace('#END#', date_end.strftime(date_format))
+        return line
+
+    @api.model
     def _prepare_invoice_line(self, line, invoice_id):
         res = super(AccountAnalyticAccount, self)._prepare_invoice_line(
             line, invoice_id)
@@ -34,8 +40,7 @@ class AccountAnalyticAccount(models.Model):
             lang = lang_obj.search(
                 [('code', '=', contract.partner_id.lang)])
             date_format = lang.date_format or '%d/%M/%Y'
-            res['name'] = res['name'].replace(
-                '#START#', self.env.context['old_date'].strftime(date_format))
-            res['name'] = res['name'].replace(
-                '#END#', self.env.context['next_date'].strftime(date_format))
+            res['name'] = self._insert_markers(
+                res['name'], self.env.context['old_date'],
+                self.env.context['next_date'], date_format)
         return res
