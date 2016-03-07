@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_account_form_form" model="ir.ui.view">
+            <field name="name">Contract form (with markers)</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
+            <field name="arch" type="xml">
+                <field name="recurring_invoice_line_ids" position="after">
+                    <group string="Legend (for the markers inside invoice lines description)" name="group_legend">
+                        <p colspan="2"> <strong>#START#</strong>: Start date of the invoiced period</p>
+                        <p colspan="2"> <strong>#END#</strong>: End date of the invoiced period</p>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
