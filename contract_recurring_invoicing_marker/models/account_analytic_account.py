@@ -39,7 +39,7 @@ class AccountAnalyticAccount(models.Model):
             contract = line.analytic_account_id
             lang = lang_obj.search(
                 [('code', '=', contract.partner_id.lang)])
-            date_format = lang.date_format or '%d/%M/%Y'
+            date_format = lang.date_format or '%m/%d/%Y'
             res['name'] = self._insert_markers(
                 res['name'], self.env.context['old_date'],
                 self.env.context['next_date'], date_format)
