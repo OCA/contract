@@ -23,6 +23,7 @@ addon | version | summary
 [contract_discount](contract_discount/) | 8.0.1.0.0 | Discounts for contracts and their invoices
 [contract_journal](contract_journal/) | 8.0.1.0.0 | Invoice Journal in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 8.0.1.0.0 | Payment mode in contracts and their invoices
+[contract_recurring_invoicing_marker](contract_recurring_invoicing_marker/) | 8.0.1.0.0 | Markers for contract recurring invoices
 [contract_recurring_plans](contract_recurring_plans/) | 8.0.1.0.0 | Analytic plans on contracts recurring invoices
 [contract_show_invoice](contract_show_invoice/) | 8.0.1.0.0 | Button in contracts to show their invoices
 [contract_show_recurring_invoice](contract_show_recurring_invoice/) | 8.0.1.0.0 | Button in contracts to show their recurring invoices
