@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2016 Binovo IT Human Project SL  <elacunza@binovo.es>
+#    Copyright (C) 2016 Binovo IT Human Project SL <elacunza@binovo.es>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,5 +17,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from . import models
+{
+    'name': "Contract recurring invoice type monthly - last day",
+    'summary': """
+        Adds a new invoice recurring period for contracts - month(s) last day.
+        """,
+    'author': "Binovo IT Human Project SL",
+    'website': "http://www.binovo.es",
+    'category': 'Sales Management',
+    'version': '8.0.1.0.0',
+    'depends': ['account_analytic_analysis'],
+    'data': [
+    ],
+    'demo': [
+    ],
+}
