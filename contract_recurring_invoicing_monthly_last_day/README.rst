@@ -6,15 +6,12 @@
 Contract Recurring Invoice Monthly Last Day
 ===========================================
 
-This module was written to extend the functionality of contracts to support to
-set a recurring type of monthly - last day.
+This module extends the functionality of contracts to support a recurring type
+of monthly - last day.
 
-This modules changes the next contract recurring invoice date computation, so
-that in case the recurring type is "Monthly - Last day", next invoice date is
-calculated to be the last day of the corresponding month.
-
-Care has to be taken to set the first invoice date correctly (last month day)
-in case that is the desired date.
+This changes the next contract recurring invoice date computation, so that if
+recurring type is "Monthly - Last day", next invoice date is computed to be the
+last day of the corresponding month.
 
 Configuration
 =============
