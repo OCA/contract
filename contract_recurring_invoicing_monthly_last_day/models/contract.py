@@ -23,6 +23,7 @@
 from openerp import models, fields, api
 from dateutil.relativedelta import relativedelta
 import datetime
+import logging
 import time
 
 
@@ -60,7 +61,7 @@ class AccountAnalyticAccount(models.Model):
                         {'recurring_next_date': new_date.strftime('%Y-%m-%d')})
                 except Exception:
                     if automatic:
-                        _logger.exception(
+                        logging.exception(
                             'Fail to create recurring invoice for contract %s',
                             contract.code)
                     else:
