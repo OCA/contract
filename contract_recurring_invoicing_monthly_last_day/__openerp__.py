@@ -19,16 +19,17 @@
 ##############################################################################
 {
     'name': "Contract recurring invoice type monthly - last day",
-    'summary': """
+    'summary': '''
         Adds a new invoice recurring period for contracts - month(s) last day.
-        """,
-    'author': "Binovo IT Human Project SL",
-    'website': "http://www.binovo.es",
+        ''',
+    'author': 'Binovo IT Human Project SL - Eneko Lacunza, '
+              'Odoo Community Association (OCA)',
+    'website': 'http://www.binovo.es',
     'category': 'Sales Management',
     'version': '8.0.1.0.0',
     'depends': ['account_analytic_analysis'],
+    'license': 'AGPL-3',
     'data': [
     ],
-    'demo': [
-    ],
+    'installable': True,
 }
