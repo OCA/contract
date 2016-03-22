@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="act_recurring_invoices" model="ir.actions.act_window">
+            <field name="context">{'search_default_contract_id':
+                [active_id],
+                'default_contract_id': active_id}
+            </field>
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_id" ref="account.invoice_tree" />
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
+        <record id="act_analytic_invoices" model="ir.actions.act_window">
+            <field name="context">{'search_default_analytic_account_ids':
+                [active_id], 'default_analytic_account_ids': active_id}</field>
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="domain">[('analytic_account_ids','=',active_id)]</field>
+            <field name="view_id" ref="account.invoice_tree" />
+            <field name="search_view_id" ref="account.view_account_invoice_filter" />
+        </record>
+
+        <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.invoice.recurring.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="40" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="button_box"]' position='inside'>
+                    <button class="oe_stat_button" type="action" icon="fa-edit"
+                        name="%(contract.act_analytic_invoices)d"
+                        string="Invoices" help="Invoices related with this contract">
+                    </button>
+                </xpath>
+                <notebook position="before">
+                    <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
+                    <div>
+                        <field name="recurring_invoices" class="oe_inline"/>
+                        <label for="recurring_invoices" />
+                        <button class="oe_link" name="recurring_create_invoice" attrs="{'invisible': [('recurring_invoices','!=',True)]}" string="Create invoices" type="object" groups="base.group_no_one"/>
+                        <button attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                            name="%(contract.act_recurring_invoices)d"
+                            string="⇒ show invoices" class="oe_link" type="action"/>
+                    </div>
+                    <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                        <field name="journal_id" />
+                        <field name="pricelist_id"/>
+                        <label for="recurring_interval"/>
+                        <div>
+                            <field name="recurring_interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                            <field name="recurring_rule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                        </div>
+                        <field name="date_start"/>
+                        <field name="recurring_next_date"/>
+                    </group>
+                    <label for="recurring_invoice_line_ids" attrs="{'invisible': [('recurring_invoices','=',False)]}"/>
+                    <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
+                        <field name="recurring_invoice_line_ids">
+                            <tree string="Account Analytic Lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
+                                <field name="price_unit"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line" />
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                    </div>
+                </notebook>
+            </field>
+        </record>
+
+        <!-- Inherited Analytic Account list for contracts -->
+        <record id="view_account_analytic_account_journal_tree" model="ir.ui.view">
+            <field name="name">account.analytic.account.journal.list</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list" />
+            <field name="arch" type="xml">
+                <field name="partner_id" position="before">
+                    <field name="journal_id" groups="account.group_account_user"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Analytic Account search view for contract -->
+        <record id="view_account_analytic_account_journal_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.journal.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id"
+                ref="analytic.view_account_analytic_account_search" />
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="journal_id"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
