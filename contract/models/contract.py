@@ -58,7 +58,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.multi
     @api.onchange('product_id')
-    def product_id_change(self):
+    def _onchange_product_id(self):
         if not self.product_id:
             return {'domain': {'uom_id': []}}
 
@@ -134,9 +134,11 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def copy(self, default=None):
+        default = dict(default or {})
         # Reset next invoice date
-        default['recurring_next_date'] = \
-            self._defaults['recurring_next_date']()
+        default.update(
+            recurring_next_date=self._defaults['recurring_next_date'](self)
+        )
         return super(AccountAnalyticAccount, self).copy(default=default)
 
     @api.onchange('partner_id')
