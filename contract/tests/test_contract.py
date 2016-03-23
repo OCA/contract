@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # © 2016 Incaser Informatica S.L. - Carlos Dauden
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+from dateutil.relativedelta import relativedelta
+import datetime
+
 from openerp.exceptions import ValidationError
 from openerp.tests.common import TransactionCase
 
@@ -11,6 +14,8 @@ class TestContract(TransactionCase):
         super(TestContract, self).setUp()
         self.partner = self.env.ref('base.res_partner_2')
         self.product = self.env.ref('product.product_product_2')
+        self.tax = self.env.ref('l10n_generic_coa.sale_tax_template')
+        self.product.taxes_id = self.tax.ids
         self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
             'partner_id': self.partner.id,
@@ -26,16 +31,77 @@ class TestContract(TransactionCase):
             'price_unit': 100,
             'discount': 50,
         })
+        self.current_date = datetime.date.today()
+        self.contract_daily = self.contract.copy()
+        self.contract_daily.recurring_rule_type = 'daily'
+        self.contract_weekly = self.contract.copy()
+        self.contract_weekly.recurring_rule_type = 'weekly'
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
             self.contract_line.write({'discount': 120})
 
-    def test_create_invoice(self):
-        self.contract.recurring_create_invoice()
-        self.invoice = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(self.invoice)
+    def test_contract(self):
+        self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
+        res = self.contract_line._onchange_product_id()
+        self.assertIn('uom_id', res['domain'])
+        self.contract_line.price_unit = 100.0
 
-        self.inv_line = self.invoice.invoice_line_ids[0]
+        self.contract.partner_id = False
+        with self.assertRaises(ValidationError):
+            self.contract.recurring_create_invoice()
+        self.contract.partner_id = self.partner.id
+
+        self.contract.recurring_create_invoice()
+        self.invoice_monthly = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract.id)])
+        self.assertTrue(self.invoice_monthly)
+        new_date = self.current_date + relativedelta(
+            months=self.contract.recurring_interval)
+        self.assertEqual(self.contract.recurring_next_date,
+                         new_date.strftime('%Y-%m-%d'))
+
+        self.inv_line = self.invoice_monthly.invoice_line_ids[0]
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
+        self.assertTrue(self.inv_line.invoice_line_tax_ids)
+
+    def test_contract_daily(self):
+        self.contract_daily.recurring_create_invoice()
+        invoice_daily = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract_daily.id)])
+        self.assertTrue(invoice_daily)
+        new_date = self.current_date + relativedelta(
+            days=self.contract_daily.recurring_interval)
+        self.assertEqual(self.contract_daily.recurring_next_date,
+                         new_date.strftime('%Y-%m-%d'))
+
+    def test_contract_weekly(self):
+        self.contract_weekly.recurring_create_invoice()
+        invoices_weekly = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract_weekly.id)])
+        self.assertTrue(invoices_weekly)
+        new_date = self.current_date + relativedelta(
+            weeks=self.contract_weekly.recurring_interval)
+        self.assertEqual(self.contract_weekly.recurring_next_date,
+                         new_date.strftime('%Y-%m-%d'))
+
+    def test_onchange_partner_id(self):
+        self.contract.pricelist_id = False
+        self.contract._onchange_partner_id()
+        self.assertEqual(self.contract.pricelist_id,
+                         self.contract.partner_id.property_product_pricelist)
+
+    def test_onchange_recurring_invoices(self):
+        self.contract.recurring_next_date = False
+        self.contract._onchange_recurring_invoices()
+        self.assertEqual(self.contract.recurring_next_date,
+                         self.contract.date_start)
+
+    def test_check_journal(self):
+        contract_no_journal = self.contract.copy()
+        contract_no_journal.journal_id = False
+        journal = self.env['account.journal'].search([('type', '=', 'sale')])
+        journal.write({'type': 'general'})
+        with self.assertRaises(ValidationError):
+            contract_no_journal.recurring_create_invoice()
+        journal.write({'type': 'sale'})
