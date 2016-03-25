@@ -33,9 +33,8 @@ class AccountAnalyticInvoiceLine(models.Model):
     discount = fields.Float(
         string='Discount (%)',
         digits=dp.get_precision('Discount'),
-        copy=True,
         help='Discount that is applied in generated invoices.'
-        ' It should be less or equal to 100')
+             ' It should be less or equal to 100')
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
@@ -118,28 +117,20 @@ class AccountAnalyticAccount(models.Model):
          ],
         default='monthly',
         string='Recurrency',
-        help="Invoice automatically repeat at specified interval")
+        help="Specify Interval for automatic invoice generation.")
     recurring_interval = fields.Integer(
         default=1,
         string='Repeat Every',
         help="Repeat every (Days/Week/Month/Year)")
     recurring_next_date = fields.Date(
         default=fields.Date.context_today,
+        copy=False,
         string='Date of Next Invoice')
     journal_id = fields.Many2one(
         'account.journal',
         string='Journal',
         default=_default_journal,
         domain="[('type', '=', 'sale'),('company_id', '=', company_id)]")
-
-    @api.multi
-    def copy(self, default=None):
-        default = dict(default or {})
-        # Reset next invoice date
-        default.update(
-            recurring_next_date=self._defaults['recurring_next_date'](self)
-        )
-        return super(AccountAnalyticAccount, self).copy(default=default)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -159,13 +150,17 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def _prepare_invoice_line(self, line, invoice_id):
-        product = line.product_id
-        account_id = (product.property_account_income_id.id or
-                      product.categ_id.property_account_income_categ_id.id)
-        contract = line.analytic_account_id
-        fpos = contract.partner_id.property_account_position_id
-        account_id = fpos.map_account(account_id)
-        taxes = fpos.map_tax(product.taxes_id)
+        invoice_line = self.env['account.invoice.line'].new({
+            'invoice_id': invoice_id,
+            'product_id': line.product_id.id,
+            'quantity': line.quantity,
+            'uom_id': line.uom_id.id,
+            'discount': line.discount,
+        })
+        # Get other invoice line values from product onchange
+        invoice_line._onchange_product_id()
+        invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
+
         name = line.name
         if 'old_date' in self.env.context and 'next_date' in self.env.context:
             lang_obj = self.env['res.lang']
@@ -176,18 +171,13 @@ class AccountAnalyticAccount(models.Model):
             name = self._insert_markers(
                 name, self.env.context['old_date'],
                 self.env.context['next_date'], date_format)
-        return {
+
+        invoice_line_vals.update({
             'name': name,
-            'account_id': account_id,
             'account_analytic_id': contract.id,
             'price_unit': line.price_unit,
-            'quantity': line.quantity,
-            'uom_id': line.uom_id.id,
-            'product_id': line.product_id.id,
-            'invoice_id': invoice_id,
-            'invoice_line_tax_ids': [(6, 0, taxes.ids)],
-            'discount': line.discount,
-        }
+        })
+        return invoice_line_vals
 
     @api.model
     def _prepare_invoice(self, contract):
@@ -195,8 +185,6 @@ class AccountAnalyticAccount(models.Model):
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
                 contract.name)
-        partner = contract.partner_id
-        fpos = partner.property_account_position_id
         journal = contract.journal_id or self.env['account.journal'].search(
             [('type', '=', 'sale'),
              ('company_id', '=', contract.company_id.id)],
@@ -205,21 +193,30 @@ class AccountAnalyticAccount(models.Model):
             raise ValidationError(
                 _("Please define a sale journal for the company '%s'.") %
                 (contract.company_id.name or '',))
-        inv_data = {
+        currency = (
+            contract.pricelist_id.currency_id or
+            contract.partner_id.property_product_pricelist.currency_id or
+            contract.company_id.currency_id
+        )
+        invoice = self.env['account.invoice'].new({
             'reference': contract.code,
-            'account_id': partner.property_account_receivable_id.id,
             'type': 'out_invoice',
-            'partner_id': partner.id,
-            'currency_id': partner.property_product_pricelist.currency_id.id,
+            'partner_id': contract.partner_id,
+            'currency_id': currency.id,
             'journal_id': journal.id,
             'date_invoice': contract.recurring_next_date,
             'origin': contract.name,
-            'fiscal_position_id': fpos.id,
-            'payment_term_id': partner.property_payment_term_id.id,
             'company_id': contract.company_id.id,
             'contract_id': contract.id,
-        }
-        invoice = self.env['account.invoice'].create(inv_data)
+        })
+        # Get other invoice values from partner onchange
+        invoice._onchange_partner_id()
+        return invoice._convert_to_write(invoice._cache)
+
+    @api.model
+    def _create_invoice(self, contract):
+        invoice_vals = self._prepare_invoice(contract)
+        invoice = self.env['account.invoice'].create(invoice_vals)
         for line in contract.recurring_invoice_line_ids:
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
             self.env['account.invoice.line'].create(invoice_line_vals)
@@ -234,16 +231,15 @@ class AccountAnalyticAccount(models.Model):
              ('account_type', '=', 'normal'),
              ('recurring_invoices', '=', True)])
         for contract in contracts:
-            next_date = fields.Date.from_string(
+            old_date = fields.Date.from_string(
                 contract.recurring_next_date or fields.Date.today())
             interval = contract.recurring_interval
-            old_date = next_date
             if contract.recurring_rule_type == 'daily':
-                new_date = next_date + relativedelta(days=interval)
+                new_date = old_date + relativedelta(days=interval)
             elif contract.recurring_rule_type == 'weekly':
-                new_date = next_date + relativedelta(weeks=interval)
+                new_date = old_date + relativedelta(weeks=interval)
             else:
-                new_date = next_date + relativedelta(months=interval)
+                new_date = old_date + relativedelta(months=interval)
             ctx = self.env.context.copy()
             ctx.update({
                 'old_date': old_date,
@@ -252,8 +248,8 @@ class AccountAnalyticAccount(models.Model):
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
-            contract = self.with_context(ctx).browse(contract.id)
-            self.with_context(ctx)._prepare_invoice(contract)
+            contract = contract.with_context(ctx)
+            self.with_context(ctx)._create_invoice(contract)
             contract.write({
                 'recurring_next_date': new_date.strftime('%Y-%m-%d')
             })
