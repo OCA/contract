@@ -46,7 +46,7 @@
                                 groups="base.group_no_one"/>
                         <button name="%(contract.act_recurring_invoices)d" type="action"
                                 attrs="{'invisible': [('recurring_invoices','!=',True)]}"
-                                string="⇒ show invoices" class="oe_link"/>
+                                string="⇒ Show invoices" class="oe_link"/>
                     </div>
                     <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                         <field name="journal_id"/>
@@ -73,6 +73,11 @@
                             </tree>
                         </field>
                     </div>
+                    <group string="Legend (for the markers inside invoice lines description)"
+                           name="group_legend" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                        <p colspan="2"> <strong>#START#</strong>: Start date of the invoiced period</p>
+                        <p colspan="2"> <strong>#END#</strong>: End date of the invoiced period</p>
+                    </group>
                 </notebook>
             </field>
         </record>
@@ -98,7 +103,7 @@
                 <field name="name" position="after">
                     <field name="journal_id"/>
                     <field name="pricelist_id"/>
-                    <filter name="recurring_invoice" string="Recurring Invoice" domain="[('recurring_invoices','=',True)]"/>
+                    <filter name="recurring_invoices" string="Recurring Invoices" domain="[('recurring_invoices','=',True)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Next Invoice" domain="[]" context="{'group_by':'recurring_next_date'}"/>
                     </group>
@@ -112,15 +117,11 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_active':1, 'search_default_recurring_invoice':1}</field>
+            <field name="context">{'search_default_active':1, 'search_default_recurring_invoices':1}</field>
             <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a new contract.
-                </p><p>
-                    Use contracts to follow tasks, issues, timesheets or invoicing based on
-                    work done, expenses and/or sales orders. Odoo will automatically manage
-                    the alerts for the renewal of the contracts to the right salesperson.
                 </p>
             </field>
         </record>
