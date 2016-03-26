@@ -16,6 +16,7 @@ class TestContract(TransactionCase):
         self.product = self.env.ref('product.product_product_2')
         self.tax = self.env.ref('l10n_generic_coa.sale_tax_template')
         self.product.taxes_id = self.tax.ids
+        self.product.description_sale = 'Test description sale'
         self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
             'partner_id': self.partner.id,
@@ -66,6 +67,7 @@ class TestContract(TransactionCase):
         self.assertTrue(self.inv_line.invoice_line_tax_ids)
 
     def test_contract_daily(self):
+        self.contract_daily.pricelist_id = False
         self.contract_daily.recurring_create_invoice()
         invoice_daily = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract_daily.id)])
@@ -86,7 +88,6 @@ class TestContract(TransactionCase):
                          new_date.strftime('%Y-%m-%d'))
 
     def test_onchange_partner_id(self):
-        self.contract.pricelist_id = False
         self.contract._onchange_partner_id()
         self.assertEqual(self.contract.pricelist_id,
                          self.contract.partner_id.property_product_pricelist)
@@ -97,6 +98,23 @@ class TestContract(TransactionCase):
         self.assertEqual(self.contract.recurring_next_date,
                          self.contract.date_start)
 
+    def test_uom(self):
+        uom_litre = self.env.ref('product.product_uom_litre')
+        self.contract_line.uom_id = uom_litre.id
+        self.contract_line._onchange_product_id()
+        self.assertEqual(self.contract_line.uom_id,
+                         self.contract_line.product_id.uom_id)
+
+    def test_onchange_product_id(self):
+        line = self.env['account.analytic.invoice.line'].new()
+        res = line._onchange_product_id()
+        self.assertFalse(res['domain']['uom_id'])
+
+    def test_no_pricelist(self):
+        self.contract.pricelist_id = False
+        self.contract_line.quantity = 2
+        self.assertAlmostEqual(self.contract_line.price_subtotal, 100.0)
+
     def test_check_journal(self):
         contract_no_journal = self.contract.copy()
         contract_no_journal.journal_id = False
@@ -104,4 +122,3 @@ class TestContract(TransactionCase):
         journal.write({'type': 'general'})
         with self.assertRaises(ValidationError):
             contract_no_journal.recurring_create_invoice()
-        journal.write({'type': 'sale'})
