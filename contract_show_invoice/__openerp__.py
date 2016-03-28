@@ -4,6 +4,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2015 Domatix (<www.domatix.com>).
+#    Copyright (C) 2016 Incaser Informatica S.L. (<www.incaser.es>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,10 +23,12 @@
 {
     'name': 'Contract Show Invoice',
     'summary': 'Button in contracts to show their invoices',
-    'version': '8.0.1.0.0',
-    'author': 'Domatix, Odoo Community Association (OCA)',
+    'version': '9.0.1.0.0',
+    'author': 'Domatix,'
+              'Incaser Informatica S.L.,'
+              'Odoo Community Association (OCA)',
     'website': 'http://www.domatix.com',
-    'depends': ['account_analytic_analysis'],
+    'depends': ['account', 'analytic'],
     'category': 'Sales Management',
     'data': [
         'views/contract_view.xml',
@@ -33,6 +36,5 @@
     'test': [
         'test/contract_show_invoice_test.yml'
     ],
-    'installable': False,
-    'auto_install': False,
+    'installable': True,
 }
