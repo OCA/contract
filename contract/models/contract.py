@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # © 2016 Incaser Informatica S.L. - Carlos Dauden
+# © 2015 Serv. Tecnol. Avanzados - Pedro M. Baeza
+# © 2014 Domatix Technologies  S.L. - Angel Moya <angel.moya@domatix.com>
+# © 2004-2010 OpenERP SA (<http://openerp.com>)
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 from dateutil.relativedelta import relativedelta
