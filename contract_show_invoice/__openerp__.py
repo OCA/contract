@@ -33,8 +33,5 @@
     'data': [
         'views/contract_view.xml',
     ],
-    'test': [
-        'test/contract_show_invoice_test.yml'
-    ],
     'installable': True,
 }
