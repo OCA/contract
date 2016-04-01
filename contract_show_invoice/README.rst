@@ -40,7 +40,7 @@ Contributors
 ------------
 
 * Ángel Moya <angel.moya@domatix.com>
-* Carlos Dauden <carlos@incaser.es>
+* Carlos Dauden <carlos.dauden@tecnativa.com>
 
 
 Maintainer
