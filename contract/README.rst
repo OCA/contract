@@ -51,8 +51,8 @@ Credits
 Contributors
 ------------
 
-* Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
-* Carlos Dauden <carlos@incaser.es>
+* Pedro M. Baeza <pedro.baeza@tecnativa.com>
+* Carlos Dauden <carlos.dauden@tecnativa.com>
 * Angel Moya <angel.moya@domatix.com>
 
 Maintainer

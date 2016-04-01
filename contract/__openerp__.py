@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA (<http://openerp.com>)
-# © 2016 Incaser Informatica S.L. - Carlos Dauden
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+# © 2004-2010 OpenERP SA
+# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     'name': 'Contracts Management recurring',
@@ -9,7 +9,7 @@
     'category': 'Other',
     'license': 'AGPL-3',
     'author': "OpenERP SA,"
-              "Incaser Informatica S.L.,"
+              "Tecnativa,"
               "Odoo Community Association (OCA)",
     'website': 'http://openerp.com',
     'depends': ['base', 'account', 'analytic'],
