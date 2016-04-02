@@ -16,6 +16,12 @@ For Project related extensions please see the
 [![Transifex Status](https://www.transifex.com/projects/p/OCA-contract-9-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-contract-9-0)
 
 [//]: # (addons)
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[contract](contract/) | 9.0.1.0.0 | Contracts Management recurring
+
 Unported addons
 ---------------
 addon | version | summary
