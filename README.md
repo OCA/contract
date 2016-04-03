@@ -21,14 +21,6 @@ Available addons
 addon | version | summary
 --- | --- | ---
 [contract](contract/) | 9.0.1.0.0 | Contracts Management recurring
-
-Unported addons
----------------
-addon | version | summary
---- | --- | ---
-[contract_discount](contract_discount/) | 8.0.1.0.0 (unported) | Discounts for contracts and their invoices
-[contract_journal](contract_journal/) | 8.0.1.0.0 (unported) | Invoice Journal in contracts and their invoices
-[contract_show_invoice](contract_show_invoice/) | 8.0.1.0.0 (unported) | Button in contracts to show their invoices
-[contract_show_recurring_invoice](contract_show_recurring_invoice/) | 8.0.1.0.0 (unported) | Button in contracts to show their recurring invoices
+[contract_show_invoice](contract_show_invoice/) | 9.0.1.0.0 | Button in contracts to show their invoices
 
 [//]: # (end addons)
