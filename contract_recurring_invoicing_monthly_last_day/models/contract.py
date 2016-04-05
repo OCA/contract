@@ -35,15 +35,10 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _recurring_create_invoice(self, automatic=False):
-        domain_other = [('recurring_rule_type', '!=', 'monthlylastday')]
-        recs_other = self.search(domain_other)
-        invoice_ids = super(AccountAnalyticAccount, recs_other)\
-            ._recurring_create_invoice(automatic)
-        domain = [('recurring_rule_type', '=', 'monthlylastday')]
-        recs_monthly_last_day = self.search(domain)
-        if recs_monthly_last_day:
-            current_date = time.strftime('%Y-%m-%d')
-            for contract in recs_monthly_last_day:
+        invoice_ids = []
+        current_date = time.strftime('%Y-%m-%d')
+        for contract in self:
+            if contract.recurring_rule_type == 'monthlylastday':
                 try:
                     invoice_values = self._prepare_invoice(contract)
                     invoice_ids.append(
@@ -66,4 +61,7 @@ class AccountAnalyticAccount(models.Model):
                             contract.code)
                     else:
                         raise
+            else:
+                invoice_ids.append(super(AccountAnalyticAccount, contract)\
+                                    ._recurring_create_invoice(automatic))
         return invoice_ids
