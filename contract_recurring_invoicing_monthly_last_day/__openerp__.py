@@ -13,5 +13,8 @@
     'version': '8.0.1.0.0',
     'depends': ['account_analytic_analysis'],
     'license': 'AGPL-3',
+    'test': [
+        'test/contract_recurring_invoicing_monthly_last_day.yml'
+    ],
     'installable': True,
 }

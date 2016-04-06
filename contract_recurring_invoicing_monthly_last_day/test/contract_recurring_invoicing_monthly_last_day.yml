@@ -1,0 +1,30 @@
+-
+  Create new contract with recurring type monthly last day
+-
+  !record {model: account.analytic.account, id: contract_main}:
+    name: Recurring monthly last day
+    company_id: base.main_company
+    partner_id: base.main_partner
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_rule_type: 'monthlylastday'
+    recurring_next_date: '2016-02-29'
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  Generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  Check contracts new recurring_next_date
+-
+  !python {model: account.analytic.account}: |
+    contract_id = ref('contract_recurring_invoicing_monthly_last_day.contract_main')
+    contract = self.browse(cr, uid, [contract_id], context=context)
+    assert contract.recurring_next_date == '2016-03-31', "Next recurring date for the contract must be 2016-03-31, but got (%s)"%(contract.recurring_next_date,)
