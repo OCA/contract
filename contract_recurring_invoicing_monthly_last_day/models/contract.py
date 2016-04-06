@@ -44,6 +44,6 @@ class AccountAnalyticAccount(models.Model):
                     else:
                         raise
             else:
-                invoice_ids.append(super(AccountAnalyticAccount, contract)\
-                                    ._recurring_create_invoice(automatic))
+                invoice_ids.append(super(AccountAnalyticAccount, contract)
+                    ._recurring_create_invoice(automatic))
         return invoice_ids
