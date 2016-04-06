@@ -19,7 +19,15 @@ class AccountAnalyticAccount(models.Model):
     def _recurring_create_invoice(self, automatic=False):
         invoice_ids = []
         current_date = time.strftime('%Y-%m-%d')
-        for contract in self:
+        if self.ids:
+            contracts = self
+        else:
+            contracts = self.search(
+                [('recurring_next_date','<=', current_date),
+                 ('state','=', 'open'),
+                 ('recurring_invoices','=', True),
+                 ('type', '=', 'contract')])
+        for contract in contracts:
             if contract.recurring_rule_type == 'monthlylastday':
                 try:
                     invoice_values = self._prepare_invoice(contract)
