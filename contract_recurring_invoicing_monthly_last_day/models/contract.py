@@ -25,7 +25,7 @@ class AccountAnalyticAccount(models.Model):
             contracts = self.search(
                 [('recurring_next_date','<=', current_date),
                  ('state','=', 'open'),
-                 ('recurring_invoices','=', True),
+                 ('recurring_invoices','=', True), 
                  ('type', '=', 'contract')])
         for contract in contracts:
             if contract.recurring_rule_type == 'monthlylastday':
