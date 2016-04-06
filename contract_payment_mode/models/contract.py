@@ -27,6 +27,9 @@ class AccountAnalyticAccount(models.Model):
         if contract.payment_mode_id:
             invoice_vals['payment_mode_id'] = contract.payment_mode_id.id
             invoice_vals['partner_bank_id'] = \
-                contract.payment_mode_id.bank_id.id
+                invoice_vals['partner_bank_id'] = (
+                contract.partner_id.bank_ids and
+                contract.partner_id.bank_ids[0].id or
+                contract.payment_mode_id.bank_id.id)
 
         return invoice_vals
