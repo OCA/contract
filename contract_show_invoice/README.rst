@@ -40,7 +40,7 @@ Contributors
 ------------
 
 * Ángel Moya <angel.moya@domatix.com>
-
+* Stéphane Bidoul <stephane.bidoul@acsone.eu>
 
 Maintainer
 ----------

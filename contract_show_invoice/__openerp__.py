@@ -22,16 +22,13 @@
 {
     'name': 'Contract Show Invoice',
     'summary': 'Button in contracts to show their invoices',
-    'version': '8.0.1.0.0',
-    'author': 'Domatix, Odoo Community Association (OCA)',
+    'version': '8.0.2.0.0',
+    'author': 'Domatix,Odoo Community Association (OCA)',
     'website': 'http://www.domatix.com',
     'depends': ['account_analytic_analysis'],
     'category': 'Sales Management',
     'data': [
         'views/contract_view.xml',
-    ],
-    'test': [
-        'test/contract_show_invoice_test.yml'
     ],
     'installable': True,
     'auto_install': False,
