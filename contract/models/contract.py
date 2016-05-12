@@ -204,7 +204,8 @@ class AccountAnalyticAccount(models.Model):
         invoice = self.env['account.invoice'].new({
             'reference': contract.code,
             'type': 'out_invoice',
-            'partner_id': contract.partner_id,
+            'partner_id': contract.partner_id.address_get(
+                ['invoice'])['invoice'],
             'currency_id': currency.id,
             'journal_id': journal.id,
             'date_invoice': contract.recurring_next_date,
