@@ -18,7 +18,7 @@ To install this module you need *account_invoice_merge*, available in:
 Usage
 =====
 
-#. Go to *Sales > Contracts* and create some contrats with same partner
+#. Go to *Sales > Contracts* and create some contracts with same partner
 #. Go to *Settings > Automation > Scheduled Actions*
 #. Select *Generate Recurring Invoices from Contracts*
 #. Set previous time that now in *Next Execution Date*
@@ -28,12 +28,6 @@ Usage
    :alt: Try me on Runbot
    :target: https://runbot.odoo-community.org/runbot/95/8.0
 
-Known issues / Roadmap
-======================
-
-* If product supplier info min quantity is greater than procurement qty and we
-  have sale orders with distinct analytic account which contains this product,
-  each purchase order line takes seller min quantity.
 
 Bug Tracker
 ===========

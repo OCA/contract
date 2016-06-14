@@ -35,7 +35,7 @@ class TestContractInvoiceMergeByPartner(TransactionCase):
         self.contract4 = self.contract1.copy()
 
     def test_invoices_merged(self):
-        self.env['account.analytic.account']._cron_recurring_create_invoice()
+        self.env['account.analytic.account']._recurring_create_invoice()
         invoices = self.env['account.invoice'].search(
             [('partner_id', '=', self.partner.id)])
         inv_draft = invoices.filtered(lambda x: x.state == 'draft')
