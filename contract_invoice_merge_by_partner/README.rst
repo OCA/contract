@@ -18,7 +18,11 @@ To install this module you need *account_invoice_merge*, available in:
 Usage
 =====
 
-#. Go to ...
+#. Go to *Sales > Contracts* and create some contrats with same partner
+#. Go to *Settings > Automation > Scheduled Actions*
+#. Select *Generate Recurring Invoices from Contracts*
+#. Set previous time that now in *Next Execution Date*
+#. Go to *Invoicing > Customer Invoices* and show merged invoice
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot

@@ -10,7 +10,8 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def _recurring_create_invoice(self, automatic=False):
-        invoices = self.env['account.invoice'].browse(
+        invoice_obj = self.env['account.invoice']
+        invoices = invoice_obj.browse(
             super(PurchaseOrderLine, self)._recurring_create_invoice(automatic)
         )
         res = []
@@ -22,7 +23,9 @@ class PurchaseOrderLine(models.Model):
                     keep_references=True, date_invoice=False)
                 res.extend(invoices_info.keys())
                 for inv_ids_list in invoices_info.values():
-                    unlink_list.append(inv_ids_list)
+                    unlink_list.extend(inv_ids_list)
             else:
                 res.append(inv_to_merge.id)
+        if unlink_list:
+            invoice_obj.browse(unlink_list).unlink()
         return res
