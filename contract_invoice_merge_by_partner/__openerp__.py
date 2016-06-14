@@ -13,5 +13,8 @@
               "Odoo Community Association (OCA)",
     'website': 'http://www.tecnativa.com',
     'depends': ['account_analytic_analysis', 'account_invoice_merge'],
+    'data': [
+        'views/res_partner_view.xml',
+    ],
     'installable': True,
 }

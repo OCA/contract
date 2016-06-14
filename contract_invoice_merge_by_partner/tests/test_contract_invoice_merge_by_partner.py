@@ -9,10 +9,10 @@ class TestContractInvoiceMergeByPartner(TransactionCase):
     """ Use case : Prepare some data for current test case """
     def setUp(self):
         super(TestContractInvoiceMergeByPartner, self).setUp()
-        #self.partner = self.env.ref('base.res_partner_2')
         self.partner = self.env['res.partner'].create(
             {'customer': True,
-             'name': "Test Customer"
+             'name': "Test Customer",
+             'contract_invoice_merge': True,
              })
         self.product = self.env.ref('product.product_product_consultant')
         self.uom = self.env.ref('product.product_uom_hour')

@@ -18,13 +18,13 @@ class PurchaseOrderLine(models.Model):
         unlink_list = []
         for partner in invoices.mapped('partner_id'):
             inv_to_merge = invoices.filtered(lambda x: x.partner_id == partner)
-            if len(inv_to_merge) > 1:
+            if partner.contract_invoice_merge and (len(inv_to_merge) > 1):
                 invoices_info = inv_to_merge.do_merge()
                 res.extend(invoices_info.keys())
                 for inv_ids_list in invoices_info.values():
                     unlink_list.extend(inv_ids_list)
             else:
-                res.append(inv_to_merge.id)
+                res.extend(inv_to_merge.ids)
         if unlink_list:
             invoice_obj.browse(unlink_list).unlink()
         return res
