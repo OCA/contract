@@ -22,7 +22,7 @@
 {
     'name': 'Contract Show Invoice',
     'summary': 'Button in contracts to show their invoices',
-    'version': '8.0.3.0.0',
+    'version': '8.0.2.1.0',
     'author': 'Domatix,Odoo Community Association (OCA)',
     'website': 'http://www.domatix.com',
     'depends': ['account_analytic_analysis'],
