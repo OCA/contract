@@ -12,19 +12,17 @@ class PurchaseOrderLine(models.Model):
     def _recurring_create_invoice(self, automatic=False):
         invoice_obj = self.env['account.invoice']
         invoices = invoice_obj.browse(
-            super(PurchaseOrderLine, self)._recurring_create_invoice(automatic)
-        )
+            super(PurchaseOrderLine, self)._recurring_create_invoice(automatic))
         res = []
         unlink_list = []
-        for partner in invoices.mapped('partner_id'):
+        for partner in set(invoices.mapped('partner_id')):
             inv_to_merge = invoices.filtered(lambda x: x.partner_id == partner)
-            if partner.contract_invoice_merge and (len(inv_to_merge) > 1):
-                invoices_info = inv_to_merge.do_merge()
-                res.extend(invoices_info.keys())
-                for inv_ids_list in invoices_info.values():
-                    unlink_list.extend(inv_ids_list)
+            if partner.contract_invoice_merge:
+                invoices_merged = inv_to_merge.do_merge()
+                res.extend(invoices_merged)
+                unlink_list.extend(inv_to_merge)
             else:
-                res.extend(inv_to_merge.ids)
-        if unlink_list:
-            invoice_obj.browse(unlink_list).unlink()
+                res.extend(inv_to_merge)
+        for inv in unlink_list:
+            inv.unlink()
         return res
