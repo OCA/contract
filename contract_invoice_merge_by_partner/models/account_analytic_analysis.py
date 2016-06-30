@@ -15,14 +15,15 @@ class PurchaseOrderLine(models.Model):
             super(PurchaseOrderLine, self)._recurring_create_invoice(automatic))
         res = []
         unlink_list = []
-        for partner in set(invoices.mapped('partner_id')):
-            inv_to_merge = invoices.filtered(lambda x: x.partner_id == partner)
+        for partner in invoices.mapped('partner_id'):
+            inv_to_merge = invoices.filtered(
+                lambda x: x.partner_id.id == partner)
             if partner.contract_invoice_merge:
                 invoices_merged = inv_to_merge.do_merge()
                 res.extend(invoices_merged)
                 unlink_list.extend(inv_to_merge)
             else:
                 res.extend(inv_to_merge)
-        for inv in unlink_list:
-            inv.unlink()
+        if unlink_list:
+            invoice_obj.unlink([x.id for x in unlink_list])
         return res
