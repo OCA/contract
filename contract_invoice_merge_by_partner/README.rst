@@ -18,7 +18,10 @@ To install this module you need *account_invoice_merge*, available in:
 Usage
 =====
 
-#. Go to *Sales > Contracts* and create some contracts with same partner
+#. Go to *Sales > Customer* choose a partner and in the tab "Sales & Purchases"
+   activate checkbox " Merge contracts invoices "
+#. Go to *Sales > Contracts* and create some contracts with same partner you
+   activated checkbox " Merge contracts invoices "
 #. Go to *Settings > Automation > Scheduled Actions*
 #. Select *Generate Recurring Invoices from Contracts*
 #. Set previous time that now in *Next Execution Date*
@@ -44,6 +47,7 @@ Contributors
 ------------
 * Carlos Dauden <carlos.dauden@tecnativa.com>
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
+* Rafael Blasco <rafael.blasco@tecnativa.com>
 
 Maintainer
 ----------
