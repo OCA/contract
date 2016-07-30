@@ -18,8 +18,6 @@ To install this module you need *account_invoice_merge*, available in:
 Usage
 =====
 
-
-
 #. Go to *Sales > Customer* choose a partner and in the tab "Sales & Purchases"
    activate checkbox " Merge contracts invoices "
 #. Go to *Sales > Contracts* and create some contracts with same partner you
