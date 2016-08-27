@@ -39,6 +39,7 @@ Credits
 Contributors
 ------------
 
+* Daniel Rodríguez <drl.9319@gmail.com>
 * Ángel Moya <angel.moya@domatix.com>
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
 

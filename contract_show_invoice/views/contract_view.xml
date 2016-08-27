@@ -6,8 +6,21 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="domain">[('invoice_line.account_analytic_id','=',active_id)]</field>
-            <field name="view_id" ref="account.invoice_tree" />
             <field name="search_view_id" ref="account.view_account_invoice_filter" />
+        </record>
+
+        <record id="action_contract_show_invoice_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="act_window_id" ref="act_analytic_invoices"/>
+        </record>
+
+        <record id="action_contract_show_invoice_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="act_analytic_invoices"/>
         </record>
 
         <record id="account_analytic_account_button_invoice" model="ir.ui.view">
