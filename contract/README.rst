@@ -21,9 +21,20 @@ To use this module, you need to:
 
 #. Go to Sales -> Contracts and select or create a new contract.
 #. Check *Generate recurring invoices automatically*.
-#. Fill fields and add new lines. You have the possibility to use markers in
-   the description field to show the start and end date of the invoiced period.
-#. A cron is created with daily interval, but if you are in debug mode can
+#. Fill fields for selecting the recurrency and invoice parameters:
+   * Journal
+   * Pricelist
+   * Period. It can be any interval of days, weeks, months, months last day or
+     years.
+   * Start date and next invoice date.
+   * Invoicing type: pre-paid or post-paid.
+#. Add the lines to be invoiced with the product, description, quantity and
+   price.
+#. You have the possibility to use the markers #START# or #END# in the
+   description field to show the start and end date of the invoiced period.
+#. Choosing between pre-paid and post-paid, you modify the dates that are shown
+   with the markers.
+#. A cron is created with daily interval, but if you are in debug mode, you can
    click on *Create invoices* to force this action.
 #. Click *Show recurring invoices* link to show all invoices created by the
    contract.
@@ -35,15 +46,15 @@ To use this module, you need to:
 Known issues / Roadmap
 ======================
 
-* Recovery states and others functional fields in Contracts.
+* Recover states and others functional fields in Contracts.
 
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
-In case of trouble, please check there if your issue has already been reported.
-If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-`here <https://github.com/OCA/contract/issues/new?body=module:%20contract%0Aversion:%209.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+Bugs are tracked on `GitHub Issues
+<https://github.com/OCA/contract/issues>`_. In case of trouble, please
+check there if your issue has already been reported. If you spotted it first,
+help us smashing it by providing a detailed and welcomed feedback.
 
 Credits
 =======

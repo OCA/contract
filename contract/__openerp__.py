@@ -6,7 +6,7 @@
 {
     'name': 'Contracts Management recurring',
     'version': '9.0.1.0.0',
-    'category': 'Other',
+    'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA,"
               "Tecnativa,"
@@ -20,5 +20,4 @@
         'views/account_invoice_view.xml',
     ],
     'installable': True,
-    'images': [],
 }

@@ -163,18 +163,17 @@ class AccountAnalyticAccount(models.Model):
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
-
+        # Insert markers
         name = line.name
+        contract = line.analytic_account_id
         if 'old_date' in self.env.context and 'next_date' in self.env.context:
             lang_obj = self.env['res.lang']
-            contract = line.analytic_account_id
             lang = lang_obj.search(
                 [('code', '=', contract.partner_id.lang)])
             date_format = lang.date_format or '%m/%d/%Y'
             name = self._insert_markers(
                 name, self.env.context['old_date'],
                 self.env.context['next_date'], date_format)
-
         invoice_line_vals.update({
             'name': name,
             'account_analytic_id': contract.id,
