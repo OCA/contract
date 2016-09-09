@@ -25,6 +25,10 @@ Configuration
    * *contract*: Contract whose line belongs to.
    * *invoice*: Invoice (header) being created.
 
+.. figure:: images/formula_form.png
+   :alt: Formula form
+   :width: 600 px
+
 Usage
 =====
 
