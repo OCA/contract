@@ -7,7 +7,7 @@ Variable quantity in contract recurrent invoicing
 =================================================
 
 With this module, you will be able to define in recurring contracts some
-lines with variable quantity according a provided formula.
+lines with variable quantity according to a provided formula.
 
 Configuration
 =============
