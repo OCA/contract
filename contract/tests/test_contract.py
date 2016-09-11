@@ -2,9 +2,6 @@
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from dateutil.relativedelta import relativedelta
-import datetime
-
 from openerp.exceptions import ValidationError
 from openerp.tests.common import TransactionCase
 
@@ -15,14 +12,14 @@ class TestContract(TransactionCase):
         super(TestContract, self).setUp()
         self.partner = self.env.ref('base.res_partner_2')
         self.product = self.env.ref('product.product_product_2')
-        self.tax = self.env.ref('l10n_generic_coa.sale_tax_template')
-        self.product.taxes_id = self.tax.ids
         self.product.description_sale = 'Test description sale'
         self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
             'partner_id': self.partner.id,
             'pricelist_id': self.partner.property_product_pricelist.id,
             'recurring_invoices': True,
+            'date_start': '2016-02-15',
+            'recurring_next_date': '2016-02-29',
         })
         self.contract_line = self.env['account.analytic.invoice.line'].create({
             'analytic_account_id': self.contract.id,
@@ -33,11 +30,6 @@ class TestContract(TransactionCase):
             'price_unit': 100,
             'discount': 50,
         })
-        self.current_date = datetime.date.today()
-        self.contract_daily = self.contract.copy()
-        self.contract_daily.recurring_rule_type = 'daily'
-        self.contract_weekly = self.contract.copy()
-        self.contract_weekly.recurring_rule_type = 'weekly'
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
@@ -58,35 +50,53 @@ class TestContract(TransactionCase):
         self.invoice_monthly = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(self.invoice_monthly)
-        new_date = self.current_date + relativedelta(
-            months=self.contract.recurring_interval)
-        self.assertEqual(self.contract.recurring_next_date,
-                         new_date.strftime('%Y-%m-%d'))
+        self.assertEqual(self.contract.recurring_next_date, '2016-03-29')
 
         self.inv_line = self.invoice_monthly.invoice_line_ids[0]
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
-        self.assertTrue(self.inv_line.invoice_line_tax_ids)
+        self.assertEqual(self.contract.partner_id.user_id,
+                         self.invoice_monthly.user_id)
 
     def test_contract_daily(self):
-        self.contract_daily.pricelist_id = False
-        self.contract_daily.recurring_create_invoice()
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'daily'
+        self.contract.pricelist_id = False
+        self.contract.cron_recurring_create_invoice()
         invoice_daily = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract_daily.id)])
+            [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoice_daily)
-        new_date = self.current_date + relativedelta(
-            days=self.contract_daily.recurring_interval)
-        self.assertEqual(self.contract_daily.recurring_next_date,
-                         new_date.strftime('%Y-%m-%d'))
+        self.assertEqual(self.contract.recurring_next_date, '2016-03-01')
 
     def test_contract_weekly(self):
-        self.contract_weekly.recurring_create_invoice()
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'weekly'
+        self.contract.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
         invoices_weekly = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract_weekly.id)])
+            [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoices_weekly)
-        new_date = self.current_date + relativedelta(
-            weeks=self.contract_weekly.recurring_interval)
-        self.assertEqual(self.contract_weekly.recurring_next_date,
-                         new_date.strftime('%Y-%m-%d'))
+        self.assertEqual(
+            self.contract.recurring_next_date, '2016-03-07')
+
+    def test_contract_yearly(self):
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'yearly'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract.id)])
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.contract.recurring_next_date, '2017-02-28')
+
+    def test_contract_monthly_lastday(self):
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_rule_type = 'monthlylastday'
+        self.contract.recurring_create_invoice()
+        invoices_monthly_lastday = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract.id)])
+        self.assertTrue(invoices_monthly_lastday)
+        self.assertEqual(self.contract.recurring_next_date, '2016-03-31')
 
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()

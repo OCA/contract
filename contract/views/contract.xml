@@ -32,7 +32,7 @@
                                 attrs="{'invisible': [('recurring_invoices','!=',True)]}"
                                 string="⇒ Show recurring invoices" class="oe_link"/>
                     </div>
-                    <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                    <group col="4" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                         <field name="journal_id"/>
                         <field name="pricelist_id"/>
                         <label for="recurring_interval"/>
@@ -40,6 +40,7 @@
                             <field name="recurring_interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
                             <field name="recurring_rule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
                         </div>
+                        <field name="recurring_invoicing_type"/>
                         <field name="date_start"/>
                         <field name="recurring_next_date"/>
                     </group>
