@@ -7,7 +7,6 @@
 
 from dateutil.relativedelta import relativedelta
 import logging
-import time
 
 from openerp import api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
@@ -52,11 +51,13 @@ class AccountAnalyticInvoiceLine(models.Model):
             else:
                 line.price_subtotal = subtotal
 
-    @api.one
+    @api.multi
     @api.constrains('discount')
     def _check_discount(self):
-        if self.discount > 100:
-            raise ValidationError(_("Discount should be less or equal to 100"))
+        for line in self:
+            if line.discount > 100:
+                raise ValidationError(
+                    _("Discount should be less or equal to 100"))
 
     @api.multi
     @api.onchange('product_id')
@@ -109,6 +110,7 @@ class AccountAnalyticAccount(models.Model):
     recurring_invoice_line_ids = fields.One2many(
         comodel_name='account.analytic.invoice.line',
         inverse_name='analytic_account_id',
+        copy=True,
         string='Invoice Lines')
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically')
@@ -116,11 +118,19 @@ class AccountAnalyticAccount(models.Model):
         [('daily', 'Day(s)'),
          ('weekly', 'Week(s)'),
          ('monthly', 'Month(s)'),
+         ('monthlylastday', 'Month(s) last day'),
          ('yearly', 'Year(s)'),
          ],
         default='monthly',
         string='Recurrency',
         help="Specify Interval for automatic invoice generation.")
+    recurring_invoicing_type = fields.Selection(
+        [('pre-paid', 'Pre-paid'),
+         ('post-paid', 'Post-paid'),
+         ],
+        default='pre-paid',
+        string='Invoicing type',
+        help="Specify if process date is 'from' or 'to' invoicing date")
     recurring_interval = fields.Integer(
         default=1,
         string='Repeat Every',
@@ -145,11 +155,34 @@ class AccountAnalyticAccount(models.Model):
             self.recurring_next_date = self.date_start
 
     @api.model
+    def get_relalive_delta(self, recurring_rule_type, interval):
+        if recurring_rule_type == 'daily':
+            return relativedelta(days=interval)
+        elif recurring_rule_type == 'weekly':
+            return relativedelta(weeks=interval)
+        elif recurring_rule_type == 'monthly':
+            return relativedelta(months=interval)
+        elif recurring_rule_type == 'monthlylastday':
+            return relativedelta(months=interval, day=31)
+        else:
+            return relativedelta(years=interval)
+
+    @api.model
     def _insert_markers(self, line, date_start, next_date, date_format):
-        line = line.replace('#START#', date_start.strftime(date_format))
-        date_end = next_date - relativedelta(days=1)
-        line = line.replace('#END#', date_end.strftime(date_format))
-        return line
+        contract = line.analytic_account_id
+        if contract.recurring_invoicing_type == 'pre-paid':
+            date_from = date_start
+            date_to = next_date - relativedelta(days=1)
+        else:
+            date_from = (date_start -
+                         self.get_relalive_delta(contract.recurring_rule_type,
+                                                 contract.recurring_interval) +
+                         relativedelta(days=1))
+            date_to = date_start
+        name = line.name
+        name = name.replace('#START#', date_from.strftime(date_format))
+        name = name.replace('#END#', date_to.strftime(date_format))
+        return name
 
     @api.model
     def _prepare_invoice_line(self, line, invoice_id):
@@ -172,7 +205,7 @@ class AccountAnalyticAccount(models.Model):
                 [('code', '=', contract.partner_id.lang)])
             date_format = lang.date_format or '%m/%d/%Y'
             name = self._insert_markers(
-                name, self.env.context['old_date'],
+                line, self.env.context['old_date'],
                 self.env.context['next_date'], date_format)
         invoice_line_vals.update({
             'name': name,
@@ -181,68 +214,61 @@ class AccountAnalyticAccount(models.Model):
         })
         return invoice_line_vals
 
-    @api.model
-    def _prepare_invoice(self, contract):
-        if not contract.partner_id:
+    @api.multi
+    def _prepare_invoice(self):
+        self.ensure_one()
+        if not self.partner_id:
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
-                contract.name)
-        journal = contract.journal_id or self.env['account.journal'].search(
+                self.name)
+        journal = self.journal_id or self.env['account.journal'].search(
             [('type', '=', 'sale'),
-             ('company_id', '=', contract.company_id.id)],
+             ('company_id', '=', self.company_id.id)],
             limit=1)
         if not journal:
             raise ValidationError(
                 _("Please define a sale journal for the company '%s'.") %
-                (contract.company_id.name or '',))
+                (self.company_id.name or '',))
         currency = (
-            contract.pricelist_id.currency_id or
-            contract.partner_id.property_product_pricelist.currency_id or
-            contract.company_id.currency_id
+            self.pricelist_id.currency_id or
+            self.partner_id.property_product_pricelist.currency_id or
+            self.company_id.currency_id
         )
         invoice = self.env['account.invoice'].new({
-            'reference': contract.code,
+            'reference': self.code,
             'type': 'out_invoice',
-            'partner_id': contract.partner_id.address_get(
+            'partner_id': self.partner_id.address_get(
                 ['invoice'])['invoice'],
             'currency_id': currency.id,
             'journal_id': journal.id,
-            'date_invoice': contract.recurring_next_date,
-            'origin': contract.name,
-            'company_id': contract.company_id.id,
-            'contract_id': contract.id,
+            'date_invoice': self.recurring_next_date,
+            'origin': self.name,
+            'company_id': self.company_id.id,
+            'contract_id': self.id,
+            'user_id': self.partner_id.user_id.id,
         })
         # Get other invoice values from partner onchange
         invoice._onchange_partner_id()
         return invoice._convert_to_write(invoice._cache)
 
-    @api.model
-    def _create_invoice(self, contract):
-        invoice_vals = self._prepare_invoice(contract)
+    @api.multi
+    def _create_invoice(self):
+        self.ensure_one()
+        invoice_vals = self._prepare_invoice()
         invoice = self.env['account.invoice'].create(invoice_vals)
-        for line in contract.recurring_invoice_line_ids:
+        for line in self.recurring_invoice_line_ids:
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
             self.env['account.invoice.line'].create(invoice_line_vals)
         invoice.compute_taxes()
         return invoice
 
-    @api.model
-    def recurring_create_invoice(self, automatic=False):
-        current_date = time.strftime('%Y-%m-%d')
-        contracts = self.search(
-            [('recurring_next_date', '<=', current_date),
-             ('account_type', '=', 'normal'),
-             ('recurring_invoices', '=', True)])
-        for contract in contracts:
+    @api.multi
+    def recurring_create_invoice(self):
+        for contract in self:
             old_date = fields.Date.from_string(
                 contract.recurring_next_date or fields.Date.today())
-            interval = contract.recurring_interval
-            if contract.recurring_rule_type == 'daily':
-                new_date = old_date + relativedelta(days=interval)
-            elif contract.recurring_rule_type == 'weekly':
-                new_date = old_date + relativedelta(weeks=interval)
-            else:
-                new_date = old_date + relativedelta(months=interval)
+            new_date = old_date + self.get_relalive_delta(
+                contract.recurring_rule_type, contract.recurring_interval)
             ctx = self.env.context.copy()
             ctx.update({
                 'old_date': old_date,
@@ -251,9 +277,16 @@ class AccountAnalyticAccount(models.Model):
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
-            contract = contract.with_context(ctx)
-            self.with_context(ctx)._create_invoice(contract)
+            contract.with_context(ctx)._create_invoice()
             contract.write({
                 'recurring_next_date': new_date.strftime('%Y-%m-%d')
             })
         return True
+
+    @api.model
+    def cron_recurring_create_invoice(self):
+        contracts = self.search(
+            [('recurring_next_date', '<=', fields.date.today()),
+             ('account_type', '=', 'normal'),
+             ('recurring_invoices', '=', True)])
+        return contracts.recurring_create_invoice()
