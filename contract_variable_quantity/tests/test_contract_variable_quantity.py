@@ -54,7 +54,7 @@ class TestContractVariableQuantity(common.SavepointCase):
             self.formula.code = "user.id"
 
     def test_check_variable_quantity(self):
-        self.contract._create_invoice(self.contract)
+        self.contract._create_invoice()
         invoice = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertEqual(invoice.invoice_line_ids[0].quantity, 12)
