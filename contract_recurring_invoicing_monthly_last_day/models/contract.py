@@ -5,7 +5,6 @@
 from openerp import models, fields, api
 from dateutil.relativedelta import relativedelta
 import datetime
-import logging
 import time
 
 
@@ -40,7 +39,7 @@ class AccountAnalyticAccount(models.Model):
                 if is_monthlylastday:
                     contract.recurring_rule_type = 'monthlylastday'
             # Note: recurring_next_day has been already incremented by super if
-            # invoice was created. Adjust recurring_next_day to month's last day
+            # invoice was created. Adjust it to month's last day
             if is_monthlylastday \
                     and contract.recurring_next_date != orig_next_date:
                 next_date = datetime.datetime.strptime(
