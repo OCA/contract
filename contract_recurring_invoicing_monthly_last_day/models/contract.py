@@ -28,30 +28,29 @@ class AccountAnalyticAccount(models.Model):
                  ('recurring_invoices', '=', True),
                  ('type', '=', 'contract')])
         for contract in contracts:
+            is_monthlylastday = False
+            orig_next_date = contract.recurring_next_date
             if contract.recurring_rule_type == 'monthlylastday':
-                try:
-                    invoice_values = self._prepare_invoice(contract)
-                    invoice_ids.append(
-                        self.env['account.invoice'].create(invoice_values))
-                    next_date = datetime.datetime.strptime(
-                        contract.recurring_next_date or current_date,
-                        "%Y-%m-%d")
-                    interval = contract.recurring_interval + 1
-                    new_date_plus1m = next_date+relativedelta(months=+interval)
-                    new_date_plus1d = datetime.datetime(new_date_plus1m.year,
-                                                        new_date_plus1m.month,
-                                                        1)
-                    new_date = new_date_plus1d+relativedelta(days=-1)
-                    contract.write(
-                        {'recurring_next_date': new_date.strftime('%Y-%m-%d')})
-                except Exception:
-                    if automatic:
-                        logging.exception(
-                            'Fail to create recurring invoice for contract %s',
-                            contract.code)
-                    else:
-                        raise
-            else:
+                is_monthlylastday = True
+                contract.recurring_rule_type = 'monthly'
+            try:
                 invoice_ids.append(super(AccountAnalyticAccount, contract)
                                    ._recurring_create_invoice(automatic))
+            finally:
+                if is_monthlylastday:
+                    contract.recurring_rule_type = 'monthlylastday'
+            # Note: recurring_next_day has been already incremented by super if
+            # invoice was created. Adjust recurring_next_day to month's last day
+            if is_monthlylastday \
+                    and contract.recurring_next_date != orig_next_date:
+                next_date = datetime.datetime.strptime(
+                    contract.recurring_next_date or current_date,
+                    "%Y-%m-%d")
+                new_date_plus1m = next_date+relativedelta(months=+1)
+                new_date_plus1d = datetime.datetime(new_date_plus1m.year,
+                                                    new_date_plus1m.month,
+                                                    1)
+                new_date = new_date_plus1d+relativedelta(days=-1)
+                contract.write(
+                    {'recurring_next_date': new_date.strftime('%Y-%m-%d')})
         return invoice_ids
