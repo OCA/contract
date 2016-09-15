@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_account_partner_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.partner.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field
+                        name="service_partner_id"
+                        domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]"
+                        context="{'default_parent_id': partner_id, 'default_is_company': False, 'default_is_customer': False, 'default_is_supplier': False, 'default_type': 'other'}"/>
+                    <field
+                        name="contact_partner_id"
+                        domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]"
+                        context="{'default_parent_id': partner_id, 'default_is_company': False, 'default_is_customer': False, 'default_is_supplier': False, 'default_type': 'contact'}"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherited Analytic Account list for contracts -->
+        <record id="view_account_analytic_account_partner_tree" model="ir.ui.view">
+            <field name="name">account.analytic.account.partner.list</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="service_partner_id"/>
+                    <field name="contact_partner_id"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
