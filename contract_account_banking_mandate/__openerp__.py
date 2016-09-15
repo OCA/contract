@@ -8,6 +8,7 @@
         "account_analytic_analysis", "account_banking_mandate"
     ],
     "author": "Binovo IT Human Project SL, Odoo Community Association (OCA)",
+    "license": "AGPL-3",
     "category": 'Sales Management',
     "website": "http://www.binovo.es",
     "summary": "Add banking mandate field to contracts for their invoices",
