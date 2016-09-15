@@ -5,7 +5,7 @@
     "name": "Contract Account Banking Mandate",
     "version": "8.0.1.0.0",
     "depends": [
-        "analytic", "account_banking_mandate"
+        "account_analytic_analysis", "account_banking_mandate"
     ],
     "author": "Binovo IT Human Project SL, Odoo Community Association (OCA)",
     "category": 'Sales Management',
