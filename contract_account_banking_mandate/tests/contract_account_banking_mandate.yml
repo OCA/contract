@@ -1,0 +1,68 @@
+-
+  In order to test mandates in contracts, create a partner with a bank account.
+  Then, create two mandates, and validate them.
+  Finally, create a contract with mandate2, create a recurring invoice and
+  check that the invoice has set the contract mandate (mandate2).
+
+  Create a partner
+-
+  !record {model: res.partner, id: test_partner, view: False}:
+    name: "Contract mandate test"
+-
+  Create a partner bank account
+-
+  !record {model: res.partner.bank, id: test_partner_bank, view: False}:
+    state: 'bank'
+    acc_number: '1234'
+    partner_id: test_partner
+-
+  Create mandate1 on 1st January
+-
+  !record {model: account.banking.mandate, id: test_mandate1, view: False}:
+    partner_bank_id: test_partner_bank
+    signature_date: "2014-01-01"
+-
+  Create mandate2 on 15th February
+-
+  !record {model: account.banking.mandate, id: test_mandate2, view: False}:
+    partner_bank_id: test_partner_bank
+    signature_date: "2015-02-15"
+-
+  Validate both mandates
+-
+  !python {model: account.banking.mandate}: |
+    self.validate(cr, uid, [ref('test_mandate1')])
+    self.validate(cr, uid, [ref('test_mandate2')])
+-
+  Create new contract with a mandate2
+-
+  !record {model: account.analytic.account, id: test_contract}:
+    name: Recurring with mandate
+    company_id: base.main_company
+    partner_id: base.main_partner
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_rule_type: 'monthly'
+    recurring_next_date: '2016-02-29'
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+    mandate_id: test_mandate2
+-
+  Generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  Check created invoice has mandate2
+-
+  !python {model: account.invoice}: |
+    aid = ref('test_contract')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids) == 1, "Expected exactly one invoice created for the contract, got %d"%(len(ids))
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.mandate_id.id == ref('test_mandate2'), "Recurring invoice has mandate id %d, but should have mandate id %d"%(invoice.mandate_id.id, ref('test_mandate2'))
