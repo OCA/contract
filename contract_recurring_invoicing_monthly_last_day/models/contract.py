@@ -43,13 +43,9 @@ class AccountAnalyticAccount(models.Model):
             if is_monthlylastday \
                     and contract.recurring_next_date != orig_next_date:
                 next_date = datetime.datetime.strptime(
-                    contract.recurring_next_date or current_date,
+                    contract.recurring_next_date,
                     "%Y-%m-%d")
-                new_date_plus1m = next_date+relativedelta(months=+1)
-                new_date_plus1d = datetime.datetime(new_date_plus1m.year,
-                                                    new_date_plus1m.month,
-                                                    1)
-                new_date = new_date_plus1d+relativedelta(days=-1)
+                new_date = next_date + relativedelta(day=31)
                 contract.write(
                     {'recurring_next_date': new_date.strftime('%Y-%m-%d')})
         return invoice_ids
