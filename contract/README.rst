@@ -21,9 +21,20 @@ To use this module, you need to:
 
 #. Go to Sales -> Contracts and select or create a new contract.
 #. Check *Generate recurring invoices automatically*.
-#. Fill fields and add new lines. You have the possibility to use markers in
-   the description field to show the start and end date of the invoiced period.
-#. A cron is created with daily interval, but if you are in debug mode can
+#. Fill fields for selecting the recurrency and invoice parameters:
+   * Journal
+   * Pricelist
+   * Period. It can be any interval of days, weeks, months, months last day or
+     years.
+   * Start date and next invoice date.
+   * Invoicing type: pre-paid or post-paid.
+#. Add the lines to be invoiced with the product, description, quantity and
+   price.
+#. You have the possibility to use the markers #START# or #END# in the
+   description field to show the start and end date of the invoiced period.
+#. Choosing between pre-paid and post-paid, you modify the dates that are shown
+   with the markers.
+#. A cron is created with daily interval, but if you are in debug mode, you can
    click on *Create invoices* to force this action.
 #. Click *Show recurring invoices* link to show all invoices created by the
    contract.
