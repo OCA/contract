@@ -6,8 +6,9 @@
 Contracts for recurrent invoicing
 =================================
 
-This module forward-port to v9 the contracts management with recurring
-invoicing functions.
+This module forward-port to v10 the contracts management with recurring
+invoicing functions. In upstream Odoo, this functionality was moved into the
+Enterprise edition.
 
 Configuration
 =============
@@ -19,9 +20,10 @@ Usage
 
 To use this module, you need to:
 
-#. Go to Sales -> Contracts and select or create a new contract.
+#. Go to Accounting -> Contracts and select or create a new contract.
 #. Check *Generate recurring invoices automatically*.
 #. Fill fields for selecting the recurrency and invoice parameters:
+
    * Journal
    * Pricelist
    * Period. It can be any interval of days, weeks, months, months last day or
@@ -41,7 +43,7 @@ To use this module, you need to:
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/110/9.0
+   :target: https://runbot.odoo-community.org/runbot/110/10.0
 
 Known issues / Roadmap
 ======================
