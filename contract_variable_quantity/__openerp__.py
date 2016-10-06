@@ -17,5 +17,5 @@
         'security/ir.model.access.csv',
         'views/contract_view.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
