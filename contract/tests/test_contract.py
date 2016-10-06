@@ -2,8 +2,8 @@
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp.exceptions import ValidationError
-from openerp.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
+from odoo.tests.common import TransactionCase
 
 
 class TestContract(TransactionCase):
@@ -12,6 +12,8 @@ class TestContract(TransactionCase):
         super(TestContract, self).setUp()
         self.partner = self.env.ref('base.res_partner_2')
         self.product = self.env.ref('product.product_product_2')
+        self.product.taxes_id += self.env['account.tax'].search(
+            [('type_tax_use', '=', 'sale')], limit=1)
         self.product.description_sale = 'Test description sale'
         self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
@@ -53,6 +55,7 @@ class TestContract(TransactionCase):
         self.assertEqual(self.contract.recurring_next_date, '2016-03-29')
 
         self.inv_line = self.invoice_monthly.invoice_line_ids[0]
+        self.assertTrue(self.inv_line.invoice_line_tax_ids)
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.partner_id.user_id,
                          self.invoice_monthly.user_id)
