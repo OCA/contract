@@ -8,10 +8,10 @@
 from dateutil.relativedelta import relativedelta
 import logging
 
-from openerp import api, fields, models
-from openerp.addons.decimal_precision import decimal_precision as dp
-from openerp.exceptions import ValidationError
-from openerp.tools.translate import _
+from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     price_unit = fields.Float('Unit Price', required=True)
     price_subtotal = fields.Float(
         compute='_compute_price_subtotal',
-        digits_compute=dp.get_precision('Account'),
+        digits=dp.get_precision('Account'),
         string='Sub Total')
     discount = fields.Float(
         string='Discount (%)',
@@ -155,7 +155,7 @@ class AccountAnalyticAccount(models.Model):
             self.recurring_next_date = self.date_start
 
     @api.model
-    def get_relalive_delta(self, recurring_rule_type, interval):
+    def get_relative_delta(self, recurring_rule_type, interval):
         if recurring_rule_type == 'daily':
             return relativedelta(days=interval)
         elif recurring_rule_type == 'weekly':
@@ -175,7 +175,7 @@ class AccountAnalyticAccount(models.Model):
             date_to = next_date - relativedelta(days=1)
         else:
             date_from = (date_start -
-                         self.get_relalive_delta(contract.recurring_rule_type,
+                         self.get_relative_delta(contract.recurring_rule_type,
                                                  contract.recurring_interval) +
                          relativedelta(days=1))
             date_to = date_start
@@ -267,7 +267,7 @@ class AccountAnalyticAccount(models.Model):
         for contract in self:
             old_date = fields.Date.from_string(
                 contract.recurring_next_date or fields.Date.today())
-            new_date = old_date + self.get_relalive_delta(
+            new_date = old_date + self.get_relative_delta(
                 contract.recurring_rule_type, contract.recurring_interval)
             ctx = self.env.context.copy()
             ctx.update({
@@ -287,6 +287,5 @@ class AccountAnalyticAccount(models.Model):
     def cron_recurring_create_invoice(self):
         contracts = self.search(
             [('recurring_next_date', '<=', fields.date.today()),
-             ('account_type', '=', 'normal'),
              ('recurring_invoices', '=', True)])
         return contracts.recurring_create_invoice()
