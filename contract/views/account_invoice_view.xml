@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <!-- Invoice search view with contract -->
-        <record id="view_account_invoice_filter_contract" model="ir.ui.view">
-            <field name="name">account.invoice.select.contract</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <field name="date" position="after">
-                    <separator/>
-                    <field name="contract_id"/>
-                </field>
+    <!-- Invoice search view with contract -->
+    <record id="view_account_invoice_filter_contract" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <separator/>
+                <field name="contract_id"/>
             </field>
-        </record>
+        </field>
+    </record>
 
-    </data>
-</openerp>
+</odoo>
