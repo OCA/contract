@@ -35,7 +35,7 @@ will contain the corresponding text that replaces the marker.
 Known issues / Roadmap
 ======================
 
-* Add more markers, like #START_MONTH# or #END_MONTH#.
+* Add more markers, like #YEAR#.
 
 Bug Tracker
 ===========
@@ -55,6 +55,7 @@ Contributors
 ------------
 
 * Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
+* Gonzalo Borrás <gborras@bisnesmart.com>
 
 Icon
 ----
