@@ -14,6 +14,8 @@ These markers are the supported ones:
 
 * #START#: Start date of the invoiced period.
 * #END# End date of the invoiced period.
+* #START_MONTH#: Start month text of the invoiced period.
+* #END_MONTH# End month text of the invoiced period.
 
 Usage
 =====

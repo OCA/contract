@@ -8,6 +8,7 @@
     'category': 'Contract Management',
     'author': 'Serv. Tecnol. Avanzados - Pedro M. Baeza, '
               'Odoo Community Association (OCA)',
+              'bisnesmart - Gonzalo Borras',
     'website': 'http://www.serviciosbaeza.com',
     'depends': [
         'account_analytic_analysis',
