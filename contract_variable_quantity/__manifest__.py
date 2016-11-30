@@ -4,7 +4,7 @@
 
 {
     'name': 'Variable quantity in contract recurrent invoicing',
-    'version': '9.0.1.0.0',
+    'version': '10.0.1.0.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "Tecnativa,"
@@ -17,5 +17,5 @@
         'security/ir.model.access.csv',
         'views/contract_view.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
