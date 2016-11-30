@@ -2,8 +2,8 @@
 # © 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import _, api, fields, models, exceptions
-from openerp.tools.safe_eval import safe_eval
+from odoo import _, api, fields, models, exceptions
+from odoo.tools.safe_eval import safe_eval
 
 
 class AccountAnalyticAccount(models.Model):
