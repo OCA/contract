@@ -10,6 +10,7 @@
     'license': 'AGPL-3',
     'author': "OpenERP SA,"
               "Tecnativa,"
+              "LasLabs, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
     'depends': ['base', 'account', 'analytic'],

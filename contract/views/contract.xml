@@ -27,11 +27,12 @@
                             attrs="{'invisible': [('recurring_invoices','!=',True)]}"
                             string="Create invoices" class="oe_link"
                             groups="base.group_no_one"/>
-                    <button name="%(contract.act_recurring_invoices)d" type="action"
+                    <button name="contract.act_recurring_invoices" type="action"
                             attrs="{'invisible': [('recurring_invoices','!=',True)]}"
                             string="⇒ Show recurring invoices" class="oe_link"/>
                 </div>
                 <group col="4" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                    <field name="contract_template_id" />
                     <field name="journal_id"/>
                     <field name="pricelist_id"/>
                     <label for="recurring_interval"/>
