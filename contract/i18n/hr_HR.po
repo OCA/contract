@@ -3,15 +3,15 @@
 # * contract
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2016
+# OCA Transbot <transbot@odoo-community.org>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: contract (9.0)\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-11 02:47+0000\n"
-"PO-Revision-Date: 2016-05-31 18:33+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>\n"
-"Language-Team: Croatian (Croatia) (http://www.transifex.com/oca/OCA-contract-9-0/language/hr_HR/)\n"
+"POT-Creation-Date: 2016-12-06 03:38+0000\n"
+"PO-Revision-Date: 2016-12-06 03:38+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"Language-Team: Croatian (Croatia) (https://www.transifex.com/oca/teams/23907/hr_HR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -97,7 +97,7 @@ msgid "Discount (%)"
 msgstr "Popust (%)"
 
 #. module: contract
-#: code:addons/contract/models/contract.py:59
+#: code:addons/contract/models/contract.py:60
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "Popust treba biti manji ili jednak 100"
@@ -107,7 +107,9 @@ msgstr "Popust treba biti manji ili jednak 100"
 msgid ""
 "Discount that is applied in generated invoices. It should be less or equal "
 "to 100"
-msgstr "Popust koji će se primjeniti na generiranim računima. Trebao bi biti manji ili jednak 100"
+msgstr ""
+"Popust koji će se primjeniti na generiranim računima. Trebao bi biti manji "
+"ili jednak 100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_display_name
@@ -145,6 +147,11 @@ msgid "Invoices"
 msgstr "Računi"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoicing_type
+msgid "Invoicing type"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_journal_id
 msgid "Journal"
 msgstr "Dnevnik"
@@ -175,15 +182,30 @@ msgid "Month(s)"
 msgstr "Mjesec(i)"
 
 #. module: contract
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Month(s) last day"
+msgstr ""
+
+#. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
 msgstr "Sljedeći račun"
 
 #. module: contract
-#: code:addons/contract/models/contract.py:196
+#: code:addons/contract/models/contract.py:230
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr "Molimo definirajte dnevnik prodaje za poduzeće '%s'."
+
+#. module: contract
+#: selection:account.analytic.account,recurring_invoicing_type:0
+msgid "Post-paid"
+msgstr ""
+
+#. module: contract
+#: selection:account.analytic.account,recurring_invoicing_type:0
+msgid "Pre-paid"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_pricelist_id
@@ -227,6 +249,11 @@ msgid "Specify Interval for automatic invoice generation."
 msgstr "Odredite interval za automatsko generiranje računa."
 
 #. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_invoicing_type
+msgid "Specify if process date is 'from' or 'to' invoicing date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_price_subtotal
 msgid "Sub Total"
 msgstr "Podzbroj"
@@ -252,7 +279,7 @@ msgid "Year(s)"
 msgstr "Godina(e)"
 
 #. module: contract
-#: code:addons/contract/models/contract.py:188
+#: code:addons/contract/models/contract.py:222
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr "Prvo morate odabrati partnera za Ugovor %s!"
