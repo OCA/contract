@@ -3,14 +3,15 @@
 # * contract
 # 
 # Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: contract (9.0)\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-17 09:01+0000\n"
-"PO-Revision-Date: 2016-04-01 10:38+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: Russian (http://www.transifex.com/oca/OCA-contract-9-0/language/ru/)\n"
+"POT-Creation-Date: 2016-12-06 03:38+0000\n"
+"PO-Revision-Date: 2016-12-06 03:38+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/oca/teams/23907/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -63,12 +64,12 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_next_date
@@ -96,7 +97,7 @@ msgid "Discount (%)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:59
+#: code:addons/contract/models/contract.py:60
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr ""
@@ -126,7 +127,7 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
@@ -144,6 +145,11 @@ msgid "Invoices"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoicing_type
+msgid "Invoicing type"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_journal_id
 msgid "Journal"
 msgstr ""
@@ -156,12 +162,12 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -174,14 +180,29 @@ msgid "Month(s)"
 msgstr ""
 
 #. module: contract
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Month(s) last day"
+msgstr ""
+
+#. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:196
+#: code:addons/contract/models/contract.py:230
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
+msgstr ""
+
+#. module: contract
+#: selection:account.analytic.account,recurring_invoicing_type:0
+msgid "Post-paid"
+msgstr ""
+
+#. module: contract
+#: selection:account.analytic.account,recurring_invoicing_type:0
+msgid "Pre-paid"
 msgstr ""
 
 #. module: contract
@@ -226,6 +247,11 @@ msgid "Specify Interval for automatic invoice generation."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_invoicing_type
+msgid "Specify if process date is 'from' or 'to' invoicing date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_price_subtotal
 msgid "Sub Total"
 msgstr ""
@@ -251,7 +277,7 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:188
+#: code:addons/contract/models/contract.py:222
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""
