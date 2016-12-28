@@ -28,7 +28,7 @@ class AccountAnalyticContract(models.Model):
          ('yearly', 'Year(s)'),
          ],
         default='monthly',
-        string='Recurrency',
+        string='Recurrence',
         help="Specify Interval for automatic invoice generation.")
     recurring_invoicing_type = fields.Selection(
         [('pre-paid', 'Pre-paid'),
