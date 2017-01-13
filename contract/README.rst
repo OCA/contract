@@ -23,6 +23,7 @@ To use this module, you need to:
 #. Go to Accounting -> Contracts and select or create a new contract.
 #. Check *Generate recurring invoices automatically*.
 #. Fill fields for selecting the recurrency and invoice parameters:
+
    * Journal
    * Pricelist
    * Period. It can be any interval of days, weeks, months, months last day or
