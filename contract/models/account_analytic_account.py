@@ -3,7 +3,7 @@
 # © 2014 Angel Moya <angel.moya@domatix.com>
 # © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
-# Copyright 2016 LasLabs Inc.
+# Copyright 2016-2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
@@ -41,6 +41,7 @@ class AccountAnalyticAccount(models.Model):
             if any((
                 field.compute, field.related, field.automatic,
                 field.readonly, field.company_dependent,
+                field.name in self.NO_SYNC,
             )):
                 continue
             self[field_name] = self.contract_template_id[field_name]
@@ -49,6 +50,10 @@ class AccountAnalyticAccount(models.Model):
     def _onchange_recurring_invoices(self):
         if self.date_start and self.recurring_invoices:
             self.recurring_next_date = self.date_start
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        self.pricelist_id = self.partner_id.property_product_pricelist.id
 
     @api.model
     def get_relative_delta(self, recurring_rule_type, interval):

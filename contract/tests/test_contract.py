@@ -18,6 +18,7 @@ class TestContract(TransactionCase):
         self.template_vals = {
             'recurring_rule_type': 'yearly',
             'recurring_interval': 12345,
+            'name': 'Test Contract Template',
         }
         self.template = self.env['account.analytic.contract'].create(
             self.template_vals,
@@ -152,4 +153,5 @@ class TestContract(TransactionCase):
             'recurring_rule_type': self.contract.recurring_rule_type,
             'recurring_interval': self.contract.recurring_interval,
         }
+        del self.template_vals['name']
         self.assertDictEqual(res, self.template_vals)

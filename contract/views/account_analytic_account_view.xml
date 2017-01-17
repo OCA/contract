@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="act_recurring_invoices" model="ir.actions.act_window">
-        <field name="context">{'search_default_contract_id':
-        [active_id],
-        'default_contract_id': active_id}
-        </field>
-        <field name="name">Invoices</field>
-        <field name="res_model">account.invoice</field>
-        <field name="view_id" ref="account.invoice_tree" />
-        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-    </record>
-
     <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
         <field name="name">account.analytic.account.invoice.recurring.form.inherit</field>
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-        <field eval="40" name="priority"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <group name="main" position="after">
                 <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
@@ -110,6 +99,11 @@
             </p>
         </field>
     </record>
-    <menuitem action="action_account_analytic_overdue_all" id="menu_action_account_analytic_overdue_all" sequence="99" parent="account.menu_finance_receivables"/>
+
+    <menuitem id="menu_action_account_analytic_overdue_all"
+              parent="account.menu_finance_receivables"
+              action="action_account_analytic_overdue_all"
+              sequence="99"
+              />
 
 </odoo>
