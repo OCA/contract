@@ -247,8 +247,9 @@ class AccountAnalyticAccount(models.Model):
             'contract_id': self.id,
             'user_id': self.partner_id.user_id.id,
         })
-        # Get other invoice values from partner onchange
+        # Get other invoice values from partner/journal onchange
         invoice._onchange_partner_id()
+        invoice._onchange_journal_id()
         return invoice._convert_to_write(invoice._cache)
 
     @api.multi
