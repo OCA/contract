@@ -41,6 +41,7 @@ Contributors
 
 * Ángel Moya <angel.moya@domatix.com>
 * Carlos Dauden <carlos.dauden@tecnativa.com>
+* Dave Burkholder <dave@thinkwelldesigns.com>
 
 
 Maintainer

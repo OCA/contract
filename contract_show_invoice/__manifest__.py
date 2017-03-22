@@ -6,7 +6,7 @@
 {
     'name': 'Contract Show Invoice',
     'summary': 'Button in contracts to show their invoices',
-    'version': '9.0.1.1.0',
+    'version': '10.0.1.0.0',
     'author': 'Domatix,'
               'Tecnativa,'
               'Odoo Community Association (OCA)',
@@ -16,5 +16,5 @@
     'data': [
         'views/contract_view.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
