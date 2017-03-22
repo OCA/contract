@@ -2,7 +2,7 @@
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestContractShowInvoice(TransactionCase):
