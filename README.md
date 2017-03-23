@@ -21,12 +21,7 @@ Available addons
 addon | version | summary
 --- | --- | ---
 [contract](contract/) | 10.0.1.0.0 | Contracts Management recurring
+[contract_show_invoice](contract_show_invoice/) | 10.0.1.0.0 | Button in contracts to show their invoices
 [contract_variable_quantity](contract_variable_quantity/) | 10.0.1.0.0 | Variable quantity in contract recurrent invoicing
-
-Unported addons
----------------
-addon | version | summary
---- | --- | ---
-[contract_show_invoice](contract_show_invoice/) | 9.0.1.1.0 (unported) | Button in contracts to show their invoices
 
 [//]: # (end addons)
