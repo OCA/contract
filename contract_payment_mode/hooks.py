@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2016 Antiun Ingenieria S.L. - Antonio Espinosa
+# Copyright 2016 Antiun Ingenieria S.L. - Antonio Espinosa
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import api, SUPERUSER_ID
@@ -14,14 +14,13 @@ def post_init_hook(cr, registry):
         env = api.Environment(cr, SUPERUSER_ID, {})
         m_contract = env['account.analytic.account']
         contracts = m_contract.search([
-            ('type', '=', 'contract'),
             ('payment_mode_id', '=', False),
         ])
         if contracts:
             _logger.info('Setting payment mode: %d contracts' %
                          len(contracts))
         for contract in contracts:
-            payment_mode = contract.partner_id.customer_payment_mode
+            payment_mode = contract.partner_id.customer_payment_mode_id
             if payment_mode:
                 contract.payment_mode_id = payment_mode.id
         _logger.info('Setting payment mode: Done')
