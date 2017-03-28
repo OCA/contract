@@ -6,26 +6,39 @@
 Contract Payment Mode
 =====================
 
-This module allows to set a payment mode on contract for creating the invoices with this payment mode.
+This module allows to set a payment mode on contract for creating the invoices
+with this payment mode.
+
+Configuration
+=============
+
+Your user should be a Sales Manager or Accountant.
 
 Usage
 =====
 
+#. Go to *Sales > Sales > Contracts*.
+#. Create one.
+#. Select a partner to which invoice.
+#. If the partner has a payment mode, this payment mode is selected here.
+#. If not, or if you want another payment mode, you can change it in the
+   corresponding field.
+#. Click on **Generate recurring invoices automatically** checkbox.
+#. Add a product to invoice.
+#. If you create an invoice, new invoice will have the selected payment mode.
+
+
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/110/8.0
-
-For further information, please visit:
-
-* https://www.odoo.com/forum/help-1
+   :target: https://runbot.odoo-community.org/runbot/110/9.0
 
 Bug Tracker
 ===========
 
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
-In case of trouble, please check there if your issue has already been reported.
-If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-`here <https://github.com/OCA/contract/issues/new?body=module:%20contract_payment_mode%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+In case of trouble, please
+check there if your issue has already been reported. If you spotted it first,
+help us smash it by providing detailed and welcomed feedback.
 
 Credits
 =======
@@ -35,14 +48,15 @@ Contributors
 
 * Ángel Moya <angel.moya@domatix.com>
 * Antonio Espinosa <antonioea@antiun.com>
+* Vicent Cubells <vicent.cubells@tecnativa.com>
 
 
 Maintainer
 ----------
 
-.. image:: http://odoo-community.org/logo.png
+.. image:: https://odoo-community.org/logo.png
    :alt: Odoo Community Association
-   :target: http://odoo-community.org
+   :target: https://odoo-community.org
 
 This module is maintained by the OCA.
 
@@ -50,4 +64,4 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-To contribute to this module, please visit http://odoo-community.org.
+To contribute to this module, please visit https://odoo-community.org.
