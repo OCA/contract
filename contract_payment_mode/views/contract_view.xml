@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_analytic_account_payment_form" model="ir.ui.view">
+        <field name="name">account.analytic.account.payment.form</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="payment_mode_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited Analytic Account list for contracts -->
+    <record id="view_account_analytic_account_payment_tree" model="ir.ui.view">
+        <field name="name">account.analytic.account.payment.list</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_list" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="payment_mode_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Analytic Account search view for contract -->
+    <record id="view_account_analytic_account_search" model="ir.ui.view">
+        <field name="name">account.analytic.account.search</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_search" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="payment_mode_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
