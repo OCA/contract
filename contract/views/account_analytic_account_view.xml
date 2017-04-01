@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="act_recurring_invoices" model="ir.actions.act_window">
-        <field name="context">{'search_default_contract_id':
-        [active_id],
-        'default_contract_id': active_id}
-        </field>
-        <field name="name">Invoices</field>
-        <field name="res_model">account.invoice</field>
-        <field name="view_id" ref="account.invoice_tree" />
-        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-    </record>
-
     <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
         <field name="name">account.analytic.account.invoice.recurring.form.inherit</field>
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-        <field eval="40" name="priority"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <group name="main" position="after">
-                <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
+                <separator string="Recurring Invoices"
+                           attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                           />
                 <div>
                     <field name="recurring_invoices" class="oe_inline"/>
                     <label for="recurring_invoices" />
-                    <button name="recurring_create_invoice" type="object"
+                    <button name="recurring_create_invoice"
+                            type="object"
                             attrs="{'invisible': [('recurring_invoices','!=',True)]}"
-                            string="Create invoices" class="oe_link"
-                            groups="base.group_no_one"/>
-                    <button name="%(contract.act_recurring_invoices)d" type="action"
+                            string="Create invoices"
+                            class="oe_link"
+                            groups="base.group_no_one"
+                            />
+                    <button name="contract.act_recurring_invoices"
+                            type="action"
                             attrs="{'invisible': [('recurring_invoices','!=',True)]}"
-                            string="⇒ Show recurring invoices" class="oe_link"/>
+                            string="⇒ Show recurring invoices"
+                            class="oe_link"
+                            />
                 </div>
                 <group col="4" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                    <field name="contract_template_id" />
                     <field name="journal_id"/>
                     <field name="pricelist_id"/>
                     <label for="recurring_interval"/>
                     <div>
-                        <field name="recurring_interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
-                        <field name="recurring_rule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                        <field name="recurring_interval"
+                               class="oe_inline"
+                               attrs="{'required': [('recurring_invoices', '=', True)]}"
+                               />
+                        <field name="recurring_rule_type"
+                               class="oe_inline"
+                               attrs="{'required': [('recurring_invoices', '=', True)]}"
+                               />
                     </div>
                     <field name="recurring_invoicing_type"/>
                     <field name="date_start"/>
                     <field name="recurring_next_date"/>
                 </group>
-                <label for="recurring_invoice_line_ids" attrs="{'invisible': [('recurring_invoices','=',False)]}"/>
+                <label for="recurring_invoice_line_ids"
+                       attrs="{'invisible': [('recurring_invoices','=',False)]}"
+                       />
                 <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                     <field name="recurring_invoice_line_ids">
                         <tree string="Account Analytic Lines" editable="bottom">
@@ -87,9 +93,15 @@
             <field name="name" position="after">
                 <field name="journal_id"/>
                 <field name="pricelist_id"/>
-                <filter name="recurring_invoices" string="Recurring Invoices" domain="[('recurring_invoices','=',True)]"/>
+                <filter name="recurring_invoices"
+                        string="Recurring Invoices"
+                        domain="[('recurring_invoices','=',True)]"
+                        />
                 <group expand="0" string="Group By...">
-                    <filter string="Next Invoice" domain="[]" context="{'group_by':'recurring_next_date'}"/>
+                    <filter string="Next Invoice"
+                            domain="[]"
+                            context="{'group_by':'recurring_next_date'}"
+                            />
                 </group>
             </field>
         </field>
@@ -109,6 +121,11 @@
             </p>
         </field>
     </record>
-    <menuitem action="action_account_analytic_overdue_all" id="menu_action_account_analytic_overdue_all" sequence="99" parent="account.menu_finance_receivables"/>
+
+    <menuitem id="menu_action_account_analytic_overdue_all"
+              parent="account.menu_finance_receivables"
+              action="action_account_analytic_overdue_all"
+              sequence="99"
+              />
 
 </odoo>
