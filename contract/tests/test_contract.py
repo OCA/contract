@@ -15,6 +15,14 @@ class TestContract(TransactionCase):
         self.product.taxes_id += self.env['account.tax'].search(
             [('type_tax_use', '=', 'sale')], limit=1)
         self.product.description_sale = 'Test description sale'
+        self.template_vals = {
+            'recurring_rule_type': 'yearly',
+            'recurring_interval': 12345,
+            'name': 'Test Contract Template',
+        }
+        self.template = self.env['account.analytic.contract'].create(
+            self.template_vals,
+        )
         self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
             'partner_id': self.partner.id,
@@ -136,3 +144,14 @@ class TestContract(TransactionCase):
         journal.write({'type': 'general'})
         with self.assertRaises(ValidationError):
             contract_no_journal.recurring_create_invoice()
+
+    def test_onchange_contract_template_id(self):
+        """ It should change the contract values to match the template. """
+        self.contract.contract_template_id = self.template
+        self.contract._onchange_contract_template_id()
+        res = {
+            'recurring_rule_type': self.contract.recurring_rule_type,
+            'recurring_interval': self.contract.recurring_interval,
+        }
+        del self.template_vals['name']
+        self.assertDictEqual(res, self.template_vals)
