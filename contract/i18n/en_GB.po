@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-06 03:38+0000\n"
-"PO-Revision-Date: 2016-12-06 03:38+0000\n"
+"POT-Creation-Date: 2017-04-27 02:40+0000\n"
+"PO-Revision-Date: 2017-04-27 02:40+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
 "Language-Team: English (United Kingdom) (https://www.transifex.com/oca/teams/23907/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -20,16 +20,19 @@ msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#END#</strong>: End date of the invoiced period"
 msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
 msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Account Analytic Lines"
 msgstr ""
 
@@ -40,6 +43,11 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: contract
+#: model:ir.actions.act_window,help:contract.account_analytic_contract_action
+msgid "Click to create a new contract template."
+msgstr ""
+
+#. module: contract
 #: model:ir.actions.act_window,help:contract.action_account_analytic_overdue_all
 msgid "Click to create a new contract."
 msgstr ""
@@ -47,6 +55,20 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
 msgid "Contract"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_account_contract_template_id
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
+msgid "Contract Template"
+msgstr ""
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.account_analytic_contract_action
+#: model:ir.ui.menu,name:contract.account_analytic_contract_menu
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_tree
+msgid "Contract Templates"
 msgstr ""
 
 #. module: contract
@@ -62,11 +84,13 @@ msgid "Create invoices"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_create_uid
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_create_uid
 msgid "Created by"
 msgstr "Created by"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_create_date
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_create_date
 msgid "Created on"
 msgstr "Created on"
@@ -83,6 +107,7 @@ msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
+#: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Day(s)"
 msgstr ""
 
@@ -97,7 +122,7 @@ msgid "Discount (%)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:60
+#: code:addons/contract/models/account_analytic_invoice_line.py:56
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr ""
@@ -110,6 +135,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_display_name
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_display_name
 msgid "Display Name"
 msgstr ""
@@ -125,6 +151,7 @@ msgid "Group By..."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_id
 msgid "ID"
 msgstr "ID"
@@ -136,6 +163,8 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoice_line_ids
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_invoice_line_ids
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Invoice Lines"
 msgstr ""
 
@@ -145,44 +174,63 @@ msgid "Invoices"
 msgstr ""
 
 #. module: contract
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
+msgid "Invoicing Type"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_invoicing_type
 msgid "Invoicing type"
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_journal_id
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_journal_id
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Journal"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract___last_update
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_write_uid
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_write_uid
 msgid "Last Updated by"
 msgstr "Last Updated by"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_write_date
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_write_date
 msgid "Last Updated on"
 msgstr "Last Updated on"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Legend (for the markers inside invoice lines description)"
 msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
+#: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s)"
 msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
+#: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s) last day"
 msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_name
+msgid "Name"
+msgstr "Name"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
@@ -190,23 +238,27 @@ msgid "Next Invoice"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:230
+#: code:addons/contract/models/account_analytic_account.py:131
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
+#: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Post-paid"
 msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
+#: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Pre-paid"
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_pricelist_id
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_pricelist_id
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Pricelist"
 msgstr ""
 
@@ -222,7 +274,9 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_rule_type
-msgid "Recurrency"
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_rule_type
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
+msgid "Recurrence"
 msgstr ""
 
 #. module: contract
@@ -233,21 +287,25 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_interval
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_interval
 msgid "Repeat Every"
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_interval
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_invoicing_type
 msgid "Specify if process date is 'from' or 'to' invoicing date"
 msgstr ""
 
@@ -268,18 +326,25 @@ msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
+#: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Week(s)"
 msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
+#: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Year(s)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:222
+#: code:addons/contract/models/account_analytic_account.py:123
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
+msgstr ""
+
+#. module: contract
+#: model:ir.model,name:contract.model_account_analytic_contract
+msgid "account.analytic.contract"
 msgstr ""
 
 #. module: contract
