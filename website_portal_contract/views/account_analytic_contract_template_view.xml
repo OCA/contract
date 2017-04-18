@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record id="account_analytic_contract_template_view_form" model="ir.ui.view">
+        <field name="name">account.analytic.contract.template.form</field>
+        <field name="model">account.analytic.contract.template</field>
+        <field name="arch" type="xml">
+            <form string="Website Template">
+                <sheet>
+                    <button string="View Template" type="object" name="open_template" class="oe_highlight oe_right" />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" placeholder="Contract Website Template" />
+                        </h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_template_view_tree" model="ir.ui.view">
+        <field name="name">account.analytic.contract.template.tree</field>
+        <field name="model">account.analytic.contract.template</field>
+        <field name="arch" type="xml">
+            <tree string="Website Templates">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_template_view_search" model="ir.ui.view">
+        <field name="name">account.analytic.contract.template.search</field>
+        <field name="model">account.analytic.contract.template</field>
+        <field name="arch" type="xml">
+            <search string="Website Templates">
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_template_action" model="ir.actions.act_window">
+        <field name="name">Website Templates</field>
+        <field name="res_model">account.analytic.contract.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract template.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="account_analytic_contract_template_menu"
+              parent="contract.menu_config_contract"
+              action="account_analytic_contract_template_action"
+              sequence="1"
+              name="Website Templates"
+              />
+
+</odoo>
