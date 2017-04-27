@@ -24,5 +24,6 @@ addon | version | summary
 [contract](contract/) | 10.0.1.0.1 | Contracts Management - Recurring
 [contract_show_invoice](contract_show_invoice/) | 10.0.1.0.0 | Button in contracts to show their invoices
 [contract_variable_quantity](contract_variable_quantity/) | 10.0.1.0.0 | Variable quantity in contract recurrent invoicing
+[product_contract](product_contract/) | 10.0.1.0.0 | Product Contract
 
 [//]: # (end addons)
