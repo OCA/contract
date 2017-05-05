@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2017 LasLabs Inc.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+
+<odoo>
+
+    <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
+        <field name="name">Contract Auto Pay</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='contract.act_recurring_invoices']" position="after">
+                <br attrs="{'invisible': [('recurring_invoices','!=',True)]}" />
+                <field name="is_auto_pay"
+                       class="oe_inline"
+                       attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                       />
+                <label for="is_auto_pay"
+                       attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                       />
+            </xpath>
+            <xpath expr="//label[@for='recurring_invoice_line_ids']" position="before">
+                <group name="group_auto_pay"
+                       attrs="{'invisible': [('is_auto_pay', '=', False)]}"
+                       >
+                    <group>
+                        <field name="payment_token_id" />
+                        <field name="invoice_mail_template_id" />
+                        <field name="pay_retry_mail_template_id" />
+                    </group>
+                    <group>
+                        <field name="pay_fail_mail_template_id" />
+                        <field name="auto_pay_retries" />
+                        <field name="auto_pay_retry_hours" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
