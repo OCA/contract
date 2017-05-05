@@ -14,5 +14,6 @@
         'account_cutoff_prepaid',
         'account_analytic_analysis',
         ],
+    'data': ['views/account_analytic_analysis.xml'],
     'installable': True,
 }

@@ -13,7 +13,7 @@ The fields *Start Date* and *End Date* on invoice lines are added by the module 
 Configuration
 =============
 
-No configuration needed.
+On the contract, depending on the configuration of the parameter *Start/End Dates Option*, the generated recurring invoice will cover the past period or the future period.
 
 Usage
 =====
