@@ -68,11 +68,16 @@ class AccountAnalyticInvoiceLine(models.Model):
                                self.uom_id.category_id.id):
             vals['uom_id'] = self.product_id.uom_id
 
+        date = (
+            self.analytic_account_id.recurring_next_date or
+            fields.Datetime.now()
+        )
+
         product = self.product_id.with_context(
             lang=self.analytic_account_id.partner_id.lang,
             partner=self.analytic_account_id.partner_id.id,
             quantity=self.quantity,
-            date=self.analytic_account_id.recurring_next_date,
+            date=date,
             pricelist=self.analytic_account_id.pricelist_id.id,
             uom=self.uom_id.id
         )
