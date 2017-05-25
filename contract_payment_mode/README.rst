@@ -17,7 +17,7 @@ Your user should be a Sales Manager or Accountant.
 Usage
 =====
 
-#. Go to *Sales > Sales > Contracts*.
+#. Go to *Accounting > Sales > Contracts*.
 #. Create one.
 #. Select a partner to which invoice.
 #. If the partner has a payment mode, this payment mode is selected here.
@@ -30,7 +30,7 @@ Usage
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/110/9.0
+   :target: https://runbot.odoo-community.org/runbot/110/10.0
 
 Bug Tracker
 ===========
@@ -49,6 +49,7 @@ Contributors
 * Ángel Moya <angel.moya@domatix.com>
 * Antonio Espinosa <antonioea@antiun.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
+* David Vidal <david.vidal@tecnativa.com>
 
 
 Maintainer
