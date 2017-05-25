@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Copyright 2015 Antiun Ingenieria S.L. - Antonio Espinosa
 # Copyright 2017 Tecnativa - Vicent Cubells
+# Copyright 2017 Tecnativa - David Vidal
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests import common
+from odoo.tests import common
 from ..hooks import post_init_hook
 
 
@@ -12,10 +13,17 @@ class TestContractPaymentInit(common.SavepointCase):
     def setUpClass(cls):
         super(TestContractPaymentInit, cls).setUpClass()
 
-        cls.payment_method = cls.env.ref(
-            'account.account_payment_method_manual_in')
-        cls.payment_mode = cls.env.ref(
-            'account_payment_mode.payment_mode_inbound_ct1')
+        cls.payment_method = cls.env['account.payment.method'].create({
+            'name': 'Test Payment Method',
+            'code': 'Test',
+            'payment_type': 'inbound',
+        })
+        cls.payment_mode = cls.env['account.payment.mode'].create({
+            'name': 'Test payment mode',
+            'active': True,
+            'payment_method_id': cls.payment_method.id,
+            'bank_account_link': 'variable',
+        })
         cls.partner = cls.env['res.partner'].create({
             'name': 'Test contract partner',
             'customer_payment_mode_id': cls.payment_mode,
@@ -30,12 +38,12 @@ class TestContractPaymentInit(common.SavepointCase):
         cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Maintenance of Servers',
         })
-
-    def _contract_payment_mode_id(self, contract_id):
-        contract = self.env['account.analytic.account'].search([
-            ('id', '=', contract_id),
-        ])
-        return contract.payment_mode_id.id
+        company = cls.env.ref('base.main_company')
+        cls.journal = cls.env['account.journal'].create({
+            'name': 'Sale Journal - Test',
+            'code': 'HRTSJ',
+            'type': 'sale',
+            'company_id': company.id})
 
     def test_post_init_hook(self):
         contract = self.env['account.analytic.account'].create({
@@ -43,15 +51,15 @@ class TestContractPaymentInit(common.SavepointCase):
             'partner_id': self.partner.id,
             'payment_mode_id': self.payment_mode.id,
         })
-        self.assertEqual(self._contract_payment_mode_id(contract.id),
-                         self.payment_mode.id)
+        self.assertEqual(contract.payment_mode_id,
+                         self.payment_mode)
 
         contract.payment_mode_id = False
-        self.assertEqual(self._contract_payment_mode_id(contract.id), False)
+        self.assertEqual(contract.payment_mode_id.id, False)
 
         post_init_hook(self.cr, self.env)
-        self.assertEqual(self._contract_payment_mode_id(contract.id),
-                         self.payment_mode.id)
+        self.assertEqual(contract.payment_mode_id,
+                         self.payment_mode)
 
     def test_contract_and_invoices(self):
         self.contract.write({'partner_id': self.partner.id})
@@ -69,14 +77,13 @@ class TestContractPaymentInit(common.SavepointCase):
                 'uom_id': self.product.uom_id.id,
             })]
         })
-        res = self.contract._prepare_invoice_data(self.contract)
-        self.assertEqual(res.get('partner_id'), self.contract.partner_id.id)
-        self.assertEqual(res.get('payment_mode_id'),
-                         self.contract.payment_mode_id.id)
         self.contract.recurring_create_invoice()
         new_invoice = self.env['account.invoice'].search([
             ('contract_id', '=', self.contract.id)
         ])
+        self.assertEqual(new_invoice.partner_id, self.contract.partner_id)
+        self.assertEqual(new_invoice.payment_mode_id,
+                         self.contract.payment_mode_id)
         self.assertEqual(len(new_invoice.ids), 1)
         self.contract.recurring_create_invoice()
         self.assertEqual(self.contract.payment_mode_id,
