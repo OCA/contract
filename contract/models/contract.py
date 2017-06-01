@@ -264,6 +264,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def recurring_create_invoice(self):
+        invoices = self.env['account.invoice']
         for contract in self:
             old_date = fields.Date.from_string(
                 contract.recurring_next_date or fields.Date.today())
@@ -277,11 +278,11 @@ class AccountAnalyticAccount(models.Model):
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
-            contract.with_context(ctx)._create_invoice()
+            invoices |= contract.with_context(ctx)._create_invoice()
             contract.write({
                 'recurring_next_date': new_date.strftime('%Y-%m-%d')
             })
-        return True
+        return invoices
 
     @api.model
     def cron_recurring_create_invoice(self):

@@ -3,30 +3,31 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp.exceptions import ValidationError
-from openerp.tests.common import TransactionCase
+from openerp.tests.common import SavepointCase
 
 
-class TestContract(TransactionCase):
+class TestContract(SavepointCase):
     # Use case : Prepare some data for current test case
-    def setUp(self):
-        super(TestContract, self).setUp()
-        self.partner = self.env.ref('base.res_partner_2')
-        self.product = self.env.ref('product.product_product_2')
-        self.product.description_sale = 'Test description sale'
-        self.contract = self.env['account.analytic.account'].create({
+    @classmethod
+    def setUpClass(cls):
+        super(TestContract, cls).setUpClass()
+        cls.partner = cls.env.ref('base.res_partner_2')
+        cls.product = cls.env.ref('product.product_product_2')
+        cls.product.description_sale = 'Test description sale'
+        cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Test Contract',
-            'partner_id': self.partner.id,
-            'pricelist_id': self.partner.property_product_pricelist.id,
+            'partner_id': cls.partner.id,
+            'pricelist_id': cls.partner.property_product_pricelist.id,
             'recurring_invoices': True,
             'date_start': '2016-02-15',
             'recurring_next_date': '2016-02-29',
         })
-        self.contract_line = self.env['account.analytic.invoice.line'].create({
-            'analytic_account_id': self.contract.id,
-            'product_id': self.product.id,
+        cls.contract_line = cls.env['account.analytic.invoice.line'].create({
+            'analytic_account_id': cls.contract.id,
+            'product_id': cls.product.id,
             'name': 'Services from #START# to #END#',
             'quantity': 1,
-            'uom_id': self.product.uom_id.id,
+            'uom_id': cls.product.uom_id.id,
             'price_unit': 100,
             'discount': 50,
         })
@@ -46,16 +47,13 @@ class TestContract(TransactionCase):
             self.contract.recurring_create_invoice()
         self.contract.partner_id = self.partner.id
 
-        self.contract.recurring_create_invoice()
-        self.invoice_monthly = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(self.invoice_monthly)
+        new_invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(new_invoice)
         self.assertEqual(self.contract.recurring_next_date, '2016-03-29')
 
-        self.inv_line = self.invoice_monthly.invoice_line_ids[0]
+        self.inv_line = new_invoice.invoice_line_ids[0]
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
-        self.assertEqual(self.contract.partner_id.user_id,
-                         self.invoice_monthly.user_id)
+        self.assertEqual(self.contract.partner_id.user_id, new_invoice.user_id)
 
     def test_contract_daily(self):
         self.contract.recurring_next_date = '2016-02-29'
@@ -71,20 +69,16 @@ class TestContract(TransactionCase):
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_rule_type = 'weekly'
         self.contract.recurring_invoicing_type = 'post-paid'
-        self.contract.recurring_create_invoice()
-        invoices_weekly = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(invoices_weekly)
+        new_invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(new_invoice)
         self.assertEqual(
             self.contract.recurring_next_date, '2016-03-07')
 
     def test_contract_yearly(self):
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_rule_type = 'yearly'
-        self.contract.recurring_create_invoice()
-        invoices_weekly = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(invoices_weekly)
+        new_invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(new_invoice)
         self.assertEqual(
             self.contract.recurring_next_date, '2017-02-28')
 
@@ -92,11 +86,18 @@ class TestContract(TransactionCase):
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_invoicing_type = 'post-paid'
         self.contract.recurring_rule_type = 'monthlylastday'
-        self.contract.recurring_create_invoice()
-        invoices_monthly_lastday = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(invoices_monthly_lastday)
+        new_invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(new_invoice)
         self.assertEqual(self.contract.recurring_next_date, '2016-03-31')
+
+    def test_contract_monthly_lastday_prepaid(self):
+        self.contract.recurring_next_date = '2016-02-25'
+        self.contract.recurring_invoicing_type = 'pre-paid'
+        self.contract.recurring_rule_type = 'monthlylastday'
+        self.contract.recurring_create_invoice()
+        new_invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(new_invoice)
+        self.assertEqual(new_invoice.date_invoice, '2016-03-31')
 
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()

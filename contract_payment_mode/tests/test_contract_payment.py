@@ -69,14 +69,13 @@ class TestContractPaymentInit(common.SavepointCase):
                 'uom_id': self.product.uom_id.id,
             })]
         })
-        res = self.contract._prepare_invoice_data(self.contract)
-        self.assertEqual(res.get('partner_id'), self.contract.partner_id.id)
-        self.assertEqual(res.get('payment_mode_id'),
-                         self.contract.payment_mode_id.id)
         self.contract.recurring_create_invoice()
         new_invoice = self.env['account.invoice'].search([
             ('contract_id', '=', self.contract.id)
         ])
+        self.assertEqual(new_invoice.partner_id, self.contract.partner_id)
+        self.assertEqual(new_invoice.payment_mode_id,
+                         self.contract.payment_mode_id)
         self.assertEqual(len(new_invoice.ids), 1)
         self.contract.recurring_create_invoice()
         self.assertEqual(self.contract.payment_mode_id,
