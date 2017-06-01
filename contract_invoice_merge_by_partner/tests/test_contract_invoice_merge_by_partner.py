@@ -23,6 +23,7 @@ class TestContractInvoiceMergeByPartner(common.SavepointCase):
             'uom_id': cls.uom.id,
             'uom_po_id': cls.uom.id,
             'sale_ok': True,
+            'taxes_id': [(6, 0, [])],
         })
         cls.contract1 = cls.env['account.analytic.account'].create({
             'name': 'Test contract',
