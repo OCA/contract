@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_analytic_account_payment_form" model="ir.ui.view">
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract_payment_mode.account_analytic_account_payment_form" />
+        <field name="arch" type="xml">
+            <field name="payment_mode_id" position="after">
+                <field name="mandate_id"
+                domain="[('partner_id', '=', commercial_partner_id), ('state', '=', 'valid')]"
+                attrs="{'invisible': ['|', ('mandate_required', '=', False), ('recurring_invoices', '=', False)]}"/>
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="mandate_required" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
