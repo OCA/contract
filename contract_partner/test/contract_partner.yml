@@ -1,0 +1,41 @@
+-  
+  In order to test contract invoice partners create a contract with partners
+-
+  !record {model: account.analytic.account, id: contract_partner}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    service_partner_id: base.res_partner_2
+    contact_partner_id: base.res_partner_address_4
+    type: contract
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 100.0
+        name: Database Administration 25
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I test partner contract
+-
+  !python {model: account.analytic.account}: |
+    aid = ref('contract_partner.contract_partner')
+    contract = self.browse(cr, uid, aid,context=context)
+    assert contract.service_partner_id.id == ref('base.res_partner_2'), "Service partner is not correct in contract"
+    assert contract.contact_partner_id.id == ref('base.res_partner_address_4'), "Contact partner is not correct in contract"
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the generated invoice for partner contract
+-
+  !python {model: account.invoice}: |
+    aid = ref('contract_partner.contract_partner')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.service_partner_id.id == ref('base.res_partner_2'), "Service partner is not correct in invoice"
+        assert invoice.contact_partner_id.id == ref('base.res_partner_address_4'), "Contact partner is not correct in invoice"
