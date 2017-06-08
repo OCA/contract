@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Binovo IT Human Project SL
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<openerp>
+<data>
+
+        <record id="account_analytic_account_form_form_mandate" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.form.mandate</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id"
+                ref="account_analytic_analysis.account_analytic_account_form_form" />
+            <field name="arch" type="xml">
+                <field name="recurring_next_date" position="after">
+                    <field name="mandate_id" domain="[('partner_id', '=', partner_id), ('state', '=', 'valid')]"/>
+                </field>
+            </field>
+        </record>
+</data>
+</openerp>
