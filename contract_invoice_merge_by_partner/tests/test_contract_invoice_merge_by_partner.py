@@ -32,8 +32,6 @@ class TestContractInvoiceMergeByPartner(common.SavepointCase):
         })
 
     def test_invoices_merged(self):
-        res = self.env['account.analytic.account'].recurring_create_invoice()
-        self.assertEqual(res, True)
         self.contract1.write({
             'recurring_invoices': True,
             'recurring_rule_type': 'monthly',
@@ -51,9 +49,7 @@ class TestContractInvoiceMergeByPartner(common.SavepointCase):
         contracts = self.env['account.analytic.account'].search([
             ('partner_id', '=', self.partner.id)
         ])
-        contracts.recurring_create_invoice()
-        invoices = self.env['account.invoice'].search(
-            [('partner_id', '=', self.partner.id)])
+        invoices = contracts.recurring_create_invoice()
         inv_draft = invoices.filtered(lambda x: x.state == 'draft')
         self.assertEqual(len(inv_draft), 1)
         inv_cancel = invoices.filtered(lambda x: x.state == 'cancel')
