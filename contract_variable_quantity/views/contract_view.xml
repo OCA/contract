@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="account_analytic_contract_view_form" model="ir.ui.view">
+        <field name="name">Contract Template Variable Qty</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="inherit_id" ref="contract.account_analytic_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="before">
+                <field name="qty_type"/>
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="after">
+                <field name="qty_formula_id"
+                       attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="attributes">
+                <attribute name="attrs">{'required': [('qty_type', '=', 'fixed')], 'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
