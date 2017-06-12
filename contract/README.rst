@@ -49,6 +49,7 @@ Known issues / Roadmap
 ======================
 
 * Recover states and others functional fields in Contracts.
+* Switch view type to primary when migrating to v11
 
 Bug Tracker
 ===========
