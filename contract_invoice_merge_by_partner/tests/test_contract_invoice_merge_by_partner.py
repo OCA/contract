@@ -43,14 +43,10 @@ class TestContractInvoiceMergeByPartner(common.SavepointCase):
                         'product_id': self.product.id,
                         'uom_id': self.uom.id})],
         })
-        self.contract2 = self.contract1.copy()
-        self.contract3 = self.contract1.copy()
-        self.contract4 = self.contract1.copy()
-        contracts = self.env['account.analytic.account'].search([
-            ('partner_id', '=', self.partner.id)
-        ])
-        invoices = contracts.recurring_create_invoice()
-        inv_draft = invoices.filtered(lambda x: x.state == 'draft')
-        self.assertEqual(len(inv_draft), 1)
-        inv_cancel = invoices.filtered(lambda x: x.state == 'cancel')
-        self.assertFalse(inv_cancel)
+        contract2 = self.contract1.copy()
+        contract3 = self.contract1.copy()
+        contract4 = self.contract1.copy()
+        contracts = self.contract1 + contract2 + contract3 + contract4
+        invoice = contracts.recurring_create_invoice()
+        self.assertEqual(len(invoice), 1)
+        self.assertEqual(len(invoice.invoice_line_ids), 4)

@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
 import logging
 
-from openerp import api, fields, models
+from openerp import _, api, fields, models
 from openerp.addons.decimal_precision import decimal_precision as dp
 from openerp.exceptions import ValidationError
-from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -222,36 +221,46 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _prepare_invoice(self):
-        self.ensure_one()
-        if not self.partner_id:
+        """Prepare the values for the invoice creation from the contract(s)
+        given. It's possible to provide several contracts. Only one invoice
+        will be created and most of the values will be taken from first
+        contract, but there are certain values that can be obtained from all
+        of them (for example, the origin field).
+
+        :param self: Recordset of contract(s).
+        :returns: Values for invoice creation.
+        :rtype: dict
+        """
+        contract = self[:1]
+        if not contract.partner_id:
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
-                self.name)
-        journal = self.journal_id or self.env['account.journal'].search(
+                contract.name)
+        journal = contract.journal_id or self.env['account.journal'].search(
             [('type', '=', 'sale'),
-             ('company_id', '=', self.company_id.id)],
+             ('company_id', '=', contract.company_id.id)],
             limit=1)
         if not journal:
             raise ValidationError(
                 _("Please define a sale journal for the company '%s'.") %
-                (self.company_id.name or '',))
+                (contract.company_id.name or '',))
         currency = (
-            self.pricelist_id.currency_id or
-            self.partner_id.property_product_pricelist.currency_id or
-            self.company_id.currency_id
+            contract.pricelist_id.currency_id or
+            contract.partner_id.property_product_pricelist.currency_id or
+            contract.company_id.currency_id
         )
         invoice = self.env['account.invoice'].new({
-            'reference': self.code,
+            'reference': ', '.join(self.filtered('code').mapped('code')),
             'type': 'out_invoice',
-            'partner_id': self.partner_id.address_get(
+            'partner_id': contract.partner_id.address_get(
                 ['invoice'])['invoice'],
             'currency_id': currency.id,
             'journal_id': journal.id,
-            'date_invoice': self.recurring_next_date,
-            'origin': self.name,
-            'company_id': self.company_id.id,
-            'contract_id': self.id,
-            'user_id': self.partner_id.user_id.id,
+            'date_invoice': contract.recurring_next_date,
+            'origin': ', '.join(self.mapped('name')),
+            'company_id': contract.company_id.id,
+            'contract_id': contract.id,
+            'user_id': contract.partner_id.user_id.id,
         })
         # Get other invoice values from partner onchange
         invoice._onchange_partner_id()
@@ -259,35 +268,55 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _create_invoice(self):
-        self.ensure_one()
+        """Create the invoice from the source contracts.
+
+        :param self: Contract records. Invoice header data will be obtained
+          from the first record of this recordset.
+
+        :return Created invoice record.
+        """
         invoice_vals = self._prepare_invoice()
         invoice = self.env['account.invoice'].create(invoice_vals)
-        for line in self.recurring_invoice_line_ids:
-            invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
-            self.env['account.invoice.line'].create(invoice_line_vals)
+        for contract in self:
+            old_date = fields.Date.from_string(
+                contract.recurring_next_date or fields.Date.today(),
+            )
+            new_date = old_date + self.get_relalive_delta(
+                contract.recurring_rule_type, contract.recurring_interval,
+            )
+            obj = self.with_context(
+                old_date=old_date,
+                next_date=new_date,
+                # For correct evaluating of domain access rules + properties
+                force_company=contract.company_id.id,
+            )
+            for line in contract.recurring_invoice_line_ids:
+                invoice_line_vals = obj._prepare_invoice_line(line, invoice.id)
+                self.env['account.invoice.line'].create(invoice_line_vals)
+            contract.write({
+                'recurring_next_date': new_date.strftime('%Y-%m-%d')
+            })
         invoice.compute_taxes()
         return invoice
 
     @api.multi
+    def _get_contracts2invoice(self, rest_contracts):
+        """Method for being inherited by other modules to specify contract
+        grouping rules. By default, each contract is invoiced separately.
+
+        :param rest_contracts: Rest of the outstanding contracts to be invoiced
+        """
+        self.ensure_one()
+        return self
+
+    @api.multi
     def recurring_create_invoice(self):
         invoices = self.env['account.invoice']
-        for contract in self:
-            old_date = fields.Date.from_string(
-                contract.recurring_next_date or fields.Date.today())
-            new_date = old_date + self.get_relalive_delta(
-                contract.recurring_rule_type, contract.recurring_interval)
-            ctx = self.env.context.copy()
-            ctx.update({
-                'old_date': old_date,
-                'next_date': new_date,
-                # Force company for correct evaluate domain access rules
-                'force_company': contract.company_id.id,
-            })
-            # Re-read contract with correct company
-            invoices |= contract.with_context(ctx)._create_invoice()
-            contract.write({
-                'recurring_next_date': new_date.strftime('%Y-%m-%d')
-            })
+        contracts = self
+        while contracts:
+            contracts2invoice = contracts[0]._get_contracts2invoice(contracts)
+            contracts -= contracts2invoice
+            invoices |= contracts2invoice._create_invoice()
         return invoices
 
     @api.model
