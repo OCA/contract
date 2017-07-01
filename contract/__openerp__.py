@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # © 2004-2010 OpenERP SA
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# © 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     'name': 'Contracts Management recurring',
-    'version': '9.0.1.2.0',
+    'version': '9.0.1.2.1',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA,"
