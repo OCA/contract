@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
                 contract_tmpl = line.product_id.contract_template_id
                 contract = self.env['account.analytic.account'].create({
                     'name': '%s Contract' % rec.name,
+                    'recurring_invoices': True,
                     'partner_id': rec.partner_id.id,
                     'contract_template_id': contract_tmpl.id,
                 })
