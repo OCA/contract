@@ -6,7 +6,8 @@ from openerp import _, api, fields, models
 
 
 class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+    _name = 'account.analytic.account'
+    _inherit = ['account.analytic.account', 'mail.thread']
 
     user_id = fields.Many2one(
         comodel_name='res.users',
@@ -46,3 +47,16 @@ class AccountAnalyticAccount(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.model
+    def create(self, values):
+        contract = super(AccountAnalyticAccount, self).create(values)
+        if contract.customer_signature:
+            values = {'customer_signature': contract.customer_signature}
+            contract._track_signature(values, 'customer_signature')
+        return contract
+
+    @api.multi
+    def write(self, values):
+        self.env['mail.thread']._track_signature(values, 'customer_signature')
+        return super(AccountAnalyticAccount, self).write(values)
