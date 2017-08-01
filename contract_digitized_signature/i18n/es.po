@@ -16,98 +16,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: contract_digitized_signature
-#: model:mail.template,body_html:contract_digitized_signature.email_contract_template
-msgid "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    <p>A new contract has been created: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Contract date start: ${object.date_start or ''}<br />\n"
-"\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"        "
-msgstr "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"    <p>Hola ${object.partner_id.name},</p>\n"
-"    <p>Un nuevo contrato se ha creado: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCIA</strong><br />\n"
-"       &nbsp;&nbsp;Contrato: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Fecha inicio del contrato: ${object.date_start or ''}<br />\n"
-"\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>Si tiene cualquier pregunta, no dude en contactar con nosotros.</p>\n"
-"    <p>Gracias por elegir ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Teléfono:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"        "
-
-#. module: contract_digitized_signature
-#: model:mail.template,subject:contract_digitized_signature.email_contract_template
-msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Contrato (Ref ${object.name or 'n/a'})"
-
-#. module: contract_digitized_signature
 #: model:ir.ui.view,arch_db:contract_digitized_signature.report_contract_document
 msgid "<strong>Customer acceptance:</strong>"
 msgstr "<strong>Aceptación de cliente:</strong>"
@@ -153,14 +61,7 @@ msgid "Analytic Account"
 msgstr "Contrato"
 
 #. module: contract_digitized_signature
-#: code:addons/contract_digitized_signature/models/account_analytic_account.py:39
-#, python-format
-msgid "Compose Email"
-msgstr "Componer correo electrónico"
-
-#. module: contract_digitized_signature
 #: model:ir.actions.report.xml,name:contract_digitized_signature.report_contract
-#: model:mail.template,report_name:contract_digitized_signature.email_contract_template
 msgid "Contract"
 msgstr "Contrato"
 
@@ -188,11 +89,6 @@ msgstr "Responsable"
 #: model:ir.ui.view,arch_db:contract_digitized_signature.report_contract_document
 msgid "Responsible:"
 msgstr "Responsable:"
-
-#. module: contract_digitized_signature
-#: model:ir.ui.view,arch_db:contract_digitized_signature.account_analytic_account_recurring_form_form
-msgid "Send by Email"
-msgstr "Enviar por correo electrónico"
 
 #. module: contract_digitized_signature
 #: model:ir.ui.view,arch_db:contract_digitized_signature.report_contract_document

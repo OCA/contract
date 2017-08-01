@@ -19,7 +19,6 @@
         "report/report_contractorder.xml",
         "report/contract_views.xml",
         "views/contract_views.xml",
-        "data/contract_template.xml",
     ],
     "installable": True,
 }

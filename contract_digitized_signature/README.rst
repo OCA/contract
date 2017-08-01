@@ -6,11 +6,16 @@
 Contract Digitized Signature
 ============================
 
-This module adds a signature field (using ``web_widget_digitized_signature``)
-to contract report.
+This module adds a signature field to contract report.
 
-Also a button has been added to contract form to allow users to send by email
-the contract report with digitized signature.
+Installation
+============
+
+This module depends on :
+
+* web_widget_digitized_signature
+
+This module is part of the OCA/web suite.
 
 Configuration
 =============
