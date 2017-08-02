@@ -9,6 +9,8 @@ Contracts for recurrent invoicing
 This module forward-port to v9 the contracts management with recurring
 invoicing functions.
 
+Also you can print and send by email contract report.
+
 Configuration
 =============
 
@@ -39,6 +41,8 @@ To use this module, you need to:
    click on *Create invoices* to force this action.
 #. Click *Show recurring invoices* link to show all invoices created by the
    contract.
+#. Click on *Print > Contract* menu to print contract report.
+#. Click on *Send by Email* button to send contract by email.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
@@ -66,6 +70,7 @@ Contributors
 * Pedro M. Baeza <pedro.baeza@tecnativa.com>
 * Carlos Dauden <carlos.dauden@tecnativa.com>
 * Angel Moya <angel.moya@domatix.com>
+* Vicent Cubells <vicent.cubells@tecnativa.com>
 
 Maintainer
 ----------
