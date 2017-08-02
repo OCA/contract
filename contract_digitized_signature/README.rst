@@ -20,7 +20,6 @@ This module is part of the OCA/web suite.
 Configuration
 =============
 
-#. Go to *Settings > Users > Users* and set a digital signature for a user.
 #. Go to *Sales > Sales > Contracts* and print a contract order. Signature
    will be added to contract report.
 

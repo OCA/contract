@@ -17,7 +17,6 @@
     ],
     "data": [
         "report/report_contractorder.xml",
-        "report/contract_views.xml",
         "views/contract_views.xml",
     ],
     "installable": True,
