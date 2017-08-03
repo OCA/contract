@@ -6,7 +6,7 @@
     "name": "Contract Digitized Signature",
     "version": "9.0.1.0.0",
     "author": "Tecnativa, "
-               "Odoo Community Association (OCA)",
+              "Odoo Community Association (OCA)",
     "website": "https://www.tecnativa.com",
     "category": "Contract Management",
     "license": "AGPL-3",
