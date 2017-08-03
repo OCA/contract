@@ -16,7 +16,7 @@
         "web_widget_digitized_signature",
     ],
     "data": [
-        "report/report_contractorder.xml",
+        "report/report_contract.xml",
         "views/contract_views.xml",
     ],
     "installable": True,

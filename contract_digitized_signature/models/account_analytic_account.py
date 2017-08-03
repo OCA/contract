@@ -9,12 +9,6 @@ class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
     _inherit = ['account.analytic.account', 'mail.thread']
 
-    user_id = fields.Many2one(
-        comodel_name='res.users',
-        string='Responsible',
-        index=True,
-        default=lambda self: self.env.user,
-    )
     customer_signature = fields.Binary(
         string='Customer acceptance',
     )
