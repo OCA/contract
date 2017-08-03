@@ -14,6 +14,7 @@
     'depends': ['account', 'analytic'],
     'category': 'Sales Management',
     'data': [
+        'views/account_invoice_view.xml',
         'views/contract_view.xml',
     ],
     'installable': True,
