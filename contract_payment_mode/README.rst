@@ -49,6 +49,7 @@ Contributors
 * Ángel Moya <angel.moya@domatix.com>
 * Antonio Espinosa <antonioea@antiun.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
+* Carlos Dauden <carlos.dauden@tecnativa.com>
 
 
 Maintainer
