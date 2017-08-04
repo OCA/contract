@@ -4,3 +4,4 @@
 
 from . import contract
 from . import invoice
+from . import res_partner
