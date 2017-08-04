@@ -2,7 +2,7 @@
 # Copyright 2017 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class ResPartner(models.Model):
@@ -18,6 +18,8 @@ class ResPartner(models.Model):
         string='Contracts',
     )
 
+    @api.multi
+    @api.depends('contract_ids')
     def _compute_contract_count(self):
         contract_data = self.env['account.analytic.account'].read_group(
             domain=[('partner_id', 'child_of', self.ids),
