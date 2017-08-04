@@ -15,7 +15,6 @@ class TestContract(SavepointCase):
             'name': 'Partner test',
             'customer': True,
         })
-        # cls.partner = cls.env.ref('base.res_partner_2')
         cls.product = cls.env.ref('product.product_product_2')
         cls.product.description_sale = 'Test description sale'
         cls.contract = cls.env['account.analytic.account'].create({
