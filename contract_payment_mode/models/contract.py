@@ -21,5 +21,7 @@ class AccountAnalyticAccount(models.Model):
         invoice_vals = super(AccountAnalyticAccount, self)._prepare_invoice()
         if self.payment_mode_id:
             invoice_vals['payment_mode_id'] = self.payment_mode_id.id
-            invoice_vals['partner_bank_id'] = self.partner_id.bank_ids[:1].id
+            invoice = self.env['account.invoice'].new(invoice_vals)
+            invoice.payment_mode_id_change()
+            invoice_vals = invoice._convert_to_write(invoice._cache)
         return invoice_vals
