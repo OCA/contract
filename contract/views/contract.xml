@@ -19,6 +19,11 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="40" name="priority"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']/.." position="before">
+                    <header>
+                        <button name="action_contract_send" type="object" string="Send by Email" groups="base.group_user"/>
+                    </header>
+                </xpath>
                 <notebook position="before">
                     <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
                     <div>

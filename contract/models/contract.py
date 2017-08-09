@@ -144,6 +144,12 @@ class AccountAnalyticAccount(models.Model):
         string='Journal',
         default=_default_journal,
         domain="[('type', '=', 'sale'),('company_id', '=', company_id)]")
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string='Responsible',
+        index=True,
+        default=lambda self: self.env.user,
+    )
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -291,3 +297,31 @@ class AccountAnalyticAccount(models.Model):
              ('account_type', '=', 'normal'),
              ('recurring_invoices', '=', True)])
         return contracts.recurring_create_invoice()
+
+    @api.multi
+    def action_contract_send(self):
+        self.ensure_one()
+        template = self.env.ref(
+            'contract.email_contract_template',
+            False,
+        )
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form',
+                                    False)
+        ctx = dict(
+            default_model='account.analytic.account',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            default_composition_mode='comment',
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }

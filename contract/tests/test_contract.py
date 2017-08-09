@@ -134,3 +134,7 @@ class TestContract(SavepointCase):
         journal.write({'type': 'general'})
         with self.assertRaises(ValidationError):
             contract_no_journal.recurring_create_invoice()
+
+    def test_send_mail_contract(self):
+        result = self.contract.action_contract_send()
+        self.assertEqual(result['name'], 'Compose Email')
