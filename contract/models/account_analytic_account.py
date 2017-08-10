@@ -204,8 +204,7 @@ class AccountAnalyticAccount(models.Model):
             'contract.email_contract_template',
             False,
         )
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form',
-                                    False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
             default_model='account.analytic.account',
             default_res_id=self.id,
