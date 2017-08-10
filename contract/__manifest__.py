@@ -19,7 +19,7 @@
         'report/report_contract.xml',
         'report/contract_views.xml',
         'data/contract_cron.xml',
-        'data/contract_template.xml',
+        'data/mail_template.xml',
         'views/account_analytic_account_view.xml',
         'views/account_analytic_contract_view.xml',
         'views/account_invoice_view.xml',
