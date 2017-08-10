@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_contract_sale_view_form" model="ir.ui.view">
+        <field name="name">Account Analytic Contract Sale Form View</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="inherit_id" ref="contract.account_analytic_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoicing_type']" position="before">
+                <field name="type"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
