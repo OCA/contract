@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-27 02:40+0000\n"
-"PO-Revision-Date: 2017-04-27 02:40+0000\n"
+"POT-Creation-Date: 2017-08-17 01:05+0000\n"
+"PO-Revision-Date: 2017-08-17 01:05+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/oca/teams/23907/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,64 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: contract
+#: model:mail.template,body_html:contract.email_contract_template
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Hello ${object.partner_id.name or ''},</p>\n"
+"    <p>A new contract has been created: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;Contract Date Start: ${object.date_start or ''}<br />\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;Your Contact: ${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any questions, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone: ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: contract
+#: model:mail.template,subject:contract.email_contract_template
+msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -30,6 +88,56 @@ msgstr "<Strong> #Bitiş # </ strong>: Faturalandırılan dönemin bitiş tarihi
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
 msgstr ""
 "<Strong> #Başlama # </ strong>: Faturalandırılan dönemin başlangıç tarihi"
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Contract: </strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Date Start: </strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Description</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Partner:</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Price</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Quantity</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Recurring Items</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Responsible: </strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Total</strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Unit Price</strong>"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -54,7 +162,15 @@ msgid "Click to create a new contract."
 msgstr "Yeni bir sözleşme oluşturmak için tıklayın."
 
 #. module: contract
+#: code:addons/contract/models/account_analytic_account.py:216
+#, python-format
+msgid "Compose Email"
+msgstr ""
+
+#. module: contract
+#: model:ir.actions.report.xml,name:contract.report_contract
 #: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
+#: model:mail.template,report_name:contract.email_contract_template
 msgid "Contract"
 msgstr "Sözleşme"
 
@@ -240,7 +356,7 @@ msgid "Next Invoice"
 msgstr "Sonraki Fatura"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:131
+#: code:addons/contract/models/account_analytic_account.py:137
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr "Lütfen '%s' şirketi için bir satış yevmiyesi tanımlayın."
@@ -300,6 +416,16 @@ msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "Tekrarlama sıklığı(Gün /Hafta /Ay /Yıl)"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_account_user_id
+msgid "Responsible"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
+msgid "Send by Email"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
@@ -327,6 +453,11 @@ msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "VAT:"
+msgstr ""
+
+#. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Week(s)"
@@ -339,7 +470,7 @@ msgid "Year(s)"
 msgstr "Yıl(lar)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:123
+#: code:addons/contract/models/account_analytic_account.py:129
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr "Önce bir Müşteri Sözleşmesi seçmelisiniz %s!"

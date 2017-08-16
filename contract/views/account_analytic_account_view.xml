@@ -7,6 +7,11 @@
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/.." position="before">
+                <header>
+                    <button name="action_contract_send" type="object" string="Send by Email" groups="base.group_user"/>
+                </header>
+            </xpath>
             <group name="main" position="after">
                 <separator string="Recurring Invoices"
                            attrs="{'invisible': [('recurring_invoices','!=',True)]}"
