@@ -32,6 +32,12 @@ class AccountAnalyticAccount(models.Model):
         copy=False,
         string='Date of Next Invoice',
     )
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string='Responsible',
+        index=True,
+        default=lambda self: self.env.user,
+    )
 
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
@@ -190,3 +196,30 @@ class AccountAnalyticAccount(models.Model):
             [('recurring_next_date', '<=', fields.date.today()),
              ('recurring_invoices', '=', True)])
         return contracts.recurring_create_invoice()
+
+    @api.multi
+    def action_contract_send(self):
+        self.ensure_one()
+        template = self.env.ref(
+            'contract.email_contract_template',
+            False,
+        )
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        ctx = dict(
+            default_model='account.analytic.account',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            default_composition_mode='comment',
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
