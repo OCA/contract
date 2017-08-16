@@ -155,3 +155,7 @@ class TestContract(TransactionCase):
         }
         del self.template_vals['name']
         self.assertDictEqual(res, self.template_vals)
+
+    def test_send_mail_contract(self):
+        result = self.contract.action_contract_send()
+        self.assertEqual(result['res_model'], 'mail.compose.message')
