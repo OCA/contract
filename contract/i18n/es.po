@@ -1,23 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* contract
-#
+# * contract
+# 
+# Translators:
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c\n"
+"Project-Id-Version: contract (9.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-02 17:47+0000\n"
-"PO-Revision-Date: 2017-08-02 17:47+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2017-08-10 00:48+0000\n"
+"PO-Revision-Date: 2017-08-11 11:56+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: Spanish (http://www.transifex.com/oca/OCA-contract-9-0/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
-msgid "\n"
+msgid ""
+"\n"
 "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "    <p>Hello ${object.partner_id.name or ''},</p>\n"
 "    <p>A new contract has been created: </p>\n"
@@ -59,48 +63,12 @@ msgid "\n"
 "    </div>\n"
 "</div>\n"
 "        "
-msgstr "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"    <p>Hola ${object.partner_id.name or ''},</p>\n"
-"    <p>Se ha creado un nuevo contrato: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
-"       &nbsp;&nbsp;Contrato: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Fecha de inicio del contrato: ${object.date_start or ''}<br />\n"
-"\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Contrato%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>Si tiene cualquier pregunta, no dude en contactarnos.</p>\n"
-"    <p>Gracias por elegir ${object.company_id.name or 'nos'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Teléfono :&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"        "
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hola ${object.partner_id.name or ''},</p>\n    <p>Se ha creado un nuevo contrato: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Contrato: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Fecha de inicio del contrato: ${object.date_start or ''}<br />\n\n       % if object.user_id:\n       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Contrato%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si tiene cualquier pregunta, no dude en contactarnos.</p>\n    <p>Gracias por elegir ${object.company_id.name or 'nos'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono :&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n        "
+
+#. module: contract
+#: model:mail.template,subject:contract.email_contract_template
+msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -111,6 +79,16 @@ msgstr "<strong>#END#</strong>: Fecha fin del periodo facturado"
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
 msgstr "<strong>#START#</strong>: Fecha inicio del periodo facturado"
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Contract: </strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Date Start: </strong>"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
@@ -139,6 +117,11 @@ msgstr "<strong>Cantidad</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Responsible: </strong>"
+msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
 
@@ -164,15 +147,17 @@ msgid "Click to create a new contract."
 msgstr "Pinche para crear un contrato nuevo. "
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
-msgid "Contract"
-msgstr "Contrato"
-
-#. module: contract
 #: code:addons/contract/models/contract.py:318
 #, python-format
 msgid "Compose Email"
 msgstr "Componer correo electrónico"
+
+#. module: contract
+#: model:ir.actions.report.xml,name:contract.report_contract
+#: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
+#: model:mail.template,report_name:contract.email_contract_template
+msgid "Contract"
+msgstr "Contrato"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_overdue_all
@@ -195,11 +180,6 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_create_date
 msgid "Created on"
 msgstr "Creado en"
-
-#. module: contract
-#: model:ir.ui.view,arch_db:contract.report_contract_document
-msgid "Date Start:"
-msgstr "Fecha de inicio:"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_next_date
@@ -320,7 +300,7 @@ msgid "Next Invoice"
 msgstr "Próxima factura"
 
 #. module: contract
-#: code:addons/contract/models/contract.py:230
+#: code:addons/contract/models/contract.py:236
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr "Por favor define un diario de ventas para la compañía '%s'."
@@ -377,11 +357,6 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: contract
-#: model:ir.ui.view,arch_db:contract.report_contract_document
-msgid "Responsible:"
-msgstr "Responsable:"
-
-#. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Send by Email"
 msgstr "Enviar por correo electrónico"
@@ -427,7 +402,7 @@ msgid "Year(s)"
 msgstr "Año(s)"
 
 #. module: contract
-#: code:addons/contract/models/contract.py:222
+#: code:addons/contract/models/contract.py:228
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr "¡Seleccione un cliente para este contrato %s!"
