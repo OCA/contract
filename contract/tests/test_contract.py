@@ -1,49 +1,52 @@
 # -*- coding: utf-8 -*-
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2016 Tecnativa - Carlos Dauden
+# Copyright 2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests import common
 
 
-class TestContract(TransactionCase):
-    # Use case : Prepare some data for current test case
-    def setUp(self):
-        super(TestContract, self).setUp()
-        self.partner = self.env.ref('base.res_partner_2')
-        self.product = self.env.ref('product.product_product_2')
-        self.product.taxes_id += self.env['account.tax'].search(
+class TestContractBase(common.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestContractBase, cls).setUpClass()
+        cls.partner = cls.env.ref('base.res_partner_2')
+        cls.product = cls.env.ref('product.product_product_2')
+        cls.product.taxes_id += cls.env['account.tax'].search(
             [('type_tax_use', '=', 'sale')], limit=1)
-        self.product.description_sale = 'Test description sale'
-        self.template_vals = {
+        cls.product.description_sale = 'Test description sale'
+        cls.template_vals = {
             'recurring_rule_type': 'yearly',
             'recurring_interval': 12345,
             'name': 'Test Contract Template',
         }
-        self.template = self.env['account.analytic.contract'].create(
-            self.template_vals,
+        cls.template = cls.env['account.analytic.contract'].create(
+            cls.template_vals,
         )
-        self.contract = self.env['account.analytic.account'].create({
+        cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Test Contract',
-            'partner_id': self.partner.id,
-            'pricelist_id': self.partner.property_product_pricelist.id,
+            'partner_id': cls.partner.id,
+            'pricelist_id': cls.partner.property_product_pricelist.id,
             'recurring_invoices': True,
             'date_start': '2016-02-15',
             'recurring_next_date': '2016-02-29',
         })
-        self.line_vals = {
-            'analytic_account_id': self.contract.id,
-            'product_id': self.product.id,
+        cls.line_vals = {
+            'analytic_account_id': cls.contract.id,
+            'product_id': cls.product.id,
             'name': 'Services from #START# to #END#',
             'quantity': 1,
-            'uom_id': self.product.uom_id.id,
+            'uom_id': cls.product.uom_id.id,
             'price_unit': 100,
             'discount': 50,
         }
-        self.acct_line = self.env['account.analytic.invoice.line'].create(
-            self.line_vals,
+        cls.acct_line = cls.env['account.analytic.invoice.line'].create(
+            cls.line_vals,
         )
 
+
+class TestContract(TestContractBase):
     def _add_template_line(self, overrides=None):
         if overrides is None:
             overrides = {}
@@ -229,26 +232,3 @@ class TestContract(TransactionCase):
                          '\n'.join([line.product_id.name,
                                     line.product_id.description_sale,
                                     ]))
-
-    def test_contract(self):
-        self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
-        res = self.acct_line._onchange_product_id()
-        self.assertIn('uom_id', res['domain'])
-        self.acct_line.price_unit = 100.0
-
-        self.contract.partner_id = False
-        with self.assertRaises(ValidationError):
-            self.contract.recurring_create_invoice()
-        self.contract.partner_id = self.partner.id
-
-        self.contract.recurring_create_invoice()
-        self.invoice_monthly = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
-        self.assertTrue(self.invoice_monthly)
-        self.assertEqual(self.contract.recurring_next_date, '2016-03-29')
-
-        self.inv_line = self.invoice_monthly.invoice_line_ids[0]
-        self.assertTrue(self.inv_line.invoice_line_tax_ids)
-        self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
-        self.assertEqual(self.contract.partner_id.user_id,
-                         self.invoice_monthly.user_id)
