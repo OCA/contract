@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+
+
+<record id="sale_agreement_form" model="ir.ui.view">
+    <field name="name">sale.agreement.form</field>
+    <field name="model">sale.agreement</field>
+    <field name="inherit_id" ref="agreement_account.sale_agreement_form"/>
+    <field name="arch" type="xml">
+        <group name="invoices" position="after">
+            <group name="sale_orders" string="Sales Orders">
+                <field name="sale_ids" nolabel="1"/>
+            </group>
+        </group>
+    </field>
+</record>
+
+
+</odoo>

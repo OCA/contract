@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+
+
+<record id="invoice_form" model="ir.ui.view">
+    <field name="name">sale.agreement.account.invoice.form</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page/group/group/field[@name='name']" position="after">
+            <field name="sale_agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id)]"
+                context="{'default_partner_id': commercial_partner_id}"/>
+            <field name="commercial_partner_id" invisible="1"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="view_account_invoice_filter" model="ir.ui.view">
+    <field name="name">sale.agreement.account.invoice.search</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+    <field name="arch" type="xml">
+        <group expand="0" position="inside">
+            <filter string="Sale Agreements" name="sale_agreement_groupby"
+                context="{'group_by': 'sale_agreement_id'}"/>
+        </group>
+    </field>
+</record>
+
+
+</odoo>
