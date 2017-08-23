@@ -89,14 +89,22 @@ class AccountAnalyticInvoiceLine(models.Model):
                                self.uom_id.category_id.id):
             vals['uom_id'] = self.product_id.uom_id
 
-        date = (
-            self.analytic_account_id.recurring_next_date or
-            fields.Datetime.now()
-        )
+        try:
+            date = (
+                self.analytic_account_id.recurring_next_date or
+                fields.Datetime.now()
+            )
+        except AttributeError:
+            date = fields.Datetime.now()
+
+        try:
+            partner = self.analytic_account_id.partner_id
+        except AttributeError:
+            partner = self.env.user.partner_id
 
         product = self.product_id.with_context(
-            lang=self.analytic_account_id.partner_id.lang,
-            partner=self.analytic_account_id.partner_id.id,
+            lang=partner.lang,
+            partner=partner.id,
             quantity=self.quantity,
             date=date,
             pricelist=self.analytic_account_id.pricelist_id.id,
