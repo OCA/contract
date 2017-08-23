@@ -89,7 +89,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                                self.uom_id.category_id.id):
             vals['uom_id'] = self.product_id.uom_id
 
-        if self.analytic_account_id._name == 'account.analytic.invoice.line':
+        if self.analytic_account_id._name == 'account.analytic.account':
             date = (
                 self.analytic_account_id.recurring_next_date or
                 fields.Datetime.now()
