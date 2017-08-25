@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
@@ -227,8 +227,9 @@ class AccountAnalyticAccount(models.Model):
         contract, but there are certain values that can be obtained from all
         of them (for example, the origin field).
 
-        :param: self: Recordset of contract(s).
-        :returns: Dictionary of values for invoice creation.
+        :param self: Recordset of contract(s).
+        :returns: Values for invoice creation.
+        :rtype: dict
         """
         contract = self[:1]
         if not contract.partner_id:
@@ -283,14 +284,12 @@ class AccountAnalyticAccount(models.Model):
             new_date = old_date + self.get_relalive_delta(
                 contract.recurring_rule_type, contract.recurring_interval,
             )
-            ctx = self.env.context.copy()
-            ctx.update({
-                'old_date': old_date,
-                'next_date': new_date,
+            obj = self.with_context(
+                old_date=old_date,
+                next_date=new_date,
                 # For correct evaluating of domain access rules + properties
-                'force_company': contract.company_id.id,
-            })
-            obj = self.with_context(ctx)
+                force_company=contract.company_id.id,
+            )
             for line in contract.recurring_invoice_line_ids:
                 invoice_line_vals = obj._prepare_invoice_line(line, invoice.id)
                 self.env['account.invoice.line'].create(invoice_line_vals)

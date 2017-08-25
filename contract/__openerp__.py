@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
-# © 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2015-2017 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
