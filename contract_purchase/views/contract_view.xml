@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="account_analytic_account_type" model="ir.ui.view">
+            <field name="name">account.analytic.account.type</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form" />
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="code"]' position='before'>
+                    <field name="type"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_purchase_overdue_all" model="ir.actions.act_window">
+            <field name="name">Contracts</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'purchase')]</field>
+            <field name="context">{
+                'search_default_active':1,
+                'search_default_recurring_invoices':1,
+                'default_type': 'purchase'
+            }</field>
+            <!--<field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new purchase contract.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_account_analytic_purchase_overdue_all"
+            id="menu_action_account_analytic_purchase_overdue_all" sequence="8"
+            parent="purchase.menu_procurement_management"/>
+    </data>
+</openerp>
