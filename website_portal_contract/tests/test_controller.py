@@ -19,3 +19,11 @@ class TestController(HttpCase):
             ready="%s.tours.test_contract_view.ready" % tour,
             login='portal',
         )
+
+    def test_template_view(self):
+        """ It should respond with 200 status """
+        response = self.url_open('/contract/template/1')
+        self.assertEquals(
+            response.getcode(),
+            200,
+        )

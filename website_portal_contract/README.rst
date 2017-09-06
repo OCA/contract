@@ -9,6 +9,11 @@ Website Portal Contract
 Extension of contract and website_portal that allows contracts to
 be shown in website portal. Each contract now has a website template tied to it.
 
+Usage
+=====
+
+`Usage Video <https://youtu.be/PSulRVdh4C4>`_
+
 To edit the website template, go to:
 
 * `Invoicing` in the top navigation.
@@ -24,9 +29,6 @@ to a contract and go to:
 * Click on your username then select `My Account` in the dropdown.
 * Click `Your Contracts`, then the relevant contract. Your template will show under
   the `Contract` section header, which is also shown in the edit template view for reference.
-
-Usage
-=====
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
