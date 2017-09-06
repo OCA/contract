@@ -6,7 +6,7 @@
 # Copyright 2015-2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class AccountAnalyticContract(models.Model):
@@ -25,6 +25,12 @@ class AccountAnalyticContract(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner (always False)",
+    )
+    contract_type = fields.Selection(
+        selection=[
+            ('sale', _('Sale')),
+            ('purchase', _('Purchase')),
+        ], default='sale'
     )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
@@ -64,7 +70,7 @@ class AccountAnalyticContract(models.Model):
         'account.journal',
         string='Journal',
         default=lambda s: s._default_journal(),
-        domain="[('type', '=', 'sale'),('company_id', '=', company_id)]",
+        domain="[('company_id', '=', company_id)]",
     )
     company_id = fields.Many2one(
         'res.company',
@@ -72,6 +78,13 @@ class AccountAnalyticContract(models.Model):
         required=True,
         default=lambda self: self.env.user.company_id,
     )
+
+    @api.onchange('contract_type')
+    def _onchange_contract_type(self):
+        self.journal_id = self.env['account.journal'].search([
+            ('type', '=', self.contract_type),
+            ('company_id', '=', self.company_id.id)
+        ], limit=1)
 
     @api.model
     def _default_journal(self):
