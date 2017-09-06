@@ -138,3 +138,9 @@ class TestContract(SavepointCase):
     def test_send_mail_contract(self):
         result = self.contract.action_contract_send()
         self.assertEqual(result['name'], 'Compose Email')
+
+    def test_onchange_contract_type(self):
+        self.contract._onchange_contract_type()
+        self.assertEqual(self.contract.journal_id.type, 'sale')
+        self.assertEqual(
+            self.contract.journal_id.company_id, self.contract.company_id)

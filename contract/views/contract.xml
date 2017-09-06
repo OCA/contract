@@ -24,6 +24,16 @@
                         <button name="action_contract_send" type="object" string="Send by Email" groups="base.group_user"/>
                     </header>
                 </xpath>
+                <xpath expr='//field[@name="code"]' position='before'>
+                    <field name="contract_type"/>
+                </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="domain">[('customer', '=', True)]</attribute>
+                    <attribute name="context">{
+                        'default_customer': True,
+                        'default_supplier': False
+                    }</attribute>
+                </field>
                 <notebook position="before">
                     <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
                     <div>
@@ -53,7 +63,7 @@
                     <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <field name="recurring_invoice_line_ids">
                             <tree string="Account Analytic Lines" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="product_id" domain="[('sale_ok', '=', True)]"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id"/>
@@ -107,7 +117,7 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain"/> <!-- This is for resetting the field when migrating from v8 -->
+            <field name="domain">[('contract_type', '=', 'sale')]</field>
             <field name="context">{'search_default_active':1, 'search_default_recurring_invoices':1}</field>
             <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
             <field name="help" type="html">
