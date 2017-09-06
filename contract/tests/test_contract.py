@@ -233,6 +233,12 @@ class TestContract(TestContractBase):
         result = self.contract.action_contract_send()
         self.assertEqual(result['res_model'], 'mail.compose.message')
 
+    def test_onchange_contract_type(self):
+        self.contract._onchange_contract_type()
+        self.assertEqual(self.contract.journal_id.type, 'sale')
+        self.assertEqual(
+            self.contract.journal_id.company_id, self.contract.company_id)
+
     def test_contract_onchange_product_id_domain_blank(self):
         """It should return a blank UoM domain when no product."""
         line = self.env['account.analytic.contract.line'].new()
