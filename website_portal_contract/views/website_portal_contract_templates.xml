@@ -48,7 +48,7 @@
                     <t t-foreach="contracts" t-as="contract">
                         <tr>
                             <td>
-                                <a t-attf-href="/contract/#{contract.id}?#{keep_query()}"><t t-esc="contract.display_name" /></a>
+                                <a t-attf-href="/contract/#{slug(contract)}"><t t-esc="contract.display_name" /></a>
                             </td>
                             <td>
                                 <span t-field="contract.debit" />

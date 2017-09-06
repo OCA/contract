@@ -4,28 +4,29 @@
 odoo.define('website_portal_contract.tour_test_contract', function(require) {
     'use strict';
 
-    var tour = require('web_tour.tour');
     var base = require('web_editor.base');
-    var website = require('website.website');
+    var _t = require('web.core')._t;
+    var tour = require('web_tour.tour');
 
     tour.register(
         'test_contract_view',
         {
+            test: true,
             url: '/my/home',
             name: 'Test website portal contract view',
-            test: true
+            wait_for: base.ready()
         },
         [
             {
-                content: 'Click on Your Contracts',
+                content: _t('Click on Your Contracts'),
                 trigger: "a:contains('Your Contracts')"
             },
             {
-                content: 'Click on Demo Project',
+                content: _t('Click on Demo Project'),
                 trigger: "a:contains('Demo Contract - Demo Portal User')"
             },
             {
-                content: 'Click History',
+                content: _t('Click History'),
                 trigger: "a:contains('History')"
             }
         ]
