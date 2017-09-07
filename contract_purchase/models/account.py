@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2015 Angel Moya <angel.moya@domatix.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# © 2017 Stefan Becker <s.becker@humanilog.org>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from openerp import api, fields, models, _
