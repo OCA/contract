@@ -15,12 +15,12 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _prepare_invoice(self):
-        self.ensure_one()
+        contract = self[:1]
 
-        if self.type == 'purchase':
+        if contract.type == 'purchase':
             journal = self.env['account.journal'].search([
                 ('type', '=', 'purchase'),
-                ('company_id', '=', self.company_id.id)
+                ('company_id', '=', contract.company_id.id)
             ], limit=1)
 
             res = super(
@@ -31,7 +31,6 @@ class AccountAnalyticAccount(models.Model):
             )._prepare_invoice()
 
             res.update({
-                'journal_id': journal.id,
                 'type': 'in_invoice'
             })
 
