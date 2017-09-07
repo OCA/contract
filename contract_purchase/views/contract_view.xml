@@ -1,14 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="account_analytic_account_type" model="ir.ui.view">
-            <field name="name">account.analytic.account.type</field>
+        <record id="account_analytic_account_purchase_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.purchase.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_account_form" />
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr='//field[@name="code"]' position='before'>
-                    <field name="type"/>
-                </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="string">Vendor</attribute>
+                    <attribute name="domain">[('supplier', '=', True)]</attribute>
+                    <attribute name="context">{
+                        'default_customer': False,
+                        'default_supplier': True
+                    }</attribute>
+                </field>
+                <field name="product_id" position="attributes">
+                    <attribute name="domain">[('purchase_ok', '=', True)]</attribute>
+                </field>
             </field>
         </record>
 
@@ -17,6 +27,10 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree'}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('account_analytic_account_purchase_form')})
+            ]"/>
             <field name="domain">[('type', '=', 'purchase')]</field>
             <field name="context">{
                 'search_default_active':1,

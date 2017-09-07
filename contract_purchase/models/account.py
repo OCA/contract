@@ -39,22 +39,6 @@ class AccountAnalyticAccount(models.Model):
 
         return res
 
-    def fields_get(
-            self, cr, user, allfields=None, context=None, write_access=True,
-            attributes=None
-    ):
-        if not context:
-            context = {}
-
-        res = super(AccountAnalyticAccount, self).fields_get(
-            cr, user, allfields, context, write_access, attributes)
-        if all((
-                'partner_id' in res,
-                context.get('default_type') == 'contract_purchase'
-        )):
-            res['partner_id']['string'] = _("Vendor")
-        return res
-
     @api.onchange('type')
     def onchange_type(self):
         if self.type == 'purchase':
