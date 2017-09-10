@@ -4,7 +4,7 @@
 
 {
     'name': u'Agreement (Sale)',
-    'summary': "Link a sale agreement to a sale order and copy to invoice",
+    'summary': "Link an agreement to a sale order and copy to invoice",
     'version': '10.0.1.0.0',
     'category': 'Contract',
     'author': "Akretion,Odoo Community Association (OCA)",
@@ -16,7 +16,7 @@
         ],
     'data': [
         'views/sale_order.xml',
-        'views/sale_agreement.xml',
+        'views/agreement.xml',
         ],
     'installable': True,
     'auto_install': True,

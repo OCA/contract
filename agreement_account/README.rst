@@ -6,34 +6,35 @@
 Agreement (Account)
 ===================
 
-This module adds a *Sale Agreement* object with the following properties:
+This module adds an *Agreement* object with the following properties:
 
-* link to a customer,
+* type (*Sale* or *Purchase*),
+* link to a partner,
 * name,
 * code,
 * signature date.
 
-You can link a customer invoice to a sale agreement.
+You can link an invoice to an agreement.
 
-If you also install the module *agreement_sale*, you will be able to link a quotation/sale order to an agreement, and this information will be copied to the invoice.
+If you also install the module *agreement_sale*, you will be able to link a quotation/sale order to an agreement, and this information will be copied to the customer invoice.
 
-A *Sale Agreement* can be used for:
+An *Agreement* can be used for:
 
 * Private business contracts
 * Public markets
 
-It will allow you to group all the orders and invoices related to the same agreement and display the references of this agreement on the documents where you have to display it. For example, the *code* property of the sale agreement is used in the module *account_invoice_factur-x* (from the `edi <https://github.com/OCA/edi>`_ project) in the XML tag */CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/ContractReferencedDocument/IssuerAssignedID*.
+It will allow you to group all the orders and invoices related to the same agreement and display the references of this agreement on the documents where you have to display it. For example, the *code* property of the agreement is used in the module *account_invoice_factur-x* (from the `edi <https://github.com/OCA/edi>`_ project) in the XML tag */CrossIndustryInvoice/SupplyChainTradeTransaction/ApplicableHeaderTradeAgreement/ContractReferencedDocument/IssuerAssignedID*.
 
 The main differences with the *Contract* object of Odoo:
 
-* a contract is an analytic account; a sale agreement is not related to analytic accounting.
-* on the invoice, the contract/analytic account is per-line; a sale agreement is attached to the invoice (not to the lines).
-* a sale agreement is a very simple object with just a few basic fields; a contract has a lot of properties and a lot of related features.
+* a contract is an analytic account; an agreement is not related to analytic accounting.
+* on the invoice, the contract/analytic account is per-line; an agreement is attached to the invoice (not to the lines).
+* an agreement is a very simple object with just a few basic fields; a contract has a lot of properties and a lot of related features.
 
 Configuration
 =============
 
-Go to the menu *Accounting > Configuration > Management > Sale Agreements* to create new agreements.
+Go to the menu *Accounting > Configuration > Management > Agreements* to create new agreements.
 
 Usage
 =====

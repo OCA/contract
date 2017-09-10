@@ -6,9 +6,9 @@
 from odoo import models, fields
 
 
-class SaleAgreement(models.Model):
-    _inherit = 'sale.agreement'
+class Agreement(models.Model):
+    _inherit = 'agreement'
 
     sale_ids = fields.One2many(
-        'sale.order', 'sale_agreement_id', string='Sale Orders', readonly=True,
+        'sale.order', 'agreement_id', string='Sale Orders', readonly=True,
         domain=[('state', 'not in', ('draft', 'sent', 'cancel'))])

@@ -4,7 +4,7 @@
 
 {
     'name': u'Agreement (Account)',
-    'summary': "Adds a sale agreement object linked to a customer invoice",
+    'summary': "Adds an agreement object linked to an invoice",
     'version': '10.0.1.0.0',
     'category': 'Contract',
     'author': "Akretion,Odoo Community Association (OCA)",
@@ -13,8 +13,8 @@
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
-        'security/sale_agreement_security.xml',
-        'views/sale_agreement.xml',
+        'security/agreement_security.xml',
+        'views/agreement.xml',
         'views/account_invoice.xml',
         ],
     'demo': ['demo/demo.xml'],

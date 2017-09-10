@@ -8,27 +8,41 @@
 
 
 <record id="invoice_form" model="ir.ui.view">
-    <field name="name">sale.agreement.account.invoice.form</field>
+    <field name="name">agreement.customer.invoice.form</field>
     <field name="model">account.invoice</field>
     <field name="inherit_id" ref="account.invoice_form"/>
     <field name="arch" type="xml">
         <xpath expr="//page/group/group/field[@name='name']" position="after">
-            <field name="sale_agreement_id"
-                domain="[('partner_id', 'child_of', commercial_partner_id)]"
-                context="{'default_partner_id': commercial_partner_id}"/>
+            <field name="agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('type', '=', 'sale')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_type': 'sale'}"/>
+            <field name="commercial_partner_id" invisible="1"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="invoice_supplier_form" model="ir.ui.view">
+    <field name="name">agreement.supplier.invoice.form</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_supplier_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page/group/group/field[@name='company_id']" position="after">
+            <field name="agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('type', '=', 'purchase')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_type': 'purchase'}"/>
             <field name="commercial_partner_id" invisible="1"/>
         </xpath>
     </field>
 </record>
 
 <record id="view_account_invoice_filter" model="ir.ui.view">
-    <field name="name">sale.agreement.account.invoice.search</field>
+    <field name="name">agreement.account.invoice.search</field>
     <field name="model">account.invoice</field>
     <field name="inherit_id" ref="account.view_account_invoice_filter"/>
     <field name="arch" type="xml">
         <group expand="0" position="inside">
-            <filter string="Sale Agreements" name="sale_agreement_groupby"
-                context="{'group_by': 'sale_agreement_id'}"/>
+            <filter string="Agreement" name="agreement_groupby"
+                context="{'group_by': 'agreement_id'}"/>
         </group>
     </field>
 </record>

@@ -6,25 +6,32 @@
 from odoo import models, fields
 
 
-class SaleAgreement(models.Model):
-    _name = 'sale.agreement'
-    _description = 'Sale Agreement'
+class Agreement(models.Model):
+    _name = 'agreement'
+    _description = 'Agreement'
 
     code = fields.Char(
         string='Code', required=True, copy=False)
     name = fields.Char(string='Name', required=True)
+    type = fields.Selection([
+        ('sale', 'Sale'),
+        ('purchase', 'Purchase'),
+        ], string='Type', required=True)
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', ondelete='restrict', required=True,
-        domain=[('customer', '=', True), ('parent_id', '=', False)])
+        'res.partner', string='Partner', ondelete='restrict', required=True,
+        domain=[('parent_id', '=', False)])
     company_id = fields.Many2one(
         'res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get(
-            'sale.agreement'))
+            'agreement'))
     active = fields.Boolean(string='Active', default=True)
     signature_date = fields.Date(string='Signature Date')
-    invoice_ids = fields.One2many(
-        'account.invoice', 'sale_agreement_id', string='Invoices',
-        readonly=True)
+    out_invoice_ids = fields.One2many(
+        'account.invoice', 'agreement_id', string='Customer Invoices',
+        readonly=True, domain=[('type', 'in', ('out_invoice', 'out_refund'))])
+    in_invoice_ids = fields.One2many(
+        'account.invoice', 'agreement_id', string='Supplier Invoices',
+        readonly=True, domain=[('type', 'in', ('in_invoice', 'in_refund'))])
 
     def name_get(self):
         res = []
@@ -38,5 +45,5 @@ class SaleAgreement(models.Model):
     _sql_constraints = [(
         'code_partner_company_unique',
         'unique(code, partner_id, company_id)',
-        'This sale agreement code already exists for this customer!'
+        'This agreement code already exists for this partner!'
         )]

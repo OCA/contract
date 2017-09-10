@@ -9,8 +9,8 @@ from odoo import models, fields, api
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    sale_agreement_id = fields.Many2one(
-        'sale.agreement', string='Sale Agreement', ondelete='restrict',
+    agreement_id = fields.Many2one(
+        'agreement', string='Agreement', ondelete='restrict',
         readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='onchange')
 
@@ -21,6 +21,6 @@ class AccountInvoice(models.Model):
         values = super(AccountInvoice, self)._prepare_refund(
             invoice, date_invoice=date_invoice, date=date,
             description=description, journal_id=journal_id)
-        if invoice.sale_agreement_id:
-            values['sale_agreement_id'] = invoice.sale_agreement_id.id
+        if invoice.agreement_id:
+            values['agreement_id'] = invoice.agreement_id.id
         return values

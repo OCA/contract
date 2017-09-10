@@ -7,12 +7,12 @@
 <odoo>
 
 
-<record id="sale_agreement_form" model="ir.ui.view">
-    <field name="name">sale.agreement.form</field>
-    <field name="model">sale.agreement</field>
-    <field name="inherit_id" ref="agreement_account.sale_agreement_form"/>
+<record id="agreement_form" model="ir.ui.view">
+    <field name="name">agreement.form</field>
+    <field name="model">agreement</field>
+    <field name="inherit_id" ref="agreement_account.agreement_form"/>
     <field name="arch" type="xml">
-        <group name="invoices" position="after">
+        <group name="in_invoices" position="after">
             <group name="sale_orders" string="Sales Orders">
                 <field name="sale_ids" nolabel="1"/>
             </group>

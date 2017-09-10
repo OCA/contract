@@ -8,25 +8,25 @@
 
 
 <record id="view_order_form" model="ir.ui.view">
-    <field name="name">sale.agreement.sale.order.form</field>
+    <field name="name">agreement.sale.order.form</field>
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale_commercial_partner.view_order_form"/>
     <field name="arch" type="xml">
         <field name="client_order_ref" position="after">
-            <field name="sale_agreement_id"
-                domain="[('partner_id', 'child_of', commercial_partner_id)]"
-                context="{'default_partner_id': commercial_partner_id}"/>
+            <field name="agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('type', '=', sale')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_type', 'sale'}"/>
         </field>
     </field>
 </record>
 
 <record id="view_sales_order_filter" model="ir.ui.view">
-    <field name="name">sale.agreement.sale.order.search</field>
+    <field name="name">agreement.sale.order.search</field>
     <field name="model">sale.order</field>
     <field name="inherit_id" ref="sale.view_sales_order_filter"/>
     <field name="arch" type="xml">
         <group expand="0" position="inside">
-            <filter string="Sale Agreement" name="sale_agreement_groupby" context="{'group_by': 'sale_agreement_id'}"/>
+            <filter string="Agreement" name="agreement_groupby" context="{'group_by': 'agreement_id'}"/>
         </group>
     </field>
 </record>

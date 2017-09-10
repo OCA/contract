@@ -9,12 +9,12 @@ from odoo import models, fields
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    sale_agreement_id = fields.Many2one(
-        'sale.agreement', string='Sale Agreement', ondelete='restrict',
+    agreement_id = fields.Many2one(
+        'agreement', string='Agreement', ondelete='restrict',
         track_visibility='onchange', readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
 
     def _prepare_invoice(self):
         vals = super(SaleOrder, self)._prepare_invoice()
-        vals['sale_agreement_id'] = self.sale_agreement_id.id or False
+        vals['agreement_id'] = self.agreement_id.id or False
         return vals
