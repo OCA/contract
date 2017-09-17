@@ -23,14 +23,14 @@
                 <field name="partner_id"/>
                 <field name="name"/>
                 <field name="code"/>
-                <field name="type"/>
+                <field name="agreement_type"/>
                 <field name="signature_date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </group>
-            <group string="Customer Invoices" name="out_invoices" attrs="{'invisible': [('type', '!=', 'sale')]}">
+            <group string="Customer Invoices" name="out_invoices" attrs="{'invisible': [('agreement_type', '!=', 'sale')]}">
                 <field name="out_invoice_ids" nolabel="1"/>
             </group>
-            <group string="Supplier Invoices" name="in_invoices" attrs="{'invisible': [('type', '!=', 'purchase')]}">
+            <group string="Supplier Invoices" name="in_invoices" attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
                 <field name="in_invoice_ids" nolabel="1"/>
             </group>
         </form>
@@ -45,7 +45,7 @@
             <field name="partner_id"/>
             <field name="code"/>
             <field name="name"/>
-            <field name="type"/>
+            <field name="agreement_type"/>
             <field name="signature_date"/>
             <field name="company_id" groups="base.group_multi_company"/>
         </tree>
@@ -59,8 +59,8 @@
         <search string="Search Agreements">
             <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Name or Number"/>
             <field name="partner_id"/>
-            <filter name="sale" string="Sale" domain="[('type', '=', 'sale')]"/>
-            <filter name="purchase" string="Purchase" domain="[('type', '=', 'purchase')]"/>
+            <filter name="sale" string="Sale" domain="[('agreement_type', '=', 'sale')]"/>
+            <filter name="purchase" string="Purchase" domain="[('agreement_type', '=', 'purchase')]"/>
             <separator/>
             <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
             <group name="groupby">
@@ -68,8 +68,8 @@
                     context="{'group_by': 'partner_id'}"/>
                 <filter name="signature_date_groupby" string="Signature Date"
                     context="{'group_by': 'signature_date'}"/>
-                <filter name="type_groupby" string="Type"
-                    context="{'group_by': 'type'}"/>
+                <filter name="agreement_type_groupby" string="Type"
+                    context="{'group_by': 'agreement_type'}"/>
             </group>
         </search>
     </field>

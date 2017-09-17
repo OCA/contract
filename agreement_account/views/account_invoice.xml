@@ -14,8 +14,8 @@
     <field name="arch" type="xml">
         <xpath expr="//page/group/group/field[@name='name']" position="after">
             <field name="agreement_id"
-                domain="[('partner_id', 'child_of', commercial_partner_id), ('type', '=', 'sale')]"
-                context="{'default_partner_id': commercial_partner_id, 'default_type': 'sale'}"/>
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'sale')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'sale'}"/>
             <field name="commercial_partner_id" invisible="1"/>
         </xpath>
     </field>
@@ -28,8 +28,8 @@
     <field name="arch" type="xml">
         <xpath expr="//page/group/group/field[@name='company_id']" position="after">
             <field name="agreement_id"
-                domain="[('partner_id', 'child_of', commercial_partner_id), ('type', '=', 'purchase')]"
-                context="{'default_partner_id': commercial_partner_id, 'default_type': 'purchase'}"/>
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
             <field name="commercial_partner_id" invisible="1"/>
         </xpath>
     </field>

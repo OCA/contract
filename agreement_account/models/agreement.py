@@ -13,7 +13,7 @@ class Agreement(models.Model):
     code = fields.Char(
         string='Code', required=True, copy=False)
     name = fields.Char(string='Name', required=True)
-    type = fields.Selection([
+    agreement_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
         ], string='Type', required=True)
