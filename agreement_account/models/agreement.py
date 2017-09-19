@@ -10,9 +10,8 @@ class Agreement(models.Model):
     _name = 'agreement'
     _description = 'Agreement'
 
-    code = fields.Char(
-        string='Code', required=True, copy=False)
-    name = fields.Char(string='Name', required=True)
+    code = fields.Char(required=True, copy=False)
+    name = fields.Char(required=True)
     agreement_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
@@ -24,8 +23,8 @@ class Agreement(models.Model):
         'res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get(
             'agreement'))
-    active = fields.Boolean(string='Active', default=True)
-    signature_date = fields.Date(string='Signature Date')
+    active = fields.Boolean(default=True)
+    signature_date = fields.Date()
     out_invoice_ids = fields.One2many(
         'account.invoice', 'agreement_id', string='Customer Invoices',
         readonly=True, domain=[('type', 'in', ('out_invoice', 'out_refund'))])
