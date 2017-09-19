@@ -6,7 +6,7 @@
 
 {
     'name': 'Contracts Management recurring',
-    'version': '9.0.1.2.1',
+    'version': '9.0.1.3.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA,"
@@ -22,6 +22,7 @@
         'data/contract_template.xml',
         'views/contract.xml',
         'views/account_invoice_view.xml',
+        'views/res_partner_view.xml',
     ],
     'installable': True,
 }

@@ -11,7 +11,10 @@ class TestContract(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestContract, cls).setUpClass()
-        cls.partner = cls.env.ref('base.res_partner_2')
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Partner test',
+            'customer': True,
+        })
         cls.product = cls.env.ref('product.product_product_2')
         cls.product.description_sale = 'Test description sale'
         cls.contract = cls.env['account.analytic.account'].create({
@@ -42,10 +45,13 @@ class TestContract(SavepointCase):
         self.assertIn('uom_id', res['domain'])
         self.contract_line.price_unit = 100.0
 
+        self.assertEqual(self.partner.contract_count, 1)
         self.contract.partner_id = False
         with self.assertRaises(ValidationError):
             self.contract.recurring_create_invoice()
+        self.assertEqual(self.partner.contract_count, 0)
         self.contract.partner_id = self.partner.id
+        self.assertEqual(self.partner.contract_count, 1)
 
         new_invoice = self.contract.recurring_create_invoice()
         self.assertTrue(new_invoice)
