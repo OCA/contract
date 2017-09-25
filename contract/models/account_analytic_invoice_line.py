@@ -3,7 +3,7 @@
 # © 2014 Angel Moya <angel.moya@domatix.com>
 # © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
-# Copyright 2016 LasLabs Inc.
+# Copyright 2016-2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -16,23 +16,44 @@ class AccountAnalyticInvoiceLine(models.Model):
     _name = 'account.analytic.invoice.line'
 
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True)
+        'product.product',
+        string='Product',
+        required=True,
+    )
     analytic_account_id = fields.Many2one(
-        'account.analytic.account', string='Analytic Account')
-    name = fields.Text(string='Description', required=True)
-    quantity = fields.Float(default=1.0, required=True)
+        'account.analytic.account',
+        string='Analytic Account',
+        required=True,
+        ondelete='cascade',
+    )
+    name = fields.Text(
+        string='Description',
+        required=True,
+    )
+    quantity = fields.Float(
+        default=1.0,
+        required=True,
+    )
     uom_id = fields.Many2one(
-        'product.uom', string='Unit of Measure', required=True)
-    price_unit = fields.Float('Unit Price', required=True)
+        'product.uom',
+        string='Unit of Measure',
+        required=True,
+    )
+    price_unit = fields.Float(
+        'Unit Price',
+        required=True,
+    )
     price_subtotal = fields.Float(
         compute='_compute_price_subtotal',
         digits=dp.get_precision('Account'),
-        string='Sub Total')
+        string='Sub Total',
+    )
     discount = fields.Float(
         string='Discount (%)',
         digits=dp.get_precision('Discount'),
         help='Discount that is applied in generated invoices.'
-             ' It should be less or equal to 100')
+             ' It should be less or equal to 100',
+    )
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
@@ -68,14 +89,20 @@ class AccountAnalyticInvoiceLine(models.Model):
                                self.uom_id.category_id.id):
             vals['uom_id'] = self.product_id.uom_id
 
-        date = (
-            self.analytic_account_id.recurring_next_date or
-            fields.Datetime.now()
-        )
+        if self.analytic_account_id._name == 'account.analytic.account':
+            date = (
+                self.analytic_account_id.recurring_next_date or
+                fields.Datetime.now()
+            )
+            partner = self.analytic_account_id.partner_id
+
+        else:
+            date = fields.Datetime.now()
+            partner = self.env.user.partner_id
 
         product = self.product_id.with_context(
-            lang=self.analytic_account_id.partner_id.lang,
-            partner=self.analytic_account_id.partner_id.id,
+            lang=partner.lang,
+            partner=partner.id,
             quantity=self.quantity,
             date=date,
             pricelist=self.analytic_account_id.pricelist_id.id,
