@@ -20,7 +20,7 @@ This module is part of the OCA/web suite.
 Configuration
 =============
 
-#. Go to *Sales > Sales > Contracts* and print a contract order. Signature
+#. Go to **Sales > Sales > Contracts** and print a contract order. Signature
    will be added to contract report.
 
 Usage
