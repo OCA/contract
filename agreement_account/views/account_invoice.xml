@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+
+
+<record id="invoice_form" model="ir.ui.view">
+    <field name="name">agreement.customer.invoice.form</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page/group/group/field[@name='name']" position="after">
+            <field name="agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'sale')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'sale'}"/>
+            <field name="commercial_partner_id" invisible="1"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="invoice_supplier_form" model="ir.ui.view">
+    <field name="name">agreement.supplier.invoice.form</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_supplier_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page/group/group/field[@name='company_id']" position="after">
+            <field name="agreement_id"
+                domain="[('partner_id', 'child_of', commercial_partner_id), ('agreement_type', '=', 'purchase')]"
+                context="{'default_partner_id': commercial_partner_id, 'default_agreement_type': 'purchase'}"/>
+            <field name="commercial_partner_id" invisible="1"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="view_account_invoice_filter" model="ir.ui.view">
+    <field name="name">agreement.account.invoice.search</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+    <field name="arch" type="xml">
+        <group expand="0" position="inside">
+            <filter string="Agreement" name="agreement_groupby"
+                context="{'group_by': 'agreement_id'}"/>
+        </group>
+    </field>
+</record>
+
+
+</odoo>
