@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
+        <field name="name">account.analytic.account.invoice.recurring.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_start']" position="after">
+                <field name="website_template_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
