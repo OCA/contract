@@ -26,9 +26,10 @@
         "views/website_portal_contract_templates.xml",
     ],
     "demo": [
-        "demo/account_analytic_invoice_line_demo.xml",
+        # Load order must be `contract => account => invoice line`
         "demo/account_analytic_contract_demo.xml",
         "demo/account_analytic_account_demo.xml",
+        "demo/account_analytic_invoice_line_demo.xml",
         "demo/assets_demo.xml",
     ],
 }
