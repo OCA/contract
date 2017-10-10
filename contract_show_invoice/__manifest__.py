@@ -7,6 +7,7 @@
     'name': 'Contract Show Invoice',
     'summary': 'Button in contracts to show their invoices',
     'version': '10.0.1.0.1',
+    'license': 'AGPL-3',
     'author': 'Domatix,'
               'Tecnativa,'
               'Odoo Community Association (OCA)',
