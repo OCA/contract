@@ -5,4 +5,4 @@
 from . import test_account_analytic_account
 from . import test_account_analytic_contract_template
 from . import test_account_analytic_contract
-from . import test_controller
+from . import test_ui
