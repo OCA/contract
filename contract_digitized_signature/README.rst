@@ -17,12 +17,6 @@ This module depends on :
 
 This module is part of the OCA/web suite.
 
-Configuration
-=============
-
-#. Go to **Sales > Sales > Contracts** and print a contract order. Signature
-   will be added to contract report.
-
 Usage
 =====
 
@@ -33,7 +27,7 @@ Usage
    changes on it.
 #. You can clear signature in any moment by clicking on the **Clear** link
    located on the top right side of signature box.
-#. If you print Contract, signature was added to contact report .
+#. If you print the Contract, signature was added to contact report.
 
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
