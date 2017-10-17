@@ -10,7 +10,7 @@ This module allows access to contracts for sale employees without account
 permissions.
 
 Employees in sale security group "User: Only Own Documents", can only access
- contracts created by themselves.
+contracts created by themselves.
 
 Usage
 =====
@@ -21,7 +21,7 @@ Usage
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/contract/10.0
+   :target: https://runbot.odoo-community.org/runbot/110/10.0
 
 Bug Tracker
 ===========

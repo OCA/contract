@@ -10,7 +10,7 @@
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'sale',
+        'sales_team',
         'contract',
     ],
     'data': [
@@ -20,4 +20,5 @@
     ],
     'license': 'AGPL-3',
     'installable': True,
+    'auto_install': True,
 }
