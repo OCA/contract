@@ -24,6 +24,7 @@ addon | version | summary
 [agreement_account](agreement_account/) | 10.0.1.0.0 | Adds an agreement object linked to an invoice
 [agreement_sale](agreement_sale/) | 10.0.1.0.0 | Link an agreement to a sale order and copy to invoice
 [contract](contract/) | 10.0.2.1.0 | Contracts Management - Recurring
+[contract_payment_auto](contract_payment_auto/) | 10.0.1.0.0 | Adds automatic payments to contracts.
 [contract_payment_mode](contract_payment_mode/) | 10.0.1.0.1 | Payment mode in contracts and their invoices
 [contract_show_invoice](contract_show_invoice/) | 10.0.1.0.0 | Button in contracts to show their invoices
 [contract_variable_quantity](contract_variable_quantity/) | 10.0.1.1.0 | Variable quantity in contract recurrent invoicing
