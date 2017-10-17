@@ -18,7 +18,7 @@ invoice recurring lines that you want.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/110/9.0
+   :target: https://runbot.odoo-community.org/runbot/110/10.0
 
 Bug Tracker
 ===========
@@ -34,14 +34,15 @@ Credits
 Contributors
 ------------
 
-* Pedro M. Baeza <pedro.baeza@tecnativa.com>
-* Vicent Cubells <vicent.cubells@tecnativa.com>
+* Tecnativa (https://www.tecnativa.com)
+    * Pedro M. Baeza <pedro.baeza@tecnativa.com>
+    * Vicent Cubells <vicent.cubells@tecnativa.com>
 
 Icon
 ----
 
 * https://openclipart.org/detail/125071/pie-graph
-* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>_ from
+* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>`_ from
   www.flaticon.com
 
 Maintainer

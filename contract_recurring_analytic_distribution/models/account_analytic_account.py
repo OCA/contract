@@ -3,7 +3,7 @@
 # Copyright 2017 Tecnativa - Vicent Cubells
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
-from openerp import models, fields, api
+from odoo import api, fields, models
 
 
 class AccountAnalyticAccount(models.Model):
@@ -26,5 +26,6 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     analytic_distribution_id = fields.Many2one(
         comodel_name='account.analytic.distribution',
-        string='Analytic Distribution', oldname='analytics_id',
+        string='Analytic Distribution',
+        oldname='analytics_id',
     )

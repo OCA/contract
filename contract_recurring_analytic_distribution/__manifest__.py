@@ -5,11 +5,11 @@
 
 {
     'name': 'Analytic plans on contracts recurring invoices',
-    'version': '9.0.1.0.0',
+    'version': '10.0.1.0.0',
     'category': 'Contract Management',
     'author': 'Tecnativa, '
               'Odoo Community Association (OCA)',
-    'website': 'http://www.tecnativa.com',
+    'website': 'https://github.com/OCA/contract/',
     'license': 'AGPL-3',
     'depends': [
         'account_analytic_distribution',
