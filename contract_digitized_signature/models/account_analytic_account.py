@@ -12,10 +12,8 @@ class AccountAnalyticAccount(models.Model):
     customer_signature = fields.Binary(
         string='Customer acceptance',
     )
-    signature_name = fields.Many2one(
-        comodel_name='res.partner',
+    signature_name = fields.Char(
         string='Signed by',
-        domain="['|',('customer','=',True),('employee','=',True)]",
     )
 
     @api.model
