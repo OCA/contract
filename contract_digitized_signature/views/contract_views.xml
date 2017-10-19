@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
+        <field name="name">account.analytic.account.invoice.recurring.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="user_id"/>
+                <field name="signature_name"/>
+            </field>
+            <xpath expr="//group[@name='group_legend']" position="after">
+                <div class="oe_clear"/>
+                <label for="customer_signature" class="oe_edit_only"/>
+                <field name="customer_signature" widget="signature"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
