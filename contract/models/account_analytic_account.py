@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016-2017 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -29,7 +29,12 @@ class AccountAnalyticAccount(models.Model):
         inverse_name='analytic_account_id',
         copy=True,
     )
-    date_start = fields.Date(default=fields.Date.context_today)
+    date_start = fields.Date(
+        default=fields.Date.context_today,
+        string='Date Start')
+    date_end = fields.Date(
+        index=True,
+        string='Date End')
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically',
     )
@@ -219,9 +224,14 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def cron_recurring_create_invoice(self):
-        contracts = self.search(
-            [('recurring_next_date', '<=', fields.date.today()),
-             ('recurring_invoices', '=', True)])
+        today = fields.date.today()
+        contracts = self.search([
+            ('recurring_invoices', '=', True),
+            ('recurring_next_date', '<=', today),
+            '|',
+            ('date_end', '=', False),
+            ('date_end', '>=', today),
+        ])
         return contracts.recurring_create_invoice()
 
     @api.multi
