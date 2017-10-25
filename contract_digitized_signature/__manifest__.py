@@ -4,7 +4,7 @@
 
 {
     "name": "Contract Digitized Signature",
-    "version": "9.0.1.0.0",
+    "version": "10.0.1.0.0",
     "author": "Tecnativa, "
               "Odoo Community Association (OCA)",
     "website": "https://www.tecnativa.com",
