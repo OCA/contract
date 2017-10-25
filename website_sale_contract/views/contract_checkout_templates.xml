@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <template id="contract_checkout_step"
+              name="Contract Checkout Step"
+              inherit_id="website_sale.wizard_checkout"
+              >
+        <xpath expr="//li[@id='step40']" position="before">
+            <!-- New Section -->
+            <li id="step32" t-att-class="(step==32 and 'text-primary') or 'text-muted'">
+                <t t-if="step &gt; 32 and step &lt; 50">
+                    <a href="/shop/checkout/contract" class="text-success">
+                        Contracts <span class="chevron" />
+                    </a>
+                </t>
+                <t t-if="not (step &gt; 32 and step &lt; 50)">
+                    Contracts <span class="chevron" />
+                </t>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Complete page of the contract -->
+    <template id="contract_checkout" name="Contract Checkout">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <body data-spy="scroll" data-target=".navspy" data-offset="50">
+                    <div class="container o_website_quote">
+                        <div class="row mt16">
+                            <div class="col-xs-12">
+                                <t t-call="website_sale.wizard_checkout">
+                                    <t t-set="step" t-value="32" />
+                                </t>
+                            </div>
+                        </div>
+                        <div class="row mt16">
+                            <!-- Sidebar -->
+                            <div class="col-md-3 hidden-print">
+                                <div class="bs-sidebar">
+                                    <div class="text-center" style="padding: 10px">
+                                        <div class="mt8 bs-header">
+                                            <t t-if="contract.accepted">
+                                                <a class="btn btn-info btn-block" data-toggle="modal" data-target="#modalContractAccept">
+                                                    Re-Do Signature
+                                                </a>
+                                            </t>
+                                            <t t-if="not contract.accepted">
+                                                <a class="btn btn-info btn-block" data-toggle="modal" data-target="#modalContractAccept">
+                                                    Sign Contract
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <hr class="mt0 mb0" />
+                                    <t t-call="website_sale_contract.contract_navigation_menu" />
+                                    <hr class="mt0 mb0" style="padding-bottom: 0" />
+                                    <div class="bs-footer row">
+                                        <div class="col-xs-6">
+                                            <t t-if="contract.previous_contract_id">
+                                                <a t-attf-href="#{contract.previous_contract_id.website_url}" type="button" class="btn btn-link">
+                                                    Previous Contract
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <a t-attf-href="/shop/checkout" type="button" class="btn btn-link">
+                                                    Back
+                                                </a>
+                                            </t>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <t t-if="contract.next_contract_id and contract.accepted">
+                                                <a t-attf-href="#{contract.next_contract_id.website_url}" type="button" class="btn btn-link pull-right">
+                                                    Next Contract
+                                                </a>
+                                            </t>
+                                            <t t-if="not contract.next_contract_id and contract.accepted">
+                                                <a t-attf-href="/shop/payment" type="button" class="btn btn-link pull-right">
+                                                    Next Step
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="contract_content" class="col-md-9 mb64 mt16">
+                                <div class="alert alert-danger alert-dismissable" t-if="message==1">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                    Unable to process contract signature submission.
+                                </div>
+                                <div class="alert alert-warning alert-dismissable" t-if="message==2">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                    You must accept this contract first.
+                                </div>
+                                <div class="alert alert-success alert-dismissable" t-if="message==3">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                    This contract has been accepted.
+                                </div>
+                                <!-- Page content -->
+                                <t t-call="website_sale_contract.contract_info" />
+                                <div class="modal fade" id="modalContractAccept" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form id="contractAccept"
+                                            method="POST" t-att-data-contract-id="contract.id" t-att-data-token="contract.access_token"
+                                            class="js_accept_json modal-content js_website_submit_form">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                                                <h4 class="modal-title">Validate Order</h4>
+                                            </div>
+                                            <div class="modal-body" id="contract-sign-dialog">
+                                                <p>
+                                                    <span>
+                                                        I agree that by signing this contract, I
+                                                        have read the terms and accept them on behalf of
+                                                        <b t-field="contract.partner_id.commercial_partner_id" />.
+                                                    </span>
+                                                </p>
+                                                <div id="signer" class="form-group">
+                                                    <label class="control-label" for="signatoryName">Your Name:</label>
+                                                    <input type="text" name="signer" id="signatoryName" class="form-control"/>
+                                                </div>
+                                                <div class="panel panel-default mt16 mb0" id="contractSignature">
+                                                    <div class="panel-heading">
+                                                        <div class="pull-right">
+                                                            <a id="contractSignClean" class="btn btn-xs">Clear</a>
+                                                        </div>
+                                                        <strong>Draw your signature</strong>
+                                                    </div>
+                                                    <div id="drawContractSign" class="panel-body" style="padding: 0"/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div t-if="not acquirers">
+                                                    <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button> or
+                                                    <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+            </div>
+        </t>
+    </template>
+
+    <template id="contract_info" name="Contract Info">
+        <h1 class="mb32 page-header" style="margin-top: 0">
+            Contract Details
+        </h1>
+        <section>
+            <div class="row mb16">
+                <div class="col-xs-4">
+                    <label>Related Product</label>
+                    <div>
+                        <a t-attf-href="#{contract.product_id.website_url}" t-esc="contract.product_id.name"
+                           type="button" class="btn btn-link" style="padding: 0; margin: 0;"
+                           target="blank" />
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <label>Contract Fee</label>
+                    <div>
+                        <span t-field="contract.contract_fee"
+                                t-options='{"widget": "monetary", "display_currency": website.currency_id}'  />
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <label>Invoices Repeat Every</label>
+                    <div>
+                        <span t-field="contract_template.recurring_interval" />
+                        <span t-field="contract_template.recurring_rule_type" />
+                        <span t-field="contract_template.recurring_invoicing_type" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <t t-if="contract_template.recurring_invoice_line_ids">
+            <section>
+                <table class="table wq-table">
+                    <thead>
+                        <tr>
+                            <th style="padding-left: 0;">Contract Invoices</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="contract_template.recurring_invoice_line_ids" t-as="invoice">
+                            <tr>
+                                <td style="padding-left: 0;">
+                                    <span t-field="invoice.display_name" />
+                                </td>
+                                <td>
+                                    <span t-field="invoice.quantity" t-options='{"widget": "integer"}' />
+                                </td>
+                                <td>
+                                    <span t-field="invoice.price_subtotal"
+                                          t-options='{"widget": "monetary", "display_currency": website.currency_id}'  />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </section>
+        </t>
+        <div t-field="contract.website_template_id.website_description"
+             class="oe_no_empty" />
+        <div class="oe_structure" />
+    </template>
+
+    <template id="contract_navigation_menu" name="Navigation Menu">
+        <div class="navspy" t-ignore="true" role="complementary">
+            <ul class="nav bs-sidenav" data-id="quote_sidebar" />
+        </div>
+    </template>
+
+</odoo>
