@@ -7,32 +7,31 @@ python:
 
 addons:
   apt:
-# only add the two lines below if you need wkhtmltopdf for your tests
-#    sources:
-#      - pov-wkhtmltopdf
+    sources:
+      - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
       - python-lxml  # because pip installation is slow
       - python-simplejson
       - python-serial
       - python-yaml
-#      - wkhtmltopdf  # only add if needed and check the before_install section below
+      - wkhtmltopdf
 
 # set up an X server to run wkhtmltopdf.
-#before_install:
-#  - "export DISPLAY=:910.0"
-#  - "sh -e /etc/init.d/xvfb start"
+before_install:
+  - "export DISPLAY=:910.0"
+  - "sh -e /etc/init.d/xvfb start"
 
 env:
   global:
   - VERSION="10.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
   - TRANSIFEX_USER='transbot@odoo-community.org'
+  - WKHTMLTOPDF_VERSION="0.12.4"
   - secure: ArnbVaF5+ry6zVysZ7HA9xcnQrodo8FsXXcon9yINTYRfDC9QEr+/mTLAPRl+lVLdtWV2GuGuX0vPYzBxFWpY3LR0BpKqXzx0G51s94zR2WWEmizYFzFhpAuIxoU4CYNckHFSUaPAQJhwB/pYx9+H/W6bMjG/VnZBq+AmBJ2Kh0=
 
   matrix:
   - LINT_CHECK="1"
   - TESTS="1" ODOO_REPO="odoo/odoo"
-  - TESTS="1" ODOO_REPO="odoo/odoo" UNIT_TEST="1"
   - TESTS="1" ODOO_REPO="OCA/OCB"
   - TRANSIFEX="1"
 

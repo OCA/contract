@@ -23,6 +23,12 @@ class AccountAnalyticAccount(models.Model):
         string='Contract Template',
         comodel_name='account.analytic.contract',
     )
+    recurring_invoice_line_ids = fields.One2many(
+        string='Invoice Lines',
+        comodel_name='account.analytic.invoice.line',
+        inverse_name='analytic_account_id',
+        copy=True,
+    )
     date_start = fields.Date(default=fields.Date.context_today)
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically',
@@ -32,19 +38,37 @@ class AccountAnalyticAccount(models.Model):
         copy=False,
         string='Date of Next Invoice',
     )
+    user_id = fields.Many2one(
+        comodel_name='res.users',
+        string='Responsible',
+        index=True,
+        default=lambda self: self.env.user,
+    )
 
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
-        """ It updates contract fields with that of the template """
+        """Update the contract fields with that of the template.
+
+        Take special consideration with the `recurring_invoice_line_ids`,
+        which must be created using the data from the contract lines. Cascade
+        deletion ensures that any errant lines that are created are also
+        deleted.
+        """
+
         contract = self.contract_template_id
+
         for field_name, field in contract._fields.iteritems():
-            if any((
+
+            if field.name == 'recurring_invoice_line_ids':
+                lines = self._convert_contract_lines(contract)
+                self.recurring_invoice_line_ids = lines
+
+            elif not any((
                 field.compute, field.related, field.automatic,
                 field.readonly, field.company_dependent,
                 field.name in self.NO_SYNC,
             )):
-                continue
-            self[field_name] = self.contract_template_id[field_name]
+                self[field_name] = self.contract_template_id[field_name]
 
     @api.onchange('recurring_invoices')
     def _onchange_recurring_invoices(self):
@@ -54,6 +78,15 @@ class AccountAnalyticAccount(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist.id
+
+    @api.multi
+    def _convert_contract_lines(self, contract):
+        self.ensure_one()
+        new_lines = []
+        for contract_line in contract.recurring_invoice_line_ids:
+            vals = contract_line._convert_to_write(contract_line.read()[0])
+            new_lines.append((0, 0, vals))
+        return new_lines
 
     @api.model
     def get_relative_delta(self, recurring_rule_type, interval):
@@ -190,3 +223,30 @@ class AccountAnalyticAccount(models.Model):
             [('recurring_next_date', '<=', fields.date.today()),
              ('recurring_invoices', '=', True)])
         return contracts.recurring_create_invoice()
+
+    @api.multi
+    def action_contract_send(self):
+        self.ensure_one()
+        template = self.env.ref(
+            'contract.email_contract_template',
+            False,
+        )
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        ctx = dict(
+            default_model='account.analytic.account',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            default_composition_mode='comment',
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }

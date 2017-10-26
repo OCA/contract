@@ -1,55 +1,69 @@
 # -*- coding: utf-8 -*-
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2016 Tecnativa - Carlos Dauden
+# Copyright 2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests import common
 
 
-class TestContract(TransactionCase):
-    # Use case : Prepare some data for current test case
-    def setUp(self):
-        super(TestContract, self).setUp()
-        self.partner = self.env.ref('base.res_partner_2')
-        self.product = self.env.ref('product.product_product_2')
-        self.product.taxes_id += self.env['account.tax'].search(
+class TestContractBase(common.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestContractBase, cls).setUpClass()
+        cls.partner = cls.env.ref('base.res_partner_2')
+        cls.product = cls.env.ref('product.product_product_2')
+        cls.product.taxes_id += cls.env['account.tax'].search(
             [('type_tax_use', '=', 'sale')], limit=1)
-        self.product.description_sale = 'Test description sale'
-        self.template_vals = {
+        cls.product.description_sale = 'Test description sale'
+        cls.template_vals = {
             'recurring_rule_type': 'yearly',
             'recurring_interval': 12345,
             'name': 'Test Contract Template',
         }
-        self.template = self.env['account.analytic.contract'].create(
-            self.template_vals,
+        cls.template = cls.env['account.analytic.contract'].create(
+            cls.template_vals,
         )
-        self.contract = self.env['account.analytic.account'].create({
+        cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Test Contract',
-            'partner_id': self.partner.id,
-            'pricelist_id': self.partner.property_product_pricelist.id,
+            'partner_id': cls.partner.id,
+            'pricelist_id': cls.partner.property_product_pricelist.id,
             'recurring_invoices': True,
             'date_start': '2016-02-15',
             'recurring_next_date': '2016-02-29',
         })
-        self.contract_line = self.env['account.analytic.invoice.line'].create({
-            'analytic_account_id': self.contract.id,
-            'product_id': self.product.id,
+        cls.line_vals = {
+            'analytic_account_id': cls.contract.id,
+            'product_id': cls.product.id,
             'name': 'Services from #START# to #END#',
             'quantity': 1,
-            'uom_id': self.product.uom_id.id,
+            'uom_id': cls.product.uom_id.id,
             'price_unit': 100,
             'discount': 50,
-        })
+        }
+        cls.acct_line = cls.env['account.analytic.invoice.line'].create(
+            cls.line_vals,
+        )
+
+
+class TestContract(TestContractBase):
+    def _add_template_line(self, overrides=None):
+        if overrides is None:
+            overrides = {}
+        vals = self.line_vals.copy()
+        vals['analytic_account_id'] = self.template.id
+        vals.update(overrides)
+        return self.env['account.analytic.contract.line'].create(vals)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
-            self.contract_line.write({'discount': 120})
+            self.acct_line.write({'discount': 120})
 
     def test_contract(self):
-        self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
-        res = self.contract_line._onchange_product_id()
+        self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
+        res = self.acct_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
-        self.contract_line.price_unit = 100.0
+        self.acct_line.price_unit = 100.0
 
         self.contract.partner_id = False
         with self.assertRaises(ValidationError):
@@ -122,10 +136,10 @@ class TestContract(TransactionCase):
 
     def test_uom(self):
         uom_litre = self.env.ref('product.product_uom_litre')
-        self.contract_line.uom_id = uom_litre.id
-        self.contract_line._onchange_product_id()
-        self.assertEqual(self.contract_line.uom_id,
-                         self.contract_line.product_id.uom_id)
+        self.acct_line.uom_id = uom_litre.id
+        self.acct_line._onchange_product_id()
+        self.assertEqual(self.acct_line.uom_id,
+                         self.acct_line.product_id.uom_id)
 
     def test_onchange_product_id(self):
         line = self.env['account.analytic.invoice.line'].new()
@@ -134,8 +148,8 @@ class TestContract(TransactionCase):
 
     def test_no_pricelist(self):
         self.contract.pricelist_id = False
-        self.contract_line.quantity = 2
-        self.assertAlmostEqual(self.contract_line.price_subtotal, 100.0)
+        self.acct_line.quantity = 2
+        self.assertAlmostEqual(self.acct_line.price_subtotal, 100.0)
 
     def test_check_journal(self):
         contract_no_journal = self.contract.copy()
@@ -146,7 +160,7 @@ class TestContract(TransactionCase):
             contract_no_journal.recurring_create_invoice()
 
     def test_onchange_contract_template_id(self):
-        """ It should change the contract values to match the template. """
+        """It should change the contract values to match the template."""
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
         res = {
@@ -155,3 +169,66 @@ class TestContract(TransactionCase):
         }
         del self.template_vals['name']
         self.assertDictEqual(res, self.template_vals)
+
+    def test_onchange_contract_template_id_lines(self):
+        """It should create invoice lines for the contract lines."""
+
+        self.acct_line.unlink()
+        self.line_vals['analytic_account_id'] = self.template.id
+        self.env['account.analytic.contract.line'].create(self.line_vals)
+        self.contract.contract_template_id = self.template
+
+        self.assertFalse(self.contract.recurring_invoice_line_ids,
+                         'Recurring lines were not removed.')
+
+        self.contract._onchange_contract_template_id()
+        del self.line_vals['analytic_account_id']
+
+        self.assertEqual(len(self.contract.recurring_invoice_line_ids), 1)
+
+        for key, value in self.line_vals.items():
+            test_value = self.contract.recurring_invoice_line_ids[0][key]
+            try:
+                test_value = test_value.id
+            except AttributeError:
+                pass
+            self.assertEqual(test_value, value)
+
+    def test_send_mail_contract(self):
+        result = self.contract.action_contract_send()
+        self.assertEqual(result['res_model'], 'mail.compose.message')
+
+    def test_contract_onchange_product_id_domain_blank(self):
+        """It should return a blank UoM domain when no product."""
+        line = self.env['account.analytic.contract.line'].new()
+        res = line._onchange_product_id()
+        self.assertFalse(res['domain']['uom_id'])
+
+    def test_contract_onchange_product_id_domain(self):
+        """It should return UoM category domain."""
+        line = self._add_template_line()
+        res = line._onchange_product_id()
+        self.assertEqual(
+            res['domain']['uom_id'][0],
+            ('category_id', '=', self.product.uom_id.category_id.id),
+        )
+
+    def test_contract_onchange_product_id_uom(self):
+        """It should update the UoM for the line."""
+        line = self._add_template_line(
+            {'uom_id': self.env.ref('product.product_uom_litre').id}
+        )
+        line.product_id.uom_id = self.env.ref('product.product_uom_day').id
+        line._onchange_product_id()
+        self.assertEqual(line.uom_id,
+                         line.product_id.uom_id)
+
+    def test_contract_onchange_product_id_name(self):
+        """It should update the name for the line."""
+        line = self._add_template_line()
+        line.product_id.description_sale = 'Test'
+        line._onchange_product_id()
+        self.assertEqual(line.name,
+                         '\n'.join([line.product_id.name,
+                                    line.product_id.description_sale,
+                                    ]))

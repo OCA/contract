@@ -20,6 +20,11 @@ class TestSaleOrder(TransactionCase):
         self.product.product_tmpl_id.is_contract = True
         self.product.product_tmpl_id.contract_template_id = self.contract.id
 
+    def tearDown(self):
+        self.env['account.analytic.account']._revert_method(
+            'create',
+        )
+
     def test_action_done(self):
         """ It should create a contract when the sale for a contract is set
         to done for the first time """

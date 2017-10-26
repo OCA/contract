@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+
+
+<record id="agreement_form" model="ir.ui.view">
+    <field name="name">agreement.form</field>
+    <field name="model">agreement</field>
+    <field name="arch" type="xml">
+        <form string="Agreement">
+            <div class="oe_button_box" name="button_box">
+                <button name="toggle_active" type="object"
+                    class="oe_stat_button" icon="fa-archive">
+                    <field name="active" widget="boolean_button"
+                        options='{"terminology": "archive"}'/>
+                </button>
+            </div>
+            <group name="main">
+                <field name="partner_id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="agreement_type"/>
+                <field name="signature_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </group>
+            <group string="Customer Invoices" name="out_invoices" attrs="{'invisible': [('agreement_type', '!=', 'sale')]}">
+                <field name="out_invoice_ids" nolabel="1"/>
+            </group>
+            <group string="Supplier Invoices" name="in_invoices" attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
+                <field name="in_invoice_ids" nolabel="1"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="agreement_tree" model="ir.ui.view">
+    <field name="name">agreement.tree</field>
+    <field name="model">agreement</field>
+    <field name="arch" type="xml">
+        <tree string="Agreements">
+            <field name="partner_id"/>
+            <field name="code"/>
+            <field name="name"/>
+            <field name="agreement_type"/>
+            <field name="signature_date"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+        </tree>
+    </field>
+</record>
+
+<record id="agreement_search" model="ir.ui.view">
+    <field name="name">agreement.search</field>
+    <field name="model">agreement</field>
+    <field name="arch" type="xml">
+        <search string="Search Agreements">
+            <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Name or Number"/>
+            <field name="partner_id"/>
+            <filter name="sale" string="Sale" domain="[('agreement_type', '=', 'sale')]"/>
+            <filter name="purchase" string="Purchase" domain="[('agreement_type', '=', 'purchase')]"/>
+            <separator/>
+            <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            <group name="groupby">
+                <filter name="partner_groupby" string="Customer"
+                    context="{'group_by': 'partner_id'}"/>
+                <filter name="signature_date_groupby" string="Signature Date"
+                    context="{'group_by': 'signature_date'}"/>
+                <filter name="agreement_type_groupby" string="Type"
+                    context="{'group_by': 'agreement_type'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="agreement_action" model="ir.actions.act_window">
+    <field name="name">Agreements</field>
+    <field name="res_model">agreement</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="agreement_menu" action="agreement_action"
+    parent="account.account_management_menu" sequence="100"/>
+
+</odoo>

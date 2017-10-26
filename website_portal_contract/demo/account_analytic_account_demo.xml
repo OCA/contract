@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2017 LasLabs Inc.
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record id="account_analytic_account_1" model="account.analytic.account">
+        <field name="name">Demo Contract</field>
+        <field name="contract_template_id" ref="account_analytic_contract_1" />
+        <field name="pricelist_id" ref="product.list0" />
+        <field name="date_start" eval="time.strftime('%Y-%m-10')" />
+        <field name="recurring_next_date" eval="time.strftime('%Y-%m-20')" />
+        <field name="partner_id" ref="portal.demo_user0_res_partner" />
+        <field name="recurring_invoices" eval="True" />
+        <field name="website_template_id" ref="website_contract_template_default" />
+    </record>
+
+</odoo>
