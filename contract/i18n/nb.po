@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: contract (9.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-10 00:48+0000\n"
-"PO-Revision-Date: 2017-08-11 11:54+0000\n"
+"POT-Creation-Date: 2017-10-20 02:51+0000\n"
+"PO-Revision-Date: 2017-09-22 21:58+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/oca/OCA-contract-9-0/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,11 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "        "
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_partner_contract_count
+msgid "# of Contracts"
 msgstr ""
 
 #. module: contract
@@ -146,7 +151,7 @@ msgid "Click to create a new contract."
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:318
+#: code:addons/contract/models/contract.py:347
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -159,9 +164,11 @@ msgid "Contract"
 msgstr ""
 
 #. module: contract
+#: model:ir.actions.act_window,name:contract.act_res_partner_2_contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:contract.menu_action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:contract.menu_config_contract
+#: model:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Contracts"
 msgstr ""
 
@@ -206,7 +213,7 @@ msgid "Discount (%)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:60
+#: code:addons/contract/models/contract.py:59
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr ""
@@ -299,7 +306,17 @@ msgid "Next Invoice"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:236
+#: model:ir.model,name:contract.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
+msgid "Partner and dependents"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/contract.py:245
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr ""
@@ -401,7 +418,7 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:228
+#: code:addons/contract/models/contract.py:237
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""

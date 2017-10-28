@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: contract (9.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-26 00:42+0000\n"
-"PO-Revision-Date: 2017-08-22 20:51+0000\n"
+"POT-Creation-Date: 2017-10-20 02:51+0000\n"
+"PO-Revision-Date: 2017-10-19 14:55+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/oca/OCA-contract-9-0/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,11 @@ msgid ""
 "</div>\n"
 "        "
 msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hola ${object.partner_id.name or ''},</p>\n    <p>Se ha creado un nuevo contrato: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Contrato: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Fecha de inicio del contrato: ${object.date_start or ''}<br />\n\n       % if object.user_id:\n       &nbsp;&nbsp;Contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Contrato%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si tiene cualquier pregunta, no dude en contactarnos.</p>\n    <p>Gracias por elegir ${object.company_id.name or 'nos'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono :&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n        "
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_partner_contract_count
+msgid "# of Contracts"
+msgstr ""
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
@@ -160,9 +165,11 @@ msgid "Contract"
 msgstr "Contrato"
 
 #. module: contract
+#: model:ir.actions.act_window,name:contract.act_res_partner_2_contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:contract.menu_action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:contract.menu_config_contract
+#: model:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Contracts"
 msgstr "Contratos"
 
@@ -298,6 +305,16 @@ msgstr "Último día del mes(es)"
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
 msgstr "Próxima factura"
+
+#. module: contract
+#: model:ir.model,name:contract.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
+msgid "Partner and dependents"
+msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract.py:245
