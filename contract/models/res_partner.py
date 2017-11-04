@@ -9,8 +9,9 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     contract_count = fields.Integer(
+        string='Contracts',
         compute='_compute_contract_count',
-        string='Contracts')
+    )
 
     def _compute_contract_count(self):
         Contract = self.env['account.analytic.account']
@@ -38,6 +39,8 @@ class ResPartner(models.Model):
                 search_default_recurring_invoices=True,
                 search_default_not_finished=True,
                 default_partner_id=self.id,
-                default_recurring_invoices=True),
-            domain=[('partner_id', '=', self.id)])
+                default_recurring_invoices=True,
+            ),
+            domain=[('partner_id', '=', self.id)],
+        )
         return res

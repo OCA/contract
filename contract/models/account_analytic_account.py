@@ -30,11 +30,13 @@ class AccountAnalyticAccount(models.Model):
         copy=True,
     )
     date_start = fields.Date(
+        string='Date Start',
         default=fields.Date.context_today,
-        string='Date Start')
+    )
     date_end = fields.Date(
+        string='Date End',
         index=True,
-        string='Date End')
+    )
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically',
     )
@@ -203,9 +205,19 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def recurring_create_invoice(self):
+        """
+        Create invoices from contracts
+        :return: invoices created
+        """
+        invoices = self.env['account.invoice']
         for contract in self:
-            old_date = fields.Date.from_string(
-                contract.recurring_next_date or fields.Date.today())
+            ref_date = contract.recurring_next_date or fields.Date.today()
+            if (contract.date_start > ref_date or
+                    contract.date_end and contract.date_end < ref_date):
+                raise ValidationError(
+                    _("You must review start and end dates!\n%s") %
+                    contract.name)
+            old_date = fields.Date.from_string(ref_date)
             new_date = old_date + self.get_relative_delta(
                 contract.recurring_rule_type, contract.recurring_interval)
             ctx = self.env.context.copy()
@@ -216,15 +228,15 @@ class AccountAnalyticAccount(models.Model):
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
-            contract.with_context(ctx)._create_invoice()
+            invoices |= contract.with_context(ctx)._create_invoice()
             contract.write({
                 'recurring_next_date': new_date.strftime('%Y-%m-%d')
             })
-        return True
+        return invoices
 
     @api.model
     def cron_recurring_create_invoice(self):
-        today = fields.date.today()
+        today = fields.Date.today()
         contracts = self.search([
             ('recurring_invoices', '=', True),
             ('recurring_next_date', '<=', today),
