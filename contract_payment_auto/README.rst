@@ -24,13 +24,19 @@ Automatic Payment Settings
 
 The following settings are available at both the contract and contract template level:
 
-| Name | Description |
-|------|-------------|
-| Invoice Message | Message template that is used to send invoices to customers upon creation. |
-| Payment Retry Message | Message template that is used to alert a customer that their automatic payment failed for some reason and will be retried. |
-| Payment Fail Message | Message template that is used to alert a customer that their automatic payment failed and will no longer be retried. |
-| Auto Pay Retries | Amount of times to attempt an automatic payment before discontinuing and removing the payment token from the contract/account payment method. |
-| Auto Pay Retry Hours | Amount of hours that should lapse until retrying failed payments. |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Name                  | Description                                                                                                                                   |
++=======================+===============================================================================================================================================+
+| Invoice Message       | Message template that is used to send invoices to customers upon creation.                                                                    |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Payment Retry Message | Message template that is used to alert a customer that their automatic payment failed for some reason and will be retried.                    |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Payment Fail Message  | Message template that is used to alert a customer that their automatic payment failed and will no longer be retried.                          |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Auto Pay Retries      | Amount of times to attempt an automatic payment before discontinuing and removing the payment token from the contract/account payment method. |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
+| Auto Pay Retry Hours  | Amount of hours that should lapse until retrying failed payments.                                                                             |
++-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+
 
 Payment Token
 -------------
