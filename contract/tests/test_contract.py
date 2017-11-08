@@ -3,6 +3,7 @@
 # Copyright 2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 
@@ -232,3 +233,37 @@ class TestContract(TestContractBase):
                          '\n'.join([line.product_id.name,
                                     line.product_id.description_sale,
                                     ]))
+
+    def test_contract_count(self):
+        """It should return contract count."""
+        count = self.partner.contract_count + 2
+        self.contract.copy()
+        self.contract.copy()
+        self.assertEqual(self.partner.contract_count, count)
+
+    def test_date_end(self):
+        """It should don't create invoices from finished contract."""
+        AccountInvoice = self.env['account.invoice']
+        self.contract.date_end = '2015-12-31'
+        with self.assertRaises(ValidationError):
+            self.contract.recurring_create_invoice()
+        init_count = AccountInvoice.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.contract.cron_recurring_create_invoice()
+        last_count = AccountInvoice.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.assertEqual(last_count, init_count)
+
+    def test_same_date_start_and_date_end(self):
+        """It should create one invoice with same start and end date."""
+        AccountInvoice = self.env['account.invoice']
+        self.contract.date_start = self.contract.date_end = fields.Date.today()
+        self.contract.recurring_next_date = self.contract.date_start
+        init_count = AccountInvoice.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.contract.cron_recurring_create_invoice()
+        last_count = AccountInvoice.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.assertEqual(last_count, init_count + 1)
+        with self.assertRaises(ValidationError):
+            self.contract.recurring_create_invoice()
