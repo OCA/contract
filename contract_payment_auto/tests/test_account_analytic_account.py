@@ -13,8 +13,9 @@ from odoo.tests import common
 from ..models import account_analytic_account
 
 
+@common.at_install(False)
+@common.post_install(True)
 class TestAccountAnalyticAccount(common.HttpCase):
-
     def setUp(self):
         super(TestAccountAnalyticAccount, self).setUp()
         self.Model = self.env['account.analytic.account']
