@@ -2,27 +2,28 @@
 # © 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests import common
+import odoo.tests
 from odoo import exceptions
 
 
-class TestContractVariableQuantity(common.SavepointCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestContractVariableQuantity, cls).setUpClass()
-        cls.partner = cls.env['res.partner'].create({
+@odoo.tests.at_install(False)
+@odoo.tests.post_install(True)
+class TestContractVariableQuantity(odoo.tests.HttpCase):
+    def setUp(self):
+        super(TestContractVariableQuantity, self).setUp()
+        self.partner = self.env['res.partner'].create({
             'name': 'Test partner',
         })
-        cls.product = cls.env['product.product'].create({
+        self.product = self.env['product.product'].create({
             'name': 'Test product',
         })
-        cls.contract = cls.env['account.analytic.account'].create({
+        self.contract = self.env['account.analytic.account'].create({
             'name': 'Test Contract',
-            'partner_id': cls.partner.id,
-            'pricelist_id': cls.partner.property_product_pricelist.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.partner.property_product_pricelist.id,
             'recurring_invoices': True,
         })
-        cls.formula = cls.env['contract.line.qty.formula'].create({
+        self.formula = self.env['contract.line.qty.formula'].create({
             'name': 'Test formula',
             # For testing each of the possible variables
             'code': 'env["res.users"]\n'
@@ -33,14 +34,14 @@ class TestContractVariableQuantity(common.SavepointCase):
                     'invoice.id\n'
                     'result = 12',
         })
-        cls.contract_line = cls.env['account.analytic.invoice.line'].create({
-            'analytic_account_id': cls.contract.id,
-            'product_id': cls.product.id,
+        self.contract_line = self.env['account.analytic.invoice.line'].create({
+            'analytic_account_id': self.contract.id,
+            'product_id': self.product.id,
             'name': 'Test',
             'qty_type': 'variable',
-            'qty_formula_id': cls.formula.id,
+            'qty_formula_id': self.formula.id,
             'quantity': 1,
-            'uom_id': cls.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'price_unit': 100,
             'discount': 50,
         })
