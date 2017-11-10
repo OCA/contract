@@ -4,11 +4,13 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import odoo.tests
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
 
 
-class TestContractInvoice(TransactionCase):
+@odoo.tests.at_install(False)
+@odoo.tests.post_install(True)
+class TestContractInvoice(odoo.tests.HttpCase):
     # Use case : Prepare some data for current test case
 
     def setUp(self):
