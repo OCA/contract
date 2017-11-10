@@ -4,42 +4,44 @@
 # Copyright 2017 Tecnativa - David Vidal
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests import common
+import odoo.tests
 from ..hooks import post_init_hook
 
 
-class TestContractPaymentInit(common.SavepointCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestContractPaymentInit, cls).setUpClass()
+@odoo.tests.post_install(True)
+@odoo.tests.at_install(False)
+class TestContractPaymentInit(odoo.tests.HttpCase):
 
-        cls.payment_method = cls.env['account.payment.method'].create({
+    def setUp(self):
+        super(TestContractPaymentInit, self).setUp()
+
+        self.payment_method = self.env['account.payment.method'].create({
             'name': 'Test Payment Method',
             'code': 'Test',
             'payment_type': 'inbound',
         })
-        cls.payment_mode = cls.env['account.payment.mode'].create({
+        self.payment_mode = self.env['account.payment.mode'].create({
             'name': 'Test payment mode',
             'active': True,
-            'payment_method_id': cls.payment_method.id,
+            'payment_method_id': self.payment_method.id,
             'bank_account_link': 'variable',
         })
-        cls.partner = cls.env['res.partner'].create({
+        self.partner = self.env['res.partner'].create({
             'name': 'Test contract partner',
-            'customer_payment_mode_id': cls.payment_mode,
+            'customer_payment_mode_id': self.payment_mode,
         })
-        cls.product = cls.env['product.product'].create({
+        self.product = self.env['product.product'].create({
             'name': 'Custom Service',
             'type': 'service',
-            'uom_id': cls.env.ref('product.product_uom_hour').id,
-            'uom_po_id': cls.env.ref('product.product_uom_hour').id,
+            'uom_id': self.env.ref('product.product_uom_hour').id,
+            'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'sale_ok': True,
         })
-        cls.contract = cls.env['account.analytic.account'].create({
+        self.contract = self.env['account.analytic.account'].create({
             'name': 'Maintenance of Servers',
         })
-        company = cls.env.ref('base.main_company')
-        cls.journal = cls.env['account.journal'].create({
+        company = self.env.ref('base.main_company')
+        self.journal = self.env['account.journal'].create({
             'name': 'Sale Journal - Test',
             'code': 'HRTSJ',
             'type': 'sale',
