@@ -206,7 +206,7 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def recurring_create_invoice(self):
         """
-        Create invoices from contracts
+        Create invoices or sales from contracts
         :return: invoices created
         """
         # NOTE: Don't use a browse because here there are 2 types of records:
