@@ -209,7 +209,10 @@ class AccountAnalyticAccount(models.Model):
         Create invoices from contracts
         :return: invoices created
         """
-        invoices = self.env['account.invoice']
+        # NOTE: Don't use a browse because here there are 2 types of records:
+        #       sale or invoice. A manual 'set' fix error of
+        #       Mixing apples and oranges: account.invoice().union(sale.order)
+        invoices = set()
         for contract in self:
             ref_date = contract.recurring_next_date or fields.Date.today()
             if (contract.date_start > ref_date or
@@ -228,7 +231,7 @@ class AccountAnalyticAccount(models.Model):
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
-            invoices |= contract.with_context(ctx)._create_invoice()
+            invoices.add(contract.with_context(ctx)._create_invoice())
             contract.write({
                 'recurring_next_date': new_date.strftime('%Y-%m-%d')
             })
