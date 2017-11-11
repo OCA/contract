@@ -17,6 +17,7 @@
         'views/account_analytic_account_view.xml',
         'views/account_analytic_contract_view.xml',
         'views/sale_view.xml',
+        'data/contract_cron.xml',
     ],
     'installable': True,
 }
