@@ -16,7 +16,7 @@ class AccountAnalyticContract(models.Model):
     NO_SYNC = [
         'name',
     ]
-    
+
     def domain_journal_id(self):
         company_id = self.env.context.get(
             'company_id', self.env.user.company_id.id)
@@ -63,7 +63,7 @@ class AccountAnalyticContract(models.Model):
         'account.journal',
         string='Journal',
         default=lambda s: s._default_journal(),
-        domain=lambda self:self.domain_journal_id(),
+        domain=lambda self: self.domain_journal_id(),
     )
 
     @api.model
