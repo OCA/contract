@@ -17,11 +17,6 @@ class AccountAnalyticContract(models.Model):
         'name',
     ]
 
-    def domain_journal_id(self):
-        company_id = self.env.context.get(
-            'company_id', self.env.user.company_id.id)
-        return [('type', '=', 'sale'), ('company_id', '=', company_id)]
-
     name = fields.Char(
         required=True,
     )
@@ -63,14 +58,16 @@ class AccountAnalyticContract(models.Model):
         'account.journal',
         string='Journal',
         default=lambda s: s._default_journal(),
-        domain=lambda self: self.domain_journal_id(),
+        domain=lambda s: s._domain_journal(),
     )
 
     @api.model
-    def _default_journal(self):
+    def _domain_journal(self):
         company_id = self.env.context.get(
             'company_id', self.env.user.company_id.id)
-        domain = [
-            ('type', '=', 'sale'),
-            ('company_id', '=', company_id)]
-        return self.env['account.journal'].search(domain, limit=1)
+        return [('type', '=', 'sale'), ('company_id', '=', company_id)]
+
+    @api.model
+    def _default_journal(self):
+        return self.env['account.journal'].search(self._domain_journal(), limit=1)
+
