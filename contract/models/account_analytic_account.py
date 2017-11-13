@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2004-2010 OpenERP SA
 # © 2014 Angel Moya <angel.moya@domatix.com>
 # © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
@@ -57,7 +56,7 @@ class AccountAnalyticAccount(models.Model):
 
         contract = self.contract_template_id
 
-        for field_name, field in contract._fields.iteritems():
+        for field_name, field in contract._fields.items():
 
             if field.name == 'recurring_invoice_line_ids':
                 lines = self._convert_contract_lines(contract)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2004-2010 OpenERP SA
 # © 2014 Angel Moya <angel.moya@domatix.com>
 # © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>

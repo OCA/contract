@@ -1,12 +1,12 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-    :alt: License: AGPL-3
+.. image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/agpl
+   :alt: License: AGPL-3
 
 =================================
 Contracts for recurrent invoicing
 =================================
 
-This module forward-port to v10 the contracts management with recurring
+This module adds the functionality of handling contracts with recurring
 invoicing functions. Also you can print and send by email contract report.
 
 In upstream Odoo, this functionality was moved into the Enterprise edition.
@@ -46,7 +46,7 @@ To use this module, you need to:
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/110/10.0
+   :target: https://runbot.odoo-community.org/runbot/110/11.0
 
 Known issues / Roadmap
 ======================
