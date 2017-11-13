@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_invoice_filter_contract" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <separator/>
+                <field name="contract_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="act_recurring_invoices" model="ir.actions.act_window">
+        <field name="context">{'search_default_contract_id':
+        [active_id],
+        'default_contract_id': active_id}
+        </field>
+        <field name="name">Invoices</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_id" ref="account.invoice_tree" />
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+    </record>
+
+</odoo>
