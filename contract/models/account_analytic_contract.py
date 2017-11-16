@@ -60,8 +60,12 @@ class AccountAnalyticContract(models.Model):
         default=lambda s: s._default_journal(),
         domain="[('type', '=', 'sale'),('company_id', '=', company_id)]",
     )
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-                                 default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.user.company_id,
+    )
 
     @api.model
     def _default_journal(self):
