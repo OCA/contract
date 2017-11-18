@@ -58,7 +58,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     sequence = fields.Integer(
         string="Sequence",
         default=10,
-        help="Sequence of the contract line when displaying contracts"
+        help="Sequence of the contract line when displaying contracts",
     )
 
     @api.multi
