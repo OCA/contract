@@ -14,6 +14,7 @@ from odoo.tools.translate import _
 
 class AccountAnalyticInvoiceLine(models.Model):
     _name = 'account.analytic.invoice.line'
+    _order = "sequence,id"
 
     product_id = fields.Many2one(
         'product.product',
@@ -53,6 +54,11 @@ class AccountAnalyticInvoiceLine(models.Model):
         digits=dp.get_precision('Discount'),
         help='Discount that is applied in generated invoices.'
              ' It should be less or equal to 100',
+    )
+    sequence = fields.Integer(
+        string="Sequence",
+        default=10,
+        help="Sequence of the contract line when displaying contracts",
     )
 
     @api.multi
