@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * contract
-#
+# 
 # Translators:
-# OCA Transbot <transbot@odoo-community.org>, 2016
+# OCA Transbot <transbot@odoo-community.org>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 19:54+0200\n"
-"PO-Revision-Date: 2017-10-23 19:58+0200\n"
-"Last-Translator: Carlos Dauden <carlos.dauden@tecnativa.com>\n"
+"POT-Creation-Date: 2017-11-21 18:22+0000\n"
+"PO-Revision-Date: 2017-11-21 18:22+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -208,13 +208,18 @@ msgid "Click to create a new contract."
 msgstr "Pinche para crear un contrato nuevo. "
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:254
+#: code:addons/contract/models/account_analytic_account.py:264
 #, python-format
 msgid "Compose Email"
 msgstr "Componer correo electrónico"
 
 #. module: contract
-#: model:ir.actions.report.xml,name:contract.report_contract
+#: model:ir.model,name:contract.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: contract
+#: model:ir.actions.report,name:contract.report_contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_analytic_account_id
 #: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
 #: model:mail.template,report_name:contract.email_contract_template
@@ -304,7 +309,7 @@ msgid "Discount (%)"
 msgstr "Descuento (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_invoice_line.py:77
+#: code:addons/contract/models/account_analytic_invoice_line.py:82
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "El descuento debería ser menor o igual a 100"
@@ -312,8 +317,12 @@ msgstr "El descuento debería ser menor o igual a 100"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line_discount
 #: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_discount
-msgid "Discount that is applied in generated invoices. It should be less or equal to 100"
-msgstr "Descuento que es aplicado en las facturas generadas. Debería ser menor o igual a 100"
+msgid ""
+"Discount that is applied in generated invoices. It should be less or equal "
+"to 100"
+msgstr ""
+"Descuento que es aplicado en las facturas generadas. Debería ser menor o "
+"igual a 100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_display_name
@@ -326,6 +335,13 @@ msgstr "Nombre mostrado"
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Finished"
 msgstr "Finalizado"
+
+#. module: contract
+#: model:ir.actions.server,name:contract.account_analytic_cron_for_invoice_ir_actions_server
+#: model:ir.cron,cron_name:contract.account_analytic_cron_for_invoice
+#: model:ir.cron,name:contract.account_analytic_cron_for_invoice
+msgid "Generate Recurring Invoices from Contracts"
+msgstr "Generar facturas recurrentes desde los contratos"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoices
@@ -404,7 +420,8 @@ msgstr "Última actualización en"
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Legend (for the markers inside invoice lines description)"
-msgstr "Leyenda (para los marcadores dentro de descripción en lineas de factura)"
+msgstr ""
+"Leyenda (para los marcadores dentro de descripción en lineas de factura)"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
@@ -430,13 +447,8 @@ msgstr "Próxima factura"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
-msgid "Valid"
-msgstr "Vigente"
-
-#. module: contract
-#: model:ir.model,name:contract.model_res_partner
-msgid "Partner"
-msgstr ""
+msgid "Partner and dependents"
+msgstr "Empresa y contactos"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:170
@@ -511,6 +523,18 @@ msgid "Send by Email"
 msgstr "Enviar por correo electrónico"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_sequence
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_line_sequence
+#: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_sequence
+msgid "Sequence of the contract line when displaying contracts"
+msgstr "Secuencia de la línea de contrato cuando se visualizan los contratos"
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
@@ -520,7 +544,8 @@ msgstr "Especifica el intervalo para la generación de facturas automática."
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_invoicing_type
 msgid "Specify if process date is 'from' or 'to' invoicing date"
-msgstr "Especifica si la fecha de proceso es desde o hasta la fecha de facturación"
+msgstr ""
+"Especifica si la fecha de proceso es desde o hasta la fecha de facturación"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_price_subtotal
@@ -546,6 +571,11 @@ msgid "VAT:"
 msgstr "NIF:"
 
 #. module: contract
+#: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
+msgid "Valid"
+msgstr "Vigente"
+
+#. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Week(s)"
@@ -564,9 +594,19 @@ msgid "You must first select a Customer for Contract %s!"
 msgstr "¡Seleccione un cliente para este contrato %s!"
 
 #. module: contract
+#: code:addons/contract/models/account_analytic_account.py:217
+#, python-format
+msgid ""
+"You must review start and end dates!\n"
+"%s"
+msgstr ""
+"Debe revisar las fechas de inicio y de fin\n"
+"%s"
+
+#. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract
 msgid "account.analytic.contract"
-msgstr ""
+msgstr "account.analytic.contract"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_invoice_line
