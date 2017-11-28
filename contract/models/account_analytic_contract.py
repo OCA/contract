@@ -74,4 +74,3 @@ class AccountAnalyticContract(models.Model):
             ('type', '=', 'sale'),
             ('company_id', '=', company_id)]
         return self.env['account.journal'].search(domain, limit=1)
-
