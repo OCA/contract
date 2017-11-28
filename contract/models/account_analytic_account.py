@@ -71,15 +71,13 @@ class AccountAnalyticAccount(models.Model):
         deletion ensures that any errant lines that are created are also
         deleted.
         """
-
         contract = self.contract_template_id
-
+        if not contract:
+            return
         for field_name, field in contract._fields.items():
-
             if field.name == 'recurring_invoice_line_ids':
                 lines = self._convert_contract_lines(contract)
                 self.recurring_invoice_line_ids = lines
-
             elif not any((
                 field.compute, field.related, field.automatic,
                 field.readonly, field.company_dependent,
