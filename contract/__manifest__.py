@@ -8,7 +8,7 @@
 
 {
     'name': 'Contracts Management - Recurring',
-    'version': '11.0.1.2.0',
+    'version': '11.0.1.4.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
@@ -19,6 +19,7 @@
     'depends': ['base', 'account', 'analytic'],
     'data': [
         'security/ir.model.access.csv',
+        'security/contract_security.xml',
         'report/report_contract.xml',
         'report/contract_views.xml',
         'data/contract_cron.xml',
