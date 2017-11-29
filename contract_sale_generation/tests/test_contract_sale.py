@@ -60,10 +60,10 @@ class TestContractSale(TransactionCase):
 
         self.contract.partner_id = False
         with self.assertRaises(ValidationError):
-            self.contract.recurring_create_invoice()
+            self.contract.recurring_create_sale()
         self.contract.partner_id = self.partner.id
 
-        self.contract.recurring_create_invoice()
+        self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
             [('project_id', '=', self.contract.id),
              ('state', '=', 'draft')])
@@ -84,10 +84,10 @@ class TestContractSale(TransactionCase):
 
         self.contract.partner_id = False
         with self.assertRaises(ValidationError):
-            self.contract.recurring_create_invoice()
+            self.contract.recurring_create_sale()
         self.contract.partner_id = self.partner.id
 
-        self.contract.recurring_create_invoice()
+        self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
             [('project_id', '=', self.contract.id),
              ('state', '=', 'sale')])

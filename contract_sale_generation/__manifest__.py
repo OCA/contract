@@ -6,7 +6,7 @@
 
 {
     'name': 'Contracts Management - Recurring Sales',
-    'version': '10.0.1.0.0',
+    'version': '10.0.2.0.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "PESOL, "
@@ -17,6 +17,7 @@
         'views/account_analytic_account_view.xml',
         'views/account_analytic_contract_view.xml',
         'views/sale_view.xml',
+        'data/contract_cron.xml',
     ],
     'installable': True,
 }
