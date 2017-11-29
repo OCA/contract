@@ -8,7 +8,7 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models
+from odoo import api, models, fields
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
@@ -70,6 +70,12 @@ class AccountAnalyticAccount(models.Model):
         if self.type == 'invoice':
             return super(AccountAnalyticAccount, self)._create_invoice()
         else:
+            return self.env['account.invoice']
+
+    @api.multi
+    def _create_sale(self):
+        self.ensure_one()
+        if self.type == 'sale':
             sale_vals = self._prepare_sale()
             sale = self.env['sale.order'].create(sale_vals)
             for line in self.recurring_invoice_line_ids:
@@ -78,3 +84,48 @@ class AccountAnalyticAccount(models.Model):
             if self.sale_autoconfirm:
                 sale.action_confirm()
             return sale
+        else:
+            return self.env['sale.order']
+
+    @api.multi
+    def recurring_create_sale(self):
+        """
+        Create sales from contracts
+        :return: sales created
+        """
+        sales = self.env['sale.order']
+        for contract in self:
+            ref_date = contract.recurring_next_date or fields.Date.today()
+            if (contract.date_start > ref_date or
+                    contract.date_end and contract.date_end < ref_date):
+                raise ValidationError(
+                    _("You must review start and end dates!\n%s") %
+                    contract.name)
+            old_date = fields.Date.from_string(ref_date)
+            new_date = old_date + self.get_relative_delta(
+                contract.recurring_rule_type, contract.recurring_interval)
+            ctx = self.env.context.copy()
+            ctx.update({
+                'old_date': old_date,
+                'next_date': new_date,
+                # Force company for correct evaluate domain access rules
+                'force_company': contract.company_id.id,
+            })
+            # Re-read contract with correct company
+            sales |= contract.with_context(ctx)._create_sale()
+            contract.write({
+                'recurring_next_date': new_date.strftime('%Y-%m-%d')
+            })
+        return sales
+
+    @api.model
+    def cron_recurring_create_sale(self):
+        today = fields.Date.today()
+        contracts = self.search([
+            ('recurring_invoices', '=', True),
+            ('recurring_next_date', '<=', today),
+            '|',
+            ('date_end', '=', False),
+            ('date_end', '>=', today),
+        ])
+        return contracts.recurring_create_sale()
