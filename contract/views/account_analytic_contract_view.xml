@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <form string="Contract Template">
                 <group name="group_main">
-                    <field name="company_id" invisible="1" />
                     <field name="name" />
                     <group name="group_main_left">
                         <field name="journal_id" />
                         <field name="pricelist_id" />
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <group name="group_main_right">
                         <field name="recurring_invoicing_type" />
