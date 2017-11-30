@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014-2017 Tecnativa - Pedro M. Baeza
 # Copyright 2015 Domatix
