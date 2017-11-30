@@ -9,9 +9,30 @@ from odoo.tests import common
 
 
 class TestContractBase(common.SavepointCase):
+
+    post_install = True
+    at_install = False
+
     @classmethod
     def setUpClass(cls):
         super(TestContractBase, cls).setUpClass()
+        # Make sure a sale journal is present for tests
+        sequence_model = cls.env['ir.sequence']
+        contract_sequence = sequence_model.create({
+            'company_id': cls.env.user.company_id.id,
+            'code': 'contract',
+            'name': 'contract sequence',
+            'number_next': 1,
+            'implementation': 'standard',
+            'padding': 3,
+            'number_increment': 1})
+        journal_model = cls.env['account.journal']
+        journal_model.create({
+            'company_id': cls.env.user.company_id.id,
+            'code': 'contract',
+            'name': 'contract journal',
+            'sequence_id': contract_sequence.id,
+            'type': 'sale'})
         cls.partner = cls.env.ref('base.res_partner_2')
         cls.product = cls.env.ref('product.product_product_2')
         cls.product.taxes_id += cls.env['account.tax'].search(
@@ -286,10 +307,14 @@ class TestContract(TestContractBase):
         line = self._add_template_line()
         line.product_id.description_sale = 'Test'
         line._onchange_product_id()
-        self.assertEqual(line.name,
-                         '\n'.join([line.product_id.name,
-                                    line.product_id.description_sale,
-                                    ]))
+        # Make sure we use same language settings as in tested code:
+        product = line.product_id.with_context(
+            lang=self.partner.lang,
+            partner=self.partner.id)
+        product_name = product.name_get()[0][1]
+        self.assertEqual(
+            line.name,
+            '\n'.join([product_name, line.product_id.description_sale]))
 
     def test_contract_count(self):
         """It should return contract count."""
