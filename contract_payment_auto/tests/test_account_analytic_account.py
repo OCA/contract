@@ -6,14 +6,16 @@ import mock
 
 from contextlib import contextmanager
 
+import odoo.tests
 from odoo import fields
 from odoo.tools import mute_logger
-from odoo.tests.common import TransactionCase
 
 from ..models import account_analytic_account
 
 
-class TestAccountAnalyticAccount(TransactionCase):
+@odoo.tests.at_install(False)
+@odoo.tests.post_install(True)
+class TestAccountAnalyticAccount(odoo.tests.HttpCase):
 
     def setUp(self):
         super(TestAccountAnalyticAccount, self).setUp()
