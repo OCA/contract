@@ -3,7 +3,7 @@
 
     <record id="act_analytic_invoices" model="ir.actions.act_window">
         <field name="context">{'search_default_analytic_account_ids':
-            [active_id], 'default_analytic_account_ids': active_id}</field>
+            [active_id], 'default_analytic_account_ids': [active_id]}</field>
         <field name="name">Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="domain">[('analytic_account_ids','=',active_id)]</field>
