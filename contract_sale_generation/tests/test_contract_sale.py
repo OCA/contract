@@ -57,19 +57,12 @@ class TestContractSale(TransactionCase):
         res = self.contract_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
         self.contract_line.price_unit = 100.0
-
-        self.contract.partner_id = False
-        with self.assertRaises(ValidationError):
-            self.contract.recurring_create_sale()
-        self.contract.partner_id = self.partner.id
-
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
             [('project_id', '=', self.contract.id),
              ('state', '=', 'draft')])
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract.recurring_next_date, '2017-02-28')
-
         self.sale_line = self.sale_monthly.order_line[0]
         self.assertAlmostEqual(self.sale_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.partner_id.user_id,
@@ -81,12 +74,6 @@ class TestContractSale(TransactionCase):
         res = self.contract_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
         self.contract_line.price_unit = 100.0
-
-        self.contract.partner_id = False
-        with self.assertRaises(ValidationError):
-            self.contract.recurring_create_sale()
-        self.contract.partner_id = self.partner.id
-
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
             [('project_id', '=', self.contract.id),
