@@ -8,6 +8,9 @@
         <field name="mode">primary</field>
         <field name="priority" eval="9999"/>
         <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="attrs">{'required': [('recurring_invoices', '=', True)]}</attribute>
+            </field>
             <xpath expr="//div[@name='button_box']/.." position="before">
                 <header>
                     <button name="action_contract_send" type="object" string="Send by Email" groups="base.group_user"/>
@@ -19,10 +22,11 @@
                            />
                 <div>
                     <field name="recurring_invoices" class="oe_inline"/>
+                    <field name="create_invoice_visibility" invisible="1"/>
                     <label for="recurring_invoices" />
                     <button name="recurring_create_invoice"
                             type="object"
-                            attrs="{'invisible': [('recurring_invoices','!=',True)]}"
+                            attrs="{'invisible': ['|', ('recurring_invoices', '!=', True), ('create_invoice_visibility', '=', False)]}"
                             string="Create invoices"
                             class="oe_link"
                             groups="base.group_no_one"
@@ -36,7 +40,9 @@
                 </div>
                 <group col="4" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                     <field name="contract_template_id" colspan="4"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id"
+                           attrs="{'required': [('recurring_invoices', '=', True)]}"
+                    />
                     <field name="pricelist_id"/>
                     <label for="recurring_interval"/>
                     <div>
@@ -49,10 +55,16 @@
                                attrs="{'required': [('recurring_invoices', '=', True)]}"
                                />
                     </div>
-                    <field name="recurring_invoicing_type"/>
-                    <field name="date_start"/>
+                    <field name="recurring_invoicing_type"
+                           attrs="{'required': [('recurring_invoices', '=', True)]}"
+                    />
+                    <field name="date_start"
+                           attrs="{'required': [('recurring_invoices', '=', True)]}"
+                    />
                     <field name="date_end"/>
-                    <field name="recurring_next_date"/>
+                    <field name="recurring_next_date"
+                           attrs="{'required': [('recurring_invoices', '=', True)]}"
+                    />
                 </group>
                 <label for="recurring_invoice_line_ids"
                        attrs="{'invisible': [('recurring_invoices','=',False)]}"
