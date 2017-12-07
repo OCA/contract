@@ -50,6 +50,17 @@ class AccountAnalyticAccount(models.Model):
         index=True,
         default=lambda self: self.env.user,
     )
+    create_invoice_visibility = fields.Boolean(
+        compute='_compute_create_invoice_visibility',
+    )
+
+    @api.depends('recurring_next_date', 'date_end')
+    def _compute_create_invoice_visibility(self):
+        for contract in self:
+            contract.create_invoice_visibility = (
+                not contract.date_end or
+                contract.recurring_next_date <= contract.date_end
+            )
 
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
@@ -76,14 +87,59 @@ class AccountAnalyticAccount(models.Model):
             )):
                 self[field_name] = self.contract_template_id[field_name]
 
-    @api.onchange('recurring_invoices')
-    def _onchange_recurring_invoices(self):
-        if self.date_start and self.recurring_invoices:
+    @api.onchange('date_start')
+    def _onchange_date_start(self):
+        if self.date_start:
             self.recurring_next_date = self.date_start
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist.id
+
+    @api.constrains('partner_id', 'recurring_invoices')
+    def _check_partner_id_recurring_invoices(self):
+        for contract in self.filtered('recurring_invoices'):
+            if not contract.partner_id:
+                raise ValidationError(
+                    _("You must supply a customer for the contract '%s'") %
+                    contract.name
+                )
+
+    @api.constrains('recurring_next_date', 'date_start')
+    def _check_recurring_next_date_start_date(self):
+        for contract in self.filtered('recurring_next_date'):
+            if contract.date_start > contract.recurring_next_date:
+                raise ValidationError(
+                    _("You can't have a next invoicing date before the start "
+                      "of the contract '%s'") % contract.name
+                )
+
+    @api.constrains('recurring_next_date', 'recurring_invoices')
+    def _check_recurring_next_date_recurring_invoices(self):
+        for contract in self.filtered('recurring_invoices'):
+            if not contract.recurring_next_date:
+                raise ValidationError(
+                    _("You must supply a next invoicing date for contract "
+                      "'%s'") % contract.name
+                )
+
+    @api.constrains('date_start', 'recurring_invoices')
+    def _check_date_start_recurring_invoices(self):
+        for contract in self.filtered('recurring_invoices'):
+            if not contract.date_start:
+                raise ValidationError(
+                    _("You must supply a start date for contract '%s'") %
+                    contract.name
+                )
+
+    @api.constrains('date_start', 'date_end')
+    def _check_start_end_dates(self):
+        for contract in self.filtered('date_end'):
+            if contract.date_start > contract.date_end:
+                raise ValidationError(
+                    _("Contract '%s' start date can't be later than end date")
+                    % contract.name
+                )
 
     @api.multi
     def _convert_contract_lines(self, contract):
@@ -204,8 +260,8 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def recurring_create_invoice(self):
-        """
-        Create invoices from contracts
+        """Create invoices from contracts
+
         :return: invoices created
         """
         invoices = self.env['account.invoice']
@@ -213,9 +269,12 @@ class AccountAnalyticAccount(models.Model):
             ref_date = contract.recurring_next_date or fields.Date.today()
             if (contract.date_start > ref_date or
                     contract.date_end and contract.date_end < ref_date):
+                if self.env.context.get('cron'):
+                    continue  # Don't fail on cron jobs
                 raise ValidationError(
                     _("You must review start and end dates!\n%s") %
-                    contract.name)
+                    contract.name
+                )
             old_date = fields.Date.from_string(ref_date)
             new_date = old_date + self.get_relative_delta(
                 contract.recurring_rule_type, contract.recurring_interval)
@@ -223,20 +282,20 @@ class AccountAnalyticAccount(models.Model):
             ctx.update({
                 'old_date': old_date,
                 'next_date': new_date,
-                # Force company for correct evaluate domain access rules
+                # Force company for correct evaluation of domain access rules
                 'force_company': contract.company_id.id,
             })
             # Re-read contract with correct company
             invoices |= contract.with_context(ctx)._create_invoice()
             contract.write({
-                'recurring_next_date': new_date.strftime('%Y-%m-%d')
+                'recurring_next_date': fields.Date.to_string(new_date)
             })
         return invoices
 
     @api.model
     def cron_recurring_create_invoice(self):
         today = fields.Date.today()
-        contracts = self.search([
+        contracts = self.with_context(cron=True).search([
             ('recurring_invoices', '=', True),
             ('recurring_next_date', '<=', today),
             '|',
