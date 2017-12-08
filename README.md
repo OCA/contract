@@ -23,7 +23,7 @@ addon | version | summary
 --- | --- | ---
 [agreement_account](agreement_account/) | 10.0.1.0.0 | Adds an agreement object linked to an invoice
 [agreement_sale](agreement_sale/) | 10.0.1.0.0 | Link an agreement to a sale order and copy to invoice
-[contract](contract/) | 10.0.3.2.0 | Contracts Management - Recurring
+[contract](contract/) | 10.0.3.3.0 | Contracts Management - Recurring
 [contract_digitized_signature](contract_digitized_signature/) | 10.0.1.0.0 | Contract Digitized Signature
 [contract_payment_auto](contract_payment_auto/) | 10.0.1.0.0 | Adds automatic payments to contracts.
 [contract_payment_mode](contract_payment_mode/) | 10.0.1.0.1 | Payment mode in contracts and their invoices
