@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Мед Ведь <p060t@list.ru>, 2017
+# nek, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 01:41+0000\n"
-"PO-Revision-Date: 2017-11-30 01:41+0000\n"
-"Last-Translator: Мед Ведь <p060t@list.ru>, 2017\n"
+"POT-Creation-Date: 2018-03-17 03:26+0000\n"
+"PO-Revision-Date: 2018-03-17 03:26+0000\n"
+"Last-Translator: nek, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/oca/teams/23907/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,38 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"\n"
+"<p>\n"
+"    Здравствуйте ${object.partner_id.name}\n"
+"    % set access_action = object.get_access_action()\n"
+"    % set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
+"    % if object.partner_id.parent_id:\n"
+"        (<i>${object.partner_id.parent_id.name}</i>)\n"
+"    % endif\n"
+"    ,\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"    Автоматическая оплата вашего счета\n"
+"    <a href=\"${access_url}\">\n"
+"        <strong>\n"
+"            ${object.number}\n"
+"        </strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"    </a>\n"
+"    failed.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"    Убедитесь, что ваша платежная информация верна и что средства\n"
+"на счете доступны.\n"
+"</p>\n"
+"\n"
+"\n"
+"        "
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_auto_pay_retry_hours
@@ -72,13 +105,13 @@ msgstr ""
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитический счет"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_is_auto_pay
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_is_auto_pay
 msgid "Auto Pay?"
-msgstr ""
+msgstr "Авто-Платеж?"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_invoice_auto_pay_attempts
@@ -169,7 +202,7 @@ msgstr ""
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Контрагент"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_pay_fail_mail_template_id
