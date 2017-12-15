@@ -240,7 +240,8 @@ class AccountAnalyticAccount(models.Model):
         invoice = self.env['account.invoice'].create(invoice_vals)
         for line in self.recurring_invoice_line_ids:
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
-            self.env['account.invoice.line'].create(invoice_line_vals)
+            if invoice_line_vals:
+                self.env['account.invoice.line'].create(invoice_line_vals)
         invoice.compute_taxes()
         return invoice
 
