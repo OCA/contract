@@ -1,8 +1,9 @@
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016-2018 Carlos Dauden <carlos.dauden@tecnativa.com>
+# -*- coding: utf-8 -*-
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
+# Copyright 2015-2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
@@ -41,9 +42,19 @@ class AccountAnalyticInvoiceLine(models.Model):
         string='Unit of Measure',
         required=True,
     )
+    automatic_price = fields.Boolean(
+        string="Auto-price?",
+        help="If this is marked, the price will be obtained automatically "
+             "applying the pricelist to the product. If not, you will be "
+             "able to introduce a manual price",
+    )
+    specific_price = fields.Float(
+        string='Specific Price',
+    )
     price_unit = fields.Float(
-        'Unit Price',
-        required=True,
+        string='Unit Price',
+        compute="_compute_price_unit",
+        inverse="_inverse_price_unit",
     )
     price_subtotal = fields.Float(
         compute='_compute_price_subtotal',
@@ -71,6 +82,37 @@ class AccountAnalyticInvoiceLine(models.Model):
         compute='_compute_date_to',
         help='Date to invoiced period',
     )
+
+    @api.depends(
+        'automatic_price',
+        'specific_price',
+        'product_id',
+        'quantity',
+        'analytic_account_id.pricelist_id',
+        'analytic_account_id.partner_id',
+    )
+    def _compute_price_unit(self):
+        """Get the specific price if no auto-price, and the price obtained
+        from the pricelist otherwise.
+        """
+        for line in self:
+            if line.automatic_price:
+                product = line.product_id.with_context(
+                    quantity=line.quantity,
+                    pricelist=line.analytic_account_id.pricelist_id.id,
+                    partner=line.analytic_account_id.partner_id.id,
+                    date=line.env.context.get('old_date', fields.Date.today()),
+                )
+                line.price_unit = product.price
+            else:
+                line.price_unit = line.specific_price
+
+    # Tip in https://github.com/odoo/odoo/issues/23891#issuecomment-376910788
+    @api.onchange('price_unit')
+    def _inverse_price_unit(self):
+        """Store the specific price in the no auto-price records."""
+        for line in self.filtered(lambda x: not x.automatic_price):
+            line.specific_price = line.price_unit
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
@@ -150,12 +192,12 @@ class AccountAnalyticInvoiceLine(models.Model):
         if self.analytic_account_id._name == 'account.analytic.account':
             date = (
                 self.analytic_account_id.recurring_next_date or
-                fields.Datetime.now()
+                fields.Date.today()
             )
             partner = self.analytic_account_id.partner_id
 
         else:
-            date = fields.Datetime.now()
+            date = fields.Date.today()
             partner = self.env.user.partner_id
 
         product = self.product_id.with_context(
