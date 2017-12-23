@@ -78,7 +78,9 @@
                             <field name="name"/>
                             <field name="quantity"/>
                             <field name="uom_id"/>
-                            <field name="price_unit"/>
+                            <field name="automatic_price"/>
+                            <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                            <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="sale.group_discount_per_so_line" />
                             <field name="price_subtotal"/>
                         </tree>
