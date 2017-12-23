@@ -59,6 +59,20 @@ class TestContract(TestContractBase):
         with self.assertRaises(ValidationError):
             self.acct_line.write({'discount': 120})
 
+    def test_automatic_price(self):
+        self.acct_line.automatic_price = True
+        self.product.list_price = 1100
+        self.assertEqual(self.acct_line.price_unit, 1100)
+        # Try to write other price
+        self.acct_line.price_unit = 10
+        self.acct_line.refresh()
+        self.assertEqual(self.acct_line.price_unit, 1100)
+        # Now disable automatic price
+        self.acct_line.automatic_price = False
+        self.acct_line.price_unit = 10
+        self.acct_line.refresh()
+        self.assertEqual(self.acct_line.price_unit, 10)
+
     def test_contract(self):
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
         res = self.acct_line._onchange_product_id()
