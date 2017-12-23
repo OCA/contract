@@ -1,8 +1,9 @@
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# -*- coding: utf-8 -*-
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
+# Copyright 2015-2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -14,10 +15,16 @@ class AccountAnalyticContract(models.Model):
     # These fields will not be synced to the contract
     NO_SYNC = [
         'name',
+        'partner_id',
     ]
 
     name = fields.Char(
         required=True,
+    )
+    # Needed for avoiding errors on several inherited behaviors
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner (always False)",
     )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
