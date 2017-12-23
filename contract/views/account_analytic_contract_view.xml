@@ -30,14 +30,16 @@
                     </group>
                 </group>
                 <group name="group_invoice_lines" string="Invoice Lines">
-                    <field name="recurring_invoice_line_ids">
+                    <field name="recurring_invoice_line_ids" nolabel="1">
                         <tree string="Account Analytic Lines" editable="bottom">
                             <field name="sequence" widget="handle" />
                             <field name="product_id" />
                             <field name="name" />
                             <field name="quantity" />
                             <field name="uom_id" />
-                            <field name="price_unit" />
+                            <field name="automatic_price"/>
+                            <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                            <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="sale.group_discount_per_so_line" />
                             <field name="price_subtotal" />
                         </tree>
