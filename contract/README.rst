@@ -33,6 +33,8 @@ To use this module, you need to:
    * Invoicing type: pre-paid or post-paid.
 #. Add the lines to be invoiced with the product, description, quantity and
    price.
+#. You can mark Auto-price? for having a price automatically obtained applying
+   the pricelist to the product price.
 #. You have the possibility to use the markers #START# or #END# in the
    description field to show the start and end date of the invoiced period.
 #. Choosing between pre-paid and post-paid, you modify the dates that are shown
