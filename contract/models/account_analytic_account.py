@@ -246,16 +246,28 @@ class AccountAnalyticAccount(models.Model):
         invoice._onchange_partner_id()
         return invoice._convert_to_write(invoice._cache)
 
+
+    @api.multi
+    def _get_recurring_invoice_lines_to_invoice(self):
+        return self.recurring_invoice_line_ids
+
     @api.multi
     def _create_invoice(self):
         self.ensure_one()
         invoice_vals = self._prepare_invoice()
         invoice = self.env['account.invoice'].create(invoice_vals)
-        for line in self.recurring_invoice_line_ids:
+        for line in self._get_recurring_invoice_lines_to_invoice():
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
             self.env['account.invoice.line'].create(invoice_line_vals)
         invoice.compute_taxes()
         return invoice
+
+    @api.multi
+    def update_date(self, old_date, new_date):
+        self.ensure_one()
+        self.write({
+            'recurring_next_date': fields.Date.to_string(new_date)
+        })
 
     @api.multi
     def recurring_create_invoice(self):
@@ -286,9 +298,7 @@ class AccountAnalyticAccount(models.Model):
             })
             # Re-read contract with correct company
             invoices |= contract.with_context(ctx)._create_invoice()
-            contract.write({
-                'recurring_next_date': fields.Date.to_string(new_date)
-            })
+            contract.update_date(old_date, new_date)
         return invoices
 
     @api.model

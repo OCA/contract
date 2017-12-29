@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_account_recurring_by_line_form" model="ir.ui.view">
+        <field name="name">Contract form recurring by line</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoice_line_ids']/tree/field[@name='name']" position="after">
+                            <field name="recurring_interval"/>
+                            <field name="recurring_rule_type"/>
+                            <field name="recurring_next_date"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

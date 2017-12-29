@@ -78,7 +78,7 @@ class AccountAnalyticAccount(models.Model):
         if self.type == 'sale':
             sale_vals = self._prepare_sale()
             sale = self.env['sale.order'].create(sale_vals)
-            for line in self.recurring_invoice_line_ids:
+            for line in self._get_recurring_invoice_lines_to_invoice():
                 sale_line_vals = self._prepare_sale_line(line, sale.id)
                 self.env['sale.order.line'].create(sale_line_vals)
             if self.sale_autoconfirm:
@@ -86,6 +86,20 @@ class AccountAnalyticAccount(models.Model):
             return sale
         else:
             return self.env['sale.order']
+
+    @api.multi
+    def update_sale_date(self, old_date, new_date):
+        self.ensure_one()
+        if self.type == 'sale':
+            self.write({
+                'recurring_next_date': fields.Date.to_string(new_date)
+            })
+
+    @api.multi
+    def update_date(self, old_date, new_date):
+        self.ensure_one()
+        if self.type == 'invoice':
+            super(AccountAnalyticAccount, self).update_date(old_date, new_date)
 
     @api.multi
     def recurring_create_sale(self):
@@ -113,9 +127,7 @@ class AccountAnalyticAccount(models.Model):
             })
             # Re-read contract with correct company
             sales |= contract.with_context(ctx)._create_sale()
-            contract.write({
-                'recurring_next_date': new_date.strftime('%Y-%m-%d')
-            })
+            contract.update_sale_date(old_date, new_date)
         return sales
 
     @api.model
