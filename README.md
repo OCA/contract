@@ -27,6 +27,7 @@ addon | version | summary
 [contract_digitized_signature](contract_digitized_signature/) | 10.0.1.0.0 | Contract Digitized Signature
 [contract_payment_auto](contract_payment_auto/) | 10.0.1.0.0 | Adds automatic payments to contracts.
 [contract_payment_mode](contract_payment_mode/) | 10.0.1.0.1 | Payment mode in contracts and their invoices
+[contract_recurring_analytic_distribution](contract_recurring_analytic_distribution/) | 10.0.1.0.0 | Analytic plans on contracts recurring invoices
 [contract_sale](contract_sale/) | 10.0.1.0.0 | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 10.0.2.0.0 | Contracts Management - Recurring Sales
 [contract_show_invoice](contract_show_invoice/) | 10.0.1.0.1 | Button in contracts to show their invoices
