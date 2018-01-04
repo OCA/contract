@@ -29,7 +29,7 @@ class AccountAnalyticAccount(models.Model):
             next_dates = record.recurring_invoice_line_ids.mapped(
                 'recurring_next_date')
             record.recurring_next_date = next_dates and \
-                min(next_dates) or False
+                min(next_dates) or fields.Date.today()
 
     @api.multi
     def _get_recurring_invoice_lines_to_invoice(self):
