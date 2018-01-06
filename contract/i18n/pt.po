@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-09 02:37+0000\n"
-"PO-Revision-Date: 2017-12-09 02:37+0000\n"
+"POT-Creation-Date: 2018-01-04 01:46+0000\n"
+"PO-Revision-Date: 2018-01-04 01:46+0000\n"
 "Last-Translator: Pedro Castro Silva <pedrocs@exo.pt>, 2017\n"
 "Language-Team: Portuguese (https://www.transifex.com/oca/teams/23907/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -201,6 +201,12 @@ msgid "Analytic Account"
 msgstr "Conta Analítica"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_automatic_price
+msgid "Auto-price?"
+msgstr ""
+
+#. module: contract
 #: model:ir.actions.act_window,help:contract.account_analytic_contract_action
 msgid "Click to create a new contract template."
 msgstr "Clique para criar um novo modelo de contrato."
@@ -324,7 +330,7 @@ msgid "Discount (%)"
 msgstr "Desconto (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_invoice_line.py:83
+#: code:addons/contract/models/account_analytic_invoice_line.py:122
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "O desconto deve ser igual ou inferior a 100"
@@ -367,6 +373,15 @@ msgstr "Agrupar Por..."
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_id
 msgid "ID"
 msgstr "ID"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_automatic_price
+msgid ""
+"If this is marked, the price will be obtained automatically applying the "
+"pricelist to the product. If not, you will be able to introduce a manual "
+"price"
+msgstr ""
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
@@ -452,6 +467,11 @@ msgstr "Próxima Fatura"
 #: model:ir.model,name:contract.model_res_partner
 msgid "Partner"
 msgstr "Parceiro"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_partner_id
+msgid "Partner (always False)"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
@@ -546,6 +566,12 @@ msgstr "Sequência da linha na visualização de contratos"
 #: model:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the contracts for this partner"
 msgstr "Mostrar os contratos para este parceiro"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_specific_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_specific_price
+msgid "Specific Price"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
