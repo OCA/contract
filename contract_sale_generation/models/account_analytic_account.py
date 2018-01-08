@@ -140,5 +140,4 @@ class AccountAnalyticAccount(models.Model):
             ('date_end', '=', False),
             ('date_end', '>=', today),
         ]).filtered(lambda c: c.recurring_next_date <= today)
-        import wdb; wdb.set_trace()
         return contracts.recurring_create_sale()
