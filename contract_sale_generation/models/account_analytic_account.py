@@ -52,6 +52,7 @@ class AccountAnalyticAccount(models.Model):
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
                 self.name)
+        sale_values = self._prepare_sale_values()
         sale = self.env['sale.order'].new({
             'partner_id': self.partner_id,
             'date_order': self.recurring_next_date,
@@ -135,9 +136,9 @@ class AccountAnalyticAccount(models.Model):
         today = fields.Date.today()
         contracts = self.search([
             ('recurring_invoices', '=', True),
-            ('recurring_next_date', '<=', today),
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),
-        ])
+        ]).filtered(lambda c: c.recurring_next_date <= today)
+        import wdb; wdb.set_trace()
         return contracts.recurring_create_sale()
