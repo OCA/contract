@@ -36,16 +36,6 @@ class AccountAnalyticAccount(models.Model):
         string='Date End',
         index=True,
     )
-    date_from = fields.Date(
-        string='Date From',
-        compute='_compute_invoiced_dates',
-        help='Date from invoiced period',
-    )
-    date_to = fields.Date(
-        string='Date To',
-        compute='_compute_invoiced_dates',
-        help='Date to invoiced period',
-    )
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically',
     )
@@ -63,29 +53,6 @@ class AccountAnalyticAccount(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility',
     )
-
-    @api.depends(
-        'recurring_invoicing_type',
-        'recurring_rule_type',
-        'recurring_interval',
-        'recurring_next_date',
-    )
-    def _compute_invoiced_dates(self):
-        for contract in self:
-            date_start = fields.Date.from_string(
-                contract.recurring_next_date or fields.Date.today())
-            next_date = date_start + self.get_relative_delta(
-                contract.recurring_rule_type, contract.recurring_interval)
-            if contract.recurring_invoicing_type == 'pre-paid':
-                date_from = date_start
-                date_to = next_date - relativedelta(days=1)
-            else:
-                date_from = (date_start - self.get_relative_delta(
-                    contract.recurring_rule_type,
-                    contract.recurring_interval) + relativedelta(days=1))
-                date_to = date_start
-            contract.date_from = fields.Date.to_string(date_from)
-            contract.date_to = fields.Date.to_string(date_to)
 
     @api.depends('recurring_next_date', 'date_end')
     def _compute_create_invoice_visibility(self):
@@ -196,9 +163,8 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def _insert_markers(self, line, date_format):
-        contract = line.analytic_account_id
-        date_from = fields.Date.from_string(contract.date_from)
-        date_to = fields.Date.from_string(contract.date_to)
+        date_from = fields.Date.from_string(line.date_from)
+        date_to = fields.Date.from_string(line.date_to)
         name = line.name
         name = name.replace('#START#', date_from.strftime(date_format))
         name = name.replace('#END#', date_to.strftime(date_format))
