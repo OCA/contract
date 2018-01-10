@@ -16,12 +16,10 @@ class SaleOrder(models.Model):
                 lambda r: r.product_id.is_contract
             )
             for line in order_lines:
-                contract_tmpl = line.product_id.contract_template_id
-                contract = self.env['account.analytic.account'].create({
-                    'name': '%s Contract' % rec.name,
-                    'partner_id': rec.partner_id.id,
-                    'contract_template_id': contract_tmpl.id,
-                })
+                AnalyticAccount = self.env['account.analytic.account']
+                contract = AnalyticAccount.create(
+                    line._get_create_contract_vals(),
+                )
                 line.contract_id = contract.id
                 contract.recurring_create_invoice()
         return super(SaleOrder, self).action_confirm()

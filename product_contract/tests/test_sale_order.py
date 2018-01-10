@@ -21,6 +21,7 @@ class TestSaleOrder(TransactionCase):
         self.product.product_tmpl_id.contract_template_id = self.contract.id
 
     def tearDown(self):
+        super(TestSaleOrder, self).tearDown()
         self.env['account.analytic.account']._revert_method(
             'create',
         )
