@@ -14,7 +14,9 @@ SQL_SYNCHRONIZE2 = \
 SET partner_id=subquery.partner_id,
     date_start=subquery.date_start,
     date_end=subquery.date_end
- FROM (SELECT l.id, c.partner_id, c.date_start, c.date_end
+ FROM (SELECT
+        l.id,
+        c.partner_id,
         GREATEST(c.date_start, l.date_start) AS date_start,
         LEAST(c.date_end, l.date_end) AS date_end
       FROM account_analytic_invoice_line l
