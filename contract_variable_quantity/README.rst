@@ -12,7 +12,7 @@ lines with variable quantity according to a provided formula.
 Configuration
 =============
 
-#. Go to Sales > Configuration > Contracts > Formulas (quantity).
+#. Go to Invoicing > Configuration > Contracts > Formulas (quantity).
 #. Define any formula based on Python code that stores at some moment a
    float/integer value of the quantity to invoice in the variable 'result'.
 
@@ -34,7 +34,7 @@ Usage
 
 To use this module, you need to:
 
-#. Go to Sales -> Contracts and select or create a new contract.
+#. Go to Invoicing > Sales > Contracts and select or create a new contract.
 #. Check *Generate recurring invoices automatically*.
 #. Add a new recurring invoicing line.
 #. Select "Variable quantity" in column "Qty. type".
