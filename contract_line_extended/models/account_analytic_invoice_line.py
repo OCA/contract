@@ -79,7 +79,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         maintained and dates stay within limit of contract."""
         vals['contract_id'] = vals['analytic_account_id']
         result = super(AccountAnalyticInvoiceLine, self).create(vals)
-        new_line._limit_dates()
+        result._limit_dates()
         return result
 
     @api.multi
