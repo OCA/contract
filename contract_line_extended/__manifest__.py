@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017 Therp BV.
+# Copyright 2017-2018 Therp BV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Contract Line Extended',
@@ -11,6 +11,9 @@
     'website': 'https://github.com/oca/contract',
     'depends': [
         'contract',
+    ],
+    'data': [
+        'views/account_analytic_account.xml',
     ],
     'installable': True,
 }
