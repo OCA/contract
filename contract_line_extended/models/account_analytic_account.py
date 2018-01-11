@@ -36,7 +36,7 @@ class AccountAnalyticAccount(models.Model):
         """Keep lines within date limits of contract."""
         for this in self:
             for line in this.recurring_invoice_line_ids:
-                line._update_dates()
+                line._limit_dates()
 
     @api.model
     def create(self, vals):
