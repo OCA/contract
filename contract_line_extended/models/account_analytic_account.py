@@ -42,7 +42,7 @@ class AccountAnalyticAccount(models.Model):
     def create(self, vals):
         result = super(AccountAnalyticAccount, self).create(vals)
         if 'recurring_invoice_line_ids' in vals:
-            result.update_lines()
+            result._update_lines()
         return result
 
     @api.multi
@@ -51,5 +51,5 @@ class AccountAnalyticAccount(models.Model):
         # keep line date_start and date_end within contract limits:
         if 'date_start' in vals or 'date_end' in vals or \
                 'recurring_invoice_line_ids' in vals:
-            self.update_lines()
+            self._update_lines()
         return result
