@@ -70,7 +70,7 @@ class AccountAnalyticAccount(models.Model):
         if self.type == 'invoice':
             return super(AccountAnalyticAccount, self)._create_invoice()
         else:
-            return self.env['account.invoice']
+            return self.env['account.invoice']._create_sale()
 
     @api.multi
     def _create_sale(self):
