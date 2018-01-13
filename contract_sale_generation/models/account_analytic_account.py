@@ -59,22 +59,22 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _create_invoice(self):
-        """
+        """ 
         Create invoices
-        @param self: single record of account.invoice
+        @param None
         @return: MUST return an invoice recordset
         """
         self.ensure_one()
         if self.type == 'invoice':
             return super(AccountAnalyticAccount, self)._create_invoice()
         else:
-            return self.env['account.invoice']._create_sale()
+            return self.env['account.invoice']
 
     @api.multi
     def _create_sale(self):
-        """
+        """ 
         Create Sale orders
-        @param self: single record of sale.order
+        @param None
         @return: MUST return a sale.order recordset
         """
         self.ensure_one()
