@@ -1,7 +1,7 @@
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
 # Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# Copyright 2016-2017 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2016-2018 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -145,6 +145,8 @@ class AccountAnalyticAccount(models.Model):
         new_lines = []
         for contract_line in contract.recurring_invoice_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
+            # Remove template link field named as analytic account field
+            vals.pop('analytic_account_id', False)
             new_lines.append((0, 0, vals))
         return new_lines
 
@@ -162,17 +164,9 @@ class AccountAnalyticAccount(models.Model):
             return relativedelta(years=interval)
 
     @api.model
-    def _insert_markers(self, line, date_start, next_date, date_format):
-        contract = line.analytic_account_id
-        if contract.recurring_invoicing_type == 'pre-paid':
-            date_from = date_start
-            date_to = next_date - relativedelta(days=1)
-        else:
-            date_from = (date_start -
-                         self.get_relative_delta(contract.recurring_rule_type,
-                                                 contract.recurring_interval) +
-                         relativedelta(days=1))
-            date_to = date_start
+    def _insert_markers(self, line, date_format):
+        date_from = fields.Date.from_string(line.date_from)
+        date_to = fields.Date.from_string(line.date_to)
         name = line.name
         name = name.replace('#START#', date_from.strftime(date_format))
         name = name.replace('#END#', date_to.strftime(date_format))
@@ -191,16 +185,12 @@ class AccountAnalyticAccount(models.Model):
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         # Insert markers
-        name = line.name
         contract = line.analytic_account_id
-        if 'old_date' in self.env.context and 'next_date' in self.env.context:
-            lang_obj = self.env['res.lang']
-            lang = lang_obj.search(
-                [('code', '=', contract.partner_id.lang)])
-            date_format = lang.date_format or '%m/%d/%Y'
-            name = self._insert_markers(
-                line, self.env.context['old_date'],
-                self.env.context['next_date'], date_format)
+        lang_obj = self.env['res.lang']
+        lang = lang_obj.search(
+            [('code', '=', contract.partner_id.lang)])
+        date_format = lang.date_format or '%m/%d/%Y'
+        name = self._insert_markers(line, date_format)
         invoice_line_vals.update({
             'name': name,
             'account_analytic_id': contract.id,
@@ -252,7 +242,8 @@ class AccountAnalyticAccount(models.Model):
         invoice = self.env['account.invoice'].create(invoice_vals)
         for line in self.recurring_invoice_line_ids:
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
-            self.env['account.invoice.line'].create(invoice_line_vals)
+            if invoice_line_vals:
+                self.env['account.invoice.line'].create(invoice_line_vals)
         invoice.compute_taxes()
         return invoice
 
