@@ -59,7 +59,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _create_invoice(self):
-        """ 
+        """
         Create invoices
         @param None
         @return: MUST return an invoice recordset
@@ -72,7 +72,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _create_sale(self):
-        """ 
+        """
         Create Sale orders
         @param None
         @return: MUST return a sale.order recordset
