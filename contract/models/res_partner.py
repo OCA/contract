@@ -18,8 +18,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.contract_count = Contract.search_count([
                 ('recurring_invoices', '=', True),
-                ('partner_id', '=', partner.id),
-                ('date_start', '<=', today),
+                ('partner_id', 'child_of', partner.ids),
                 '|',
                 ('date_end', '=', False),
                 ('date_end', '>=', today),
@@ -37,9 +36,10 @@ class ResPartner(models.Model):
                 self.env.context,
                 search_default_recurring_invoices=True,
                 search_default_not_finished=True,
+                search_default_partner_id=self.id,
                 default_partner_id=self.id,
                 default_recurring_invoices=True,
+                default_pricelist_id=self.property_product_pricelist.id,
             ),
-            domain=[('partner_id', '=', self.id)],
         )
         return res
