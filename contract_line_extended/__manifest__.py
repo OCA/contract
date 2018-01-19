@@ -10,6 +10,7 @@
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
     'depends': [
+        'base_active_date',
         'contract',
     ],
     'data': [

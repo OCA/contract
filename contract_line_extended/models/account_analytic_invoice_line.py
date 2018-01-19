@@ -12,25 +12,26 @@ SQL_SYNCHRONIZE1 = \
 SQL_SYNCHRONIZE2 = \
     """UPDATE account_analytic_invoice_line
 SET partner_id=subquery.partner_id,
-    date_start=subquery.date_start,
-    date_end=subquery.date_end
+    active_date_start=subquery.date_start,
+    active_date_end=subquery.date_end
  FROM (SELECT
         l.id,
         c.partner_id,
-        GREATEST(c.date_start, l.date_start) AS date_start,
-        LEAST(c.date_end, l.date_end) AS date_end
+        GREATEST(c.date_start, l.active_date_start) AS date_start,
+        LEAST(c.date_end, l.active_date_end) AS date_end
       FROM account_analytic_invoice_line l
       JOIN account_analytic_account c
       ON l.contract_id = c.id
     WHERE (l.partner_id is NULL AND NOT c.partner_id IS NULL)
-    OR (l.date_start is NULL AND NOT c.date_start IS NULL)
-    OR (l.date_end is NULL AND NOT c.date_end IS NULL))
+    OR (l.active_date_start is NULL AND NOT c.date_start IS NULL)
+    OR (l.active_date_end is NULL AND NOT c.date_end IS NULL))
  AS subquery
  WHERE subquery.id = account_analytic_invoice_line.id"""
 
 
 class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'account.analytic.invoice.line'
+    _name = 'account.analytic.invoice.line'
+    _inherit = ['account.analytic.invoice.line', 'active.date']
 
     # We already had analytic_account_id to refer to the contract to which
     # this line belongs. Unfortunately this is overwritten by
@@ -49,12 +50,6 @@ class AccountAnalyticInvoiceLine(models.Model):
         readonly=True,
         store=True,
         related='contract_id.partner_id')
-    # date_start and date_end are normally the same as on the contract.
-    # However, making them not reference fields, but updating those if
-    # needed when the contract changes allows to update a contract by changing
-    # its lines.
-    date_start = fields.Date(string='Line start date')
-    date_end = fields.Date(string='Line end date')
 
     @api.multi
     def _limit_dates(self):
@@ -63,13 +58,13 @@ class AccountAnalyticInvoiceLine(models.Model):
             contract = this.contract_id
             line_vals = {}
             if contract.date_start:
-                if (not this.date_start) or \
-                        this.date_start < contract.date_start:
-                    line_vals['date_start'] = contract.date_start
+                if (not this.active_date_start) or \
+                        this.active_date_start < contract.date_start:
+                    line_vals['active_date_start'] = contract.date_start
             if contract.date_end:
-                if (not this.date_end) or \
-                        this.date_end > contract.date_end:
-                    line_vals['date_end'] = contract.date_end
+                if (not this.active_date_end) or \
+                        this.active_date_end > contract.date_end:
+                    line_vals['active_date_end'] = contract.date_end
             if line_vals:
                 super(AccountAnalyticInvoiceLine, this).write(line_vals)
 
