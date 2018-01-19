@@ -10,6 +10,10 @@
             ref="contract.account_analytic_account_recurring_form_form"
             />
         <field name="arch" type="xml">
+            <!-- Also show inactive contract lines -->
+            <field name="recurring_invoice_line_ids" position="attributes">
+                <attribute name="context">{'active_test': False}</attribute>
+            </field>
             <!-- Next fields are added to contract line -->
             <field name="price_subtotal" position="after">
                 <field name="active_date_start"/>
