@@ -61,7 +61,7 @@ class AccountAnalyticAccount(models.Model):
     def _create_invoice(self):
         """
         Create invoices
-        @param None
+        @param self: single record of account.invoice
         @return: MUST return an invoice recordset
         """
         self.ensure_one()
@@ -74,7 +74,7 @@ class AccountAnalyticAccount(models.Model):
     def _create_sale(self):
         """
         Create Sale orders
-        @param None
+        @param self: single record of sale.order
         @return: MUST return a sale.order recordset
         """
         self.ensure_one()
