@@ -23,8 +23,8 @@ class AccountAnalyticAccount(models.Model):
         invoice_vals = self._prepare_invoice()
         invoice = self.env['account.invoice'].create(invoice_vals)
         for line in self.recurring_invoice_line_ids:
-            if line.date_start <= self.recurring_next_date and \
-                    line.date_end >= self.recurring_next_date:
+            if line.active_date_start <= self.recurring_next_date and \
+                    line.active_date_end >= self.recurring_next_date:
                 invoice_line_vals = self._prepare_invoice_line(
                     line, invoice.id)
                 self.env['account.invoice.line'].create(invoice_line_vals)
