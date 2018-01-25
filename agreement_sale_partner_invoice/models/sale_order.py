@@ -31,3 +31,8 @@ class SaleOrder(models.Model):
                 vals.update({'partner_invoice_id':
                              agreement.partner_invoice_id.id})
         return super(SaleOrder, self).write(vals)
+
+    @api.onchange('agreement_id')
+    def onchange_agreement(self):
+        if self.agreement_id.partner_invoice_id:
+            self.partner_invoice_id = self.agreement_id.partner_invoice_id.id
