@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+
+<odoo>
+
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_invoice_id" position="after">
+                <field name="agreement_partner_invoice_id" invisible="1"/>
+            </field>
+            <field name="partner_invoice_id" position="attributes">
+                <attribute name="attrs">{'readonly':[('agreement_partner_invoice_id','!=', False)]}</attribute>
+            </field>
+        </field>
+    </record>
+
+
+</odoo>
