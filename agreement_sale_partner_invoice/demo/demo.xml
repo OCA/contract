@@ -8,7 +8,7 @@
 
     <record id="sale_partner_agreement" model="sale.order">
         <field name="partner_id" ref="base.res_partner_12"/>
-        <field name="agreement_id" ref="agreement_account.market1"/>
+        <field name="agreement_id" ref="agreement_account.market2"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="team_id" ref="sales_team.team_sales_department"/>
         <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -21,5 +21,10 @@
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="price_unit">2950.00</field>
     </record>
+
+    <record id="sale_partner_agreement" model="sale.order">
+        <field name="agreement_id" ref="agreement_account.market1"/>
+    </record>
+        
 
 </odoo>

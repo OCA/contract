@@ -20,8 +20,7 @@ class SaleOrder(models.Model):
             agreement = self.env['agreement'].browse(agreement_id)
             if agreement.partner_invoice_id:
                 vals['partner_invoice_id'] = agreement.partner_invoice_id.id
-        order = super(SaleOrder, self).create(vals)
-        return order
+        return super(SaleOrder, self).create(vals)
 
     def write(self, vals):
         if 'agreement_id' in vals:
