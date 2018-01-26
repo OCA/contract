@@ -12,9 +12,9 @@
     <field name="model">agreement</field>
     <field name="inherit_id" ref="agreement_account.agreement_form"/>
     <field name="arch" type="xml">
-        <group name="in_invoices" position="after">
-            <group name="sale_orders" string="Sales Orders" attrs="{'invisible': [('agreement_type', '!=', 'sale')]}">
-                <field name="sale_ids" nolabel="1"/>
+        <group name="out_invoices" position="after">
+            <group name="sale_orders" string="Sales Orders">
+                <field name="sale_ids" colspan="4" nolabel="1"/>
             </group>
         </group>
     </field>
