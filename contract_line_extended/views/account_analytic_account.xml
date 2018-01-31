@@ -13,6 +13,7 @@
             <!-- Also show inactive contract lines -->
             <field name="recurring_invoice_line_ids" position="attributes">
                 <attribute name="context">{'active_test': False}</attribute>
+                <attribute name="domain">['|',('active','=',False)('active','=',True)]</attribute>
             </field>
             <!-- Next fields are added to contract line -->
             <field name="price_subtotal" position="after">
