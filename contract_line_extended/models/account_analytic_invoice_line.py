@@ -72,6 +72,9 @@ class AccountAnalyticInvoiceLine(models.Model):
     def create(self, vals):
         """Make sure link between contract lines and contract is
         maintained and dates stay within limit of contract."""
+        if self._name != 'account.analytic.invoice.line':
+            # template contract line
+            return super(AccountAnalyticInvoiceLine, self).create(vals)
         vals['contract_id'] = vals['analytic_account_id']
         result = super(AccountAnalyticInvoiceLine, self).create(vals)
         result._limit_dates()
@@ -80,6 +83,9 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def write(self, vals):
         """Keep line dates within contract dates on write."""
+        if self._name != 'account.analytic.invoice.line':
+            # template contract line
+            return super(AccountAnalyticInvoiceLine, self).write(vals)
         result = super(AccountAnalyticInvoiceLine, self).write(vals)
         self._limit_dates()
         return result
