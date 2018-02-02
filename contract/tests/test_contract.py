@@ -169,6 +169,8 @@ class TestContract(TestContractBase):
         journal.write({'type': 'general'})
         with self.assertRaises(ValidationError):
             contract_no_journal.recurring_create_invoice()
+        # Is the system not supposed to be back in orginal state after test?
+        journal.write({'type': 'sale'})
 
     def test_check_date_end(self):
         with self.assertRaises(ValidationError):
