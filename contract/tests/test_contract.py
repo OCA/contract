@@ -12,6 +12,23 @@ class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestContractBase, cls).setUpClass()
+        # Make sure a sale journal is present for tests
+        sequence_model = cls.env['ir.sequence']
+        contract_sequence = sequence_model.create({
+            'company_id': cls.env.user.company_id.id,
+            'code': 'contract',
+            'name': 'contract sequence',
+            'number_next': 1,
+            'implementation': 'standard',
+            'padding': 3,
+            'number_increment': 1})
+        journal_model = cls.env['account.journal']
+        journal_model.create({
+            'company_id': cls.env.user.company_id.id,
+            'code': 'contract',
+            'name': 'contract journal',
+            'sequence_id': contract_sequence.id,
+            'type': 'sale'})
         cls.partner = cls.env.ref('base.res_partner_2')
         cls.product = cls.env.ref('product.product_product_2')
         cls.product.taxes_id += cls.env['account.tax'].search(
@@ -169,8 +186,6 @@ class TestContract(TestContractBase):
         journal.write({'type': 'general'})
         with self.assertRaises(ValidationError):
             contract_no_journal.recurring_create_invoice()
-        # Is the system not supposed to be back in orginal state after test?
-        journal.write({'type': 'sale'})
 
     def test_check_date_end(self):
         with self.assertRaises(ValidationError):
