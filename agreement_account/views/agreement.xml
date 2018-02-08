@@ -20,19 +20,43 @@
                 </button>
             </div>
             <group name="main">
-                <field name="partner_id"/>
-                <field name="name"/>
-                <field name="code"/>
-                <field name="agreement_type"/>
-                <field name="signature_date"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <group name="left">
+                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <field name="signature_date"/>
+                </group>
+                <group name="right">
+                    <field name="agreement_type" widget="radio"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
             </group>
-            <group string="Customer Invoices" name="out_invoices" attrs="{'invisible': [('agreement_type', '!=', 'sale')]}">
-                <field name="out_invoice_ids" nolabel="1"/>
-            </group>
-            <group string="Supplier Invoices" name="in_invoices" attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
-                <field name="in_invoice_ids" nolabel="1"/>
-            </group>
+            <notebook>
+                <page string="Sales" class="oe_page_title"
+                      attrs="{'invisible': [('agreement_type', '!=', 'sale')]}">
+                    <group name="sale">
+                        <group name="sale_left">
+                        </group>
+                        <group name="sale_right">
+                        </group>
+                    </group>
+                    <group string="Customer Invoices" name="out_invoices">
+                        <field name="out_invoice_ids" colspan="4" nolabel="1"/>
+                    </group>
+                </page>
+                <page string="Purchases" class="oe_page_title"
+                      attrs="{'invisible': [('agreement_type', '!=', 'purchase')]}">
+                    <group name="purchase">
+                        <group name="purchase_left">
+                        </group>
+                        <group name="purchase_right">
+                        </group>
+                    </group>
+                    <group string="Supplier Invoices" name="in_invoices">
+                        <field name="in_invoice_ids" colspan="4" nolabel="1"/>
+                    </group>
+                </page>
+            </notebook>
         </form>
     </field>
 </record>
