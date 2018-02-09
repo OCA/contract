@@ -9,6 +9,10 @@ from odoo.tests import common
 
 
 class TestContractBase(common.SavepointCase):
+
+    post_install = True
+    at_install = False
+
     @classmethod
     def setUpClass(cls):
         super(TestContractBase, cls).setUpClass()
