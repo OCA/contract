@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2017 Pesol (<http://pesol.es>)
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
@@ -14,6 +13,7 @@ class TestContractSale(TransactionCase):
     def setUp(self):
         super(TestContractSale, self).setUp()
         self.partner = self.env.ref('base.res_partner_2')
+        self.partner.user_id = self.env.ref('base.user_demo')
         self.product = self.env.ref('product.product_product_2')
         self.product.taxes_id += self.env['account.tax'].search(
             [('type_tax_use', '=', 'sale')], limit=1)
@@ -59,7 +59,7 @@ class TestContractSale(TransactionCase):
         self.contract_line.price_unit = 100.0
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
-            [('project_id', '=', self.contract.id),
+            [('analytic_account_id', '=', self.contract.id),
              ('state', '=', 'draft')])
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract.recurring_next_date, '2017-02-28')
@@ -76,7 +76,7 @@ class TestContractSale(TransactionCase):
         self.contract_line.price_unit = 100.0
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
-            [('project_id', '=', self.contract.id),
+            [('analytic_account_id', '=', self.contract.id),
              ('state', '=', 'sale')])
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract.recurring_next_date, '2017-02-28')
