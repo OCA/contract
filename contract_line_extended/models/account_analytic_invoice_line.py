@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2018 Therp BV.
+# Copyright 2017-2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo import api, fields, models
 
@@ -42,21 +42,20 @@ class AccountAnalyticInvoiceLine(models.Model):
         string='Contract',
         readonly=True,
         ondelete='cascade',
-        index=True,
-        store=True)
+        index=True)
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
-        readonly=True,
-        store=True,
-        related='contract_id.partner_id')
+        readonly=True)
 
     @api.multi
-    def _limit_dates(self):
+    def _sync_with_contract(self):
         """Keep line dates within contract dates."""
         for this in self:
             contract = this.contract_id
             line_vals = {}
+            if contract.partner_id != this.partner_id:
+                line_vals['partner_id'] = contract.partner_id.id
             if contract.date_start:
                 if (not this.active_date_start) or \
                         this.active_date_start < contract.date_start:
@@ -77,7 +76,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             return super(AccountAnalyticInvoiceLine, self).create(vals)
         vals['contract_id'] = vals['analytic_account_id']
         result = super(AccountAnalyticInvoiceLine, self).create(vals)
-        result._limit_dates()
+        result._sync_with_contract()
         return result
 
     @api.multi
@@ -87,7 +86,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             # template contract line
             return super(AccountAnalyticInvoiceLine, self).write(vals)
         result = super(AccountAnalyticInvoiceLine, self).write(vals)
-        self._limit_dates()
+        self._sync_with_contract()
         return result
 
     @api.model_cr
