@@ -5,7 +5,7 @@
 {
     'name': u'Agreement (Sale)',
     'summary': "Link an agreement to a sale order and copy to invoice",
-    'version': '10.0.1.0.0',
+    'version': '10.0.1.0.1',
     'category': 'Contract',
     'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'http://www.akretion.com',
