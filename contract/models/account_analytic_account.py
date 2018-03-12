@@ -169,14 +169,14 @@ class AccountAnalyticAccount(models.Model):
             self.company_id.currency_id
         )
         invoice = self.env['account.invoice'].new({
-            'reference': self.code,
+            # 'reference': self.code,
             'type': 'out_invoice',
             'partner_id': self.partner_id.address_get(
                 ['invoice'])['invoice'],
             'currency_id': currency.id,
             'journal_id': journal.id,
             'date_invoice': self.recurring_next_date,
-            'origin': self.name,
+            'origin': '[' + self.code +'] ' + self.name if self.code else self.name,
             'company_id': self.company_id.id,
             'contract_id': self.id,
             'user_id': self.partner_id.user_id.id,
