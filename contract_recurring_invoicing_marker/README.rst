@@ -14,6 +14,8 @@ These markers are the supported ones:
 
 * #START#: Start date of the invoiced period.
 * #END# End date of the invoiced period.
+* #START_MONTH#: Start month of the invoiced period.
+* #END_MONTH# End month of the invoiced period.
 
 Usage
 =====
@@ -35,7 +37,7 @@ will contain the corresponding text that replaces the marker.
 Known issues / Roadmap
 ======================
 
-* Add more markers, like #START_MONTH# or #END_MONTH#.
+* Add more markers, like #YEAR#.
 
 Bug Tracker
 ===========
@@ -55,6 +57,7 @@ Contributors
 ------------
 
 * Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
+* Gonzalo Borrás <gborras@bisnesmart.com>
 
 Icon
 ----

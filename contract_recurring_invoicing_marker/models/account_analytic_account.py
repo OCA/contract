@@ -28,6 +28,8 @@ class AccountAnalyticAccount(models.Model):
     def _insert_markers(self, line, date_start, date_end, date_format):
         line = line.replace('#START#', date_start.strftime(date_format))
         line = line.replace('#END#', date_end.strftime(date_format))
+        line = line.replace('#START_MONTH#', date_start.strftime("%B"))
+        line = line.replace('#END_MONTH#', date_end.strftime("%B"))
         return line
 
     @api.model
