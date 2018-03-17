@@ -4,13 +4,14 @@
 # 
 # Translators:
 # OCA Transbot <transbot@odoo-community.org>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 01:41+0000\n"
-"PO-Revision-Date: 2017-11-30 01:41+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"POT-Creation-Date: 2018-03-10 01:44+0000\n"
+"PO-Revision-Date: 2018-03-10 01:44+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/oca/teams/23907/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,69 +81,69 @@ msgstr ""
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#END#</strong>: End date of the invoiced period"
-msgstr ""
+msgstr "<strong>#END#</strong>: Laskutusjakson päättymsispäivä"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
-msgstr ""
+msgstr "<strong>#START#</strong>: Laskutusjakson alkamispäivä"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Contract: </strong>"
-msgstr ""
+msgstr "<strong>Sopimus: </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Date Start: </strong>"
-msgstr ""
+msgstr "<strong>Aloituspäivä: </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Kuvaus</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Partner:</strong>"
-msgstr ""
+msgstr "<strong>Kumppani:</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
-msgstr ""
+msgstr "<strong>Hinta</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Määrä</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
-msgstr ""
+msgstr "<strong>Toistuvat kohdat</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Responsible: </strong>"
-msgstr ""
+msgstr "<strong>Vastuullinen: </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Summa</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Yksikköhinta</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "Kustannuspaikan rivit"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_account
@@ -151,25 +152,31 @@ msgid "Analytic Account"
 msgstr "Analyyttinen tili"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_automatic_price
+msgid "Auto-price?"
+msgstr "Automaattinen hinta?"
+
+#. module: contract
 #: model:ir.actions.act_window,help:contract.account_analytic_contract_action
 msgid "Click to create a new contract template."
-msgstr ""
+msgstr "Klikkaa luodaksesi uuden sopimuspohjan."
 
 #. module: contract
 #: model:ir.actions.act_window,help:contract.action_account_analytic_overdue_all
 msgid "Click to create a new contract."
-msgstr ""
+msgstr "Klikkaa luodaksesi uuden sopimuksen."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_company_id
 msgid "Company"
-msgstr ""
+msgstr "Yritys"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:263
+#: code:addons/contract/models/account_analytic_account.py:322
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Suunnittele sähköposti"
 
 #. module: contract
 #: model:ir.actions.report.xml,name:contract.report_contract
@@ -177,18 +184,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_account_invoice_contract_id
 #: model:mail.template,report_name:contract.email_contract_template
 msgid "Contract"
-msgstr ""
+msgstr "Sopimus"
+
+#. module: contract
+#: code:addons/contract/models/account_analytic_account.py:139
+#, python-format
+msgid "Contract '%s' start date can't be later than end date"
+msgstr "Sopimuksen '%s' alkupäivä ei voi olla myöhemmin kuin päättymispäivä"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract_line
 msgid "Contract Lines"
-msgstr ""
+msgstr "Sopimuksen rivit"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_contract_template_id
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Contract Template"
-msgstr ""
+msgstr "Sopimusmalli"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.account_analytic_contract_action
@@ -196,7 +209,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_tree
 msgid "Contract Templates"
-msgstr ""
+msgstr "Sopimusmallit"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_overdue_all
@@ -206,12 +219,17 @@ msgstr ""
 #: model:ir.ui.menu,name:contract.menu_config_contract
 #: model:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Contracts"
-msgstr ""
+msgstr "Sopimukset"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_account_create_invoice_visibility
+msgid "Create invoice visibility"
+msgstr "Laskun luonnin näkyvyys"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Create invoices"
-msgstr ""
+msgstr "Luo laskuja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_create_uid
@@ -231,23 +249,23 @@ msgstr "Luotu"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_date_end
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Date End"
-msgstr ""
+msgstr "Päättymispäivä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_date_start
 msgid "Date Start"
-msgstr ""
+msgstr "Alkamispäivä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_next_date
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Seuraavan laskun päiväys"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Päiviä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_name
@@ -259,13 +277,13 @@ msgstr "Kuvaus"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_discount
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Alennus (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_invoice_line.py:83
+#: code:addons/contract/models/account_analytic_invoice_line.py:122
 #, python-format
 msgid "Discount should be less or equal to 100"
-msgstr ""
+msgstr "Alennuksen pitäisi olla korkeintaan 100"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line_discount
@@ -274,6 +292,8 @@ msgid ""
 "Discount that is applied in generated invoices. It should be less or equal "
 "to 100"
 msgstr ""
+"Alennus jota käytetään kun luodaan laskuja. Tämän pitäisi olla korkeintaan "
+"100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_display_name
@@ -285,17 +305,17 @@ msgstr "Nimi"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Finished"
-msgstr ""
+msgstr "Päätetty"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoices
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "Luo toistuvaislaskuja automaattisesti"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittele..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_id
@@ -305,39 +325,44 @@ msgid "ID"
 msgstr "ID"
 
 #. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_automatic_price
+msgid ""
+"If this is marked, the price will be obtained automatically applying the "
+"pricelist to the product. If not, you will be able to introduce a manual "
+"price"
+msgstr ""
+
+#. module: contract
 #: model:ir.model,name:contract.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Lasku"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoice_line_ids
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_invoice_line_ids
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Laskurivit"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.act_recurring_invoices
 msgid "Invoices"
-msgstr ""
-
-#. module: contract
-#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
-msgid "Invoicing Type"
-msgstr ""
+msgstr "Laskut"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_invoicing_type
+#: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Invoicing type"
-msgstr ""
+msgstr "Laskun tyyppi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_journal_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_journal_id
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Journal"
-msgstr ""
+msgstr "Päiväkirja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract___last_update
@@ -364,19 +389,19 @@ msgstr "Viimeksi päivitetty"
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Legend (for the markers inside invoice lines description)"
-msgstr ""
+msgstr "Kuvaukset (laskurivien sisällä olevat merkinnät)"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Kuukausi(a)"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s) last day"
-msgstr ""
+msgstr "Kuukauden viimeinen päivä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_name
@@ -386,20 +411,25 @@ msgstr "Nimi"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
-msgstr ""
+msgstr "Seuraava lasku"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_partner_id
+msgid "Partner (always False)"
+msgstr "Kumppani (aina epätosi)"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Partner and dependents"
-msgstr ""
+msgstr "Kumppani ja riippuvuudet"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:169
+#: code:addons/contract/models/account_analytic_account.py:225
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr ""
@@ -408,20 +438,20 @@ msgstr ""
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Post-paid"
-msgstr ""
+msgstr "Jälkimaksu"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Pre-paid"
-msgstr ""
+msgstr "Ennakkomaksu"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_pricelist_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_pricelist_id
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Pricelist"
-msgstr ""
+msgstr "Hinnasto"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_product_id
@@ -440,47 +470,58 @@ msgstr "Määrä"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_rule_type
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Recurrence"
-msgstr ""
+msgstr "Toistuvuus"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Toistuvat laskut"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_interval
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "Toista joka"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_interval
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Toista joka (päivä/viikko/kuukausi/vuosi)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Vastuullinen"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Lähetä sähköpostilla"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_sequence
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestys"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line_sequence
 #: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_sequence
 msgid "Sequence of the contract line when displaying contracts"
 msgstr ""
+
+#. module: contract
+#: model:ir.ui.view,arch_db:contract.view_partner_form
+msgid "Show the contracts for this partner"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_specific_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_specific_price
+msgid "Specific Price"
+msgstr "Määritetty hinta"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
@@ -498,13 +539,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_price_subtotal
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_price_subtotal
 msgid "Sub Total"
-msgstr ""
+msgstr "Välisumma"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_price_unit
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Yksikköhinta"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_uom_id
@@ -515,33 +556,40 @@ msgstr "Mittayksikkö"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr ""
+msgstr "Vero:"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Valid"
-msgstr ""
+msgstr "Voimassa"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Viikko(a)"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Year(s)"
+msgstr "Vuotta"
+
+#. module: contract
+#: code:addons/contract/models/account_analytic_account.py:112
+#, python-format
+msgid ""
+"You can't have a next invoicing date before the start of the contract '%s'"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:161
+#: code:addons/contract/models/account_analytic_account.py:217
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:216
+#: code:addons/contract/models/account_analytic_account.py:274
 #, python-format
 msgid ""
 "You must review start and end dates!\n"
@@ -549,21 +597,34 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#: code:addons/contract/models/account_analytic_account.py:103
+#, python-format
+msgid "You must supply a customer for the contract '%s'"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/account_analytic_account.py:121
+#, python-format
+msgid "You must supply a next invoicing date for contract '%s'"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/account_analytic_account.py:130
+#, python-format
+msgid "You must supply a start date for contract '%s'"
+msgstr ""
+
+#. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract
 msgid "account.analytic.contract"
-msgstr ""
+msgstr "account.analytic.contract"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_invoice_line
 msgid "account.analytic.invoice.line"
-msgstr ""
-
-#. module: contract
-#: model:ir.ui.view,arch_db:contract.view_partner_form
-msgid "show the contracts for this partner"
-msgstr ""
+msgstr "account.analytic.invoice.line"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "⇒ Show recurring invoices"
-msgstr ""
+msgstr "⇒ Näytä toistuvaislaskut"
