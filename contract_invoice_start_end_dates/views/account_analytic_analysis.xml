@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<openerp>
+<data>
+
+<record id="account_analytic_account_form_form" model="ir.ui.view">
+    <field name="name">contract_start_end_dates.account.analytic.account.form</field>
+    <field name="model">account.analytic.account</field>
+    <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
+    <field name="arch" type="xml">
+        <field name="recurring_next_date" position="before">
+            <field name="start_end_dates_option"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_account_analytic_account_overdue_search" model="ir.ui.view">
+    <field name="name">contract_start_end_dates.account.analytic.account.search</field>
+    <field name="model">account.analytic.account</field>
+    <field name="inherit_id" ref="account_analytic_analysis.view_account_analytic_account_overdue_search"/>
+    <field name="arch" type="xml">
+        <filter name="cancelled" position="after">
+            <separator/>
+            <filter name="recurring_past" string="Recurring Invoicing Past Period" domain="[('recurring_invoices', '=', True), ('start_end_dates_option', '=', 'past')]"/>
+            <filter name="recurring_future" string="Recurring Invoicing Future Period" domain="[('recurring_invoices', '=', True), ('start_end_dates_option', '=', 'future')]"/>
+        </filter>
+        <filter context="{'group_by' : 'pricelist_id'}" position="after">
+            <filter name="start_end_dates_option_groupby" string="Start/End Dates Option"
+                context="{'group_by': 'start_end_dates_option'}"/>
+        </filter>
+    </field>
+</record>
+
+</data>
+</openerp>
