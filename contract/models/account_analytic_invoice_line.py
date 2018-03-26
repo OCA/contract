@@ -98,7 +98,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _inverse_price_unit(self):
         """Store the specific price in the no auto-price records."""
         for line in self.filtered(lambda x: not x.automatic_price):
-            line.specific_price = self.price_unit
+            line.specific_price = line.price_unit
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
