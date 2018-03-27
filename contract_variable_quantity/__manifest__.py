@@ -1,9 +1,10 @@
-# © 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016 Tecnativa - Pedro M. Baeza
+# Copyright 2018 Tecnativa - Carlos Dauden
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     'name': 'Variable quantity in contract recurrent invoicing',
-    'version': '11.0.1.0.0',
+    'version': '11.0.1.1.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "Tecnativa,"
