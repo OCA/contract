@@ -1,4 +1,5 @@
-# © 2016 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016 Tecnativa - Pedro M. Baeza
+# Copyright 2018 Tecnativa - Carlos Dauden
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import odoo.tests
@@ -58,3 +59,12 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
         invoice = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertEqual(invoice.invoice_line_ids[0].quantity, 12)
+
+    def test_check_skip_zero_qty(self):
+        self.formula.code = 'result=0'
+        self.contract.skip_zero_qty = True
+        invoice = self.contract._create_invoice()
+        self.assertFalse(invoice.invoice_line_ids)
+        self.contract.skip_zero_qty = False
+        invoice = self.contract._create_invoice()
+        self.assertAlmostEqual(invoice.invoice_line_ids[0].quantity, 0.0)
