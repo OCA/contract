@@ -8,7 +8,7 @@
 
 {
     'name': 'Contracts Management - Recurring',
-    'version': '11.0.1.4.1',
+    'version': '11.0.1.4.2',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
