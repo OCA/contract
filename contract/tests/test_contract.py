@@ -303,3 +303,16 @@ class TestContract(TestContractBase):
         self.assertTrue(self.contract.create_invoice_visibility)
         self.contract.date_end = '2016-01-01'
         self.assertFalse(self.contract.create_invoice_visibility)
+
+    def test_extend_invoice(self):
+        AccountInvoice = self.env['account.invoice']
+        self.contract.recurring_create_invoice()
+        invoice = AccountInvoice.search(
+            [('contract_id', '=', self.contract.id)])
+        invoice.origin = 'Orig Invoice'
+        self.contract._create_invoice(invoice)
+        self.assertEqual(invoice.origin, 'Orig Invoice Test Contract')
+        invoice_count = AccountInvoice.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.assertEqual(invoice_count, 1)
+        self.assertEqual(len(invoice.invoice_line_ids), 2)
