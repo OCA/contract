@@ -145,6 +145,8 @@ class AccountAnalyticAccount(models.Model):
         new_lines = []
         for contract_line in contract.recurring_invoice_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
+            # Remove template link field named as analytic account field
+            vals.pop('analytic_account_id', False)
             new_lines.append((0, 0, vals))
         return new_lines
 
