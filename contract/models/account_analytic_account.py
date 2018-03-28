@@ -188,6 +188,8 @@ class AccountAnalyticAccount(models.Model):
             'uom_id': line.uom_id.id,
             'discount': line.discount,
         })
+        # Add analytic tags to invoice line
+        invoice_line.analytic_tag_ids |= line.analytic_tag_ids
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)

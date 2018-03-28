@@ -65,6 +65,10 @@ class AccountAnalyticInvoiceLine(models.Model):
         help='Discount that is applied in generated invoices.'
              ' It should be less or equal to 100',
     )
+    analytic_tag_ids = fields.Many2many(
+        'account.analytic.tag',
+        string='Analytic Tags',
+    )
     sequence = fields.Integer(
         string="Sequence",
         default=10,
