@@ -236,10 +236,30 @@ class AccountAnalyticAccount(models.Model):
         return invoice._convert_to_write(invoice._cache)
 
     @api.multi
-    def _create_invoice(self):
+    def _prepare_invoice_update(self, invoice):
+        vals = self._prepare_invoice()
+        update_vals = {
+            'contract_id': self.id,
+            'date_invoice': vals.get('date_invoice', False),
+            'reference': ' '.join(filter(None, [
+                invoice.reference, vals.get('reference')])),
+            'origin': ' '.join(filter(None, [
+                invoice.origin, vals.get('origin')])),
+        }
+        return update_vals
+
+    @api.multi
+    def _create_invoice(self, invoice=False):
+        """
+        :param invoice: If not False add lines to this invoice
+        :return: invoice created or updated
+        """
         self.ensure_one()
-        invoice_vals = self._prepare_invoice()
-        invoice = self.env['account.invoice'].create(invoice_vals)
+        if invoice and invoice.state == 'draft':
+            invoice.update(self._prepare_invoice_update(invoice))
+        else:
+            invoice = self.env['account.invoice'].create(
+                self._prepare_invoice())
         for line in self.recurring_invoice_line_ids:
             invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
             if invoice_line_vals:
