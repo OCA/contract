@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-30 11:59+0000\n"
-"PO-Revision-Date: 2018-03-30 11:59+0000\n"
+"POT-Creation-Date: 2018-04-06 21:09+0000\n"
+"PO-Revision-Date: 2018-04-06 21:09+0000\n"
 "Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/oca/teams/23907/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -151,6 +151,12 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_automatic_price
+msgid "Auto-price?"
+msgstr ""
+
+#. module: contract
 #: model:ir.actions.act_window,help:contract.account_analytic_contract_action
 msgid "Click to create a new contract template."
 msgstr ""
@@ -166,7 +172,7 @@ msgid "Company"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:312
+#: code:addons/contract/models/account_analytic_account.py:332
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -306,7 +312,7 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_invoice_line.py:135
+#: code:addons/contract/models/account_analytic_invoice_line.py:177
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "De korting moet kleiner of gelijk aan 100 zijn"
@@ -357,6 +363,15 @@ msgstr "Groepeer op..."
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_id
 msgid "ID"
 msgstr "ID"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_account_analytic_contract_line_automatic_price
+#: model:ir.model.fields,help:contract.field_account_analytic_invoice_line_automatic_price
+msgid ""
+"If this is marked, the price will be obtained automatically applying the "
+"pricelist to the product. If not, you will be able to introduce a manual "
+"price"
+msgstr ""
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
@@ -440,6 +455,11 @@ msgstr "Naam"
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
 msgstr "Volgende factuur"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_partner_id
+msgid "Partner (always False)"
+msgstr ""
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
@@ -540,6 +560,12 @@ msgid "Show the contracts for this partner"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_specific_price
+#: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_specific_price
+msgid "Specific Price"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_rule_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_rule_type
 #: model:ir.model.fields,help:contract.field_project_project_recurring_rule_type
@@ -609,7 +635,7 @@ msgid "You must first select a Customer for Contract %s!"
 msgstr " Er moet eerst een klant worden ingesteld op contract %s!"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:264
+#: code:addons/contract/models/account_analytic_account.py:284
 #, python-format
 msgid ""
 "You must review start and end dates!\n"
