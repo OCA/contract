@@ -56,7 +56,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 class ContractLineFormula(models.Model):
     _name = 'contract.line.qty.formula'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Text(required=True, default="result = 0")
 
     @api.constrains('code')
