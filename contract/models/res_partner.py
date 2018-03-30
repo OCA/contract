@@ -39,7 +39,7 @@ class ResPartner(models.Model):
                 search_default_partner_id=self.id,
                 default_partner_id=self.id,
                 default_recurring_invoices=True,
-                default_pricelist_id=self.pricelist_id.id,
+                default_pricelist_id=self.property_product_pricelist.id,
             ),
         )
         return res
