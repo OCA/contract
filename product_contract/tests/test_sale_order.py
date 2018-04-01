@@ -24,6 +24,7 @@ class TestSaleOrder(TransactionCase):
         self.env['account.analytic.account']._revert_method(
             'create',
         )
+        super(TestSaleOrder, self).tearDown()
 
     def test_action_done(self):
         """ It should create a contract when the sale for a contract is set
