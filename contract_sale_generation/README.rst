@@ -40,6 +40,7 @@ Contributors
 ------------
 
 * Angel Moya <angel.moya@pesol.es>
+* Florent THOMAS <florent.thomas@mind-and-go.com>
 
 Maintainer
 ----------
