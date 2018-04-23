@@ -102,6 +102,11 @@ class AccountAnalyticAccount(models.Model):
             ('company_id', '=', company_id)]
         return self.env['account.journal'].search(domain, limit=1)
 
+    contract_type = fields.Selection(
+        selection=[
+            ('sale', _('Sale'))
+        ], default='sale'
+    )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string='Pricelist')
@@ -142,13 +147,20 @@ class AccountAnalyticAccount(models.Model):
         'account.journal',
         string='Journal',
         default=_default_journal,
-        domain="[('type', '=', 'sale'),('company_id', '=', company_id)]")
+        domain="[('company_id', '=', company_id)]")
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Responsible',
         index=True,
         default=lambda self: self.env.user,
     )
+
+    @api.onchange('contract_type')
+    def _onchange_contract_type(self):
+        self.journal_id = self.env['account.journal'].search([
+            ('type', '=', self.contract_type),
+            ('company_id', '=', self.company_id.id)
+        ], limit=1)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -220,7 +232,7 @@ class AccountAnalyticAccount(models.Model):
         return invoice_line_vals
 
     @api.multi
-    def _prepare_invoice(self):
+    def _prepare_invoice(self, journal=None):
         """Prepare the values for the invoice creation from the contract(s)
         given. It's possible to provide several contracts. Only one invoice
         will be created and most of the values will be taken from first
@@ -236,14 +248,18 @@ class AccountAnalyticAccount(models.Model):
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
                 contract.name)
-        journal = contract.journal_id or self.env['account.journal'].search(
-            [('type', '=', 'sale'),
-             ('company_id', '=', contract.company_id.id)],
-            limit=1)
+
+        if not journal:
+            journal = contract.journal_id or self.env[
+                'account.journal'].search([
+                    ('type', '=', contract.contract_type),
+                    ('company_id', '=', contract.company_id.id)
+                ], limit=1)
+
         if not journal:
             raise ValidationError(
-                _("Please define a sale journal for the company '%s'.") %
-                (contract.company_id.name or '',))
+                _("Please define a %s journal for the company '%s'.") %
+                (contract.contract_type, contract.company_id.name or '',))
         currency = (
             contract.pricelist_id.currency_id or
             contract.partner_id.property_product_pricelist.currency_id or
