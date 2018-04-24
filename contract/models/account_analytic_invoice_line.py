@@ -3,7 +3,7 @@
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
 # Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
-# Copyright 2015-2017 Tecnativa - Pedro M. Baeza
+# Copyright 2015-2018 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
@@ -98,7 +98,9 @@ class AccountAnalyticInvoiceLine(models.Model):
         for line in self:
             if line.automatic_price:
                 product = line.product_id.with_context(
-                    quantity=line.quantity,
+                    quantity=line.env.context.get(
+                        'contract_line_qty', line.quantity,
+                    ),
                     pricelist=line.analytic_account_id.pricelist_id.id,
                     partner=line.analytic_account_id.partner_id.id,
                     date=line.env.context.get('old_date', fields.Date.today()),
