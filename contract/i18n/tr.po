@@ -4,13 +4,14 @@
 # 
 # Translators:
 # OCA Transbot <transbot@odoo-community.org>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-06 21:09+0000\n"
-"PO-Revision-Date: 2018-04-06 21:09+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"POT-Creation-Date: 2018-04-28 02:01+0000\n"
+"PO-Revision-Date: 2018-04-28 02:01+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/oca/teams/23907/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,73 +71,121 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Merhaba ${object.partner_id.name or ''},</p>\n"
+"    <p>Yeni bir sözleşme oluşturuldu: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERANSLAR</strong><br />\n"
+"       &nbsp;&nbsp;Sözleşme: <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;Sözleşme Başlama Tarihi: ${object.date_start or ''}<br />\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;İletişim: <a href=\"mailto:${object.user_id.email or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;İletişim: ${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Herhangi bir sorunuz varsa, bizimle iletişime geçmekten çekinmeyin.</p>\n"
+"    <p>Bizi seçtiğiniz için teşekkürler ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone: ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Sözleşme (Ref ${object.name or 'n/a'})"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#END#</strong>: End date of the invoiced period"
-msgstr "<strong>#SON#</strong>: Faturalanmış dönemin bitiş tarihi"
+msgstr "<strong>#SONLANMA#</strong>: Faturalanma dönemin bitiş tarihi"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
-msgstr "<strong>#BAŞLAMA#</strong>: Faturalandırılan süre başlangıç tarihi"
+msgstr "<strong>#BAŞLAMA#</strong>: Faturalanma dönemin başlama tarihi"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Contract: </strong>"
-msgstr ""
+msgstr "<strong>Sözleşme: </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Date Start: </strong>"
-msgstr ""
+msgstr "<strong>Başlama Tarihi : </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Açıklama</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Partner:</strong>"
-msgstr ""
+msgstr "<strong>İş Ortağı:</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
-msgstr ""
+msgstr "<strong>Fiyat</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Miktar</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
-msgstr ""
+msgstr "<strong>Yinelenen Öğeler</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Responsible: </strong>"
-msgstr ""
+msgstr "<strong>Sorumlu: </strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Toplam</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Birim Fiyat</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -154,7 +203,7 @@ msgstr "Analitik Hesap"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_automatic_price
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_automatic_price
 msgid "Auto-price?"
-msgstr ""
+msgstr "Otomatik Fiyat?"
 
 #. module: contract
 #: model:ir.actions.act_window,help:contract.account_analytic_contract_action
@@ -169,18 +218,18 @@ msgstr "Yeni bir sözleşme oluşturmak için tıklayın."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_company_id
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:332
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "E-posta Oluştur"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: contract
 #: model:ir.actions.report,name:contract.report_contract
@@ -194,12 +243,12 @@ msgstr "Sözleşme"
 #: code:addons/contract/models/account_analytic_account.py:138
 #, python-format
 msgid "Contract '%s' start date can't be later than end date"
-msgstr ""
+msgstr "Sözleşme '%s' başlangıç tarihi, bitiş tarihinden sonra olamaz"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract_line
 msgid "Contract Lines"
-msgstr ""
+msgstr "Sözleşme Satırları"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_contract_template_id
@@ -230,7 +279,7 @@ msgstr "Sözleşmeler"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_create_invoice_visibility
 #: model:ir.model.fields,field_description:contract.field_project_project_create_invoice_visibility
 msgid "Create Invoice Visibility"
-msgstr ""
+msgstr "Fatura Görünürlüğü Oluştur"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -256,7 +305,7 @@ msgstr "Oluşturuldu"
 #: model:ir.model.fields,field_description:contract.field_project_project_date_end
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Date End"
-msgstr ""
+msgstr "Sonlanma Tarihi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_date_from
@@ -267,7 +316,7 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_date_start
 msgid "Date Start"
-msgstr ""
+msgstr "Başlama Tarihi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_date_to
@@ -312,7 +361,7 @@ msgid "Discount (%)"
 msgstr "İndirim (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_invoice_line.py:177
+#: code:addons/contract/models/account_analytic_invoice_line.py:179
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "İndirim 100'den az veya ona eşit olmalıdır"
@@ -336,14 +385,14 @@ msgstr "Ad Görünümü"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Finished"
-msgstr ""
+msgstr "Sonlanmış"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.account_analytic_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.account_analytic_cron_for_invoice
 #: model:ir.cron,name:contract.account_analytic_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
-msgstr ""
+msgstr "Sözleşmelerden Tekrarlanan Faturalar Oluşturun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_recurring_invoices
@@ -371,6 +420,8 @@ msgid ""
 "pricelist to the product. If not, you will be able to introduce a manual "
 "price"
 msgstr ""
+"Bu işaretliyse, Fiyat fiyat listesinden ürüne otomatik olarak uygulayarak "
+"elde edilir. Değilse, manuel fiyat uygulayabilirsiniz."
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
@@ -475,13 +526,13 @@ msgstr "Lütfen '%s' firması için bir satış yevmiyesi tanımlayın."
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Post-paid"
-msgstr ""
+msgstr "Sonradan-Ödemeli"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Pre-paid"
-msgstr ""
+msgstr "Ön-Ödemeli"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_pricelist_id
@@ -522,30 +573,30 @@ msgstr "Tekrarlayan Faturalar"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_recurring_interval
 #: model:ir.model.fields,field_description:contract.field_project_project_recurring_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "Tekrar Aralığı"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_interval
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_interval
 #: model:ir.model.fields,help:contract.field_project_project_recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Tekrarlama Her (Gün / Hafta / Ay / Yıl) "
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Send by Email"
-msgstr ""
+msgstr "E-posta ile Gönderme"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_sequence
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sıra"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line_sequence
@@ -556,7 +607,7 @@ msgstr ""
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the contracts for this partner"
-msgstr ""
+msgstr "Bu iş ortağı için sözleşmeleri göster"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_specific_price
@@ -599,12 +650,12 @@ msgstr "Ölçü Birimi"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr ""
+msgstr "KDV:"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Valid"
-msgstr ""
+msgstr "Geçerli"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
