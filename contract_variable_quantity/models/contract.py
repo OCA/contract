@@ -38,6 +38,10 @@ class AccountAnalyticAccount(models.Model):
                 vals = {}
             else:
                 vals['quantity'] = qty
+                # Re-evaluate price with this new quantity
+                vals['price_unit'] = line.with_context(
+                    contract_line_qty=qty,
+                ).price_unit
         return vals
 
 
