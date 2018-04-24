@@ -1,5 +1,5 @@
 # Copyright 2004-2010 OpenERP SA
-# Copyright 2014-2017 Tecnativa - Pedro M. Baeza
+# Copyright 2014-2018 Tecnativa - Pedro M. Baeza
 # Copyright 2015 Domatix
 # Copyright 2016-2018 Tecnativa - Carlos Dauden
 # Copyright 2017 Tecnativa - Vicent Cubells
@@ -8,7 +8,7 @@
 
 {
     'name': 'Contracts Management - Recurring',
-    'version': '11.0.2.0.1',
+    'version': '11.0.2.0.2',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
