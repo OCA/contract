@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models
 
 
@@ -13,8 +12,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.onchange('partner_id')
     def on_change_partner_id(self):
-        if self.partner_id.customer_payment_mode_id:
-            self.payment_mode_id = self.partner_id.customer_payment_mode_id.id
+        self.payment_mode_id = self.partner_id.customer_payment_mode_id.id
 
     @api.multi
     def _prepare_invoice(self):
@@ -22,6 +20,6 @@ class AccountAnalyticAccount(models.Model):
         if self.payment_mode_id:
             invoice_vals['payment_mode_id'] = self.payment_mode_id.id
             invoice = self.env['account.invoice'].new(invoice_vals)
-            invoice.payment_mode_id_change()
+            invoice._onchange_payment_mode_id()
             invoice_vals = invoice._convert_to_write(invoice._cache)
         return invoice_vals
