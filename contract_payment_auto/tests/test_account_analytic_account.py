@@ -45,6 +45,13 @@ class TestAccountAnalyticAccount(common.HttpCase):
             'acquirer_id': self.acquirer.id,
             'acquirer_ref': 'Test',
         })
+        self.other_payment_token = self.env['payment.token'].create({
+            'name': 'Test Other Token',
+            'partner_id': self.partner.id,
+            'active': True,
+            'acquirer_id': self.acquirer.id,
+            'acquirer_ref': 'OtherTest',
+        })
         self.contract = self.Model.create({
             'name': 'Test Contract',
             'partner_id': self.partner.id,
@@ -182,12 +189,33 @@ class TestAccountAnalyticAccount(common.HttpCase):
         res = self.contract._pay_invoice(invoice)
         self.assertIs(res, None)
 
-    def test_pay_invoice_success(self):
-        """ It should return True on success. """
+    def assert_successful_pay_invoice(self, expected_token=None):
         with self._mock_transaction(s2s_side_effect=True):
             invoice = self._create_invoice(True)
             res = self.contract._pay_invoice(invoice)
             self.assertTrue(res)
+            if expected_token is not None:
+                Transactions = self.contract.env['payment.transaction']
+                tx_vals = Transactions.create.call_args[0][0]
+                self.assertEqual(tx_vals.get('payment_token_id'),
+                                 expected_token.id)
+
+    def test_pay_invoice_success(self):
+        """ It should return True on success. """
+        self.assert_successful_pay_invoice()
+
+    def test_pay_invoice_with_contract_token(self):
+        """ When contract and partner have a token, contract's is used. """
+        self.partner.payment_token_id = self.other_payment_token
+        self.contract.payment_token_id = self.payment_token
+        self.assert_successful_pay_invoice(expected_token=self.payment_token)
+
+    def test_pay_invoice_with_partner_token_success(self):
+        """ When contract has no related token, it should use partner's. """
+        self.contract.payment_token_id = False
+        self.partner.payment_token_id = self.other_payment_token
+        self.assert_successful_pay_invoice(
+            expected_token=self.other_payment_token)
 
     @mute_logger(account_analytic_account.__name__)
     def test_pay_invoice_exception(self):
@@ -243,7 +271,8 @@ class TestAccountAnalyticAccount(common.HttpCase):
     def test_get_tx_vals(self):
         """ It should return a dict. """
         self.assertIsInstance(
-            self.contract._get_tx_vals(self._create_invoice()),
+            self.contract._get_tx_vals(self._create_invoice(),
+                                       self.contract.payment_token_id),
             dict,
         )
 

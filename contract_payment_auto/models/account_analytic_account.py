@@ -91,7 +91,7 @@ class AccountAnalyticAccount(models.Model):
             return
 
         transaction = self.env['payment.transaction'].create(
-            self._get_tx_vals(invoice),
+            self._get_tx_vals(invoice, token),
         )
         valid_states = ['authorized', 'done']
 
@@ -136,10 +136,9 @@ class AccountAnalyticAccount(models.Model):
         return
 
     @api.multi
-    def _get_tx_vals(self, invoice):
+    def _get_tx_vals(self, invoice, token):
         """ Return values for create of payment.transaction for invoice."""
         amount_due = invoice.residual
-        token = self.payment_token_id
         partner = token.partner_id
         reference = self.env['payment.transaction'].get_next_reference(
             invoice.number,
