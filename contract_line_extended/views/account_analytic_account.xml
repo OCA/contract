@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record
+        id="account_analytic_account_recurring_form_form"
+        model="ir.ui.view"
+        >
+        <field name="model">account.analytic.account</field>
+        <field
+            name="inherit_id"
+            ref="contract.account_analytic_account_recurring_form_form"
+            />
+        <field name="arch" type="xml">
+            <!-- Also show inactive contract lines -->
+            <field name="recurring_invoice_line_ids" position="attributes">
+                <attribute name="context">{'active_test': False}</attribute>
+                <attribute name="domain">['|',('active','=',False)('active','=',True)]</attribute>
+            </field>
+            <!-- Next fields are added to contract line -->
+            <field name="price_subtotal" position="after">
+                <field name="active_date_start"/>
+                <field name="active_date_end"/>
+            </field>
+        </field>
+    </record>
+</odoo>
