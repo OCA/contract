@@ -28,8 +28,8 @@ class AccountAnalyticAccount(models.Model):
         return vals
 
 
-class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'account.analytic.invoice.line'
+class AccountAnalyticContractLine(models.Model):
+    _inherit = 'account.analytic.contract.line'
 
     qty_type = fields.Selection(
         selection=[
