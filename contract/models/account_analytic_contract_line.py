@@ -4,14 +4,13 @@
 from odoo import fields, models
 
 
-class AccountAnalyticContractLine(models.Model):
-    _name = 'account.analytic.contract.line'
-    _description = 'Contract Lines'
-    _inherit = 'account.analytic.invoice.line'
+class AccountAnalyticInvoiceLine(models.Model):
+    _name = 'account.analytic.invoice.line'
+    _inherit = 'account.analytic.contract.line'
 
     analytic_account_id = fields.Many2one(
-        string='Contract',
-        comodel_name='account.analytic.contract',
+        'account.analytic.account',
+        string='Analytic Account',
         required=True,
         ondelete='cascade',
     )
