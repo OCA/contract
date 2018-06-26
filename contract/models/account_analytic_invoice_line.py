@@ -14,8 +14,9 @@ from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 
-class AccountAnalyticInvoiceLine(models.Model):
-    _name = 'account.analytic.invoice.line'
+class AccountAnalyticContractLine(models.Model):
+    _name = 'account.analytic.contract.line'
+    _description = 'Contract Lines'
     _order = "sequence,id"
 
     product_id = fields.Many2one(
@@ -24,8 +25,8 @@ class AccountAnalyticInvoiceLine(models.Model):
         required=True,
     )
     analytic_account_id = fields.Many2one(
-        'account.analytic.account',
-        string='Analytic Account',
+        string='Contract',
+        comodel_name='account.analytic.contract',
         required=True,
         ondelete='cascade',
     )
