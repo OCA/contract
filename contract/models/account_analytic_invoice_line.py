@@ -9,7 +9,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     _inherit = 'account.analytic.contract.line'
 
     analytic_account_id = fields.Many2one(
-        'account.analytic.account',
+        comodel_name='account.analytic.account',
         string='Analytic Account',
         required=True,
         ondelete='cascade',
