@@ -25,10 +25,10 @@ Contracts Management - Recurring
 
 |badge1| |badge2| |badge3| |badge4| |badge5| 
 
-This module brings back the contracts management with recurring invoicing
-features. Also you can print and send by email contract report.
+This module enables contracts management with recurring
+invoicing functions. Also you can print and send by email contract report.
 
-In upstream Odoo, this functionality was moved into the Enterprise edition.
+It works for customer contract and supplier contracts.
 
 **Table of contents**
 
@@ -106,6 +106,7 @@ Contributors
 * Angel Moya <angel.moya@domatix.com>
 * Dave Lasley <dave@laslabs.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
+* Miquel Raïch <miquel.raich@eficent.com>
 
 Maintainers
 ~~~~~~~~~~~
