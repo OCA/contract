@@ -6,13 +6,15 @@
         <field name="model">account.analytic.contract</field>
         <field name="arch" type="xml">
             <form string="Contract Template">
+                <group name="name">
+                    <field name="name"/>
+                </group>
                 <group name="group_main">
-                    <field name="company_id" invisible="1" />
-                    <field name="name" />
                     <group name="group_main_left">
+                        <field name="contract_type" />
                         <field name="journal_id" />
                         <field name="pricelist_id" />
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                     <group name="group_main_right">
                         <field name="recurring_invoicing_type" />
@@ -37,7 +39,7 @@
                             <field name="name" />
                             <field name="quantity" />
                             <field name="uom_id" />
-                            <field name="automatic_price"/>
+                            <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"/>
                             <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
                             <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="sale.group_discount_per_so_line" />
@@ -61,6 +63,7 @@
         <field name="arch" type="xml">
             <tree string="Contract Templates">
                 <field name="name" />
+                <field name="contract_type" />
                 <field name="recurring_rule_type" />
                 <field name="recurring_interval" />
                 <field name="recurring_invoicing_type" />
@@ -75,11 +78,15 @@
         <field name="arch" type="xml">
             <search string="Contract Templates">
                 <field name="name" />
+                <field name="contract_type" />
                 <field name="recurring_rule_type" />
                 <field name="recurring_interval" />
                 <field name="recurring_invoicing_type" />
                 <field name="pricelist_id" />
                 <field name="journal_id" />
+                <filter string="Contract Type"
+                        context="{'group_by': 'contract_type'}"
+                        />
                 <filter string="Recurrence"
                         context="{'group_by': 'recurring_rule_type'}"
                         />
@@ -101,6 +108,7 @@
         <field name="res_model">account.analytic.contract</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="account_analytic_contract_view_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new contract template.
