@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
 # Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
@@ -212,16 +211,22 @@ class AccountAnalyticAccount(models.Model):
         return invoice_line_vals
 
     @api.multi
-    def _prepare_invoice(self):
+    def _prepare_invoice(self, journal=None):
         self.ensure_one()
         if not self.partner_id:
-            raise ValidationError(
-                _("You must first select a Customer for Contract %s!") %
-                self.name)
-        journal = self.journal_id or self.env['account.journal'].search(
-            [('type', '=', 'sale'),
-             ('company_id', '=', self.company_id.id)],
-            limit=1)
+            if self.contract_type == 'purchase':
+                raise ValidationError(
+                    _("You must first select a Supplier for Contract %s!") %
+                    self.name)
+            else:
+                raise ValidationError(
+                    _("You must first select a Customer for Contract %s!") %
+                    self.name)
+        if not journal:
+            journal = self.journal_id or self.env['account.journal'].search([
+                ('type', '=', self.contract_type),
+                ('company_id', '=', self.company_id.id)
+            ], limit=1)
         if not journal:
             raise ValidationError(
                 _("Please define a sale journal for the company '%s'.") %

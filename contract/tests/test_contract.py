@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016 Tecnativa - Carlos Dauden
 # Copyright 2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -32,6 +31,15 @@ class TestContractBase(common.SavepointCase):
             'recurring_invoices': True,
             'date_start': '2016-02-15',
             'recurring_next_date': '2016-02-29',
+        })
+        cls.contract2 = cls.env['account.analytic.account'].create({
+            'name': 'Test Contract 2',
+            'partner_id': cls.partner.id,
+            'pricelist_id': cls.partner.property_product_pricelist.id,
+            'recurring_invoices': True,
+            'date_start': '2016-02-15',
+            'recurring_next_date': '2016-02-29',
+            'contract_type': 'purchase',
         })
         cls.line_vals = {
             'analytic_account_id': cls.contract.id,
@@ -270,24 +278,27 @@ class TestContract(TestContractBase):
                                     ]))
 
     def test_contract_count(self):
-        """It should return contract count."""
-        count = self.partner.contract_count + 2
+        """It should return sale contract count."""
+        count = self.partner.sale_contract_count + 2
         self.contract.copy()
         self.contract.copy()
-        self.assertEqual(self.partner.contract_count, count)
+        self.assertEqual(self.partner.sale_contract_count, count)
+        count = self.partner.purchase_contract_count + 1
+        self.contract2.copy()
+        self.assertEqual(self.partner.purchase_contract_count, count)
 
     def test_same_date_start_and_date_end(self):
         """It should create one invoice with same start and end date."""
-        AccountInvoice = self.env['account.invoice']
+        account_invoice_model = self.env['account.invoice']
         self.contract.write({
             'date_start': fields.Date.today(),
             'date_end': fields.Date.today(),
             'recurring_next_date': fields.Date.today(),
         })
-        init_count = AccountInvoice.search_count(
+        init_count = account_invoice_model.search_count(
             [('contract_id', '=', self.contract.id)])
         self.contract.cron_recurring_create_invoice()
-        last_count = AccountInvoice.search_count(
+        last_count = account_invoice_model.search_count(
             [('contract_id', '=', self.contract.id)])
         self.assertEqual(last_count, init_count + 1)
         with self.assertRaises(ValidationError):
@@ -304,3 +315,31 @@ class TestContract(TestContractBase):
         self.assertTrue(self.contract.create_invoice_visibility)
         self.contract.date_end = '2016-01-01'
         self.assertFalse(self.contract.create_invoice_visibility)
+
+    def test_extend_invoice(self):
+        account_invoice_model = self.env['account.invoice']
+        self.contract.recurring_create_invoice()
+        invoice = account_invoice_model.search(
+            [('contract_id', '=', self.contract.id)])
+        invoice.origin = 'Orig Invoice'
+        self.contract._create_invoice(invoice)
+        self.assertEqual(invoice.origin, 'Orig Invoice Test Contract')
+        invoice_count = account_invoice_model.search_count(
+            [('contract_id', '=', self.contract.id)])
+        self.assertEqual(invoice_count, 1)
+        self.assertEqual(len(invoice.invoice_line_ids), 2)
+
+    def test_act_show_contract(self):
+        show_contract = self.partner.\
+            with_context(contract_type='sale').act_show_contract()
+        self.assertDictContainsSubset(
+            {
+                'name': 'Customer Contracts',
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'res_model': 'account.analytic.account',
+                'xml_id': 'contract.action_account_analytic_sale_overdue_all',
+            },
+            show_contract,
+            'There was an error and the view couldn\'t be opened.'
+        )
