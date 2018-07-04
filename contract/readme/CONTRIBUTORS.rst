@@ -3,3 +3,4 @@
 * Angel Moya <angel.moya@domatix.com>
 * Dave Lasley <dave@laslabs.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
+* Miquel Raïch <miquel.raich@eficent.com>
