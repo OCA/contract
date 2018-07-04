@@ -9,9 +9,14 @@
         <field type="xml" name="arch">
         <xpath expr="//div[@name='button_box']" position="inside">
             <button name="act_show_contract" type="object" class="oe_stat_button"
-                    icon="fa-book"
-                    help="Show the contracts for this partner">
-                <field name="contract_count" widget="statinfo" string="Contracts"/>
+                    icon="fa-book" context="{'contract_type': 'sale'}"
+                    help="Show the sale contracts for this partner">
+                <field name="sale_contract_count" widget="statinfo" string="Sale Contracts"/>
+            </button>
+            <button name="act_show_contract" type="object" class="oe_stat_button"
+                    icon="fa-book" context="{'contract_type': 'purchase'}"
+                    help="Show the purchase contracts for this partner">
+                <field name="purchase_contract_count" widget="statinfo" string="Purchase Contracts"/>
             </button>
         </xpath>
     </field>
