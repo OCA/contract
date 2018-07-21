@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_account_timeformat_form" model="ir.ui.view">
+        <field name="name">Contract form</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
+        <field name="arch" type="xml">
+            <group name="group_legend" position="inside">
+                <p colspan="2"><strong>#START(FORMATTING)# and #END(FORMATTING)</strong>: Format the date according to
+                    the LDML
+                    format. Examples: for 1 September 2018
+                </p>
+                <p>
+                    <ul>
+                        <li>#START(MMMM yyyy)# : September 2018</li>
+                        <li>#START(d MMMM yy)# : 1 September 18</li>
+                        <li>#END(dd MMMM yyy)# : 01 September 2018</li>
+                        <li>#END(EEEE dd MMMM yyy)# : Sunday 01 September 2018</li>
+                        <li>#START(dd/MM/yyyy) : 30/09/2018</li>
+                        <li>#END# : Default behaviour - Date format on based on partner language</li>
+                    </ul>
+                </p>
+            </group>
+        </field>
+    </record>
+</odoo>
