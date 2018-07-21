@@ -33,7 +33,8 @@ class AccountAnalyticAccount(models.Model):
         partner_lang = line.analytic_account_id.partner_id.lang
 
         if from_result and len(from_result[0]) > 1:
-            from_string = self._format_date(date_from, partner_lang, from_result[0])
+            from_string = self._format_date(date_from, partner_lang,
+                                            from_result[0])
             name = re.sub(from_regex, from_string, name)
         else:
             # Original behaviour
