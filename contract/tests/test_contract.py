@@ -40,6 +40,7 @@ class TestContractBase(common.SavepointCase):
             'recurring_invoices': True,
             'date_start': '2016-02-15',
             'recurring_next_date': '2016-02-29',
+            'recurring_rule_type': 'monthly'
         })
         cls.line_vals = {
             'analytic_account_id': cls.contract.id,
