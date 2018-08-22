@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_analytic_account_recurring_section_form" model="ir.ui.view">
+        <field name="name">Account Analytic account Form View</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="recurring_invoice_line_ids"]/tree//field[@name="name"]'
+                   position="after">
+                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
