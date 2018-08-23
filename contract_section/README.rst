@@ -22,7 +22,7 @@ Contracts Management - Add section to invoice lines
 
 |badge1| |badge2| |badge3| |badge4| 
 
-Enable the use of sections on the contract.
+Enable the use of sections on the contract and the contract template.
 
 **Table of contents**
 
@@ -33,7 +33,7 @@ Usage
 =====
 
 Create a contract with sections. When the invoice is created, the sections are
-transfered to the invoice.
+transferred to the invoice.
 
 Bug Tracker
 ===========
