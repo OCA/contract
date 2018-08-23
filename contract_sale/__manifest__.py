@@ -9,7 +9,7 @@
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'sale_management',
+        'sale',
         'contract',
     ],
     'data': [
