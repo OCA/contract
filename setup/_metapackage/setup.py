@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo11-addon-contract',
         'odoo11-addon-contract_payment_mode',
+        'odoo11-addon-contract_sale',
         'odoo11-addon-contract_sale_invoicing',
         'odoo11-addon-contract_section',
         'odoo11-addon-contract_variable_qty_timesheet',
