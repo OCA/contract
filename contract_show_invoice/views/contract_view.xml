@@ -32,8 +32,15 @@
         <field name="arch" type="xml">
             <xpath expr='//div[@name="button_box"]' position='inside'>
                 <button class="oe_stat_button" type="action" icon="fa-edit"
-                    name="%(contract_show_invoice.act_analytic_invoices)d"
-                    string="Invoices" help="Invoices related with this contract">
+                        name="%(contract_show_invoice.act_analytic_invoices)d"
+                        help="Invoices related with this contract">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_invoiced" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Invoiced</span>
+                    </div>
                 </button>
             </xpath>
         </field>
