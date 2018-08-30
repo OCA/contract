@@ -14,10 +14,9 @@ class AccountAnalyticAccount(models.Model):
         for analytic in self:
             fetch_data = invoice_model.read_group(
                 [('invoice_line_ids.account_analytic_id', '=', analytic.id)],
-                ['partner_id', 'amount_total'], ['partner_id'], lazy=False)
-
-            result = [data['amount_total'] for data in fetch_data]
-            analytic.total_invoiced = sum(result)
+                ['amount_total'], [],
+            )
+            analytic.total_invoiced = fetch_data[0]['amount_total']
 
     total_invoiced = fields.Float(string="Total Invoiced",
                                   compute='_compute_total_invoiced')
