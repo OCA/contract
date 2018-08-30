@@ -10,11 +10,14 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _compute_total_invoiced(self):
+        invoice_model = self.env['account.invoice']
         for analytic in self:
-            invoices = self.env['account.invoice'].search(
-                [('invoice_line_ids.account_analytic_id', '=', analytic.id)])
-            analytic.total_invoiced = sum(invoices.mapped('amount_total'))
+            fetch_data = invoice_model.read_group(
+                [('invoice_line_ids.account_analytic_id', '=', analytic.id)],
+                ['partner_id', 'amount_total'], ['partner_id'], lazy=False)
+
+            result = [data['amount_total'] for data in fetch_data]
+            analytic.total_invoiced = sum(result)
 
     total_invoiced = fields.Float(string="Total Invoiced",
                                   compute='_compute_total_invoiced')
-
