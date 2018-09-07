@@ -39,7 +39,8 @@
                             <field name="name" />
                             <field name="quantity" />
                             <field name="uom_id" />
-                            <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"/>
+                            <field name="contract_type" invisible="1" />
+                            <field name="automatic_price" attrs="{'invisible': [('contract_type','=','purchase')]}"/>
                             <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
                             <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="sale.group_discount_per_so_line" />

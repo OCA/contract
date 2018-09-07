@@ -25,15 +25,12 @@ class AccountAnalyticContract(models.Model):
         comodel_name="res.partner",
         string="Partner (always False)",
     )
-<<<<<<< HEAD
-=======
     contract_type = fields.Selection(
         selection=[
             ('sale', 'Customer'),
             ('purchase', 'Supplier'),
         ], default='sale',
     )
->>>>>>> 402370f... [IMP] Make sure it works for sale and purchase contracts
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string='Pricelist',
@@ -72,12 +69,8 @@ class AccountAnalyticContract(models.Model):
         'account.journal',
         string='Journal',
         default=lambda s: s._default_journal(),
-<<<<<<< HEAD
-        domain="[('type', '=', 'sale'),('company_id', '=', company_id)]",
-=======
         domain="[('type', '=', contract_type),"
                "('company_id', '=', company_id)]",
->>>>>>> 402370f... [IMP] Make sure it works for sale and purchase contracts
     )
     company_id = fields.Many2one(
         'res.company',
@@ -86,8 +79,6 @@ class AccountAnalyticContract(models.Model):
         default=lambda self: self.env.user.company_id,
     )
 
-<<<<<<< HEAD
-=======
     @api.onchange('contract_type')
     def _onchange_contract_type(self):
         if self.contract_type == 'purchase':
@@ -98,7 +89,6 @@ class AccountAnalyticContract(models.Model):
             ('company_id', '=', self.company_id.id)
         ], limit=1)
 
->>>>>>> 402370f... [IMP] Make sure it works for sale and purchase contracts
     @api.model
     def _default_journal(self):
         company_id = self.env.context.get(

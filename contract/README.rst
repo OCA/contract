@@ -6,11 +6,8 @@
 Contracts for recurrent invoicing
 =================================
 
-<<<<<<< HEAD
-This module forward-port to v10 the contracts management with recurring
-=======
+
 This module enables contracts management with recurring
->>>>>>> 402370f... [IMP] Make sure it works for sale and purchase contracts
 invoicing functions. Also you can print and send by email contract report.
 
 It works for customer contract and supplier contracts.

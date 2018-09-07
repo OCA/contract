@@ -31,16 +31,6 @@ class ResPartner(models.Model):
         result = [[data['partner_id'][0], data['contract_type'],
                    data['__count']] for data in fetch_data]
         for partner in self:
-<<<<<<< HEAD
-            partner.contract_count = Contract.search_count([
-                ('recurring_invoices', '=', True),
-                ('partner_id', '=', partner.id),
-                ('date_start', '<=', today),
-                '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', today),
-            ])
-=======
             partner_child_ids = partner.child_ids.ids + partner.ids
             partner.sale_contract_count = sum([
                 r[2] for r in result
@@ -48,7 +38,6 @@ class ResPartner(models.Model):
             partner.purchase_contract_count = sum([
                 r[2] for r in result
                 if r[0] in partner_child_ids and r[1] == 'purchase'])
->>>>>>> 402370f... [IMP] Make sure it works for sale and purchase contracts
 
     def act_show_contract(self):
         """ This opens contract view

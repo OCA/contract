@@ -5,6 +5,7 @@
 # Copyright 2016-2017 Tecnativa - Carlos Dauden
 # Copyright 2017 Tecnativa - Vicent Cubells
 # Copyright 2016-2017 LasLabs Inc.
+# Copyright 2018 Therp BV (<http://therp.nl>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
@@ -15,7 +16,8 @@
     'author': "OpenERP SA, "
               "Tecnativa, "
               "LasLabs, "
-              "Odoo Community Association (OCA)",
+              "Odoo Community Association (OCA)"
+              "Therp BV ,",
     'website': 'https://github.com/oca/contract',
     'depends': ['base', 'account', 'analytic'],
     'data': [
