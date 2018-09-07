@@ -215,13 +215,19 @@ class AccountAnalyticAccount(models.Model):
     def _prepare_invoice(self):
         self.ensure_one()
         if not self.partner_id:
-            raise ValidationError(
-                _("You must first select a Customer for Contract %s!") %
-                self.name)
-        journal = self.journal_id or self.env['account.journal'].search(
-            [('type', '=', 'sale'),
-             ('company_id', '=', self.company_id.id)],
-            limit=1)
+            if self.contract_type == 'purchase':
+                raise ValidationError(
+                    _("You must first select a Supplier for Contract %s!") %
+                    self.name)
+            else:
+                raise ValidationError(
+                    _("You must first select a Customer for Contract %s!") %
+                    self.name)
+        if not journal:
+            journal = self.journal_id or self.env['account.journal'].search([
+                ('type', '=', self.contract_type),
+                ('company_id', '=', self.company_id.id)
+            ], limit=1)
         if not journal:
             raise ValidationError(
                 _("Please define a sale journal for the company '%s'.") %
