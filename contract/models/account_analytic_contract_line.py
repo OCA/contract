@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
 # Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2015-2017 Tecnativa - Pedro M. Baeza
+# Copyright 2018 Therp BV (<http://therp.nl>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -74,6 +74,9 @@ class AccountAnalyticContractLine(models.Model):
         string="Sequence",
         default=10,
         help="Sequence of the contract line when displaying contracts",
+    )
+    contract_type = fields.Selection(
+        related='analytic_account_id.contract_type',
     )
 
     @api.depends(
