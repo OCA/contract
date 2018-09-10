@@ -322,7 +322,7 @@ class TestContract(TestContractBase):
         invoice = account_invoice_model.search(
             [('contract_id', '=', self.contract.id)])
         invoice.origin = 'Orig Invoice'
-        self.contract._create_invoice(invoice)
+        self.contract._create_invoice(invoice, journal=None)
         self.assertEqual(invoice.origin, 'Orig Invoice Test Contract')
         invoice_count = account_invoice_model.search_count(
             [('contract_id', '=', self.contract.id)])
