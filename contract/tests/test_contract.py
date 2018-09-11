@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 Tecnativa - Carlos Dauden
 # Copyright 2017 Tecnativa - Pedro M. Baeza
+# Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields
@@ -248,6 +249,12 @@ class TestContract(TestContractBase):
         self.assertEqual(self.contract.journal_id.type, 'sale')
         self.assertEqual(
             self.contract.journal_id.company_id, self.contract.company_id)
+        self.contract.write({'contract_type': 'purchase'})
+        self.contract._onchange_contract_type()
+        self.assertFalse(
+            self.contract.recurring_invoice_line_ids.filtered(
+                'automatic_price'
+            ))
 
     def test_contract_onchange_product_id_domain_blank(self):
         """It should return a blank UoM domain when no product."""
@@ -328,13 +335,13 @@ class TestContract(TestContractBase):
         self.contract.recurring_create_invoice()
         invoice = account_invoice_model.search(
             [('contract_id', '=', self.contract.id)])
-        invoice.origin = 'Orig Invoice'
-        self.contract._create_invoice(invoice)
+        invoice.origin = 'Orig Invoice Test Contract'
+        self.contract._create_invoice()
         self.assertEqual(invoice.origin, 'Orig Invoice Test Contract')
         invoice_count = account_invoice_model.search_count(
             [('contract_id', '=', self.contract.id)])
-        self.assertEqual(invoice_count, 1)
-        self.assertEqual(len(invoice.invoice_line_ids), 2)
+        self.assertEqual(invoice_count, 2)
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
 
     def test_act_show_contract(self):
         show_contract = self.partner.\
@@ -349,4 +356,38 @@ class TestContract(TestContractBase):
             },
             show_contract,
             'There was an error and the view couldn\'t be opened.'
+        )
+
+    def test_prepare_invoice(self, journal=None):
+        self.contract.write({
+            'partner_id': None,
+            'contract_type': 'purchase',
+            'recurring_invoices': None,
+        })
+        with self.assertRaises(ValidationError) as cm, self.env.cr.savepoint():
+            self.contract._prepare_invoice()
+        self.assertEqual(
+            cm.exception.name,
+            'You must first select a Supplier for Contract Test Contract!'
+        )
+        self.contract.write({
+            'contract_type': 'sale',
+        })
+        with self.assertRaises(ValidationError) as cm, self.env.cr.savepoint():
+            self.contract._prepare_invoice()
+        self.assertEqual(
+            cm.exception.name,
+            'You must first select a Customer for Contract Test Contract!'
+        )
+
+    def test_get_act_window_contract_xml(self):
+        self.assertEqual(
+            self.contract.partner_id._get_act_window_contract_xml('purchase'),
+            self.env['ir.actions.act_window'].for_xml_id(
+                'contract', 'action_account_analytic_purchase_overdue_all')
+        )
+        self.assertEqual(
+            self.contract.partner_id._get_act_window_contract_xml('blah'),
+            self.env['ir.actions.act_window'].for_xml_id(
+                'contract', 'action_account_analytic_sale_overdue_all')
         )
