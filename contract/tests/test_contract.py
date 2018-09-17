@@ -307,11 +307,7 @@ class TestContract(TestContractBase):
         line = self._add_template_line()
         line.product_id.description_sale = 'Test'
         line._onchange_product_id()
-        # Make sure we use same language settings as in tested code:
-        product = line.product_id.with_context(
-            lang=self.partner.lang,
-            partner=self.partner.id)
-        product_name = product.name_get()[0][1]
+        product_name = line.product_id.name_get()[0][1]
         self.assertEqual(
             line.name,
             '\n'.join([product_name, line.product_id.description_sale]))
