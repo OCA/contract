@@ -24,6 +24,13 @@ class TestContractBase(common.SavepointCase):
         cls.template = cls.env['account.analytic.contract'].create(
             cls.template_vals,
         )
+        # For being sure of the applied price
+        cls.env['product.pricelist.item'].create({
+            'pricelist_id': cls.partner.property_product_pricelist.id,
+            'product_id': cls.product.id,
+            'compute_price': 'formula',
+            'base': 'list_price',
+        })
         cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Test Contract',
             'partner_id': cls.partner.id,
