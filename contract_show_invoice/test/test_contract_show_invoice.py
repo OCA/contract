@@ -26,3 +26,7 @@ class TestContractShowInvoice(TransactionCase):
 
     def test_contract_show_invoice(self):
         self.assertEqual(len(self.analytic_account.analytic_account_ids), 1)
+
+    def test_contract_total_invoiced(self):
+        self.assertEqual(self.invoice.amount_total,
+                         self.analytic_account.total_invoiced)
