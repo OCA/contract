@@ -20,11 +20,6 @@ For further information, please visit:
 
 * https://www.odoo.com/forum/help-1
 
-Known issues / Roadmap
-======================
-
-* Add field with the total amount invoiced to the invoices button.
-
 Bug Tracker
 ===========
 
@@ -42,6 +37,7 @@ Contributors
 * Ángel Moya <angel.moya@domatix.com>
 * Carlos Dauden <carlos.dauden@tecnativa.com>
 * Dave Burkholder <dave@thinkwelldesigns.com>
+* Alberto Martín - Guadaltech <alberto.martin@guadaltech.es>
 
 
 Maintainer
