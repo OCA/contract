@@ -1,0 +1,53 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <!-- Agreement Increase Type List View-->
+    <record model="ir.ui.view" id="partner_agreement_increasetype_list_view">
+      <field name="name">Agreement Increase Type List</field>
+      <field name="model">partner_agreement.increasetype</field>
+      <field name="arch" type="xml">
+        <tree default_order='name'>
+          <field name="name"/>
+          <field name="description"/>
+          <field name="increase_percent"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Agreement Increase Type Form View -->
+    <record model="ir.ui.view" id="partner_agreement_increasetype_form_view">
+      <field name="name">Agreement Increase Type Form</field>
+      <field name="model">partner_agreement.increasetype</field>
+      <field name="arch" type="xml">
+        <form string="Agreements Type Form">
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only" string="Type"/>
+              <h1><field name="name"/></h1>
+            </div>
+            <group>
+              <field name="description"/>
+              <field name="increase_percent"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_increasetype">
+      <field name="name">Agreement Increase Type</field>
+      <field name="res_model">partner_agreement.increasetype</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem
+      name="Increase Types"
+      id="partner_agreement_increasetype_menu_1"
+      parent="partner_agreement.menu_3"
+      sequence="45"
+      action="partner_agreement_action_increasetype"/>
+  </data>
+</odoo>
