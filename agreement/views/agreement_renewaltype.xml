@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <!-- Agreement Renewal Type List View-->
+    <record model="ir.ui.view" id="partner_agreement_renewaltype_list_view">
+      <field name="name">Agreement Renewal Type List</field>
+      <field name="model">partner_agreement.renewaltype</field>
+      <field name="arch" type="xml">
+        <tree default_order='name'>
+          <field name="name"/>
+          <field name="description"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Agreement Renewal Type Form View -->
+    <record model="ir.ui.view" id="partner_agreement_renewaltype_form_view">
+      <field name="name">Agreement Renewal Type Form</field>
+      <field name="model">partner_agreement.renewaltype</field>
+      <field name="arch" type="xml">
+        <form string="Agreements Type Form">
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only" string="Type"/>
+              <h1><field name="name"/></h1>
+            </div>
+            <group>
+              <field name="description"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_renewaltype">
+      <field name="name">Agreement Renewal Type</field>
+      <field name="res_model">partner_agreement.renewaltype</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem
+      name="Renewal Types"
+      id="partner_agreement_renewaltype_menu_1"
+      parent="partner_agreement.menu_3"
+      sequence="44"
+      action="partner_agreement_action_renewaltype"/>
+  </data>
+</odoo>

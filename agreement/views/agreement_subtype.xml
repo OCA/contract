@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <!-- Agreement Sub Type List View-->
+    <record model="ir.ui.view" id="partner_agreement_subtype_list_view">
+      <field name="name">Agreement Subtype List</field>
+      <field name="model">partner_agreement.subtype</field>
+      <field name="arch" type="xml">
+        <tree default_order='name'>
+          <field name="name" string="Sub-Type Name"/>
+          <field name="agreement_type" string="Agreement Type"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Agreement Sub Type Form View -->
+    <record model="ir.ui.view" id="partner_agreement_subtype_form_view">
+      <field name="name">Agreement Sub Type Form</field>
+      <field name="model">partner_agreement.subtype</field>
+      <field name="arch" type="xml">
+        <form string="Agreements Sub Type Form">
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only" string="Sub-Type Name"/>
+              <h1><field name="name" string="Sub-Type Name"/></h1>
+            </div>
+            <group>
+              <field name="agreement_type" string="Agreement Type" required="True"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_subtype">
+      <field name="name">Agreement Sub Type</field>
+      <field name="res_model">partner_agreement.subtype</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem
+      name="Sub-Types"
+      id="partner_agreement_subtype_menu_1"
+      parent="partner_agreement.menu_3"
+      sequence="43"
+      action="partner_agreement_action_subtype"/>
+  </data>
+</odoo>
