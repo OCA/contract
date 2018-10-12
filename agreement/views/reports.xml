@@ -1,0 +1,48 @@
+<odoo>
+   <report
+        id="partner_agreement_contract_document"
+        model="partner_agreement.agreement"
+        string="Contract Document"
+        name="partner_agreement.report_agreement_document"
+        file="partner_agreement.report_agreement_document"
+        report_type="qweb-pdf"/>
+
+    <report
+        id="partner_agreement_contract_document_preview"
+        model="partner_agreement.agreement"
+        string="Contract Document Preview"
+        name="partner_agreement.report_agreement_document"
+        file="partner_agreement.report_agreement_document"
+        report_type="qweb-html"/>
+
+        <template id="report_agreement_document">
+          <t t-name="partner_agreement.report_agreement_document">
+            <t t-call="web.html_container">
+              <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                  <div class="page">
+                    <h3>!!! THIS IS JUST AN EXAMPLE REPORT TO SHOW HOW SECTIONS/CLAUSES CAN LOOK. MORE WORK IS NEEDED FOR FORMATTING</h3>
+                    <table class="table table-condensed">
+                      <tbody class="section_tbody">
+                        <tr t-foreach="doc.sections" t-as="s">
+                          <h3 t-field="s.name"/>
+                          <span t-field="s.content"/>
+                          <table class="table table-condensed">
+                            <tbody class="clause_tbody">
+                              <tr t-foreach="s.clauses" t-as="c">
+                                <h4 style="padding:20px" t-field="c.name"/>
+                                <h5 style="padding:20px" t-field="c.content"/>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </t>
+              </t>
+            </t>
+          </t>
+        </template>
+
+</odoo>
