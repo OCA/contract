@@ -6,11 +6,18 @@
 # Copyright 2016-2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
+import traceback
+from contextlib import contextmanager
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAnalyticAccount(models.Model):
@@ -259,6 +266,17 @@ class AccountAnalyticAccount(models.Model):
         invoice.compute_taxes()
         return invoice
 
+    @contextmanager
+    @api.multi
+    def logged_exception_savepoint(self, *args):
+        try:
+            with self.env.cr.savepoint() as ctx:
+                yield ctx
+        except:
+            _logger.exception(traceback.format_exc())
+            if args:
+                _logger.exception(*args)
+
     @api.multi
     def recurring_create_invoice(self):
         """Create invoices from contracts
@@ -266,31 +284,34 @@ class AccountAnalyticAccount(models.Model):
         :return: invoices created
         """
         invoices = self.env['account.invoice']
+
+        error_msg_tmpl = ('Invoice creation failed for contract id %d'
+                          ' (traceback above).'
+                          ' Going on with other contracts, if any.')
         for contract in self:
-            ref_date = contract.recurring_next_date or fields.Date.today()
-            if (contract.date_start > ref_date or
-                    contract.date_end and contract.date_end < ref_date):
-                if self.env.context.get('cron'):
-                    continue  # Don't fail on cron jobs
-                raise ValidationError(
-                    _("You must review start and end dates!\n%s") %
-                    contract.name
-                )
-            old_date = fields.Date.from_string(ref_date)
-            new_date = old_date + self.get_relative_delta(
-                contract.recurring_rule_type, contract.recurring_interval)
-            ctx = self.env.context.copy()
-            ctx.update({
-                'old_date': old_date,
-                'next_date': new_date,
-                # Force company for correct evaluation of domain access rules
-                'force_company': contract.company_id.id,
-            })
-            # Re-read contract with correct company
-            invoices |= contract.with_context(ctx)._create_invoice()
-            contract.write({
-                'recurring_next_date': fields.Date.to_string(new_date)
-            })
+            with self.logged_exception_savepoint(error_msg_tmpl, contract.id):
+                ref_date = contract.recurring_next_date or fields.Date.today()
+                if (contract.date_start > ref_date or
+                        contract.date_end and contract.date_end < ref_date):
+                    raise ValidationError(
+                        _("You must review start and end dates!\n%s") %
+                        contract.name
+                    )
+                old_date = fields.Date.from_string(ref_date)
+                new_date = old_date + self.get_relative_delta(
+                    contract.recurring_rule_type, contract.recurring_interval)
+                ctx = self.env.context.copy()
+                ctx.update({
+                    'old_date': old_date,
+                    'next_date': new_date,
+                    # Force company for correct eval of domain access rules
+                    'force_company': contract.company_id.id,
+                })
+                # Re-read contract with correct company
+                invoices |= contract.with_context(ctx)._create_invoice()
+                contract.write({
+                    'recurring_next_date': fields.Date.to_string(new_date)
+                })
         return invoices
 
     @api.model

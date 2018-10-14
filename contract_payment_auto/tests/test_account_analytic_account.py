@@ -10,6 +10,9 @@ from odoo import fields
 from odoo.tools import mute_logger
 from odoo.tests import common
 
+from odoo.addons.contract.models.account_analytic_account \
+    import _logger as aaa_logger
+
 from ..models import account_analytic_account
 
 
@@ -331,3 +334,58 @@ class TestAccountAnalyticAccount(common.HttpCase):
         finally:
             self.contract._revert_method('_do_auto_pay')
         meth.assert_not_called()
+
+    def register_payment(self, invoice):
+        journal = self.env['account.journal'].search([('type', '=', 'sale')])
+        method = self.env.ref('account.account_payment_method_manual_in')
+        payment = self.env['account.payment'].create({
+            'partner_id': invoice.partner_id.id,
+            'partner_type': 'customer',
+            'payment_type': 'inbound',
+            'journal_id': journal.id,
+            'payment_method_id': method.id,
+            'amount': invoice.residual,
+            'invoice_ids': [(6, 0, [invoice.id])],
+        })
+        payment.post()
+
+    def test_cron_retry_auto_pay_with_errors(self):
+        " Auto-pay errors must not rollback the whole transaction "
+        invoices = self.env['account.invoice']
+        for num in range(4):
+            invoice = self._create_invoice(True)
+            invoice.write({
+                'auto_pay_attempts': 1,
+                'auto_pay_failed': '2015-01-01 00:00:00',
+            })
+            invoices += invoice
+
+        register_payment = self.register_payment
+
+        def mocked_autopay_with_errors(self, invoice):
+            " Mock for _do_auto_pay that raises for even index invoices "
+            register_payment(invoice)
+            if invoices.ids.index(invoice.id) % 2:
+                raise RuntimeError
+
+        self.contract._patch_method('_do_auto_pay', mocked_autopay_with_errors)
+        try:
+            with mock.patch.object(aaa_logger, 'exception') as mocked_log:
+                self.contract.cron_retry_auto_pay()
+        finally:
+            self.contract._revert_method('_do_auto_pay')
+
+        # Check final invoice states: only those which failed must be "open"
+        self.assertEqual(invoices.mapped('state'),
+                         ['paid', 'open', 'paid', 'open'])
+        # Check there are 2 logs for each failure = traceback + custom message:
+        self.assertEqual(mocked_log.call_count, 4)
+        # - traceback: contains original exception name
+        log_args = [args for args, kwargs in mocked_log.call_args_list]
+        self.assertTrue(all('RuntimeError' in l[0] for l in log_args[::2]))
+        # - custom message: contains the in-failure invoice identifier
+        self.assertTrue(all(
+            log_arg[0].startswith('Automatic payment of invoice id %d failed')
+            for log_arg in log_args[1::2]))
+        self.assertEqual([invoices[3].id, invoices[1].id],
+                         [log_arg[1] for log_arg in log_args[1::2]])

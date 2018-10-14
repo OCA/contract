@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import logging
+import traceback
 
 from datetime import datetime, timedelta
 
@@ -41,17 +42,24 @@ class AccountAnalyticAccount(models.Model):
             ('account_analytic_id.is_auto_pay', '=', True),
         ])
         now = datetime.now()
+        error_msg_tmpl = (
+            'Automatic payment of invoice id %d failed (traceback above).'
+            ' Going on with other contracts, if any.')
 
         for invoice_line in invoice_lines:
 
             account = invoice_line.account_analytic_id
             invoice = invoice_line.invoice_id
-            fail_time = fields.Datetime.from_string(invoice.auto_pay_failed)
-            retry_delta = timedelta(hours=account.auto_pay_retry_hours)
-            retry_time = fail_time + retry_delta
 
-            if retry_time < now:
-                account._do_auto_pay(invoice)
+            with self.logged_exception_savepoint(error_msg_tmpl, invoice.id):
+
+                fail_time = fields.Datetime.from_string(invoice.auto_pay_failed)
+                retry_delta = timedelta(hours=account.auto_pay_retry_hours)
+                retry_time = fail_time + retry_delta
+
+                if retry_time < now:
+                    account._do_auto_pay(invoice)
+
 
     @api.multi
     def _create_invoice(self):

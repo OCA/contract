@@ -3,9 +3,15 @@
 # Copyright 2017 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from mock import patch
+from contextlib import contextmanager
+
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common
+
+from odoo.addons.contract.models.account_analytic_account \
+    import _logger as aaa_logger
 
 
 class TestContractBase(common.SavepointCase):
@@ -45,6 +51,13 @@ class TestContractBase(common.SavepointCase):
         cls.acct_line = cls.env['account.analytic.invoice.line'].create(
             cls.line_vals,
         )
+
+    @contextmanager
+    def assertExceptionLogged(self, exception_type):
+        with patch.object(aaa_logger, 'exception') as mocked_log:
+            yield mocked_log
+        self.assertTrue(any('%s:' % exception_type.__name__ in args[0]
+                            for args, kw in mocked_log.call_args_list))
 
 
 class TestContract(TestContractBase):
@@ -134,6 +147,44 @@ class TestContract(TestContractBase):
         self.assertTrue(invoices_monthly_lastday)
         self.assertEqual(self.contract.recurring_next_date, '2016-03-31')
 
+    def test_recurring_when_some_raise(self):
+        """A crash in multiple contracts invoice creation must not rollback
+        the whole transaction.
+        """
+
+        # Generate a bunch of contracts, one half being invalid
+        journal = self.env['account.journal'].search([('type', '=', 'sale')])
+        journal.write({'type': 'general'})
+
+        contracts = self.env['account.analytic.account']
+        for num in range(4):
+            contract = self.contract.copy()
+            if num % 2:
+                contract.journal_id = False
+            contracts += contract
+
+        # Generate the invoices of all contracts
+        with patch.object(aaa_logger, 'exception') as mocked_log:
+            invoices = contracts.recurring_create_invoice()
+
+        # Check db state and logged errors
+        count = self.env['account.invoice'].search_count(
+            [('contract_id', 'in', contracts.ids)])
+        self.assertEqual(count, 2)
+        self.assertEqual(invoices.mapped('contract_id.id'),
+                         [contracts[0].id, contracts[2].id])
+        # Check there are 2 logs for each failure = traceback + custom message:
+        self.assertEqual(mocked_log.call_count, 4)
+        # - traceback: contains original exception name
+        log_args = [args for args, kwargs in mocked_log.call_args_list]
+        self.assertTrue(all('ValidationError' in l[0] for l in log_args[::2]))
+        # - custom message: contains the in-failure contract identifier
+        self.assertTrue(all(
+            log_arg[0].startswith('Invoice creation failed for contract id %d')
+            for log_arg in log_args[1::2]))
+        self.assertEqual([contracts[1].id, contracts[3].id],
+                         [log_arg[1] for log_arg in log_args[1::2]])
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(self.contract.pricelist_id,
@@ -167,7 +218,7 @@ class TestContract(TestContractBase):
         contract_no_journal.journal_id = False
         journal = self.env['account.journal'].search([('type', '=', 'sale')])
         journal.write({'type': 'general'})
-        with self.assertRaises(ValidationError):
+        with self.assertExceptionLogged(ValidationError):
             contract_no_journal.recurring_create_invoice()
 
     def test_check_date_end(self):
@@ -290,7 +341,7 @@ class TestContract(TestContractBase):
         last_count = AccountInvoice.search_count(
             [('contract_id', '=', self.contract.id)])
         self.assertEqual(last_count, init_count + 1)
-        with self.assertRaises(ValidationError):
+        with self.assertExceptionLogged(ValidationError):
             self.contract.recurring_create_invoice()
 
     def test_compute_create_invoice_visibility(self):
