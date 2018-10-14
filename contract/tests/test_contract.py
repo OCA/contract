@@ -10,8 +10,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 
-from odoo.addons.contract.models.account_analytic_account \
-    import _logger as aaa_logger
+from ..models.account_analytic_account import _logger as aaa_logger
 
 
 class TestContractBase(common.SavepointCase):
