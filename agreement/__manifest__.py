@@ -12,8 +12,11 @@
     "license": "AGPL-3",
     "version": "11.0.0.0.1",
     "depends": [
+        "account",
+        "contacts",
         "mail",
-        "sale_management"
+        "product",
+        "sale_management",
     ],
     "data": [
         "views/reports.xml",
