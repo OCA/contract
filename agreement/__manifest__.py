@@ -19,6 +19,9 @@
         "sale_management",
     ],
     "data": [
+        "data/module_category.xml",
+        "security/res_groups.xml",
+        "security/ir.model.access.csv",
         "views/reports.xml",
         "views/agreement.xml",
         "views/agreement_clause.xml",
@@ -29,7 +32,7 @@
         "views/agreement_renewaltype.xml",
         "views/agreement_increasetype.xml",
         "views/res_partner.xml",
-        "security/ir.model.access.csv",
+        "views/menu.xml",
     ],
     "application": True,
     "development_status": "Beta",
