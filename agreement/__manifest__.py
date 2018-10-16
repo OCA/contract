@@ -4,7 +4,9 @@
 {
     "name": "Agreements",
     "summary": "Manage Agreements, LOI and Contracts",
-    "author": "Pavlov Media, Odoo Community Association (OCA)",
+    "author": "Pavlov Media, "
+              "Open Source Integrators, "
+              "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "category": "Partner",
     "license": "AGPL-3",
@@ -27,4 +29,6 @@
         "security/ir.model.access.csv",
     ],
     "application": True,
+    "development_status": "Beta",
+    "maintainers": "max3903",
 }
