@@ -22,6 +22,7 @@
         "data/module_category.xml",
         "security/res_groups.xml",
         "security/ir.model.access.csv",
+        'views/res_config_settings.xml',
         "views/reports.xml",
         "views/agreement.xml",
         "views/agreement_clause.xml",
