@@ -1,51 +1,49 @@
+<?xml version="1.0"?>
 <odoo>
-  <data>
-    <!-- explicit list view definition -->
 
     <!-- Agreement Type List View-->
     <record model="ir.ui.view" id="partner_agreement_type_list_view">
-      <field name="name">Agreement Type List</field>
-      <field name="model">partner_agreement.type</field>
-      <field name="arch" type="xml">
-        <tree default_order='name'>
-          <field name="name" string="Type Name"/>
-          <field name="agreement_subtypes" string="Sub-Types"/>
-        </tree>
-      </field>
+        <field name="name">Agreement Type List</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <tree default_order='name'>
+                <field name="name" string="Type Name"/>
+                <field name="agreement_subtypes_ids" string="Sub-Types"/>
+            </tree>
+        </field>
     </record>
 
     <!-- Agreement Type Form View -->
     <record model="ir.ui.view" id="partner_agreement_type_form_view">
-      <field name="name">Agreement Type Form</field>
-      <field name="model">partner_agreement.type</field>
-      <field name="arch" type="xml">
-        <form string="Agreements Type Form">
-          <sheet>
-            <div class="oe_title">
-              <label for="name" class="oe_edit_only" string="Type"/>
-              <h1><field name="name" string="Type Name"/></h1>
-            </div>
-            <group>
-              <field name="agreement_subtypes" string="Sub-Types"/>
-            </group>
-          </sheet>
-        </form>
-      </field>
+        <field name="name">Agreement Type Form</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <form string="Agreements Type Form">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Type"/>
+                        <h1><field name="name" string="Type Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="agreement_subtypes_ids" string="Sub-Types"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
     </record>
 
     <!-- Actions opening views on models -->
     <record model="ir.actions.act_window" id="partner_agreement_action_type">
-      <field name="name">Agreement Type</field>
-      <field name="res_model">partner_agreement.type</field>
-      <field name="view_mode">tree,form</field>
+        <field name="name">Agreement Type</field>
+        <field name="res_model">agreement.type</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
     <!-- Menu Items -->
     <menuitem
-      name="Types"
-      id="partner_agreement_type_menu_1"
-      parent="partner_agreement.menu_3"
-      sequence="42"
-      action="partner_agreement_action_type"/>
-  </data>
+        name="Types"
+        id="partner_agreement_type_menu_1"
+        parent="agreement.partner_agreement_menu_3"
+        sequence="42"
+        action="partner_agreement_action_type"/>
 </odoo>
