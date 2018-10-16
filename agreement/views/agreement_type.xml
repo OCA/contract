@@ -20,12 +20,11 @@
         <field name="arch" type="xml">
             <form string="Agreements Type Form">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Type"/>
-                        <h1><field name="name" string="Type Name"/></h1>
-                    </div>
                     <group>
-                        <field name="agreement_subtypes_ids" string="Sub-Types"/>
+                        <field name="name"/>
+                    </group>
+                    <group string="Sub-Types">
+                        <field name="agreement_subtypes_ids" nolabel="1"/>
                     </group>
                 </sheet>
             </form>
