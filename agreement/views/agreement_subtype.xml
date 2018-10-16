@@ -18,14 +18,14 @@
         <field name="name">Agreement Sub Type Form</field>
         <field name="model">agreement.subtype</field>
         <field name="arch" type="xml">
-            <form string="Agreements Sub Type Form">
+            <form string="Agreement Sub-Types">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Sub-Type Name"/>
-                        <h1><field name="name" string="Sub-Type Name"/></h1>
-                    </div>
                     <group>
-                        <field name="agreement_type_id" string="Agreement Type" required="True"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="agreement_type_id"
+                               required="True"/>
                     </group>
                 </sheet>
             </form>
@@ -34,7 +34,7 @@
 
     <!-- Actions opening views on models -->
     <record model="ir.actions.act_window" id="partner_agreement_action_subtype">
-        <field name="name">Agreement Sub Type</field>
+        <field name="name">Agreement Sub-Types</field>
         <field name="res_model">agreement.subtype</field>
         <field name="view_mode">tree,form</field>
     </record>
