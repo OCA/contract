@@ -15,19 +15,20 @@
     </record>
 
     <!-- Agreement Increase Type Form View -->
-        <record model="ir.ui.view" id="partner_agreement_increasetype_form_view">
+    <record model="ir.ui.view" id="partner_agreement_increasetype_form_view">
         <field name="name">Agreement Increase Type Form</field>
         <field name="model">agreement.increasetype</field>
         <field name="arch" type="xml">
             <form string="Agreements Type Form">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Type"/>
-                        <h1><field name="name"/></h1>
-                    </div>
                     <group>
-                        <field name="description"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
                         <field name="increase_percent"/>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
                     </group>
                 </sheet>
             </form>

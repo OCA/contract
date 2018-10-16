@@ -1,10 +1,9 @@
 # Copyright (C) 2018 - TODAY, Pavlov Media
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import api, models, fields, _
 
 
-# Main Agreement Records Model
 class Agreement(models.Model):
     _name = 'agreement'
     _inherit = ['mail.thread']
@@ -99,8 +98,10 @@ class Agreement(models.Model):
         help="Total value of the contract over ther entire term.",
         store=True
     )
-    contract_id = fields.Char(
-        string="ID",
+    reference = fields.Char(
+        string="Reference",
+        required=True,
+        default=lambda self: _('New'),
         track_visibility='onchange',
         help="ID used for internal contract tracking.")
     total_company_mrc = fields.Monetary(
@@ -138,54 +139,6 @@ class Agreement(models.Model):
         string="Termination Date",
         track_visibility='onchange',
         help="Date that the contract was terminated."
-    )
-    customer_address = fields.Char(
-        related='customer_id.contact_address',
-        string="Address"
-    )
-    customer_street = fields.Char(
-        related='customer_id.street',
-        string="Street"
-    )
-    customer_street2 = fields.Char(
-        related='customer_id.street2',
-        string="Street 2"
-    )
-    customer_city = fields.Char(
-        related='customer_id.city',
-        string="City"
-    )
-    customer_state_id = fields.Many2one(
-        related='customer_id.state_id',
-        string="State"
-    )
-    customer_zip = fields.Char(
-        related='customer_id.zip',
-        string="Zip"
-    )
-    vendor_address = fields.Char(
-        related='vendor_id.contact_address',
-        string="Address"
-    )
-    vendor_street = fields.Char(
-        related='vendor_id.street',
-        string="Street"
-    )
-    vendor_street2 = fields.Char(
-        related='vendor_id.street2',
-        string="Street 2"
-    )
-    vendor_city = fields.Char(
-        related='vendor_id.city',
-        string="City"
-    )
-    vendor_state_id = fields.Many2one(
-        related='vendor_id.state_id',
-        string="State"
-    )
-    vendor_zip = fields.Char(
-        related='vendor_id.zip',
-        string="Zip"
     )
     reviewed_date = fields.Date(
         string="Reviewed Date",
@@ -236,7 +189,6 @@ class Agreement(models.Model):
         related='customer_contact_id.email',
         string="Email"
     )
-
     vendor_contact_id = fields.Many2one(
         'res.partner',
         string="Vendor Contact",
@@ -264,6 +216,9 @@ class Agreement(models.Model):
         help="Select the sub-type of this agreement. Sub-Types are related to "
              "agreement types."
     )
+    product_ids = fields.Many2many(
+        'product.template',
+        string="Products & Services")
     sale_order_id = fields.Many2one(
         'sale.order',
         string="Sales Order",
@@ -309,7 +264,6 @@ class Agreement(models.Model):
         track_visibility='onchange',
         help="Describes what happens after the contract expires."
     )
-
     order_lines_services_ids = fields.One2many(
         related='sale_order_id.order_line',
         string="Service Order Lines",
@@ -427,6 +381,13 @@ class Agreement(models.Model):
                 'view_mode': 'form',
                 'view_type': 'form',
                 'res_id': res.id}
+
+    @api.model
+    def create(self, vals):
+        if vals.get('reference', _('New')) == _('New'):
+            vals['reference'] = \
+                self.env['ir.sequence'].next_by_code('agreement') or _('New')
+        return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
     @api.multi
