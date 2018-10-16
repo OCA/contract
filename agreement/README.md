@@ -24,6 +24,7 @@ Images
 Contributors
 
 * Patrick Wilson <pwilson@pavlovmedia.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>
 
 Do not contact contributors directly about support or help with technical issues.
 
