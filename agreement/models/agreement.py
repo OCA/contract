@@ -8,6 +8,9 @@ class Agreement(models.Model):
     _name = 'agreement'
     _inherit = ['mail.thread']
 
+    def _default_stage_id(self):
+        return self.env.ref('agreement.agreement_stage_new')
+
     # General
     name = fields.Char(
         string="Title",
@@ -348,7 +351,10 @@ class Agreement(models.Model):
         'agreement.stage',
         string="Stage",
         group_expand='_read_group_stage_ids',
-        help="Select the current stage of the agreement."
+        help="Select the current stage of the agreement.",
+        track_visibility='onchange',
+        index=True,
+        default=lambda self: self._default_stage_id(),
     )
 
     # Create New Version Button
