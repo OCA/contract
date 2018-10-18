@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <report
+            id="partner_agreement_contract_document"
+            model="agreement"
+            string="Contract Document"
+            name="agreement.report_agreement_document"
+            file="agreement.report_agreement_document"
+            report_type="qweb-pdf"/>
+
+    <report
+            id="partner_agreement_contract_document_preview"
+            model="agreement"
+            string="Contract Document Preview"
+            name="agreement.report_agreement_document"
+            file="agreement.report_agreement_document"
+            report_type="qweb-html"/>
+
+    <template id="report_agreement_document">
+        <t t-name="agreement.report_agreement_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h1 t-field="doc.name"/>
+                            <h2>Parties</h2>
+                            <h3>Company Information</h3>
+                            <h3>Customer Information</h3>
+                            <table class="table table-condensed">
+                                <tbody class="section_tbody">
+                                    <tr t-foreach="doc.sections_ids" t-as="s">
+                                        <h2 t-field="s.name"/>
+                                        <span t-field="s.content"/>
+                                        <table class="table table-condensed">
+                                            <tbody class="clause_tbody">
+                                                <tr t-foreach="s.clauses_ids" t-as="c">
+                                                    <h3 style="padding:20px" t-field="c.name"/>
+                                                    <h4 style="padding:20px" t-field="c.content"/>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

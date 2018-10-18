@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Agreement Stage List View-->
+    <record model="ir.ui.view" id="partner_agreement_stage_list_view">
+        <field name="name">Agreement Stage List</field>
+        <field name="model">agreement.stage</field>
+        <field name="arch" type="xml">
+            <tree default_order='sequence, name'>
+                <field name="sequence" widget="handle"/>
+                <field name="name" string="Stage Name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Stage Form View -->
+    <record model="ir.ui.view" id="partner_agreement_stage_form_view">
+        <field name="name">Agreement Stage Form</field>
+        <field name="model">agreement.stage</field>
+        <field name="arch" type="xml">
+            <form string="Agreements Stage Form">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Stage Name"/>
+                        <h1><field name="name" string="Stage Name"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="fold"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_stage">
+        <field name="name">Agreement Stage</field>
+        <field name="res_model">agreement.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
