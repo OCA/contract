@@ -21,6 +21,7 @@
     'data': [
         'data/ir_sequence.xml',
         'data/module_category.xml',
+        'data/agreement_stage.xml',
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'views/res_config_settings.xml',
