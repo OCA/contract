@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <tree default_order='name'>
                 <field name="name"/>
-                <field name="customer_id"/>
-                <field name="vendor_id"/>
+                <field name="partner_id"/>
+                <field name="company_partner_id"/>
                 <field name="parent_agreement_id"/>
                 <field name="agreement_type_id"/>
                 <field name="agreement_subtype_id"/>
@@ -40,7 +40,7 @@
                         <group>
                             <field name="reference" readonly="1"/>
                             <field name="parent_agreement_id"
-                                   domain="[('customer_id', '=', customer_id)]"/>
+                                   domain="[('partner_id', '=', partner_id)]"/>
                             <field name="is_template"/>
                         </group>
                         <group>
@@ -62,33 +62,33 @@
                                nolabel="1"/>
                     </group>
                     <group name="parties" string="Parties">
-                        <group name="customer_left"
-                               string="Customer">
+                        <group name="partner"
+                               string="Partner">
                             <div class="o_address_format">
-                                <field name="customer_id"
+                                <field name="partner_id"
                                        domain="[('customer', '=', True)]"
                                        context="{'show_address': 1}"
                                        options="{&quot;always_reload&quot;: True}"/>
                             </div>
                         </group>
-                        <group name="vendor_right"
-                               string="Vendor">
+                        <group name="company"
+                               string="Company">
                             <div class="o_address_format">
-                                <field name="vendor_id"
-                                       domain="[('supplier', '=', True)]"
+                                <field name="company_partner_id"
+                                       readonly="1"
                                        context="{'show_address': 1}"
                                        options="{&quot;always_reload&quot;: True}"/>
                             </div>
                         </group>
-                        <group name="contact_left" string="Primary Contact">
-                            <field name="customer_contact_id" domain="[('parent_id', '=', customer_id)]" nolabel="1"/>
-                            <field name="customer_contact_phone" widget="phone" readonly="1" nolabel="1"/>
-                            <field name="customer_contact_email" widget="email" readonly="1" nolabel="1"/>
+                        <group name="partner_left" string="Primary Contact">
+                            <field name="partner_contact_id" domain="[('parent_id', '=', partner_id)]" nolabel="1"/>
+                            <field name="partner_contact_phone" widget="phone" readonly="1" nolabel="1"/>
+                            <field name="partner_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
                         <group name="contact_right" string="Primary Contact">
-                            <field name="vendor_contact_id" domain="[('parent_id', '=', vendor_id)]" nolabel="1"/>
-                            <field name="vendor_contact_phone" widget="phone" readonly="1" nolabel="1"/>
-                            <field name="vendor_contact_email" widget="email" readonly="1" nolabel="1"/>
+                            <field name="company_contact_id" domain="[('parent_id', '=', company_partner_id)]" nolabel="1"/>
+                            <field name="company_contact_phone" widget="phone" readonly="1" nolabel="1"/>
+                            <field name="company_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
                     </group>
                     <group name="term_information">
@@ -97,13 +97,12 @@
                             <field name="end_date" required="True" attrs="{'required': [('is_template', '=', False)], 'readonly':[('is_template', '=', True)]}"/>
                             <field name="expiration_notice"/>
                             <field name="change_notice"/>
-                            <field name="notification_address_id" domain="['|',('parent_id','=',customer_id),('parent_id','=',vendor_id)]"/>
+                            <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_partner_id)]"/>
                             <field name="termination_requested"/>
                             <field name="termination_date"/>
                         </group>
                         <group name="paymentterm_right" string="Payment Terms">
-                            <field name="customer_term" attrs="{'invisible': [('customer_id', '=', False)]}"/>
-                            <field name="vendor_term" attrs="{'invisible': [('vendor_id', '=', False)]}"/>
+                            <field name="term" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="payment_term_id" widget="selection"/>
                             <field name="renewal_type_id" widget="selection"/>
                             <field name="increase_type_id" widget="selection"/>
@@ -143,15 +142,15 @@
                         </page>
                         <page name="signature" string="Signatures">
                             <group>
+                                <group string="Partner">
+                                    <field name="partner_signed_date"/>
+                                    <field name="partner_signed_user_id" domain="[('parent_id', '=', partner_id)]"/>
+                                </group>
                                 <group string="Company">
                                     <field name="company_signed_date"/>
                                     <field name="company_signed_user_id"/>
                                     <field name="signed_contract" filename="signed_contract_filename"/>
                                     <field name="signed_contract_filename" invisible="1"/>
-                                </group>
-                                <group string="Customer">
-                                    <field name="customer_signed_date"/>
-                                    <field name="customer_signed_user_id" domain="[('parent_id', '=', customer_id)]"/>
                                 </group>
                             </group>
                         </page>
@@ -160,8 +159,20 @@
                                 <field name="product_ids" nolabel="1"/>
                             </group>
                         </page>
-                        <page name="costs" string="Costs">
-                            <group string="Financial Details">
+                        <page name="financials" string="Financials">
+                            <group>
+                                <group>
+                                    <field name="analytic_id"/>
+                                </group>
+                                <group></group>
+                            </group>
+                            <group string="Revenues and Costs">
+                                <field name="analytic_line_ids"
+                                       readonly="1"
+                                       nolabel="1"/>
+                            </group>
+                            <!--
+                            <group string="Financial Details>
                                 <group string="Company">
                                     <field name="total_company_mrc"/>
                                     <field name="total_company_nrc"/>
@@ -172,7 +183,7 @@
                                     <field name="total_customer_mrc"/>
                                     <field name="total_customer_nrc"/>
                                 </group>
-                            </group>
+                            </group> -->
                         </page>
                         <page name="child_agreements" string="Child Agreements">
                             <field name="child_agreements_ids">
@@ -235,7 +246,7 @@
                                             <field name="name"/>
                                         </strong><br/>
                                         <div class="o_kanban_record_subtitle text-muted">
-                                            <field name="customer_id" invisible="context.get('default_customer_id', False)"/>
+                                            <field name="partner_id" invisible="context.get('default_partner_id', False)"/>
                                             <t t-if="record.start_date.raw_value and record.start_date.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                             <div t-attf-class="#{red || ''}">
                                                 <i><field name="start_date"/></i>
@@ -285,10 +296,38 @@
                 <filter name="filter_non_template" string="Non-Templates" domain="[('active','=',True),('is_template', '=', False)]"/>
                 <filter name="filter_inactive" string="Archived" domain="[('active','=',False)]"/>
                 <filter name="filter_templates" string="Templates" domain="[('active','=',True),('is_template', '=', True)]"/>
-                <filter name="group_customer_id" string="customers" icon="terp-partner" context="{'group_by':'customer_id'}"/>
+                <filter name="group_partner_id" string="Partners" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                 <filter name="group_status" string="Status" icon="terp-partner" context="{'group_by':'state'}"/>
             </search>
         </field>
+    </record>
+
+    <!-- Agreement Reporting -->
+    <record id="agreement_graph_view" model="ir.ui.view">
+        <field name="name">agreement.graph</field>
+        <field name="model">agreement</field>
+        <field name="arch" type="xml">
+            <graph string="Agreements" type="bar">
+                <field name="stage_id" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="agreement_pivot_view" model="ir.ui.view">
+        <field name="name">agreement.pivot</field>
+        <field name="model">agreement</field>
+        <field name="arch" type="xml">
+            <pivot string="Agreements" display_quantity="true">
+                <field name="stage_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_agreement_report_order" model="ir.actions.act_window">
+        <field name="name">Agreements</field>
+        <field name="res_model">agreement</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,pivot</field>
     </record>
 
     <!-- Adding a new filter to the order line search view -->

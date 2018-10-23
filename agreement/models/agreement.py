@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Pavlov Media
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models, fields, _
+from odoo import api, fields, models, _
 
 
 class Agreement(models.Model):
@@ -58,26 +58,20 @@ class Agreement(models.Model):
              "removing it."
     )
     company_signed_date = fields.Date(
-        string="Company Signed Date",
+        string="Signed on",
         track_visibility='onchange',
         help="Date the contract was signed by Company."
     )
-    customer_signed_date = fields.Date(
-        string="Customer Signed Date",
+    partner_signed_date = fields.Date(
+        string="Signed on",
         track_visibility='onchange',
-        help="Date the contract was signed by Customer."
+        help="Date the contract was signed by the Partner."
     )
-    customer_term = fields.Integer(
-        string="Customer Term (Months)",
+    term = fields.Integer(
+        string="Term (Months)",
         track_visibility='onchange',
-        help="Number of months this agreement/contract is in effect with "
-             "customer."
-    )
-    vendor_term = fields.Integer(
-        string="Vendor Term (Months)",
-        track_visibility='onchange',
-        help="Number of months this agreement/contract is in effect with "
-             "vendor."
+        help="Number of months this agreement/contract is in effect with the "
+             "partner."
     )
     expiration_notice = fields.Integer(
         string="Exp. Notice (Days)",
@@ -161,49 +155,48 @@ class Agreement(models.Model):
         string="Approved By",
         track_visibility='onchange'
     )
-
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency'
     )
-    customer_id = fields.Many2one(
+    partner_id = fields.Many2one(
         'res.partner',
-        string="Customer",
+        string="Partmer",
         copy=True,
-        help="The customer this agreement is related to (If Applicable)."
+        help="The customer or vendor this agreement is related to."
     )
-    vendor_id = fields.Many2one(
+    company_partner_id = fields.Many2one(
         'res.partner',
-        string="Vendor",
+        string="Company",
         copy=True,
-        help="The vendor this agreement is related to (If Applicable)."
+        default=lambda self: self.env.user.company_id.partner_id
     )
-    customer_contact_id = fields.Many2one(
+    partner_contact_id = fields.Many2one(
         'res.partner',
-        string="Customer Contact",
+        string="Partner Contact",
         copy=True,
-        help="The primary customer contact (If Applicable)."
+        help="The primary partner contact (If Applicable)."
     )
-    customer_contact_phone = fields.Char(
-        related='customer_contact_id.phone',
+    partner_contact_phone = fields.Char(
+        related='partner_contact_id.phone',
         string="Phone"
     )
-    customer_contact_email = fields.Char(
-        related='customer_contact_id.email',
+    partner_contact_email = fields.Char(
+        related='partner_contact_id.email',
         string="Email"
     )
-    vendor_contact_id = fields.Many2one(
+    company_contact_id = fields.Many2one(
         'res.partner',
-        string="Vendor Contact",
+        string="Company Contact",
         copy=True,
-        help="The primary vendor contact (If Applicable)."
+        help="The primary contact in the company."
     )
-    vendor_contact_phone = fields.Char(
-        related='vendor_contact_id.phone',
+    company_contact_phone = fields.Char(
+        related='company_contact_id.phone',
         string="Phone"
     )
-    vendor_contact_email = fields.Char(
-        related='vendor_contact_id.email',
+    company_contact_email = fields.Char(
+        related='company_contact_id.email',
         string="Email"
     )
     agreement_type_id = fields.Many2one(
@@ -243,14 +236,14 @@ class Agreement(models.Model):
     )
     company_signed_user_id = fields.Many2one(
         'res.users',
-        string="Company Signed By",
+        string="Signed By",
         track_visibility='onchange',
         help="The user at our company who authorized/signed the agreement or "
              "contract."
     )
-    customer_signed_user_id = fields.Many2one(
+    partner_signed_user_id = fields.Many2one(
         'res.partner',
-        string="Customer Signed By",
+        string="Signed By",
         track_visibility='onchange',
         help="Contact on the account that signed the agreement/contract."
     )
@@ -284,6 +277,12 @@ class Agreement(models.Model):
         string="Clauses",
         copy=True
     )
+    analytic_id = fields.Many2one('account.analytic.account',
+                                  string='Analytic Account', index=True)
+    analytic_line_ids = fields.One2many('account.analytic.line',
+                                        'agreement_id',
+                                        string='Revenues and Costs',
+                                        copy=False)
     previous_version_agreements_ids = fields.One2many(
         'agreement',
         'parent_agreement_id',
@@ -325,11 +324,11 @@ class Agreement(models.Model):
     )
 
     # compute contract_value field
-    @api.depends('total_customer_mrc', 'total_customer_nrc', 'customer_term')
+    @api.depends('total_customer_mrc', 'total_customer_nrc', 'term')
     def _compute_contract_value(self):
         for record in self:
             record.contract_value =\
-                (record.total_customer_mrc * record.customer_term) +\
+                (record.total_customer_mrc * record.term) +\
                 record.total_customer_nrc
 
     # compute total_company_mrc field

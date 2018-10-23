@@ -2,6 +2,7 @@
 
 from . import (
     res_config_settings,
+    account,
     agreement,
     agreement_clause,
     agreement_section,
