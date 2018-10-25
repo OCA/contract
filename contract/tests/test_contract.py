@@ -90,6 +90,7 @@ class TestContract(TestContractBase):
         self.assertEqual(self.acct_line.price_unit, 10)
 
     def test_contract(self):
+        recurring_next_date = fields.Date.to_date('2016-03-29')
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
         res = self.acct_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
@@ -101,7 +102,8 @@ class TestContract(TestContractBase):
         self.invoice_monthly = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(self.invoice_monthly)
-        self.assertEqual(self.contract.recurring_next_date, '2016-03-29')
+        self.assertEqual(self.contract.recurring_next_date,
+                         recurring_next_date)
         self.inv_line = self.invoice_monthly.invoice_line_ids[0]
         self.assertTrue(self.inv_line.invoice_line_tax_ids)
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
@@ -109,6 +111,7 @@ class TestContract(TestContractBase):
                          self.invoice_monthly.user_id)
 
     def test_contract_daily(self):
+        recurring_next_date = fields.Date.to_date('2016-03-01')
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_rule_type = 'daily'
         self.contract.pricelist_id = False
@@ -116,9 +119,11 @@ class TestContract(TestContractBase):
         invoice_daily = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoice_daily)
-        self.assertEqual(self.contract.recurring_next_date, '2016-03-01')
+        self.assertEqual(self.contract.recurring_next_date,
+                         recurring_next_date)
 
     def test_contract_weekly(self):
+        recurring_next_date = fields.Date.to_date('2016-03-07')
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_rule_type = 'weekly'
         self.contract.recurring_invoicing_type = 'post-paid'
@@ -127,9 +132,10 @@ class TestContract(TestContractBase):
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoices_weekly)
         self.assertEqual(
-            self.contract.recurring_next_date, '2016-03-07')
+            self.contract.recurring_next_date, recurring_next_date)
 
     def test_contract_yearly(self):
+        recurring_next_date = fields.Date.to_date('2017-02-28')
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_rule_type = 'yearly'
         self.contract.recurring_create_invoice()
@@ -137,9 +143,10 @@ class TestContract(TestContractBase):
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoices_weekly)
         self.assertEqual(
-            self.contract.recurring_next_date, '2017-02-28')
+            self.contract.recurring_next_date, recurring_next_date)
 
     def test_contract_monthly_lastday(self):
+        recurring_next_date = fields.Date.to_date('2016-03-31')
         self.contract.recurring_next_date = '2016-02-29'
         self.contract.recurring_invoicing_type = 'post-paid'
         self.contract.recurring_rule_type = 'monthlylastday'
@@ -147,7 +154,8 @@ class TestContract(TestContractBase):
         invoices_monthly_lastday = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertTrue(invoices_monthly_lastday)
-        self.assertEqual(self.contract.recurring_next_date, '2016-03-31')
+        self.assertEqual(self.contract.recurring_next_date,
+                         recurring_next_date)
 
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
@@ -155,13 +163,14 @@ class TestContract(TestContractBase):
                          self.contract.partner_id.property_product_pricelist)
 
     def test_onchange_date_start(self):
-        date = '2016-01-01'
-        self.contract.date_start = date
+        recurring_next_date = fields.Date.to_date('2016-01-01')
+        self.contract.date_start = recurring_next_date
         self.contract._onchange_date_start()
-        self.assertEqual(self.contract.recurring_next_date, date)
+        self.assertEqual(self.contract.recurring_next_date,
+                         recurring_next_date)
 
     def test_uom(self):
-        uom_litre = self.env.ref('product.product_uom_litre')
+        uom_litre = self.env.ref('uom.product_uom_litre')
         self.acct_line.uom_id = uom_litre.id
         self.acct_line._onchange_product_id()
         self.assertEqual(self.acct_line.uom_id,
@@ -273,9 +282,9 @@ class TestContract(TestContractBase):
     def test_contract_onchange_product_id_uom(self):
         """It should update the UoM for the line."""
         line = self._add_template_line(
-            {'uom_id': self.env.ref('product.product_uom_litre').id}
+            {'uom_id': self.env.ref('uom.product_uom_litre').id}
         )
-        line.product_id.uom_id = self.env.ref('product.product_uom_day').id
+        line.product_id.uom_id = self.env.ref('uom.product_uom_day').id
         line._onchange_product_id()
         self.assertEqual(line.uom_id,
                          line.product_id.uom_id)
@@ -292,13 +301,14 @@ class TestContract(TestContractBase):
 
     def test_contract_count(self):
         """It should return sale contract count."""
-        count = self.partner.sale_contract_count + 2
+        sale_count = self.partner.sale_contract_count + 2
         self.contract.copy()
         self.contract.copy()
-        self.assertEqual(self.partner.sale_contract_count, count)
-        count = self.partner.purchase_contract_count + 1
+        purchase_count = self.partner.purchase_contract_count + 1
         self.contract2.copy()
-        self.assertEqual(self.partner.purchase_contract_count, count)
+        self.partner.refresh()
+        self.assertEqual(self.partner.sale_contract_count, sale_count)
+        self.assertEqual(self.partner.purchase_contract_count, purchase_count)
 
     def test_same_date_start_and_date_end(self):
         """It should create one invoice with same start and end date."""
