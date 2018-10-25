@@ -42,7 +42,7 @@
                             <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"/>
                             <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
                             <field name="specific_price" invisible="1"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line" />
+                            <field name="discount" groups="base.group_no_one" />
                             <field name="price_subtotal" />
                         </tree>
                     </field>
@@ -84,19 +84,24 @@
                 <field name="recurring_invoicing_type" />
                 <field name="pricelist_id" />
                 <field name="journal_id" />
-                <filter string="Contract Type"
+                <filter name="contract_type"
+                        string="Contract Type"
                         context="{'group_by': 'contract_type'}"
                         />
-                <filter string="Recurrence"
+                <filter name="recurring_rule_type"
+                        string="Recurrence"
                         context="{'group_by': 'recurring_rule_type'}"
                         />
-                <filter string="Invoicing type"
+                <filter name="recurring_invoicing_type"
+                        string="Invoicing type"
                         context="{'group_by': 'recurring_invoicing_type'}"
                         />
-                <filter string="Pricelist"
+                <filter name="pricelist_id"
+                        string="Pricelist"
                         context="{'group_by': 'pricelist_id'}"
                         />
-                <filter string="Journal"
+                <filter name="journal_id"
+                        string="Journal"
                         context="{'group_by': 'journal_id'}"
                         />
             </search>

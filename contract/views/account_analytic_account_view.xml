@@ -84,7 +84,7 @@
                             <field name="automatic_price"/>
                             <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
                             <field name="specific_price" invisible="1"/>
-                            <field name="discount" groups="sale.group_discount_per_so_line" />
+                            <field name="discount" groups="base.group_no_one" />
                             <field name="price_subtotal"/>
                         </tree>
                     </field>
@@ -188,11 +188,13 @@
                         domain="[('date_end', '&lt;', time.strftime('%Y-%m-%d'))]"
                         />
                 <group expand="0" string="Group By...">
-                    <filter string="Next Invoice"
+                    <filter name="next_invoice"
+                            string="Next Invoice"
                             domain="[]"
                             context="{'group_by':'recurring_next_date'}"
                             />
-                    <filter string="Date End"
+                    <filter name="date_end"
+                            string="Date End"
                             domain="[]"
                             context="{'group_by':'date_end'}"
                             />
@@ -232,7 +234,7 @@
     </record>
 
     <menuitem id="menu_action_account_analytic_sale_overdue_all"
-              parent="account.menu_finance_receivables_documents"
+              parent="account.menu_finance_receivables"
               action="action_account_analytic_sale_overdue_all"
               sequence="99"
               />
@@ -268,7 +270,7 @@
     </record>
     
     <menuitem id="menu_action_account_analytic_purchase_overdue_all"
-              parent="account.menu_finance_payables_documents"
+              parent="account.menu_finance_payables"
               action="action_account_analytic_purchase_overdue_all"
               sequence="99"
           />
