@@ -3,7 +3,7 @@
 {
     'name': 'Contract Invoicing of Pending Sales Orders',
     'summary': 'Include sales to invoice in contract invoice creation',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Contract Management',
     'website': 'https://github.com/oca/contract',
     'author': 'Tecnativa, '
