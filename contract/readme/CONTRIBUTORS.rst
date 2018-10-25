@@ -4,3 +4,4 @@
 * Dave Lasley <dave@laslabs.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
 * Miquel Raïch <miquel.raich@eficent.com>
+* Souheil Bejaoui <souheil.bejaoui@acsone.eu>
