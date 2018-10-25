@@ -9,7 +9,8 @@ class TestContractSaleInvoicing(TestContractBase):
     def setUpClass(cls):
         super(TestContractSaleInvoicing, cls).setUpClass()
         cls.product_so = cls.env.ref(
-            'product.service_order_01_product_template')
+            'product.product_product_1')
+        cls.product_so.invoice_policy = 'order'
         cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
             'partner_invoice_id': cls.partner.id,
