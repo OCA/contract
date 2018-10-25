@@ -10,6 +10,7 @@ from odoo import api, fields, models
 
 class AccountAnalyticContract(models.Model):
     _name = 'account.analytic.contract'
+    _description = "Account Analytic Contract"
 
     # These fields will not be synced to the contract
     NO_SYNC = [
