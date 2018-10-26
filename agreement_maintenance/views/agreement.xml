@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Agreement Form View -->
+    <record model="ir.ui.view" id="agreement_form_view">
+        <field name="name">Agreement Form</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='products']/group"
+                   position="after">
+                <group string="Service Profiles">
+                    <field name="serviceprofile_ids" nolabel="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="profile_type"/>
+                            <field name="equipment_id"/>
+                            <field name="product_id"/>
+                            <field name="fsm_location_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
