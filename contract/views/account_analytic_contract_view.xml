@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_contract_view_form" model="ir.ui.view">
+        <field name="name">Account Analytic Contract Form View</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contract Template">
+                <group name="name">
+                    <field name="name"/>
+                </group>
+                <group name="group_main">
+                    <group name="group_main_left">
+                        <field name="contract_type" />
+                        <field name="journal_id" />
+                        <field name="pricelist_id" />
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </group>
+                    <group name="group_main_right">
+                        <field name="recurring_invoicing_type" />
+                        <label for="recurring_interval" />
+                        <div>
+                            <field name="recurring_interval"
+                                   class="oe_inline"
+                                   required="True"
+                                   />
+                            <field name="recurring_rule_type"
+                                   class="oe_inline"
+                                   required="True"
+                                   />
+                        </div>
+                    </group>
+                </group>
+                <group name="group_invoice_lines" string="Invoice Lines">
+                    <field name="recurring_invoice_line_ids" nolabel="1">
+                        <tree string="Account Analytic Lines" editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="quantity" />
+                            <field name="uom_id" />
+                            <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"/>
+                            <field name="price_unit" attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                            <field name="specific_price" invisible="1"/>
+                            <field name="discount" groups="base.group_no_one" />
+                            <field name="price_subtotal" />
+                        </tree>
+                    </field>
+                </group>
+                <group name="group_legend"
+                       string="Legend (for the markers inside invoice lines description)"
+                       >
+                    <p> <strong>#START#</strong>: Start date of the invoiced period</p>
+                    <p> <strong>#END#</strong>: End date of the invoiced period</p>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_view_tree" model="ir.ui.view">
+        <field name="name">Account Analytic Contract Tree View</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Contract Templates">
+                <field name="name" />
+                <field name="contract_type" />
+                <field name="recurring_rule_type" />
+                <field name="recurring_interval" />
+                <field name="recurring_invoicing_type" />
+                <field name="pricelist_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_view_search" model="ir.ui.view">
+        <field name="name">Account Analytic Contract Search View</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="arch" type="xml">
+            <search string="Contract Templates">
+                <field name="name" />
+                <field name="contract_type" />
+                <field name="recurring_rule_type" />
+                <field name="recurring_interval" />
+                <field name="recurring_invoicing_type" />
+                <field name="pricelist_id" />
+                <field name="journal_id" />
+                <filter name="contract_type"
+                        string="Contract Type"
+                        context="{'group_by': 'contract_type'}"
+                        />
+                <filter name="recurring_rule_type"
+                        string="Recurrence"
+                        context="{'group_by': 'recurring_rule_type'}"
+                        />
+                <filter name="recurring_invoicing_type"
+                        string="Invoicing type"
+                        context="{'group_by': 'recurring_invoicing_type'}"
+                        />
+                <filter name="pricelist_id"
+                        string="Pricelist"
+                        context="{'group_by': 'pricelist_id'}"
+                        />
+                <filter name="journal_id"
+                        string="Journal"
+                        context="{'group_by': 'journal_id'}"
+                        />
+            </search>
+        </field>
+    </record>
+
+    <record id="account_analytic_contract_action" model="ir.actions.act_window">
+        <field name="name">Contract Templates</field>
+        <field name="res_model">account.analytic.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="account_analytic_contract_view_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract template.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_config_contract"
+              name="Contracts"
+              sequence="1"
+              parent="account.menu_finance_configuration"
+              />
+
+    <menuitem id="account_analytic_contract_menu"
+              parent="menu_config_contract"
+              action="account_analytic_contract_action"
+              sequence="1"
+              />
+
+</odoo>
