@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_invoice_line_view_form" model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.form</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="inherit_id"
+               ref="account_abstract_analytic_contract_line_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Contract Line</attribute>
+            </xpath>
+            <xpath expr="//group[@name='recurrence_info']" position="inside">
+                <group>
+                    <field name="create_invoice_visibility" invisible="1"/>
+                    <field name="date_start" required="1"/>
+                    <field name="recurring_next_date"/>
+                </group>
+                <group>
+                    <field name="date_end"
+                           attrs="{'required': [('is_auto_renew', '=', True)]}"/>
+                </group>
+                <group>
+                    <field name="predecessor_contract_line_id"/>
+                </group>
+                <group>
+                    <field name="successor_contract_line_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_analytic_invoice_line_sale_view_form"
+            model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.sale.form</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="inherit_id"
+               ref="account_analytic_invoice_line_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="account_analytic_invoice_line_purchase_view_form"
+            model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.purchase.form</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="inherit_id"
+               ref="account_analytic_invoice_line_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('purchase_ok', '=', True)]
+                </attribute>
+            </field>
+            <xpath expr="//field[@name='automatic_price']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_analytic_invoice_line_view_tree" model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.tree</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="is_canceled"
+                  decoration-info="create_invoice_visibility and not is_canceled">
+                <field name="sequence" widget="handle"/>
+                <field name="product_id"/>
+                <field name="name"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="automatic_price"/>
+                <field name="price_unit"
+                       attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                <field name="specific_price"
+                       invisible="1"/>
+                <field name="discount"
+                       groups="base.group_no_one"/>
+                <field name="price_subtotal"/>
+                <field name="recurring_interval"
+                       invisible="1"/>
+                <field name="recurring_rule_type"
+                       invisible="1"/>
+                <field name="recurring_invoicing_type"
+                       invisible="1"/>
+                <field name="date_start" required="1"/>
+                <field name="date_end"/>
+                <field name="recurring_next_date"
+                       required="1"/>
+                <field name="last_date_invoiced"
+                       groups="base.group_no_one"/>
+                <field name="create_invoice_visibility"
+                       invisible="1"/>
+                <field name="is_plan_successor_allowed"
+                       invisible="1"/>
+                <field name="is_stop_plan_successor_allowed"
+                       invisible="1"/>
+                <field name="is_stop_allowed"
+                       invisible="1"/>
+                <field name="is_cancel_allowed"
+                       invisible="1"/>
+                <field name="is_un_cancel_allowed"
+                       invisible="1"/>
+                <field name="is_auto_renew" invisible="1"/>
+                <field name="is_canceled" invisible="1"/>
+                <button name="action_plan_successor"
+                        string="Plan Start" type="object"
+                        icon="fa-calendar text-success"
+                        attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"/>
+                <button name="action_stop_plan_successor"
+                        string="Stop Plan Successor"
+                        type="object"
+                        icon="fa-pause text-muted"
+                        attrs="{'invisible': [('is_stop_plan_successor_allowed', '=', False)]}"/>
+                <button name="action_stop" string="Stop"
+                        type="object"
+                        icon="fa-stop text-danger"
+                        attrs="{'invisible': [('is_stop_allowed', '=', False)]}"/>
+                <button name="cancel" string="Cancel"
+                        type="object"
+                        icon="fa-ban text-danger"
+                        confirm="Are you sure you want to cancel this line"
+                        attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"/>
+                <button name="action_uncancel"
+                        string="Un-cancel" type="object"
+                        icon="fa-ban text-success"
+                        attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"/>
+                <button name="renew" string="Renew"
+                        type="object"
+                        icon="fa-fast-forward text-success"
+                        groups="base.group_no_one"
+                        attrs="{'invisible': [('is_auto_renew', '=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_analytic_invoice_line_purchase_view_tree"
+            model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.purchase.tree</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id"
+               ref="account_analytic_invoice_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='automatic_price']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
