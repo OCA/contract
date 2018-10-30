@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_invoice_line_view_form" model="ir.ui.view">
+        <field name="name">account.analytic.invoice.line.form</field>
+        <field name="model">account.analytic.invoice.line</field>
+        <field name="inherit_id"
+               ref="account_abstract_analytic_contract_line_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Contract Line</attribute>
+            </xpath>
+            <xpath expr="//group[@name='recurrence_info']" position="inside">
+                <group>
+                    <field name="date_start" required="1"/>
+                </group>
+                <group>
+                    <field name="date_end"/>
+                </group>
+                <group>
+                    <field name="recurring_next_date"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

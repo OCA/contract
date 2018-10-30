@@ -48,35 +48,16 @@
                            attrs="{'required': [('recurring_invoices', '=', True)]}"
                     />
                     <field name="pricelist_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <label for="recurring_interval"/>
-                    <div>
-                        <field name="recurring_interval"
-                               class="oe_inline"
-                               attrs="{'required': [('recurring_invoices', '=', True)]}"
-                               />
-                        <field name="recurring_rule_type"
-                               class="oe_inline"
-                               attrs="{'required': [('recurring_invoices', '=', True)]}"
-                               />
-                    </div>
-                    <field name="recurring_invoicing_type"
-                           attrs="{'required': [('recurring_invoices', '=', True)]}"
-                    />
-                    <field name="date_start"
-                           attrs="{'required': [('recurring_invoices', '=', True)]}"
-                    />
+                    <field name="recurring_next_date"/>
                     <field name="date_end"/>
-                    <field name="recurring_next_date"
-                           attrs="{'required': [('recurring_invoices', '=', True)]}"
-                    />
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <label for="recurring_invoice_line_ids"
                        attrs="{'invisible': [('recurring_invoices','=',False)]}"
                        />
                 <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                     <field name="recurring_invoice_line_ids">
-                        <tree string="Account Analytic Lines" editable="bottom">
+                        <tree string="Account Analytic Lines">
                             <field name="sequence" widget="handle" />
                             <field name="product_id"/>
                             <field name="name"/>
@@ -87,6 +68,12 @@
                             <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="base.group_no_one" />
                             <field name="price_subtotal"/>
+                            <field name="recurring_interval" invisible="1"/>
+                            <field name="recurring_rule_type" invisible="1"/>
+                            <field name="recurring_invoicing_type" invisible="1"/>
+                            <field name="date_start" required="1"/>
+                            <field name="date_end"/>
+                            <field name="recurring_next_date" required="1"/>
                         </tree>
                     </field>
                 </div>
@@ -154,9 +141,6 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="before">
                 <field name="journal_id" groups="account.group_account_user"/>
-            </field>
-            <field name="partner_id" position="after">
-                <field name="recurring_next_date" invisible="not context.get('is_contract', False)"/>
             </field>
         </field>
     </record>
