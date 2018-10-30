@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_abstract_analytic_contract_line_view_form" model="ir.ui.view">
+        <field name="name">Account Abstract Analytic Contract Line Form View</field>
+        <field name="model">account.abstract.analytic.contract.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="quantity" colspan="2"/>
+                    <field name="uom_id" colspan="2"/>
+                    <field name="automatic_price"/>
+                    <field name="specific_price" invisible="1"/>
+                    <field name="price_unit"
+                           attrs="{'readonly': [('automatic_price', '=', True)]}"
+                           colspan="2"/>
+                    <field name="discount" colspan="2"/>
+                </group>
+                <group name="recurrence_info">
+                    <group>
+                        <field name="recurring_invoicing_type"/>
+                    </group>
+                    <group>
+                        <label for="recurring_interval"/>
+                        <div>
+                            <field name="recurring_interval"
+                                   class="oe_inline"/>
+                            <field name="recurring_rule_type"
+                                   class="oe_inline"/>
+                        </div>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>
