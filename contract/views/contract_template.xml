@@ -16,24 +16,10 @@
                         <field name="pricelist_id" />
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
-                    <group name="group_main_right">
-                        <field name="recurring_invoicing_type" />
-                        <label for="recurring_interval" />
-                        <div>
-                            <field name="recurring_interval"
-                                   class="oe_inline"
-                                   required="True"
-                                   />
-                            <field name="recurring_rule_type"
-                                   class="oe_inline"
-                                   required="True"
-                                   />
-                        </div>
-                    </group>
                 </group>
                 <group name="group_invoice_lines" string="Invoice Lines">
                     <field name="recurring_invoice_line_ids" nolabel="1">
-                        <tree string="Account Analytic Lines" editable="bottom">
+                        <tree string="Account Analytic Lines">
                             <field name="sequence" widget="handle" />
                             <field name="product_id" />
                             <field name="name" />
@@ -44,6 +30,9 @@
                             <field name="specific_price" invisible="1"/>
                             <field name="discount" groups="base.group_no_one" />
                             <field name="price_subtotal" />
+                            <field name="recurring_rule_type" invisible="1"/>
+                            <field name="recurring_interval" invisible="1"/>
+                            <field name="recurring_invoicing_type" invisible="1"/>
                         </tree>
                     </field>
                 </group>
@@ -64,9 +53,6 @@
             <tree string="Contract Templates">
                 <field name="name" />
                 <field name="contract_type" />
-                <field name="recurring_rule_type" />
-                <field name="recurring_interval" />
-                <field name="recurring_invoicing_type" />
                 <field name="pricelist_id" />
             </tree>
         </field>
@@ -79,22 +65,11 @@
             <search string="Contract Templates">
                 <field name="name" />
                 <field name="contract_type" />
-                <field name="recurring_rule_type" />
-                <field name="recurring_interval" />
-                <field name="recurring_invoicing_type" />
                 <field name="pricelist_id" />
                 <field name="journal_id" />
                 <filter name="contract_type"
                         string="Contract Type"
                         context="{'group_by': 'contract_type'}"
-                        />
-                <filter name="recurring_rule_type"
-                        string="Recurrence"
-                        context="{'group_by': 'recurring_rule_type'}"
-                        />
-                <filter name="recurring_invoicing_type"
-                        string="Invoicing type"
-                        context="{'group_by': 'recurring_invoicing_type'}"
                         />
                 <filter name="pricelist_id"
                         string="Pricelist"
