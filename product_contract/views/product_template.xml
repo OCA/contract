@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+
+<odoo>
+
+    <record id="product_template_form_contract_view" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div>
+                    <field name="is_contract"/>
+                    <label for="is_contract"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_standard_price']"
+                   position="inside">
+                <field name="contract_template_id"
+                       attrs="{'invisible': [('is_contract', '=', False)],
+                               'required':[('is_contract', '=', True)]}"/>
+                <field name="recurring_invoicing_type"
+                       attrs="{'invisible': [('is_contract', '=', False)],
+                               'required':[('is_contract', '=', True)]}"/>
+
+                <label for="recurring_interval" attrs="{'invisible': [('is_contract', '=', False)],
+                               'required':[('is_contract', '=', True)]}"/>
+                <div attrs="{'invisible': [('is_contract', '=', False)],
+                               'required':[('is_contract', '=', True)]}">
+                    <field name="recurring_interval"
+                           class="oe_inline" nolabel="1"/>
+                    <field name="recurring_rule_type"
+                           class="oe_inline" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
