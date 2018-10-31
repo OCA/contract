@@ -13,9 +13,8 @@
               "Odoo Community Association (OCA)",
     'website': 'https://laslabs.com',
     'depends': [
-        'contract',
         'product',
-        'sale',
+        'contract_sale',
     ],
     'data': [
         'views/product_template_view.xml',
