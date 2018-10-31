@@ -14,8 +14,6 @@ class TestSaleOrder(TransactionCase):
         self.sale = self.env.ref('sale.sale_order_2')
         self.contract = self.env['account.analytic.contract'].create({
             'name': 'Test',
-            'recurring_rule_type': 'yearly',
-            'recurring_interval': 12345,
         })
         self.product.product_tmpl_id.is_contract = True
         self.product.product_tmpl_id.contract_template_id = self.contract.id
