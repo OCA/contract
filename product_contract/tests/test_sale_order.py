@@ -27,6 +27,8 @@ class TestSaleOrder(TransactionCase):
     def test_action_done(self):
         """ It should create a contract when the sale for a contract is set
         to done for the first time """
+
+        self.assertTrue(self.sale.is_contract)
         self.env['account.analytic.account']._patch_method(
             'create', MagicMock()
         )

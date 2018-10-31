@@ -15,6 +15,30 @@ class ProductTemplate(models.Model):
         comodel_name='account.analytic.contract', string='Contract Template'
     )
 
+    recurring_rule_type = fields.Selection(
+        [
+            ('daily', 'Day(s)'),
+            ('weekly', 'Week(s)'),
+            ('monthly', 'Month(s)'),
+            ('monthlylastday', 'Month(s) last day'),
+            ('yearly', 'Year(s)'),
+        ],
+        default='monthly',
+        string='Recurrence',
+        help="Specify Interval for automatic invoice generation.",
+    )
+    recurring_invoicing_type = fields.Selection(
+        [('pre-paid', 'Pre-paid'), ('post-paid', 'Post-paid')],
+        default='pre-paid',
+        string='Invoicing type',
+        help="Specify if process date is 'from' or 'to' invoicing date",
+    )
+    recurring_interval = fields.Integer(
+        default=1,
+        string='Repeat Every',
+        help="Repeat every (Days/Week/Month/Year)",
+    )
+
     @api.onchange('is_contract')
     def _change_is_contract(self):
         """ Clear the relation to contract_template_id when downgrading
