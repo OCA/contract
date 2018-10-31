@@ -2,11 +2,21 @@
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, models
+from odoo import fields, api, models
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    is_contract = fields.Boolean(
+        string='Is a contract', compute="_compute_is_contract"
+    )
+
+    @api.depends('order_line')
+    def _compute_is_contract(self):
+        self.is_contract = any(
+            self.order_line.mapped('is_contract')
+        )
 
     @api.multi
     def action_confirm(self):

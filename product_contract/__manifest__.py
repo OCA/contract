@@ -17,7 +17,8 @@
         'contract_sale',
     ],
     'data': [
-        'views/product_template_view.xml',
+        'views/product_template.xml',
+        'views/sale_order.xml',
     ],
     'installable': True,
     'application': False,
