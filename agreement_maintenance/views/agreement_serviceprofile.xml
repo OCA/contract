@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Agreement Service Profile List View-->
+    <record model="ir.ui.view" id="agreement_serviceprofile_list_view">
+        <field name="name">Agreement Service Profile List</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <tree string="Service Profiles"
+                  create="false" edit="false">
+                <field name="name"/>
+                <field name="profile_type"/>
+                <field name="equipment_id"/>
+                <field name="product_id"/>
+                <field name="fsm_location_id"/>
+                <field name="agreement_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Service Profile Form View -->
+    <record model="ir.ui.view" id="agreement_serviceprofile_form_view">
+        <field name="name">Agreement Service Profile Form</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <form string="Service Profile"
+                  create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="profile_type"/>
+                            <field name="equipment_id"
+                                   attrs="{'invisible': [('profile_type', '!=', 'equipment')]}"/>
+                            <field name="equipment_category_id"
+                                   attrs="{'invisible': [('profile_type', '!=', 'equipment')]}"/>
+                            <field name="product_id"
+                                   attrs="{'invisible': [('profile_type', '!=', 'product')]}"/>
+                        </group>
+                        <group>
+                            <field name="fsm_location_id"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="agreement_action_serviceprofile">
+        <field name="name">Agreement Service Profile</field>
+        <field name="res_model">agreement.serviceprofile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
