@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <report
+            id="partner_agreement_contract_document"
+            model="agreement"
+            string="Contract Document"
+            name="agreement.report_agreement_document"
+            file="agreement.report_agreement_document"
+            report_type="qweb-pdf"/>
+
+    <report
+            id="partner_agreement_contract_document_preview"
+            model="agreement"
+            string="Contract Document Preview"
+            name="agreement.report_agreement_document"
+            file="agreement.report_agreement_document"
+            report_type="qweb-html"/>
+
+    <template id="report_agreement_document">
+        <t t-name="agreement.report_agreement_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h1 t-field="doc.name"/>
+                            <div name="description">
+                                <p t-field="doc.description"/>
+                            </div>
+                            <h2>Parties</h2>
+                            <h3>Company Information</h3>
+                            <div name="company_address">
+                                <address t-field="doc.company_partner_id"
+                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                            </div>
+                            <div name="company_contact">
+                                Represented by <span t-field="doc.company_contact_id.name"/>.
+                            </div>
+                            <h3>Partner Information</h3>
+                            <div name="partner_address">
+                                <address t-field="doc.partner_id"
+                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                            </div>
+                            <div name="partner_contact">
+                                Represented by <span t-field="doc.partner_contact_id.name"/>.
+                            </div>
+                            <h2>Agreement</h2>
+                            <table class="table table-condensed">
+                                <tbody class="section_tbody">
+                                    <tr>
+                                        <td>
+                                            <ol>
+                                                <li t-foreach="doc.sections_ids" t-as="s">
+                                                    <h3 t-field="s.name"/>
+                                                    <p t-field="s.content"/>
+                                                    <ol>
+                                                        <li t-foreach="s.clauses_ids" t-as="c">
+                                                            <h4 t-field="c.name"/>
+                                                            <p t-field="c.content"/>
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h2>Special Terms</h2>
+                            <div name="special_term">
+                                <p t-field="doc.special_terms"/>
+                            </div>
+                            <h2>Signatures</h2>
+                            <table class="table table-condensed">
+                                <theader>
+                                    <tr>
+                                        <th>Partner</th>
+                                        <th>Company</th>
+                                    </tr>
+                                </theader>
+                                <tbody class="section_tbody">
+                                    <tr>
+                                        <td>
+                                            <p t-field="doc.partner_id"/>
+                                            <p>By: </p>
+                                            <p>
+                                                Name: <span t-field="doc.partner_contact_id.name"/>
+                                            </p>
+                                            <p>
+                                                Title: <span t-field="doc.partner_contact_id.function"/>
+                                            </p>
+                                            <p>Date: </p>
+                                        </td>
+                                        <td>
+                                            <p t-field="doc.company_partner_id"/>
+                                            <p>By: </p>
+                                            <p>
+                                                Name: <span t-field="doc.company_contact_id.name"/>
+                                            </p>
+                                            <p>
+                                                Title: <span t-field="doc.company_contact_id.function"/>
+                                            </p>
+                                            <p>Date: </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
