@@ -82,6 +82,7 @@ class SaleOrderLine(models.Model):
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
             'contract_id': contract.id,
+            'sale_order_line_id': self.id,
         }
 
     @api.multi
