@@ -56,7 +56,6 @@
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="date_start"/>
-                    <field name="recurring_next_date"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="date_end"/>
@@ -67,8 +66,6 @@
                 <field name="date_start"
                        attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"/>
                 <field name="date_end"
-                       attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"/>
-                <field name="recurring_next_date"
                        attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree"
