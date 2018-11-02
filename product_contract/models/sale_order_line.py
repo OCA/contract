@@ -3,7 +3,8 @@
 # Copyright 2017 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
@@ -13,7 +14,13 @@ class SaleOrderLine(models.Model):
         string='Is a contract', related="product_id.is_contract"
     )
     contract_id = fields.Many2one(
-        comodel_name='account.analytic.account', string='Contract'
+        comodel_name='account.analytic.account', string='Contract', copy=False
+    )
+    contract_template_id = fields.Many2one(
+        comodel_name='account.analytic.contract',
+        string='Contract Template',
+        related='product_id.product_tmpl_id.contract_template_id',
+        readonly=True
     )
     recurring_rule_type = fields.Selection(
         [
@@ -55,3 +62,54 @@ class SaleOrderLine(models.Model):
                 self.product_id.recurring_invoicing_type
             )
             self.recurring_interval = self.product_id.recurring_interval
+
+    @api.multi
+    def _prepare_contract_line_values(self, contract):
+        self.ensure_one()
+        return {
+            'sequence': self.sequence,
+            'product_id': self.product_id.id,
+            'name': self.name,
+            'quantity': self.product_uom_qty,
+            'uom_id': self.product_uom.id,
+            'price_unit': self.price_unit,
+            'discount': self.discount,
+            'recurring_next_date': self.recurring_next_date
+            or fields.Date.today(),
+            'date_end': self.date_end,
+            'date_start': self.date_start or fields.Date.today(),
+            'recurring_interval': self.recurring_interval,
+            'recurring_invoicing_type': self.recurring_invoicing_type,
+            'recurring_rule_type': self.recurring_rule_type,
+            'contract_id': contract.id,
+        }
+
+    @api.multi
+    def create_contract_line(self, contract):
+        contract_line = self.env['account.analytic.invoice.line']
+        for rec in self:
+            contract_line.create(rec._prepare_contract_line_values(contract))
+
+    @api.constrains('contract_id')
+    def _check_contract_sale_partner(self):
+        for rec in self:
+            if rec.contract_id:
+                if rec.order_id.partner_id != rec.contract_id.partner_id:
+                    raise ValidationError(
+                        _(
+                            "Sale Order and contract should be "
+                            "linked to the same partner"
+                        )
+                    )
+
+    @api.constrains('product_id', 'contract_id')
+    def _check_contract_sale_contract_template(self):
+        for rec in self:
+            if rec.contract_id:
+                if (
+                    rec.contract_template_id
+                    != rec.contract_id.contract_template_id
+                ):
+                    raise ValidationError(
+                        _("Contract product has different contract template")
+                    )

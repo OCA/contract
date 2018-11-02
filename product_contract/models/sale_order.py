@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import fields, api, models
@@ -9,29 +10,61 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     is_contract = fields.Boolean(
-        string='Is a contract', compute="_compute_is_contract"
+        string='Is a contract', compute='_compute_is_contract'
     )
+    contract_count = fields.Integer(compute='_compute_contract_count')
 
     @api.depends('order_line')
     def _compute_is_contract(self):
-        self.is_contract = any(
-            self.order_line.mapped('is_contract')
-        )
+        self.is_contract = any(self.order_line.mapped('is_contract'))
 
     @api.multi
     def action_confirm(self):
         """ If we have a contract in the order, set it up """
-        for rec in self:
-            order_lines = self.mapped('order_line').filtered(
-                lambda r: r.product_id.is_contract
+        contract_env = self.env['account.analytic.account']
+        for rec in self.filtered('is_contract'):
+            line_to_create_contract = rec.order_line.filtered(
+                lambda r: not r.contract_id
             )
-            for line in order_lines:
-                contract_tmpl = line.product_id.contract_template_id
-                contract = self.env['account.analytic.account'].create({
-                    'name': '%s Contract' % rec.name,
-                    'partner_id': rec.partner_id.id,
-                    'contract_template_id': contract_tmpl.id,
-                })
-                line.contract_id = contract.id
-                contract.recurring_create_invoice()
+            for contract_template in line_to_create_contract.mapped(
+                'product_id.contract_template_id'
+            ):
+                order_lines = line_to_create_contract.filtered(
+                    lambda r: r.product_id.contract_template_id
+                    == contract_template
+                )
+                contract = contract_env.create(
+                    {
+                        'name': '{template_name}: {sale_name}'.format(
+                            template_name=contract_template.name,
+                            sale_name=rec.name,
+                        ),
+                        'partner_id': rec.partner_id.id,
+                        'recurring_invoices': True,
+                        'contract_template_id': contract_template.id,
+                    }
+                )
+                contract._onchange_contract_template_id()
+                order_lines.create_contract_line(contract)
+                order_lines.write({'contract_id': contract.id})
+            line_to_update_contract = rec.order_line.filtered('contract_id')
+            for line in line_to_update_contract:
+                line.create_contract_line(line.contract_id)
         return super(SaleOrder, self).action_confirm()
+
+    @api.multi
+    @api.depends("order_line")
+    def _compute_contract_count(self):
+        for rec in self:
+            rec.contract_count = len(rec.order_line.mapped('contract_id'))
+
+    @api.multi
+    def action_show_contracts(self):
+        self.ensure_one()
+        action = self.env.ref(
+            "contract.action_account_analytic_sale_overdue_all"
+        ).read()[0]
+        action["domain"] = [
+            ("id", "in", self.order_line.mapped('contract_id').ids)
+        ]
+        return action
