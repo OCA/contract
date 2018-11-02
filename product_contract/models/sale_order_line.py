@@ -20,7 +20,7 @@ class SaleOrderLine(models.Model):
         comodel_name='account.analytic.contract',
         string='Contract Template',
         related='product_id.product_tmpl_id.contract_template_id',
-        readonly=True
+        readonly=True,
     )
     recurring_rule_type = fields.Selection(
         [
@@ -50,9 +50,6 @@ class SaleOrderLine(models.Model):
     )
     date_start = fields.Date(string='Date Start', default=fields.Date.today())
     date_end = fields.Date(string='Date End', index=True)
-    recurring_next_date = fields.Date(
-        default=fields.Date.today(), copy=False, string='Date of Next Invoice'
-    )
 
     @api.onchange('product_id')
     def onchange_product(self):
@@ -74,8 +71,6 @@ class SaleOrderLine(models.Model):
             'uom_id': self.product_uom.id,
             'price_unit': self.price_unit,
             'discount': self.discount,
-            'recurring_next_date': self.recurring_next_date
-            or fields.Date.today(),
             'date_end': self.date_end,
             'date_start': self.date_start or fields.Date.today(),
             'recurring_interval': self.recurring_interval,
@@ -87,9 +82,13 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def create_contract_line(self, contract):
+        contract_line_env = self.env['account.analytic.invoice.line']
         contract_line = self.env['account.analytic.invoice.line']
         for rec in self:
-            contract_line.create(rec._prepare_contract_line_values(contract))
+            contract_line |= contract_line_env.create(
+                rec._prepare_contract_line_values(contract)
+            )
+        contract_line._onchange_date_start()
 
     @api.constrains('contract_id')
     def _check_contract_sale_partner(self):

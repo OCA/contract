@@ -26,6 +26,7 @@ class SaleOrder(models.Model):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id
             )
+            line_to_update_contract = rec.order_line.filtered('contract_id')
             for contract_template in line_to_create_contract.mapped(
                 'product_id.contract_template_id'
             ):
@@ -47,7 +48,6 @@ class SaleOrder(models.Model):
                 contract._onchange_contract_template_id()
                 order_lines.create_contract_line(contract)
                 order_lines.write({'contract_id': contract.id})
-            line_to_update_contract = rec.order_line.filtered('contract_id')
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
         return super(SaleOrder, self).action_confirm()
@@ -64,10 +64,10 @@ class SaleOrder(models.Model):
         action = self.env.ref(
             "contract.action_account_analytic_sale_overdue_all"
         ).read()[0]
-        contracts = self.env['account.analytic.invoice.line'].search([
-            ('sale_order_line', 'in', self.order_line.ids)
-        ]).mapped('contract_id')
-        action["domain"] = [
-            ("id", "in", contracts.ids)
-        ]
+        contracts = (
+            self.env['account.analytic.invoice.line']
+            .search([('sale_order_line_id', 'in', self.order_line.ids)])
+            .mapped('contract_id')
+        )
+        action["domain"] = [("id", "in", contracts.ids)]
         return action
