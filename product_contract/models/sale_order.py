@@ -64,7 +64,10 @@ class SaleOrder(models.Model):
         action = self.env.ref(
             "contract.action_account_analytic_sale_overdue_all"
         ).read()[0]
+        contracts = self.env['account.analytic.invoice.line'].search([
+            ('sale_order_line', 'in', self.order_line.ids)
+        ]).mapped('contract_id')
         action["domain"] = [
-            ("id", "in", self.order_line.mapped('contract_id').ids)
+            ("id", "in", contracts.ids)
         ]
         return action
