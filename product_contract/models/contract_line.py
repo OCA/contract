@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountAnalyticInvoiceLine(models.Model):
@@ -14,3 +14,12 @@ class AccountAnalyticInvoiceLine(models.Model):
         required=False,
         copy=False,
     )
+
+    @api.multi
+    def _prepare_invoice_line(self, invoice_id):
+        res = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
+            invoice_id
+        )
+        if self.sale_order_line_id:
+            res['sale_line_ids'] = [(6, 0, [self.sale_order_line_id.id])]
+        return res
