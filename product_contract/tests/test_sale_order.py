@@ -16,7 +16,25 @@ class TestSaleOrder(TransactionCase):
             {'name': 'Template 1'}
         )
         self.contract_template2 = self.env['account.analytic.contract'].create(
-            {'name': 'Template 2'}
+            {
+                'name': 'Template 2',
+                'recurring_invoice_line_ids': [
+                    (
+                        0,
+                        0,
+                        {
+                            'product_id': self.product2.id,
+                            'name': 'Services from #START# to #END#',
+                            'quantity': 1,
+                            'uom_id': self.product2.uom_id.id,
+                            'price_unit': 100,
+                            'discount': 50,
+                            'recurring_rule_type': 'yearly',
+                            'recurring_interval': 1,
+                        },
+                    )
+                ],
+            }
         )
         self.product1.write(
             {
