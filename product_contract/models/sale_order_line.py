@@ -64,6 +64,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_contract_line_values(self, contract):
         self.ensure_one()
+        contract_line_env = self.env['account.analytic.invoice.line']
         return {
             'sequence': self.sequence,
             'product_id': self.product_id.id,
@@ -74,6 +75,13 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'date_end': self.date_end,
             'date_start': self.date_start or fields.Date.today(),
+            'recurring_next_date':
+                contract_line_env._compute_first_recurring_next_date(
+                    self.date_start or fields.Date.today(),
+                    self.recurring_invoicing_type,
+                    self.recurring_rule_type,
+                    self.recurring_interval,
+                ),
             'recurring_interval': self.recurring_interval,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
@@ -89,7 +97,7 @@ class SaleOrderLine(models.Model):
             contract_line |= contract_line_env.create(
                 rec._prepare_contract_line_values(contract)
             )
-        contract_line._onchange_date_start()
+        return contract_line
 
     @api.constrains('contract_id')
     def _check_contract_sale_partner(self):
