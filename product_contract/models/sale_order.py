@@ -24,9 +24,11 @@ class SaleOrder(models.Model):
         contract_env = self.env['account.analytic.account']
         for rec in self.filtered('is_contract'):
             line_to_create_contract = rec.order_line.filtered(
-                lambda r: not r.contract_id
+                lambda r: not r.contract_id and r.product_id.is_contract
             )
-            line_to_update_contract = rec.order_line.filtered('contract_id')
+            line_to_update_contract = rec.order_line.filtered(
+                lambda r: r.contract_id and r.product_id.is_contract
+            )
             for contract_template in line_to_create_contract.mapped(
                 'product_id.contract_template_id'
             ):
