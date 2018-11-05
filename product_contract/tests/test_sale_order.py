@@ -73,6 +73,8 @@ class TestSaleOrder(TransactionCase):
         )
 
     def test_check_contract_sale_partner(self):
+        """Can't link order line to a partner contract different then the
+        order one"""
         contract2 = self.env['account.analytic.account'].create(
             {
                 'name': 'Contract',
@@ -84,6 +86,8 @@ class TestSaleOrder(TransactionCase):
             self.order_line1.contract_id = contract2
 
     def test_check_contract_sale_contract_template(self):
+        """Can't link order line to a contract with different contract
+        template then the product one"""
         contract1 = self.env['account.analytic.account'].create(
             {
                 'name': 'Contract',
@@ -92,3 +96,42 @@ class TestSaleOrder(TransactionCase):
         )
         with self.assertRaises(ValidationError):
             self.order_line1.contract_id = contract1
+
+    def test_no_contract_proudct(self):
+        """it should create contract for only product contract"""
+        self.product1.is_contract = False
+        self.sale.action_confirm()
+        self.assertFalse(self.order_line1.contract_id)
+
+    def test_sale_order_line_invoice_status(self):
+        """Sale order line for contract product should have nothing to
+        invoice as status"""
+        self.sale.action_confirm()
+        self.assertEqual(self.order_line1.invoice_status, 'no')
+
+    def test_sale_order_invoice_status(self):
+        """Sale order with only contract product should have nothing to
+        invoice status directtly"""
+        self.sale.order_line.filtered(
+            lambda line: not line.product_id.is_contract
+        ).unlink()
+        self.sale.action_confirm()
+        self.assertEqual(self.sale.invoice_status, 'no')
+
+    def test_sale_order_create_invoice(self):
+        """Should not invoice contract product on sale order create invoice"""
+        self.product2.is_contract = False
+        self.product2.invoice_policy = 'order'
+        self.sale.action_confirm()
+        self.sale.action_invoice_create()
+        self.assertEqual(len(self.sale.invoice_ids), 1)
+        invoice_line = self.sale.invoice_ids.invoice_line_ids.filtered(
+            lambda line: line.product_id.is_contract
+        )
+        self.assertEqual(len(invoice_line), 0)
+
+    def test_link_contract_invoice_to_sale_order(self):
+        """It should link contract invoice to sale order"""
+        self.sale.action_confirm()
+        invoice = self.order_line1.contract_id.recurring_create_invoice()
+        self.assertTrue(invoice in self.sale.invoice_ids)
