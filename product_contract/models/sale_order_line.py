@@ -48,7 +48,7 @@ class SaleOrderLine(models.Model):
         help="Repeat every (Days/Week/Month/Year)",
         copy=False,
     )
-    date_start = fields.Date(string='Date Start', default=fields.Date.today())
+    date_start = fields.Date(string='Date Start')
     date_end = fields.Date(string='Date End', index=True)
 
     @api.onchange('product_id')
@@ -59,6 +59,7 @@ class SaleOrderLine(models.Model):
                 self.product_id.recurring_invoicing_type
             )
             self.recurring_interval = self.product_id.recurring_interval
+            self.date_start = fields.Date.today()
 
     @api.multi
     def _prepare_contract_line_values(self, contract):
