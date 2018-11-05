@@ -4,14 +4,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'Product Contract',
+    'name': 'Recurring - Product Contract',
     'version': '12.0.1.0.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "LasLabs, "
               "ACSONE SA/NV, "
               "Odoo Community Association (OCA)",
-    'website': 'https://laslabs.com',
+    'website': 'https://github.com/oca/contract',
     'depends': [
         'product',
         'contract_sale',
