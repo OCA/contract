@@ -113,3 +113,14 @@ class SaleOrderLine(models.Model):
                     raise ValidationError(
                         _("Contract product has different contract template")
                     )
+
+    def _compute_invoice_status(self):
+        super(SaleOrderLine, self)._compute_invoice_status()
+        for line in self.filtered('contract_id'):
+            line.invoice_status = 'no'
+
+    @api.multi
+    def invoice_line_create(self, invoice_id, qty):
+        return super(
+            SaleOrderLine, self.filtered(lambda l: not l.contract_id)
+        ).invoice_line_create(invoice_id, qty)
