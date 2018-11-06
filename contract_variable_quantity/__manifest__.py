@@ -15,6 +15,9 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/abstract_contract_view.xml',
+        'views/contract_line_formula.xml',
+        'views/contract_template_view.xml',
         'views/contract_view.xml',
     ],
     'installable': True,
