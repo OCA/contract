@@ -59,6 +59,7 @@ class AccountAnalyticContractLine(models.Model):
 
 class ContractLineFormula(models.Model):
     _name = 'contract.line.qty.formula'
+    _description = 'Contract Line Formula'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Text(required=True, default="result = 0")
