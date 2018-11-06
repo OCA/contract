@@ -1,5 +1,6 @@
 # Copyright 2016 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Tecnativa - Carlos Dauden
+# Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import odoo.tests
@@ -35,7 +36,7 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
                     'result = 12',
         })
         self.contract_line = self.env['account.analytic.invoice.line'].create({
-            'analytic_account_id': self.contract.id,
+            'contract_id': self.contract.id,
             'product_id': self.product.id,
             'name': 'Test',
             'qty_type': 'variable',
@@ -44,6 +45,10 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
             'uom_id': self.product.uom_id.id,
             'price_unit': 100,
             'discount': 50,
+            'recurring_rule_type': 'monthly',
+            'recurring_interval': 1,
+            'date_start': '2016-02-15',
+            'recurring_next_date': '2016-02-29',
         })
 
     def test_check_invalid_code(self):
@@ -55,7 +60,7 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
             self.formula.code = "user.id"
 
     def test_check_variable_quantity(self):
-        self.contract._create_invoice()
+        self.contract.recurring_create_invoice()
         invoice = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
         self.assertEqual(invoice.invoice_line_ids[0].quantity, 12)
@@ -63,8 +68,8 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
     def test_check_skip_zero_qty(self):
         self.formula.code = 'result=0'
         self.contract.skip_zero_qty = True
-        invoice = self.contract._create_invoice()
+        invoice = self.contract.recurring_create_invoice()
         self.assertFalse(invoice.invoice_line_ids)
         self.contract.skip_zero_qty = False
-        invoice = self.contract._create_invoice()
+        invoice = self.contract.recurring_create_invoice()
         self.assertAlmostEqual(invoice.invoice_line_ids[0].quantity, 0.0)
