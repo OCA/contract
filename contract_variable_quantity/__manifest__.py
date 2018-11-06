@@ -4,7 +4,7 @@
 
 {
     'name': 'Variable quantity in contract recurrent invoicing',
-    'version': '11.0.1.3.0',
+    'version': '12.0.1.0.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "Tecnativa,"
