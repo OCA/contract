@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+
+<odoo>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract (in
+            product_contract_variable_quantity)
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='contract']"
+                   position="inside">
+                <group>
+                    <field name="qty_type"
+                           attrs="{'required': [('is_contract', '=', True)], 'invisible': [('is_contract', '!=', True)]}"/>
+                    <field name="qty_formula_id"
+                           attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
