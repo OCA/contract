@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_abstract_analytic_contract_line_view_form"
+            model="ir.ui.view">
+        <field name="name">Account Abstract Analytic Contract Line Form View
+        </field>
+        <field name="model">account.abstract.analytic.contract.line</field>
+        <field name="inherit_id"
+               ref="contract.account_abstract_analytic_contract_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="before">
+                <field name="qty_type"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="qty_formula_id"
+                       attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="attrs">{'required': [('qty_type', '=',
+                    'fixed')], 'invisible': [('qty_type', '!=', 'fixed')]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
