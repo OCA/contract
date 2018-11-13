@@ -86,8 +86,28 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist', string='Pricelist'
     )
-    recurring_next_date = fields.Date(
-        copy=False, string='Date of Next Invoice'
+    recurring_next_date = fields.Date(string='Date of Next Invoice')
+
+    is_canceled = fields.Boolean(string="Canceled", default=False)
+    is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    auto_renew_interval = fields.Integer(
+        default=1,
+        string='Renew Every',
+        help="Renew every (Days/Week/Month/Year)",
+    )
+    auto_renew_rule_type = fields.Selection(
+        [('monthly', 'Month(s)'), ('yearly', 'Year(s)')],
+        default='yearly',
+        string='Renewal type',
+        help="Specify Interval for automatic renewal.",
+    )
+    termination_notice_interval = fields.Integer(
+        default=1, string='Termination Notice Before'
+    )
+    termination_notice_rule_type = fields.Selection(
+        [('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)')],
+        default='monthly',
+        string='Termination Notice type',
     )
 
     @api.depends(
