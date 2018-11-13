@@ -8,18 +8,27 @@
                ref="account_abstract_analytic_contract_line_view_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="string">Contract Line</attribute>
             </xpath>
             <xpath expr="//group[@name='recurrence_info']" position="inside">
                 <group>
                     <field name="date_start" required="1"/>
-                </group>
-                <group>
-                    <field name="date_end"/>
-                </group>
-                <group>
                     <field name="recurring_next_date"/>
+                </group>
+                <group>
+                    <field name="date_end" attrs="{'required': [('is_auto_renew', '=', True)]}"/>
+                </group>
+                <group>
+                    <field name="predecessor_contract_line_id"/>
+                </group>
+                <group>
+                    <field name="successor_contract_line_id"/>
                 </group>
             </xpath>
         </field>

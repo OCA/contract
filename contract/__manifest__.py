@@ -20,11 +20,13 @@
     'website': 'https://github.com/oca/contract',
     'depends': ['base', 'account', 'analytic'],
     'data': [
+        'wizards/contract_line_wizard.xml',
         'security/ir.model.access.csv',
         'security/contract_security.xml',
         'report/report_contract.xml',
         'report/contract_views.xml',
         'data/contract_cron.xml',
+        'data/contract_renew_cron.xml',
         'data/mail_template.xml',
         'views/abstract_contract_line.xml',
         'views/contract.xml',
