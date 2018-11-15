@@ -25,14 +25,17 @@
             <xpath expr="//field[@name='order_line']" position="before">
                 <field name="is_contract" invisible="1"/>
             </xpath>
-             <xpath expr="//field[@name='order_line']/form//field[@name='product_id']"
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_id']"
                    position="after">
-                 <field name="contract_template_id" invisible="1"/>
-                 <field name="contract_id"
-                        attrs="{'invisible': [('is_contract', '=', False)]}"
-                        domain="[('partner_id','=',parent.partner_id),('contract_template_id','=',contract_template_id)]"
-                 />
-             </xpath>
+                <field name="contract_template_id" invisible="1"/>
+                <field name="contract_id"
+                       attrs="{'invisible': [('is_contract', '=', False)]}"
+                       domain="[('partner_id','=',parent.partner_id),('contract_template_id','=',contract_template_id)]"/>
+                <field name="contract_line_id"
+                       attrs="{'invisible': [('is_contract', '=', False)]}"
+                       domain="[('contract_id','=',contract_id)]"/>
+
+            </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
                    position="after">
                 <separator colspan="4" string="Recurrence Invoicing"
