@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -12,10 +11,7 @@
               "ACSONE SA/NV, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
-    'depends': [
-        'product',
-        'contract_sale',
-    ],
+    'depends': ['product', 'contract_sale'],
     'data': [
         'views/product_template.xml',
         'views/sale_order.xml',
