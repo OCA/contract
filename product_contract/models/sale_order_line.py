@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # Copyright 2017 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -51,6 +50,13 @@ class SaleOrderLine(models.Model):
     date_start = fields.Date(string='Date Start')
     date_end = fields.Date(string='Date End', index=True)
 
+    contract_line_id = fields.Many2one(
+        comodel_name="account.analytic.invoice.line",
+        string="Contract Line to replace",
+        required=False,
+        copy=False,
+    )
+
     @api.onchange('product_id')
     def onchange_product(self):
         if self.product_id.is_contract:
@@ -97,6 +103,7 @@ class SaleOrderLine(models.Model):
             contract_line |= contract_line_env.create(
                 rec._prepare_contract_line_values(contract)
             )
+            rec.contract_line_id.stop(rec.date_start)
         return contract_line
 
     @api.constrains('contract_id')
