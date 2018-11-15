@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
+from odoo.fields import Date
 
 
 class TestSaleOrder(TransactionCase):
@@ -51,6 +52,36 @@ class TestSaleOrder(TransactionCase):
         self.order_line1 = self.sale.order_line.filtered(
             lambda l: l.product_id == self.product1
         )
+        self.contract = self.env["account.analytic.account"].create(
+            {
+                "name": "Test Contract 2",
+                "partner_id": self.sale.partner_id.id,
+                "pricelist_id":
+                    self.sale.partner_id.property_product_pricelist.id,
+                "recurring_invoices": True,
+                "contract_type": "purchase",
+                "contract_template_id": self.contract_template1.id,
+                "recurring_invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product1.id,
+                            "name": "Services from #START# to #END#",
+                            "quantity": 1,
+                            "uom_id": self.product1.uom_id.id,
+                            "price_unit": 100,
+                            "discount": 50,
+                            "recurring_rule_type": "monthly",
+                            "recurring_interval": 1,
+                            "date_start": "2016-02-15",
+                            "recurring_next_date": "2016-02-29",
+                        },
+                    )
+                ],
+            }
+        )
+        self.contract_line = self.contract.recurring_invoice_line_ids[0]
 
     def test_compute_is_contract(self):
         """Sale Order should have is_contract true if one of its lines is
@@ -153,3 +184,13 @@ class TestSaleOrder(TransactionCase):
         self.sale.action_confirm()
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice in self.sale.invoice_ids)
+
+    def test_contract_upsell(self):
+        """Should stop contract line at sale order line start date"""
+        self.order_line1.contract_id = self.contract
+        self.order_line1.contract_line_id = self.contract_line
+        self.order_line1.date_start = "2018-01-01"
+        self.sale.action_confirm()
+        self.assertEqual(
+            self.contract_line.date_end, Date.to_date("2018-01-01")
+        )
