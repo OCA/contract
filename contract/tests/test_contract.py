@@ -27,10 +27,11 @@ class TestContractBase(common.SavepointCase):
         )
         # For being sure of the applied price
         cls.env['product.pricelist.item'].create({
+            'applied_on': '0_product_variant',
             'pricelist_id': cls.partner.property_product_pricelist.id,
             'product_id': cls.product.id,
-            'compute_price': 'formula',
-            'base': 'list_price',
+            'compute_price': 'fixed',
+            'fixed_price': 1100,
         })
         cls.contract = cls.env['account.analytic.account'].create({
             'name': 'Test Contract',
@@ -69,7 +70,6 @@ class TestContract(TestContractBase):
 
     def test_automatic_price(self):
         self.acct_line.automatic_price = True
-        self.product.list_price = 1100
         self.assertEqual(self.acct_line.price_unit, 1100)
         # Try to write other price
         self.acct_line.price_unit = 10
