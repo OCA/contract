@@ -37,6 +37,26 @@ class ProductTemplate(models.Model):
         string='Repeat Every',
         help="Repeat every (Days/Week/Month/Year)",
     )
+    is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    auto_renew_interval = fields.Integer(
+        default=1,
+        string='Renew Every',
+        help="Renew every (Days/Week/Month/Year)",
+    )
+    auto_renew_rule_type = fields.Selection(
+        [('monthly', 'Month(s)'), ('yearly', 'Year(s)')],
+        default='yearly',
+        string='Renewal type',
+        help="Specify Interval for automatic renewal.",
+    )
+    termination_notice_interval = fields.Integer(
+        default=1, string='Termination Notice Before'
+    )
+    termination_notice_rule_type = fields.Selection(
+        [('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)')],
+        default='monthly',
+        string='Termination Notice type',
+    )
 
     @api.onchange('is_contract')
     def _change_is_contract(self):

@@ -16,3 +16,12 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
             )
             self.recurring_interval = self.product_id.recurring_interval
             self.date_start = fields.Date.today()
+            self.is_auto_renew = self.product_id.is_auto_renew
+            self.auto_renew_interval = self.product_id.auto_renew_interval
+            self.auto_renew_rule_type = self.product_id.auto_renew_rule_type
+            self.termination_notice_interval = (
+                self.product_id.termination_notice_interval
+            )
+            self.termination_notice_rule_type = (
+                self.product_id.termination_notice_rule_type
+            )
