@@ -47,14 +47,19 @@ class SaleOrderLine(models.Model):
         help="Repeat every (Days/Week/Month/Year)",
         copy=False,
     )
-    date_start = fields.Date(string='Date Start')
-    date_end = fields.Date(string='Date End', index=True)
+    date_start = fields.Date(string='Date Start',)
+    date_end = fields.Date(string='Date End',)
 
     contract_line_id = fields.Many2one(
         comodel_name="account.analytic.invoice.line",
         string="Contract Line to replace",
         required=False,
         copy=False,
+    )
+    is_auto_renew = fields.Boolean(
+        string="Auto Renew",
+        related="product_id.is_auto_renew",
+        readonly=True,
     )
 
     @api.onchange('product_id')
@@ -65,7 +70,14 @@ class SaleOrderLine(models.Model):
                 self.product_id.recurring_invoicing_type
             )
             self.recurring_interval = self.product_id.recurring_interval
-            self.date_start = fields.Date.today()
+            self.date_start = self.date_start or fields.Date.today()
+            if self.product_id.is_auto_renew:
+                self.date_end = self.date_start + self.env[
+                    'account.analytic.invoice.line'
+                ].get_relative_delta(
+                    self.product_id.auto_renew_rule_type,
+                    self.product_id.auto_renew_interval,
+                )
 
     @api.multi
     def _prepare_contract_line_values(self, contract):
@@ -91,6 +103,13 @@ class SaleOrderLine(models.Model):
             'recurring_interval': self.recurring_interval,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
+            'is_auto_renew': self.product_id.is_auto_renew,
+            'auto_renew_interval': self.product_id.auto_renew_interval,
+            'auto_renew_rule_type': self.product_id.auto_renew_rule_type,
+            'termination_notice_interval':
+                self.product_id.termination_notice_interval,
+            'termination_notice_rule_type':
+                self.product_id.termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
         }
