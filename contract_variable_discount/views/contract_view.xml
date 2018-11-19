@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_analytic_contract_view_form" model="ir.ui.view">
+        <field name="name">Contract Template Variable discount</field>
+        <field name="model">account.analytic.contract</field>
+        <field name="inherit_id" ref="contract.account_analytic_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='discount']" position="before">
+                <field name="discount_type"/>
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='discount']" position="after">
+                <field name="discount_formula_id"
+                       attrs="{'required': [('discount_type', '=', 'variable')], 'invisible': [('discount_type', '!=', 'variable')]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='discount']" position="attributes">
+                <attribute name="attrs">{'required': [('discount_type', '=', 'fixed')], 'invisible': [('discount_type', '!=', 'fixed')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_contract_line_discount_formula_tree" model="ir.ui.view">
+        <field name="model">contract.line.discount.formula</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_contract_line_discount_formula_form" model="ir.ui.view">
+        <field name="model">contract.line.discount.formula</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group string="Code">
+                        <div style="margin-top: 4px;">
+                            <field name="code" nolabel="1"/>
+                            <h3>Help with Python expressions.</h3>
+                            <p>You have to insert valid Python code block that stores at some moment a float/integer value of the discount to invoice in the variable 'result'.</p>
+                            <p>You can use these variables to compute your formula:</p>
+                            <ul>
+                                <li><i>env</i>: Environment variable for getting other models.</li>
+                                <li><i>context</i>: Current context dictionary.</li>
+                                <li><i>user</i>: Current user.</li>
+                                <li><i>line</i>: Contract recurring invoice line that triggers this formula.</li>
+                                <li><i>partner</i>: Contract partner</li>
+                                <li><i>contract</i>: Contract whose line belongs to.</li>
+                            </ul>
+                            <div>
+                                <p>Example of Python code</p>
+                                <code>
+                                    result = env['product.product'].search_count([('sale_ok', '=', True)])
+                                </code>
+                            </div>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_contract_discount_formula" model="ir.actions.act_window">
+        <field name="name">Formulas (discount)</field>
+        <field name="res_model">contract.line.discount.formula</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new formula for variable discounts.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_contract_discount_formula"
+              action="action_contract_discount_formula"
+              parent="contract.menu_config_contract"
+    />
+
+</odoo>
