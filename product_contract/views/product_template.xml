@@ -19,24 +19,45 @@
                     <label for="is_contract"/>
                 </div>
             </xpath>
-            <xpath expr="//group[@name='group_standard_price']"
-                   position="inside">
-                <field name="contract_template_id"
-                       attrs="{'invisible': [('is_contract', '=', False)],
-                               'required':[('is_contract', '=', True)]}"/>
-                <field name="recurring_invoicing_type"
-                       attrs="{'invisible': [('is_contract', '=', False)],
-                               'required':[('is_contract', '=', True)]}"/>
+            <xpath expr="//notebook" position="inside">
+                <page string="Contract"
+                      attrs="{'invisible': [('is_contract', '=', False)],}">
+                    <group>
+                        <field name="contract_template_id"
+                               attrs="{'required':[('is_contract', '=', True)]}"/>
+                        <field name="recurring_invoicing_type"
+                               attrs="{'required':[('is_contract', '=', True)]}"/>
 
-                <label for="recurring_interval" attrs="{'invisible': [('is_contract', '=', False)],
+                        <label for="recurring_interval" attrs="{'required':[('is_contract', '=', True)]}"/>
+                        <div attrs="{'required':[('is_contract', '=', True)]}">
+                            <field name="recurring_interval"
+                                   class="oe_inline" nolabel="1"/>
+                            <field name="recurring_rule_type"
+                                   class="oe_inline" nolabel="1"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="is_auto_renew"/>
+                        <label for="auto_renew_interval" attrs="{'invisible': [('is_auto_renew', '=', False)],
                                'required':[('is_contract', '=', True)]}"/>
-                <div attrs="{'invisible': [('is_contract', '=', False)],
-                               'required':[('is_contract', '=', True)]}">
-                    <field name="recurring_interval"
-                           class="oe_inline" nolabel="1"/>
-                    <field name="recurring_rule_type"
-                           class="oe_inline" nolabel="1"/>
-                </div>
+                        <div attrs="{'invisible': [('is_auto_renew', '=', False)],
+                               'required':[('is_auto_renew', '=', True)]}">
+                            <field name="auto_renew_interval"
+                                   class="oe_inline" nolabel="1"/>
+                            <field name="auto_renew_rule_type"
+                                   class="oe_inline" nolabel="1"/>
+                        </div>
+                        <label for="termination_notice_interval" attrs="{'invisible': [('is_auto_renew', '=', False)],
+                               'required':[('is_contract', '=', True)]}"/>
+                        <div attrs="{'invisible': [('is_auto_renew', '=', False)],
+                               'required':[('is_auto_renew', '=', True)]}">
+                            <field name="termination_notice_interval"
+                                   class="oe_inline" nolabel="1"/>
+                            <field name="termination_notice_rule_type"
+                                   class="oe_inline" nolabel="1"/>
+                        </div>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

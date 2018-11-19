@@ -34,6 +34,8 @@
                 <field name="contract_line_id"
                        attrs="{'invisible': [('is_contract', '=', False)]}"
                        domain="[('contract_id','=',contract_id)]"/>
+                <field name="is_auto_renew"
+                       invisible="1"/>
 
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
@@ -58,10 +60,10 @@
                     </div>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_start"/>
+                    <field name="date_start" attrs="{'required': [('is_contract', '=', True)]}"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_end"/>
+                    <field name="date_end" attrs="{'required': [('is_auto_renew', '=', True)]}"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']"
