@@ -40,6 +40,7 @@ class TestSaleOrder(TransactionCase):
         self.product1.write(
             {
                 'is_contract': True,
+                'is_auto_renew': True,
                 'contract_template_id': self.contract_template1.id,
             }
         )
@@ -52,6 +53,7 @@ class TestSaleOrder(TransactionCase):
         self.order_line1 = self.sale.order_line.filtered(
             lambda l: l.product_id == self.product1
         )
+        self.order_line1.date_start = '2018-01-01'
         self.contract = self.env["account.analytic.account"].create(
             {
                 "name": "Test Contract 2",
@@ -88,9 +90,14 @@ class TestSaleOrder(TransactionCase):
         contract"""
         self.assertTrue(self.sale.is_contract)
 
+    def test_action_confirm_auto_renew_without_date_end(self):
+        with self.assertRaises(ValidationError):
+            self.sale.action_confirm()
+
     def test_action_confirm(self):
         """ It should create a contract for each contract template used in
         order_line """
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped('contract_id')
         self.assertEqual(len(contracts), 2)
@@ -102,12 +109,14 @@ class TestSaleOrder(TransactionCase):
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used
         in order_line"""
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.assertEqual(self.sale.contract_count, 2)
 
     def test_onchange_product(self):
         """ It should get recurrence invoicing info to the sale line from
         its product """
+        self.order_line1.onchange_product()
         self.assertEqual(
             self.order_line1.recurring_rule_type,
             self.product1.recurring_rule_type,
@@ -119,6 +128,10 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.order_line1.recurring_invoicing_type,
             self.product1.recurring_invoicing_type,
+        )
+        self.assertEqual(
+            self.order_line1.date_end,
+            Date.to_date('2019-01-01'),
         )
 
     def test_check_contract_sale_partner(self):
@@ -155,6 +168,7 @@ class TestSaleOrder(TransactionCase):
     def test_sale_order_line_invoice_status(self):
         """Sale order line for contract product should have nothing to
         invoice as status"""
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.assertEqual(self.order_line1.invoice_status, 'no')
 
@@ -164,6 +178,7 @@ class TestSaleOrder(TransactionCase):
         self.sale.order_line.filtered(
             lambda line: not line.product_id.is_contract
         ).unlink()
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.assertEqual(self.sale.invoice_status, 'no')
 
@@ -171,6 +186,7 @@ class TestSaleOrder(TransactionCase):
         """Should not invoice contract product on sale order create invoice"""
         self.product2.is_contract = False
         self.product2.invoice_policy = 'order'
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.sale.action_invoice_create()
         self.assertEqual(len(self.sale.invoice_ids), 1)
@@ -181,6 +197,7 @@ class TestSaleOrder(TransactionCase):
 
     def test_link_contract_invoice_to_sale_order(self):
         """It should link contract invoice to sale order"""
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice in self.sale.invoice_ids)
@@ -189,8 +206,14 @@ class TestSaleOrder(TransactionCase):
         """Should stop contract line at sale order line start date"""
         self.order_line1.contract_id = self.contract
         self.order_line1.contract_line_id = self.contract_line
-        self.order_line1.date_start = "2018-01-01"
+        self.contract_line.date_end = "2019-01-01"
+        self.contract_line.is_auto_renew = "2019-01-01"
+        self.order_line1.date_start = "2018-06-01"
+        self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.assertEqual(
-            self.contract_line.date_end, Date.to_date("2018-01-01")
+            self.contract_line.date_end, Date.to_date("2018-06-01")
+        )
+        self.assertFalse(
+            self.contract_line.is_auto_renew
         )
