@@ -265,14 +265,26 @@ class AccountAnalyticInvoiceLine(models.Model):
                         % line.contract_id.name
                     )
 
-    @api.depends('recurring_next_date', 'date_end')
+    @api.depends('recurring_next_date', 'date_start', 'date_end')
     def _compute_create_invoice_visibility(self):
+        today = fields.Date.today()
         for line in self:
-            line.create_invoice_visibility = not line.date_end or (
-                line.recurring_next_date
-                and line.date_end
-                and line.recurring_next_date <= line.date_end
-            )
+            if today < line.date_start:
+                line.create_invoice_visibility = False
+            elif not line.date_end:
+                line.create_invoice_visibility = True
+            elif line.recurring_next_date:
+                if line.recurring_invoicing_type == 'pre-paid':
+                    line.create_invoice_visibility = (
+                        line.recurring_next_date <= line.date_end
+                    )
+                else:
+                    line.create_invoice_visibility = (
+                        line.recurring_next_date
+                        - line.get_relative_delta(
+                            line.recurring_rule_type, line.recurring_interval
+                        )
+                    ) <= line.date_end
 
     @api.model
     def recurring_create_invoice(self, contract=False):
@@ -288,9 +300,14 @@ class AccountAnalyticInvoiceLine(models.Model):
                 ('contract_id.recurring_invoices', '=', True),
                 ('recurring_next_date', '<=', date_ref),
                 ('is_canceled', '=', False),
-                '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', date_ref),
+                # '|',
+                # ('date_end', '=', False),
+                # ('date_end', '>=', date_ref),
+                # with this leaf, it's impossible to invoice the last period
+                # in post-paid case.
+                # i.e: date_end = 15/03 recurring_next_date = 31/03
+                # A solution for this, is to only check recurring_next_date
+                # and filter with create_invoice_visibility
             ]
         )
         lines = self.search(domain).filtered('create_invoice_visibility')
