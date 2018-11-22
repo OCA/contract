@@ -66,7 +66,7 @@
                 />
                 <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                     <field name="recurring_invoice_line_ids">
-                        <tree decoration-muted="is_canceled">
+                        <tree decoration-muted="is_canceled" decoration-info="create_invoice_visibility and not is_canceled">
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"/>
                             <field name="name"/>
@@ -84,7 +84,7 @@
                                    invisible="1"/>
                             <field name="date_start" required="1"/>
                             <field name="date_end"/>
-                            <field name="recurring_next_date" required="1"/>
+                            <field name="recurring_next_date" required="1" attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"/>
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
                             <field name="is_plan_successor_allowed" invisible="1"/>

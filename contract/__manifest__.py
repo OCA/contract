@@ -19,6 +19,7 @@
     "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
     'depends': ['base', 'account', 'analytic'],
+    "external_dependencies": {"python": ["dateutil"]},
     'data': [
         'wizards/contract_line_wizard.xml',
         'security/ir.model.access.csv',
