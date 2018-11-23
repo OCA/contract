@@ -26,20 +26,6 @@ class AccountAnalyticInvoiceLine(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility'
     )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner (always False)",
-        related='contract_id.partner_id',
-        store=True,
-        readonly=True,
-    )
-    pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist',
-        string='Pricelist',
-        related='contract_id.pricelist_id',
-        store=True,
-        readonly=True,
-    )
     successor_contract_line_id = fields.Many2one(
         comodel_name='account.analytic.invoice.line',
         string="Successor Contract Line",
@@ -793,3 +779,25 @@ class AccountAnalyticInvoiceLine(models.Model):
         domain = self._contract_line_to_renew_domain()
         to_renew = self.search(domain)
         to_renew.renew()
+
+    @api.model
+    def fields_view_get(
+        self, view_id=None, view_type='form', toolbar=False, submenu=False
+    ):
+        default_contract_type = self.env.context.get('default_contract_type')
+        if view_type == 'tree' and default_contract_type == 'purchase':
+            view_id = self.env.ref(
+                'contract.account_analytic_invoice_line_purchase_view_tree'
+            ).id
+        if view_type == 'form':
+            if default_contract_type == 'purchase':
+                view_id = self.env.ref(
+                    'contract.account_analytic_invoice_line_purchase_view_form'
+                ).id
+            elif default_contract_type == 'sale':
+                view_id = self.env.ref(
+                    'contract.account_analytic_invoice_line_sale_view_form'
+                ).id
+        return super(AccountAnalyticInvoiceLine, self).fields_view_get(
+            view_id, view_type, toolbar, submenu
+        )

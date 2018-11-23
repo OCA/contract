@@ -5,140 +5,110 @@
             model="ir.ui.view">
         <field name="name">Contract form</field>
         <field name="model">account.analytic.account</field>
-        <field name="inherit_id"
-               ref="analytic.view_account_analytic_account_form"/>
-        <field name="mode">primary</field>
-        <field name="priority" eval="9999"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position="attributes">
-                <attribute name="attrs">{'required': [('recurring_invoices',
-                    '=', True)]}
-                </attribute>
-            </field>
-            <xpath expr="//div[@name='button_box']/.." position="before">
+            <form>
                 <header>
-                    <button name="action_contract_send" type="object"
-                            string="Send by Email" groups="base.group_user"/>
-                </header>
-            </xpath>
-            <xpath expr='//field[@name="code"]' position='before'>
-                <field name="contract_type" invisible="1" required="1"/>
-            </xpath>
-            <group name="main" position="after">
-                <separator string="Recurring Invoices"
-                           attrs="{'invisible': [('recurring_invoices','!=',True)]}"
-                />
-                <div>
-                    <field name="recurring_invoices" class="oe_inline"/>
-                    <field name="create_invoice_visibility" invisible="1"/>
-                    <label for="recurring_invoices"/>
+                    <button name="action_contract_send"
+                            type="object"
+                            string="Send by Email"
+                            groups="base.group_user"/>
                     <button name="recurring_create_invoice"
                             type="object"
-                            attrs="{'invisible': ['|', ('recurring_invoices', '!=', True), ('create_invoice_visibility', '=', False)]}"
+                            attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"
                             string="Create invoices"
-                            class="oe_link"
-                            groups="base.group_no_one"
-                    />
-                    <button name="contract.act_recurring_invoices"
-                            type="action"
-                            attrs="{'invisible': [('recurring_invoices','!=',True)]}"
-                            string="⇒ Show recurring invoices"
-                            class="oe_link"
-                    />
-                </div>
-                <group col="4"
-                       attrs="{'invisible': [('recurring_invoices','!=',True)]}">
-                    <field name="contract_template_id" colspan="4"
-                           domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
-                           context="{'default_contract_type': contract_type}"/>
-                    <field name="journal_id"
-                           domain="[('type', '=', contract_type),('company_id', '=', company_id)]"
-                           attrs="{'required': [('recurring_invoices', '=', True)]}"
-                    />
-                    <field name="pricelist_id"/>
-                    <field name="recurring_next_date"/>
-                    <field name="date_end"/>
-                    <field name="company_id"
-                           groups="base.group_multi_company"/>
-                </group>
-                <label for="recurring_invoice_line_ids"
-                       attrs="{'invisible': [('recurring_invoices','=',False)]}"
-                />
-                <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
-                    <field name="recurring_invoice_line_ids">
-                        <tree decoration-muted="is_canceled" decoration-info="create_invoice_visibility and not is_canceled">
-                            <field name="sequence" widget="handle"/>
-                            <field name="product_id"/>
-                            <field name="name"/>
-                            <field name="quantity"/>
-                            <field name="uom_id"/>
-                            <field name="automatic_price"/>
-                            <field name="price_unit"
-                                   attrs="{'readonly': [('automatic_price', '=', True)]}"/>
-                            <field name="specific_price" invisible="1"/>
-                            <field name="discount" groups="base.group_no_one"/>
-                            <field name="price_subtotal"/>
-                            <field name="recurring_interval" invisible="1"/>
-                            <field name="recurring_rule_type" invisible="1"/>
-                            <field name="recurring_invoicing_type"
-                                   invisible="1"/>
-                            <field name="date_start" required="1"/>
+                            groups="base.group_no_one"/>
+                </header>
+                <sheet string="Contract">
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="toggle_active" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+
+                        <button name="contract.act_recurring_invoices"
+                                type="action"
+                                string="Invoices"
+                                icon="fa-list"
+                                class="oe_stat_button"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Contract Name"
+                                   class="oe_edit_only"/>
+                        <h3>
+                            <field name="name" class="oe_inline"
+                                   placeholder="e.g. Contract XYZ"/>
+                        </h3>
+                    </div>
+                    <group name="main">
+                        <group>
+                            <field name="partner_id" required="1"/>
+                        </group>
+                        <group>
+                            <field name="contract_template_id"
+                                   domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
+                                   context="{'default_contract_type': contract_type}"/>
+                            <field name="contract_type" invisible="1"
+                                   required="1"/>
+                        </group>
+                    </group>
+
+                    <group name="recurring_invoices">
+                        <group>
+                            <field name="journal_id" required="1"/>
+                            <field name="recurring_next_date"/>
+                        </group>
+                        <group>
+                            <field name="pricelist_id"/>
                             <field name="date_end"/>
-                            <field name="recurring_next_date" required="1" attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="recurring_invoice_line"
+                              string="Recurring Invoices">
+                            <field name="recurring_invoice_line_ids" context="{'default_contract_type': contract_type}"/>
+                        </page>
+                        <page name="info" string="Other Information">
+                            <div invisible="1">
+                                <field name="recurring_invoices"
+                                       class="oe_inline"/>
+                                <label for="recurring_invoices"/>
+                            </div>
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
-                            <field name="is_plan_successor_allowed" invisible="1"/>
-                            <field name="is_stop_plan_successor_allowed" invisible="1"/>
-                            <field name="is_stop_allowed" invisible="1"/>
-                            <field name="is_cancel_allowed" invisible="1"/>
-                            <field name="is_un_cancel_allowed" invisible="1"/>
-                            <field name="is_auto_renew" invisible="1"/>
-                            <field name="is_canceled" invisible="1"/>
-                            <button name="action_plan_successor"
-                                    string="Plan Start"
-                                    type="object"
-                                    icon="fa-calendar text-success"
-                                    attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"/>
-                            <button name="action_stop_plan_successor"
-                                    string="Stop Plan Successor"
-                                    type="object"
-                                    icon="fa-pause text-muted"
-                                    attrs="{'invisible': [('is_stop_plan_successor_allowed', '=', False)]}"/>
-                            <button name="action_stop"
-                                    string="Stop"
-                                    type="object"
-                                    icon="fa-stop text-danger"
-                                    attrs="{'invisible': [('is_stop_allowed', '=', False)]}"/>
-                            <button name="cancel"
-                                    string="Cancel"
-                                    type="object"
-                                    icon="fa-ban text-danger"
-                                    attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"/>
-                            <button name="action_uncancel"
-                                    string="Un-cancel"
-                                    type="object"
-                                    icon="fa-ban text-success"
-                                    attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"/>
-                            <button name="renew"
-                                    string="Renew"
-                                    type="object"
-                                    icon="fa-fast-forward text-success"
-                                    groups="base.group_no_one"
-                                    attrs="{'invisible': [('is_auto_renew', '=', False)]}"/>
-                        </tree>
-                    </field>
+                            <group>
+                                <field name="code"/>
+                                <field name="group_id"/>
+                                <field name="company_id"
+                                       options="{'no_create': True}"
+                                       groups="base.group_multi_company"/>
+                                <field name="currency_id"
+                                       options="{'no_create': True}"
+                                       groups="base.group_multi_currency"/>
+                            </group>
+                            <group string="Legend (for the markers inside invoice lines description)"
+                                   name="group_legend">
+                                <p colspan="2"><strong>#START#</strong>: Start
+                                    date
+                                    of the
+                                    invoiced period
+                                </p>
+                                <p colspan="2"><strong>#END#</strong>: End date
+                                    of
+                                    the
+                                    invoiced period
+                                </p>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
-                <group string="Legend (for the markers inside invoice lines description)"
-                       name="group_legend"
-                       attrs="{'invisible': [('recurring_invoices','!=',True)]}">
-                    <p colspan="2"><strong>#START#</strong>: Start date of the
-                        invoiced period
-                    </p>
-                    <p colspan="2"><strong>#END#</strong>: End date of the
-                        invoiced period
-                    </p>
-                </group>
-            </group>
+            </form>
+
         </field>
     </record>
 
@@ -159,9 +129,6 @@
             </field>
             <field name="journal_id" position="attributes">
                 <attribute name="domain">[('type', '=', 'sale'),('company_id', '=', company_id)]</attribute>
-            </field>
-            <field name="product_id" position="attributes">
-                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
             </field>
         </field>
     </record>
@@ -184,14 +151,6 @@
             <field name="journal_id" position="attributes">
                 <attribute name="domain">[('type', '=', 'purchase'),('company_id', '=', company_id)]</attribute>
             </field>
-            <field name="product_id" position="attributes">
-                <attribute name="domain">[('purchase_ok', '=', True)]
-                </attribute>
-            </field>
-            <xpath expr="//field[@name='recurring_invoice_line_ids']/tree/field[@name='automatic_price']"
-                   position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
         </field>
     </record>
 

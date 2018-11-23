@@ -16,7 +16,7 @@ class AccountAnalyticContract(models.Model):
 
     recurring_invoice_line_ids = fields.One2many(
         comodel_name='account.analytic.contract.line',
-        inverse_name='contract_template_id',
+        inverse_name='contract_id',
         copy=True,
         string='Invoice Lines',
     )
