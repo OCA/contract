@@ -79,13 +79,6 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         help="Repeat every (Days/Week/Month/Year)",
         required=True,
     )
-
-    partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Partner (always False)"
-    )
-    pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist', string='Pricelist'
-    )
     recurring_next_date = fields.Date(string='Date of Next Invoice')
 
     is_canceled = fields.Boolean(string="Canceled", default=False)
@@ -109,14 +102,21 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         default='monthly',
         string='Termination Notice type',
     )
+    contract_id = fields.Many2one(
+        string='Contract',
+        comodel_name='account.abstract.analytic.contract',
+        required=True,
+        ondelete='cascade',
+        oldname='analytic_account_id',
+    )
 
     @api.depends(
         'automatic_price',
         'specific_price',
         'product_id',
         'quantity',
-        'pricelist_id',
-        'partner_id',
+        'contract_id.pricelist_id',
+        'contract_id.partner_id',
     )
     def _compute_price_unit(self):
         """Get the specific price if no auto-price, and the price obtained
@@ -128,8 +128,8 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
                     quantity=line.env.context.get(
                         'contract_line_qty', line.quantity
                     ),
-                    pricelist=line.pricelist_id.id,
-                    partner=line.partner_id.id,
+                    pricelist=line.contract_id.pricelist_id.id,
+                    partner=line.contract_id.partner_id.id,
                     date=line.env.context.get('old_date', fields.Date.today()),
                 )
                 line.price_unit = product.price
@@ -150,8 +150,8 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
             subtotal = line.quantity * line.price_unit
             discount = line.discount / 100
             subtotal *= 1 - discount
-            if line.pricelist_id:
-                cur = line.pricelist_id.currency_id
+            if line.contract_id.pricelist_id:
+                cur = line.contract_id.pricelist_id.currency_id
                 line.price_subtotal = cur.round(subtotal)
             else:
                 line.price_subtotal = subtotal
@@ -183,14 +183,14 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
             vals['uom_id'] = self.product_id.uom_id
 
         date = self.recurring_next_date or fields.Date.today()
-        partner = self.partner_id or self.env.user.partner_id
+        partner = self.contract_id.partner_id or self.env.user.partner_id
 
         product = self.product_id.with_context(
             lang=partner.lang,
             partner=partner.id,
             quantity=self.quantity,
             date=date,
-            pricelist=self.pricelist_id.id,
+            pricelist=self.contract_id.pricelist_id.id,
             uom=self.uom_id.id,
         )
 
