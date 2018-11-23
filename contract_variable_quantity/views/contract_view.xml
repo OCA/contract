@@ -5,19 +5,8 @@
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
         <field name="arch" type="xml">
-            <field name="recurring_next_date" position="after">
+            <xpath expr="//field[@name='code']" position="after">
                 <field name="skip_zero_qty"/>
-            </field>
-            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="before">
-                <field name="qty_type"/>
-            </xpath>
-            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="after">
-                <field name="qty_formula_id"
-                       attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
-                />
-            </xpath>
-            <xpath expr="//field[@name='recurring_invoice_line_ids']//field[@name='quantity']" position="attributes">
-                <attribute name="attrs">{'required': [('qty_type', '=', 'fixed')], 'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
             </xpath>
         </field>
     </record>
