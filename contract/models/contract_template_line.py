@@ -15,24 +15,10 @@ class AccountAnalyticContractLine(models.Model):
     _description = 'Contract Lines'
     _order = "sequence,id"
 
-    contract_template_id = fields.Many2one(
+    contract_id = fields.Many2one(
         string='Contract',
         comodel_name='account.analytic.contract',
         required=True,
         ondelete='cascade',
         oldname='analytic_account_id',
-    )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-        string="Partner (always False)",
-        related='contract_template_id.partner_id',
-        store=True,
-        readonly=True,
-    )
-    pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist',
-        string='Pricelist',
-        related='contract_template_id.pricelist_id',
-        store=True,
-        readonly=True,
     )
