@@ -111,7 +111,7 @@ class TestContract(TestContractBase):
         del vals['contract_id']
         del vals['date_start']
         del vals['date_end']
-        vals['contract_template_id'] = self.template.id
+        vals['contract_id'] = self.template.id
         vals.update(overrides)
         return self.env['account.analytic.contract.line'].create(vals)
 
