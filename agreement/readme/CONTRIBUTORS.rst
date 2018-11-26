@@ -2,3 +2,4 @@
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
 * Wolfgang Hall <whall@opensourceintegrators.com>
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+* Yves Goldberg <yves@ygol.com>
