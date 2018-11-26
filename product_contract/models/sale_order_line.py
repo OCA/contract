@@ -47,8 +47,8 @@ class SaleOrderLine(models.Model):
         help="Repeat every (Days/Week/Month/Year)",
         copy=False,
     )
-    date_start = fields.Date(string='Date Start',)
-    date_end = fields.Date(string='Date End',)
+    date_start = fields.Date(string='Date Start')
+    date_end = fields.Date(string='Date End')
 
     contract_line_id = fields.Many2one(
         comodel_name="account.analytic.invoice.line",
@@ -57,9 +57,7 @@ class SaleOrderLine(models.Model):
         copy=False,
     )
     is_auto_renew = fields.Boolean(
-        string="Auto Renew",
-        related="product_id.is_auto_renew",
-        readonly=True,
+        string="Auto Renew", related="product_id.is_auto_renew", readonly=True
     )
 
     @api.onchange('product_id')
@@ -107,23 +105,20 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'date_end': self.date_end,
             'date_start': self.date_start or fields.Date.today(),
-            'recurring_next_date':
-                contract_line_env._compute_first_recurring_next_date(
-                    self.date_start or fields.Date.today(),
-                    self.recurring_invoicing_type,
-                    self.recurring_rule_type,
-                    self.recurring_interval,
-                ),
+            'recurring_next_date': contract_line_env._compute_first_recurring_next_date(
+                self.date_start or fields.Date.today(),
+                self.recurring_invoicing_type,
+                self.recurring_rule_type,
+                self.recurring_interval,
+            ),
             'recurring_interval': self.recurring_interval,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
             'is_auto_renew': self.product_id.is_auto_renew,
             'auto_renew_interval': self.product_id.auto_renew_interval,
             'auto_renew_rule_type': self.product_id.auto_renew_rule_type,
-            'termination_notice_interval':
-                self.product_id.termination_notice_interval,
-            'termination_notice_rule_type':
-                self.product_id.termination_notice_rule_type,
+            'termination_notice_interval': self.product_id.termination_notice_interval,
+            'termination_notice_rule_type': self.product_id.termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
         }
@@ -133,10 +128,18 @@ class SaleOrderLine(models.Model):
         contract_line_env = self.env['account.analytic.invoice.line']
         contract_line = self.env['account.analytic.invoice.line']
         for rec in self:
-            contract_line |= contract_line_env.create(
+            new_contract_line = contract_line_env.create(
                 rec._prepare_contract_line_values(contract)
             )
-            rec.contract_line_id.stop(rec.date_start)
+            contract_line |= new_contract_line
+            if rec.contract_line_id:
+                rec.contract_line_id.stop(rec.date_start)
+                rec.contract_line_id.successor_contract_line_id = (
+                    new_contract_line
+                )
+                new_contract_line.predecessor_contract_line_id = (
+                    self.contract_line_id.id
+                )
         return contract_line
 
     @api.constrains('contract_id')
