@@ -58,8 +58,7 @@ class TestSaleOrder(TransactionCase):
             {
                 "name": "Test Contract 2",
                 "partner_id": self.sale.partner_id.id,
-                "pricelist_id":
-                    self.sale.partner_id.property_product_pricelist.id,
+                "pricelist_id": self.sale.partner_id.property_product_pricelist.id,
                 "recurring_invoices": True,
                 "contract_type": "purchase",
                 "contract_template_id": self.contract_template1.id,
@@ -129,10 +128,7 @@ class TestSaleOrder(TransactionCase):
             self.order_line1.recurring_invoicing_type,
             self.product1.recurring_invoicing_type,
         )
-        self.assertEqual(
-            self.order_line1.date_end,
-            Date.to_date('2019-01-01'),
-        )
+        self.assertEqual(self.order_line1.date_end, Date.to_date('2019-01-01'))
 
     def test_check_contract_sale_partner(self):
         """Can't link order line to a partner contract different then the
@@ -214,6 +210,13 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.contract_line.date_end, Date.to_date("2018-06-01")
         )
-        self.assertFalse(
-            self.contract_line.is_auto_renew
+        self.assertFalse(self.contract_line.is_auto_renew)
+        new_contract_line = self.env['account.analytic.invoice.line'].search(
+            [('sale_order_line_id', '=', self.order_line1.id)]
+        )
+        self.assertEqual(
+            self.contract_line.successor_contract_line_id, new_contract_line
+        )
+        self.assertEqual(
+            new_contract_line.predecessor_contract_line_id, self.contract_line
         )
