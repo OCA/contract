@@ -208,7 +208,7 @@ class TestSaleOrder(TransactionCase):
         self.order_line1.onchange_product()
         self.sale.action_confirm()
         self.assertEqual(
-            self.contract_line.date_end, Date.to_date("2018-06-01")
+            self.contract_line.date_end, Date.to_date("2018-05-31")
         )
         self.assertFalse(self.contract_line.is_auto_renew)
         new_contract_line = self.env['account.analytic.invoice.line'].search(
