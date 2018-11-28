@@ -6,7 +6,14 @@ from odoo.fields import Date
 
 CRITERIA = namedtuple(
     'CRITERIA',
-    ['WHEN', 'HAS_DATE_END', 'IS_AUTO_RENEW', 'HAS_SUCCESSOR', 'CANCELED'],
+    [
+        'WHEN',
+        'HAS_DATE_END',
+        'IS_AUTO_RENEW',
+        'HAS_SUCCESSOR',
+        'PREDECESSOR_HAS_SUCCESSOR',
+        'CANCELED',
+    ],
 )
 ALLOWED = namedtuple(
     'ALLOWED',
@@ -19,6 +26,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=True,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -32,6 +40,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=True,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -45,6 +54,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=True,
@@ -58,6 +68,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=False,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -71,6 +82,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=True,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -84,6 +96,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=True,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -97,6 +110,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=True,
@@ -110,6 +124,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=False,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -123,6 +138,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=True,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -136,6 +152,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=True,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -149,6 +166,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=True,
         IS_AUTO_RENEW=False,
         HAS_SUCCESSOR=False,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=False,
     ): ALLOWED(
         PLAN_SUCCESSOR=True,
@@ -162,6 +180,7 @@ CRITERIA_ALLOWED_DICT = {
         HAS_DATE_END=None,
         IS_AUTO_RENEW=None,
         HAS_SUCCESSOR=None,
+        PREDECESSOR_HAS_SUCCESSOR=False,
         CANCELED=True,
     ): ALLOWED(
         PLAN_SUCCESSOR=False,
@@ -169,6 +188,20 @@ CRITERIA_ALLOWED_DICT = {
         STOP=False,
         CANCEL=False,
         UN_CANCEL=True,
+    ),
+    CRITERIA(
+        WHEN=None,
+        HAS_DATE_END=None,
+        IS_AUTO_RENEW=None,
+        HAS_SUCCESSOR=None,
+        PREDECESSOR_HAS_SUCCESSOR=True,
+        CANCELED=True,
+    ): ALLOWED(
+        PLAN_SUCCESSOR=False,
+        STOP_PLAN_SUCCESSOR=False,
+        STOP=False,
+        CANCEL=False,
+        UN_CANCEL=False,
     ),
 }
 
@@ -187,16 +220,31 @@ def compute_criteria(
     date_end,
     is_auto_renew,
     successor_contract_line_id,
+    predecessor_contract_line_id,
     is_canceled,
 ):
     if is_canceled:
-        return CRITERIA(
-            WHEN=None,
-            HAS_DATE_END=None,
-            IS_AUTO_RENEW=None,
-            HAS_SUCCESSOR=None,
-            CANCELED=True,
-        )
+        if (
+            not predecessor_contract_line_id
+            or not predecessor_contract_line_id.successor_contract_line_id
+        ):
+            return CRITERIA(
+                WHEN=None,
+                HAS_DATE_END=None,
+                IS_AUTO_RENEW=None,
+                HAS_SUCCESSOR=None,
+                PREDECESSOR_HAS_SUCCESSOR=False,
+                CANCELED=True,
+            )
+        else:
+            return CRITERIA(
+                WHEN=None,
+                HAS_DATE_END=None,
+                IS_AUTO_RENEW=None,
+                HAS_SUCCESSOR=None,
+                PREDECESSOR_HAS_SUCCESSOR=True,
+                CANCELED=True,
+            )
     when = compute_when(date_start, date_end)
     has_date_end = date_end if not date_end else True
     is_auto_renew = is_auto_renew
@@ -207,6 +255,7 @@ def compute_criteria(
         HAS_DATE_END=has_date_end,
         IS_AUTO_RENEW=is_auto_renew,
         HAS_SUCCESSOR=has_successor,
+        PREDECESSOR_HAS_SUCCESSOR=None,
         CANCELED=canceled,
     )
 
@@ -216,6 +265,7 @@ def get_allowed(
     date_end,
     is_auto_renew,
     successor_contract_line_id,
+    predecessor_contract_line_id,
     is_canceled,
 ):
     criteria = compute_criteria(
@@ -223,6 +273,7 @@ def get_allowed(
         date_end,
         is_auto_renew,
         successor_contract_line_id,
+        predecessor_contract_line_id,
         is_canceled,
     )
     if criteria in CRITERIA_ALLOWED_DICT:
