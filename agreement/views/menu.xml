@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Top menu item -->
+    <menuitem
+            name="Agreements"
+            id="agreement_root"
+            web_icon="agreement,static/description/icon.png"
+            sequence="80"
+            groups="agreement.group_agreement_user"/>
+
+    <!-- Dashboard -->
+    <menuitem
+            name="Dashboard"
+            id="agreement_dashboard"
+            parent="agreement_root"
+            sequence="10"/>
+    <menuitem
+            name="Agreements"
+            id="dashboard_agreements"
+            parent="agreement_dashboard"
+            sequence="10"
+            action="agreement_dashboard_agreement"/>
+
+    <!-- Operations -->
+    <menuitem
+            name="Operations"
+            id="agreement_operations"
+            parent="agreement_root"
+            sequence="20"/>
+    <menuitem
+            name="Agreements"
+            id="operations_agreements"
+            parent="agreement_operations"
+            sequence="10"
+            action="agreement_operations_agreement"/>
+
+    <!-- Master Data -->
+    <menuitem
+            name="Master Data"
+            id="agreement_masterdata"
+            parent="agreement_root"
+            sequence="30"/>
+    <menuitem
+            name="Clauses"
+            id="agreement_clauses"
+            parent="agreement_masterdata"
+            sequence="10"
+            action="partner_agreement_action_clause"/>
+    <menuitem
+            name="Sections"
+            id="agreement_sections"
+            parent="agreement_masterdata"
+            sequence="20"
+            action="partner_agreement_action_section"/>
+    <menuitem
+            name="Products"
+            id="agreement_products"
+            sequence="30"
+            parent="agreement_masterdata"
+            action="product.product_template_action"/>
+
+    <!-- Reporting -->
+    <menuitem
+            name="Reporting"
+            id="agreement_reporting"
+            sequence="40"
+            parent="agreement_root"
+            groups="agreement.group_agreement_manager"/>
+
+    <menuitem
+            name="Agreements"
+            id="agreement_agreement_reporting"
+            sequence="10"
+            parent="agreement_reporting"
+            action="action_agreement_report_order"/>
+
+    <!-- Configuration -->
+    <menuitem
+            name="Configuration"
+            id="agreement_configuration"
+            sequence="50"
+            parent="agreement_root"
+            groups="agreement.group_agreement_manager"/>
+    <menuitem
+            name="Settings"
+            id="agreement_settings"
+            sequence="10"
+            parent="agreement_configuration"
+            action="agreement.action_agreement_config"/>
+    <menuitem
+            name="Templates"
+            id="template"
+            parent="agreement_configuration"
+            sequence="20"
+            action="partner_agreement_agreement_templates"/>
+    <menuitem
+            name="Renewal Types"
+            id="agreement_renewaltype"
+            parent="agreement_configuration"
+            sequence="30"
+            action="partner_agreement_action_renewaltype"/>
+    <menuitem
+            name="Stages"
+            id="agreement_stages"
+            parent="agreement_configuration"
+            sequence="40"
+            action="partner_agreement_action_stage"/>
+    <menuitem
+            name="Types"
+            id="agreement_types"
+            parent="agreement_configuration"
+            sequence="50"
+            action="partner_agreement_action_type"/>
+    <menuitem
+            name="Sub-Types"
+            id="agreement_subtypes"
+            parent="agreement_configuration"
+            sequence="60"
+            action="partner_agreement_action_subtype"/>
+</odoo>

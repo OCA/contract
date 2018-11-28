@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Agreement Type List View-->
+    <record model="ir.ui.view" id="partner_agreement_type_list_view">
+        <field name="name">Agreement Type List</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <tree default_order='name'>
+                <field name="name" string="Type Name"/>
+                <field name="agreement_subtypes_ids" string="Sub-Types"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Type Form View -->
+    <record model="ir.ui.view" id="partner_agreement_type_form_view">
+        <field name="name">Agreement Type Form</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <form string="Agreements Type Form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group string="Sub-Types">
+                        <field name="agreement_subtypes_ids" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_type">
+        <field name="name">Agreement Type</field>
+        <field name="res_model">agreement.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
