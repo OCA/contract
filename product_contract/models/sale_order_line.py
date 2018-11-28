@@ -2,6 +2,7 @@
 # Copyright 2017 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -105,20 +106,23 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'date_end': self.date_end,
             'date_start': self.date_start or fields.Date.today(),
-            'recurring_next_date': contract_line_env._compute_first_recurring_next_date(
-                self.date_start or fields.Date.today(),
-                self.recurring_invoicing_type,
-                self.recurring_rule_type,
-                self.recurring_interval,
-            ),
+            'recurring_next_date': 
+                contract_line_env._compute_first_recurring_next_date(
+                    self.date_start or fields.Date.today(),
+                    self.recurring_invoicing_type,
+                    self.recurring_rule_type,
+                    self.recurring_interval,
+                ),
             'recurring_interval': self.recurring_interval,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
             'is_auto_renew': self.product_id.is_auto_renew,
             'auto_renew_interval': self.product_id.auto_renew_interval,
             'auto_renew_rule_type': self.product_id.auto_renew_rule_type,
-            'termination_notice_interval': self.product_id.termination_notice_interval,
-            'termination_notice_rule_type': self.product_id.termination_notice_rule_type,
+            'termination_notice_interval':
+                self.product_id.termination_notice_interval,
+            'termination_notice_rule_type':
+                self.product_id.termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
         }
@@ -133,7 +137,9 @@ class SaleOrderLine(models.Model):
             )
             contract_line |= new_contract_line
             if rec.contract_line_id:
-                rec.contract_line_id.stop(rec.date_start)
+                rec.contract_line_id.stop(
+                    rec.date_start - relativedelta(days=1)
+                )
                 rec.contract_line_id.successor_contract_line_id = (
                     new_contract_line
                 )
