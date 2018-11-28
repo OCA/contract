@@ -164,6 +164,11 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def _insert_markers(self, line, date_start, next_date, date_format):
+        self._read_from_database([
+            'recurring_rule_type',
+            'recurring_interval',
+            'recurring_invoicing_type',
+            'partner_id'])
         contract = line.analytic_account_id
         if contract.recurring_invoicing_type == 'pre-paid':
             date_from = date_start
@@ -181,6 +186,14 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def _prepare_invoice_line(self, line, invoice_id):
+        line._read_from_database([
+            'product_id',
+            'uom_id',
+            'analytic_account_id',
+            'quantity',
+            'price_unit',
+            'discount',
+            ])
         invoice_line = self.env['account.invoice.line'].new({
             'invoice_id': invoice_id,
             'product_id': line.product_id.id,
@@ -214,6 +227,23 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _prepare_invoice(self):
         self.ensure_one()
+        self._read_from_database([
+            'partner_id',
+            'name',
+            'journal_id',
+            'company_id',
+            'pricelist_id',
+            'recurring_next_date',
+            'id',
+            'code',
+            ])
+        self.partner_id._read_from_database([
+            'property_product_pricelist',
+            'user_id',
+            'type',
+            'id',
+            'child_ids',
+            ])
         if not self.partner_id:
             raise ValidationError(
                 _("You must first select a Customer for Contract %s!") %
@@ -251,6 +281,9 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _create_invoice(self):
         self.ensure_one()
+        self._read_from_database([
+            'recurring_invoice_line_ids',
+            ])
         invoice_vals = self._prepare_invoice()
         invoice = self.env['account.invoice'].create(invoice_vals)
         for line in self.recurring_invoice_line_ids:
@@ -266,6 +299,15 @@ class AccountAnalyticAccount(models.Model):
         :return: invoices created
         """
         invoices = self.env['account.invoice']
+        self._read_from_database([
+            'recurring_next_date',
+            'date_start',
+            'date_end',
+            'name',
+            'recurring_rule_type',
+            'recurring_interval',
+            'company_id',
+            ])
         for contract in self:
             ref_date = contract.recurring_next_date or fields.Date.today()
             if (contract.date_start > ref_date or
