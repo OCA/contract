@@ -557,7 +557,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                                         - suspension.date_start)
             * contract line start and end's in the suspension period
                 -> apply delay
-                    - delay: suspension.date_end - contract_line.end_date
+                    - delay: suspension.date_end - contract_line.date_start
             * contract line start in the suspension period and end after it
                 -> apply delay
                     - delay: suspension.date_end - contract_line.date_start
@@ -576,13 +576,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         contract_line = self.env['account.analytic.invoice.line']
         for rec in self:
             if rec.date_start >= date_start:
-                if rec.date_end and rec.date_end <= date_end:
-                    delay = date_end - rec.date_end
-                elif (
-                    rec.date_end
-                    and rec.date_end > date_end
-                    or not rec.date_end
-                ) and rec.date_start <= date_end:
+                if rec.date_start < date_end:
                     delay = date_end - rec.date_start
                 else:
                     delay = date_end - date_start
