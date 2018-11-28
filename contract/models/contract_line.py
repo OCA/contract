@@ -1,6 +1,7 @@
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -91,25 +92,28 @@ class AccountAnalyticInvoiceLine(models.Model):
         'date_end',
         'is_auto_renew',
         'successor_contract_line_id',
+        'predecessor_contract_line_id',
         'is_canceled',
     )
     def _compute_allowed(self):
         for rec in self:
-            allowed = get_allowed(
-                rec.date_start,
-                rec.date_end,
-                rec.is_auto_renew,
-                rec.successor_contract_line_id,
-                rec.is_canceled,
-            )
-            if allowed:
-                rec.is_plan_successor_allowed = allowed.PLAN_SUCCESSOR
-                rec.is_stop_plan_successor_allowed = (
-                    allowed.STOP_PLAN_SUCCESSOR
+            if rec.date_start:
+                allowed = get_allowed(
+                    rec.date_start,
+                    rec.date_end,
+                    rec.is_auto_renew,
+                    rec.successor_contract_line_id,
+                    rec.predecessor_contract_line_id,
+                    rec.is_canceled,
                 )
-                rec.is_stop_allowed = allowed.STOP
-                rec.is_cancel_allowed = allowed.CANCEL
-                rec.is_un_cancel_allowed = allowed.UN_CANCEL
+                if allowed:
+                    rec.is_plan_successor_allowed = allowed.PLAN_SUCCESSOR
+                    rec.is_stop_plan_successor_allowed = (
+                        allowed.STOP_PLAN_SUCCESSOR
+                    )
+                    rec.is_stop_allowed = allowed.STOP
+                    rec.is_cancel_allowed = allowed.CANCEL
+                    rec.is_un_cancel_allowed = allowed.UN_CANCEL
 
     @api.constrains('is_auto_renew', 'successor_contract_line_id', 'date_end')
     def _check_allowed(self):
@@ -185,8 +189,12 @@ class AccountAnalyticInvoiceLine(models.Model):
         """Date end should be auto-computed if a contract line is set to
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
-            rec.date_end = self.date_start + self.get_relative_delta(
-                rec.auto_renew_rule_type, rec.auto_renew_interval
+            rec.date_end = (
+                self.date_start
+                + self.get_relative_delta(
+                    rec.auto_renew_rule_type, rec.auto_renew_interval
+                )
+                - relativedelta(days=1)
             )
 
     @api.onchange(
@@ -255,22 +263,24 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _compute_create_invoice_visibility(self):
         today = fields.Date.today()
         for line in self:
-            if today < line.date_start:
-                line.create_invoice_visibility = False
-            elif not line.date_end:
-                line.create_invoice_visibility = True
-            elif line.recurring_next_date:
-                if line.recurring_invoicing_type == 'pre-paid':
-                    line.create_invoice_visibility = (
-                        line.recurring_next_date <= line.date_end
-                    )
-                else:
-                    line.create_invoice_visibility = (
-                        line.recurring_next_date
-                        - line.get_relative_delta(
-                            line.recurring_rule_type, line.recurring_interval
+            if line.date_start:
+                if today < line.date_start:
+                    line.create_invoice_visibility = False
+                elif not line.date_end:
+                    line.create_invoice_visibility = True
+                elif line.recurring_next_date:
+                    if line.recurring_invoicing_type == 'pre-paid':
+                        line.create_invoice_visibility = (
+                            line.recurring_next_date <= line.date_end
                         )
-                    ) <= line.date_end
+                    else:
+                        line.create_invoice_visibility = (
+                            line.recurring_next_date
+                            - line.get_relative_delta(
+                                line.recurring_rule_type,
+                                line.recurring_interval,
+                            )
+                        ) <= line.date_end
 
     @api.model
     def recurring_create_invoice(self, contract=False):
@@ -577,9 +587,9 @@ class AccountAnalyticInvoiceLine(models.Model):
         for rec in self:
             if rec.date_start >= date_start:
                 if rec.date_start < date_end:
-                    delay = date_end - rec.date_start
+                    delay = (date_end - rec.date_start) + timedelta(days=1)
                 else:
-                    delay = date_end - date_start
+                    delay = (date_end - date_start) + timedelta(days=1)
                 rec.delay(delay)
                 contract_line |= rec
             else:
@@ -626,6 +636,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                 )
             )
             contract.message_post(body=msg)
+        self.mapped('predecessor_contract_line_id').write(
+            {'successor_contract_line_id': False}
+        )
         return self.write({'is_canceled': True})
 
     @api.multi
@@ -644,9 +657,14 @@ class AccountAnalyticInvoiceLine(models.Model):
                 )
             )
             contract.message_post(body=msg)
-        return self.write(
-            {'is_canceled': False, 'recurring_next_date': recurring_next_date}
-        )
+        for rec in self:
+            if rec.predecessor_contract_line_id:
+                rec.predecessor_contract_line_id.successor_contract_line_id = (
+                    rec
+                )
+            rec.is_canceled = False
+            rec.recurring_next_date = recurring_next_date
+        return True
 
     @api.multi
     def action_uncancel(self):
@@ -739,9 +757,13 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def _get_renewal_dates(self):
         self.ensure_one()
-        date_start = self.date_end
-        date_end = date_start + self.get_relative_delta(
-            self.auto_renew_rule_type, self.auto_renew_interval
+        date_start = self.date_end + relativedelta(days=1)
+        date_end = (
+            date_start
+            + self.get_relative_delta(
+                self.auto_renew_rule_type, self.auto_renew_interval
+            )
+            - relativedelta(days=1)
         )
         return date_start, date_end
 
