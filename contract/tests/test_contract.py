@@ -827,10 +827,11 @@ class TestContract(TestContractBase):
             suspension_start, suspension_end, True
         )
         self.assertEqual(
-            self.acct_line.date_start, start_date + (suspension_end - end_date)
+            self.acct_line.date_start,
+            start_date + (suspension_end - start_date),
         )
         self.assertEqual(
-            self.acct_line.date_end, end_date + (suspension_end - end_date)
+            self.acct_line.date_end, end_date + (suspension_end - start_date)
         )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
