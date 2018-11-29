@@ -62,7 +62,7 @@ class AccountAnalyticAccount(models.Model):
             recurring_next_date = contract.recurring_invoice_line_ids.filtered(
                 'create_invoice_visibility'
             ).mapped('recurring_next_date')
-            if recurring_next_date:
+            if recurring_next_date and all(recurring_next_date):
                 contract.recurring_next_date = min(recurring_next_date)
 
     @api.depends('recurring_invoice_line_ids.create_invoice_visibility')
@@ -123,8 +123,10 @@ class AccountAnalyticAccount(models.Model):
             vals = contract_line._convert_to_write(contract_line.read()[0])
             # Remove template link field
             vals.pop('contract_template_id', False)
-            vals['date_start'] = fields.Date.today()
-            vals['recurring_next_date'] = fields.Date.today()
+            vals['date_start'] = fields.Date.context_today(contract_line)
+            vals['recurring_next_date'] = fields.Date.context_today(
+                contract_line
+            )
             self.recurring_invoice_line_ids._onchange_date_start()
             new_lines.append((0, 0, vals))
         return new_lines

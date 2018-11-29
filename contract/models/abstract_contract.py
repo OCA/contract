@@ -11,7 +11,7 @@ from odoo import api, models, fields
 
 class AbstractAccountAnalyticContract(models.AbstractModel):
     _name = 'account.abstract.analytic.contract'
-    _description = 'Abstract Account Analytic Contract'
+    _description = 'Abstract Recurring Contract'
 
     # These fields will not be synced to the contract
     NO_SYNC = ['name', 'partner_id']
@@ -40,7 +40,9 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
         'res.company',
         string='Company',
         required=True,
-        default=lambda self: self.env.user.company_id,
+        default=lambda self: self.env['res.company']._company_default_get(
+            self._name
+        ),
     )
 
     @api.onchange('contract_type')
