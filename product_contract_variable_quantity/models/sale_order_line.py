@@ -26,9 +26,10 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_id')
     def onchange_product(self):
         super(SaleOrderLine, self).onchange_product()
-        if self.product_id.is_contract:
-            self.qty_type = self.product_id.qty_type
-            self.qty_formula_id = self.product_id.qty_formula_id
+        for rec in self:
+            if rec.product_id.is_contract:
+                rec.qty_type = rec.product_id.qty_type
+                rec.qty_formula_id = rec.product_id.qty_formula_id
 
     @api.multi
     def _prepare_contract_line_values(self, contract):
