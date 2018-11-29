@@ -50,9 +50,6 @@
                     </group>
                     <group name="recurrence_info">
                         <group>
-                            <field name="recurring_invoicing_type"/>
-                        </group>
-                        <group>
                             <label for="recurring_interval"/>
                             <div>
                                 <field name="recurring_interval"
@@ -61,7 +58,10 @@
                                        class="oe_inline" nolabel="1"/>
                             </div>
                         </group>
-
+                        <group>
+                            <field name="recurring_invoicing_type"
+                            attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
