@@ -40,30 +40,30 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
                    position="after">
+                <field name="is_contract" invisible="1"/>
                 <separator colspan="4" string="Recurrence Invoicing"
                            attrs="{'invisible': [('is_contract', '=', False)]}"/>
-                <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="is_contract" invisible="1"/>
-                    <field name="recurring_invoicing_type"
-                           attrs="{'invisible': [('is_contract', '=', False)],
-                               'required':[('is_contract', '=', True)]}"/>
-                </group>
+
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <label for="recurring_interval"/>
                     <div>
                         <field name="recurring_interval"
-                               class="oe_inline" nolabel="1"
-                               attrs="{'required':[('is_contract', '=', True)]}"/>
+                               class="oe_inline" nolabel="1"/>
                         <field name="recurring_rule_type"
-                               class="oe_inline" nolabel="1"
-                               attrs="{'required':[('is_contract', '=', True)]}"/>
+                               class="oe_inline" nolabel="1"/>
                     </div>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_start" attrs="{'required': [('is_contract', '=', True)]}"/>
+                    <field name="recurring_invoicing_type"
+                           attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_end" attrs="{'required': [('is_auto_renew', '=', True)]}"/>
+                    <field name="date_start"
+                           attrs="{'required': [('is_contract', '=', True)]}"/>
+                </group>
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field name="date_end"
+                           attrs="{'required': [('is_auto_renew', '=', True)]}"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']"
