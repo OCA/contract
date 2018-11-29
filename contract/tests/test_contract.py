@@ -102,6 +102,7 @@ class TestContractBase(common.SavepointCase):
         cls.acct_line = cls.env['account.analytic.invoice.line'].create(
             cls.line_vals
         )
+        cls.acct_line.product_id.is_auto_renew = True
 
 
 class TestContract(TestContractBase):
