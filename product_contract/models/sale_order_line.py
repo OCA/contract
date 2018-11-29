@@ -63,39 +63,55 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product(self):
-        if self.product_id.is_contract:
-            self.recurring_rule_type = self.product_id.recurring_rule_type
-            self.recurring_invoicing_type = (
-                self.product_id.recurring_invoicing_type
-            )
-            self.recurring_interval = self.product_id.recurring_interval
-            self.date_start = self.date_start or fields.Date.today()
-            if self.is_auto_renew:
-                self.date_end = self.date_start + self.env[
-                    'account.analytic.invoice.line'
-                ].get_relative_delta(
-                    self.product_id.auto_renew_rule_type,
-                    self.product_id.auto_renew_interval,
+        contract_line_env = self.env['account.analytic.invoice.line']
+        for rec in self:
+            if rec.product_id.is_contract:
+                rec.recurring_rule_type = rec.product_id.recurring_rule_type
+                rec.recurring_invoicing_type = (
+                    rec.product_id.recurring_invoicing_type
                 )
+                rec.recurring_interval = rec.product_id.recurring_interval
+                rec.date_start = rec.date_start or fields.Date.today()
+                if rec.is_auto_renew:
+                    rec.date_end = (
+                        rec.date_start
+                        + contract_line_env.get_relative_delta(
+                            rec.product_id.auto_renew_rule_type,
+                            rec.product_id.auto_renew_interval,
+                        )
+                    )
 
     @api.onchange('date_start')
     def onchange_date_start(self):
         for rec in self:
             if rec.is_auto_renew:
-                if not self.date_start:
+                if not rec.date_start:
                     rec.date_end = False
                 else:
-                    self.date_end = self.date_start + self.env[
+                    rec.date_end = rec.date_start + self.env[
                         'account.analytic.invoice.line'
                     ].get_relative_delta(
-                        self.product_id.auto_renew_rule_type,
-                        self.product_id.auto_renew_interval,
+                        rec.product_id.auto_renew_rule_type,
+                        rec.product_id.auto_renew_interval,
                     )
 
     @api.multi
     def _prepare_contract_line_values(self, contract):
         self.ensure_one()
-        contract_line_env = self.env['account.analytic.invoice.line']
+        recurring_next_date = self.env[
+            'account.analytic.invoice.line'
+        ]._compute_first_recurring_next_date(
+            self.date_start or fields.Date.today(),
+            self.recurring_invoicing_type,
+            self.recurring_rule_type,
+            self.recurring_interval,
+        )
+        termination_notice_interval = (
+            self.product_id.termination_notice_interval
+        )
+        termination_notice_rule_type = (
+            self.product_id.termination_notice_rule_type
+        )
         return {
             'sequence': self.sequence,
             'product_id': self.product_id.id,
@@ -106,23 +122,15 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'date_end': self.date_end,
             'date_start': self.date_start or fields.Date.today(),
-            'recurring_next_date': 
-                contract_line_env._compute_first_recurring_next_date(
-                    self.date_start or fields.Date.today(),
-                    self.recurring_invoicing_type,
-                    self.recurring_rule_type,
-                    self.recurring_interval,
-                ),
+            'recurring_next_date': recurring_next_date,
             'recurring_interval': self.recurring_interval,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
             'is_auto_renew': self.product_id.is_auto_renew,
             'auto_renew_interval': self.product_id.auto_renew_interval,
             'auto_renew_rule_type': self.product_id.auto_renew_rule_type,
-            'termination_notice_interval':
-                self.product_id.termination_notice_interval,
-            'termination_notice_rule_type':
-                self.product_id.termination_notice_rule_type,
+            'termination_notice_interval': termination_notice_interval,
+            'termination_notice_rule_type': termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
         }
