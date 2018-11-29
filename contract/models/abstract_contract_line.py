@@ -14,7 +14,7 @@ from odoo.tools.translate import _
 
 class AccountAbstractAnalyticContractLine(models.AbstractModel):
     _name = 'account.abstract.analytic.contract.line'
-    _description = 'Account Abstract Analytic Contract Line'
+    _description = 'Abstract Recurring Contract Line'
 
     product_id = fields.Many2one(
         'product.product', string='Product', required=True
@@ -130,7 +130,9 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
                     ),
                     pricelist=line.contract_id.pricelist_id.id,
                     partner=line.contract_id.partner_id.id,
-                    date=line.env.context.get('old_date', fields.Date.today()),
+                    date=line.env.context.get(
+                        'old_date', fields.Date.context_today(line)
+                    ),
                 )
                 line.price_unit = product.price
             else:
@@ -182,7 +184,7 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         ):
             vals['uom_id'] = self.product_id.uom_id
 
-        date = self.recurring_next_date or fields.Date.today()
+        date = self.recurring_next_date or fields.Date.context_today(self)
         partner = self.contract_id.partner_id or self.env.user.partner_id
 
         product = self.product_id.with_context(
