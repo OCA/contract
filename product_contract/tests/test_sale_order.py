@@ -54,11 +54,12 @@ class TestSaleOrder(TransactionCase):
             lambda l: l.product_id == self.product1
         )
         self.order_line1.date_start = '2018-01-01'
+        pricelist = self.sale.partner_id.property_product_pricelist.id
         self.contract = self.env["account.analytic.account"].create(
             {
                 "name": "Test Contract 2",
                 "partner_id": self.sale.partner_id.id,
-                "pricelist_id": self.sale.partner_id.property_product_pricelist.id,
+                "pricelist_id": pricelist,
                 "recurring_invoices": True,
                 "contract_type": "purchase",
                 "contract_template_id": self.contract_template1.id,
