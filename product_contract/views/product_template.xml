@@ -26,16 +26,21 @@
                     <group>
                         <field name="contract_template_id"
                                attrs="{'required':[('is_contract', '=', True)]}"/>
-                        <field name="recurring_invoicing_type"
-                               attrs="{'required':[('is_contract', '=', True)]}"/>
-
-                        <label for="recurring_interval" attrs="{'required':[('is_contract', '=', True)]}"/>
-                        <div attrs="{'required':[('is_contract', '=', True)]}">
-                            <field name="recurring_interval"
-                                   class="oe_inline" nolabel="1"/>
-                            <field name="recurring_rule_type"
-                                   class="oe_inline" nolabel="1"/>
-                        </div>
+                    </group>
+                    <group name="recurrence_info">
+                        <group>
+                            <label for="recurring_interval"/>
+                            <div>
+                                <field name="recurring_interval"
+                                       class="oe_inline" nolabel="1"/>
+                                <field name="recurring_rule_type"
+                                       class="oe_inline" nolabel="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="recurring_invoicing_type"
+                            attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
+                        </group>
                     </group>
                     <group>
                         <field name="is_auto_renew"/>
