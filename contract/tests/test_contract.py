@@ -161,6 +161,7 @@ class TestContract(TestContractBase):
 
     def test_contract_daily(self):
         recurring_next_date = to_date('2018-02-23')
+        last_date_invoiced = to_date('2018-02-22')
         self.acct_line.recurring_next_date = '2018-02-22'
         self.acct_line.recurring_rule_type = 'daily'
         self.contract.pricelist_id = False
@@ -172,9 +173,11 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.recurring_next_date, recurring_next_date
         )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
-    def test_contract_weekly(self):
+    def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date('2018-03-01')
+        last_date_invoiced = to_date('2018-02-21')
         self.acct_line.recurring_next_date = '2018-02-22'
         self.acct_line.recurring_rule_type = 'weekly'
         self.acct_line.recurring_invoicing_type = 'post-paid'
@@ -186,11 +189,14 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.recurring_next_date, recurring_next_date
         )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
-    def test_contract_yearly(self):
-        recurring_next_date = to_date('2019-02-22')
+    def test_contract_weekly_pre_paid(self):
+        recurring_next_date = to_date('2018-03-01')
+        last_date_invoiced = to_date('2018-02-28')
         self.acct_line.recurring_next_date = '2018-02-22'
-        self.acct_line.recurring_rule_type = 'yearly'
+        self.acct_line.recurring_rule_type = 'weekly'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
         self.contract.recurring_create_invoice()
         invoices_weekly = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)]
@@ -199,9 +205,44 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.recurring_next_date, recurring_next_date
         )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_yearly_post_paid(self):
+        recurring_next_date = to_date('2019-02-22')
+        last_date_invoiced = to_date('2018-02-21')
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'yearly'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract.id)]
+        )
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_yearly_pre_paid(self):
+        recurring_next_date = to_date('2019-02-22')
+        last_date_invoiced = to_date('2019-02-21')
+        self.acct_line.date_end = '2020-02-22'
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'yearly'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.env['account.invoice'].search(
+            [('contract_id', '=', self.contract.id)]
+        )
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
     def test_contract_monthly_lastday(self):
         recurring_next_date = to_date('2018-03-31')
+        last_date_invoiced = to_date('2018-02-22')
         self.acct_line.recurring_next_date = '2018-02-22'
         self.acct_line.recurring_invoicing_type = 'post-paid'
         self.acct_line.recurring_rule_type = 'monthlylastday'
@@ -213,21 +254,41 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.recurring_next_date, recurring_next_date
         )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
     def test_last_invoice_post_paid(self):
-        recurring_next_date = to_date('2018-04-30')
-        self.acct_line.recurring_next_date = '2018-03-31'
-        self.acct_line.date_end = '2018-03-15'
+        self.acct_line.date_start = '2018-01-01'
         self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        self.assertTrue(self.acct_line.create_invoice_visibility)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-02-01')
+        )
+        self.assertFalse(self.acct_line.last_date_invoiced)
         self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-03-01')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-01-31')
+        )
+        self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-04-01')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-02-28')
+        )
+        self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-03-15')
+        )
+        self.assertFalse(self.acct_line.recurring_next_date)
+        self.assertFalse(self.acct_line.create_invoice_visibility)
         invoices = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)]
         )
-        self.assertTrue(invoices)
-        self.assertEqual(
-            self.acct_line.recurring_next_date, recurring_next_date
-        )
-        self.assertFalse(self.acct_line.create_invoice_visibility)
         self.contract.recurring_create_invoice()
         new_invoices = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)]
@@ -239,19 +300,38 @@ class TestContract(TestContractBase):
         )
 
     def test_last_invoice_pre_paid(self):
-        recurring_next_date = to_date('2018-04-01')
-        self.acct_line.recurring_next_date = '2018-03-01'
-        self.acct_line.date_end = '2018-03-15'
+        self.acct_line.date_start = '2018-01-01'
         self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        self.assertTrue(self.acct_line.create_invoice_visibility)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-01-01')
+        )
+        self.assertFalse(self.acct_line.last_date_invoiced)
         self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-02-01')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-01-31')
+        )
+        self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-02-28')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-02-28')
+        )
+        self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-03-15')
+        )
+        self.assertFalse(self.acct_line.recurring_next_date)
+        self.assertFalse(self.acct_line.create_invoice_visibility)
         invoices = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)]
         )
-        self.assertTrue(invoices)
-        self.assertEqual(
-            self.acct_line.recurring_next_date, recurring_next_date
-        )
-        self.assertFalse(self.acct_line.create_invoice_visibility)
         self.contract.recurring_create_invoice()
         new_invoices = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)]
@@ -454,48 +534,6 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(last_count, init_count + 1)
 
-    def test_compute_create_invoice_visibility(self):
-        self.acct_line.write(
-            {
-                'recurring_next_date': '2018-01-15',
-                'date_start': '2018-01-01',
-                'is_auto_renew': False,
-                'date_end': False,
-            }
-        )
-        self.assertTrue(self.contract.create_invoice_visibility)
-        self.acct_line.date_end = '2018-02-01'
-        self.contract.refresh()
-        self.assertTrue(self.contract.create_invoice_visibility)
-        self.acct_line.date_end = '2018-01-01'
-        self.contract.refresh()
-        self.assertFalse(self.contract.create_invoice_visibility)
-
-    def test_compute_create_invoice_visibility_for_contract_line(self):
-        self.acct_line.write(
-            {
-                'recurring_next_date': '2018-01-15',
-                'date_start': '2018-01-01',
-                'is_auto_renew': False,
-                'date_end': False,
-            }
-        )
-        self.assertTrue(self.acct_line.create_invoice_visibility)
-        self.acct_line.date_end = '2018-02-01'
-        self.assertTrue(self.acct_line.create_invoice_visibility)
-        self.acct_line.date_end = '2018-01-01'
-        self.assertFalse(self.acct_line.create_invoice_visibility)
-        self.acct_line.write(
-            {
-                'date_start': fields.Date.today() + relativedelta(months=2),
-                'recurring_next_date': fields.Date.today()
-                + relativedelta(months=2),
-                'is_auto_renew': False,
-                'date_end': False,
-            }
-        )
-        self.assertFalse(self.acct_line.create_invoice_visibility)
-
     def test_act_show_contract(self):
         show_contract = self.partner.with_context(
             contract_type='sale'
@@ -607,6 +645,10 @@ class TestContract(TestContractBase):
         self.acct_line.copy()
         self.acct_line.write({'date_end': False, 'is_auto_renew': False})
         self.assertFalse(self.contract.date_end)
+
+    def test_last_date_invoiced_prepaid(self):
+        self.contract.recurring_create_invoice()
+        self
 
     def test_stop_contract_line(self):
         """It should put end to the contract line"""
@@ -735,13 +777,21 @@ class TestContract(TestContractBase):
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, True
         )
-        self.assertEqual(self.acct_line.date_end, suspension_start)
+        self.assertEqual(
+            self.acct_line.date_end, suspension_start - relativedelta(days=1)
+        )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
-        new_date_end = suspension_end + (end_date - suspension_start)
-        self.assertEqual(new_line.date_start, suspension_end)
+        new_date_end = (
+            suspension_end
+            + (end_date - suspension_start)
+            + relativedelta(days=1)
+        )
+        self.assertEqual(
+            new_line.date_start, suspension_end + relativedelta(days=1)
+        )
         self.assertEqual(new_line.date_end, new_date_end)
 
     def test_stop_plan_successor_contract_line_3(self):
@@ -767,13 +817,21 @@ class TestContract(TestContractBase):
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, True
         )
-        self.assertEqual(self.acct_line.date_end, suspension_start)
+        self.assertEqual(
+            self.acct_line.date_end, suspension_start - relativedelta(days=1)
+        )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
-        new_date_end = end_date + (suspension_end - suspension_start)
-        self.assertEqual(new_line.date_start, suspension_end)
+        new_date_end = (
+            end_date
+            + (suspension_end - suspension_start)
+            + relativedelta(days=1)
+        )
+        self.assertEqual(
+            new_line.date_start, suspension_end + relativedelta(days=1)
+        )
         self.assertEqual(new_line.date_end, new_date_end)
 
     def test_stop_plan_successor_contract_line_3_without_end_date(self):
@@ -800,12 +858,16 @@ class TestContract(TestContractBase):
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, False
         )
-        self.assertEqual(self.acct_line.date_end, suspension_start)
+        self.assertEqual(
+            self.acct_line.date_end, suspension_start - relativedelta(days=1)
+        )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
-        self.assertEqual(new_line.date_start, suspension_end)
+        self.assertEqual(
+            new_line.date_start, suspension_end + relativedelta(days=1)
+        )
         self.assertFalse(new_line.date_end)
 
     def test_stop_plan_successor_contract_line_4(self):
@@ -1112,7 +1174,9 @@ class TestContract(TestContractBase):
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, True
         )
-        self.assertEqual(self.acct_line.date_end, suspension_start)
+        self.assertEqual(
+            self.acct_line.date_end, suspension_start - relativedelta(days=1)
+        )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
@@ -1121,10 +1185,13 @@ class TestContract(TestContractBase):
         self.assertTrue(new_line.is_canceled)
         self.assertFalse(self.acct_line.successor_contract_line_id)
         self.assertEqual(new_line.predecessor_contract_line_id, self.acct_line)
-        new_line.uncancel(suspension_end)
+        new_line.uncancel(suspension_end + relativedelta(days=1))
         self.assertFalse(new_line.is_canceled)
         self.assertEqual(self.acct_line.successor_contract_line_id, new_line)
-        self.assertEqual(new_line.recurring_next_date, suspension_end)
+        self.assertEqual(
+            new_line.recurring_next_date,
+            suspension_end + relativedelta(days=1),
+        )
 
     def test_cancel_uncancel_with_predecessor_has_successor(self):
         suspension_start = fields.Date.today() + relativedelta(months=6)
@@ -1199,3 +1266,107 @@ class TestContract(TestContractBase):
         self.assertTrue(new_line.is_auto_renew)
         self.assertEqual(new_line.date_start, to_date('2019-01-01'))
         self.assertEqual(new_line.date_end, to_date('2019-12-31'))
+
+    def test_cron_recurring_create_invoice(self):
+        self.acct_line.date_start = '2018-01-01'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        contracts = self.contract
+        for i in range(10):
+            contracts |= self.contract.copy()
+        self.env['account.analytic.account'].cron_recurring_create_invoice()
+        invoices = self.env['account.invoice'].search(
+            [('contract_id', 'in', contracts.ids)]
+        )
+        self.assertEqual(len(contracts), len(invoices))
+
+    def test_get_invoiced_period_monthlylastday(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line.recurring_rule_type = 'monthlylastday'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2018-01-31'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-02-01'))
+        self.assertEqual(last, to_date('2018-02-28'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-03-01'))
+        self.assertEqual(last, to_date('2018-03-15'))
+
+    def test_get_invoiced_period_monthly_post_paid(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line.recurring_rule_type = 'monthly'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2018-02-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-02-05'))
+        self.assertEqual(last, to_date('2018-03-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-03-05'))
+        self.assertEqual(last, to_date('2018-03-15'))
+
+    def test_get_invoiced_period_monthly_pre_paid(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.acct_line.recurring_rule_type = 'monthly'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2018-02-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-02-05'))
+        self.assertEqual(last, to_date('2018-03-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-03-05'))
+        self.assertEqual(last, to_date('2018-03-15'))
+
+    def test_get_invoiced_period_yearly_post_paid(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line.recurring_rule_type = 'yearly'
+        self.acct_line.date_end = '2020-03-15'
+        self.acct_line._onchange_date_start()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2019-01-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2019-01-05'))
+        self.assertEqual(last, to_date('2020-01-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2020-01-05'))
+        self.assertEqual(last, to_date('2020-03-15'))
+
+    def test_get_invoiced_period_yearly_pre_paid(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.acct_line.recurring_rule_type = 'yearly'
+        self.acct_line.date_end = '2020-03-15'
+        self.acct_line._onchange_date_start()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2019-01-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2019-01-05'))
+        self.assertEqual(last, to_date('2020-01-04'))
+        self.contract.recurring_create_invoice()
+        first, last = self.acct_line._get_invoiced_period()
+        self.assertEqual(first, to_date('2020-01-05'))
+        self.assertEqual(last, to_date('2020-03-15'))
