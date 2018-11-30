@@ -946,3 +946,12 @@ class AccountAnalyticInvoiceLine(models.Model):
         return super(AccountAnalyticInvoiceLine, self).fields_view_get(
             view_id, view_type, toolbar, submenu
         )
+
+    @api.multi
+    def unlink(self):
+        """stop unlink uncnacled lines"""
+        if not all(self.mapped('is_canceled')):
+            raise ValidationError(
+                _("Contract line must be canceled before delete")
+            )
+        return super(AccountAnalyticInvoiceLine, self).unlink()
