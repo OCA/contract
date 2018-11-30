@@ -431,7 +431,7 @@ class TestContract(TestContractBase):
 
     def test_onchange_contract_template_id_lines(self):
         """It should create invoice lines for the contract lines."""
-
+        self.acct_line.cancel()
         self.acct_line.unlink()
         self.contract.contract_template_id = self.template
 
@@ -1370,3 +1370,7 @@ class TestContract(TestContractBase):
         first, last = self.acct_line._get_invoiced_period()
         self.assertEqual(first, to_date('2020-01-05'))
         self.assertEqual(last, to_date('2020-03-15'))
+
+    def test_unlink(self):
+        with self.assertRaises(ValidationError):
+            self.acct_line.unlink()
