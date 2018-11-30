@@ -82,18 +82,19 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
-            if rec.is_canceled:
-                rec.state = 'canceled'
-            elif today < rec.date_start:
-                rec.state = 'upcoming'
-            elif not rec.date_end or (
-                today <= rec.date_end and rec.is_auto_renew
-            ):
-                rec.state = 'in-progress'
-            elif today <= rec.date_end and not rec.is_auto_renew:
-                rec.state = 'upcoming-close'
-            else:
-                rec.state = 'closed'
+            if rec.date_start:
+                if rec.is_canceled:
+                    rec.state = 'canceled'
+                elif today < rec.date_start:
+                    rec.state = 'upcoming'
+                elif not rec.date_end or (
+                    today <= rec.date_end and rec.is_auto_renew
+                ):
+                    rec.state = 'in-progress'
+                elif today <= rec.date_end and not rec.is_auto_renew:
+                    rec.state = 'upcoming-close'
+                else:
+                    rec.state = 'closed'
 
     @api.depends(
         'date_start',
@@ -202,13 +203,14 @@ class AccountAnalyticInvoiceLine(models.Model):
         """Date end should be auto-computed if a contract line is set to
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
-            rec.date_end = (
-                self.date_start
-                + self.get_relative_delta(
-                    rec.auto_renew_rule_type, rec.auto_renew_interval
+            if rec.date_start:
+                rec.date_end = (
+                    self.date_start
+                    + self.get_relative_delta(
+                        rec.auto_renew_rule_type, rec.auto_renew_interval
+                    )
+                    - relativedelta(days=1)
                 )
-                - relativedelta(days=1)
-            )
 
     @api.onchange(
         'date_start',
