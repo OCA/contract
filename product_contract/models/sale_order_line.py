@@ -79,6 +79,7 @@ class SaleOrderLine(models.Model):
                             rec.product_id.auto_renew_rule_type,
                             rec.product_id.auto_renew_interval,
                         )
+                        - relativedelta(days=1)
                     )
 
     @api.onchange('date_start')
@@ -88,11 +89,15 @@ class SaleOrderLine(models.Model):
                 if not rec.date_start:
                     rec.date_end = False
                 else:
-                    rec.date_end = rec.date_start + self.env[
-                        'account.analytic.invoice.line'
-                    ].get_relative_delta(
-                        rec.product_id.auto_renew_rule_type,
-                        rec.product_id.auto_renew_interval,
+                    rec.date_end = (
+                        rec.date_start
+                        + self.env[
+                            'account.analytic.invoice.line'
+                        ].get_relative_delta(
+                            rec.product_id.auto_renew_rule_type,
+                            rec.product_id.auto_renew_interval,
+                        )
+                        - relativedelta(days=1)
                     )
 
     @api.multi
