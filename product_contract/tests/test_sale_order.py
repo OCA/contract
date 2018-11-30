@@ -129,7 +129,7 @@ class TestSaleOrder(TransactionCase):
             self.order_line1.recurring_invoicing_type,
             self.product1.recurring_invoicing_type,
         )
-        self.assertEqual(self.order_line1.date_end, Date.to_date('2019-01-01'))
+        self.assertEqual(self.order_line1.date_end, Date.to_date('2018-12-31'))
 
     def test_check_contract_sale_partner(self):
         """Can't link order line to a partner contract different then the
