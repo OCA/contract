@@ -60,9 +60,9 @@ class AccountAnalyticAccount(models.Model):
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.recurring_invoice_line_ids.filtered(
-                'create_invoice_visibility'
+                'recurring_next_date'
             ).mapped('recurring_next_date')
-            if recurring_next_date and all(recurring_next_date):
+            if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)
 
     @api.depends('recurring_invoice_line_ids.create_invoice_visibility')
