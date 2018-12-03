@@ -18,6 +18,18 @@ class SaleOrder(models.Model):
         self.is_contract = any(self.order_line.mapped('is_contract'))
 
     @api.multi
+    def _prepare_contract_value(self, contract_template):
+        self.ensure_one()
+        return {
+            'name': '{template_name}: {sale_name}'.format(
+                template_name=contract_template.name, sale_name=self.name
+            ),
+            'partner_id': self.partner_id.id,
+            'recurring_invoices': True,
+            'contract_template_id': contract_template.id,
+        }
+
+    @api.multi
     def action_confirm(self):
         """ If we have a contract in the order, set it up """
         contract_env = self.env['account.analytic.account']
@@ -36,15 +48,7 @@ class SaleOrder(models.Model):
                     == contract_template
                 )
                 contract = contract_env.create(
-                    {
-                        'name': '{template_name}: {sale_name}'.format(
-                            template_name=contract_template.name,
-                            sale_name=rec.name,
-                        ),
-                        'partner_id': rec.partner_id.id,
-                        'recurring_invoices': True,
-                        'contract_template_id': contract_template.id,
-                    }
+                    rec._prepare_contract_value(contract_template)
                 )
                 contract._onchange_contract_template_id()
                 order_lines.create_contract_line(contract)
