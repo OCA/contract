@@ -7,6 +7,7 @@ from odoo import models, fields
 # Main Agreement Section Records Model
 class AgreementSubtype(models.Model):
     _name = 'agreement.subtype'
+    _description = 'Agreement Subtype'
 
     # General
     name = fields.Char(

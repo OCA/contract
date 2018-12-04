@@ -8,6 +8,7 @@ from odoo import models, fields, api
 class AgreementSection(models.Model):
     _name = 'agreement.section'
     _order = 'section_sequence'
+    _description = 'Agreement Section'
 
     # General
     name = fields.Char(

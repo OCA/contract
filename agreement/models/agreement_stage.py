@@ -8,6 +8,7 @@ from odoo import models, fields
 class AgreementStage(models.Model):
     _name = 'agreement.stage'
     _order = 'sequence'
+    _description = 'Agreement Stage'
 
     # General
     name = fields.Char(

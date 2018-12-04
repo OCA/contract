@@ -8,6 +8,7 @@ from odoo import models, fields, api
 class AgreementClause(models.Model):
     _name = 'agreement.clause'
     _order = 'clause_sequence'
+    _description = 'Agreement Clause'
 
     # General
     name = fields.Char(
