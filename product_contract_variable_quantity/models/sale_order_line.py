@@ -32,9 +32,11 @@ class SaleOrderLine(models.Model):
                 rec.qty_formula_id = rec.product_id.qty_formula_id
 
     @api.multi
-    def _prepare_contract_line_values(self, contract):
+    def _prepare_contract_line_values(
+        self, contract, predecessor_contract_line=False
+    ):
         values = super(SaleOrderLine, self)._prepare_contract_line_values(
-            contract
+            contract, predecessor_contract_line
         )
         values['qty_type'] = self.qty_type
         values['qty_formula_id'] = self.qty_formula_id.id
