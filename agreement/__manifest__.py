@@ -10,7 +10,7 @@
     'website': 'https://github.com/OCA/contract',
     'category': 'Partner',
     'license': 'AGPL-3',
-    'version': '11.0.0.0.1',
+    'version': '12.0.0.0.1',
     'depends': [
         'account',
         'contacts',
