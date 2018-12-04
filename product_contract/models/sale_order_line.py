@@ -72,7 +72,7 @@ class SaleOrderLine(models.Model):
                 )
                 rec.recurring_interval = rec.product_id.recurring_interval
                 rec.date_start = rec.date_start or fields.Date.today()
-                if rec.is_auto_renew:
+                if rec.product_id.is_auto_renew:
                     rec.date_end = (
                         rec.date_start
                         + contract_line_env.get_relative_delta(
@@ -85,7 +85,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('date_start')
     def onchange_date_start(self):
         for rec in self:
-            if rec.is_auto_renew:
+            if rec.product_id.is_auto_renew:
                 if not rec.date_start:
                     rec.date_end = False
                 else:
