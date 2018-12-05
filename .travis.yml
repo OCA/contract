@@ -6,12 +6,14 @@ python:
   - "3.5"
 
 addons:
+  postgresql: "9.6"
   apt:
 # only add the two lines below if you need wkhtmltopdf for your tests
 #    sources:
 #      - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
+      - postgresql-9.6-postgis-2.3 postgis # because travis doesn't know which one to install
       - python-lxml  # because pip installation is slow
       - python-simplejson
       - python-serial
