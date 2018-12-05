@@ -20,8 +20,8 @@ class AccountAnalyticAccount(models.Model):
         sale_line = self.env['sale.order.line'].new({
             'order_id': order_id,
             'product_id': line.product_id.id,
-            'proudct_uom_qty': line.quantity,
-            'proudct_uom_id': line.uom_id.id,
+            'product_uom_qty': line.quantity,
+            'product_uom': line.uom_id.id,
         })
         # Get other invoice line values from product onchange
         sale_line.product_id_change()
