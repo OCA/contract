@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Copyright 2018 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Agreement Form View -->
+	<record id="agreement_fsm_order_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.fsm.order.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button name="action_view_service_order" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('service_order_count', '=', 0)]}">
+                    <field name="service_order_count" widget="statinfo" string="Service Orders"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Copyright 2018 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Fields Service Orders Form View -->
+	<record id="fsm_order_agreement_form" model="ir.ui.view">
+        <field name="name">fsm.order.agreement.form</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_form"/>
+        <field name="arch" type="xml">
+            <field name="fsm_location_id" position="after">
+                <field name="agreement_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>
