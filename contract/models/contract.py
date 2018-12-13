@@ -56,11 +56,14 @@ class AccountAnalyticAccount(models.Model):
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
-    @api.depends('recurring_invoice_line_ids.recurring_next_date')
+    @api.depends(
+        'recurring_invoice_line_ids.recurring_next_date',
+        'recurring_invoice_line_ids.is_canceled',
+    )
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.recurring_invoice_line_ids.filtered(
-                'recurring_next_date'
+                lambda l: l.recurring_next_date and not l.is_canceled
             ).mapped('recurring_next_date')
             if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)

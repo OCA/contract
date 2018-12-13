@@ -29,7 +29,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     date_end = fields.Date(string='Date End', index=True)
     recurring_next_date = fields.Date(string='Date of Next Invoice')
     last_date_invoiced = fields.Date(
-        string='Last Date Invoiced', readonly=True
+        string='Last Date Invoiced', readonly=True, copy=False
     )
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility'
@@ -403,17 +403,20 @@ class AccountAnalyticInvoiceLine(models.Model):
             else self.date_start
         )
         if self.recurring_rule_type == 'monthlylastday':
-            last_date_invoiced = first_date_invoiced + self.get_relative_delta(
-                self.recurring_rule_type, self.recurring_interval - 1
-            )
+            last_date_invoiced = self.recurring_next_date
         else:
-            last_date_invoiced = (
-                first_date_invoiced
-                + self.get_relative_delta(
-                    self.recurring_rule_type, self.recurring_interval
+            if self.recurring_invoicing_type == 'pre-paid':
+                last_date_invoiced = (
+                    self.recurring_next_date
+                    + self.get_relative_delta(
+                        self.recurring_rule_type, self.recurring_interval
+                    )
+                    - relativedelta(days=1)
                 )
-                - relativedelta(days=1)
-            )
+            else:
+                last_date_invoiced = self.recurring_next_date - relativedelta(
+                    days=1
+                )
         if self.date_end and self.date_end < last_date_invoiced:
             last_date_invoiced = self.date_end
         return first_date_invoiced, last_date_invoiced
