@@ -27,6 +27,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_id.id,
             'recurring_invoices': True,
             'contract_template_id': contract_template.id,
+            'user_id': self.user_id.id,
         }
 
     @api.multi
