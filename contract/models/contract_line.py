@@ -77,6 +77,9 @@ class AccountAnalyticInvoiceLine(models.Model):
         ],
         compute="_compute_state",
     )
+    active = fields.Boolean(
+        string="Active", related="contract_id.active", strore=True
+    )
 
     @api.multi
     def _compute_state(self):
@@ -519,8 +522,6 @@ class AccountAnalyticInvoiceLine(models.Model):
                         "invoiced at least one time."
                     )
                 )
-            old_date_start = rec.date_start
-            old_date_end = rec.date_end
             new_date_start = rec.date_start + delay_delta
             rec.recurring_next_date = self._compute_first_recurring_next_date(
                 new_date_start,
