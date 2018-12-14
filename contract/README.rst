@@ -107,6 +107,7 @@ Contributors
 * Dave Lasley <dave@laslabs.com>
 * Vicent Cubells <vicent.cubells@tecnativa.com>
 * Miquel Raïch <miquel.raich@eficent.com>
+* Dennis Sluijk <d.sluijk@onestein.nl>
 
 Maintainers
 ~~~~~~~~~~~

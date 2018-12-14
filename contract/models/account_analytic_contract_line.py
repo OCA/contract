@@ -33,6 +33,10 @@ class AccountAnalyticContractLine(models.Model):
         string='Description',
         required=True,
     )
+    name_on_contract = fields.Text(
+        string='Description (on contract)',
+        required=True,
+    )
     quantity = fields.Float(
         default=1.0,
         required=True,
@@ -215,6 +219,7 @@ class AccountAnalyticContractLine(models.Model):
         if product.description_sale:
             name += '\n' + product.description_sale
         vals['name'] = name
+        vals['name_on_contract'] = name
 
         vals['price_unit'] = product.price
         self.update(vals)
