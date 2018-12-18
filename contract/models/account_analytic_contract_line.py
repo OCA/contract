@@ -224,3 +224,10 @@ class AccountAnalyticContractLine(models.Model):
         vals['price_unit'] = product.price
         self.update(vals)
         return {'domain': domain}
+
+    @api.model
+    def create(self, vals):
+        if 'name_on_contract' not in vals or not vals['name_on_contract']:
+            vals['name_on_contract'] = vals['name']
+
+        return super(AccountAnalyticContractLine, self).create(vals)
