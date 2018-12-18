@@ -28,6 +28,12 @@ class AccountAnalyticAccount(models.Model):
         inverse_name='analytic_account_id',
         copy=True,
     )
+    recurring_invoice_total = fields.Monetary(
+        string='Total',
+        store=True,
+        readonly=True,
+        compute='_compute_recurring_invoice_total'
+    )
     date_start = fields.Date(
         string='Date Start',
         default=fields.Date.context_today,
@@ -53,6 +59,14 @@ class AccountAnalyticAccount(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility',
     )
+
+    @api.depends('recurring_invoice_line_ids',
+                 'recurring_invoice_line_ids.price_subtotal')
+    def _compute_recurring_invoice_total(self):
+        for account in self:
+            account.recurring_invoice_total = sum(
+                [l.price_subtotal for l in account.recurring_invoice_line_ids]
+            )
 
     @api.depends('recurring_next_date', 'date_end')
     def _compute_create_invoice_visibility(self):

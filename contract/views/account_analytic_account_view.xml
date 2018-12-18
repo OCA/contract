@@ -90,6 +90,9 @@
                         </tree>
                     </field>
                 </div>
+                <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                    <field name="recurring_invoice_total" class="oe_subtotal_footer_separator"/>
+                </group>
                 <group string="Legend (for the markers inside invoice lines description)"
                        name="group_legend" attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                     <p colspan="2"> <strong>#START#</strong>: Start date of the invoiced period</p>
