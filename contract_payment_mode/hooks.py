@@ -11,7 +11,7 @@ def post_init_hook(cr, registry):
     """Copy payment mode from partner to the new field at contract."""
     with api.Environment.manage():
         env = api.Environment(cr, SUPERUSER_ID, {})
-        m_contract = env['account.analytic.account']
+        m_contract = env['contract.contract']
         contracts = m_contract.search([
             ('payment_mode_id', '=', False),
         ])
