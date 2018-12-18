@@ -12,9 +12,9 @@ class AccountAnalyticInvoiceLine(models.Model):
     _inherit = 'account.analytic.invoice.line'
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id):
+    def _prepare_invoice_line(self, invoice_id=False):
         vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id)
+            invoice_id=invoice_id)
         if self.qty_type == 'variable':
             eval_context = {
                 'env': self.env,
@@ -22,8 +22,10 @@ class AccountAnalyticInvoiceLine(models.Model):
                 'user': self.env.user,
                 'line': self,
                 'contract': self.contract_id,
-                'invoice': self.env['account.invoice'].browse(invoice_id),
             }
+            if invoice_id:
+                eval_context['invoice'] = self.env['account.invoice'].browse(
+                    invoice_id),
             safe_eval(self.qty_formula_id.code.strip(), eval_context,
                       mode="exec", nocopy=True)  # nocopy for returning result
             qty = eval_context.get('result', 0)
