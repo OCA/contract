@@ -24,6 +24,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     )
     date_start = fields.Date(
         string='Date Start',
+        required=True,
         default=lambda self: fields.Date.context_today(self),
     )
     date_end = fields.Date(string='Date End', index=True)
@@ -78,7 +79,10 @@ class AccountAnalyticInvoiceLine(models.Model):
         compute="_compute_state",
     )
     active = fields.Boolean(
-        string="Active", related="contract_id.active", strore=True
+        string="Active",
+        related="contract_id.active",
+        store=True,
+        readonly=True,
     )
 
     @api.multi
@@ -312,75 +316,18 @@ class AccountAnalyticInvoiceLine(models.Model):
                         rec.recurring_next_date
                     )
 
-    @api.model
-    def _get_recurring_create_invoice_domain(self, contract=False):
-        domain = []
-        date_ref = fields.Date.context_today(self)
-        if contract:
-            contract.ensure_one()
-            date_ref = contract.recurring_next_date
-            domain.append(('contract_id', '=', contract.id))
-
-        domain.extend(
-            [
-                ('contract_id.recurring_invoices', '=', True),
-                ('recurring_next_date', '<=', date_ref),
-                ('is_canceled', '=', False),
-            ]
-        )
-        return domain
-
-    @api.model
-    def recurring_create_invoice(self, contract=False):
-        domain = self._get_recurring_create_invoice_domain(contract)
-        contract_to_invoice = self.read_group(
-            domain, ['id', 'contract_id'], ['contract_id']
-        )
-        return self._recurring_create_invoice(contract_to_invoice)
-
-    @api.model
-    def _recurring_create_invoice(self, contract_to_invoice):
-        """Create invoices from contracts
-
-        :return: invoices created
-        """
-        invoices = self.env['account.invoice']
-        for contract in contract_to_invoice:
-            lines = self.search(contract['__domain'])
-            if lines:
-                invoices |= lines._create_invoice()
-                lines._update_recurring_next_date()
-        return invoices
-
     @api.multi
-    def _create_invoice(self):
-        """
-        :return: invoice created
-        """
-        contract = self.mapped('contract_id')
-        date_invoice = min(self.mapped('recurring_next_date'))
-        invoice = self.env['account.invoice'].create(
-            contract._prepare_invoice(date_invoice)
-        )
-        for line in self:
-            invoice_line_vals = line._prepare_invoice_line(invoice.id)
-            if invoice_line_vals:
-                self.env['account.invoice.line'].create(invoice_line_vals)
-        invoice.compute_taxes()
-        return invoice
-
-    @api.multi
-    def _prepare_invoice_line(self, invoice_id):
+    def _prepare_invoice_line(self, invoice_id=False):
         self.ensure_one()
-        invoice_line = self.env['account.invoice.line'].new(
-            {
-                'invoice_id': invoice_id,
-                'product_id': self.product_id.id,
-                'quantity': self.quantity,
-                'uom_id': self.uom_id.id,
-                'discount': self.discount,
-            }
-        )
+        invoice_line_vals = {
+            'product_id': self.product_id.id,
+            'quantity': self.quantity,
+            'uom_id': self.uom_id.id,
+            'discount': self.discount,
+        }
+        if invoice_id:
+            invoice_line_vals['invoice_id'] = invoice_id.id
+        invoice_line = self.env['account.invoice.line'].new(invoice_line_vals)
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
