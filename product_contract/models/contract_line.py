@@ -16,9 +16,9 @@ class AccountAnalyticInvoiceLine(models.Model):
     )
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id):
+    def _prepare_invoice_line(self, invoice_id=False):
         res = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id
+            invoice_id=invoice_id
         )
         if self.sale_order_line_id:
             res['sale_line_ids'] = [(6, 0, [self.sale_order_line_id.id])]
