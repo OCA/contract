@@ -1290,14 +1290,15 @@ class TestContract(TestContractBase):
         self.acct_line.recurring_invoicing_type = 'post-paid'
         self.acct_line.date_end = '2018-03-15'
         self.acct_line._onchange_date_start()
-        contracts = self.contract
+        contracts = self.contract2
         for i in range(10):
             contracts |= self.contract.copy()
         self.env['account.analytic.account'].cron_recurring_create_invoice()
-        invoices = self.env['account.invoice'].search(
-            [('contract_id', 'in', contracts.ids)]
+        invoice_lines = self.env['account.invoice.line'].search(
+            [('account_analytic_id', 'in', contracts.ids)]
         )
-        self.assertEqual(len(contracts), len(invoices))
+        self.assertEqual(len(contracts.mapped('recurring_invoice_line_ids')),
+                         len(invoice_lines))
 
     def test_get_invoiced_period_monthlylastday(self):
         self.acct_line.date_start = '2018-01-05'
