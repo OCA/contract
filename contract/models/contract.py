@@ -173,25 +173,20 @@ class AccountAnalyticAccount(models.Model):
         invoice_type = 'out_invoice'
         if self.contract_type == 'purchase':
             invoice_type = 'in_invoice'
-        invoice = self.env['account.invoice'].new(
-            {
-                'reference': self.code,
-                'type': invoice_type,
-                'partner_id': self.partner_id.address_get(['invoice'])[
-                    'invoice'
-                ],
-                'currency_id': currency.id,
-                'date_invoice': date_invoice,
-                'journal_id': journal.id,
-                'origin': self.name,
-                'company_id': self.company_id.id,
-                'contract_id': self.id,
-                'user_id': self.partner_id.user_id.id,
-            }
-        )
-        # Get other invoice values from partner onchange
-        invoice._onchange_partner_id()
-        return invoice._convert_to_write(invoice._cache)
+        return {
+            'reference': self.code,
+            'type': invoice_type,
+            'partner_id': self.partner_id.address_get(['invoice'])[
+                'invoice'
+            ],
+            'currency_id': currency.id,
+            'date_invoice': date_invoice,
+            'journal_id': journal.id,
+            'origin': self.name,
+            'company_id': self.company_id.id,
+            'contract_id': self.id,
+            'user_id': self.partner_id.user_id.id,
+        }
 
     @api.multi
     def action_contract_send(self):
@@ -217,12 +212,61 @@ class AccountAnalyticAccount(models.Model):
             'context': ctx,
         }
 
+    @api.model
+    def _get_recurring_create_invoice_domain(self, contract=False):
+        domain = []
+        date_ref = fields.Date.context_today(self)
+        if contract:
+            contract.ensure_one()
+            date_ref = contract.recurring_next_date
+            domain.append(('id', '=', contract.id))
+        domain.extend(
+            [
+                ('recurring_invoices', '=', True),
+                ('recurring_next_date', '<=', date_ref),
+            ]
+        )
+        return domain
+
+    @api.multi
+    def _get_lines_to_invoice(self, date_ref=False):
+        self.ensure_one()
+        if not date_ref:
+            date_ref = fields.Date.context_today(self)
+        return self.recurring_invoice_line_ids.filtered(
+            lambda l: not l.is_canceled and l.recurring_next_date <= date_ref)
+
     @api.multi
     def recurring_create_invoice(self):
-        return self.env[
-            'account.analytic.invoice.line'
-        ].recurring_create_invoice(self)
+        invoice_model = self.env['account.invoice']
+        invoices_values = []
+        for contract in self:
+            contract_lines = contract._get_lines_to_invoice()
+            if not contract_lines:
+                continue
+            invoice_values = contract._prepare_invoice(
+                contract.recurring_next_date)
+            for line in contract_lines:
+                invoice_values.setdefault('invoice_line_ids', [])
+                invoice_values['invoice_line_ids'].append(
+                    (0, 0, line._prepare_invoice_line(False))
+                )
+            # If no account on the product, the invoice lines account is
+            # taken from the invoice's journal in _onchange_product_id
+            # This code is not in finalize_creation_from_contract because it's
+            # not possible to create an invoice line with no account
+            new_invoice = invoice_model.new(invoice_values)
+            for invoice_line in new_invoice.invoice_line_ids:
+                invoice_line.invoice_id = new_invoice
+                invoice_line._onchange_product_id()
+            invoice_values = new_invoice._convert_to_write(new_invoice._cache)
+            invoices_values.append(invoice_values)
+            contract_lines._update_recurring_next_date()
+        invoices = invoice_model.create(invoices_values)
+        invoices.finalize_creation_from_contract()
 
     @api.model
     def cron_recurring_create_invoice(self):
-        self.env['account.analytic.invoice.line'].recurring_create_invoice()
+        domain = self._get_recurring_create_invoice_domain()
+        contracts_to_invoice = self.search(domain)
+        contracts_to_invoice.recurring_create_invoice()
