@@ -1,7 +1,7 @@
 # © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class AccountInvoice(models.Model):
@@ -10,9 +10,3 @@ class AccountInvoice(models.Model):
     contract_id = fields.Many2one(
         'account.analytic.account', string='Contract'
     )
-
-    @api.multi
-    def finalize_creation_from_contract(self):
-        for invoice in self:
-            invoice._onchange_partner_id()
-        self.compute_taxes()

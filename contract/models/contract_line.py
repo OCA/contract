@@ -319,14 +319,15 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
         self.ensure_one()
-        invoice_line = self.env['account.invoice.line'].new(
-            {
-                'product_id': self.product_id.id,
-                'quantity': self.quantity,
-                'uom_id': self.uom_id.id,
-                'discount': self.discount,
-            }
-        )
+        invoice_line_vals = {
+            'product_id': self.product_id.id,
+            'quantity': self.quantity,
+            'uom_id': self.uom_id.id,
+            'discount': self.discount,
+        }
+        if invoice_id:
+            invoice_line_vals['invoice_id'] = invoice_id.id
+        invoice_line = self.env['account.invoice.line'].new(invoice_line_vals)
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
