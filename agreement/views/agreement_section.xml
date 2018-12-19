@@ -1,23 +1,16 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <!-- Agreement Sections Sequences-->
-    <record id="seq_agreement_section" model="ir.sequence">
-        <field name="name">agreement_section_sequencer</field>
-        <field name="code">agreement.section</field>
-        <field name="prefix">0</field>
-        <field name="padding">1</field>
-    </record>
-
     <!-- Agreement Sections List View-->
     <record model="ir.ui.view" id="partner_agreement_section_list_view">
         <field name="name">Agreement Section List</field>
         <field name="model">agreement.section</field>
         <field name="arch" type="xml">
-            <tree default_order='agreement_id, section_sequence'>
-                <field name="agreement_id" string="Agreement"/>
-                <field name="section_sequence" string="Sequence"/>
-                <field name="name" string="Section Name"/>
+            <tree string="Sections" default_order='agreement_id, sequence'>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="agreement_id"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
@@ -28,41 +21,42 @@
         <field name="name">Agreement Section Form</field>
         <field name="model">agreement.section</field>
         <field name="arch" type="xml">
-            <form string="Agreements Section Form">
+            <form string="Section">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Section Name"/>
-                        <h1><field name="name" string="Section Name"/></h1>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
                     </div>
                     <group>
-                        <field name="agreement_id" string="Agreement"/>
-                    </group>
-                    <group>
-                        <field name='content' string="Content"/>
+                        <group>
+                            <field name="title"/>
+                            <field name="agreement_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
                     </group>
                     <notebook>
+                        <page string="Content">
+                            <field name='content' nolabel="1"/>
+                        </page>
                         <page string="Clauses">
-                            <field name="clauses_ids" string="Clauses" context="{'default_section_id': active_id,'default_agreement_id': agreement_id}">
+                            <field name="clauses_ids"
+                                   nolabel="1"
+                                   context="{'default_section_id': active_id, 'default_agreement_id': agreement_id}">
                                 <tree>
-                                    <field name="clause_sequence" widget="handle"/>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="name"/>
-                                    <field name="content"/>
+                                    <field name="title"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Dynamic Placeholder Generator">
-                            THIS IS UNDER DEVELOPEMENT: The purpose of this section is to be able to create dynamic fields inside your content.
-                            <group>
-                                <field name="model_id"/>
-                                <field name="model_object_field_id" domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
-                                <field name="sub_object_id" readonly="1"/>
-                                <field name="sub_model_object_field_id" domain="[('model_id','=',sub_object_id),('ttype','!=','one2many'),('ttype','!=','many2many')]" attrs="{'readonly':[('sub_object_id','=',False)],'required':[('sub_object_id','!=',False)]}"/>
-                                <field name="null_value"/>
-                                <field name="copyvalue"/>
-                            </group>
-                        </page>
                     </notebook>
-                    Sequence #<field name="section_sequence" readonly="1"/>
                 </sheet>
             </form>
         </field>
