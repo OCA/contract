@@ -213,13 +213,73 @@ class AccountAnalyticAccount(models.Model):
         }
 
     @api.model
-    def _get_recurring_create_invoice_domain(self, contract=False):
+    def _finalize_invoice_values(self, invoice_values):
+        """
+        This method adds the missing values in the invoice lines dictionaries.
+
+        If no account on the product, the invoice lines account is
+        taken from the invoice's journal in _onchange_product_id
+        This code is not in finalize_creation_from_contract because it's
+        not possible to create an invoice line with no account
+
+        :param invoice_values: dictionary (invoice values)
+        :return: updated dictionary (invoice values)
+        """
+        # If no account on the product, the invoice lines account is
+        # taken from the invoice's journal in _onchange_product_id
+        # This code is not in finalize_creation_from_contract because it's
+        # not possible to create an invoice line with no account
+        new_invoice = self.env['account.invoice'].new(invoice_values)
+        for invoice_line in new_invoice.invoice_line_ids:
+            name = invoice_line.name
+            account_analytic_id = invoice_line.account_analytic_id
+            price_unit = invoice_line.price_unit
+            invoice_line.invoice_id = new_invoice
+            invoice_line._onchange_product_id()
+            invoice_line.update({
+                'name': name,
+                'account_analytic_id': account_analytic_id,
+                'price_unit': price_unit,
+            })
+        return new_invoice._convert_to_write(new_invoice._cache)
+
+    @api.model
+    def _finalize_invoice_creation(self, invoices):
+        for invoice in invoices:
+            invoice._onchange_partner_id()
+        invoices.compute_taxes()
+
+    @api.model
+    def _finalize_and_create_invoices(self, invoices_values):
+        """
+        This method:
+         - finalizes the invoices values (onchange's...)
+         - creates the invoices
+         - finalizes the created invoices (onchange's, tax computation...)
+        :param invoices_values: list of dictionaries (invoices values)
+        :return: created invoices (account.invoice)
+        """
+        if isinstance(invoices_values, dict):
+            invoices_values = [invoices_values]
+        final_invoices_values = []
+        for invoice_values in invoices_values:
+            final_invoices_values.append(
+                self._finalize_invoice_values(invoice_values))
+        invoices = self.env['account.invoice'].create(final_invoices_values)
+        self._finalize_invoice_creation(invoices)
+        return invoices
+
+    @api.model
+    def _get_contracts_to_invoice_domain(self, date_ref=None):
+        """
+        This method builds the domain to use to find all
+        contracts (account.analytic.account) to invoice.
+        :param date_ref: optional reference date to use instead of today
+        :return: list (domain) usable on account.analytic.account
+        """
         domain = []
-        date_ref = fields.Date.context_today(self)
-        if contract:
-            contract.ensure_one()
-            date_ref = contract.recurring_next_date
-            domain.append(('id', '=', contract.id))
+        if not date_ref:
+            date_ref = fields.Date.context_today(self)
         domain.extend(
             [
                 ('recurring_invoices', '=', True),
@@ -229,44 +289,59 @@ class AccountAnalyticAccount(models.Model):
         return domain
 
     @api.multi
-    def _get_lines_to_invoice(self, date_ref=False):
+    def _get_lines_to_invoice(self, date_ref):
+        """
+        This method fetches and returns the lines to invoice on the contract
+        (self), based on the given date.
+        :param date_ref: date used as reference date to find lines to invoice
+        :return: contract lines (account.analytic.invoice.line recordset)
+        """
         self.ensure_one()
-        if not date_ref:
-            date_ref = fields.Date.context_today(self)
         return self.recurring_invoice_line_ids.filtered(
-            lambda l: not l.is_canceled and l.recurring_next_date <= date_ref)
+            lambda l: not l.is_canceled and l.recurring_next_date
+            and l.recurring_next_date <= date_ref)
 
     @api.multi
-    def recurring_create_invoice(self):
-        invoice_model = self.env['account.invoice']
+    def _prepare_recurring_invoices_values(self, date_ref=False):
+        """
+        This method builds the list of invoices values to create, based on
+        the lines to invoice of the contracts in self.
+        !!! The date of next invoice (recurring_next_date) is updated here !!!
+        :return: list of dictionaries (invoices values)
+        """
         invoices_values = []
         for contract in self:
-            contract_lines = contract._get_lines_to_invoice()
+            if not date_ref:
+                date_ref = contract.recurring_next_date
+            contract_lines = contract._get_lines_to_invoice(date_ref)
             if not contract_lines:
                 continue
-            invoice_values = contract._prepare_invoice(
-                contract.recurring_next_date)
+            invoice_values = contract._prepare_invoice(date_ref)
             for line in contract_lines:
                 invoice_values.setdefault('invoice_line_ids', [])
                 invoice_values['invoice_line_ids'].append(
-                    (0, 0, line._prepare_invoice_line(False))
+                    (0, 0, line._prepare_invoice_line(invoice_id=False))
                 )
-            # If no account on the product, the invoice lines account is
-            # taken from the invoice's journal in _onchange_product_id
-            # This code is not in finalize_creation_from_contract because it's
-            # not possible to create an invoice line with no account
-            new_invoice = invoice_model.new(invoice_values)
-            for invoice_line in new_invoice.invoice_line_ids:
-                invoice_line.invoice_id = new_invoice
-                invoice_line._onchange_product_id()
-            invoice_values = new_invoice._convert_to_write(new_invoice._cache)
             invoices_values.append(invoice_values)
             contract_lines._update_recurring_next_date()
-        invoices = invoice_model.create(invoices_values)
-        invoices.finalize_creation_from_contract()
+        return invoices_values
+
+    @api.multi
+    def recurring_create_invoice(self):
+        """
+        This method triggers the creation of the next invoices of the contracts
+        even if their next invoicing date is in the future.
+        """
+        return self._recurring_create_invoice()
+
+    @api.multi
+    def _recurring_create_invoice(self, date_ref=False):
+        invoices_values = self._prepare_recurring_invoices_values(date_ref)
+        return self._finalize_and_create_invoices(invoices_values)
 
     @api.model
     def cron_recurring_create_invoice(self):
-        domain = self._get_recurring_create_invoice_domain()
+        domain = self._get_contracts_to_invoice_domain()
         contracts_to_invoice = self.search(domain)
-        contracts_to_invoice.recurring_create_invoice()
+        date_ref = fields.Date.context_today(contracts_to_invoice)
+        contracts_to_invoice._recurring_create_invoice(date_ref)
