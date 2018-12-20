@@ -45,17 +45,38 @@
                                 Represented by <span t-field="doc.partner_contact_id.name"/>.
                             </div>
                             <h2>Agreement</h2>
+                            <h3>Recitals</h3>
+                            <table class="table table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <ol>
+                                                <li t-foreach="doc.recital_ids" t-as="r">
+                                                    <t t-if="r.title">
+                                                        <h3 t-field="r.title"/>
+                                                    </t>
+                                                    <p t-field="r.content"/>
+                                                </li>
+                                            </ol>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <table class="table table-condensed">
                                 <tbody class="section_tbody">
                                     <tr>
                                         <td>
                                             <ol>
                                                 <li t-foreach="doc.sections_ids" t-as="s">
-                                                    <h3 t-field="s.name"/>
+                                                    <t t-if="s.title">
+                                                        <h3 t-field="s.title"/>
+                                                    </t>
                                                     <p t-field="s.content"/>
                                                     <ol>
                                                         <li t-foreach="s.clauses_ids" t-as="c">
-                                                            <h4 t-field="c.name"/>
+                                                            <t t-if="c.title">
+                                                                <h4 t-field="c.title"/>
+                                                            </t>
                                                             <p t-field="c.content"/>
                                                         </li>
                                                     </ol>
@@ -65,10 +86,12 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <h2>Special Terms</h2>
-                            <div name="special_term">
-                                <p t-field="doc.special_terms"/>
-                            </div>
+                            <t t-if="special_term">
+                                <h2>Special Terms</h2>
+                                <div name="special_term">
+                                    <p t-field="doc.special_terms"/>
+                                </div>
+                            </t>
                             <h2>Signatures</h2>
                             <table class="table table-condensed">
                                 <theader>
@@ -104,6 +127,13 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div t-foreach="doc.appendix_ids" t-as="a">
+                            <div class="page">
+                                <h1 t-field="a.title"
+                                    style="page-break-before: always;"/>
+                                <p t-field="a.content"/>
+                            </div>
                         </div>
                     </t>
                 </t>

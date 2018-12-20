@@ -7,6 +7,7 @@ from odoo import models, fields
 # Main Agreement Section Records Model
 class AgreementStage(models.Model):
     _name = 'agreement.stage'
+    _description = 'Agreement Stages'
     _order = 'sequence'
 
     # General

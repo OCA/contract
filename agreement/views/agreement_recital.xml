@@ -1,28 +1,27 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <!-- Agreement Clause List View-->
-    <record model="ir.ui.view" id="partner_agreement_clause_list_view">
-        <field name="name">Agreement Clause List</field>
-        <field name="model">agreement.clause</field>
+    <!-- Agreement Recital List View-->
+    <record model="ir.ui.view" id="agreement_recital_tree">
+        <field name="name">Agreement Recital Tree</field>
+        <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <tree string="Clauses" default_order='agreement_id, sequence'>
+            <tree string="Recitals" default_order='agreement_id, sequence'>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="title"/>
                 <field name="agreement_id"/>
-                <field name="section_id"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
 
-    <!-- Agreement Clause Form View -->
-    <record model="ir.ui.view" id="partner_agreement_clause_form_view">
-        <field name="name">Agreement clause Form</field>
-        <field name="model">agreement.clause</field>
+    <!-- Agreement Recital Form View -->
+    <record model="ir.ui.view" id="agreement_recital_form">
+        <field name="name">Agreement Recital Form</field>
+        <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <form string="Clause">
+            <form string="Recital">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -37,7 +36,6 @@
                         <group>
                             <field name="title"/>
                             <field name="agreement_id"/>
-                            <field name="section_id" domain="[('agreement_id', '=', agreement_id)]"/>
                         </group>
                         <group>
                             <field name="sequence"/>
@@ -49,22 +47,21 @@
         </field>
     </record>
 
-    <!-- Agreement Clause Search View -->
-    <record model="ir.ui.view" id="agreement_clause_search_view">
-        <field name="name">Agreement Clause Search</field>
-        <field name="model">agreement.clause</field>
+    <!-- Agreement Recital Search View -->
+    <record model="ir.ui.view" id="agreement_recital_search">
+        <field name="name">Agreement Recital Search</field>
+        <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <search string="Agreement Clause Search">
+            <search>
                 <filter name="group_agreement" icon="terp-partner" context="{'group_by':'agreement_id'}"/>
-                <filter name="group_section" icon="terp-partner" context="{'group_by':'section_id'}"/>
             </search>
         </field>
     </record>
 
     <!-- Actions opening views on models -->
-    <record model="ir.actions.act_window" id="partner_agreement_action_clause">
-        <field name="name">Clauses</field>
-        <field name="res_model">agreement.clause</field>
+    <record model="ir.actions.act_window" id="agreement_recital_action">
+        <field name="name">Recitals</field>
+        <field name="res_model">agreement.recital</field>
         <field name="view_mode">tree,form</field>
     </record>
 

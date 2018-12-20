@@ -265,18 +265,18 @@ class Agreement(models.Model):
         string="Service Order Lines",
         copy=False
     )
-    sections_ids = fields.One2many(
-        'agreement.section',
-        'agreement_id',
-        string="Sections",
-        copy=True
-    )
-    clauses_ids = fields.One2many(
-        'agreement.clause',
-        'agreement_id',
-        string="Clauses",
-        copy=True
-    )
+    recital_ids = fields.One2many('agreement.recital', 'agreement_id',
+                                  string="Recitals", copy=True)
+    sections_ids = fields.One2many('agreement.section', 'agreement_id',
+                                   string="Sections", copy=True)
+    clauses_ids = fields.One2many('agreement.clause', 'agreement_id',
+                                  string="Clauses", copy=True)
+    appendix_ids = fields.One2many('agreement.appendix', 'agreement_id',
+                                   string="Appendices", copy=True)
+    serviceprofile_ids = fields.One2many('agreement.serviceprofile',
+                                         'agreement_id',
+                                         string="Service Profiles",
+                                         readonly=True)
     analytic_id = fields.Many2one('account.analytic.account',
                                   string='Analytic Account', index=True)
     analytic_line_ids = fields.One2many('account.analytic.line',
