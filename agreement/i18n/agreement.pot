@@ -16,8 +16,11 @@ msgstr ""
 #. module: agreement
 #: selection:agreement,state:0
 #: model:ir.model.fields,field_description:agreement.field_agreement_active
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_active
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_active
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_active
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_active
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_active
 msgid "Active"
 msgstr ""
 
@@ -33,19 +36,19 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_account_analytic_line_agreement_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_agreement_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_agreement_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_type_agreement_subtypes_ids
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_agreement_id
 #: model:ir.module.category,name:agreement.agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_list_view
 #: model:ir.ui.view,arch_db:agreement.report_agreement_document
 msgid "Agreement"
 msgstr ""
 
 #. module: agreement
-#: model:ir.ui.view,arch_db:agreement.agreement_clause_pivot_view
-msgid "Agreement Clause Pivot"
+#: model:ir.model,name:agreement.model_agreement_appendix
+msgid "Agreement Appendices"
 msgstr ""
 
 #. module: agreement
@@ -54,7 +57,7 @@ msgid "Agreement Clause Search"
 msgstr ""
 
 #. module: agreement
-#: model:ir.actions.act_window,name:agreement.partner_agreement_action_clause
+#: model:ir.model,name:agreement.model_agreement_clause
 msgid "Agreement Clauses"
 msgstr ""
 
@@ -66,6 +69,11 @@ msgstr ""
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Agreement Name"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model,name:agreement.model_agreement_recital
+msgid "Agreement Recitals"
 msgstr ""
 
 #. module: agreement
@@ -85,12 +93,23 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.partner_agreement_action_section
+#: model:ir.model,name:agreement.model_agreement_section
 msgid "Agreement Sections"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model,name:agreement.model_agreement_serviceprofile
+msgid "Agreement Service Profiles"
 msgstr ""
 
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.partner_agreement_action_stage
 msgid "Agreement Stage"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model,name:agreement.model_agreement_stage
+msgid "Agreement Stages"
 msgstr ""
 
 #. module: agreement
@@ -105,11 +124,23 @@ msgid "Agreement Sub-type"
 msgstr ""
 
 #. module: agreement
-#: model:ir.actions.act_window,name:agreement.partner_agreement_action_type
+#: model:ir.model,name:agreement.model_agreement_subtype
+msgid "Agreement Subtypes"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_agreement_type_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_agreement_type_id
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_subtype_list_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_type_form_view
 msgid "Agreement Type"
+msgstr ""
+
+#. module: agreement
+#: model:ir.actions.act_window,name:agreement.partner_agreement_action_type
+#: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_type_list_view
+msgid "Agreement Types"
 msgstr ""
 
 #. module: agreement
@@ -126,6 +157,7 @@ msgstr ""
 #: model:ir.ui.menu,name:agreement.operations_agreements
 #: model:ir.ui.view,arch_db:agreement.agreement_graph_view
 #: model:ir.ui.view,arch_db:agreement.agreement_pivot_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_list_view
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_section_search_view
 #: model:ir.ui.view,arch_db:agreement.partner_form
 #: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
@@ -133,18 +165,8 @@ msgid "Agreements"
 msgstr ""
 
 #. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-msgid "Agreements Clause Form"
-msgstr ""
-
-#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Agreements Form"
-msgstr ""
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid "Agreements Section Form"
 msgstr ""
 
 #. module: agreement
@@ -155,7 +177,6 @@ msgstr ""
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_increasetype_form_view
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_renewaltype_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_type_form_view
 msgid "Agreements Type Form"
 msgstr ""
 
@@ -175,9 +196,17 @@ msgid "Any terms that you have agreed to and want to track on the agreement/cont
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_model_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_model_id
-msgid "Applies to"
+#: model:ir.actions.act_window,name:agreement.agreement_appendix_action
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_ids
+#: model:ir.ui.menu,name:agreement.agreement_appendices
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_tree
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+msgid "Appendices"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+msgid "Appendix"
 msgstr ""
 
 #. module: agreement
@@ -223,19 +252,21 @@ msgid "Child Agreements"
 msgstr ""
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+msgid "Clause"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_content
 msgid "Clause Content"
 msgstr ""
 
 #. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-msgid "Clause Name"
-msgstr ""
-
-#. module: agreement
+#: model:ir.actions.act_window,name:agreement.partner_agreement_action_clause
 #: model:ir.model.fields,field_description:agreement.field_agreement_clauses_ids
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_clauses_ids
 #: model:ir.ui.menu,name:agreement.agreement_clauses
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_list_view
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
 msgid "Clauses"
@@ -289,8 +320,15 @@ msgid "Contact on the account that signed the agreement/contract."
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_content
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_content
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
 msgid "Content"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.menu,name:agreement.agreement_data_contents
+msgid "Contents"
 msgstr ""
 
 #. module: agreement
@@ -309,11 +347,14 @@ msgid "Contract Value"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_create_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_create_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_create_uid
@@ -321,11 +362,14 @@ msgid "Created by"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_create_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_create_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_create_date
@@ -378,12 +422,6 @@ msgid "Date:"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_null_value
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_null_value
-msgid "Default Value"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_renewal_type_id
 msgid "Describes what happens after the contract expires."
 msgstr ""
@@ -411,11 +449,14 @@ msgid "Description of the renewal type."
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_display_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_display_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_display_name
@@ -425,12 +466,6 @@ msgstr ""
 #. module: agreement
 #: selection:agreement,state:0
 msgid "Draft"
-msgstr ""
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid "Dynamic Placeholder Generator"
 msgstr ""
 
 #. module: agreement
@@ -455,20 +490,8 @@ msgid "Exp. Notice (Days)"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_model_object_field_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_model_object_field_id
-msgid "Field"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_signed_contract_filename
 msgid "Filename"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_copyvalue
-#: model:ir.model.fields,help:agreement.field_agreement_section_copyvalue
-msgid "Final placeholder expression, to be copy-pasted in the desired template field."
 msgstr ""
 
 #. module: agreement
@@ -482,12 +505,15 @@ msgid "General"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_4830
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_4859
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_id
 msgid "ID"
@@ -503,6 +529,21 @@ msgstr ""
 #: model:ir.model.fields,help:agreement.field_agreement_clause_active
 #: model:ir.model.fields,help:agreement.field_agreement_section_active
 msgid "If unchecked, it will allow you to hide the agreement without removing it."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_active
+msgid "If unchecked, it will allow you to hide this appendix without removing it."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_recital_active
+msgid "If unchecked, it will allow you to hide this recital without removing it."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_serviceprofile_active
+msgid "If unchecked, it will allow you to hide this service profile without removing it."
 msgstr ""
 
 #. module: agreement
@@ -537,10 +578,13 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement___last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype___last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_section___last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_type___last_update
@@ -548,10 +592,13 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_write_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_write_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_write_uid
@@ -560,10 +607,13 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_write_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_write_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_write_date
@@ -600,6 +650,17 @@ msgstr ""
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_masterdata
 msgid "Master Data"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_subtype_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_type_name
+msgid "Name"
 msgstr ""
 
 #. module: agreement
@@ -653,12 +714,6 @@ msgstr ""
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_operations
 msgid "Operations"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_null_value
-#: model:ir.model.fields,help:agreement.field_agreement_section_null_value
-msgid "Optional value to use if the target field is empty."
 msgstr ""
 
 #. module: agreement
@@ -730,12 +785,6 @@ msgid "Phone"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_copyvalue
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_copyvalue
-msgid "Placeholder Expression"
-msgstr ""
-
-#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Preview"
 msgstr ""
@@ -774,6 +823,21 @@ msgstr ""
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Products/Services"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+msgid "Recital"
+msgstr ""
+
+#. module: agreement
+#: model:ir.actions.act_window,name:agreement.agreement_recital_action
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_ids
+#: model:ir.ui.menu,name:agreement.agreement_recitals
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_tree
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#: model:ir.ui.view,arch_db:agreement.report_agreement_document
+msgid "Recitals"
 msgstr ""
 
 #. module: agreement
@@ -849,6 +913,7 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_section_id
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
 msgid "Section"
 msgstr ""
 
@@ -858,22 +923,11 @@ msgid "Section Content"
 msgstr ""
 
 #. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_list_view
-msgid "Section Name"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_sections_ids
 #: model:ir.ui.menu,name:agreement.agreement_sections
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_list_view
 msgid "Sections"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_model_object_field_id
-#: model:ir.model.fields,help:agreement.field_agreement_section_model_object_field_id
-msgid "Select target field from the related document model. If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
 
 #. module: agreement
@@ -902,22 +956,31 @@ msgid "Select the user who manages this agreement."
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_clause_sequence
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_section_sequence
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_sequence
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_sequence
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_sequence
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_sequence
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_sequence
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_list_view
 msgid "Sequence"
-msgstr ""
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid "Sequence #"
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_order_lines_services_ids
 msgid "Service Order Lines"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_serviceprofile_form
+msgid "Service Profile"
+msgstr ""
+
+#. module: agreement
+#: model:ir.actions.act_window,name:agreement.agreement_serviceprofile_action
+#: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_ids
+#: model:ir.ui.menu,name:agreement.agreement_serviceprofiles
+#: model:ir.ui.view,arch_db:agreement.agreement_serviceprofile_tree
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+msgid "Service Profiles"
 msgstr ""
 
 #. module: agreement
@@ -1005,27 +1068,13 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_subtypes
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_type_form_view
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_type_list_view
 msgid "Sub-Types"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_sub_model_object_field_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_sub_model_object_field_id
-msgid "Sub-field"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_sub_object_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_sub_object_id
-msgid "Sub-model"
-msgstr ""
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid "THIS IS UNDER DEVELOPEMENT: The purpose of this section is to be able to create dynamic fields inside your content."
+#: model:ir.model.fields,field_description:agreement.field_agreement_type_agreement_subtypes_ids
+msgid "Subtypes"
 msgstr ""
 
 #. module: agreement
@@ -1091,9 +1140,11 @@ msgid "The revision will increase with every save event."
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_model_id
-#: model:ir.model.fields,help:agreement.field_agreement_section_model_id
-msgid "The type of document this template can be used with."
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_title
+#: model:ir.model.fields,help:agreement.field_agreement_clause_title
+#: model:ir.model.fields,help:agreement.field_agreement_recital_title
+#: model:ir.model.fields,help:agreement.field_agreement_section_title
+msgid "The title is displayed on the PDF.The name is not."
 msgstr ""
 
 #. module: agreement
@@ -1117,13 +1168,13 @@ msgid "This stage is folded in the kanban view by deafault."
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_clause_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_title
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_title
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_title
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_name
-#: model:ir.model.fields,field_description:agreement.field_agreement_section_name
-#: model:ir.model.fields,field_description:agreement.field_agreement_subtype_name
-#: model:ir.model.fields,field_description:agreement.field_agreement_type_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_title
 msgid "Title"
 msgstr ""
 
@@ -1183,18 +1234,6 @@ msgid "Version:"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_sub_model_object_field_id
-#: model:ir.model.fields,help:agreement.field_agreement_section_sub_model_object_field_id
-msgid "When a relationship field is selected as first field, this field lets you select the target field within the destination document model (sub-model)."
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_clause_sub_object_id
-#: model:ir.model.fields,help:agreement.field_agreement_section_sub_object_id
-msgid "When a relationship field is selected as first field, this field shows the document model the relationship goes to."
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_end_date
 msgid "When the agreement ends."
 msgstr ""
@@ -1210,11 +1249,6 @@ msgid "agreement"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model,name:agreement.model_agreement_clause
-msgid "agreement.clause"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model,name:agreement.model_agreement_increasetype
 msgid "agreement.increasetype"
 msgstr ""
@@ -1222,26 +1256,6 @@ msgstr ""
 #. module: agreement
 #: model:ir.model,name:agreement.model_agreement_renewaltype
 msgid "agreement.renewaltype"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model,name:agreement.model_agreement_section
-msgid "agreement.section"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model,name:agreement.model_agreement_stage
-msgid "agreement.stage"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model,name:agreement.model_agreement_subtype
-msgid "agreement.subtype"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model,name:agreement.model_agreement_type
-msgid "agreement.type"
 msgstr ""
 
 #. module: agreement
