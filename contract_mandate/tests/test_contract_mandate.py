@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 Carlos Dauden - Tecnativa <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -43,12 +42,11 @@ class TestContractMandate(common.SavepointCase):
             'sale_ok': True,
             'taxes_id': [(6, 0, [])],
         })
-        cls.contract = cls.env['account.analytic.account'].create({
+        cls.contract = cls.env['contract.contract'].create({
             'name': 'Test contract',
             'partner_id': cls.partner.id,
-            'recurring_invoices': True,
             'recurring_interval': 1,
-            'recurring_invoice_line_ids': [(0, 0, {
+            'contract_line_ids': [(0, 0, {
                 'quantity': 2.0,
                 'price_unit': 200.0,
                 'name': 'Test contract line',
