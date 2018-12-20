@@ -83,6 +83,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         related="contract_id.active",
         store=True,
         readonly=True,
+        default=True,
     )
 
     @api.multi
