@@ -282,15 +282,6 @@ class AccountAnalyticInvoiceLine(models.Model):
                     % rec.name
                 )
 
-    @api.constrains('date_start')
-    def _check_date_start_recurring_invoices(self):
-        for line in self.filtered('contract_id.recurring_invoices'):
-            if not line.date_start:
-                raise ValidationError(
-                    _("You must supply a start date for contract line '%s'")
-                    % line.name
-                )
-
     @api.constrains('date_start', 'date_end')
     def _check_start_end_dates(self):
         for line in self.filtered('date_end'):
