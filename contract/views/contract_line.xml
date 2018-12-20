@@ -26,6 +26,14 @@
                     <field name="date_end"
                            attrs="{'required': [('is_auto_renew', '=', True)]}"/>
                 </group>
+                <group groups="base.group_no_one">
+                    <field name="last_date_invoiced" readonly="True"/>
+                    <field name="termination_notice_date" readonly="True"/>
+                </group>
+                <group groups="base.group_no_one">
+                    <field name="manual_renew_needed"/>
+                </group>
+
                 <group>
                     <field name="predecessor_contract_line_id"/>
                 </group>
