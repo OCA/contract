@@ -19,6 +19,6 @@ def migrate(cr, version):
             lambda c: not c.create_invoice_visibility
         )
         cr.execute(
-            "UPDATE account_analytic_account set recurring_next_date=null where id in (%)"
-            % ','.join(finished_contract.ids)
+            "UPDATE account_analytic_account set recurring_next_date=null "
+            "where id in (%)" % ','.join(finished_contract.ids)
         )
