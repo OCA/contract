@@ -417,11 +417,6 @@ class TestContract(TestContractBase):
             self.contract.write({'recurring_invoices': True})
             self.acct_line.write({'recurring_next_date': False})
 
-    def test_check_date_start_recurring_invoices(self):
-        with self.assertRaises(ValidationError):
-            self.contract.write({'recurring_invoices': True})
-            self.acct_line.write({'date_start': False})
-
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
         self.contract.contract_template_id = self.template
