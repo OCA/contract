@@ -33,7 +33,6 @@
         'views/contract.xml',
         'views/contract_template_line.xml',
         'views/contract_template.xml',
-        'views/account_invoice_view.xml',
         'views/contract_line.xml',
         'views/res_partner_view.xml',
     ],
