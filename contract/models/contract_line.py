@@ -1,4 +1,5 @@
 # Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import timedelta
@@ -32,6 +33,12 @@ class AccountAnalyticInvoiceLine(models.Model):
     last_date_invoiced = fields.Date(
         string='Last Date Invoiced', readonly=True, copy=False
     )
+    termination_notice_date = fields.Date(
+        string='Termination notice date',
+        compute="_compute_termination_notice_date",
+        store=True,
+        copy=False,
+    )
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility'
     )
@@ -40,6 +47,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         string="Successor Contract Line",
         required=False,
         readonly=True,
+        index=True,
         copy=False,
         help="In case of restart after suspension, this field contain the new "
         "contract line created.",
@@ -49,8 +57,16 @@ class AccountAnalyticInvoiceLine(models.Model):
         string="Predecessor Contract Line",
         required=False,
         readonly=True,
+        index=True,
         copy=False,
         help="Contract Line origin of this one.",
+    )
+    manual_renew_needed = fields.Boolean(
+        string="Manual renew needed",
+        default=False,
+        help="This flag is used to make a difference between a definitive stop"
+        "and temporary one for which a user is not able to plan a"
+        "successor in advance",
     )
     is_plan_successor_allowed = fields.Boolean(
         string="Plan successor allowed?", compute='_compute_allowed'
@@ -72,36 +88,185 @@ class AccountAnalyticInvoiceLine(models.Model):
         selection=[
             ('upcoming', 'Upcoming'),
             ('in-progress', 'In-progress'),
+            ('to-renew', 'To renew'),
             ('upcoming-close', 'Upcoming Close'),
             ('closed', 'Closed'),
             ('canceled', 'Canceled'),
         ],
         compute="_compute_state",
+        search='_search_state',
     )
     active = fields.Boolean(
         string="Active",
         related="contract_id.active",
         store=True,
         readonly=True,
+        default=True,
     )
 
     @api.multi
+    @api.depends(
+        'date_end',
+        'termination_notice_rule_type',
+        'termination_notice_interval',
+    )
+    def _compute_termination_notice_date(self):
+        for rec in self:
+            if rec.date_end:
+                rec.termination_notice_date = (
+                    rec.date_end
+                    - self.get_relative_delta(
+                        rec.termination_notice_rule_type,
+                        rec.termination_notice_interval,
+                    )
+                )
+
+    @api.multi
+    @api.depends('is_canceled', 'date_start', 'date_end', 'is_auto_renew')
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
-            if rec.date_start:
-                if rec.is_canceled:
-                    rec.state = 'canceled'
-                elif today < rec.date_start:
-                    rec.state = 'upcoming'
-                elif not rec.date_end or (
-                    today <= rec.date_end and rec.is_auto_renew
+            if rec.is_canceled:
+                rec.state = 'canceled'
+                continue
+
+            if rec.date_start and rec.date_start > today:
+                # Before period
+                rec.state = 'upcoming'
+                continue
+            if (
+                rec.date_start
+                and rec.date_start <= today
+                and (not rec.date_end or rec.date_end >= today)
+            ):
+                # In period
+                if (
+                    rec.termination_notice_date
+                    and rec.termination_notice_date < today
+                    and not rec.is_auto_renew
+                    and not rec.manual_renew_needed
                 ):
-                    rec.state = 'in-progress'
-                elif today <= rec.date_end and not rec.is_auto_renew:
                     rec.state = 'upcoming-close'
                 else:
+                    rec.state = 'in-progress'
+                continue
+            if rec.date_end and rec.date_end < today:
+                # After
+                if (
+                    rec.manual_renew_needed
+                    and not rec.successor_contract_line_id
+                    or rec.is_auto_renew
+                ):
+                    rec.state = 'to-renew'
+                else:
                     rec.state = 'closed'
+
+    @api.model
+    def _get_state_domain(self, state):
+        today = fields.Date.context_today(self)
+        if state == 'upcoming':
+            return [
+                "&",
+                ('date_start', '>', today),
+                ('is_canceled', '=', False),
+            ]
+        if state == 'in-progress':
+            return [
+                "&",
+                "&",
+                "&",
+                ('date_start', '<=', today),
+                ('is_canceled', '=', False),
+                "|",
+                ('date_end', '>=', today),
+                ('date_end', '=', False),
+                "|",
+                "&",
+                ('is_auto_renew', '=', True),
+                ('is_auto_renew', '=', False),
+                ('termination_notice_date', '>', today),
+            ]
+        if state == 'to-renew':
+            return [
+                "&",
+                "&",
+                ('is_canceled', '=', False),
+                ('date_end', '<', today),
+                "|",
+                "&",
+                ('manual_renew_needed', '=', True),
+                ('successor_contract_line_id', '=', False),
+                ('is_auto_renew', '=', True),
+            ]
+        if state == 'upcoming-close':
+            return [
+                "&",
+                "&",
+                "&",
+                "&",
+                "&",
+                ('date_start', '<=', today),
+                ('is_auto_renew', '=', False),
+                ('manual_renew_needed', '=', False),
+                ('is_canceled', '=', False),
+                ('termination_notice_date', '<', today),
+                ('date_end', '>=', today),
+            ]
+        if state == 'closed':
+            return [
+                "&",
+                "&",
+                "&",
+                ('is_canceled', '=', False),
+                ('date_end', '<', today),
+                ('is_auto_renew', '=', False),
+                "|",
+                "&",
+                ('manual_renew_needed', '=', True),
+                ('successor_contract_line_id', '!=', False),
+                ('manual_renew_needed', '=', False),
+            ]
+        if state == 'canceled':
+            return [('is_canceled', '=', True)]
+
+    @api.model
+    def _search_state(self, operator, value):
+        states = [
+            'upcoming',
+            'in-progress',
+            'to-renew',
+            'upcoming-close',
+            'closed',
+            'canceled',
+        ]
+        if operator == '!=' and not value:
+            return []
+        if operator == '=' and not value:
+            return [('id', '=', False)]
+        if operator == '=':
+            return self._get_state_domain(value)
+        if operator == '!=':
+            domain = []
+            for state in states:
+                if state != value:
+                    if domain:
+                        domain.insert(0, '|')
+                    domain.extend(self._get_state_domain(state))
+            return domain
+        if operator == 'in':
+            domain = []
+            if not value:
+                return [('id', '=', False)]
+            for state in value:
+                if domain:
+                    domain.insert(0, '|')
+                domain.extend(self._get_state_domain(state))
+            return domain
+
+        if operator == 'not in':
+            return self._search_state(
+                'in', [state for state in states if state not in value]
+            )
 
     @api.depends(
         'date_start',
@@ -282,15 +447,6 @@ class AccountAnalyticInvoiceLine(models.Model):
                     % rec.name
                 )
 
-    @api.constrains('date_start')
-    def _check_date_start_recurring_invoices(self):
-        for line in self.filtered('contract_id.recurring_invoices'):
-            if not line.date_start:
-                raise ValidationError(
-                    _("You must supply a start date for contract line '%s'")
-                    % line.name
-                )
-
     @api.constrains('date_start', 'date_end')
     def _check_start_end_dates(self):
         for line in self.filtered('date_end'):
@@ -324,6 +480,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             'quantity': self.quantity,
             'uom_id': self.uom_id.id,
             'discount': self.discount,
+            'contract_line_id': self.id,
         }
         if invoice_id:
             invoice_line_vals['invoice_id'] = invoice_id.id
@@ -393,31 +550,18 @@ class AccountAnalyticInvoiceLine(models.Model):
             new_date = old_date + self.get_relative_delta(
                 rec.recurring_rule_type, rec.recurring_interval
             )
-
             if rec.recurring_rule_type == 'monthlylastday':
-                rec.last_date_invoiced = (
-                    old_date
-                    if rec.date_end and old_date < rec.date_end
-                    else rec.date_end
-                )
+                last_date_invoiced = old_date
             elif rec.recurring_invoicing_type == 'post-paid':
-                rec.last_date_invoiced = (
-                    old_date - relativedelta(days=1)
-                    if rec.date_end and old_date < rec.date_end
-                    else rec.date_end
-                )
+                last_date_invoiced = old_date - relativedelta(days=1)
             elif rec.recurring_invoicing_type == 'pre-paid':
-                rec.last_date_invoiced = (
-                    new_date - relativedelta(days=1)
-                    if rec.date_end and new_date < rec.date_end
-                    else rec.date_end
-                )
-            if (
-                rec.last_date_invoiced
-                and rec.last_date_invoiced == rec.date_end
-            ):
+                last_date_invoiced = new_date - relativedelta(days=1)
+
+            if rec.date_end and last_date_invoiced >= rec.date_end:
+                rec.last_date_invoiced = rec.date_end
                 rec.recurring_next_date = False
             else:
+                rec.last_date_invoiced = last_date_invoiced
                 rec.recurring_next_date = new_date
 
     @api.multi
@@ -481,7 +625,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             rec.date_start = new_date_start
 
     @api.multi
-    def stop(self, date_end, post_message=True):
+    def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
         Put date_end on contract line
         We don't consider contract lines that end's before the new end date
@@ -508,9 +652,20 @@ class AccountAnalyticInvoiceLine(models.Model):
                             )
                         )
                         rec.contract_id.message_post(body=msg)
-                    rec.write({'date_end': date_end, 'is_auto_renew': False})
+                    rec.write(
+                        {
+                            'date_end': date_end,
+                            'is_auto_renew': False,
+                            "manual_renew_needed": manual_renew_needed,
+                        }
+                    )
                 else:
-                    rec.write({'is_auto_renew': False})
+                    rec.write(
+                        {
+                            'is_auto_renew': False,
+                            "manual_renew_needed": manual_renew_needed,
+                        }
+                    )
         return True
 
     @api.multi
@@ -527,6 +682,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             )
         new_vals = self.read()[0]
         new_vals.pop("id", None)
+        new_vals.pop("last_date_invoiced", None)
         values = self._convert_to_write(new_vals)
         values['date_start'] = date_start
         values['date_end'] = date_end
@@ -644,7 +800,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                         + relativedelta(days=1)
                     )
                     rec.stop(
-                        date_start - relativedelta(days=1), post_message=False
+                        date_start - relativedelta(days=1),
+                        manual_renew_needed=True,
+                        post_message=False,
                     )
                     contract_line |= rec.plan_successor(
                         new_date_start,
@@ -664,7 +822,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                         new_date_end = rec.date_end
 
                     rec.stop(
-                        date_start - relativedelta(days=1), post_message=False
+                        date_start - relativedelta(days=1),
+                        manual_renew_needed=True,
+                        post_message=False,
                     )
                     contract_line |= rec.plan_successor(
                         new_date_start,
@@ -839,7 +999,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         res = self.env['account.analytic.invoice.line']
         for rec in self:
             is_auto_renew = rec.is_auto_renew
-            rec.stop(rec.date_end, post_message=False)
+            rec.is_auto_renew = False
             date_start, date_end = rec._get_renewal_dates()
             new_line = rec.plan_successor(
                 date_start, date_end, is_auto_renew, post_message=False
@@ -863,13 +1023,11 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.model
     def _contract_line_to_renew_domain(self):
-        date_ref = fields.Date.context_today(self) + self.get_relative_delta(
-            self.termination_notice_rule_type, self.termination_notice_interval
-        )
         return [
             ('is_auto_renew', '=', True),
-            ('date_end', '<=', date_ref),
             ('is_canceled', '=', False),
+            ('contract_id.recurring_invoices', '=', True),
+            ('termination_notice_date', '<=', fields.Date.context_today(self)),
         ]
 
     @api.model
