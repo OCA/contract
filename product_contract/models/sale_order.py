@@ -28,6 +28,7 @@ class SaleOrder(models.Model):
             'recurring_invoices': True,
             'contract_template_id': contract_template.id,
             'user_id': self.user_id.id,
+            'payment_term_id': self.payment_term_id.id,
         }
 
     @api.multi
