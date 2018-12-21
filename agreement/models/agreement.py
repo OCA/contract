@@ -40,6 +40,10 @@ class Agreement(models.Model):
         track_visibility='onchange',
         help="Description of the agreement"
     )
+    dynamic_description = fields.Text(
+        compute="_compute_dynamic_description",
+        string="Dynamic Description",
+        help='compute dynamic description')
     start_date = fields.Date(
         string="Start Date",
         track_visibility='onchange',
@@ -323,12 +327,23 @@ class Agreement(models.Model):
         track_visibility='always'
     )
 
+    # compute the dynamic content for mako expression
+    @api.multi
+    def _compute_dynamic_description(self):
+        MailTemplates = self.env['mail.template']
+        for agreement in self:
+            lang = agreement.partner_id.lang or 'en_US'
+            description = MailTemplates.with_context(
+                lang=lang).render_template(
+                agreement.description, 'agreement', agreement.id)
+            agreement.dynamic_description = description
+
     # compute contract_value field
     @api.depends('total_customer_mrc', 'total_customer_nrc', 'term')
     def _compute_contract_value(self):
         for record in self:
-            record.contract_value =\
-                (record.total_customer_mrc * record.term) +\
+            record.contract_value = \
+                (record.total_customer_mrc * record.term) + \
                 record.total_customer_nrc
 
     # compute total_company_mrc field

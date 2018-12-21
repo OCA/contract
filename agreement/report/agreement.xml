@@ -25,7 +25,7 @@
                         <div class="page">
                             <h1 t-field="doc.name"/>
                             <div name="description">
-                                <p t-field="doc.description"/>
+                                <p t-field="doc.dynamic_description"/>
                             </div>
                             <h2>Parties</h2>
                             <h3>Company Information</h3>
@@ -55,7 +55,7 @@
                                                     <t t-if="r.title">
                                                         <h3 t-field="r.title"/>
                                                     </t>
-                                                    <p t-field="r.content"/>
+                                                    <p t-field="r.dynamic_content"/>
                                                 </li>
                                             </ol>
                                         </td>
@@ -71,13 +71,13 @@
                                                     <t t-if="s.title">
                                                         <h3 t-field="s.title"/>
                                                     </t>
-                                                    <p t-field="s.content"/>
+                                                    <p t-field="s.dynamic_content"/>
                                                     <ol>
                                                         <li t-foreach="s.clauses_ids" t-as="c">
                                                             <t t-if="c.title">
                                                                 <h4 t-field="c.title"/>
                                                             </t>
-                                                            <p t-field="c.content"/>
+                                                            <p t-field="c.dynamic_content"/>
                                                         </li>
                                                     </ol>
                                                 </li>
@@ -132,7 +132,7 @@
                             <div class="page">
                                 <h1 t-field="a.title"
                                     style="page-break-before: always;"/>
-                                <p t-field="a.content"/>
+                                <p t-field="a.dynamic_content"/>
                             </div>
                         </div>
                     </t>
