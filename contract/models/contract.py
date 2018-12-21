@@ -47,6 +47,10 @@ class AccountAnalyticAccount(models.Model):
     date_end = fields.Date(
         compute='_compute_date_end', string='Date End', store=True
     )
+    payment_term_id = fields.Many2one(
+        comodel_name='account.payment.term',
+        string='Payment Terms',
+    )
 
     @api.depends('recurring_invoice_line_ids.date_end')
     def _compute_date_end(self):
