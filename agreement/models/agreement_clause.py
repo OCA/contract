@@ -25,7 +25,8 @@ class AgreementClause(models.Model):
         ondelete="cascade"
     )
     content = fields.Html(string="Clause Content")
-    dynamic_content = fields.Html(compute="_compute_dynamic_content",
+    dynamic_content = fields.Html(
+        compute="_compute_dynamic_content",
         string="Dynamic Content",
         help='compute dynamic Content')
     active = fields.Boolean(
@@ -42,7 +43,7 @@ class AgreementClause(models.Model):
         for clause in self:
             lang = clause.agreement_id and \
                 clause.agreement_id.partner_id.lang or 'en_US'
-            content = \
-            MailTemplates.with_context(lang=lang).render_template(
+            content = MailTemplates.with_context(
+                lang=lang).render_template(
                 clause.content, 'agreement.clause', clause.id)
             clause.dynamic_content = content

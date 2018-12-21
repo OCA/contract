@@ -25,7 +25,8 @@ class AgreementSection(models.Model):
         string="Clauses"
     )
     content = fields.Html(string="Section Content")
-    dynamic_content = fields.Html(compute="_compute_dynamic_content",
+    dynamic_content = fields.Html(
+        compute="_compute_dynamic_content",
         string="Dynamic Content",
         help='compute dynamic Content')
     active = fields.Boolean(
@@ -42,7 +43,7 @@ class AgreementSection(models.Model):
         for section in self:
             lang = section.agreement_id and \
                 section.agreement_id.partner_id.lang or 'en_US'
-            content = \
-            MailTemplates.with_context(lang=lang).render_template(
+            content = MailTemplates.with_context(
+                lang=lang).render_template(
                 section.content, 'agreement.section', section.id)
             section.dynamic_content = content

@@ -15,7 +15,8 @@ class AgreementAppendix(models.Model):
                              "The name is not.")
     sequence = fields.Integer(string="Sequence", default=10)
     content = fields.Html(string="Content")
-    dynamic_content = fields.Html(compute="_compute_dynamic_content",
+    dynamic_content = fields.Html(
+        compute="_compute_dynamic_content",
         string="Dynamic Content",
         help='compute dynamic Content')
     agreement_id = fields.Many2one('agreement', string="Agreement",
@@ -33,7 +34,7 @@ class AgreementAppendix(models.Model):
         for appendix in self:
             lang = appendix.agreement_id and \
                 appendix.agreement_id.partner_id.lang or 'en_US'
-            content = \
-            MailTemplates.with_context(lang=lang).render_template(
+            content = MailTemplates.with_context(
+                lang=lang).render_template(
                 appendix.content, 'agreement.appendix', appendix.id)
             appendix.dynamic_content = content

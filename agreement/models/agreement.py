@@ -40,7 +40,8 @@ class Agreement(models.Model):
         track_visibility='onchange',
         help="Description of the agreement"
     )
-    dynamic_description = fields.Text(compute="_compute_dynamic_description",
+    dynamic_description = fields.Text(
+        compute="_compute_dynamic_description",
         string="Dynamic Description",
         help='compute dynamic description')
     start_date = fields.Date(
@@ -332,8 +333,8 @@ class Agreement(models.Model):
         MailTemplates = self.env['mail.template']
         for agreement in self:
             lang = agreement.partner_id.lang or 'en_US'
-            description = \
-            MailTemplates.with_context(lang=lang).render_template(
+            description = MailTemplates.with_context(
+                lang=lang).render_template(
                 agreement.description, 'agreement', agreement.id)
             agreement.dynamic_description = description
 
