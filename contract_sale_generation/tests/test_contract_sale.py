@@ -98,3 +98,11 @@ class TestContractSale(TransactionCase):
         }
         del self.template_vals['name']
         self.assertDictEqual(res, self.template_vals)
+
+    def test_check_cron_ended_contract(self):
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'yearly'
+        self.contract.date_end = '2016-02-28'
+        sale_orders = self.contract.with_context(
+            cron=True).recurring_create_sale()
+        self.assertFalse(sale_orders)
