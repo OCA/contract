@@ -4,7 +4,9 @@
 # Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Copyright 2016-2017 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2018 Therp BV <https://therp.nl>.
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+# pylint: disable=no-member
 
 from dateutil.relativedelta import relativedelta
 
@@ -15,9 +17,10 @@ from odoo.tools.translate import _
 
 class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
-    _inherit = ['account.analytic.account',
-                'account.analytic.contract',
-                ]
+    _inherit = [
+        'account.analytic.account',
+        'account.analytic.contract',
+    ]
 
     contract_template_id = fields.Many2one(
         string='Contract Template',
@@ -163,18 +166,18 @@ class AccountAnalyticAccount(models.Model):
             return relativedelta(years=interval)
 
     @api.model
-    def _insert_markers(self, line, date_start, next_date, date_format):
-        contract = line.analytic_account_id
-        if contract.recurring_invoicing_type == 'pre-paid':
-            date_from = date_start
-            date_to = next_date - relativedelta(days=1)
-        else:
-            date_from = (date_start -
-                         self.get_relative_delta(contract.recurring_rule_type,
-                                                 contract.recurring_interval) +
-                         relativedelta(days=1))
-            date_to = date_start
-        name = line.name
+    def _insert_markers(self, name):
+        """Replace markers in contract or line with dates from context.
+
+        This can be used either for the generation of invoice values
+        or for invoice line values.
+        """
+        self.ensure_one()
+        context = self.env.context if 'date_format' in self.env.context \
+            else self.get_invoice_context()
+        date_format = context.get('date_format', '%m/%d/%Y')
+        date_from = context['date_from']
+        date_to = context['date_to']
         name = name.replace('#START#', date_from.strftime(date_format))
         name = name.replace('#END#', date_to.strftime(date_format))
         return name
@@ -190,20 +193,21 @@ class AccountAnalyticAccount(models.Model):
         })
         # Add analytic tags to invoice line
         invoice_line.analytic_tag_ids |= line.analytic_tag_ids
-        # Get other invoice line values from product onchange
-        invoice_line._onchange_product_id()
+        # Get some invoice line values from relevant parts of
+        # onchange_product_id (for performance reasons inlined here).
+        invoice = invoice_line.invoice_id
+        account = invoice_line.get_invoice_line_account(
+            invoice.type,
+            invoice_line.product_id,
+            invoice.fiscal_position_id,
+            invoice.company_id)
+        if account:
+            invoice_line.account_id = account.id
+        invoice_line._set_taxes()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         # Insert markers
-        name = line.name
         contract = line.analytic_account_id
-        if 'old_date' in self.env.context and 'next_date' in self.env.context:
-            lang_obj = self.env['res.lang']
-            code = contract.partner_id.lang or self.company_id.partner_id.lang
-            lang = lang_obj.search([('code', '=', code)])
-            date_format = lang.date_format or '%m/%d/%Y'
-            name = self._insert_markers(
-                line, self.env.context['old_date'],
-                self.env.context['next_date'], date_format)
+        name = self._insert_markers(line.name)
         invoice_line_vals.update({
             'name': name,
             'account_analytic_id': contract.id,
@@ -260,6 +264,51 @@ class AccountAnalyticAccount(models.Model):
         return invoice
 
     @api.multi
+    def get_invoice_context(self):
+        """Compute context for invoice creation."""
+        self.ensure_one()
+        ctx = self.env.context.copy()
+        ref_date = self.recurring_next_date or fields.Date.today()
+        date_start = fields.Date.from_string(ref_date)
+        next_date = date_start + self.get_relative_delta(
+            self.recurring_rule_type, self.recurring_interval)
+        lang_obj = self.env['res.lang']
+        code = self.partner_id.lang or self.company_id.partner_id.lang
+        lang = lang_obj.search([('code', '=', code)])
+        date_format = lang.date_format or '%m/%d/%Y'
+        if self.recurring_invoicing_type == 'pre-paid':
+            date_from = date_start
+            date_to = next_date - relativedelta(days=1)
+        else:
+            date_from = (
+                date_start -
+                self.get_relative_delta(
+                    self.recurring_rule_type, self.recurring_interval) +
+                relativedelta(days=1))
+            date_to = date_start
+        ctx.update({
+            'next_date': next_date,
+            'date_format': date_format,
+            'date_from': date_from,
+            'date_to': date_to,
+            # Force company for correct evaluation of domain access rules
+            'force_company': self.company_id.id})
+        return ctx
+
+    @api.multi
+    def check_dates_valid(self):
+        """Check start and end dates."""
+        self.ensure_one()
+        ref_date = self.recurring_next_date or fields.Date.today()
+        if (self.date_start > ref_date or
+                self.date_end and self.date_end < ref_date):
+            if self.env.context.get('cron'):
+                return False  # Don't fail on cron jobs
+            raise ValidationError(
+                _("You must review start and end dates!\n%s") % self.name)
+        return True
+
+    @api.multi
     def recurring_create_invoice(self, limit=None):
         """Create invoices from contracts
 
@@ -272,29 +321,13 @@ class AccountAnalyticAccount(models.Model):
         for contract in self:
             if limit and len(invoices) >= limit:
                 break
-            ref_date = contract.recurring_next_date or fields.Date.today()
-            if (contract.date_start > ref_date or
-                    contract.date_end and contract.date_end < ref_date):
-                if self.env.context.get('cron'):
-                    continue  # Don't fail on cron jobs
-                raise ValidationError(
-                    _("You must review start and end dates!\n%s") %
-                    contract.name
-                )
-            old_date = fields.Date.from_string(ref_date)
-            new_date = old_date + self.get_relative_delta(
-                contract.recurring_rule_type, contract.recurring_interval)
-            ctx = self.env.context.copy()
-            ctx.update({
-                'old_date': old_date,
-                'next_date': new_date,
-                # Force company for correct evaluation of domain access rules
-                'force_company': contract.company_id.id,
-            })
+            if not contract.check_dates_valid():
+                continue
             # Re-read contract with correct company
+            ctx = contract.get_invoice_context()
             invoices |= contract.with_context(ctx)._create_invoice()
             contract.write({
-                'recurring_next_date': fields.Date.to_string(new_date)
+                'recurring_next_date': fields.Date.to_string(ctx['next_date'])
             })
         return invoices
 
