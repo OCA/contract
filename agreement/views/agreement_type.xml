@@ -6,7 +6,7 @@
         <field name="name">Agreement Type List</field>
         <field name="model">agreement.type</field>
         <field name="arch" type="xml">
-            <tree default_order='name'>
+            <tree string="Agreement Types" default_order='name'>
                 <field name="name" string="Type Name"/>
                 <field name="agreement_subtypes_ids" string="Sub-Types"/>
             </tree>
@@ -18,14 +18,14 @@
         <field name="name">Agreement Type Form</field>
         <field name="model">agreement.type</field>
         <field name="arch" type="xml">
-            <form string="Agreements Type Form">
+            <form string="Agreement Type">
                 <sheet>
-                    <group>
-                        <field name="name"/>
-                    </group>
-                    <group string="Sub-Types">
-                        <field name="agreement_subtypes_ids" nolabel="1"/>
-                    </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <field name="agreement_subtypes_ids"
+                           nolabel="1"/>
                 </sheet>
             </form>
         </field>
@@ -33,7 +33,7 @@
 
     <!-- Actions opening views on models -->
     <record model="ir.actions.act_window" id="partner_agreement_action_type">
-        <field name="name">Agreement Type</field>
+        <field name="name">Agreement Types</field>
         <field name="res_model">agreement.type</field>
         <field name="view_mode">tree,form</field>
     </record>

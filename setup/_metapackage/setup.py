@@ -9,7 +9,6 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo11-addon-agreement',
-        'odoo11-addon-agreement_maintenance',
         'odoo11-addon-contract',
         'odoo11-addon-contract_payment_mode',
         'odoo11-addon-contract_sale',

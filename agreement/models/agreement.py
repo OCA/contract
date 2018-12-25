@@ -40,6 +40,10 @@ class Agreement(models.Model):
         track_visibility='onchange',
         help="Description of the agreement"
     )
+    dynamic_description = fields.Text(
+        compute="_compute_dynamic_description",
+        string="Dynamic Description",
+        help='compute dynamic description')
     start_date = fields.Date(
         string="Start Date",
         track_visibility='onchange',
@@ -265,18 +269,18 @@ class Agreement(models.Model):
         string="Service Order Lines",
         copy=False
     )
-    sections_ids = fields.One2many(
-        'agreement.section',
-        'agreement_id',
-        string="Sections",
-        copy=True
-    )
-    clauses_ids = fields.One2many(
-        'agreement.clause',
-        'agreement_id',
-        string="Clauses",
-        copy=True
-    )
+    recital_ids = fields.One2many('agreement.recital', 'agreement_id',
+                                  string="Recitals", copy=True)
+    sections_ids = fields.One2many('agreement.section', 'agreement_id',
+                                   string="Sections", copy=True)
+    clauses_ids = fields.One2many('agreement.clause', 'agreement_id',
+                                  string="Clauses", copy=True)
+    appendix_ids = fields.One2many('agreement.appendix', 'agreement_id',
+                                   string="Appendices", copy=True)
+    serviceprofile_ids = fields.One2many('agreement.serviceprofile',
+                                         'agreement_id',
+                                         string="Service Profiles",
+                                         readonly=True)
     analytic_id = fields.Many2one('account.analytic.account',
                                   string='Analytic Account', index=True)
     analytic_line_ids = fields.One2many('account.analytic.line',
@@ -323,12 +327,23 @@ class Agreement(models.Model):
         track_visibility='always'
     )
 
+    # compute the dynamic content for mako expression
+    @api.multi
+    def _compute_dynamic_description(self):
+        MailTemplates = self.env['mail.template']
+        for agreement in self:
+            lang = agreement.partner_id.lang or 'en_US'
+            description = MailTemplates.with_context(
+                lang=lang).render_template(
+                agreement.description, 'agreement', agreement.id)
+            agreement.dynamic_description = description
+
     # compute contract_value field
     @api.depends('total_customer_mrc', 'total_customer_nrc', 'term')
     def _compute_contract_value(self):
         for record in self:
-            record.contract_value =\
-                (record.total_customer_mrc * record.term) +\
+            record.contract_value = \
+                (record.total_customer_mrc * record.term) + \
                 record.total_customer_nrc
 
     # compute total_company_mrc field

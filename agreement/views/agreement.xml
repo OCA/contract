@@ -6,7 +6,7 @@
         <field name="name">Agreement List</field>
         <field name="model">agreement</field>
         <field name="arch" type="xml">
-            <tree default_order='name'>
+            <tree string="Agreements" default_order='name'>
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="company_partner_id"/>
@@ -30,6 +30,8 @@
                     <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Agreement Name"/>
                         <h1>
@@ -61,6 +63,13 @@
                                required="True"
                                nolabel="1"/>
                     </group>
+                    <div class="oe_edit_only">
+                        <p>
+                            For dynamic content use mako expression '${expression}'. For ex:
+                             1. object's field name: ${object.field_name} or
+                             2. many2one field name: ${object.many2one_field_id.field_name}
+                        </p>
+                    </div>
                     <group name="parties" string="Parties">
                         <group name="partner"
                                string="Partner">
@@ -118,27 +127,26 @@
                                 <button name="%(partner_agreement_contract_document_preview)d" string="Preview" type="action" class="oe_highlight"/>
                                 <button name="%(partner_agreement_contract_document)d" string="Print" type="action" class="oe_highlight"/>
                             </div>
-                            <group string="Sections" default_order='section_sequence'>
-                                <field name="sections_ids"
-                                       nolabel="1"
-                                       context="{'default_agreement': active_id}">
-                                    <tree default_order='section_sequence'>
-                                        <field name="section_sequence" widget="handle"/>
-                                        <field name="name"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group string="Clauses" default_order='section_id, clause_sequence'>
-                                <field name="clauses_ids"
-                                       nolabel="1"
-                                       context="{'default_agreement': active_id}">
-                                    <tree default_order='section_id, clause_sequence'>
-                                        <field name="clause_sequence" widget="handle"/>
-                                        <field name="section_id"/>
-                                        <field name="name"/>
-                                    </tree>
-                                </field>
-                            </group>
+                            <separator string="Recitals"/>
+                            <field name="recital_ids"
+                                   default_order="sequence"
+                                   nolabel="1"
+                                   context="{'default_agreement': active_id}"/>
+                            <separator string="Sections"/>
+                            <field name="sections_ids"
+                                   default_order='sequence'
+                                   nolabel="1"
+                                   context="{'default_agreement': active_id}"/>
+                            <separator string="Clauses"/>
+                            <field name="clauses_ids"
+                                   default_order='clause_id, sequence'
+                                   nolabel="1"
+                                   context="{'default_agreement': active_id}"/>
+                            <separator string="Appendices"/>
+                            <field name="appendix_ids"
+                                   default_order='sequence'
+                                   nolabel="1"
+                                   context="{'default_agreement': active_id}"/>
                         </page>
                         <page name="signature" string="Signatures">
                             <group>
@@ -159,6 +167,9 @@
                                 <field name="product_ids" nolabel="1"/>
                             </group>
                         </page>
+                        <page name="serviceprofiles" string="Service Profiles">
+                            <field name="serviceprofile_ids" nolabel="1"/>
+                        </page>
                         <page name="financials" string="Financials">
                             <group>
                                 <group>
@@ -171,19 +182,6 @@
                                        readonly="1"
                                        nolabel="1"/>
                             </group>
-                            <!--
-                            <group string="Financial Details>
-                                <group string="Company">
-                                    <field name="total_company_mrc"/>
-                                    <field name="total_company_nrc"/>
-                                    <field name="currency_id"/>
-                                    <field name="contract_value" readonly="1"/>
-                                </group>
-                                <group string="Customer">
-                                    <field name="total_customer_mrc"/>
-                                    <field name="total_customer_nrc"/>
-                                </group>
-                            </group> -->
                         </page>
                         <page name="child_agreements" string="Child Agreements">
                             <field name="child_agreements_ids">
@@ -203,7 +201,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="peformance" string="Performance">
+                        <page name="performance" string="Performance">
                             <p>This section is a place where financial records will show the current performance of this agreement.</p>
                             <p>Perhaps include invoices with total vs costs? </p>
                         </page>

@@ -42,21 +42,44 @@
             parent="agreement_root"
             sequence="30"/>
     <menuitem
+            name="Contents"
+            id="agreement_data_contents"
+            parent="agreement_masterdata"
+            sequence="10"/>
+    <menuitem
+            name="Recitals"
+            id="agreement_recitals"
+            parent="agreement_data_contents"
+            sequence="10"
+            action="agreement_recital_action"/>
+    <menuitem
             name="Clauses"
             id="agreement_clauses"
-            parent="agreement_masterdata"
-            sequence="10"
+            parent="agreement_data_contents"
+            sequence="20"
             action="partner_agreement_action_clause"/>
     <menuitem
             name="Sections"
             id="agreement_sections"
-            parent="agreement_masterdata"
-            sequence="20"
+            parent="agreement_data_contents"
+            sequence="30"
             action="partner_agreement_action_section"/>
+    <menuitem
+            name="Appendices"
+            id="agreement_appendices"
+            parent="agreement_data_contents"
+            sequence="40"
+            action="agreement_appendix_action"/>
+    <menuitem
+            name="Service Profiles"
+            id="agreement_serviceprofiles"
+            parent="agreement_masterdata"
+            sequence="50"
+            action="agreement_serviceprofile_action"/>
     <menuitem
             name="Products"
             id="agreement_products"
-            sequence="30"
+            sequence="100"
             parent="agreement_masterdata"
             action="product.product_template_action"/>
 
@@ -100,6 +123,12 @@
             parent="agreement_configuration"
             sequence="30"
             action="partner_agreement_action_renewaltype"/>
+    <menuitem
+            name="Increase Types"
+            id="agreement_increamenttypes"
+            parent="agreement_configuration"
+            sequence="31"
+            action="partner_agreement_action_increasetype"/>
     <menuitem
             name="Stages"
             id="agreement_stages"
