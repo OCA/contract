@@ -66,8 +66,8 @@
                     <div class="oe_edit_only">
                         <p>
                             For dynamic content use mako expression '${expression}'. For ex:
-                             1. object's field name: ${object.field_name} or
-                             2. many2one field name: ${object.many2one_field_id.field_name}
+                            1. object's field name: ${object.field_name} or
+                            2. many2one field name: ${object.many2one_field_id.field_name}
                         </p>
                     </div>
                     <group name="parties" string="Parties">
@@ -163,12 +163,21 @@
                             </group>
                         </page>
                         <page name="products" string="Products/Services">
-                            <group string="Products/Services">
-                                <field name="product_ids" nolabel="1"/>
-                            </group>
+                            <field name="line_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
+                                </tree>
+                            </field>
                         </page>
                         <page name="serviceprofiles" string="Service Profiles">
-                            <field name="serviceprofile_ids" nolabel="1"/>
+                            <field name="serviceprofile_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
                         </page>
                         <page name="financials" string="Financials">
                             <group>

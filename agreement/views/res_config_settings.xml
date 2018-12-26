@@ -13,6 +13,25 @@
                      string="Agreements"
                      data-key="agreement"
                      groups="agreement.group_agreement_manager">
+                    <h2>Operations</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_uom"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_uom"/>
+                                <div class="text-muted">
+                                    Sell and purchase products in different units of measure
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                        <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <h2>Advanced Features</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box">
