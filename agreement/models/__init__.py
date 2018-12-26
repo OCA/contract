@@ -6,6 +6,7 @@ from . import (
     agreement,
     agreement_appendix,
     agreement_clause,
+    agreement_line,
     agreement_recital,
     agreement_section,
     agreement_serviceprofile,

@@ -279,8 +279,7 @@ class Agreement(models.Model):
                                    string="Appendices", copy=True)
     serviceprofile_ids = fields.One2many('agreement.serviceprofile',
                                          'agreement_id',
-                                         string="Service Profiles",
-                                         readonly=True)
+                                         string="Service Profiles")
     analytic_id = fields.Many2one('account.analytic.account',
                                   string='Analytic Account', index=True)
     analytic_line_ids = fields.One2many('account.analytic.line',
@@ -301,11 +300,8 @@ class Agreement(models.Model):
         copy=False,
         domain=[('active', '=', True)]
     )
-    products_ids = fields.Many2many(
-        'product.template',
-        string="Products",
-        copy=False
-    )
+    line_ids = fields.One2many('agreement.line', 'agreement_id',
+                               string="Products/Services", copy=False)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
