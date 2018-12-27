@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo11-addon-agreement',
         'odoo11-addon-agreement_mrp',
+        'odoo11-addon-agreement_project',
         'odoo11-addon-agreement_repair',
         'odoo11-addon-agreement_stock',
         'odoo11-addon-contract',
