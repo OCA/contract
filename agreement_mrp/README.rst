@@ -37,15 +37,6 @@ adds a smart button on the agreement to look at the list of related MOs.
 .. contents::
    :local:
 
-Installation
-============
-
-To install Field Service and have the mapping features,
-you need to install agreement and mrp
-
-Please refer to the installation instructions available at:
-https://github.com/OCA/contract/agreement_mrp
-
 Usage
 =====
 
@@ -59,8 +50,8 @@ To use this module, you need to:
 Known issues / Roadmap
 ======================
 
-The roadmap of the Field Service application is documented on
-`Github <https://github.com/OCA/contract/issues/221>`_.
+The roadmap of the Agreement application is documented on
+`Github <https://github.com/OCA/contract/issues>`_.
 
 Bug Tracker
 ===========
