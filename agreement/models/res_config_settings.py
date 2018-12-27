@@ -11,6 +11,8 @@ class ResConfigSettings(models.TransientModel):
         string='Manage maintenance agreements and contracts')
     module_agreement_mrp = fields.Boolean(
         string='Link your manufacturing orders to an agreement.')
+    module_agreement_project = fields.Boolean(
+        string='Link your projects and tasks to an agreement.')
     module_agreement_repair = fields.Boolean(
         string='Link your repair orders to an agreement.')
     module_agreement_stock = fields.Boolean(
