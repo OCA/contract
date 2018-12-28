@@ -95,9 +95,8 @@ class TestContractBase(common.SavepointCase):
             'recurring_rule_type': 'monthly',
             'recurring_interval': 1,
             'date_start': '2018-01-01',
-            'date_end': '2019-01-01',
             'recurring_next_date': '2018-01-15',
-            'is_auto_renew': True,
+            'is_auto_renew': False,
         }
         cls.acct_line = cls.env['account.analytic.invoice.line'].create(
             cls.line_vals
@@ -112,7 +111,6 @@ class TestContract(TestContractBase):
         vals = self.line_vals.copy()
         del vals['contract_id']
         del vals['date_start']
-        del vals['date_end']
         vals['contract_id'] = self.template.id
         vals.update(overrides)
         return self.env['account.analytic.contract.line'].create(vals)
@@ -652,9 +650,7 @@ class TestContract(TestContractBase):
 
     def test_date_end(self):
         """recurring next date for a contract is the min for all lines"""
-        self.assertEqual(self.acct_line.date_end, to_date('2019-01-01'))
         self.acct_line.date_end = '2018-01-01'
-        self.assertEqual(self.acct_line.date_end, to_date('2018-01-01'))
         self.acct_line.copy()
         self.acct_line.write({'date_end': False, 'is_auto_renew': False})
         self.assertFalse(self.contract.date_end)
@@ -1247,7 +1243,9 @@ class TestContract(TestContractBase):
             )
 
     def test_search_contract_line_to_renew(self):
-        self.acct_line.write({'date_end': fields.Date.today()})
+        self.acct_line.write(
+            {'date_end': fields.Date.today(), 'is_auto_renew': True}
+        )
         line_1 = self.acct_line.copy(
             {'date_end': fields.Date.today() + relativedelta(months=1)}
         )
@@ -1268,13 +1266,29 @@ class TestContract(TestContractBase):
         )
 
     def test_renew(self):
+        date_start = fields.Date.today() - relativedelta(months=9)
+        date_end = (
+            date_start + relativedelta(months=12) - relativedelta(days=1)
+        )
+        self.acct_line.write(
+            {
+                'is_auto_renew': True,
+                'date_start': date_start,
+                'recurring_next_date': date_start,
+                'date_end': fields.Date.today(),
+            }
+        )
         self.acct_line._onchange_is_auto_renew()
-        self.assertEqual(self.acct_line.date_end, to_date('2018-12-31'))
+        self.assertEqual(self.acct_line.date_end, date_end)
         new_line = self.acct_line.renew()
         self.assertFalse(self.acct_line.is_auto_renew)
         self.assertTrue(new_line.is_auto_renew)
-        self.assertEqual(new_line.date_start, to_date('2019-01-01'))
-        self.assertEqual(new_line.date_end, to_date('2019-12-31'))
+        self.assertEqual(
+            new_line.date_start, date_start + relativedelta(months=12)
+        )
+        self.assertEqual(
+            new_line.date_end, date_end + relativedelta(months=12)
+        )
 
     def test_cron_recurring_create_invoice(self):
         self.acct_line.date_start = '2018-01-01'
