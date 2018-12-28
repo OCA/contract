@@ -20,6 +20,6 @@ class AccountAnalyticInvoiceLine(models.Model):
         res = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
             invoice_id=invoice_id
         )
-        if self.sale_order_line_id:
+        if self.sale_order_line_id and res:
             res['sale_line_ids'] = [(6, 0, [self.sale_order_line_id.id])]
         return res
