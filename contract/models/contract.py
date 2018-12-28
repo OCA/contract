@@ -48,8 +48,7 @@ class AccountAnalyticAccount(models.Model):
         compute='_compute_date_end', string='Date End', store=True
     )
     payment_term_id = fields.Many2one(
-        comodel_name='account.payment.term',
-        string='Payment Terms',
+        comodel_name='account.payment.term', string='Payment Terms'
     )
 
     @api.depends('recurring_invoice_line_ids.date_end')
@@ -330,9 +329,13 @@ class AccountAnalyticAccount(models.Model):
             invoice_values = contract._prepare_invoice(date_ref)
             for line in contract_lines:
                 invoice_values.setdefault('invoice_line_ids', [])
-                invoice_values['invoice_line_ids'].append(
-                    (0, 0, line._prepare_invoice_line(invoice_id=False))
+                invoice_line_values = line._prepare_invoice_line(
+                    invoice_id=False
                 )
+                if invoice_line_values:
+                    invoice_values['invoice_line_ids'].append(
+                        (0, 0, invoice_line_values)
+                    )
             invoices_values.append(invoice_values)
             contract_lines._update_recurring_next_date()
         return invoices_values

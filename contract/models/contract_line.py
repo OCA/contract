@@ -385,31 +385,18 @@ class AccountAnalyticInvoiceLine(models.Model):
             new_date = old_date + self.get_relative_delta(
                 rec.recurring_rule_type, rec.recurring_interval
             )
-
             if rec.recurring_rule_type == 'monthlylastday':
-                rec.last_date_invoiced = (
-                    old_date
-                    if rec.date_end and old_date < rec.date_end
-                    else rec.date_end
-                )
+                last_date_invoiced = old_date
             elif rec.recurring_invoicing_type == 'post-paid':
-                rec.last_date_invoiced = (
-                    old_date - relativedelta(days=1)
-                    if rec.date_end and old_date < rec.date_end
-                    else rec.date_end
-                )
+                last_date_invoiced = old_date - relativedelta(days=1)
             elif rec.recurring_invoicing_type == 'pre-paid':
-                rec.last_date_invoiced = (
-                    new_date - relativedelta(days=1)
-                    if rec.date_end and new_date < rec.date_end
-                    else rec.date_end
-                )
-            if (
-                rec.last_date_invoiced
-                and rec.last_date_invoiced == rec.date_end
-            ):
+                last_date_invoiced = new_date - relativedelta(days=1)
+
+            if rec.date_end and last_date_invoiced >= rec.date_end:
+                rec.last_date_invoiced = rec.date_end
                 rec.recurring_next_date = False
             else:
+                rec.last_date_invoiced = last_date_invoiced
                 rec.recurring_next_date = new_date
 
     @api.multi
