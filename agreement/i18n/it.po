@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement
+# 	* agreement
 #
 msgid ""
 msgstr ""
@@ -41,6 +41,7 @@ msgstr "Funzioni avanzate"
 #: model:ir.model.fields,field_description:agreement.field_account_analytic_line_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_agreement_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_agreement_id
@@ -68,6 +69,12 @@ msgstr "Clausole contratto"
 #: model:ir.actions.act_window,name:agreement.partner_agreement_action_increasetype
 msgid "Agreement Increase Type"
 msgstr "Tipo aumento contratto"
+
+#. module: agreement
+#: model:ir.model,name:agreement.model_agreement_line
+#, fuzzy
+msgid "Agreement Lines"
+msgstr "Tipi contratto"
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
@@ -195,8 +202,11 @@ msgstr "Riga analitica"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_special_terms
-msgid "Any terms that you have agreed to and want to track on the agreement/contract."
-msgstr "Qualsiasi temine contrattuale accettato di cui si vuole tenere traccia."
+msgid ""
+"Any terms that you have agreed to and want to track on the agreement/"
+"contract."
+msgstr ""
+"Qualsiasi temine contrattuale accettato di cui si vuole tenere traccia."
 
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_appendix_action
@@ -354,6 +364,7 @@ msgstr "Valore contratto"
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_create_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_create_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_create_uid
@@ -369,6 +380,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_create_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_create_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_create_date
@@ -432,6 +444,7 @@ msgstr "Descrive cosa accade dopo la scadenza del contratto."
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_description
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_description
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_description
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_description
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
@@ -456,6 +469,7 @@ msgstr "Descrizione del tipo di rinnovo."
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_display_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_display_name
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_display_name
@@ -506,6 +520,16 @@ msgid "Exp. Notice (Days)"
 msgstr "Avviso scad. (giorni)"
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Field Service"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Field Service Equipments"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_signed_contract_filename
 msgid "Filename"
 msgstr "Nome file"
@@ -517,30 +541,50 @@ msgstr "Finanziari"
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid "For dynamic content use mako expression '${expression}'. For ex:\n"
-"                                     1. object's field name: ${object.field_name} or\n"
-"                                     2. many2one field name: ${object.many2one_field_id.field_name}"
+msgid ""
+"For dynamic content use mako expression '${expression}'. For ex:\n"
+"                                     1. object's field name: ${object."
+"field_name} or\n"
+"                                     2. many2one field name: ${object."
+"many2one_field_id.field_name}"
 msgstr ""
 "Per contenuti dinamici usare l'espressione mako \"${expression}\".Per es.:\n"
-"                                     1. nome campo dell'oggetto: "
-"${object.field_name} oppure\n"
-"                                     2. nome campo \"molti a uno\": "
-"${object.many2one_field_id.field_name}"
+"                                     1. nome campo dell'oggetto: ${object."
+"field_name} oppure\n"
+"                                     2. nome campo \"molti a uno\": ${object."
+"many2one_field_id.field_name}"
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
 #: model:ir.ui.view,arch_db:agreement.agreement_recital_form
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
-msgid "For dynamic content use mako expression '${expression}'. For ex:\n"
-"                             1. object's field name: ${object.field_name} or\n"
-"                             2. many2one field name: ${object.many2one_field_id.field_name}"
+msgid ""
+"For dynamic content use mako expression '${expression}'. For ex:\n"
+"                             1. object's field name: ${object.field_name} "
+"or\n"
+"                             2. many2one field name: ${object."
+"many2one_field_id.field_name}"
 msgstr ""
 "Per contenuti dinamici usare l'espressione mako \"${expression}\". Per es.:\n"
-"                             1. nome campo dell'oggetto: ${object.field_name}"
-" oppure\n"
-"                             2. nome campo \"molti a uno\": "
-"${object.many2one_field_id.field_name}"
+"                             1. nome campo dell'oggetto: ${object."
+"field_name} oppure\n"
+"                             2. nome campo \"molti a uno\": ${object."
+"many2one_field_id.field_name}"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#, fuzzy
+msgid ""
+"For dynamic content use mako expression '${expression}'. For ex:\n"
+"                            1. object's field name: ${object.field_name} or\n"
+"                            2. many2one field name: ${object."
+"many2one_field_id.field_name}"
+msgstr ""
+"Per contenuti dinamici usare l'espressione mako \"${expression}\". Per es.:\n"
+"                             1. nome campo dell'oggetto: ${object."
+"field_name} oppure\n"
+"                             2. nome campo \"molti a uno\": ${object."
+"many2one_field_id.field_name}"
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
@@ -548,15 +592,21 @@ msgid "General"
 msgstr "Generale"
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Helpdesk"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_4864
+#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_6098
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_id
 msgid "ID"
@@ -571,24 +621,29 @@ msgstr "ID usato per tracciare internamente il contratto."
 #: model:ir.model.fields,help:agreement.field_agreement_active
 #: model:ir.model.fields,help:agreement.field_agreement_clause_active
 #: model:ir.model.fields,help:agreement.field_agreement_section_active
-msgid "If unchecked, it will allow you to hide the agreement without removing it."
+msgid ""
+"If unchecked, it will allow you to hide the agreement without removing it."
 msgstr ""
 "Se non selezionato, permette di nascondere il contratto senza rimuoverlo."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_appendix_active
-msgid "If unchecked, it will allow you to hide this appendix without removing it."
+msgid ""
+"If unchecked, it will allow you to hide this appendix without removing it."
 msgstr ""
 "Se non selezionato, permette di nascondere l'integrazione senza rimuoverla."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_recital_active
-msgid "If unchecked, it will allow you to hide this recital without removing it."
+msgid ""
+"If unchecked, it will allow you to hide this recital without removing it."
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_serviceprofile_active
-msgid "If unchecked, it will allow you to hide this service profile without removing it."
+msgid ""
+"If unchecked, it will allow you to hide this service profile without "
+"removing it."
 msgstr ""
 "Se non selezionato, consente di nascondere questo profilo di servizio senza "
 "rimuoverlo."
@@ -615,10 +670,16 @@ msgstr "Tipi incremento"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_increasetype_name
-msgid "Increase types describe any increases that may happen during the contract."
+msgid ""
+"Increase types describe any increases that may happen during the contract."
 msgstr ""
 "I tipi di incremento descrivono qualsiasi aumento possa  verificarsi durante "
 "il contratto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Inventory"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_stage_fold
@@ -635,6 +696,7 @@ msgstr "È un modello?"
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype___last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_line___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype___last_update
 #: model:ir.model.fields,field_description:agreement.field_agreement_section___last_update
@@ -649,6 +711,7 @@ msgstr "Ultima modifica il"
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_write_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_write_uid
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_write_uid
@@ -664,6 +727,7 @@ msgstr "Ultimo aggiornamento di"
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_clause_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_increasetype_write_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_recital_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_write_date
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_write_date
@@ -677,11 +741,94 @@ msgstr "Ultimo aggiornamento il"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_parent_agreement_id
-msgid "Link this agreement to a parent agreement. For example if this agreement is an amendment to another agreement. This list will only show other agreements related to the same account."
+msgid ""
+"Link this agreement to a parent agreement. For example if this agreement is "
+"an amendment to another agreement. This list will only show other agreements "
+"related to the same account."
 msgstr ""
 "Collega questo contratto a un contratto padre, per esempio se è una "
 "rettifica di un altro contratto. Questo elenco mostra solo quelli relativi "
 "allo stesso conto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your Field Service equipments to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_fieldservice_equipment_agreement
+msgid "Link your Field Service equipments to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your Field Service orders to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_fieldservice_agreement
+msgid "Link your Field Service orders to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your Helpdesk tickets to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_helpdesk_agreement
+msgid "Link your Helpdesk tickets to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_rma
+msgid "Link your RMAs to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your manufacturing orders to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_mrp
+msgid "Link your manufacturing orders to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_stock
+msgid "Link your pickings to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your projects and tasks to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_project
+msgid "Link your projects and tasks to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your repair orders to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_repair
+msgid "Link your repair orders to an agreement."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your returns to an agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Link your transfers to an agreement"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
@@ -694,15 +841,25 @@ msgid "Make this agreement a template."
 msgstr "Crea un modello da questo contratto."
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_maintenance
 #: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
 msgid "Manage maintenance agreements and contracts"
+msgstr "Gestione contratti di assistenza"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_maintenance
+#, fuzzy
+msgid "Manage maintenance agreements and contracts."
 msgstr "Gestione contratti di assistenza"
 
 #. module: agreement
 #: model:res.groups,name:agreement.group_agreement_manager
 msgid "Manager"
 msgstr "Responsabile"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Manufacturing"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_masterdata
@@ -727,8 +884,8 @@ msgstr "Nome:"
 
 #. module: agreement
 #: code:addons/agreement/models/agreement.py:105
-#: code:addons/agreement/models/agreement.py:407
-#: code:addons/agreement/models/agreement.py:409
+#: code:addons/agreement/models/agreement.py:403
+#: code:addons/agreement/models/agreement.py:405
 #, python-format
 msgid "New"
 msgstr "Nuovo"
@@ -770,6 +927,7 @@ msgstr "Numero di mesi di entrata in vigore del contratto con il partner."
 
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_operations
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
 msgid "Operations"
 msgstr "Operazioni"
 
@@ -862,12 +1020,17 @@ msgid "Print"
 msgstr "Stampa"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_product_id
+#, fuzzy
+msgid "Product"
+msgstr "Prodotti"
+
+#. module: agreement
 #: model:ir.model,name:agreement.model_product_template
 msgid "Product Template"
 msgstr "Modello prodotto"
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement_products_ids
 #: model:ir.ui.menu,name:agreement.agreement_products
 msgid "Products"
 msgstr "Prodotti"
@@ -878,9 +1041,20 @@ msgid "Products & Services"
 msgstr "Prodotti e servizi"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_ids
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Products/Services"
 msgstr "Prodotti/Servizi"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Project"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_qty
+msgid "Quantity"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.agreement_recital_form
@@ -919,9 +1093,15 @@ msgstr "Tipi rinnovo"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_renewaltype_name
-msgid "Renewal types describe what happens after the agreement/contract expires."
+msgid ""
+"Renewal types describe what happens after the agreement/contract expires."
 msgstr ""
 "I tipi di rinnovo descrivono cosa accade dopo la scadenza del contratto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Repair"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_reporting
@@ -932,6 +1112,11 @@ msgstr "Rendicontazione"
 #: model:ir.ui.view,arch_db:agreement.report_agreement_document
 msgid "Represented by"
 msgstr "Rappresentato da"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Returns"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_analytic_line_ids
@@ -1000,7 +1185,9 @@ msgstr "Seleziona la fase corrente del contratto."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_agreement_subtype_id
-msgid "Select the sub-type of this agreement. Sub-Types are related to agreement types."
+msgid ""
+"Select the sub-type of this agreement. Sub-Types are related to agreement "
+"types."
 msgstr ""
 "Seleziona il sottotipo di contratto. I sottotipi sono collegati ai tipi di "
 "contratto."
@@ -1014,6 +1201,11 @@ msgstr "Seleziona il tipo di contratto."
 #: model:ir.model.fields,help:agreement.field_agreement_assigned_user_id
 msgid "Select the user who manages this agreement."
 msgstr "Seleziona l'utente che gestisce questo contratto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Sell and purchase products in different units of measure"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_sequence
@@ -1171,10 +1363,12 @@ msgstr "Termini di pagamento."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_notification_address_id
-msgid "The address to send notificaitons to, if different from customer address.(Address Type = Other)"
+msgid ""
+"The address to send notificaitons to, if different from customer address."
+"(Address Type = Other)"
 msgstr ""
-"L'indirizzo a cui inviare le notifiche, se diverso dall'indirizzo cliente. ("
-"Tipo indirizzo = Altro)"
+"L'indirizzo a cui inviare le notifiche, se diverso dall'indirizzo cliente. "
+"(Tipo indirizzo = Altro)"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_increase_type_id
@@ -1211,19 +1405,24 @@ msgstr "Sul PDF è visualizzato il titolo ma non il nome."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_company_signed_user_id
-msgid "The user at our company who authorized/signed the agreement or contract."
+msgid ""
+"The user at our company who authorized/signed the agreement or contract."
 msgstr "L'utente dentro l'azienda che ha autorizzato/firmato il contratto."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_version
-msgid "The versions are used to keep track of document history and previous versions can be referenced."
+msgid ""
+"The versions are used to keep track of document history and previous "
+"versions can be referenced."
 msgstr ""
 "Le versioni vengono usate per tenere traccia della storia del documento. Le "
 "versioni precedenti possono essere menzionate."
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
-msgid "This section is a place where financial records will show the current performance of this agreement."
+msgid ""
+"This section is a place where financial records will show the current "
+"performance of this agreement."
 msgstr ""
 "Questa sezione è il luogo dove i documenti finanziari mostrano il rendimento "
 "corrente di questo contratto."
@@ -1283,6 +1482,16 @@ msgstr "Nome tipo"
 #: model:ir.ui.menu,name:agreement.agreement_types
 msgid "Types"
 msgstr "Tipi"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_line_uom_id
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Units Of Measure"
+msgstr ""
 
 #. module: agreement
 #: model:res.groups,name:agreement.group_agreement_user
