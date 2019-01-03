@@ -12,10 +12,7 @@ class Agreement(models.Model):
         return self.env.ref('agreement.agreement_stage_new')
 
     # General
-    name = fields.Char(
-        string="Title",
-        required=True
-    )
+    name = fields.Char(string="Title", required=True)
     is_template = fields.Boolean(
         string="Is a Template?",
         default=False,
@@ -101,6 +98,7 @@ class Agreement(models.Model):
     )
     reference = fields.Char(
         string="Reference",
+        copy=False,
         required=True,
         default=lambda self: _('New'),
         track_visibility='onchange',
