@@ -14,7 +14,8 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
         vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id=invoice_id)
+            invoice_id=invoice_id
+        )
         if self.qty_type == 'variable':
             eval_context = {
                 'env': self.env,
@@ -22,23 +23,28 @@ class AccountAnalyticInvoiceLine(models.Model):
                 'user': self.env.user,
                 'line': self,
                 'contract': self.contract_id,
+                'invoice': self.env['account.invoice'].browse(invoice_id),
             }
-            if invoice_id:
-                eval_context['invoice'] = self.env['account.invoice'].browse(
-                    invoice_id),
-            safe_eval(self.qty_formula_id.code.strip(), eval_context,
-                      mode="exec", nocopy=True)  # nocopy for returning result
+            safe_eval(
+                self.qty_formula_id.code.strip(),
+                eval_context,
+                mode="exec",
+                nocopy=True,
+            )  # nocopy for returning result
             qty = eval_context.get('result', 0)
             if self.contract_id.skip_zero_qty and float_is_zero(
-                    qty, self.env['decimal.precision'].precision_get(
-                    'Product Unit of Measure')):
+                qty,
+                self.env['decimal.precision'].precision_get(
+                    'Product Unit of Measure'
+                ),
+            ):
                 # Return empty dict to skip line create
                 vals = {}
             else:
                 vals['quantity'] = qty
                 # Re-evaluate price with this new quantity
                 vals['price_unit'] = self.with_context(
-                    contract_line_qty=qty,
+                    contract_line_qty=qty
                 ).price_unit
         else:
             if vals.get('quantity') and vals['quantity'] == 0:
