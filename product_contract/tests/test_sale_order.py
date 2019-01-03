@@ -2,6 +2,7 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from dateutil.relativedelta import relativedelta
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
 from odoo.fields import Date
@@ -61,7 +62,7 @@ class TestSaleOrder(TransactionCase):
                 "partner_id": self.sale.partner_id.id,
                 "pricelist_id": pricelist,
                 "recurring_invoices": True,
-                "contract_type": "purchase",
+                "contract_type": "sale",
                 "contract_template_id": self.contract_template1.id,
                 "recurring_invoice_line_ids": [
                     (
@@ -203,8 +204,8 @@ class TestSaleOrder(TransactionCase):
         """Should stop contract line at sale order line start date"""
         self.order_line1.contract_id = self.contract
         self.order_line1.contract_line_id = self.contract_line
-        self.contract_line.date_end = "2019-01-01"
-        self.contract_line.is_auto_renew = "2019-01-01"
+        self.contract_line.date_end = Date.today() + relativedelta(months=4)
+        self.contract_line.is_auto_renew = True
         self.order_line1.date_start = "2018-06-01"
         self.order_line1.onchange_product()
         self.sale.action_confirm()
