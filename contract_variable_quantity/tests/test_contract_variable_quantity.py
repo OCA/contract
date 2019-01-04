@@ -61,8 +61,7 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
 
     def test_check_variable_quantity(self):
         self.contract.recurring_create_invoice()
-        invoice = self.env['account.invoice'].search(
-            [('contract_id', '=', self.contract.id)])
+        invoice = self.contract._get_related_invoices()
         self.assertEqual(invoice.invoice_line_ids[0].quantity, 12)
 
     def test_check_skip_zero_qty(self):
