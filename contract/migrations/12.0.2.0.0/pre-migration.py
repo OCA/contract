@@ -20,6 +20,5 @@ def migrate(cr, version):
         )
         cr.execute(
             "UPDATE account_analytic_account set recurring_next_date=null "
-            "where id in (%)"
-            % ','.join(finished_contract.ids)
+            "where id in (%)" % ','.join(finished_contract.ids)
         )

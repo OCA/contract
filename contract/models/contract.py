@@ -50,6 +50,46 @@ class AccountAnalyticAccount(models.Model):
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term', string='Payment Terms'
     )
+    invoice_count = fields.Integer(compute="_compute_invoice_count")
+
+    @api.multi
+    def _get_related_invoices(self):
+        self.ensure_one()
+
+        invoices = (
+            self.env['account.invoice.line']
+            .search(
+                [
+                    (
+                        'contract_line_id',
+                        'in',
+                        self.recurring_invoice_line_ids.ids,
+                    )
+                ]
+            )
+            .mapped('invoice_id')
+        )
+        invoices |= self.env['account.invoice'].search(
+            [('old_contract_id', '=', self.id)]
+        )
+        return invoices
+
+    @api.multi
+    def _compute_invoice_count(self):
+        for rec in self:
+            rec.invoice_count = len(rec._get_related_invoices())
+
+    @api.multi
+    def action_show_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoices',
+            'res_model': 'account.invoice',
+            'view_type': 'form',
+            'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
+            'domain': [('id', 'in', self._get_related_invoices().ids)],
+        }
 
     @api.depends('recurring_invoice_line_ids.date_end')
     def _compute_date_end(self):
@@ -185,7 +225,6 @@ class AccountAnalyticAccount(models.Model):
             'journal_id': journal.id,
             'origin': self.name,
             'company_id': self.company_id.id,
-            'contract_id': self.id,
             'user_id': self.partner_id.user_id.id,
         }
 

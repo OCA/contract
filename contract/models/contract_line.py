@@ -1,4 +1,5 @@
 # Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import timedelta
@@ -40,6 +41,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         string="Successor Contract Line",
         required=False,
         readonly=True,
+        index=True,
         copy=False,
         help="In case of restart after suspension, this field contain the new "
         "contract line created.",
@@ -49,9 +51,11 @@ class AccountAnalyticInvoiceLine(models.Model):
         string="Predecessor Contract Line",
         required=False,
         readonly=True,
+        index=True,
         copy=False,
         help="Contract Line origin of this one.",
     )
+    is_suspended = fields.Boolean(string="Suspended", default=False)
     is_plan_successor_allowed = fields.Boolean(
         string="Plan successor allowed?", compute='_compute_allowed'
     )
@@ -72,11 +76,14 @@ class AccountAnalyticInvoiceLine(models.Model):
         selection=[
             ('upcoming', 'Upcoming'),
             ('in-progress', 'In-progress'),
+            ('suspension-planed', 'Suspension Planed'),
+            ('suspended', 'Suspended'),
             ('upcoming-close', 'Upcoming Close'),
             ('closed', 'Closed'),
             ('canceled', 'Canceled'),
         ],
         compute="_compute_state",
+        search='_search_state',
     )
     active = fields.Boolean(
         string="Active",
@@ -90,19 +97,134 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
-            if rec.date_start:
-                if rec.is_canceled:
-                    rec.state = 'canceled'
-                elif today < rec.date_start:
-                    rec.state = 'upcoming'
-                elif not rec.date_end or (
-                    today <= rec.date_end and rec.is_auto_renew
-                ):
-                    rec.state = 'in-progress'
-                elif today <= rec.date_end and not rec.is_auto_renew:
+            if rec.is_canceled:
+                rec.state = 'canceled'
+                continue
+
+            if rec.date_start and rec.date_start > today:
+                # Before period
+                rec.state = 'upcoming'
+                continue
+            if (
+                rec.date_start
+                and rec.date_start <= today
+                and (not rec.date_end or rec.date_end >= today)
+            ):
+                # In period
+                if rec.is_suspended:
+                    rec.state = 'suspension-planed'
+                    continue
+                if rec.date_end and not rec.is_auto_renew:
                     rec.state = 'upcoming-close'
                 else:
+                    rec.state = 'in-progress'
+                continue
+            if rec.date_end and rec.date_end < today:
+                if rec.is_suspended and not rec.successor_contract_line_id:
+                    rec.state = 'suspended'
+                else:
                     rec.state = 'closed'
+
+    @api.model
+    def _get_state_domain(self, state):
+        today = fields.Date.context_today(self)
+        if state == 'upcoming':
+            return [
+                "&",
+                ('date_start', '>', today),
+                ('is_canceled', '=', False),
+            ]
+        if state == 'in-progress':
+            return [
+                "&",
+                "&",
+                "&",
+                "&",
+                ('date_start', '<=', today),
+                ('is_auto_renew', '=', True),
+                ('is_suspended', '=', False),
+                ('is_canceled', '=', False),
+                "|",
+                ('date_end', '>=', today),
+                ('date_end', '=', False),
+            ]
+        if state == 'suspension-planed':
+            return [
+                "&",
+                "&",
+                "&",
+                ('date_start', '<=', today),
+                ('is_suspended', '=', True),
+                ('is_canceled', '=', False),
+                '|',
+                ('date_end', '>=', today),
+                ('date_end', '=', False),
+            ]
+        if state == 'suspended':
+            return [
+                "&",
+                "&",
+                "&",
+                ('date_end', '<', today),
+                ('successor_contract_line_id', '=', False),
+                ('is_suspended', '=', True),
+                ('is_canceled', '=', False),
+            ]
+        if state == 'upcoming-close':
+            return [
+                "&",
+                "&",
+                "&",
+                "&",
+                ('date_start', '<=', today),
+                ('is_auto_renew', '=', False),
+                ('is_suspended', '=', False),
+                ('is_canceled', '=', False),
+                '|',
+                ('date_end', '>=', today),
+                ('date_end', '=', False),
+            ]
+        if state == 'closed':
+            return [
+                "&",
+                "&",
+                ('is_canceled', '=', False),
+                ('date_end', '<', today),
+                "|",
+                "&",
+                ('is_suspended', '=', True),
+                ('successor_contract_line_id', '!=', False),
+                ('is_suspended', '=', False),
+            ]
+
+        if state == 'canceled':
+            return [('is_canceled', '=', True)]
+
+    @api.model
+    def _search_state(self, operator, value):
+        if operator == '!=' and not value:
+            return []
+        if operator == '=' and not value:
+            return [('id', '=', False)]
+        if operator == '=':
+            return self._get_state_domain(value)
+        if operator == '!=':
+            states = [
+                'upcoming',
+                'in-progress',
+                'suspension-planed',
+                'suspended',
+                'upcoming-close',
+                'closed',
+                'canceled',
+            ]
+            domain = []
+            for state in states:
+                if state != value:
+                    if domain:
+                        domain.insert(0, '|')
+                    domain.extend(self._get_state_domain(state))
+            return domain
 
     @api.depends(
         'date_start',
@@ -316,6 +438,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             'quantity': self.quantity,
             'uom_id': self.uom_id.id,
             'discount': self.discount,
+            'contract_line_id': self.id,
         }
         if invoice_id:
             invoice_line_vals['invoice_id'] = invoice_id.id
@@ -460,7 +583,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             rec.date_start = new_date_start
 
     @api.multi
-    def stop(self, date_end, post_message=True):
+    def stop(self, date_end, is_suspended=False, post_message=True):
         """
         Put date_end on contract line
         We don't consider contract lines that end's before the new end date
@@ -487,9 +610,17 @@ class AccountAnalyticInvoiceLine(models.Model):
                             )
                         )
                         rec.contract_id.message_post(body=msg)
-                    rec.write({'date_end': date_end, 'is_auto_renew': False})
+                    rec.write(
+                        {
+                            'date_end': date_end,
+                            'is_auto_renew': False,
+                            "is_suspended": is_suspended,
+                        }
+                    )
                 else:
-                    rec.write({'is_auto_renew': False})
+                    rec.write(
+                        {'is_auto_renew': False, "is_suspended": is_suspended}
+                    )
         return True
 
     @api.multi
@@ -624,7 +755,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                         + relativedelta(days=1)
                     )
                     rec.stop(
-                        date_start - relativedelta(days=1), post_message=False
+                        date_start - relativedelta(days=1),
+                        is_suspended=True,
+                        post_message=False,
                     )
                     contract_line |= rec.plan_successor(
                         new_date_start,
@@ -644,7 +777,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                         new_date_end = rec.date_end
 
                     rec.stop(
-                        date_start - relativedelta(days=1), post_message=False
+                        date_start - relativedelta(days=1),
+                        is_suspended=True,
+                        post_message=False,
                     )
                     contract_line |= rec.plan_successor(
                         new_date_start,
