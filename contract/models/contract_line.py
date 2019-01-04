@@ -843,12 +843,8 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.model
     def _contract_line_to_renew_domain(self):
-        date_ref = fields.Date.context_today(self) + self.get_relative_delta(
-            self.termination_notice_rule_type, self.termination_notice_interval
-        )
         return [
             ('is_auto_renew', '=', True),
-            ('date_end', '<=', date_ref),
             ('is_canceled', '=', False),
             ('contract_id.recurring_invoices', '=', True),
         ]
@@ -856,7 +852,16 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.model
     def cron_renew_contract_line(self):
         domain = self._contract_line_to_renew_domain()
-        to_renew = self.search(domain)
+        to_renew = self
+        for contract_line in self.search(domain):
+            date_ref = fields.Date.context_today(
+                self
+            ) + self.get_relative_delta(
+                contract_line.termination_notice_rule_type,
+                contract_line.termination_notice_interval,
+            )
+            if contract_line.date_end <= date_ref:
+                to_renew |= contract_line
         to_renew.renew()
 
     @api.model
