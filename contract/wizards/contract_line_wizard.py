@@ -13,16 +13,20 @@ class AccountAnalyticInvoiceLineWizard(models.TransientModel):
     date_end = fields.Date(string='Date End')
     recurring_next_date = fields.Date(string='Next Invoice Date')
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    is_suspended = fields.Boolean(string="Is a suspension", default=False)
     contract_line_id = fields.Many2one(
         comodel_name="account.analytic.invoice.line",
         string="Contract Line",
         required=True,
+        index=True,
     )
 
     @api.multi
     def stop(self):
         for wizard in self:
-            wizard.contract_line_id.stop(wizard.date_end)
+            wizard.contract_line_id.stop(
+                wizard.date_end, is_suspended=wizard.is_suspended
+            )
         return True
 
     @api.multi
