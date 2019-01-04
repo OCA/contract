@@ -1256,7 +1256,10 @@ class TestContract(TestContractBase):
             {'date_end': fields.Date.today() - relativedelta(months=2)}
         )
         self.acct_line.copy(
-            {'date_end': fields.Date.today() + relativedelta(months=2)}
+            {
+                'date_end': fields.Date.today() + relativedelta(months=2),
+                'is_auto_renew': False,
+            }
         )
         to_renew = self.acct_line.search(
             self.acct_line._contract_line_to_renew_domain()
