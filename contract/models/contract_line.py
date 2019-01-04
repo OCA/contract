@@ -506,6 +506,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             )
         new_vals = self.read()[0]
         new_vals.pop("id", None)
+        new_vals.pop("last_date_invoiced", None)
         values = self._convert_to_write(new_vals)
         values['date_start'] = date_start
         values['date_end'] = date_end
