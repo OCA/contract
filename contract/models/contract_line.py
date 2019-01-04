@@ -850,6 +850,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             ('is_auto_renew', '=', True),
             ('date_end', '<=', date_ref),
             ('is_canceled', '=', False),
+            ('contract_id.recurring_invoices', '=', True),
         ]
 
     @api.model
