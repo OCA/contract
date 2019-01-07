@@ -47,7 +47,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                     contract_line_qty=qty
                 ).price_unit
         else:
-            if vals.get('quantity') and vals['quantity'] == 0:
+            if 'quantity' in vals and vals['quantity'] == 0:
                 # Skip zero should ignore lines with qty zero even for fixed
                 # qty
                 vals = {}
