@@ -35,7 +35,6 @@ class AccountAnalyticContractLine(models.Model):
     )
     name_on_contract = fields.Text(
         string='Description (on contract)',
-        required=True,
     )
     quantity = fields.Float(
         default=1.0,
