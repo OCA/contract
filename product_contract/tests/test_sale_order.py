@@ -222,3 +222,38 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             new_contract_line.predecessor_contract_line_id, self.contract_line
         )
+
+    def test_onchange_product_id_recurring_info(self):
+        self.product2.write(
+            {
+                'recurring_rule_type': 'monthly',
+                'recurring_invoicing_type': 'pre-paid',
+                'recurring_interval': '2',
+                'is_auto_renew': True,
+                'auto_renew_interval': '6',
+                'auto_renew_rule_type': 'monthly',
+                'termination_notice_interval': '6',
+                'termination_notice_rule_type': 'weekly',
+            }
+        )
+        self.contract_line.write(
+            {
+                'date_start': Date.today(),
+                'date_end': Date.today() + relativedelta(years=1),
+                'recurring_next_date': Date.today(),
+                'product_id': self.product2.id,
+            }
+        )
+        self.contract_line._onchange_product_id_recurring_info()
+        self.assertEqual(self.contract_line.recurring_rule_type, 'monthly')
+        self.assertEqual(
+            self.contract_line.recurring_invoicing_type, 'pre-paid'
+        )
+        self.assertEqual(self.contract_line.recurring_interval, 2)
+        self.assertEqual(self.contract_line.is_auto_renew, True)
+        self.assertEqual(self.contract_line.auto_renew_interval, 6)
+        self.assertEqual(self.contract_line.auto_renew_rule_type, 'monthly')
+        self.assertEqual(self.contract_line.termination_notice_interval, 6)
+        self.assertEqual(
+            self.contract_line.termination_notice_rule_type, 'weekly'
+        )
