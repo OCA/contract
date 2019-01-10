@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo11-addon-agreement_mrp',
         'odoo11-addon-agreement_project',
         'odoo11-addon-agreement_repair',
+        'odoo11-addon-agreement_sale',
         'odoo11-addon-agreement_stock',
         'odoo11-addon-contract',
         'odoo11-addon-contract_payment_mode',
