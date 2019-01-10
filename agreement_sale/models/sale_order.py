@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         'agreement',
         string="Agreement Template",
         domain="[('is_template', '=', True)]")
-    agreement_id = fields.Many2one('agreement', string="Agreement")
+    agreement_id = fields.Many2one('agreement', string="Agreement", copy=False)
 
     @api.multi
     def _action_confirm(self):
