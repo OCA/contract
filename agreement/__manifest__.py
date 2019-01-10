@@ -22,6 +22,7 @@
         'data/ir_sequence.xml',
         'data/module_category.xml',
         'data/agreement_stage.xml',
+        'data/agreement_type.xml',
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'report/agreement.xml',
