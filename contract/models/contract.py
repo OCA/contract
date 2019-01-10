@@ -157,7 +157,7 @@ class AccountAnalyticAccount(models.Model):
         for contract in self.filtered('recurring_invoices'):
             if not contract.partner_id:
                 raise ValidationError(
-                    _("You must supply a customer for the contract '%s'")
+                    _("You must supply a partner for the contract '%s'")
                     % contract.name
                 )
 
@@ -180,17 +180,6 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _prepare_invoice(self, date_invoice, journal=None):
         self.ensure_one()
-        if not self.partner_id:
-            if self.contract_type == 'purchase':
-                raise ValidationError(
-                    _("You must first select a Supplier for Contract %s!")
-                    % self.name
-                )
-            else:
-                raise ValidationError(
-                    _("You must first select a Customer for Contract %s!")
-                    % self.name
-                )
         if not journal:
             journal = (
                 self.journal_id
