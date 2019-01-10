@@ -17,17 +17,19 @@ class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestContractBase, cls).setUpClass()
+        cls.today = fields.Date.today()
         cls.partner = cls.env.ref('base.res_partner_2')
-        cls.product = cls.env.ref('product.product_product_2')
-        cls.product.taxes_id += cls.env['account.tax'].search(
+        cls.product_1 = cls.env.ref('product.product_product_1')
+        cls.product_2 = cls.env.ref('product.product_product_2')
+        cls.product_1.taxes_id += cls.env['account.tax'].search(
             [('type_tax_use', '=', 'sale')], limit=1
         )
-        cls.product.description_sale = 'Test description sale'
+        cls.product_1.description_sale = 'Test description sale'
         cls.line_template_vals = {
-            'product_id': cls.product.id,
+            'product_id': cls.product_1.id,
             'name': 'Services from #START# to #END#',
             'quantity': 1,
-            'uom_id': cls.product.uom_id.id,
+            'uom_id': cls.product_1.uom_id.id,
             'price_unit': 100,
             'discount': 50,
             'recurring_rule_type': 'yearly',
@@ -44,7 +46,7 @@ class TestContractBase(common.SavepointCase):
         cls.env['product.pricelist.item'].create(
             {
                 'pricelist_id': cls.partner.property_product_pricelist.id,
-                'product_id': cls.product.id,
+                'product_id': cls.product_1.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
             }
@@ -69,10 +71,10 @@ class TestContractBase(common.SavepointCase):
                         0,
                         0,
                         {
-                            'product_id': cls.product.id,
+                            'product_id': cls.product_1.id,
                             'name': 'Services from #START# to #END#',
                             'quantity': 1,
-                            'uom_id': cls.product.uom_id.id,
+                            'uom_id': cls.product_1.uom_id.id,
                             'price_unit': 100,
                             'discount': 50,
                             'recurring_rule_type': 'monthly',
@@ -86,10 +88,10 @@ class TestContractBase(common.SavepointCase):
         )
         cls.line_vals = {
             'contract_id': cls.contract.id,
-            'product_id': cls.product.id,
+            'product_id': cls.product_1.id,
             'name': 'Services from #START# to #END#',
             'quantity': 1,
-            'uom_id': cls.product.uom_id.id,
+            'uom_id': cls.product_1.uom_id.id,
             'price_unit': 100,
             'discount': 50,
             'recurring_rule_type': 'monthly',
@@ -121,7 +123,7 @@ class TestContract(TestContractBase):
 
     def test_automatic_price(self):
         self.acct_line.automatic_price = True
-        self.product.list_price = 1100
+        self.product_1.list_price = 1100
         self.assertEqual(self.acct_line.price_unit, 1100)
         # Try to write other price
         self.acct_line.price_unit = 10
@@ -395,6 +397,8 @@ class TestContract(TestContractBase):
 
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
+        self.contract.contract_template_id = False
+        self.contract._onchange_contract_template_id()
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
         res = {
@@ -403,10 +407,10 @@ class TestContract(TestContractBase):
                     0,
                     0,
                     {
-                        'product_id': self.product.id,
+                        'product_id': self.product_1.id,
                         'name': 'Services from #START# to #END#',
                         'quantity': 1,
-                        'uom_id': self.product.uom_id.id,
+                        'uom_id': self.product_1.uom_id.id,
                         'price_unit': 100,
                         'discount': 50,
                         'recurring_rule_type': 'yearly',
@@ -450,6 +454,15 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.contract.journal_id.company_id, self.contract.company_id
         )
+        self.contract.type = 'purchase'
+        self.contract._onchange_contract_type()
+        self.assertFalse(
+            any(
+                self.contract.recurring_invoice_line_ids.mapped(
+                    'automatic_price'
+                )
+            )
+        )
 
     def test_contract_onchange_product_id_domain_blank(self):
         """It should return a blank UoM domain when no product."""
@@ -463,7 +476,7 @@ class TestContract(TestContractBase):
         res = line._onchange_product_id()
         self.assertEqual(
             res['domain']['uom_id'][0],
-            ('category_id', '=', self.product.uom_id.category_id.id),
+            ('category_id', '=', self.product_1.uom_id.category_id.id),
         )
 
     def test_contract_onchange_product_id_uom(self):
@@ -502,9 +515,9 @@ class TestContract(TestContractBase):
         """It should create one invoice with same start and end date."""
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'date_end': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
+                'date_start': self.today,
+                'date_end': self.today,
+                'recurring_next_date': self.today,
             }
         )
         self.contract._compute_recurring_next_date()
@@ -630,33 +643,40 @@ class TestContract(TestContractBase):
         """It should put end to the contract line"""
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
-                'date_end': fields.Date.today() + relativedelta(months=7),
+                'date_start': self.today - relativedelta(months=7),
+                'recurring_next_date': self.today - relativedelta(months=7),
+                'date_end': self.today - relativedelta(months=5),
+                'is_auto_renew': False,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.acct_line.stop(self.today)
+        self.acct_line.write(
+            {
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=7),
                 'is_auto_renew': True,
             }
         )
-        self.acct_line.stop(fields.Date.today() + relativedelta(months=5))
+        self.acct_line.stop(self.today + relativedelta(months=5))
         self.assertEqual(
-            self.acct_line.date_end,
-            fields.Date.today() + relativedelta(months=5),
+            self.acct_line.date_end, self.today + relativedelta(months=5)
         )
 
     def test_stop_upcoming_contract_line(self):
         """It should put end to the contract line"""
         self.acct_line.write(
             {
-                'date_start': fields.Date.today() + relativedelta(months=3),
-                'recurring_next_date': fields.Date.today()
-                + relativedelta(months=3),
-                'date_end': fields.Date.today() + relativedelta(months=7),
+                'date_start': self.today + relativedelta(months=3),
+                'recurring_next_date': self.today + relativedelta(months=3),
+                'date_end': self.today + relativedelta(months=7),
                 'is_auto_renew': True,
             }
         )
-        self.acct_line.stop(fields.Date.today())
+        self.acct_line.stop(self.today)
         self.assertEqual(
-            self.acct_line.date_end,
-            fields.Date.today() + relativedelta(months=7),
+            self.acct_line.date_end, self.today + relativedelta(months=7)
         )
         self.assertTrue(self.acct_line.is_canceled)
 
@@ -664,56 +684,74 @@ class TestContract(TestContractBase):
         """Past contract line are ignored on stop"""
         self.acct_line.write(
             {
-                'date_end': fields.Date.today() + relativedelta(months=5),
+                'date_end': self.today + relativedelta(months=5),
                 'is_auto_renew': True,
             }
         )
-        self.acct_line.stop(fields.Date.today() + relativedelta(months=7))
+        self.acct_line.stop(self.today + relativedelta(months=7))
         self.assertEqual(
-            self.acct_line.date_end,
-            fields.Date.today() + relativedelta(months=5),
+            self.acct_line.date_end, self.today + relativedelta(months=5)
         )
 
     def test_stop_contract_line_without_date_end(self):
         """Past contract line are ignored on stop"""
         self.acct_line.write({'date_end': False, 'is_auto_renew': False})
-        self.acct_line.stop(fields.Date.today() + relativedelta(months=7))
+        self.acct_line.stop(self.today + relativedelta(months=7))
         self.assertEqual(
-            self.acct_line.date_end,
-            fields.Date.today() + relativedelta(months=7),
+            self.acct_line.date_end, self.today + relativedelta(months=7)
         )
 
-    def test_stop_plan_successor_wizard(self):
+    def test_stop_wizard(self):
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
-                'date_end': fields.Date.today() + relativedelta(months=5),
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=5),
                 'is_auto_renew': True,
             }
         )
         wizard = self.env['account.analytic.invoice.line.wizard'].create(
             {
-                'date_end': fields.Date.today() + relativedelta(months=7),
+                'date_end': self.today + relativedelta(months=3),
                 'contract_line_id': self.acct_line.id,
             }
         )
         wizard.stop()
         self.assertEqual(
-            self.acct_line.date_end,
-            fields.Date.today() + relativedelta(months=7),
+            self.acct_line.date_end, self.today + relativedelta(months=3)
         )
         self.assertFalse(self.acct_line.is_auto_renew)
+
+    def test_stop_plan_successor_contract_line_0(self):
+        successor_contract_line = self.acct_line.copy(
+            {
+                'date_start': self.today + relativedelta(months=5),
+                'recurring_next_date': self.today + relativedelta(months=5),
+            }
+        )
+        self.acct_line.write(
+            {
+                'successor_contract_line_id': successor_contract_line.id,
+                'is_auto_renew': False,
+                'date_end': self.today,
+            }
+        )
+        suspension_start = self.today + relativedelta(months=5)
+        suspension_end = self.today + relativedelta(months=6)
+        with self.assertRaises(ValidationError):
+            self.acct_line.stop_plan_successor(
+                suspension_start, suspension_end, True
+            )
 
     def test_stop_plan_successor_contract_line_1(self):
         """
         * contract line end's before the suspension period:
                 -> apply stop
         """
-        suspension_start = fields.Date.today() + relativedelta(months=5)
-        suspension_end = fields.Date.today() + relativedelta(months=6)
-        start_date = fields.Date.today()
-        end_date = fields.Date.today() + relativedelta(months=4)
+        suspension_start = self.today + relativedelta(months=5)
+        suspension_end = self.today + relativedelta(months=6)
+        start_date = self.today
+        end_date = self.today + relativedelta(months=4)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -739,10 +777,10 @@ class TestContract(TestContractBase):
                     - date_end: suspension.date_end + (contract_line.date_end
                                                     - suspension.date_start)
         """
-        suspension_start = fields.Date.today() + relativedelta(months=3)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today()
-        end_date = fields.Date.today() + relativedelta(months=4)
+        suspension_start = self.today + relativedelta(months=3)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today
+        end_date = self.today + relativedelta(months=4)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -769,7 +807,7 @@ class TestContract(TestContractBase):
             new_line.date_start, suspension_end + relativedelta(days=1)
         )
         self.assertEqual(new_line.date_end, new_date_end)
-        self.assertTrue(self.acct_line.is_suspended)
+        self.assertTrue(self.acct_line.manual_renew_needed)
 
     def test_stop_plan_successor_contract_line_3(self):
         """
@@ -780,10 +818,10 @@ class TestContract(TestContractBase):
                     - date_end: suspension.date_end + (suspension.date_end
                                                     - suspension.date_start)
         """
-        suspension_start = fields.Date.today() + relativedelta(months=3)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today()
-        end_date = fields.Date.today() + relativedelta(months=6)
+        suspension_start = self.today + relativedelta(months=3)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today
+        end_date = self.today + relativedelta(months=6)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -810,7 +848,7 @@ class TestContract(TestContractBase):
             new_line.date_start, suspension_end + relativedelta(days=1)
         )
         self.assertEqual(new_line.date_end, new_date_end)
-        self.assertTrue(self.acct_line.is_suspended)
+        self.assertTrue(self.acct_line.manual_renew_needed)
 
     def test_stop_plan_successor_contract_line_3_without_end_date(self):
         """
@@ -821,9 +859,9 @@ class TestContract(TestContractBase):
                     - date_end: suspension.date_end + (suspension.date_end
                                                     - suspension.date_start)
         """
-        suspension_start = fields.Date.today() + relativedelta(months=3)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today()
+        suspension_start = self.today + relativedelta(months=3)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today
         end_date = False
         self.acct_line.write(
             {
@@ -847,7 +885,7 @@ class TestContract(TestContractBase):
             new_line.date_start, suspension_end + relativedelta(days=1)
         )
         self.assertFalse(new_line.date_end)
-        self.assertTrue(self.acct_line.is_suspended)
+        self.assertTrue(self.acct_line.manual_renew_needed)
 
     def test_stop_plan_successor_contract_line_4(self):
         """
@@ -855,10 +893,10 @@ class TestContract(TestContractBase):
                 -> apply delay
                     - delay: suspension.date_end - contract_line.end_date
         """
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today() + relativedelta(months=3)
-        end_date = fields.Date.today() + relativedelta(months=4)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today + relativedelta(months=3)
+        end_date = self.today + relativedelta(months=4)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -888,10 +926,10 @@ class TestContract(TestContractBase):
                 -> apply delay
                     - delay: suspension.date_end - contract_line.date_start
         """
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today() + relativedelta(months=3)
-        end_date = fields.Date.today() + relativedelta(months=6)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today + relativedelta(months=3)
+        end_date = self.today + relativedelta(months=6)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -921,9 +959,9 @@ class TestContract(TestContractBase):
                 -> apply delay
                     - delay: suspension.date_end - contract_line.date_start
         """
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today() + relativedelta(months=3)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today + relativedelta(months=3)
         end_date = False
         self.acct_line.write(
             {
@@ -952,10 +990,10 @@ class TestContract(TestContractBase):
                 -> apply delay
                     - delay: suspension.date_end - suspension.start_date
         """
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=3)
-        start_date = fields.Date.today() + relativedelta(months=4)
-        end_date = fields.Date.today() + relativedelta(months=6)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=3)
+        start_date = self.today + relativedelta(months=4)
+        end_date = self.today + relativedelta(months=6)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -987,9 +1025,9 @@ class TestContract(TestContractBase):
                 -> apply delay
                     - delay: suspension.date_end - suspension.start_date
         """
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=3)
-        start_date = fields.Date.today() + relativedelta(months=4)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=3)
+        start_date = self.today + relativedelta(months=4)
         end_date = False
         self.acct_line.write(
             {
@@ -1015,10 +1053,10 @@ class TestContract(TestContractBase):
         self.assertFalse(new_line)
 
     def test_stop_plan_successor_wizard(self):
-        suspension_start = fields.Date.today() + relativedelta(months=2)
-        suspension_end = fields.Date.today() + relativedelta(months=3)
-        start_date = fields.Date.today() + relativedelta(months=4)
-        end_date = fields.Date.today() + relativedelta(months=6)
+        suspension_start = self.today + relativedelta(months=2)
+        suspension_end = self.today + relativedelta(months=3)
+        start_date = self.today + relativedelta(months=4)
+        end_date = self.today + relativedelta(months=6)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -1053,15 +1091,15 @@ class TestContract(TestContractBase):
     def test_plan_successor_contract_line(self):
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
-                'date_end': fields.Date.today() + relativedelta(months=3),
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=3),
                 'is_auto_renew': False,
             }
         )
         self.acct_line.plan_successor(
-            fields.Date.today() + relativedelta(months=5),
-            fields.Date.today() + relativedelta(months=7),
+            self.today + relativedelta(months=5),
+            self.today + relativedelta(months=7),
             True,
         )
         new_line = self.env['account.analytic.invoice.line'].search(
@@ -1071,49 +1109,47 @@ class TestContract(TestContractBase):
         self.assertTrue(new_line.is_auto_renew)
         self.assertTrue(new_line, "should create a new contract line")
         self.assertEqual(
-            new_line.date_start, fields.Date.today() + relativedelta(months=5)
+            new_line.date_start, self.today + relativedelta(months=5)
         )
         self.assertEqual(
-            new_line.date_end, fields.Date.today() + relativedelta(months=7)
+            new_line.date_end, self.today + relativedelta(months=7)
         )
 
     def test_overlap(self):
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
-                'date_end': fields.Date.today() + relativedelta(months=3),
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=3),
                 'is_auto_renew': False,
             }
         )
         self.acct_line.plan_successor(
-            fields.Date.today() + relativedelta(months=5),
-            fields.Date.today() + relativedelta(months=7),
+            self.today + relativedelta(months=5),
+            self.today + relativedelta(months=7),
             True,
         )
         new_line = self.env['account.analytic.invoice.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         with self.assertRaises(ValidationError):
-            new_line.date_start = fields.Date.today() + relativedelta(months=2)
+            new_line.date_start = self.today + relativedelta(months=2)
         with self.assertRaises(ValidationError):
-            self.acct_line.date_end = fields.Date.today() + relativedelta(
-                months=6
-            )
+            self.acct_line.date_end = self.today + relativedelta(months=6)
 
     def test_plan_successor_wizard(self):
         self.acct_line.write(
             {
-                'date_start': fields.Date.today(),
-                'recurring_next_date': fields.Date.today(),
-                'date_end': fields.Date.today() + relativedelta(months=2),
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=2),
                 'is_auto_renew': False,
             }
         )
         wizard = self.env['account.analytic.invoice.line.wizard'].create(
             {
-                'date_start': fields.Date.today() + relativedelta(months=3),
-                'date_end': fields.Date.today() + relativedelta(months=5),
+                'date_start': self.today + relativedelta(months=3),
+                'date_end': self.today + relativedelta(months=5),
                 'is_auto_renew': True,
                 'contract_line_id': self.acct_line.id,
             }
@@ -1126,23 +1162,35 @@ class TestContract(TestContractBase):
         self.assertTrue(new_line.is_auto_renew)
         self.assertTrue(new_line, "should create a new contract line")
         self.assertEqual(
-            new_line.date_start, fields.Date.today() + relativedelta(months=3)
+            new_line.date_start, self.today + relativedelta(months=3)
         )
         self.assertEqual(
-            new_line.date_end, fields.Date.today() + relativedelta(months=5)
+            new_line.date_end, self.today + relativedelta(months=5)
         )
 
     def test_cancel(self):
         self.acct_line.cancel()
         self.assertTrue(self.acct_line.is_canceled)
-        self.acct_line.uncancel(fields.Date.today())
+        self.acct_line.uncancel(self.today)
+        self.assertFalse(self.acct_line.is_canceled)
+
+    def test_uncancel_wizard(self):
+        self.acct_line.cancel()
+        self.assertTrue(self.acct_line.is_canceled)
+        wizard = self.env['account.analytic.invoice.line.wizard'].create(
+            {
+                'recurring_next_date': self.today,
+                'contract_line_id': self.acct_line.id,
+            }
+        )
+        wizard.uncancel()
         self.assertFalse(self.acct_line.is_canceled)
 
     def test_cancel_uncancel_with_predecessor(self):
-        suspension_start = fields.Date.today() + relativedelta(months=3)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
-        start_date = fields.Date.today()
-        end_date = fields.Date.today() + relativedelta(months=4)
+        suspension_start = self.today + relativedelta(months=3)
+        suspension_end = self.today + relativedelta(months=5)
+        start_date = self.today
+        end_date = self.today + relativedelta(months=4)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -1173,10 +1221,10 @@ class TestContract(TestContractBase):
         )
 
     def test_cancel_uncancel_with_predecessor_has_successor(self):
-        suspension_start = fields.Date.today() + relativedelta(months=6)
-        suspension_end = fields.Date.today() + relativedelta(months=7)
-        start_date = fields.Date.today()
-        end_date = fields.Date.today() + relativedelta(months=8)
+        suspension_start = self.today + relativedelta(months=6)
+        suspension_end = self.today + relativedelta(months=7)
+        start_date = self.today
+        end_date = self.today + relativedelta(months=8)
         self.acct_line.write(
             {
                 'date_start': start_date,
@@ -1191,8 +1239,8 @@ class TestContract(TestContractBase):
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         new_line.cancel()
-        suspension_start = fields.Date.today() + relativedelta(months=4)
-        suspension_end = fields.Date.today() + relativedelta(months=5)
+        suspension_start = self.today + relativedelta(months=4)
+        suspension_end = self.today + relativedelta(months=5)
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, True
         )
@@ -1217,23 +1265,18 @@ class TestContract(TestContractBase):
             )
 
     def test_search_contract_line_to_renew(self):
-        self.acct_line.write(
-            {'date_end': fields.Date.today(), 'is_auto_renew': True}
-        )
+        self.acct_line.write({'date_end': self.today, 'is_auto_renew': True})
         line_1 = self.acct_line.copy(
-            {'date_end': fields.Date.today() + relativedelta(months=1)}
+            {'date_end': self.today + relativedelta(months=1)}
         )
         line_2 = self.acct_line.copy(
-            {'date_end': fields.Date.today() - relativedelta(months=1)}
+            {'date_end': self.today - relativedelta(months=1)}
         )
         line_3 = self.acct_line.copy(
-            {'date_end': fields.Date.today() - relativedelta(months=2)}
+            {'date_end': self.today - relativedelta(months=2)}
         )
-        self.acct_line.copy(
-            {
-                'date_end': fields.Date.today() + relativedelta(months=2),
-                'is_auto_renew': False,
-            }
+        line_4 = self.acct_line.copy(
+            {'date_end': self.today + relativedelta(months=2)}
         )
         to_renew = self.acct_line.search(
             self.acct_line._contract_line_to_renew_domain()
@@ -1241,9 +1284,15 @@ class TestContract(TestContractBase):
         self.assertEqual(
             set(to_renew), set((self.acct_line, line_1, line_2, line_3))
         )
+        self.acct_line.cron_renew_contract_line()
+        self.assertTrue(self.acct_line.successor_contract_line_id)
+        self.assertTrue(line_1.successor_contract_line_id)
+        self.assertTrue(line_2.successor_contract_line_id)
+        self.assertTrue(line_3.successor_contract_line_id)
+        self.assertFalse(line_4.successor_contract_line_id)
 
     def test_renew(self):
-        date_start = fields.Date.today() - relativedelta(months=9)
+        date_start = self.today - relativedelta(months=9)
         date_end = (
             date_start + relativedelta(months=12) - relativedelta(days=1)
         )
@@ -1252,7 +1301,7 @@ class TestContract(TestContractBase):
                 'is_auto_renew': True,
                 'date_start': date_start,
                 'recurring_next_date': date_start,
-                'date_end': fields.Date.today(),
+                'date_end': self.today,
             }
         )
         self.acct_line._onchange_is_auto_renew()
@@ -1301,6 +1350,7 @@ class TestContract(TestContractBase):
         first, last = self.acct_line._get_invoiced_period()
         self.assertEqual(first, to_date('2018-03-01'))
         self.assertEqual(last, to_date('2018-03-15'))
+        self.acct_line.manual_renew_needed = True
 
     def test_get_invoiced_period_monthly_pre_paid_2(self):
         self.acct_line.date_start = '2018-01-05'
@@ -1407,3 +1457,305 @@ class TestContract(TestContractBase):
     def test_unlink(self):
         with self.assertRaises(ValidationError):
             self.acct_line.unlink()
+
+    def test_contract_line_state(self):
+        lines = self.env['account.analytic.invoice.line']
+        # upcoming
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today + relativedelta(months=3),
+                'recurring_next_date': self.today + relativedelta(months=3),
+                'date_end': self.today + relativedelta(months=5),
+            }
+        )
+        # in-progress
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=5),
+            }
+        )
+        # in-progress
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today,
+                'recurring_next_date': self.today,
+                'date_end': self.today + relativedelta(months=5),
+                'manual_renew_needed': True,
+            }
+        )
+        # to-renew
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today - relativedelta(months=5),
+                'recurring_next_date': self.today - relativedelta(months=5),
+                'date_end': self.today - relativedelta(months=2),
+                'manual_renew_needed': True,
+            }
+        )
+        # upcoming-close
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today - relativedelta(months=5),
+                'recurring_next_date': self.today - relativedelta(months=5),
+                'date_end': self.today + relativedelta(days=20),
+                'is_auto_renew': False,
+            }
+        )
+        # closed
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today - relativedelta(months=5),
+                'recurring_next_date': self.today - relativedelta(months=5),
+                'date_end': self.today - relativedelta(months=2),
+                'is_auto_renew': False,
+            }
+        )
+        # canceled
+        lines |= self.acct_line.copy(
+            {
+                'date_start': self.today - relativedelta(months=5),
+                'recurring_next_date': self.today - relativedelta(months=5),
+                'date_end': self.today - relativedelta(months=2),
+                'is_canceled': True,
+            }
+        )
+        states = [
+            'upcoming',
+            'in-progress',
+            'to-renew',
+            'upcoming-close',
+            'closed',
+            'canceled',
+        ]
+        self.assertEqual(set(lines.mapped('state')), set(states))
+        for state in states:
+            lines = self.env['account.analytic.invoice.line'].search(
+                [('state', '=', state)]
+            )
+            self.assertEqual(len(set(lines.mapped('state'))), 1, state)
+            self.assertEqual(lines.mapped('state')[0], state, state)
+
+        for state in states:
+            lines = self.env['account.analytic.invoice.line'].search(
+                [('state', '!=', state)]
+            )
+            self.assertFalse(state in lines.mapped('state'))
+
+        lines = self.env['account.analytic.invoice.line'].search(
+            [('state', 'in', states)]
+        )
+        self.assertEqual(set(lines.mapped('state')), set(states))
+        lines = self.env['account.analytic.invoice.line'].search(
+            [('state', 'in', [])]
+        )
+        self.assertFalse(lines.mapped('state'))
+        with self.assertRaises(TypeError):
+            self.env['account.analytic.invoice.line'].search(
+                [('state', 'in', 'upcoming')]
+            )
+        lines = self.env['account.analytic.invoice.line'].search(
+            [('state', 'not in', [])]
+        )
+        self.assertEqual(set(lines.mapped('state')), set(states))
+        lines = self.env['account.analytic.invoice.line'].search(
+            [('state', 'not in', states)]
+        )
+        self.assertFalse(lines.mapped('state'))
+        lines = self.env['account.analytic.invoice.line'].search(
+            [('state', 'not in', ['upcoming', 'in-progress'])]
+        )
+        self.assertEqual(
+            set(lines.mapped('state')),
+            set(['to-renew', 'upcoming-close', 'closed', 'canceled']),
+        )
+
+    def test_check_auto_renew_contract_line_with_successor(self):
+        """
+        A contract line with a successor can't be set to auto-renew
+        """
+        successor_contract_line = self.acct_line.copy()
+        with self.assertRaises(ValidationError):
+            self.acct_line.write(
+                {
+                    'is_auto_renew': True,
+                    'successor_contract_line_id': successor_contract_line.id,
+                }
+            )
+
+    def test_check_no_date_end_contract_line_with_successor(self):
+        """
+        A contract line with a successor must have a end date
+        """
+        successor_contract_line = self.acct_line.copy()
+        with self.assertRaises(ValidationError):
+            self.acct_line.write(
+                {
+                    'date_end': False,
+                    'successor_contract_line_id': successor_contract_line.id,
+                }
+            )
+
+    def test_check_last_date_invoiced_1(self):
+        """
+        start end can't be before the date of last invoice
+        """
+        with self.assertRaises(ValidationError):
+            self.acct_line.write(
+                {
+                    'last_date_invoiced': self.acct_line.date_start
+                    - relativedelta(days=1)
+                }
+            )
+
+    def test_check_last_date_invoiced_2(self):
+        """
+        start date can't be after the date of last invoice
+        """
+        self.acct_line.write({'date_end': self.today})
+        with self.assertRaises(ValidationError):
+            self.acct_line.write(
+                {
+                    'last_date_invoiced': self.acct_line.date_end
+                    + relativedelta(days=1)
+                }
+            )
+
+    def test_init_last_date_invoiced(self):
+        self.acct_line.write(
+            {'date_start': '2019-01-01', 'recurring_next_date': '2019-03-01'}
+        )
+        line_monthlylastday = self.acct_line.copy(
+            {
+                'recurring_rule_type': 'monthlylastday',
+                'recurring_next_date': '2019-03-31',
+            }
+        )
+        line_prepaid = self.acct_line.copy(
+            {
+                'recurring_invoicing_type': 'pre-paid',
+                'recurring_rule_type': 'monthly',
+            }
+        )
+        line_postpaid = self.acct_line.copy(
+            {
+                'recurring_invoicing_type': 'post-paid',
+                'recurring_rule_type': 'monthly',
+            }
+        )
+        lines = line_monthlylastday | line_prepaid | line_postpaid
+        lines.write({'last_date_invoiced': False})
+        self.assertFalse(any(lines.mapped('last_date_invoiced')))
+        lines._init_last_date_invoiced()
+        self.assertEqual(
+            line_monthlylastday.last_date_invoiced, to_date("2019-02-28")
+        )
+        self.assertEqual(
+            line_prepaid.last_date_invoiced, to_date("2019-02-28")
+        )
+        self.assertEqual(
+            line_postpaid.last_date_invoiced, to_date("2019-01-31")
+        )
+
+    def test_delay_invoiced_contract_line(self):
+        self.acct_line.write(
+            {
+                'last_date_invoiced': self.acct_line.date_start
+                + relativedelta(days=1)
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.acct_line._delay(relativedelta(months=1))
+
+    def test_cancel_invoiced_contract_line(self):
+        self.acct_line.write(
+            {
+                'last_date_invoiced': self.acct_line.date_start
+                + relativedelta(days=1)
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.acct_line.cancel()
+
+    def test_action_uncancel(self):
+        action = self.acct_line.action_uncancel()
+        self.assertEqual(
+            action['context']['default_contract_line_id'], self.acct_line.id
+        )
+
+    def test_action_plan_successor(self):
+        action = self.acct_line.action_plan_successor()
+        self.assertEqual(
+            action['context']['default_contract_line_id'], self.acct_line.id
+        )
+
+    def test_action_stop(self):
+        action = self.acct_line.action_stop()
+        self.assertEqual(
+            action['context']['default_contract_line_id'], self.acct_line.id
+        )
+
+    def test_action_stop_plan_successor(self):
+        action = self.acct_line.action_stop_plan_successor()
+        self.assertEqual(
+            action['context']['default_contract_line_id'], self.acct_line.id
+        )
+
+    def test_purchase_fields_view_get(self):
+        purchase_tree_view = self.env.ref(
+            'contract.account_analytic_invoice_line_purchase_view_tree'
+        )
+        purchase_form_view = self.env.ref(
+            'contract.account_analytic_invoice_line_purchase_view_form'
+        )
+        view = self.acct_line.with_context(
+            default_contract_type='purchase'
+        ).fields_view_get(view_type='tree')
+        self.assertEqual(view['view_id'], purchase_tree_view.id)
+        view = self.acct_line.with_context(
+            default_contract_type='purchase'
+        ).fields_view_get(view_type='form')
+        self.assertEqual(view['view_id'], purchase_form_view.id)
+
+    def test_sale_fields_view_get(self):
+        sale_form_view = self.env.ref(
+            'contract.account_analytic_invoice_line_sale_view_form'
+        )
+        view = self.acct_line.with_context(
+            default_contract_type='sale'
+        ).fields_view_get(view_type='form')
+        self.assertEqual(view['view_id'], sale_form_view.id)
+
+    def test_contract_count_invoice(self):
+        self.contract.recurring_create_invoice()
+        self.contract.recurring_create_invoice()
+        self.contract.recurring_create_invoice()
+        self.contract._compute_invoice_count()
+        self.assertEqual(self.contract.invoice_count, 3)
+
+    def test_contract_count_invoice(self):
+        invoices = self.env['account.invoice']
+        invoices |= self.contract.recurring_create_invoice()
+        invoices |= self.contract.recurring_create_invoice()
+        invoices |= self.contract.recurring_create_invoice()
+        action = self.contract.action_show_invoices()
+        self.assertEqual(set(action['domain'][0][2]), set(invoices.ids))
+
+    def test_compute_create_invoice_visibility(self):
+        self.assertTrue(self.contract.create_invoice_visibility)
+        self.acct_line.write(
+            {
+                'date_start': '2018-01-01',
+                'date_end': '2018-12-31',
+                'last_date_invoiced': '2018-12-31',
+                'recurring_next_date': False,
+            }
+        )
+        self.assertFalse(self.acct_line.create_invoice_visibility)
+        self.assertFalse(self.contract.create_invoice_visibility)
+
+    def test_invoice_contract_without_lines(self):
+        self.contract.recurring_invoice_line_ids.cancel()
+        self.contract.recurring_invoice_line_ids.unlink()
+        self.assertFalse(self.contract.recurring_create_invoice())
