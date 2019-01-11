@@ -215,6 +215,7 @@ class AccountAnalyticAccount(models.Model):
             'origin': self.name,
             'company_id': self.company_id.id,
             'user_id': self.partner_id.user_id.id,
+            'payment_term_id': self.payment_term_id.id,
         }
 
     @api.multi
@@ -277,7 +278,9 @@ class AccountAnalyticAccount(models.Model):
     @api.model
     def _finalize_invoice_creation(self, invoices):
         for invoice in invoices:
+            payment_term = invoice.payment_term_id
             invoice._onchange_partner_id()
+            invoice.payment_term_id = payment_term
         invoices.compute_taxes()
 
     @api.model
