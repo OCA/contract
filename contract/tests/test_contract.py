@@ -640,17 +640,13 @@ class TestContract(TestContractBase):
         self.assertFalse(self.contract.date_end)
 
     def test_stop_contract_line(self):
-        """It should put end to the contract line"""
-        self.acct_line.write(
-            {
-                'date_start': self.today - relativedelta(months=7),
-                'recurring_next_date': self.today - relativedelta(months=7),
-                'date_end': self.today - relativedelta(months=5),
-                'is_auto_renew': False,
-            }
-        )
+        """It should raise a validation error"""
+        self.acct_line.cancel()
         with self.assertRaises(ValidationError):
             self.acct_line.stop(self.today)
+
+    def test_stop_contract_line(self):
+        """It should put end to the contract line"""
         self.acct_line.write(
             {
                 'date_start': self.today,
