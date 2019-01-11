@@ -999,7 +999,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         res = self.env['account.analytic.invoice.line']
         for rec in self:
             is_auto_renew = rec.is_auto_renew
-            rec.is_auto_renew = False
+            rec.stop(rec.date_end, post_message=False)
             date_start, date_end = rec._get_renewal_dates()
             new_line = rec.plan_successor(
                 date_start, date_end, is_auto_renew, post_message=False

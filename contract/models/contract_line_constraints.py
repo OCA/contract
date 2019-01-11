@@ -303,7 +303,7 @@ CRITERIA_ALLOWED_DICT = {
     ): Allowed(
         plan_successor=False,
         stop_plan_successor=False,
-        stop=False,
+        stop=True,
         cancel=False,
         uncancel=False,
     ),
@@ -333,7 +333,7 @@ CRITERIA_ALLOWED_DICT = {
     ): Allowed(
         plan_successor=True,
         stop_plan_successor=False,
-        stop=False,
+        stop=True,
         cancel=False,
         uncancel=False,
     ),
