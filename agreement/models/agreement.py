@@ -12,10 +12,6 @@ class Agreement(models.Model):
 
     code = fields.Char(required=True, copy=False)
     name = fields.Char(required=True)
-    agreement_type = fields.Selection([
-        ('sale', 'Sale'),
-        ('purchase', 'Purchase'),
-        ], string='Type', required=True)
     partner_id = fields.Many2one(
         'res.partner', string='Partner', ondelete='restrict', required=True,
         domain=[('parent_id', '=', False)])
@@ -25,6 +21,8 @@ class Agreement(models.Model):
             'agreement'))
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
+    start_date = fields.Date()
+    end_date = fields.Date()
 
     def name_get(self):
         res = []

@@ -26,7 +26,8 @@
                     <field name="signature_date"/>
                 </group>
                 <group name="right">
-                    <field name="agreement_type" widget="radio"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
                     <field name="code"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
@@ -43,8 +44,9 @@
             <field name="partner_id"/>
             <field name="code"/>
             <field name="name"/>
-            <field name="agreement_type"/>
             <field name="signature_date"/>
+            <field name="start_date"/>
+            <field name="end_date"/>
             <field name="company_id" groups="base.group_multi_company"/>
         </tree>
     </field>
@@ -57,8 +59,6 @@
         <search string="Search Agreements">
             <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]" string="Name or Number"/>
             <field name="partner_id"/>
-            <filter name="sale" string="Sale" domain="[('agreement_type', '=', 'sale')]"/>
-            <filter name="purchase" string="Purchase" domain="[('agreement_type', '=', 'purchase')]"/>
             <separator/>
             <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
             <group name="groupby">
@@ -66,8 +66,6 @@
                     context="{'group_by': 'partner_id'}"/>
                 <filter name="signature_date_groupby" string="Signature Date"
                     context="{'group_by': 'signature_date'}"/>
-                <filter name="agreement_type_groupby" string="Type"
-                    context="{'group_by': 'agreement_type'}"/>
             </group>
         </search>
     </field>
