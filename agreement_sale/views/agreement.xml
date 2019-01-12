@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Agreement Form View -->
+	<record id="agreement_sale_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <page name="signature" position="after">
+                <page name="sales" string="Sales">
+                    <group>
+                        <group id="sale-left">
+                            <field name="sale_id" readonly="1"/>
+                        </group>
+                        <group id="sale-right"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

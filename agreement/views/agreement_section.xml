@@ -44,13 +44,32 @@
                     <notebook>
                         <page string="Content">
                             <field name='content' nolabel="1"/>
-                            <div class="oe_edit_only">
+                            <group class="oe_edit_only">
+                                <group>
+                                    <field name="field_id"
+                                           domain="[('model_id', '=', active_model),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"/>
+                                    <field name="sub_object_id" readonly="1"/>
+                                    <field name="sub_model_object_field_id"
+                                           domain="[('model_id', '=', sub_object_id),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                                           attrs="{'readonly':[('sub_object_id', '=', False)],
+                                           'required':[('sub_object_id', '!=', False)]}"/>
+                                    <field name="default_value"/>
+                                    <field name="copyvalue"/>
+                                </group>
                                 <p>
-                                    For dynamic content use mako expression '${expression}'. For ex:
-                                     1. object's field name: ${object.field_name} or
-                                     2. many2one field name: ${object.many2one_field_id.field_name}
+                                    This section (on the left) allows you to add dynamic fields inside the content.
+                                    <ol>
+                                        <li>Select the section field</li>
+                                        <li>Select the sub-field</li>
+                                        <li>Enter the default value if the field is empty</li>
+                                        <li>Copy and paste the placeholder expression in the content</li>
+                                    </ol>
                                 </p>
-                            </div>
+                            </group>
                         </page>
                         <page string="Clauses">
                             <field name="clauses_ids"

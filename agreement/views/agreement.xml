@@ -63,13 +63,32 @@
                                required="True"
                                nolabel="1"/>
                     </group>
-                    <div class="oe_edit_only">
+                    <group class="oe_edit_only">
+                        <group>
+                            <field name="field_id"
+                                   domain="[('model_id', '=', active_model),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"/>
+                            <field name="sub_object_id" readonly="1"/>
+                            <field name="sub_model_object_field_id"
+                                   domain="[('model_id', '=', sub_object_id),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                                   attrs="{'readonly':[('sub_object_id', '=', False)],
+                                           'required':[('sub_object_id', '!=', False)]}"/>
+                            <field name="default_value"/>
+                            <field name="copyvalue"/>
+                        </group>
                         <p>
-                            For dynamic content use mako expression '${expression}'. For ex:
-                             1. object's field name: ${object.field_name} or
-                             2. many2one field name: ${object.many2one_field_id.field_name}
+                            This section (on the left) allows you to add dynamic fields inside the description and special terms.
+                            <ol>
+                                <li>Select the agreement field</li>
+                                <li>Select the sub-field</li>
+                                <li>Enter the default value if the field is empty</li>
+                                <li>Copy and paste the placeholder expression in the description or the special terms</li>
+                            </ol>
                         </p>
-                    </div>
+                    </group>
                     <group name="parties" string="Parties">
                         <group name="partner"
                                string="Partner">
@@ -102,8 +121,8 @@
                     </group>
                     <group name="term_information">
                         <group name="termdates_left" string="Term Dates">
-                            <field name="start_date" required="True" attrs="{'required': [('is_template', '=', False)], 'readonly':[('is_template', '=', True)]}"/>
-                            <field name="end_date" required="True" attrs="{'required': [('is_template', '=', False)], 'readonly':[('is_template', '=', True)]}"/>
+                            <field name="start_date" attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"/>
+                            <field name="end_date" attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"/>
                             <field name="expiration_notice"/>
                             <field name="change_notice"/>
                             <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_partner_id)]"/>
@@ -163,12 +182,21 @@
                             </group>
                         </page>
                         <page name="products" string="Products/Services">
-                            <group string="Products/Services">
-                                <field name="product_ids" nolabel="1"/>
-                            </group>
+                            <field name="line_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
+                                </tree>
+                            </field>
                         </page>
                         <page name="serviceprofiles" string="Service Profiles">
-                            <field name="serviceprofile_ids" nolabel="1"/>
+                            <field name="serviceprofile_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
                         </page>
                         <page name="financials" string="Financials">
                             <group>
@@ -360,6 +388,7 @@
         <field name="name">Templates</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', True)]</field>
+        <field name="context">[('is_template', '=', True)]</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
 

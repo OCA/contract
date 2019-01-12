@@ -12,95 +12,83 @@ class Agreement(models.Model):
         return self.env.ref('agreement.agreement_stage_new')
 
     # General
-    name = fields.Char(
-        string="Title",
-        required=True
-    )
+    name = fields.Char(string="Title", required=True)
     is_template = fields.Boolean(
         string="Is a Template?",
         default=False,
         copy=False,
-        help="Make this agreement a template."
-    )
+        help="Make this agreement a template.")
     version = fields.Integer(
         string="Version",
         default=1,
         copy=False,
         help="The versions are used to keep track of document history and "
-             "previous versions can be referenced."
-    )
+             "previous versions can be referenced.")
     revision = fields.Integer(
         string="Revision",
         default=0,
         copy=False,
-        help="The revision will increase with every save event."
-    )
+        help="The revision will increase with every save event.")
     description = fields.Text(
         string="Description",
         track_visibility='onchange',
-        help="Description of the agreement"
-    )
+        help="Description of the agreement")
     dynamic_description = fields.Text(
         compute="_compute_dynamic_description",
         string="Dynamic Description",
-        help='compute dynamic description')
+        help='Compute dynamic description')
     start_date = fields.Date(
         string="Start Date",
         track_visibility='onchange',
-        help="When the agreement starts."
-    )
+        help="When the agreement starts.")
     end_date = fields.Date(
         string="End Date",
         track_visibility='onchange',
-        help="When the agreement ends."
-    )
+        help="When the agreement ends.")
     color = fields.Integer()
     active = fields.Boolean(
         string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the agreement without "
-             "removing it."
-    )
+             "removing it.")
     company_signed_date = fields.Date(
         string="Signed on",
         track_visibility='onchange',
-        help="Date the contract was signed by Company."
-    )
+        help="Date the contract was signed by Company.")
     partner_signed_date = fields.Date(
         string="Signed on",
         track_visibility='onchange',
-        help="Date the contract was signed by the Partner."
-    )
+        help="Date the contract was signed by the Partner.")
     term = fields.Integer(
         string="Term (Months)",
         track_visibility='onchange',
         help="Number of months this agreement/contract is in effect with the "
-             "partner."
-    )
+             "partner.")
     expiration_notice = fields.Integer(
         string="Exp. Notice (Days)",
         track_visibility='onchange',
-        help="Number of Days before expiration to be notified."
-    )
+        help="Number of Days before expiration to be notified.")
     change_notice = fields.Integer(
         string="Change Notice (Days)",
         track_visibility='onchange',
-        help="Number of Days to be notified before changes."
-    )
+        help="Number of Days to be notified before changes.")
     special_terms = fields.Text(
         string="Special Terms",
         track_visibility='onchange',
         help="Any terms that you have agreed to and want to track on the "
-             "agreement/contract."
-    )
+             "agreement/contract.")
+    dynamic_special_terms = fields.Text(
+        compute="_compute_dynamic_special_terms",
+        string="Dynamic Special Terms",
+        help='Compute dynamic special terms')
     contract_value = fields.Monetary(
         compute='_compute_contract_value',
         string="Contract Value",
         help="Total value of the contract over ther entire term.",
-        store=True
-    )
+        store=True)
     reference = fields.Char(
         string="Reference",
+        copy=False,
         required=True,
         default=lambda self: _('New'),
         track_visibility='onchange',
@@ -108,114 +96,92 @@ class Agreement(models.Model):
     total_company_mrc = fields.Monetary(
         'Company MRC',
         currency_field='currency_id',
-        help="Total company monthly recurring costs."
-    )
+        help="Total company monthly recurring costs.")
     total_customer_mrc = fields.Monetary(
         'Customer MRC',
         currency_field='currency_id',
-        help="Total custemer monthly recurring costs."
-    )
+        help="Total custemer monthly recurring costs.")
     total_company_nrc = fields.Monetary(
         'Company NRC',
         currency_field='currency_id',
-        help="Total company non-recurring costs."
-    )
+        help="Total company non-recurring costs.")
     total_customer_nrc = fields.Monetary(
         'Customer NRC',
         currency_field='currency_id',
-        help="Total custemer non-monthly recurring costs."
-    )
+        help="Total custemer non-monthly recurring costs.")
     increase_type_id = fields.Many2one(
         'agreement.increasetype',
         string="Increase Type",
         track_visibility='onchange',
-        help="The amount that certain rates may increase."
-    )
+        help="The amount that certain rates may increase.")
     termination_requested = fields.Date(
         string="Termination Requested Date",
         track_visibility='onchange',
-        help="Date that a request for termination was received."
-    )
+        help="Date that a request for termination was received.")
     termination_date = fields.Date(
         string="Termination Date",
         track_visibility='onchange',
-        help="Date that the contract was terminated."
-    )
+        help="Date that the contract was terminated.")
     reviewed_date = fields.Date(
         string="Reviewed Date",
-        track_visibility='onchange'
-    )
+        track_visibility='onchange')
     reviewed_user_id = fields.Many2one(
         'res.users',
         string="Reviewed By",
-        track_visibility='onchange'
-    )
+        track_visibility='onchange')
     approved_date = fields.Date(
         string="Approved Date",
-        track_visibility='onchange'
-    )
+        track_visibility='onchange')
     approved_user_id = fields.Many2one(
         'res.users',
         string="Approved By",
-        track_visibility='onchange'
-    )
+        track_visibility='onchange')
     currency_id = fields.Many2one(
         'res.currency',
-        string='Currency'
-    )
+        string='Currency')
     partner_id = fields.Many2one(
         'res.partner',
-        string="Partmer",
+        string="Partner",
         copy=True,
-        help="The customer or vendor this agreement is related to."
-    )
+        help="The customer or vendor this agreement is related to.")
     company_partner_id = fields.Many2one(
         'res.partner',
         string="Company",
         copy=True,
-        default=lambda self: self.env.user.company_id.partner_id
-    )
+        default=lambda self: self.env.user.company_id.partner_id)
     partner_contact_id = fields.Many2one(
         'res.partner',
         string="Partner Contact",
         copy=True,
-        help="The primary partner contact (If Applicable)."
-    )
+        help="The primary partner contact (If Applicable).")
     partner_contact_phone = fields.Char(
         related='partner_contact_id.phone',
-        string="Phone"
-    )
+        string="Phone")
     partner_contact_email = fields.Char(
         related='partner_contact_id.email',
-        string="Email"
-    )
+        string="Email")
     company_contact_id = fields.Many2one(
         'res.partner',
         string="Company Contact",
         copy=True,
-        help="The primary contact in the company."
-    )
+        help="The primary contact in the company.")
     company_contact_phone = fields.Char(
         related='company_contact_id.phone',
-        string="Phone"
-    )
+        string="Phone")
     company_contact_email = fields.Char(
         related='company_contact_id.email',
-        string="Email"
-    )
+        string="Email")
     agreement_type_id = fields.Many2one(
         'agreement.type',
         string="Agreement Type",
         track_visibility='onchange',
-        help="Select the type of agreement."
-    )
+        help="Select the type of agreement.")
     agreement_subtype_id = fields.Many2one(
         'agreement.subtype',
         string="Agreement Sub-type",
         track_visibility='onchange',
         help="Select the sub-type of this agreement. Sub-Types are related to "
-             "agreement types."
-    )
+             "agreement types.")
     product_ids = fields.Many2many(
         'product.template',
         string="Products & Services")
@@ -224,51 +190,43 @@ class Agreement(models.Model):
         string="Sales Order",
         track_visibility='onchange',
         copy=False,
-        help="Select the Sales Order that this agreement is related to."
-    )
+        help="Select the Sales Order that this agreement is related to.")
     payment_term_id = fields.Many2one(
         'account.payment.term',
         string="Payment Term",
         track_visibility='onchange',
-        help="Terms of payments."
-    )
+        help="Terms of payments.")
     assigned_user_id = fields.Many2one(
         'res.users',
         string="Assigned To",
         track_visibility='onchange',
-        help="Select the user who manages this agreement."
-    )
+        help="Select the user who manages this agreement.")
     company_signed_user_id = fields.Many2one(
         'res.users',
         string="Signed By",
         track_visibility='onchange',
         help="The user at our company who authorized/signed the agreement or "
-             "contract."
-    )
+             "contract.")
     partner_signed_user_id = fields.Many2one(
         'res.partner',
         string="Signed By",
         track_visibility='onchange',
-        help="Contact on the account that signed the agreement/contract."
-    )
+        help="Contact on the account that signed the agreement/contract.")
     parent_agreement_id = fields.Many2one(
         'agreement',
         string="Parent Agreement",
         help="Link this agreement to a parent agreement. For example if this "
              "agreement is an amendment to another agreement. This list will "
-             "only show other agreements related to the same account."
-    )
+             "only show other agreements related to the same account.")
     renewal_type_id = fields.Many2one(
         'agreement.renewaltype',
         string="Renewal Type",
         track_visibility='onchange',
-        help="Describes what happens after the contract expires."
-    )
+        help="Describes what happens after the contract expires.")
     order_lines_services_ids = fields.One2many(
         related='sale_order_id.order_line',
         string="Service Order Lines",
-        copy=False
-    )
+        copy=False)
     recital_ids = fields.One2many('agreement.recital', 'agreement_id',
                                   string="Recitals", copy=True)
     sections_ids = fields.One2many('agreement.section', 'agreement_id',
@@ -279,8 +237,7 @@ class Agreement(models.Model):
                                    string="Appendices", copy=True)
     serviceprofile_ids = fields.One2many('agreement.serviceprofile',
                                          'agreement_id',
-                                         string="Service Profiles",
-                                         readonly=True)
+                                         string="Service Profiles")
     analytic_id = fields.Many2one('account.analytic.account',
                                   string='Analytic Account', index=True)
     analytic_line_ids = fields.One2many('account.analytic.line',
@@ -292,40 +249,52 @@ class Agreement(models.Model):
         'parent_agreement_id',
         string="Child Agreements",
         copy=False,
-        domain=[('active', '=', False)]
-    )
+        domain=[('active', '=', False)])
     child_agreements_ids = fields.One2many(
         'agreement',
         'parent_agreement_id',
         string="Child Agreements",
         copy=False,
-        domain=[('active', '=', True)]
-    )
-    products_ids = fields.Many2many(
-        'product.template',
-        string="Products",
-        copy=False
-    )
+        domain=[('active', '=', True)])
+    line_ids = fields.One2many('agreement.line', 'agreement_id',
+                               string="Products/Services", copy=False)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
         ('inactive', 'Inactive')],
         default='draft',
-        track_visibility='always'
-    )
+        track_visibility='always')
     notification_address_id = fields.Many2one(
         'res.partner',
         string="Notification Address",
         help="The address to send notificaitons to, if different from "
-             "customer address.(Address Type = Other)"
-    )
+             "customer address.(Address Type = Other)")
     signed_contract_filename = fields.Char(
-        string="Filename"
-    )
+        string="Filename")
     signed_contract = fields.Binary(
         string="Signed Document",
-        track_visibility='always'
-    )
+        track_visibility='always')
+    field_id = fields.Many2one(
+        'ir.model.fields', string="Field",
+        help="""Select target field from the related document model. If it is a
+         relationship field you will be able to select a target field at the
+         destination of the relationship.""")
+    sub_object_id = fields.Many2one(
+        'ir.model', string="Sub-model",
+        help="""When a relationship field is selected as first field, this
+         field shows the document model the relationship goes to.""")
+    sub_model_object_field_id = fields.Many2one(
+        'ir.model.fields', string="Sub-field",
+        help="""When a relationship field is selected as first field, this
+         field lets you select the target field within the destination document
+          model (sub-model).""")
+    default_value = fields.Char(
+        string="Default Value",
+        help="Optional value to use if the target field is empty.")
+    copyvalue = fields.Char(
+        string="Placeholder Expression",
+        help="""Final placeholder expression, to be copy-pasted in the desired
+         template field.""")
 
     # compute the dynamic content for mako expression
     @api.multi
@@ -337,6 +306,16 @@ class Agreement(models.Model):
                 lang=lang).render_template(
                 agreement.description, 'agreement', agreement.id)
             agreement.dynamic_description = description
+
+    @api.multi
+    def _compute_dynamic_special_terms(self):
+        MailTemplates = self.env['mail.template']
+        for agreement in self:
+            lang = agreement.partner_id.lang or 'en_US'
+            special_terms = MailTemplates.with_context(
+                lang=lang).render_template(
+                agreement.special_terms, 'agreement', agreement.id)
+            agreement.dynamic_special_terms = special_terms
 
     # compute contract_value field
     @api.depends('total_customer_mrc', 'total_customer_nrc', 'term')
@@ -354,6 +333,20 @@ class Agreement(models.Model):
         amount_total = sum(order_lines.mapped('purchase_price'))
         for record in self:
             record.total_company_mrc = amount_total
+
+    @api.onchange('field_id')
+    def onchange_sub_object_id(self):
+        if self.field_id:
+            self.sub_object_id = self.env['ir.model'].search(
+                [('model', '=', self.field_id.relation)])[0]
+
+    @api.onchange('sub_model_object_field_id', 'default_value')
+    def onchange_copyvalue(self):
+        if self.sub_model_object_field_id or self.default_value:
+            self.copyvalue = "${object.%s.%s or %s}" % \
+                             (self.field_id.name,
+                              self.sub_model_object_field_id.name,
+                              self.default_value or '\'\'')
 
     # Used for Kanban grouped_by view
     @api.model

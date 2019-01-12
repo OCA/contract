@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="edit_project_agreement" model="ir.ui.view">
+        <field name="name">project.project.form.agreement</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="agreement_id"
+                       domain="[('partner_id', '=', partner_id)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_task_form2_agreement" model="ir.ui.view">
+        <field name="name">project.task.form.agreement</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="agreement_id" readonly="1"/>
+                <field name="serviceprofile_id"
+                       domain="[('agreement_id', '=', agreement_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit project task search view-->
+    <record id="view_task_search_form_agreement" model="ir.ui.view">
+        <field name="name">project.task.select.agreement</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
