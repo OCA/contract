@@ -3,8 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Agreement_base',
-    'summary': "Adds an agreement object linked to an invoice",
+    'name': 'Agreement',
+    'summary': "Adds an agreement object",
     'version': '12.0.1.0.0',
     'category': 'Contract',
     'author': "Akretion,Odoo Community Association (OCA)",
