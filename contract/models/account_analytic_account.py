@@ -294,7 +294,7 @@ class AccountAnalyticAccount(models.Model):
         return invoices
 
     @api.model
-    def cron_recurring_create_invoice(self):
+    def cron_recurring_create_invoice(self, limit=None):
         today = fields.Date.today()
         contracts = self.with_context(cron=True).search([
             ('recurring_invoices', '=', True),
@@ -302,7 +302,7 @@ class AccountAnalyticAccount(models.Model):
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),
-        ])
+        ], limit=limit)
         return contracts.recurring_create_invoice()
 
     @api.multi
