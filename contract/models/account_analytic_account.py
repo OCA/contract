@@ -198,8 +198,8 @@ class AccountAnalyticAccount(models.Model):
         contract = line.analytic_account_id
         if 'old_date' in self.env.context and 'next_date' in self.env.context:
             lang_obj = self.env['res.lang']
-            lang = lang_obj.search(
-                [('code', '=', contract.partner_id.lang)])
+            code = contract.partner_id.lang or self.company_id.partner_id.lang
+            lang = lang_obj.search([('code', '=', code)])
             date_format = lang.date_format or '%m/%d/%Y'
             name = self._insert_markers(
                 line, self.env.context['old_date'],
