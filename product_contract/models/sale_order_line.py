@@ -101,7 +101,9 @@ class SaleOrderLine(models.Model):
                     )
 
     @api.multi
-    def _prepare_contract_line_values(self, contract):
+    def _prepare_contract_line_values(
+        self, contract, predecessor_contract_line
+    ):
         self.ensure_one()
         recurring_next_date = self.env[
             'account.analytic.invoice.line'
@@ -138,6 +140,7 @@ class SaleOrderLine(models.Model):
             'termination_notice_rule_type': termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
+            'predecessor_contract_line_id': predecessor_contract_line.id,
         }
 
     @api.multi
@@ -145,20 +148,19 @@ class SaleOrderLine(models.Model):
         contract_line_env = self.env['account.analytic.invoice.line']
         contract_line = self.env['account.analytic.invoice.line']
         for rec in self:
-            new_contract_line = contract_line_env.create(
-                rec._prepare_contract_line_values(contract)
-            )
-            contract_line |= new_contract_line
             if rec.contract_line_id:
                 rec.contract_line_id.stop(
                     rec.date_start - relativedelta(days=1)
                 )
+            new_contract_line = contract_line_env.create(
+                rec._prepare_contract_line_values(contract,
+                                                  rec.contract_line_id)
+            )
+            if rec.contract_line_id:
                 rec.contract_line_id.successor_contract_line_id = (
                     new_contract_line
                 )
-                new_contract_line.predecessor_contract_line_id = (
-                    self.contract_line_id.id
-                )
+            contract_line |= new_contract_line
         return contract_line
 
     @api.constrains('contract_id')
