@@ -278,13 +278,18 @@ class AccountAnalyticAccount(models.Model):
         return invoice
 
     @api.multi
-    def recurring_create_invoice(self):
+    def recurring_create_invoice(self, limit=None):
         """Create invoices from contracts
+
+        :param int limit:
+            Max of invoices to create.
 
         :return: invoices created
         """
         invoices = self.env['account.invoice']
         for contract in self:
+            if limit and len(invoices) >= limit:
+                break
             ref_date = contract.recurring_next_date or fields.Date.today()
             if (contract.date_start > ref_date or
                     contract.date_end and contract.date_end < ref_date):
@@ -320,8 +325,8 @@ class AccountAnalyticAccount(models.Model):
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),
-        ], limit=limit)
-        return contracts.recurring_create_invoice()
+        ])
+        return contracts.recurring_create_invoice(limit)
 
     @api.multi
     def action_contract_send(self):
