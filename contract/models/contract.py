@@ -48,9 +48,15 @@ class AccountAnalyticAccount(models.Model):
         compute='_compute_date_end', string='Date End', store=True
     )
     payment_term_id = fields.Many2one(
-        comodel_name='account.payment.term', string='Payment Terms'
+        comodel_name='account.payment.term', string='Payment Terms',
+        index=True,
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
+    fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        string='Fiscal Position',
+        ondelete='restrict',
+    )
 
     @api.multi
     def _get_related_invoices(self):
@@ -151,6 +157,7 @@ class AccountAnalyticAccount(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist.id
+        self.fiscal_position_id = self.partner_id.property_account_position_id
 
     @api.constrains('partner_id', 'recurring_invoices')
     def _check_partner_id_recurring_invoices(self):
@@ -216,6 +223,7 @@ class AccountAnalyticAccount(models.Model):
             'company_id': self.company_id.id,
             'user_id': self.partner_id.user_id.id,
             'payment_term_id': self.payment_term_id.id,
+            'fiscal_position_id': self.fiscal_position_id.id,
         }
 
     @api.multi
@@ -279,8 +287,10 @@ class AccountAnalyticAccount(models.Model):
     def _finalize_invoice_creation(self, invoices):
         for invoice in invoices:
             payment_term = invoice.payment_term_id
+            fiscal_position = invoice.fiscal_position_id
             invoice._onchange_partner_id()
             invoice.payment_term_id = payment_term
+            invoice.fiscal_position_id = fiscal_position
         invoices.compute_taxes()
 
     @api.model
