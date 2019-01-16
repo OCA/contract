@@ -19,7 +19,8 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
     name = fields.Char(required=True)
     # Needed for avoiding errors on several inherited behaviors
     partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Partner (always False)"
+        comodel_name="res.partner", string="Partner (always False)",
+        index=True,
     )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist', string='Pricelist'
@@ -27,6 +28,7 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
     contract_type = fields.Selection(
         selection=[('sale', 'Customer'), ('purchase', 'Supplier')],
         default='sale',
+        index=True,
     )
 
     journal_id = fields.Many2one(
@@ -35,6 +37,7 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
         default=lambda s: s._default_journal(),
         domain="[('type', '=', contract_type),"
         "('company_id', '=', company_id)]",
+        index=True,
     )
     company_id = fields.Many2one(
         'res.company',
