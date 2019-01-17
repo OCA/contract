@@ -75,8 +75,8 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
     )
     recurring_interval = fields.Integer(
         default=1,
-        string='Repeat Every',
-        help="Repeat every (Days/Week/Month/Year)",
+        string='Invoice Every',
+        help="Invoice every (Days/Week/Month/Year)",
         required=True,
     )
     date_start = fields.Date(string='Date Start')
