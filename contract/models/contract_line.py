@@ -436,7 +436,8 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _check_recurring_next_date_recurring_invoices(self):
         for rec in self.filtered('contract_id.recurring_invoices'):
             if not rec.recurring_next_date and (
-                not rec.last_date_invoiced
+                not rec.date_end
+                or not rec.last_date_invoiced
                 or rec.last_date_invoiced < rec.date_end
             ):
                 raise ValidationError(
