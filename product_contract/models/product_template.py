@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
     contract_template_id = fields.Many2one(
         comodel_name='account.analytic.contract', string='Contract Template'
     )
-
+    default_qty = fields.Integer(string="Default Quantity")
     recurring_rule_type = fields.Selection(
         [
             ('daily', 'Day(s)'),
@@ -23,7 +23,7 @@ class ProductTemplate(models.Model):
             ('yearly', 'Year(s)'),
         ],
         default='monthly',
-        string='Recurrence',
+        string='Invoice Every',
         help="Specify Interval for automatic invoice generation.",
     )
     recurring_invoicing_type = fields.Selection(
@@ -32,23 +32,7 @@ class ProductTemplate(models.Model):
         string='Invoicing type',
         help="Specify if process date is 'from' or 'to' invoicing date",
     )
-    recurring_interval = fields.Integer(
-        default=1,
-        string='Repeat Every',
-        help="Repeat every (Days/Week/Month/Year)",
-    )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
-    auto_renew_interval = fields.Integer(
-        default=1,
-        string='Renew Every',
-        help="Renew every (Days/Week/Month/Year)",
-    )
-    auto_renew_rule_type = fields.Selection(
-        [('monthly', 'Month(s)'), ('yearly', 'Year(s)')],
-        default='yearly',
-        string='Renewal type',
-        help="Specify Interval for automatic renewal.",
-    )
     termination_notice_interval = fields.Integer(
         default=1, string='Termination Notice Before'
     )
