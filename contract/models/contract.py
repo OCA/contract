@@ -57,6 +57,22 @@ class AccountAnalyticAccount(models.Model):
         string='Fiscal Position',
         ondelete='restrict',
     )
+    invoice_partner_id = fields.Many2one(
+        string="Invoicing contact",
+        comodel_name='res.partner',
+        ondelete='restrict',
+    )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        inverse='_inverse_partner_id',
+    )
+
+    @api.multi
+    def _inverse_partner_id(self):
+        for rec in self:
+            if not rec.invoice_partner_id:
+                rec.invoice_partner_id = rec.partner_id.address_get(
+                    ['invoice'])['invoice']
 
     @api.multi
     def _get_related_invoices(self):
@@ -88,7 +104,14 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def action_show_invoices(self):
         self.ensure_one()
-        return {
+        tree_view_ref = 'account.invoice_supplier_tree' \
+            if self.contract_type == 'purchase' \
+            else 'account.invoice_tree_with_onboarding'
+        form_view_ref = 'account.invoice_supplier_form' \
+            if self.contract_type == 'purchase' else 'account.invoice_form'
+        tree_view = self.env.ref(tree_view_ref, raise_if_not_found=False)
+        form_view = self.env.ref(form_view_ref, raise_if_not_found=False)
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'Invoices',
             'res_model': 'account.invoice',
@@ -96,6 +119,9 @@ class AccountAnalyticAccount(models.Model):
             'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
             'domain': [('id', 'in', self._get_related_invoices().ids)],
         }
+        if tree_view and form_view:
+            action['views'] = [(tree_view.id, 'tree'), (form_view.id, 'form')]
+        return action
 
     @api.depends('recurring_invoice_line_ids.date_end')
     def _compute_date_end(self):
@@ -158,6 +184,12 @@ class AccountAnalyticAccount(models.Model):
     def _onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist.id
         self.fiscal_position_id = self.partner_id.property_account_position_id
+        self.invoice_partner_id = self.partner_id.address_get(
+            ['invoice'])['invoice']
+        return {'domain': {'invoice_partner_id': [
+            '|',
+            ('id', 'parent_of', self.partner_id.id),
+            ('id', 'child_of', self.partner_id.id)]}}
 
     @api.constrains('partner_id', 'recurring_invoices')
     def _check_partner_id_recurring_invoices(self):
@@ -215,7 +247,7 @@ class AccountAnalyticAccount(models.Model):
         return {
             'reference': self.code,
             'type': invoice_type,
-            'partner_id': self.partner_id.address_get(['invoice'])['invoice'],
+            'partner_id': self.invoice_partner_id.id,
             'currency_id': currency.id,
             'date_invoice': date_invoice,
             'journal_id': journal.id,
