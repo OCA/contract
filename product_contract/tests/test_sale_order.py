@@ -41,7 +41,7 @@ class TestSaleOrder(TransactionCase):
         self.product1.write(
             {
                 'is_contract': True,
-                'is_auto_renew': True,
+                'default_qty': 12,
                 'contract_template_id': self.contract_template1.id,
             }
         )
@@ -55,6 +55,7 @@ class TestSaleOrder(TransactionCase):
             lambda l: l.product_id == self.product1
         )
         self.order_line1.date_start = '2018-01-01'
+        self.order_line1.product_uom_qty = 12
         pricelist = self.sale.partner_id.property_product_pricelist.id
         self.contract = self.env["account.analytic.account"].create(
             {
@@ -91,10 +92,6 @@ class TestSaleOrder(TransactionCase):
         contract"""
         self.assertTrue(self.sale.is_contract)
 
-    def test_action_confirm_auto_renew_without_date_end(self):
-        with self.assertRaises(ValidationError):
-            self.sale.action_confirm()
-
     def test_action_confirm(self):
         """ It should create a contract for each contract template used in
         order_line """
@@ -121,10 +118,6 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.order_line1.recurring_rule_type,
             self.product1.recurring_rule_type,
-        )
-        self.assertEqual(
-            self.order_line1.recurring_interval,
-            self.product1.recurring_interval,
         )
         self.assertEqual(
             self.order_line1.recurring_invoicing_type,
@@ -228,10 +221,8 @@ class TestSaleOrder(TransactionCase):
             {
                 'recurring_rule_type': 'monthly',
                 'recurring_invoicing_type': 'pre-paid',
-                'recurring_interval': '2',
                 'is_auto_renew': True,
-                'auto_renew_interval': '6',
-                'auto_renew_rule_type': 'monthly',
+                'default_qty': 12,
                 'termination_notice_interval': '6',
                 'termination_notice_rule_type': 'weekly',
             }
@@ -249,9 +240,9 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.contract_line.recurring_invoicing_type, 'pre-paid'
         )
-        self.assertEqual(self.contract_line.recurring_interval, 2)
+        self.assertEqual(self.contract_line.recurring_interval, 1)
         self.assertEqual(self.contract_line.is_auto_renew, True)
-        self.assertEqual(self.contract_line.auto_renew_interval, 6)
+        self.assertEqual(self.contract_line.auto_renew_interval, 12)
         self.assertEqual(self.contract_line.auto_renew_rule_type, 'monthly')
         self.assertEqual(self.contract_line.termination_notice_interval, 6)
         self.assertEqual(
