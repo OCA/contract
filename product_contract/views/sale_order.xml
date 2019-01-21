@@ -34,8 +34,7 @@
                 <field name="contract_line_id"
                        attrs="{'invisible': [('is_contract', '=', False)]}"
                        domain="[('contract_id','=',contract_id)]"/>
-                <field name="is_auto_renew"
-                       invisible="1"/>
+
 
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
@@ -45,13 +44,7 @@
                            attrs="{'invisible': [('is_contract', '=', False)]}"/>
 
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <label for="recurring_interval"/>
-                    <div>
-                        <field name="recurring_interval"
-                               class="oe_inline" nolabel="1"/>
-                        <field name="recurring_rule_type"
-                               class="oe_inline" nolabel="1"/>
-                    </div>
+                    <field name="recurring_rule_type"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="recurring_invoicing_type"
@@ -62,8 +55,7 @@
                            attrs="{'required': [('is_contract', '=', True)]}"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_end"
-                           attrs="{'required': [('is_auto_renew', '=', True)]}"/>
+                    <field name="date_end" required="True"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']"

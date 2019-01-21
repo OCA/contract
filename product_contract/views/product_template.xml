@@ -29,30 +29,16 @@
                     </group>
                     <group name="recurrence_info">
                         <group>
-                            <label for="recurring_interval"/>
-                            <div>
-                                <field name="recurring_interval"
-                                       class="oe_inline" nolabel="1"/>
-                                <field name="recurring_rule_type"
-                                       class="oe_inline" nolabel="1"/>
-                            </div>
+                            <field name="recurring_rule_type"/>
                         </group>
                         <group>
+                            <field name="default_qty"/>
                             <field name="recurring_invoicing_type"
                             attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
                         </group>
                     </group>
                     <group>
                         <field name="is_auto_renew"/>
-                        <label for="auto_renew_interval" attrs="{'invisible': [('is_auto_renew', '=', False)],
-                               'required':[('is_contract', '=', True)]}"/>
-                        <div attrs="{'invisible': [('is_auto_renew', '=', False)],
-                               'required':[('is_auto_renew', '=', True)]}">
-                            <field name="auto_renew_interval"
-                                   class="oe_inline" nolabel="1"/>
-                            <field name="auto_renew_rule_type"
-                                   class="oe_inline" nolabel="1"/>
-                        </div>
                         <label for="termination_notice_interval" attrs="{'invisible': [('is_auto_renew', '=', False)],
                                'required':[('is_contract', '=', True)]}"/>
                         <div attrs="{'invisible': [('is_auto_renew', '=', False)],
