@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
             'contract_template_id': contract_template.id,
             'user_id': self.user_id.id,
             'payment_term_id': self.payment_term_id.id,
+            'fiscal_position_id': self.fiscal_position_id.id,
         }
 
     @api.multi
