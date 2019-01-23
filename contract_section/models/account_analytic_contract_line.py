@@ -8,6 +8,6 @@ class AccountAnalyticContractLine(models.Model):
     _inherit = 'account.analytic.contract.line'
 
     layout_category_id = fields.Many2one(
-    	'sale.layout_category',
-    	string='Section'
+        'sale.layout_category',
+        string='Section'
     )
