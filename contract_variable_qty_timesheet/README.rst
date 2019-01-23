@@ -50,6 +50,8 @@ Contributors
 * `Tecnativa <https://www.tecnativa.com>`_:
   * Carlos Dauden
 
+ * Nikul Chaudhary <nikulchaudhary2112@gmail.com>
+
 Do not contact contributors directly about support or help with technical issues.
 
 Maintainer
