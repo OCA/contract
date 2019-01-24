@@ -7,7 +7,9 @@ from odoo import fields, models
 class AccountAnalyticContractLine(models.Model):
     _inherit = 'account.analytic.contract.line'
 
-    layout_category_id = fields.Many2one(
-        'sale.layout_category',
-        string='Section'
+    display_type = fields.Selection([
+        ('line_section', "Section"),
+        ('line_note', "Note")],
+        default=False,
+        help="Technical field for UX purpose."
     )

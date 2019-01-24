@@ -12,6 +12,6 @@ class AccountAnalyticAccount(models.Model):
         invoice_line_vals = super(AccountAnalyticAccount, self). \
             _prepare_invoice_line(line, invoice_id)
         invoice_line_vals.update({
-            'layout_category_id': line.layout_category_id.id,
+            'display_type': line.display_type,
         })
         return invoice_line_vals

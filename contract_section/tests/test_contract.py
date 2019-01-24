@@ -13,14 +13,8 @@ class TestContract(TestContractBase):
         # contract line
         super(TestContract, cls).setUpClass()
         cls.acct_line.unlink()
-        cls.section = cls.env['sale.layout_category'].create({
-            'name': 'Services',
-            'subtotal': True,
-            'pagebreak': True,
-            'sequence': 1
-        })
         cls.line_vals.update({
-            'layout_category_id': cls.section.id,
+            'display_type': 'line_section',
         })
         cls.acct_line = cls.env['account.analytic.invoice.line'].create(
             cls.line_vals,
@@ -32,5 +26,5 @@ class TestContract(TestContractBase):
         self.contract.recurring_create_invoice()
         invoice_id = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
-        self.assertEqual(invoice_id.invoice_line_ids.layout_category_id.id,
-                         self.line_vals['layout_category_id'])
+        self.assertEqual(invoice_id.invoice_line_ids.display_type,
+                         self.line_vals['display_type'])
