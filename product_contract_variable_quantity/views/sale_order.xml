@@ -14,13 +14,15 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']"
-                   position="after">
-                <field name="qty_type"
-                attrs="{'required': [('is_contract', '=', True)], 'invisible': [('is_contract', '=', False)]}"/>
-                <field name="qty_formula_id"
-                       attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
-                />
+            <xpath expr="//field[@name='order_line']/form//label[@for='name']"
+                   position="before">
+                <group col="4">
+                    <field name="qty_type"
+                           attrs="{'required': [('is_contract', '=', True)], 'invisible': [('is_contract', '=', False)]}"/>
+                    <field name="qty_formula_id"
+                           attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
+                    />
+                </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']"
                    position="after">
@@ -28,9 +30,6 @@
                        attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"/>
                 <field name="qty_formula_id"
                        attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"/>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
-                <attribute name="attrs">{'required': [('qty_type', '=', 'fixed')], 'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
             </xpath>
         </field>
     </record>
