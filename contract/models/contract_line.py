@@ -365,6 +365,18 @@ class AccountAnalyticInvoiceLine(models.Model):
             recurring_rule_type, recurring_interval
         )
 
+    @api.model
+    def compute_first_date_end(
+        self, date_start, auto_renew_rule_type, auto_renew_interval
+    ):
+        return (
+            date_start
+            + self.get_relative_delta(
+                auto_renew_rule_type, auto_renew_interval
+            )
+            - relativedelta(days=1)
+        )
+
     @api.onchange(
         'date_start',
         'is_auto_renew',
@@ -376,12 +388,10 @@ class AccountAnalyticInvoiceLine(models.Model):
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
             if rec.date_start:
-                rec.date_end = (
-                    self.date_start
-                    + self.get_relative_delta(
-                        rec.auto_renew_rule_type, rec.auto_renew_interval
-                    )
-                    - relativedelta(days=1)
+                rec.date_end = self.compute_first_date_end(
+                    rec.date_start,
+                    rec.auto_renew_rule_type,
+                    rec.auto_renew_interval,
                 )
 
     @api.onchange(
@@ -986,12 +996,8 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _get_renewal_dates(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
-        date_end = (
-            date_start
-            + self.get_relative_delta(
-                self.auto_renew_rule_type, self.auto_renew_interval
-            )
-            - relativedelta(days=1)
+        date_end = self.compute_first_date_end(
+            date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
         return date_start, date_end
 
