@@ -13,7 +13,12 @@ class TestContract(TestContractBase):
         # contract line
         super(TestContract, cls).setUpClass()
         cls.acct_line.unlink()
-        cls.section = cls.env.ref('sale.sale_layout_cat_2')
+        cls.section = cls.env['sale.layout_category'].create({
+            'name': 'Services',
+            'subtotal': True,
+            'pagebreak': True,
+            'sequence': 1
+        })
         cls.line_vals.update({
             'layout_category_id': cls.section.id,
         })
