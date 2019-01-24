@@ -494,10 +494,7 @@ class TestContract(TestContractBase):
         line.product_id.description_sale = 'Test'
         line._onchange_product_id()
         self.assertEqual(
-            line.name,
-            '\n'.join(
-                [line.product_id.name, line.product_id.description_sale]
-            ),
+            line.name, line.product_id.get_product_multiline_description_sale()
         )
 
     def test_contract_count(self):
