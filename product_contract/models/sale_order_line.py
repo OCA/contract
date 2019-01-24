@@ -51,6 +51,14 @@ class SaleOrderLine(models.Model):
         copy=False,
     )
 
+    @api.multi
+    def _get_auto_renew_rule_type(self):
+        """monthly last day don't make sense for auto_renew_rule_type"""
+        self.ensure_one()
+        if self.recurring_rule_type == "monthlylastday":
+            return "monthly"
+        return self.recurring_rule_type
+
     @api.onchange('product_id')
     def onchange_product(self):
         contract_line_env = self.env['account.analytic.invoice.line']
@@ -62,10 +70,11 @@ class SaleOrderLine(models.Model):
                     rec.product_id.recurring_invoicing_type
                 )
                 rec.date_start = rec.date_start or fields.Date.today()
+
                 rec.date_end = (
                     rec.date_start
                     + contract_line_env.get_relative_delta(
-                        rec.product_id.recurring_rule_type,
+                        rec._get_auto_renew_rule_type(),
                         int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
@@ -73,16 +82,16 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
     def onchange_date_start(self):
+        contract_line_env = self.env['account.analytic.invoice.line']
         for rec in self:
             if not rec.date_start:
                 rec.date_end = False
             else:
                 rec.date_end = (
                     rec.date_start
-                    + self.env[
-                        'account.analytic.invoice.line'
-                    ].get_relative_delta(
-                        rec.recurring_rule_type, int(rec.product_uom_qty)
+                    + contract_line_env.get_relative_delta(
+                        rec._get_auto_renew_rule_type(),
+                        int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
                 )
@@ -134,7 +143,7 @@ class SaleOrderLine(models.Model):
             'recurring_rule_type': self.recurring_rule_type,
             'is_auto_renew': self.product_id.is_auto_renew,
             'auto_renew_interval': self.product_uom_qty,
-            'auto_renew_rule_type': self.product_id.recurring_rule_type,
+            'auto_renew_rule_type': self._get_auto_renew_rule_type(),
             'termination_notice_interval': termination_notice_interval,
             'termination_notice_rule_type': termination_notice_rule_type,
             'contract_id': contract.id,
