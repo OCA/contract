@@ -181,6 +181,21 @@ class TestContract(TestContractBase):
         with self.assertRaises(ValidationError):
             self.contract.date_end = '2015-12-31'
 
+    def test_check_cron_ended_contract(self):
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'yearly'
+        self.contract.date_end = '2016-02-28'
+        invoices = self.contract.with_context(
+            cron=True).recurring_create_invoice()
+        self.assertFalse(invoices)
+
+    def test_check_no_cron_ended_contract(self):
+        self.contract.recurring_next_date = '2016-02-29'
+        self.contract.recurring_rule_type = 'yearly'
+        self.contract.date_end = '2016-02-28'
+        with self.assertRaises(ValidationError):
+            self.contract.recurring_create_invoice()
+
     def test_check_recurring_next_date_start_date(self):
         with self.assertRaises(ValidationError):
             self.contract.write({
