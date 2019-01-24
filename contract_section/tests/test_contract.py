@@ -22,7 +22,6 @@ class TestContract(TestContractBase):
 
     def test_create_invoice(self):
         """ Create contract with section"""
-        self.assertTrue(self.acct_line.layout_category_id)
         self.contract.recurring_create_invoice()
         invoice_id = self.env['account.invoice'].search(
             [('contract_id', '=', self.contract.id)])
