@@ -255,12 +255,16 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _create_invoice(self):
         self.ensure_one()
-        invoice_vals = self._prepare_invoice()
-        invoice = self.env['account.invoice'].create(invoice_vals)
+        # Re-read contract with correct company
+        _self = self.with_context(self.get_invoice_context())
+        invoice_vals = _self._prepare_invoice()
+        invoice = _self.env['account.invoice'].create(invoice_vals)
+        # Lines are read from an env where expensive values are precomputed
         for line in self.recurring_invoice_line_ids:
-            invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
-            self.env['account.invoice.line'].create(invoice_line_vals)
-        invoice.compute_taxes()
+            invoice_line_vals = _self._prepare_invoice_line(line, invoice.id)
+            _self.env['account.invoice.line'].create(invoice_line_vals)
+        # Update next invoice date for current contract
+        _self.recurring_next_date = _self.env.context['next_date']
         return invoice
 
     @api.multi
@@ -287,6 +291,7 @@ class AccountAnalyticAccount(models.Model):
                 relativedelta(days=1))
             date_to = date_start
         ctx.update({
+            'mail_notrack': True,
             'next_date': next_date,
             'date_format': date_format,
             'date_from': date_from,
@@ -317,18 +322,21 @@ class AccountAnalyticAccount(models.Model):
 
         :return: invoices created
         """
-        invoices = self.env['account.invoice']
-        for contract in self:
-            if limit and len(invoices) >= limit:
-                break
-            if not contract.check_dates_valid():
-                continue
-            # Re-read contract with correct company
-            ctx = contract.get_invoice_context()
-            invoices |= contract.with_context(ctx)._create_invoice()
-            contract.write({
-                'recurring_next_date': fields.Date.to_string(ctx['next_date'])
-            })
+        _self = self.with_context(prefetch_fields=False)
+        invoices = _self.env['account.invoice']
+        # Precompute expensive computed fields in batch
+        recurring_lines = _self.mapped("recurring_invoice_line_ids")
+        recurring_lines._fields["price_unit"].determine_value(recurring_lines)
+        # Create invoices
+        with _self.env.norecompute():
+            for contract in _self:
+                if limit and len(invoices) >= limit:
+                    break
+                if not contract.check_dates_valid():
+                    continue
+                invoices |= contract._create_invoice()
+            invoices.compute_taxes()
+        _self.recompute()
         return invoices
 
     @api.model
