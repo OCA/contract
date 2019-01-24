@@ -18,7 +18,7 @@
     "ACSONE SA/NV, "
     "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
-    'depends': ['base', 'account', 'analytic'],
+    'depends': ['base', 'account', 'analytic', 'product'],
     "external_dependencies": {"python": ["dateutil"]},
     'data': [
         'wizards/contract_line_wizard.xml',
