@@ -108,8 +108,8 @@ msgstr ""
 "\n"
 "    <br/>\n"
 "    <p>Bei Fragen zögern Sie bitte nicht, uns zu kontaktieren.</p>\n"
-"    <p>${object.company_id.name or 'Wir'} bedanken uns für Ihren Auftrag!</p>"
-"\n"
+"    <p>${object.company_id.name or 'Wir'} bedanken uns für Ihren Auftrag!</"
+"p>\n"
 "    <br/>\n"
 "    <br/>\n"
 "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
@@ -117,14 +117,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -135,8 +135,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -246,7 +246,7 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:342
+#: code:addons/contract/models/account_analytic_account.py:347
 #, python-format
 msgid "Compose Email"
 msgstr "E-Mail verfassen"
@@ -750,8 +750,8 @@ msgstr "Jahr(e)"
 msgid ""
 "You can't have a next invoicing date before the start of the contract '%s'"
 msgstr ""
-"Das Datum der nächsten Rechnung darf nicht vor Vertragsbeginn des Vertrags '%"
-"s' liegen"
+"Das Datum der nächsten Rechnung darf nicht vor Vertragsbeginn des Vertrags "
+"'%s' liegen"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:211
@@ -766,7 +766,7 @@ msgid "You must first select a Supplier for Contract %s!"
 msgstr "Sie müssen zuerst einen Kunden für den Vertrag '%s' auswählen!"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:294
+#: code:addons/contract/models/account_analytic_account.py:299
 #, python-format
 msgid ""
 "You must review start and end dates!\n"
@@ -785,7 +785,8 @@ msgstr "Sie müssen einen Kunden für den Vertrag '%s' angeben"
 #: code:addons/contract/models/account_analytic_account.py:120
 #, python-format
 msgid "You must supply a next invoicing date for contract '%s'"
-msgstr "Sie müssen das Datum der nächsten Rechnung für den Vertrag '%s' angeben"
+msgstr ""
+"Sie müssen das Datum der nächsten Rechnung für den Vertrag '%s' angeben"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:129
