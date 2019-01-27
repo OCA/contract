@@ -318,6 +318,18 @@ msgid "Company NRC"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_dynamic_description
+#, fuzzy
+msgid "Compute dynamic description"
+msgstr "Calcola la descrizione dinamica"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_dynamic_special_terms
+#, fuzzy
+msgid "Compute dynamic special terms"
+msgstr "Calcola la descrizione dinamica"
+
+#. module: agreement
 #: model:ir.ui.menu,name:agreement.agreement_configuration
 msgid "Configuration"
 msgstr "Configurazione"
@@ -358,6 +370,31 @@ msgstr "Anteprima documento contratto"
 #: model:ir.model.fields,field_description:agreement.field_agreement_contract_value
 msgid "Contract Value"
 msgstr "Valore contratto"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
+msgid "Copy and paste the placeholder expression in the content"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+msgid ""
+"Copy and paste the placeholder expression in the description or the special "
+"terms"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_sale
+msgid "Create an agreement when the sale order is confirmed."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+msgid "Create an agreement when the sales order is confirmed"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_appendix_create_uid
@@ -437,6 +474,15 @@ msgid "Date:"
 msgstr "Data:"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_default_value
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_default_value
+#: model:ir.model.fields,field_description:agreement.field_agreement_default_value
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_default_value
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_default_value
+msgid "Default Value"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_renewal_type_id
 msgid "Describes what happens after the contract expires."
 msgstr "Descrive cosa accade dopo la scadenza del contratto."
@@ -499,6 +545,11 @@ msgid "Dynamic Description"
 msgstr "Descrizione dinamica"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_dynamic_special_terms
+msgid "Dynamic Special Terms"
+msgstr ""
+
+#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.view_project_agreement_kanban
 msgid "Edit"
 msgstr "Modifica"
@@ -515,9 +566,27 @@ msgid "End Date"
 msgstr "Data fine"
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
+msgid "Enter the default value if the field is empty"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_expiration_notice
 msgid "Exp. Notice (Days)"
 msgstr "Avviso scad. (giorni)"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_field_id
+msgid "Field"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
@@ -535,56 +604,20 @@ msgid "Filename"
 msgstr "Nome file"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_copyvalue
+#: model:ir.model.fields,help:agreement.field_agreement_clause_copyvalue
+#: model:ir.model.fields,help:agreement.field_agreement_copyvalue
+#: model:ir.model.fields,help:agreement.field_agreement_recital_copyvalue
+#: model:ir.model.fields,help:agreement.field_agreement_section_copyvalue
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired\n"
+"         template field."
+msgstr ""
+
+#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "Financials"
 msgstr "Finanziari"
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
-msgid ""
-"For dynamic content use mako expression '${expression}'. For ex:\n"
-"                                     1. object's field name: ${object."
-"field_name} or\n"
-"                                     2. many2one field name: ${object."
-"many2one_field_id.field_name}"
-msgstr ""
-"Per contenuti dinamici usare l'espressione mako \"${expression}\".Per es.:\n"
-"                                     1. nome campo dell'oggetto: ${object."
-"field_name} oppure\n"
-"                                     2. nome campo \"molti a uno\": ${object."
-"many2one_field_id.field_name}"
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
-#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
-msgid ""
-"For dynamic content use mako expression '${expression}'. For ex:\n"
-"                             1. object's field name: ${object.field_name} "
-"or\n"
-"                             2. many2one field name: ${object."
-"many2one_field_id.field_name}"
-msgstr ""
-"Per contenuti dinamici usare l'espressione mako \"${expression}\". Per es.:\n"
-"                             1. nome campo dell'oggetto: ${object."
-"field_name} oppure\n"
-"                             2. nome campo \"molti a uno\": ${object."
-"many2one_field_id.field_name}"
-
-#. module: agreement
-#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
-#, fuzzy
-msgid ""
-"For dynamic content use mako expression '${expression}'. For ex:\n"
-"                            1. object's field name: ${object.field_name} or\n"
-"                            2. many2one field name: ${object."
-"many2one_field_id.field_name}"
-msgstr ""
-"Per contenuti dinamici usare l'espressione mako \"${expression}\". Per es.:\n"
-"                             1. nome campo dell'oggetto: ${object."
-"field_name} oppure\n"
-"                             2. nome campo \"molti a uno\": ${object."
-"many2one_field_id.field_name}"
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
@@ -606,7 +639,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement.field_agreement_renewaltype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_section_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_serviceprofile_id
-#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_6098
+#: model:ir.model.fields,field_description:agreement.field_agreement_stage_id_6126
 #: model:ir.model.fields,field_description:agreement.field_agreement_subtype_id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_id
 msgid "ID"
@@ -618,9 +651,17 @@ msgid "ID used for internal contract tracking."
 msgstr "ID usato per tracciare internamente il contratto."
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_section_active
+#, fuzzy
+msgid ""
+"If unchecked, it will allow you to hide the\n"
+"                             agreement without removing it."
+msgstr ""
+"Se non selezionato, permette di nascondere il contratto senza rimuoverlo."
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_active
 #: model:ir.model.fields,help:agreement.field_agreement_clause_active
-#: model:ir.model.fields,help:agreement.field_agreement_section_active
 msgid ""
 "If unchecked, it will allow you to hide the agreement without removing it."
 msgstr ""
@@ -827,6 +868,18 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+#, fuzzy
+msgid "Link your subscriptions to an agreement"
+msgstr "Descrizione del contratto"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_res_config_settings_module_agreement_sale_subscription
+#, fuzzy
+msgid "Link your subscriptions to an agreement."
+msgstr "Descrizione del contratto"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
 msgid "Link your transfers to an agreement"
 msgstr ""
 
@@ -883,9 +936,9 @@ msgid "Name:"
 msgstr "Nome:"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:105
-#: code:addons/agreement/models/agreement.py:403
-#: code:addons/agreement/models/agreement.py:405
+#: code:addons/agreement/models/agreement.py:93
+#: code:addons/agreement/models/agreement.py:400
+#: code:addons/agreement/models/agreement.py:402
 #, python-format
 msgid "New"
 msgstr "Nuovo"
@@ -932,6 +985,15 @@ msgid "Operations"
 msgstr "Operazioni"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_default_value
+#: model:ir.model.fields,help:agreement.field_agreement_clause_default_value
+#: model:ir.model.fields,help:agreement.field_agreement_default_value
+#: model:ir.model.fields,help:agreement.field_agreement_recital_default_value
+#: model:ir.model.fields,help:agreement.field_agreement_section_default_value
+msgid "Optional value to use if the target field is empty."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_parent_agreement_id
 msgid "Parent Agreement"
 msgstr "Contratto padre"
@@ -944,10 +1006,6 @@ msgstr "Parti"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_partner_id
-msgid "Partmer"
-msgstr "Partner"
-
-#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 #: model:ir.ui.view,arch_db:agreement.report_agreement_document
 msgid "Partner"
@@ -998,6 +1056,15 @@ msgstr "Includere fatture con totali vs. costi?"
 #: model:ir.model.fields,field_description:agreement.field_agreement_partner_contact_phone
 msgid "Phone"
 msgstr "Telefono"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_copyvalue
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_copyvalue
+#: model:ir.model.fields,field_description:agreement.field_agreement_copyvalue
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_copyvalue
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_copyvalue
+msgid "Placeholder Expression"
+msgstr ""
 
 #. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
@@ -1150,6 +1217,18 @@ msgid "Revisions"
 msgstr "Revisioni"
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+#, fuzzy
+msgid "Sale Subscriptions"
+msgstr "Descrizione"
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.res_config_settings_view_form
+#, fuzzy
+msgid "Sales"
+msgstr "Ordine di vendita"
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_sale_order_id
 msgid "Sales Order"
 msgstr "Ordine di vendita"
@@ -1174,14 +1253,62 @@ msgid "Sections"
 msgstr "Sezioni"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_clause_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_recital_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_section_field_id
+msgid ""
+"Select target field from the related document model. If it is a\n"
+"         relationship field you will be able to select a target field at "
+"the\n"
+"         destination of the relationship."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_sale_order_id
 msgid "Select the Sales Order that this agreement is related to."
 msgstr "Seleziona l'ordine di vendita a cui è collegato questo contratto."
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#, fuzzy
+msgid "Select the agreement field"
+msgstr "Seleziona il tipo di contratto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+msgid "Select the appendix field"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+msgid "Select the clause field"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_stage_id
 msgid "Select the current stage of the agreement."
 msgstr "Seleziona la fase corrente del contratto."
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+msgid "Select the recital field"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
+msgid "Select the section field"
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
+msgid "Select the sub-field"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_agreement_subtype_id
@@ -1325,6 +1452,24 @@ msgid "Sub-Types"
 msgstr "Sottotipi"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_sub_model_object_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_sub_model_object_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_sub_model_object_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_sub_model_object_field_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_sub_model_object_field_id
+msgid "Sub-field"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_appendix_sub_object_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_clause_sub_object_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_recital_sub_object_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_section_sub_object_id
+#: model:ir.model.fields,field_description:agreement.field_agreement_sub_object_id
+msgid "Sub-model"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_type_agreement_subtypes_ids
 msgid "Subtypes"
 msgstr "Sottotipo"
@@ -1419,6 +1564,23 @@ msgstr ""
 "versioni precedenti possono essere menzionate."
 
 #. module: agreement
+#: model:ir.ui.view,arch_db:agreement.agreement_appendix_form
+#: model:ir.ui.view,arch_db:agreement.agreement_recital_form
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_clause_form_view
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_section_form_view
+msgid ""
+"This section (on the left) allows you to add dynamic fields inside the "
+"content."
+msgstr ""
+
+#. module: agreement
+#: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
+msgid ""
+"This section (on the left) allows you to add dynamic fields inside the "
+"description and special terms."
+msgstr ""
+
+#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid ""
 "This section is a place where financial records will show the current "
@@ -1509,6 +1671,30 @@ msgid "Version:"
 msgstr "Versione:"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_sub_model_object_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_clause_sub_model_object_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_recital_sub_model_object_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_section_sub_model_object_field_id
+#: model:ir.model.fields,help:agreement.field_agreement_sub_model_object_field_id
+msgid ""
+"When a relationship field is selected as first field, this\n"
+"         field lets you select the target field within the destination "
+"document\n"
+"          model (sub-model)."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement_appendix_sub_object_id
+#: model:ir.model.fields,help:agreement.field_agreement_clause_sub_object_id
+#: model:ir.model.fields,help:agreement.field_agreement_recital_sub_object_id
+#: model:ir.model.fields,help:agreement.field_agreement_section_sub_object_id
+#: model:ir.model.fields,help:agreement.field_agreement_sub_object_id
+msgid ""
+"When a relationship field is selected as first field, this\n"
+"         field shows the document model the relationship goes to."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement_end_date
 msgid "When the agreement ends."
 msgstr "Quando termina il contratto."
@@ -1542,11 +1728,6 @@ msgid "compute dynamic Content"
 msgstr "Calcola i contenuti dinamici"
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement_dynamic_description
-msgid "compute dynamic description"
-msgstr "Calcola la descrizione dinamica"
-
-#. module: agreement
 #: model:ir.ui.view,arch_db:agreement.view_project_agreement_kanban
 msgid "oe_kanban_text_red"
 msgstr ""
@@ -1570,3 +1751,49 @@ msgstr "|  Creato da:"
 #: model:ir.ui.view,arch_db:agreement.partner_agreement_form_view
 msgid "|  Created On:"
 msgstr "|  Creato il:"
+
+#~ msgid ""
+#~ "For dynamic content use mako expression '${expression}'. For ex:\n"
+#~ "                                     1. object's field name: ${object."
+#~ "field_name} or\n"
+#~ "                                     2. many2one field name: ${object."
+#~ "many2one_field_id.field_name}"
+#~ msgstr ""
+#~ "Per contenuti dinamici usare l'espressione mako \"${expression}\".Per "
+#~ "es.:\n"
+#~ "                                     1. nome campo dell'oggetto: ${object."
+#~ "field_name} oppure\n"
+#~ "                                     2. nome campo \"molti a uno\": "
+#~ "${object.many2one_field_id.field_name}"
+
+#~ msgid ""
+#~ "For dynamic content use mako expression '${expression}'. For ex:\n"
+#~ "                             1. object's field name: ${object.field_name} "
+#~ "or\n"
+#~ "                             2. many2one field name: ${object."
+#~ "many2one_field_id.field_name}"
+#~ msgstr ""
+#~ "Per contenuti dinamici usare l'espressione mako \"${expression}\". Per "
+#~ "es.:\n"
+#~ "                             1. nome campo dell'oggetto: ${object."
+#~ "field_name} oppure\n"
+#~ "                             2. nome campo \"molti a uno\": ${object."
+#~ "many2one_field_id.field_name}"
+
+#, fuzzy
+#~ msgid ""
+#~ "For dynamic content use mako expression '${expression}'. For ex:\n"
+#~ "                            1. object's field name: ${object.field_name} "
+#~ "or\n"
+#~ "                            2. many2one field name: ${object."
+#~ "many2one_field_id.field_name}"
+#~ msgstr ""
+#~ "Per contenuti dinamici usare l'espressione mako \"${expression}\". Per "
+#~ "es.:\n"
+#~ "                             1. nome campo dell'oggetto: ${object."
+#~ "field_name} oppure\n"
+#~ "                             2. nome campo \"molti a uno\": ${object."
+#~ "many2one_field_id.field_name}"
+
+#~ msgid "Partmer"
+#~ msgstr "Partner"
