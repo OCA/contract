@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo11-addon-agreement',
+        'odoo11-addon-agreement_maintenance',
         'odoo11-addon-agreement_mrp',
         'odoo11-addon-agreement_project',
         'odoo11-addon-agreement_repair',
