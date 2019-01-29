@@ -30,6 +30,7 @@ class SaleOrder(models.Model):
             'user_id': self.user_id.id,
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id,
+            'invoice_partner_id': self.partner_invoice_id.id,
         }
 
     @api.multi
