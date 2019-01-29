@@ -42,6 +42,7 @@ class TestSaleOrder(TransactionCase):
             {
                 'is_contract': True,
                 'default_qty': 12,
+                'recurring_rule_type': "monthlylastday",
                 'contract_template_id': self.contract_template1.id,
             }
         )
@@ -103,6 +104,10 @@ class TestSaleOrder(TransactionCase):
             self.order_line1.contract_id.contract_template_id,
             self.contract_template1,
         )
+        contract_line = self.order_line1.contract_id.recurring_invoice_line_ids
+        self.assertEqual(contract_line.date_start, Date.to_date('2018-01-01'))
+        self.assertEqual(contract_line.date_end, Date.to_date('2018-12-31'))
+        self.assertEqual(contract_line.recurring_next_date, Date.to_date('2018-01-31'))
 
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used

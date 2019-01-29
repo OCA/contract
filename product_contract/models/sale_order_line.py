@@ -107,7 +107,7 @@ class SaleOrderLine(models.Model):
             self.date_start or fields.Date.today(),
             self.recurring_invoicing_type,
             self.recurring_rule_type,
-            int(self.product_uom_qty),
+            1,
         )
         termination_notice_interval = (
             self.product_id.termination_notice_interval
