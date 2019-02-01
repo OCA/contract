@@ -30,6 +30,7 @@ class TestSaleOrder(TransactionCase):
         self.product1.write(
             {
                 'is_contract': True,
+                'default_qty': 12,
                 'contract_template_id': self.contract_template1.id,
                 'qty_formula_id': self.formula.id,
                 'qty_type': 'variable',
