@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
     contract_template_id = fields.Many2one(
         comodel_name='account.analytic.contract', string='Contract Template'
     )
-    default_qty = fields.Integer(string="Default Quantity")
+    default_qty = fields.Integer(string="Default Quantity", default=1)
     recurring_rule_type = fields.Selection(
         [
             ('daily', 'Day(s)'),
