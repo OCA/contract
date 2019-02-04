@@ -1,5 +1,5 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# Copyright (C) 2019 - TODAY, Open Source Integrators
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
 
@@ -37,11 +37,8 @@ class SaleOrder(models.Model):
                         'sale_line_id': line.id,
                         'uom_id': line.product_uom.id
                     })
-                    # If the product sold has a BOM, create a service profile
-                    bom = self.env['mrp.bom'].search(
-                        [('product_tmpl_id', '=',
-                          line.product_id.product_tmpl_id.id)])
-                    if bom:
+                    # If the product is a service profile, create one
+                    if line.product_id.product_tmpl_id.is_serviceprofile:
                         self.env['agreement.serviceprofile'].create({
                             'name': line.name,
                             'agreement_id': order.agreement_id.id,
