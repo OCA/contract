@@ -107,7 +107,9 @@ class TestSaleOrder(TransactionCase):
         contract_line = self.order_line1.contract_id.recurring_invoice_line_ids
         self.assertEqual(contract_line.date_start, Date.to_date('2018-01-01'))
         self.assertEqual(contract_line.date_end, Date.to_date('2018-12-31'))
-        self.assertEqual(contract_line.recurring_next_date, Date.to_date('2018-01-31'))
+        self.assertEqual(
+            contract_line.recurring_next_date, Date.to_date('2018-01-31')
+        )
 
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used
@@ -220,6 +222,23 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             new_contract_line.predecessor_contract_line_id, self.contract_line
         )
+
+    def test_contract_upsell_2(self):
+        """Should stop contract line at sale order line start date"""
+        self.order_line1.contract_id = self.contract
+        self.order_line1.contract_line_id = self.contract_line
+        self.contract_line.write(
+            {
+                'date_start': "2018-06-01",
+                'recurring_next_date': "2018-06-01",
+                'date_end': False,
+            }
+        )
+        self.order_line1.date_start = "2018-06-01"
+        self.order_line1.onchange_product()
+        self.sale.action_confirm()
+        self.assertFalse(self.contract_line.date_end)
+        self.assertTrue(self.contract_line.is_canceled)
 
     def test_onchange_product_id_recurring_info(self):
         self.product2.write(
