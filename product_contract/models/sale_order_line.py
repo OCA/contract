@@ -98,8 +98,13 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_contract_line_values(
-        self, contract, predecessor_contract_line
+        self, contract, predecessor_contract_line_id=False
     ):
+        """
+        :param contract: related contract
+        :param predecessor_contract_line_id: contract line to replace id
+        :return: new contract line dict
+        """
         self.ensure_one()
         recurring_next_date = self.env[
             'account.analytic.invoice.line'
@@ -148,26 +153,42 @@ class SaleOrderLine(models.Model):
             'termination_notice_rule_type': termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
-            'predecessor_contract_line_id': predecessor_contract_line.id,
+            'predecessor_contract_line_id': predecessor_contract_line_id,
         }
 
     @api.multi
     def create_contract_line(self, contract):
         contract_line_env = self.env['account.analytic.invoice.line']
         contract_line = self.env['account.analytic.invoice.line']
+        predecessor_contract_line = False
         for rec in self:
             if rec.contract_line_id:
-                rec.contract_line_id.stop(
-                    rec.date_start - relativedelta(days=1)
+                # If the upsell/downsell line start at the same date or before
+                # the contract line to replace supposed to start, we cancel
+                # the one to be replaced. Otherwise we stop it.
+                if rec.date_start <= rec.contract_line_id.date_start:
+                    # The contract will handel the contract line integrity
+                    # An exception will be raised if we try to cancel an
+                    # invoiced contract line
+                    rec.contract_line_id.cancel()
+                elif (
+                    not rec.contract_line_id.date_end
+                    or rec.date_start <= rec.contract_line_id.date_end
+                ):
+                    rec.contract_line_id.stop(
+                        rec.date_start - relativedelta(days=1)
+                    )
+                    predecessor_contract_line = rec.contract_line_id
+            if predecessor_contract_line:
+                new_contract_line = contract_line_env.create(
+                    rec._prepare_contract_line_values(contract, predecessor_contract_line.id)
                 )
-            new_contract_line = contract_line_env.create(
-                rec._prepare_contract_line_values(
-                    contract, rec.contract_line_id
-                )
-            )
-            if rec.contract_line_id:
-                rec.contract_line_id.successor_contract_line_id = (
+                predecessor_contract_line.successor_contract_line_id = (
                     new_contract_line
+                )
+            else:
+                new_contract_line = contract_line_env.create(
+                    rec._prepare_contract_line_values(contract)
                 )
             contract_line |= new_contract_line
         return contract_line
