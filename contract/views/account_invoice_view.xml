@@ -24,6 +24,21 @@
             'search_default_contract_id': [active_id],
             'default_contract_id': active_id}
         </field>
+        <field name="domain">[('type','in', ['out_invoice', 'out_refund'])]</field>
+    </record>
+
+    <record id="act_purchase_recurring_invoices" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('account.invoice_supplier_tree')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('account.invoice_supplier_form')})]"/>
+        <field name="context">{
+            'search_default_contract_id': [active_id],
+            'default_contract_id': active_id}
+        </field>
+        <field name="domain">[('type','in', ['in_invoice', 'in_refund'])]</field>
     </record>
 
 </odoo>
