@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
     def onchange_date_start(self):
         contract_line_env = self.env['account.analytic.invoice.line']
-        for rec in self:
+        for rec in self.filtered('product_id.is_contract'):
             if not rec.date_start:
                 rec.date_end = False
             else:
