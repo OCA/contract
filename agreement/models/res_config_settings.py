@@ -24,8 +24,7 @@ class ResConfigSettings(models.TransientModel):
     module_agreement_stock = fields.Boolean(
         string='Link your pickings to an agreement.')
     module_fieldservice_agreement = fields.Boolean(
-        string='Link your Field Service orders to an agreement.')
-    module_fieldservice_equipment_agreement = fields.Boolean(
-        string='Link your Field Service equipments to an agreement.')
+        string='Link your Field Service orders and equipments to an'
+               ' agreement.')
     module_helpdesk_agreement = fields.Boolean(
         string='Link your Helpdesk tickets to an agreement.')
