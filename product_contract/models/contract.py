@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 
 
@@ -14,11 +15,15 @@ class AccountAnalyticAccount(models.Model):
     @api.depends('recurring_invoice_line_ids')
     def _compute_sale_order_count(self):
         for rec in self:
-            rec.sale_order_count = len(
-                rec.recurring_invoice_line_ids.mapped(
-                    'sale_order_line_id.order_id'
+            try:
+                order_count = len(
+                    rec.recurring_invoice_line_ids.mapped(
+                        'sale_order_line_id.order_id'
+                    )
                 )
-            )
+            except AccessError:
+                order_count = 0
+            rec.sale_order_count = order_count
 
     @api.multi
     def action_view_sales_orders(self):
