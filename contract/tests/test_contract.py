@@ -154,7 +154,7 @@ class TestContract(TestContractBase):
         self.assertTrue(self.inv_line.invoice_line_tax_ids)
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(
-            self.contract.partner_id.user_id, self.invoice_monthly.user_id
+            self.contract.user_id, self.invoice_monthly.user_id
         )
 
     def test_contract_recurring_next_date(self):
