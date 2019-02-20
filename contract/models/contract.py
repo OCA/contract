@@ -253,7 +253,7 @@ class AccountAnalyticAccount(models.Model):
             'journal_id': journal.id,
             'origin': self.name,
             'company_id': self.company_id.id,
-            'user_id': self.partner_id.user_id.id,
+            'user_id': self.user_id.id,
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id,
         }
