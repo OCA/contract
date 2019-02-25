@@ -273,9 +273,9 @@
                                         </strong><br/>
                                         <div class="o_kanban_record_subtitle text-muted">
                                             <field name="partner_id" invisible="context.get('default_partner_id', False)"/>
-                                            <t t-if="record.start_date.raw_value and record.start_date.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                            <t t-if="record.end_date.raw_value and record.end_date.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                             <div t-attf-class="#{red || ''}">
-                                                <i><field name="start_date"/></i>
+                                                <i><field name="end_date"/></i>
                                             </div>
                                         </div>
                                     </div>
@@ -319,6 +319,10 @@
         <field name="model">agreement</field>
         <field name="arch" type="xml">
             <search string="Agreement Search">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="agreement_type_id"/>
+                <field name="agreement_subtype_id"/>
                 <filter name="filter_non_template" string="Non-Templates" domain="[('active','=',True),('is_template', '=', False)]"/>
                 <filter name="filter_inactive" string="Archived" domain="[('active','=',False)]"/>
                 <filter name="filter_templates" string="Templates" domain="[('active','=',True),('is_template', '=', True)]"/>
