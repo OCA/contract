@@ -19,8 +19,7 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
     name = fields.Char(required=True)
     # Needed for avoiding errors on several inherited behaviors
     partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Partner (always False)",
-        index=True,
+        comodel_name="res.partner", string="Partner (always False)", index=True
     )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist', string='Pricelist'

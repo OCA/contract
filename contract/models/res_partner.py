@@ -16,14 +16,10 @@ class ResPartner(models.Model):
 
     def _compute_contract_count(self):
         contract_model = self.env['account.analytic.account']
-        today = fields.Date.today()
         fetch_data = contract_model.read_group(
             [
                 ('recurring_invoices', '=', True),
                 ('partner_id', 'child_of', self.ids),
-                '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', today),
             ],
             ['partner_id', 'contract_type'],
             ['partner_id', 'contract_type'],
@@ -62,7 +58,6 @@ class ResPartner(models.Model):
             context=dict(
                 self.env.context,
                 search_default_recurring_invoices=True,
-                search_default_not_finished=True,
                 search_default_partner_id=self.id,
                 default_partner_id=self.id,
                 default_recurring_invoices=True,
