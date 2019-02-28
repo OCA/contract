@@ -29,8 +29,13 @@
                    position="after">
                 <field name="contract_template_id" invisible="1"/>
                 <field name="contract_id"
+                       options='{"no_create": True}'
                        attrs="{'invisible': [('is_contract', '=', False)]}"
-                       domain="[('partner_id','=',parent.partner_id),('contract_template_id','=',contract_template_id)]"/>
+                       domain="['|',('contract_template_id','=',contract_template_id),
+                       ('contract_template_id','=',False),
+                       ('partner_id','=',parent.partner_id),
+                       ('recurring_invoices','=',True),
+                       ]"/>
                 <field name="contract_line_id"
                        attrs="{'invisible': [('is_contract', '=', False)]}"
                        domain="[('contract_id','=',contract_id)]"/>
