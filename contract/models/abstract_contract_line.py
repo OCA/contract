@@ -81,7 +81,7 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
     )
     date_start = fields.Date(string='Date Start')
     recurring_next_date = fields.Date(string='Date of Next Invoice')
-
+    last_date_invoiced = fields.Date(string='Last Date Invoiced')
     is_canceled = fields.Boolean(string="Canceled", default=False)
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     auto_renew_interval = fields.Integer(
@@ -132,7 +132,8 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
             if line.automatic_price:
                 product = line.product_id.with_context(
                     quantity=line.env.context.get(
-                        'contract_line_qty', line.quantity
+                        'contract_line_qty',
+                        line.quantity,
                     ),
                     pricelist=line.contract_id.pricelist_id.id,
                     partner=line.contract_id.partner_id.id,
@@ -192,7 +193,6 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
 
         date = self.recurring_next_date or fields.Date.context_today(self)
         partner = self.contract_id.partner_id or self.env.user.partner_id
-
         product = self.product_id.with_context(
             lang=partner.lang,
             partner=partner.id,
