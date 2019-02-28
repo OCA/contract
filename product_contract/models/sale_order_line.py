@@ -181,7 +181,9 @@ class SaleOrderLine(models.Model):
                     predecessor_contract_line = rec.contract_line_id
             if predecessor_contract_line:
                 new_contract_line = contract_line_env.create(
-                    rec._prepare_contract_line_values(contract, predecessor_contract_line.id)
+                    rec._prepare_contract_line_values(
+                        contract, predecessor_contract_line.id
+                    )
                 )
                 predecessor_contract_line.successor_contract_line_id = (
                     new_contract_line
@@ -210,7 +212,8 @@ class SaleOrderLine(models.Model):
         for rec in self:
             if rec.contract_id:
                 if (
-                    rec.contract_template_id
+                    rec.contract_id.contract_template_id
+                    and rec.contract_template_id
                     != rec.contract_id.contract_template_id
                 ):
                     raise ValidationError(
