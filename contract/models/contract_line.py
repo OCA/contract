@@ -409,6 +409,14 @@ class AccountAnalyticInvoiceLine(models.Model):
                 rec.recurring_interval,
             )
 
+    @api.constrains('is_canceled', 'is_auto_renew')
+    def _check_auto_renew_canceled_lines(self):
+        for rec in self:
+            if rec.is_canceled and rec.is_auto_renew:
+                raise ValidationError(
+                    _("A canceled contract line can't be set to auto-renew")
+                )
+
     @api.constrains('recurring_next_date', 'date_start')
     def _check_recurring_next_date_start_date(self):
         for line in self.filtered('recurring_next_date'):
@@ -486,9 +494,12 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
         self.ensure_one()
+        dates = self._get_period_to_invoice(
+            self.last_date_invoiced, self.recurring_next_date
+        )
         invoice_line_vals = {
             'product_id': self.product_id.id,
-            'quantity': self.quantity,
+            'quantity': self._get_quantity_to_invoice(*dates),
             'uom_id': self.uom_id.id,
             'discount': self.discount,
             'contract_line_id': self.id,
@@ -501,8 +512,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         # Insert markers
         contract = self.contract_id
-        first_date_invoiced, last_date_invoiced = self._get_invoiced_period()
-        name = self._insert_markers(first_date_invoiced, last_date_invoiced)
+        name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
                 'name': name,
@@ -513,31 +523,37 @@ class AccountAnalyticInvoiceLine(models.Model):
         return invoice_line_vals
 
     @api.multi
-    def _get_invoiced_period(self):
+    def _get_period_to_invoice(
+        self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
+    ):
         self.ensure_one()
+        first_date_invoiced = False
+        if not recurring_next_date:
+            return first_date_invoiced, last_date_invoiced, recurring_next_date
         first_date_invoiced = (
-            self.last_date_invoiced + relativedelta(days=1)
-            if self.last_date_invoiced
+            last_date_invoiced + relativedelta(days=1)
+            if last_date_invoiced
             else self.date_start
         )
         if self.recurring_rule_type == 'monthlylastday':
-            last_date_invoiced = self.recurring_next_date
+            last_date_invoiced = recurring_next_date
         else:
             if self.recurring_invoicing_type == 'pre-paid':
                 last_date_invoiced = (
-                    self.recurring_next_date
+                    recurring_next_date
                     + self.get_relative_delta(
                         self.recurring_rule_type, self.recurring_interval
                     )
                     - relativedelta(days=1)
                 )
             else:
-                last_date_invoiced = self.recurring_next_date - relativedelta(
+                last_date_invoiced = recurring_next_date - relativedelta(
                     days=1
                 )
-        if self.date_end and self.date_end < last_date_invoiced:
-            last_date_invoiced = self.date_end
-        return first_date_invoiced, last_date_invoiced
+        if stop_at_date_end:
+            if self.date_end and self.date_end < last_date_invoiced:
+                last_date_invoiced = self.date_end
+        return first_date_invoiced, last_date_invoiced, recurring_next_date
 
     @api.multi
     def _insert_markers(self, first_date_invoiced, last_date_invoiced):
@@ -650,8 +666,16 @@ class AccountAnalyticInvoiceLine(models.Model):
                 rec.cancel()
             else:
                 if not rec.date_end or rec.date_end > date_end:
+                    old_date_end = rec.date_end
+                    values = {
+                        'date_end': date_end,
+                        'is_auto_renew': False,
+                        'manual_renew_needed': manual_renew_needed,
+                    }
+                    if rec.last_date_invoiced == date_end:
+                        values['recurring_next_date'] = False
+                    rec.write(values)
                     if post_message:
-                        old_date_end = rec.date_end
                         msg = _(
                             """Contract line for <strong>{product}</strong>
                             stopped: <br/>
@@ -663,13 +687,6 @@ class AccountAnalyticInvoiceLine(models.Model):
                             )
                         )
                         rec.contract_id.message_post(body=msg)
-                    rec.write(
-                        {
-                            'date_end': date_end,
-                            'is_auto_renew': False,
-                            "manual_renew_needed": manual_renew_needed,
-                        }
-                    )
                 else:
                     rec.write(
                         {
@@ -877,7 +894,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         self.mapped('predecessor_contract_line_id').write(
             {'successor_contract_line_id': False}
         )
-        return self.write({'is_canceled': True})
+        return self.write({'is_canceled': True, 'is_auto_renew': False})
 
     @api.multi
     def uncancel(self, recurring_next_date):
@@ -1073,3 +1090,10 @@ class AccountAnalyticInvoiceLine(models.Model):
                 _("Contract line must be canceled before delete")
             )
         return super(AccountAnalyticInvoiceLine, self).unlink()
+
+    @api.multi
+    def _get_quantity_to_invoice(
+        self, period_first_date, period_last_date, invoice_date
+    ):
+        self.ensure_one()
+        return self.quantity
