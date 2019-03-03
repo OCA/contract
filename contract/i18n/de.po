@@ -117,14 +117,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -135,8 +135,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -591,6 +591,7 @@ msgstr "Produkt"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__purchase_contract_count
+#: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Purchase Contracts"
 msgstr "Einkaufsverträge"
@@ -633,6 +634,7 @@ msgstr "Verantwortlich"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
+#: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Sale Contracts"
 msgstr "Verkaufsverträge"
@@ -741,8 +743,8 @@ msgstr "Jahr(e)"
 msgid ""
 "You can't have a next invoicing date before the start of the contract '%s'"
 msgstr ""
-"Das Datum der nächsten Rechnung darf nicht vor Vertragsbeginn des Vertrags '%"
-"s' liegen"
+"Das Datum der nächsten Rechnung darf nicht vor Vertragsbeginn des Vertrags "
+"'%s' liegen"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:211
@@ -776,7 +778,8 @@ msgstr "Sie müssen einen Kunden für den Vertrag '%s' angeben"
 #: code:addons/contract/models/account_analytic_account.py:120
 #, python-format
 msgid "You must supply a next invoicing date for contract '%s'"
-msgstr "Sie müssen das Datum der nächsten Rechnung für den Vertrag '%s' angeben"
+msgstr ""
+"Sie müssen das Datum der nächsten Rechnung für den Vertrag '%s' angeben"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:129
