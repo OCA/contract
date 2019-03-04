@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="model">res.company</field>
+        <field type="xml" name="arch">
+            <field name="currency_id" position="after">
+                <field name="contract_pregenerate_days" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

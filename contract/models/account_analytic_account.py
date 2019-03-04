@@ -8,6 +8,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 # pylint: disable=no-member
 
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -341,14 +342,27 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def cron_recurring_create_invoice(self, limit=None):
-        today = fields.Date.today()
-        contracts = self.with_context(cron=True).search([
-            ('recurring_invoices', '=', True),
-            ('recurring_next_date', '<=', today),
-            '|',
-            ('date_end', '=', False),
-            ('date_end', '>=', today),
-        ])
+        """Generate invoices.
+
+        Invoices can be generated a specified number of days before the
+        invoice date, to allow the user to check the invoices before
+        confirmation, or to send out the invoices to the customers before
+        the invoice date.
+        """
+        today = datetime.today()
+        company_model = self.env['res.company']
+        for company in company_model.search([]):
+            days_before = company.contract_pregenerate_days or 0
+            cutoffdate = (today + relativedelta(days=days_before)).strftime(
+                '%Y-%m-%d')
+            contracts = self.with_context(cron=True).search([
+                ('company_id', '=', company.id),
+                ('recurring_invoices', '=', True),
+                ('recurring_next_date', '<=', cutoffdate),
+                '|',
+                ('date_end', '=', False),
+                ('date_end', '>=', cutoffdate),
+            ])
         return contracts.recurring_create_invoice(limit)
 
     @api.multi
