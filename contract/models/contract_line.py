@@ -513,28 +513,42 @@ class AccountAnalyticInvoiceLine(models.Model):
         return invoice_line_vals
 
     @api.multi
-    def _get_invoiced_period(self):
+    def _get_next_invoiced_period(
+        self, last_date_invoiced, recurring_next_date
+    ):
         self.ensure_one()
         first_date_invoiced = (
-            self.last_date_invoiced + relativedelta(days=1)
-            if self.last_date_invoiced
+            last_date_invoiced + relativedelta(days=1)
+            if last_date_invoiced
             else self.date_start
         )
         if self.recurring_rule_type == 'monthlylastday':
-            last_date_invoiced = self.recurring_next_date
+            last_date_invoiced = recurring_next_date
         else:
             if self.recurring_invoicing_type == 'pre-paid':
                 last_date_invoiced = (
-                    self.recurring_next_date
+                    recurring_next_date
                     + self.get_relative_delta(
                         self.recurring_rule_type, self.recurring_interval
                     )
                     - relativedelta(days=1)
                 )
             else:
-                last_date_invoiced = self.recurring_next_date - relativedelta(
+                last_date_invoiced = recurring_next_date - relativedelta(
                     days=1
                 )
+        recurring_next_date = recurring_next_date + self.get_relative_delta(
+            self.recurring_rule_type, self.recurring_interval
+        )
+        return first_date_invoiced, last_date_invoiced, recurring_next_date
+
+    @api.multi
+    def _get_invoiced_period(self):
+        self.ensure_one()
+        dates = self._get_next_invoiced_period(
+            self.last_date_invoiced, self.recurring_next_date
+        )
+        first_date_invoiced, last_date_invoiced, recurring_next_date = dates
         if self.date_end and self.date_end < last_date_invoiced:
             last_date_invoiced = self.date_end
         return first_date_invoiced, last_date_invoiced
