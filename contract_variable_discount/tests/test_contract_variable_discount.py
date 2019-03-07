@@ -44,8 +44,13 @@ class TestContractVariableDiscount(TransactionCase):
         })
         self.formula = self.env['contract.line.discount.formula'].create({
             'name': 'Test formula',
-            # For testing each of the possible variables
-            'code': 'result = 15',
+            'code': 'env["res.users"]\n'
+                    'context.get("lang")\n'
+                    'user.id\n'
+                    'contract.id\n'
+                    'partner.id\n'
+                    'line.discount_type\n'
+                    'result = 15',
         })
         self.line_vals = {
             'analytic_account_id': self.template.id,

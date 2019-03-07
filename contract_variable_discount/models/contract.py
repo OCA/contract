@@ -42,7 +42,7 @@ class AccountAnalyticContractLine(models.Model):
         selection=[
             ('fixed', 'Fixed discount'),
             ('variable', 'Variable discount'),
-        ], required=True, default='fixed', string="discount. type")
+        ], required=True, default='fixed', string="Discount type")
     discount_formula_id = fields.Many2one(
         comodel_name="contract.line.discount.formula", string="Formula")
 
