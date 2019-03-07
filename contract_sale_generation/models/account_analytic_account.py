@@ -22,19 +22,29 @@ class AccountAnalyticAccount(models.Model):
         sale_line = self.env['sale.order.line'].new({
             'order_id': order_id,
             'product_id': line.product_id.id,
-            'product_qty': line.quantity,
-            'product_uom_qty': line.quantity,
-            'product_uom': line.uom_id.id,
         })
         # Get other sale line values from product onchange
         sale_line.product_id_change()
-        sale_line_vals = sale_line._convert_to_write(sale_line._cache)
         # Insert markers
-        name = self._insert_markers(line.name)
+        name = line.name
+        contract = line.analytic_account_id
+        if 'old_date' in self.env.context and 'next_date' in self.env.context:
+            lang_obj = self.env['res.lang']
+            lang = lang_obj.search(
+                [('code', '=', contract.partner_id.lang)])
+            date_format = lang.date_format or '%m/%d/%Y'
+            name = self._insert_markers(
+                line, self.env.context['old_date'],
+                self.env.context['next_date'], date_format)
+        
+        sale_line_vals = sale_line._convert_to_write(sale_line._cache)
         sale_line_vals.update({
             'name': name,
             'discount': line.discount,
             'price_unit': line.price_unit,
+             'product_qty': line.quantity,
+             'product_uom_qty': line.quantity,
+             'product_uom': line.uom_id.id,
         })
         return sale_line_vals
 
