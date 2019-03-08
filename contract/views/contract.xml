@@ -200,7 +200,7 @@
                 <separator/>
                 <filter name="not_finished"
                         string="In progress"
-                        domain="[('recurring_next_date', '&gt;=', time.strftime('%Y-%m-%d'))]"
+                        domain="['|', ('date_end', '&gt;=', time.strftime('%Y-%m-%d')), ('date_end', '=', False)]"
                 />
                 <filter name="finished"
                         string="Finished"

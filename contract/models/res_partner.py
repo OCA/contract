@@ -62,7 +62,6 @@ class ResPartner(models.Model):
             context=dict(
                 self.env.context,
                 search_default_recurring_invoices=True,
-                search_default_not_finished=True,
                 search_default_partner_id=self.id,
                 default_partner_id=self.id,
                 default_recurring_invoices=True,
