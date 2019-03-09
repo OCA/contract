@@ -36,15 +36,15 @@ class AccountAnalyticAccount(models.Model):
             name = self._insert_markers(
                 line, self.env.context['old_date'],
                 self.env.context['next_date'], date_format)
-        
+
         sale_line_vals = sale_line._convert_to_write(sale_line._cache)
         sale_line_vals.update({
             'name': name,
             'discount': line.discount,
             'price_unit': line.price_unit,
-             'product_qty': line.quantity,
-             'product_uom_qty': line.quantity,
-             'product_uom': line.uom_id.id,
+            'product_qty': line.quantity,
+            'product_uom_qty': line.quantity,
+            'product_uom': line.uom_id.id,
         })
         return sale_line_vals
 
