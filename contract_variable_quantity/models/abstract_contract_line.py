@@ -13,6 +13,11 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         selection=[
             ('fixed', 'Fixed quantity'),
             ('variable', 'Variable quantity'),
-        ], required=True, default='fixed', string="Qty. type")
+        ],
+        required=True,
+        default='fixed',
+        string="Qty. type",
+    )
     qty_formula_id = fields.Many2one(
-        comodel_name="contract.line.qty.formula", string="Qty. formula")
+        comodel_name="contract.line.qty.formula", string="Qty. formula"
+    )

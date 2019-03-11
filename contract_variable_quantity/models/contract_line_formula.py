@@ -23,12 +23,18 @@ class ContractLineFormula(models.Model):
             'line': self.env['account.analytic.invoice.line'],
             'contract': self.env['account.analytic.account'],
             'invoice': self.env['account.invoice'],
+            'quantity': 0,
+            'period_first_date': False,
+            'period_last_date': False,
+            'invoice_date': False,
         }
         try:
             safe_eval(
-                self.code.strip(), eval_context, mode="exec", nocopy=True)
+                self.code.strip(), eval_context, mode="exec", nocopy=True
+            )
         except Exception as e:
             raise exceptions.ValidationError(
-                _('Error evaluating code.\nDetails: %s') % e)
+                _('Error evaluating code.\nDetails: %s') % e
+            )
         if 'result' not in eval_context:
             raise exceptions.ValidationError(_('No valid result returned.'))
