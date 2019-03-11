@@ -486,9 +486,12 @@ class AccountAnalyticInvoiceLine(models.Model):
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
         self.ensure_one()
+        dates = self._get_invoiced_period(
+            self.last_date_invoiced, self.recurring_next_date
+        )
         invoice_line_vals = {
             'product_id': self.product_id.id,
-            'quantity': self.quantity,
+            'quantity': self._get_quantity_to_invoice(*dates),
             'uom_id': self.uom_id.id,
             'discount': self.discount,
             'contract_line_id': self.id,
@@ -501,8 +504,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         # Insert markers
         contract = self.contract_id
-        first_date_invoiced, last_date_invoiced = self._get_invoiced_period()
-        name = self._insert_markers(first_date_invoiced, last_date_invoiced)
+        name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
                 'name': name,
@@ -513,10 +515,11 @@ class AccountAnalyticInvoiceLine(models.Model):
         return invoice_line_vals
 
     @api.multi
-    def _get_next_invoiced_period(
-        self, last_date_invoiced, recurring_next_date
-    ):
+    def _get_invoiced_period(self, last_date_invoiced, recurring_next_date):
         self.ensure_one()
+        first_date_invoiced = False
+        if not recurring_next_date:
+            return first_date_invoiced, last_date_invoiced, recurring_next_date
         first_date_invoiced = (
             last_date_invoiced + relativedelta(days=1)
             if last_date_invoiced
@@ -537,21 +540,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                 last_date_invoiced = recurring_next_date - relativedelta(
                     days=1
                 )
-        recurring_next_date = recurring_next_date + self.get_relative_delta(
-            self.recurring_rule_type, self.recurring_interval
-        )
-        return first_date_invoiced, last_date_invoiced, recurring_next_date
-
-    @api.multi
-    def _get_invoiced_period(self):
-        self.ensure_one()
-        dates = self._get_next_invoiced_period(
-            self.last_date_invoiced, self.recurring_next_date
-        )
-        first_date_invoiced, last_date_invoiced, recurring_next_date = dates
         if self.date_end and self.date_end < last_date_invoiced:
             last_date_invoiced = self.date_end
-        return first_date_invoiced, last_date_invoiced
+        return first_date_invoiced, last_date_invoiced, recurring_next_date
 
     @api.multi
     def _insert_markers(self, first_date_invoiced, last_date_invoiced):
