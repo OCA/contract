@@ -12,18 +12,27 @@ class AccountAnalyticInvoiceLine(models.Model):
     _inherit = 'account.analytic.invoice.line'
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id=False):
-        vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id=invoice_id
+    def _get_quantity_to_invoice(
+        self, period_first_date, period_last_date, invoice_date
+    ):
+        quantity = super(
+            AccountAnalyticInvoiceLine, self
+        )._get_quantity_to_invoice(
+            period_first_date, period_last_date, invoice_date
         )
+        if not period_first_date or not period_last_date or not invoice_date:
+            return quantity
         if self.qty_type == 'variable':
             eval_context = {
                 'env': self.env,
                 'context': self.env.context,
                 'user': self.env.user,
                 'line': self,
+                'quantity': quantity,
+                'period_first_date': period_first_date,
+                'period_last_date': period_last_date,
+                'invoice_date': invoice_date,
                 'contract': self.contract_id,
-                'invoice': self.env['account.invoice'].browse(invoice_id),
             }
             safe_eval(
                 self.qty_formula_id.code.strip(),
@@ -31,24 +40,23 @@ class AccountAnalyticInvoiceLine(models.Model):
                 mode="exec",
                 nocopy=True,
             )  # nocopy for returning result
-            qty = eval_context.get('result', 0)
-            if self.contract_id.skip_zero_qty and float_is_zero(
-                qty,
+            quantity = eval_context.get('result', 0)
+        return quantity
+
+    @api.multi
+    def _prepare_invoice_line(self, invoice_id=False):
+        vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
+            invoice_id=invoice_id
+        )
+        if (
+            'quantity' in vals
+            and self.contract_id.skip_zero_qty
+            and float_is_zero(
+                vals['quantity'],
                 self.env['decimal.precision'].precision_get(
                     'Product Unit of Measure'
                 ),
-            ):
-                # Return empty dict to skip line create
-                vals = {}
-            else:
-                vals['quantity'] = qty
-                # Re-evaluate price with this new quantity
-                vals['price_unit'] = self.with_context(
-                    contract_line_qty=qty
-                ).price_unit
-        else:
-            if 'quantity' in vals and vals['quantity'] == 0:
-                # Skip zero should ignore lines with qty zero even for fixed
-                # qty
-                vals = {}
+            )
+        ):
+            vals = {}
         return vals
