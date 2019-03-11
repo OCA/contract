@@ -10,9 +10,7 @@
     'author': "Tecnativa,"
               "Odoo Community Association (OCA)",
     'website': 'https://www.tecnativa.com',
-    'depends': [
-        'contract',
-    ],
+    'depends': ['contract'],
     'data': [
         'security/ir.model.access.csv',
         'views/abstract_contract_view.xml',
