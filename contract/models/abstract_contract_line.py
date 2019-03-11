@@ -81,7 +81,7 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
     )
     date_start = fields.Date(string='Date Start')
     recurring_next_date = fields.Date(string='Date of Next Invoice')
-
+    last_date_invoiced = fields.Date(string='Last Date Invoiced')
     is_canceled = fields.Boolean(string="Canceled", default=False)
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     auto_renew_interval = fields.Integer(
@@ -116,6 +116,17 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         oldname='analytic_account_id',
     )
 
+    @api.multi
+    def _get_invoiced_period(self, last_date_invoiced, recurring_next_date):
+        return self.date_start, last_date_invoiced, recurring_next_date
+
+    @api.multi
+    def _get_quantity_to_invoice(
+        self, period_first_date, period_last_date, invoice_date
+    ):
+        self.ensure_one()
+        return self.quantity
+
     @api.depends(
         'automatic_price',
         'specific_price',
@@ -130,9 +141,13 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
         """
         for line in self:
             if line.automatic_price:
+                dates = line._get_invoiced_period(
+                    line.last_date_invoiced, line.recurring_next_date
+                )
                 product = line.product_id.with_context(
                     quantity=line.env.context.get(
-                        'contract_line_qty', line.quantity
+                        'contract_line_qty',
+                        line._get_quantity_to_invoice(*dates),
                     ),
                     pricelist=line.contract_id.pricelist_id.id,
                     partner=line.contract_id.partner_id.id,
@@ -155,7 +170,10 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
     @api.depends('quantity', 'price_unit', 'discount')
     def _compute_price_subtotal(self):
         for line in self:
-            subtotal = line.quantity * line.price_unit
+            dates = line._get_invoiced_period(
+                line.last_date_invoiced, line.recurring_next_date
+            )
+            subtotal = line._get_quantity_to_invoice(*dates) * line.price_unit
             discount = line.discount / 100
             subtotal *= 1 - discount
             if line.contract_id.pricelist_id:
@@ -192,11 +210,13 @@ class AccountAbstractAnalyticContractLine(models.AbstractModel):
 
         date = self.recurring_next_date or fields.Date.context_today(self)
         partner = self.contract_id.partner_id or self.env.user.partner_id
-
+        dates = self._get_invoiced_period(
+            self.last_date_invoiced, self.recurring_next_date
+        )
         product = self.product_id.with_context(
             lang=partner.lang,
             partner=partner.id,
-            quantity=self.quantity,
+            quantity=self._get_quantity_to_invoice(*dates),
             date=date,
             pricelist=self.contract_id.pricelist_id.id,
             uom=self.uom_id.id,
