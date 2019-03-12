@@ -171,7 +171,7 @@ class AccountAnalyticAccount(models.Model):
         for field_name, field in contract_template_id._fields.items():
             if field.name == 'recurring_invoice_line_ids':
                 lines = self._convert_contract_lines(contract_template_id)
-                self.recurring_invoice_line_ids = lines
+                self.recurring_invoice_line_ids += lines
             elif not any(
                 (
                     field.compute,
@@ -183,6 +183,7 @@ class AccountAnalyticAccount(models.Model):
                 )
             ):
                 self[field_name] = self.contract_template_id[field_name]
+        self.recurring_invoice_line_ids._onchange_date_start()
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -213,7 +214,8 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _convert_contract_lines(self, contract):
         self.ensure_one()
-        new_lines = []
+        new_lines = self.env['account.analytic.invoice.line']
+        contract_line_model = self.env['account.analytic.invoice.line']
         for contract_line in contract.recurring_invoice_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
             # Remove template link field
@@ -222,8 +224,7 @@ class AccountAnalyticAccount(models.Model):
             vals['recurring_next_date'] = fields.Date.context_today(
                 contract_line
             )
-            self.recurring_invoice_line_ids._onchange_date_start()
-            new_lines.append((0, 0, vals))
+            new_lines += contract_line_model.new(vals)
         return new_lines
 
     @api.multi
