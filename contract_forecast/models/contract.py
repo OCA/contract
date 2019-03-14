@@ -11,11 +11,14 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def action_show_contract_forecast(self):
         self.ensure_one()
+        context = {'search_default_groupby_date_invoice': True}
+        context.update(self.env.context)
+
         return {
             "type": "ir.actions.act_window",
             "name": _("Contract Forecast"),
             "res_model": "contract.line.forecast.period",
             "domain": [("contract_id", "=", self.id)],
             "view_mode": "pivot,tree",
-            "context": self.env.context,
+            "context": context,
         }

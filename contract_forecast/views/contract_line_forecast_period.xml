@@ -19,7 +19,7 @@
                     <filter string="Date End" name="groupby_date_end"
                             context="{'group_by':'date_end'}"/>
                     <filter string="Date Invoice" name="groupby_date_invoice"
-                            context="{'group_by':'date_invoice'}"/>
+                            context="{'group_by':'date_invoice:day'}"/>
                 </group>
             </search>
         </field>
@@ -48,8 +48,8 @@
         <field name="model">contract.line.forecast.period</field>
         <field name="arch" type="xml">
             <pivot string="Contract Forecast">
-                <field name="product_id" type="row"/>
-                <field name="date_invoice" type="col"/>
+                <field name="product_id" type="col"/>
+                <field name="date_invoice" type="row"/>
                 <field name="price_subtotal" type="measure"/>
             </pivot>
         </field>
