@@ -106,7 +106,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     def create(self, values):
         contract_lines = super(AccountAnalyticInvoiceLine, self).create(values)
         for contract_line in contract_lines:
-            contract_line._generate_forecast_periods()
+            contract_line.with_delay()._generate_forecast_periods()
         return contract_lines
 
     @api.model
