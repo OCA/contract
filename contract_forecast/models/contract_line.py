@@ -54,11 +54,11 @@ class AccountAnalyticInvoiceLine(models.Model):
         if self.is_canceled or not self.active:
             return False
         contract_forecast_end_date = self._get_contract_forecast_end_date()
-        if not self.date_end:
-            return period_date_end <= contract_forecast_end_date
+        if not self.date_end or self.is_auto_renew:
+            return period_date_end < contract_forecast_end_date
         return (
             period_date_end < self.date_end
-            and period_date_end <= contract_forecast_end_date
+            and period_date_end < contract_forecast_end_date
         )
 
     @api.multi
@@ -71,7 +71,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                 last_date_invoiced = (
                     rec.last_date_invoiced
                     if rec.last_date_invoiced
-                    else rec.date_start
+                    else rec.date_start - relativedelta(days=1)
                 )
                 period_date_end = last_date_invoiced
                 recurring_next_date = rec.recurring_next_date
@@ -79,7 +79,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                     period_date_end
                 ):
                     period_dates = rec._get_period_to_invoice(
-                        last_date_invoiced, recurring_next_date
+                        last_date_invoiced,
+                        recurring_next_date,
+                        stop_at_date_end=not rec.is_auto_renew,
                     )
                     period_date_start, period_date_end, recurring_next_date = (
                         period_dates
@@ -124,6 +126,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             "recurring_interval",
             "is_canceled",
             "active",
+            "is_auto_renew",
         ]
 
     @api.multi

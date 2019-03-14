@@ -115,3 +115,31 @@ class TestContractLineForecastPeriod(TestContractBase):
         )
         self.assertTrue(self.acct_line.forecast_period_ids)
         self.assertEqual(len(self.acct_line.forecast_period_ids), 1)
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_7(self):
+        self.acct_line.write(
+            {
+                'date_end': "2019-6-05",
+                'recurring_rule_type': "monthlylastday",
+                'recurring_invoicing_type': 'pre-paid',
+                'is_auto_renew': True,
+            }
+        )
+        self.acct_line._onchange_date_start()
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_8(self):
+        self.acct_line.write(
+            {
+                'date_start': "2019-01-14",
+                'recurring_next_date': "2019-01-31",
+                'date_end': "2019-01-14",
+                'recurring_rule_type': "monthlylastday",
+                'recurring_invoicing_type': 'post-paid',
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 1)
