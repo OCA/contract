@@ -19,8 +19,12 @@ def post_init_hook(cr, registry):
     )
     with api.Environment.manage():
         env = api.Environment(cr, SUPERUSER_ID, {})
-        contract_lines = env["account.analytic.invoice.line"].search(
-            [('is_canceled', '=', False)]
-        )
-        for contract_line in contract_lines:
-            contract_line.with_delay()._generate_forecast_periods()
+        offset = 0
+        while True:
+            contract_lines = env["account.analytic.invoice.line"].search(
+                [('is_canceled', '=', False)], limit=100, offset=offset
+            )
+            contract_lines.with_delay()._generate_forecast_periods()
+            if len(contract_lines) < 100:
+                break
+            offset += 100

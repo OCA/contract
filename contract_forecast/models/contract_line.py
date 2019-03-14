@@ -66,6 +66,7 @@ class AccountAnalyticInvoiceLine(models.Model):
     def _generate_forecast_periods(self):
         values = []
         for rec in self:
+            rec.forecast_period_ids.unlink()
             if rec.recurring_next_date:
                 last_date_invoiced = (
                     rec.last_date_invoiced
@@ -98,11 +99,6 @@ class AccountAnalyticInvoiceLine(models.Model):
                         )
                     )
         return self.env["contract.line.forecast.period"].create(values)
-
-    @api.multi
-    @job(default_channel=QUEUE_CHANNEL)
-    def _unlink_forecast_periods(self):
-        return self.mapped("forecast_period_ids").unlink()
 
     @api.model
     def create(self, values):
@@ -140,6 +136,5 @@ class AccountAnalyticInvoiceLine(models.Model):
             ]
         ):
             for rec in self:
-                rec._unlink_forecast_periods()
-                rec._generate_forecast_periods()
+                rec.with_delay()._generate_forecast_periods()
         return res
