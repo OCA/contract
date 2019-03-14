@@ -204,7 +204,7 @@
                 <group expand="0" string="Group By...">
                     <filter name="next_invoice"
                             string="Next Invoice"
-                            domain="[('recurring_next_date', '&gt;=', time.strftime('%Y-%m-%d'))]"
+                            domain="[('recurring_next_date', '!=', False)]"
                             context="{'group_by':'recurring_next_date'}"
                     />
                     <filter name="date_end"
