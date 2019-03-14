@@ -1807,3 +1807,9 @@ class TestContract(TestContractBase):
         self.contract.recurring_invoice_line_ids.cancel()
         self.contract.recurring_invoice_line_ids.unlink()
         self.assertFalse(self.contract.recurring_create_invoice())
+
+    def test_stop_at_last_date_invoiced(self):
+        self.contract.recurring_create_invoice()
+        self.assertTrue(self.acct_line.recurring_next_date)
+        self.acct_line.stop(self.acct_line.last_date_invoiced)
+        self.assertFalse(self.acct_line.recurring_next_date)
