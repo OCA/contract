@@ -183,7 +183,6 @@ class AccountAnalyticAccount(models.Model):
                 )
             ):
                 self[field_name] = self.contract_template_id[field_name]
-        self.recurring_invoice_line_ids._onchange_date_start()
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -225,6 +224,7 @@ class AccountAnalyticAccount(models.Model):
                 contract_line
             )
             new_lines += contract_line_model.new(vals)
+        new_lines._onchange_date_start()
         return new_lines
 
     @api.multi
