@@ -29,7 +29,7 @@ class Agreement(models.Model):
         return res
 
     _sql_constraints = [(
-        'code_partner_company_unique',
+        'code_partner_unique',
         'unique(code, partner_id)',
         'This agreement code already exists for this partner!'
         )]
