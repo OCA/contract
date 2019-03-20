@@ -9,7 +9,7 @@
     'category': 'Contract',
     'author': "Akretion,Odoo Community Association (OCA)",
     'contributors': 'Yves Goldberg (Ygol InternetWork)',
-    'website': 'http://www.akretion.com',
+    'website': 'https://github.com/oca/contract',
     'license': 'AGPL-3',
     'depends': ['base'],
     'data': [
