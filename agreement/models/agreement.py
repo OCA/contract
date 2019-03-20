@@ -14,6 +14,10 @@ class Agreement(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Partner', ondelete='restrict', required=True,
         domain=[('parent_id', '=', False)])
+    company_id = fields.Many2one(
+        'res.company', string='Company',
+        default=lambda self: self.env['res.company']._company_default_get(
+'agreement'))
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
     start_date = fields.Date()
@@ -29,7 +33,7 @@ class Agreement(models.Model):
         return res
 
     _sql_constraints = [(
-        'code_partner_unique',
-        'unique(code, partner_id)',
+        'code_partner_company_unique',
+        'unique(code, partner_id, company_id)',
         'This agreement code already exists for this partner!'
         )]
