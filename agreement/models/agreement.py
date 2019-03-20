@@ -17,7 +17,7 @@ class Agreement(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get(
-'agreement'))
+            'agreement'))
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
     start_date = fields.Date()
