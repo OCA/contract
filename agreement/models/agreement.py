@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -15,10 +14,6 @@ class Agreement(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Partner', ondelete='restrict', required=True,
         domain=[('parent_id', '=', False)])
-    company_id = fields.Many2one(
-        'res.company', string='Company',
-        default=lambda self: self.env['res.company']._company_default_get(
-            'agreement'))
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
     start_date = fields.Date()
