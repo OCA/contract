@@ -4,7 +4,7 @@
 # Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Copyright 2016-2017 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
-# Copyright 2018 Therp BV <https://therp.nl>.
+# Copyright 2018-2019 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 # pylint: disable=no-member
 
@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class AccountAnalyticAccount(models.Model):
@@ -353,8 +354,9 @@ class AccountAnalyticAccount(models.Model):
         company_model = self.env['res.company']
         for company in company_model.search([]):
             days_before = company.contract_pregenerate_days or 0
-            cutoffdate = (today + relativedelta(days=days_before)).strftime(
-                '%Y-%m-%d')
+            cutoffdate = (
+                today + relativedelta(days=days_before)
+            ).strftime(DEFAULT_SERVER_DATE_FORMAT)
             contracts = self.with_context(cron=True).search([
                 ('company_id', '=', company.id),
                 ('recurring_invoices', '=', True),
