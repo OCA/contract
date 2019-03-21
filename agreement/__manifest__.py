@@ -7,8 +7,7 @@
     'summary': "Adds an agreement object",
     'version': '12.0.1.0.0',
     'category': 'Contract',
-    'author': "Akretion,Odoo Community Association (OCA)",
-    'contributors': 'Yves Goldberg (Ygol InternetWork)',
+    'author': "Akretion, Yves Goldberg (Ygol Internetwork), Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
     'license': 'AGPL-3',
     'depends': ['base'],
@@ -18,5 +17,10 @@
         'views/agreement.xml',
         ],
     'demo': ['demo/demo.xml'],
+    'development_status': 'Beta',
+    'maintainers': [
+        'ygol',
+        'max3903',
+    ],
     'installable': True,
 }
