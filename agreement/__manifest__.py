@@ -21,7 +21,7 @@
     'development_status': 'Beta',
     'maintainers': [
         'ygol',
-        'max3903',
+        'alexis-via',
     ],
     'installable': True,
 }
