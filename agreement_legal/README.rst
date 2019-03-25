@@ -23,7 +23,7 @@ Agreements
     :target: https://runbot.odoo-community.org/runbot/110/11.0
     :alt: Try me on Runbot
 
-|badge1| |badge2| |badge3| |badge4| |badge5| 
+|badge1| |badge2| |badge3| |badge4| |badge5|
 
 This module allows you to manage agreements, letter of intent and contract content.
 The module is meant to be used by the legal team of a company and to allow them
@@ -94,6 +94,7 @@ Contributors
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
 * Wolfgang Hall <whall@opensourceintegrators.com>
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>
 
 Other credits
 ~~~~~~~~~~~~~
@@ -122,7 +123,7 @@ promote its widespread use.
 
 Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
-|maintainer-max3903| 
+|maintainer-max3903|
 
 This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/11.0/agreement>`_ project on GitHub.
 

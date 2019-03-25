@@ -1,6 +1,6 @@
 To use this module:
 
-* Go to Agreement > Agrements
+* Go to Agreement > Agreements
 * Create a new agreement
 * Select a template
 * Follow the process to get the required approval
