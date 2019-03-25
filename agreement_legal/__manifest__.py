@@ -27,7 +27,6 @@
         "data/agreement_type.xml",
         "security/res_groups.xml",
         "security/ir.model.access.csv",
-        "security/agreement_security.xml",
         "report/agreement.xml",
         "views/res_config_settings.xml",
         "views/agreement_appendix.xml",
