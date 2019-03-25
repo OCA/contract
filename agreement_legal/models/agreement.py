@@ -10,12 +10,7 @@ class Agreement(models.Model):
 
     def _default_stage_id(self):
         return self.env.ref("agreement_legal.agreement_stage_new")
-    # re-adding company from "agreement"
-    company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        default=lambda self: self.env["res.company"]._company_default_get("agreement"),
-    )
+
     # General
     name = fields.Char(string="Title", required=True)
     is_template = fields.Boolean(

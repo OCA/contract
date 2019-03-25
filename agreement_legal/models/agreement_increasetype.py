@@ -7,6 +7,7 @@ from odoo import fields, models
 # Main Agreement Increase Type Records Model
 class AgreementIncreaseType(models.Model):
     _name = "agreement.increasetype"
+    _description = "Agreement Increase Type"
 
     # General
     name = fields.Char(
