@@ -11,7 +11,8 @@ class AgreementSection(models.Model):
 
     name = fields.Char(string="Name", required=True)
     title = fields.Char(
-        string="Title", help="The title is displayed on the PDF." "The name is not."
+        string="Title",
+        help="The title is displayed on the PDF." "The name is not."
     )
     sequence = fields.Integer(string="Sequence")
     agreement_id = fields.Many2one(

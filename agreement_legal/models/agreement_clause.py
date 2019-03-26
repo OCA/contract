@@ -11,12 +11,18 @@ class AgreementClause(models.Model):
 
     name = fields.Char(string="Name", required=True)
     title = fields.Char(
-        string="Title", help="The title is displayed on the PDF." "The name is not."
+        string="Title",
+        help="The title is displayed on the PDF." "The name is not."
     )
     sequence = fields.Integer(string="Sequence")
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        "agreement",
+        string="Agreement",
+        ondelete="cascade")
     section_id = fields.Many2one(
-        "agreement.section", string="Section", ondelete="cascade"
+        "agreement.section",
+        string="Section",
+        ondelete="cascade"
     )
     content = fields.Html(string="Clause Content")
     dynamic_content = fields.Html(

@@ -300,7 +300,9 @@ class Agreement(models.Model):
         "account.analytic.account", string="Analytic Account", index=True
     )
     analytic_line_ids = fields.One2many(
-        "account.analytic.line", "agreement_id", string="Revenues and Costs", copy=False
+        "account.analytic.line",
+        "agreement_id",
+        string="Revenues and Costs", copy=False
     )
     previous_version_agreements_ids = fields.One2many(
         "agreement",
@@ -373,7 +375,8 @@ class Agreement(models.Model):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            description = MailTemplates.with_context(lang=lang)._render_template(
+            description = MailTemplates.with_context(
+                lang=lang)._render_template(
                 agreement.description, "agreement", agreement.id
             )
             agreement.dynamic_description = description
@@ -383,7 +386,8 @@ class Agreement(models.Model):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            special_terms = MailTemplates.with_context(lang=lang)._render_template(
+            special_terms = MailTemplates.with_context(
+                lang=lang)._render_template(
                 agreement.special_terms, "agreement", agreement.id
             )
             agreement.dynamic_special_terms = special_terms
@@ -477,7 +481,8 @@ class Agreement(models.Model):
     @api.model
     def create(self, vals):
         if vals.get("reference", _("New")) == _("New"):
-            vals["reference"] = self.env["ir.sequence"].next_by_code("agreement") or _(
+            vals["reference"] = self.env[
+                "ir.sequence"].next_by_code("agreement") or _(
                 "New"
             )
         return super(Agreement, self).create(vals)
