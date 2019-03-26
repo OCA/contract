@@ -93,7 +93,7 @@ class AgreementSection(models.Model):
                 and section.agreement_id.partner_id.lang
                 or "en_US"
             )
-            content = MailTemplates.with_context(lang=lang).render_template(
+            content = MailTemplates.with_context(lang=lang)._render_template(
                 section.content, "agreement.section", section.id
             )
             section.dynamic_content = content

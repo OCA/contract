@@ -92,7 +92,7 @@ class AgreementAppendix(models.Model):
                 and appendix.agreement_id.partner_id.lang
                 or "en_US"
             )
-            content = MailTemplates.with_context(lang=lang).render_template(
+            content = MailTemplates.with_context(lang=lang)._render_template(
                 appendix.content, "agreement.appendix", appendix.id
             )
             appendix.dynamic_content = content
