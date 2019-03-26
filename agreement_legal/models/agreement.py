@@ -48,7 +48,9 @@ class Agreement(models.Model):
         help="When the agreement starts.",
     )
     end_date = fields.Date(
-        string="End Date", track_visibility="onchange", help="When the agreement ends."
+        string="End Date",
+        track_visibility="onchange",
+        help="When the agreement ends."
     )
     color = fields.Integer()
     active = fields.Boolean(
@@ -144,15 +146,25 @@ class Agreement(models.Model):
         track_visibility="onchange",
         help="Date that the contract was terminated.",
     )
-    reviewed_date = fields.Date(string="Reviewed Date", track_visibility="onchange")
+    reviewed_date = fields.Date(
+        string="Reviewed Date",
+        track_visibility="onchange")
     reviewed_user_id = fields.Many2one(
-        "res.users", string="Reviewed By", track_visibility="onchange"
+        "res.users",
+        string="Reviewed By",
+        track_visibility="onchange"
     )
-    approved_date = fields.Date(string="Approved Date", track_visibility="onchange")
+    approved_date = fields.Date(
+        string="Approved Date",
+        track_visibility="onchange")
     approved_user_id = fields.Many2one(
-        "res.users", string="Approved By", track_visibility="onchange"
+        "res.users",
+        string="Approved By",
+        track_visibility="onchange"
     )
-    currency_id = fields.Many2one("res.currency", string="Currency")
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency")
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -202,7 +214,9 @@ class Agreement(models.Model):
         help="Select the sub-type of this agreement. Sub-Types are related to "
         "agreement types.",
     )
-    product_ids = fields.Many2many("product.template", string="Products & Services")
+    product_ids = fields.Many2many(
+        "product.template",
+        string="Products & Services")
     sale_order_id = fields.Many2one(
         "sale.order",
         string="Sales Order",
@@ -249,22 +263,38 @@ class Agreement(models.Model):
         help="Describes what happens after the contract expires.",
     )
     order_lines_services_ids = fields.One2many(
-        related="sale_order_id.order_line", string="Service Order Lines", copy=False
+        related="sale_order_id.order_line",
+        string="Service Order Lines",
+        copy=False
     )
     recital_ids = fields.One2many(
-        "agreement.recital", "agreement_id", string="Recitals", copy=True
+        "agreement.recital",
+        "agreement_id",
+        string="Recitals",
+        copy=True
     )
     sections_ids = fields.One2many(
-        "agreement.section", "agreement_id", string="Sections", copy=True
+        "agreement.section",
+        "agreement_id",
+        string="Sections",
+        copy=True
     )
     clauses_ids = fields.One2many(
-        "agreement.clause", "agreement_id", string="Clauses", copy=True
+        "agreement.clause",
+        "agreement_id",
+        string="Clauses",
+        copy=True
     )
     appendix_ids = fields.One2many(
-        "agreement.appendix", "agreement_id", string="Appendices", copy=True
+        "agreement.appendix",
+        "agreement_id",
+        string="Appendices",
+        copy=True
     )
     serviceprofile_ids = fields.One2many(
-        "agreement.serviceprofile", "agreement_id", string="Service Profiles"
+        "agreement.serviceprofile",
+        "agreement_id",
+        string="Service Profiles"
     )
     analytic_id = fields.Many2one(
         "account.analytic.account", string="Analytic Account", index=True
@@ -287,7 +317,10 @@ class Agreement(models.Model):
         domain=[("active", "=", True)],
     )
     line_ids = fields.One2many(
-        "agreement.line", "agreement_id", string="Products/Services", copy=False
+        "agreement.line",
+        "agreement_id",
+        string="Products/Services",
+        copy=False
     )
     state = fields.Selection(
         [("draft", "Draft"), ("active", "Active"), ("inactive", "Inactive")],
@@ -301,7 +334,9 @@ class Agreement(models.Model):
         "customer address.(Address Type = Other)",
     )
     signed_contract_filename = fields.Char(string="Filename")
-    signed_contract = fields.Binary(string="Signed Document", track_visibility="always")
+    signed_contract = fields.Binary(
+        string="Signed Document",
+        track_visibility="always")
     field_id = fields.Many2one(
         "ir.model.fields",
         string="Field",
@@ -364,7 +399,8 @@ class Agreement(models.Model):
     # compute total_company_mrc field
     @api.depends("order_lines_services_ids", "sale_order_id")
     def _compute_company_mrc(self):
-        order_lines = self.env["sale.order.line"].search([("is_service", "=", True)])
+        order_lines = self.env["sale.order.line"].search(
+            [("is_service", "=", True)])
         amount_total = sum(order_lines.mapped("purchase_price"))
         for record in self:
             record.total_company_mrc = amount_total

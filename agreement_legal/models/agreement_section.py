@@ -14,8 +14,14 @@ class AgreementSection(models.Model):
         string="Title", help="The title is displayed on the PDF." "The name is not."
     )
     sequence = fields.Integer(string="Sequence")
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
-    clauses_ids = fields.One2many("agreement.clause", "section_id", string="Clauses")
+    agreement_id = fields.Many2one(
+        "agreement",
+        string="Agreement",
+        ondelete="cascade")
+    clauses_ids = fields.One2many(
+        "agreement.clause",
+        "section_id",
+        string="Clauses")
     content = fields.Html(string="Section Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
@@ -82,7 +88,9 @@ class AgreementSection(models.Model):
         MailTemplates = self.env["mail.template"]
         for section in self:
             lang = (
-                section.agreement_id and section.agreement_id.partner_id.lang or "en_US"
+                section.agreement_id
+                and section.agreement_id.partner_id.lang
+                or "en_US"
             )
             content = MailTemplates.with_context(lang=lang).render_template(
                 section.content, "agreement.section", section.id

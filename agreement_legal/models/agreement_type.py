@@ -10,5 +10,7 @@ class AgreementType(models.Model):
 
     name = fields.Char(string="Name", required=True)
     agreement_subtypes_ids = fields.One2many(
-        "agreement.subtype", "agreement_type_id", string="Subtypes"
+        "agreement.subtype",
+        "agreement_type_id",
+        string="Subtypes"
     )

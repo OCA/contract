@@ -20,7 +20,10 @@ class AgreementRecital(models.Model):
         string="Dynamic Content",
         help="compute dynamic Content",
     )
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        "agreement",
+        string="Agreement",
+        ondelete="cascade")
     active = fields.Boolean(
         string="Active",
         default=True,
@@ -81,7 +84,9 @@ class AgreementRecital(models.Model):
         MailTemplates = self.env["mail.template"]
         for recital in self:
             lang = (
-                recital.agreement_id and recital.agreement_id.partner_id.lang or "en_US"
+                recital.agreement_id
+                and recital.agreement_id.partner_id.lang
+                or "en_US"
             )
             content = MailTemplates.with_context(lang=lang).render_template(
                 recital.content, "agreement.recital", recital.id

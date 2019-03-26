@@ -84,7 +84,9 @@ class AgreementClause(models.Model):
         MailTemplates = self.env["mail.template"]
         for clause in self:
             lang = (
-                clause.agreement_id and clause.agreement_id.partner_id.lang or "en_US"
+                clause.agreement_id
+                and clause.agreement_id.partner_id.lang
+                or "en_US"
             )
             content = MailTemplates.with_context(lang=lang).render_template(
                 clause.content, "agreement.clause", clause.id

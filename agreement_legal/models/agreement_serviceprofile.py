@@ -9,7 +9,10 @@ class AgreementServiceProfile(models.Model):
     _description = "Agreement Service Profiles"
 
     name = fields.Char(string="Name", required=True)
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        "agreement",
+        string="Agreement",
+        ondelete="cascade")
     active = fields.Boolean(
         string="Active",
         default=True,

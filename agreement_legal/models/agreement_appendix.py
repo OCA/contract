@@ -15,14 +15,19 @@ class AgreementAppendix(models.Model):
         required=True,
         help="The title is displayed on the PDF." "The name is not.",
     )
-    sequence = fields.Integer(string="Sequence", default=10)
+    sequence = fields.Integer(
+        string="Sequence",
+        default=10)
     content = fields.Html(string="Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
         string="Dynamic Content",
         help="compute dynamic Content",
     )
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        "agreement",
+        string="Agreement",
+        ondelete="cascade")
     active = fields.Boolean(
         string="Active",
         default=True,

@@ -19,7 +19,8 @@ class ResConfigSettings(models.TransientModel):
     module_agreement_repair = fields.Boolean(
         string="Link your repair orders to an agreement."
     )
-    module_agreement_rma = fields.Boolean(string="Link your RMAs to an agreement.")
+    module_agreement_rma = fields.Boolean(
+        string="Link your RMAs to an agreement.")
     module_agreement_sale = fields.Boolean(
         string="Create an agreement when the sale order is confirmed."
     )
@@ -30,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
         string="Link your pickings to an agreement."
     )
     module_fieldservice_agreement = fields.Boolean(
-        string="Link your Field Service orders and equipments to an" " agreement."
+        string="Link your Field Service orders and equipments to an agreement."
     )
     module_helpdesk_agreement = fields.Boolean(
         string="Link your Helpdesk tickets to an agreement."

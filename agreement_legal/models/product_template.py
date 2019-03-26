@@ -7,4 +7,6 @@ from odoo import fields, models
 class Product(models.Model):
     _inherit = "product.template"
 
-    agreements_ids = fields.Many2many("agreement", string="Agreements")
+    agreements_ids = fields.Many2many(
+        "agreement",
+        string="Agreements")

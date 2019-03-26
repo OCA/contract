@@ -17,5 +17,7 @@ class AgreementRenewalType(models.Model):
         "agreement/contract expires.",
     )
     description = fields.Text(
-        string="Description", required=True, help="Description of the renewal type."
+        string="Description",
+        required=True,
+        help="Description of the renewal type."
     )
