@@ -51,7 +51,7 @@ class AgreementSection(models.Model):
 
     @api.onchange('field_id')
     def onchange_sub_object_id(self):
-        if self.field_id:
+        if self.field_id and self.field_id.relation:
             self.sub_object_id = self.env['ir.model'].search(
                 [('model', '=', self.field_id.relation)])[0]
 
