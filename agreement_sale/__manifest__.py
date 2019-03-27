@@ -4,14 +4,13 @@
 {
     'name': 'Agreement - Sale',
     'summary': 'Create an agreement when the sales order is confirmed',
-    'version': '11.0.0.0.1',
+    'version': '12.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'Open Source Integrators, Odoo Community Association (OCA)',
     'category': 'Agreement',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'agreement',
-        'sale',
+        'agreement_legal',
     ],
     'data': [
         'views/agreement.xml',

@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <odoo>
     <!-- Copyright 2019 Open Source Integrators
-         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+        © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>) -->
 
     <!-- Agreement Form View -->
     <record id="agreement_sale_form_view" model="ir.ui.view">
         <field name="name">agreement.form.view</field>
         <field name="model">agreement</field>
-        <field name="inherit_id" ref="agreement.partner_agreement_form_view"/>
+        <field name="inherit_id"
+               ref="agreement_legal.partner_agreement_form_view"/>
         <field name="arch" type="xml">
             <page name="signature" position="after">
                 <page name="sales" string="Sales">
-                    <group>
-                        <group id="sale-left">
-                            <field name="sale_id" readonly="1"/>
-                        </group>
-                        <group id="sale-right"/>
+                    <group id="sale-left" name="sale_orders"
+                           string="Sales Orders">
+                        <field name="sale_ids" nolabel="1"/>
                     </group>
                 </page>
             </page>

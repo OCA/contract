@@ -1,5 +1,6 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2017 Akretion(Alexis de Lattre < alexis.delattre @ akretion.com >)
 
 from odoo import api, fields, models
 
@@ -11,7 +12,16 @@ class SaleOrder(models.Model):
         'agreement',
         string="Agreement Template",
         domain="[('is_template', '=', True)]")
-    agreement_id = fields.Many2one('agreement', string="Agreement", copy=False)
+    agreement_id = fields.Many2one(
+        'agreement', string='Agreement', ondelete='restrict',
+        track_visibility='onchange', readonly=True,
+        states={'draft': [('readonly', False)],
+                'sent': [('readonly', False)]}, copy=False)
+
+    def _prepare_invoice(self):
+        vals = super(SaleOrder, self)._prepare_invoice()
+        vals['agreement_id'] = self.agreement_id.id or False
+        return vals
 
     @api.multi
     def _action_confirm(self):
@@ -20,8 +30,8 @@ class SaleOrder(models.Model):
             if order.agreement_template_id:
                 order.agreement_id = order.agreement_template_id.copy(default={
                     'name': order.name,
+                    'code': order.name,
                     'is_template': False,
-                    'sale_id': order.id,
                     'partner_id': order.partner_id.id,
                     'analytic_account_id':
                         order.analytic_account_id and
