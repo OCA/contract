@@ -10,10 +10,10 @@
     'website': 'https://github.com/OCA/contract',
     'category': 'Maintenance',
     'license': 'AGPL-3',
-    'version': '11.0.0.0.1',
+    'version': '12.0.1.0.0',
     'depends': [
-        'agreement',
         'maintenance',
+        'agreement_serviceprofile',
     ],
     'data': [
         'views/agreement_view.xml',
