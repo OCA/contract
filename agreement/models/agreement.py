@@ -342,11 +342,15 @@ class Agreement(models.Model):
 
     @api.onchange('sub_model_object_field_id', 'default_value')
     def onchange_copyvalue(self):
-        if self.sub_model_object_field_id or self.default_value:
-            self.copyvalue = "${object.%s.%s or %s}" % \
+        if self.field_id or self.default_value:
+            self.copyvalue = "${object.%s or %s}" % \
                              (self.field_id.name,
-                              self.sub_model_object_field_id.name,
                               self.default_value or '\'\'')
+            if self.sub_model_object_field_id or self.default_value:
+                self.copyvalue = "${object.%s.%s or %s}" % \
+                                 (self.field_id.name,
+                                  self.sub_model_object_field_id.name,
+                                  self.default_value or '\'\'')
 
     # Used for Kanban grouped_by view
     @api.model
