@@ -12,10 +12,6 @@ class Agreement(models.Model):
 
     @api.multi
     def _compute_repair_count(self):
-        data = self.env['mrp.repair'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.repair_count = count_data.get(agreement.id, 0)
+        for ag_rec in self:
+            ag_rec.repair_count = self.env['repair.order'].search_count(
+                [('agreement_id', 'in', ag_rec.ids)])
