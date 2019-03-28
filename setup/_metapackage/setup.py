@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-contract Odoo addons",
     version=version,
     install_requires=[
+        'odoo12-addon-agreement',
         'odoo12-addon-contract',
         'odoo12-addon-contract_sale',
     ],
