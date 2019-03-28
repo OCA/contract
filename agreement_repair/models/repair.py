@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class MRPRepair(models.Model):
-    _inherit = "mrp.repair"
+class Repair(models.Model):
+    _inherit = "repair.order"
 
     agreement_id = fields.Many2one('agreement', 'Agreement')
     serviceprofile_id = fields.Many2one('agreement.serviceprofile',
