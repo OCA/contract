@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <!-- Agreement Form View -->
+    <record id="agreement_sale_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id"
+               ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <page name="signature" position="after">
+                <page name="sales" string="Sales">
+                    <group>
+                        <group id="sale_left">
+                            <field name="sale_id" readonly="1"/>
+                            <field name="analytic_account_id"/>
+                        </group>
+                        <group id="sale_right"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <menuitem id="agreement.agreement_menu" action="agreement.agreement_action" sequence="100"/>
+
+</odoo>
