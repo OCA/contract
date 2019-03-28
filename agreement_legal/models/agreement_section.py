@@ -67,21 +67,26 @@ class AgreementSection(models.Model):
          template field.""",
     )
 
-    @api.onchange("field_id")
-    def onchange_sub_object_id(self):
-        if self.field_id:
-            self.sub_object_id = self.env["ir.model"].search(
-                [("model", "=", self.field_id.relation)]
-            )[0]
 
-    @api.onchange("sub_model_object_field_id", "default_value")
+    @api.onchange('field_id', 'sub_model_object_field_id', 'default_value')
     def onchange_copyvalue(self):
-        if self.sub_model_object_field_id or self.default_value:
-            self.copyvalue = "${{object.{}.{} or {}}}".format(
-                self.field_id.name,
-                self.sub_model_object_field_id.name,
-                self.default_value or "''",
-            )
+        self.sub_object_id = False
+        self.copyvalue = False
+        self.sub_object_id = False
+        if self.field_id and not self.field_id.relation:
+            self.copyvalue = "${object.%s or %s}" % \
+                             (self.field_id.name,
+                              self.default_value or '\'\'')
+            self.sub_model_object_field_id = False
+        if self.field_id and self.field_id.relation:
+            self.sub_object_id = self.env['ir.model'].search(
+                [('model', '=', self.field_id.relation)])[0]
+        if self.sub_model_object_field_id:
+            self.copyvalue = "${object.%s.%s or %s}" %\
+                (self.field_id.name,
+                 self.sub_model_object_field_id.name,
+                 self.default_value or '\'\'')
+
 
     # compute the dynamic content for mako expression
     @api.multi
