@@ -14,30 +14,18 @@ class Agreement(models.Model):
 
     @api.multi
     def _compute_picking_count(self):
-        data = self.env['stock.picking'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.picking_count = count_data.get(agreement.id, 0)
+        for ag_rec in self:
+            ag_rec.picking_count = self.env['stock.picking'].search_count(
+                [('agreement_id', 'in', ag_rec.ids)])
 
     @api.multi
     def _compute_move_count(self):
-        data = self.env['stock.move'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.move_count = count_data.get(agreement.id, 0)
+        for ag_rec in self:
+            ag_rec.move_count = self.env['stock.move'].search_count(
+                [('agreement_id', 'in', ag_rec.ids)])
 
     @api.multi
     def _compute_lot_count(self):
-        data = self.env['stock.production.lot'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.lot_count = count_data.get(agreement.id, 0)
+        for ag_rec in self:
+            ag_rec.lot_count = self.env['stock.production.lot'].search_count(
+                [('agreement_id', 'in', ag_rec.ids)])

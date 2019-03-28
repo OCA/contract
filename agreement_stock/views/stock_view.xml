@@ -46,7 +46,8 @@
         <field name="inherit_id" ref="stock.search_product_lot_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//group" position="inside">
-                <filter string="Service Profile" domain="[]"
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
                         context="{'group_by':'serviceprofile_id'}"/>
             </xpath>
         </field>
