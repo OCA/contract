@@ -4,14 +4,14 @@
 {
     'name': 'Agreement - Repair',
     'summary': 'Link repair orders to an agreement',
-    'version': '11.0.0.0.1',
+    'version': '12.0.1.0.0',
     'category': 'Contract',
     'author': 'Open Source Integrators, '
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'agreement',
-        'mrp_repair',
+        'agreement_serviceprofile',
+        'repair',
     ],
     'data': [
         'views/agreement_view.xml',
