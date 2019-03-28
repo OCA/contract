@@ -2,16 +2,16 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Agreement - Sale',
-    'summary': 'Create an agreement when the sales order is confirmed',
-    'version': '11.0.0.0.1',
+    'name': 'Agreement Legal Sale',
+    'summary': 'Create an agreement when the sale order is confirmed',
+    'version': '12.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'Open Source Integrators, Odoo Community Association (OCA)',
     'category': 'Agreement',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'agreement',
-        'sale',
+        'agreement_legal',
+        'agreement_sale',
     ],
     'data': [
         'views/agreement.xml',

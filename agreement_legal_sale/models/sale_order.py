@@ -11,7 +11,6 @@ class SaleOrder(models.Model):
         'agreement',
         string="Agreement Template",
         domain="[('is_template', '=', True)]")
-    agreement_id = fields.Many2one('agreement', string="Agreement", copy=False)
 
     @api.multi
     def _action_confirm(self):
@@ -20,14 +19,14 @@ class SaleOrder(models.Model):
             if order.agreement_template_id:
                 order.agreement_id = order.agreement_template_id.copy(default={
                     'name': order.name,
+                    'code': order.name,
                     'is_template': False,
                     'sale_id': order.id,
                     'partner_id': order.partner_id.id,
-                    'analytic_account_id':
-                        order.analytic_account_id and
-                        order.analytic_account_id.id or False,
+                    'analytic_account_id': order.analytic_account_id and
+                    order.analytic_account_id.id or False,
                 })
-                for line in self.order_line:
+                for line in order.order_line:
                     # Create agreement line
                     self.env['agreement.line'].create({
                         'product_id': line.product_id.id,
