@@ -11,10 +11,6 @@ class Agreement(models.Model):
 
     @api.multi
     def _compute_mo_count(self):
-        data = self.env['mrp.production'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.mo_count = count_data.get(agreement.id, 0)
+        for ag_rec in self:
+            ag_rec.mo_count = self.env['mrp.production'].search_count(
+                [('agreement_id', 'in', ag_rec.ids)])
