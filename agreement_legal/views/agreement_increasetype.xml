@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Agreement Increase Type List View-->
+    <record model="ir.ui.view" id="partner_agreement_increasetype_list_view">
+        <field name="name">Agreement Increase Type List</field>
+        <field name="model">agreement.increasetype</field>
+        <field name="arch" type="xml">
+            <tree default_order='name'>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="increase_percent"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Increase Type Form View -->
+    <record model="ir.ui.view" id="partner_agreement_increasetype_form_view">
+        <field name="name">Agreement Increase Type Form</field>
+        <field name="model">agreement.increasetype</field>
+        <field name="arch" type="xml">
+            <form string="Agreements Type Form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="increase_percent"/>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_increasetype">
+        <field name="name">Agreement Increase Type</field>
+        <field name="res_model">agreement.increasetype</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
