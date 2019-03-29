@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 
-
 class AgreementRecital(models.Model):
     _name = "agreement.recital"
     _description = "Agreement Recitals"
