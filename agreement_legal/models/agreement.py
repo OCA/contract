@@ -48,9 +48,7 @@ class Agreement(models.Model):
         help="When the agreement starts.",
     )
     end_date = fields.Date(
-        string="End Date",
-        track_visibility="onchange",
-        help="When the agreement ends."
+        string="End Date", track_visibility="onchange", help="When the agreement ends."
     )
     color = fields.Integer()
     active = fields.Boolean(
@@ -96,12 +94,6 @@ class Agreement(models.Model):
         string="Dynamic Special Terms",
         help="Compute dynamic special terms",
     )
-    contract_value = fields.Monetary(
-        compute="_compute_contract_value",
-        string="Contract Value",
-        help="Total value of the contract over ther entire term.",
-        store=True,
-    )
     reference = fields.Char(
         string="Reference",
         copy=False,
@@ -109,26 +101,6 @@ class Agreement(models.Model):
         default=lambda self: _("New"),
         track_visibility="onchange",
         help="ID used for internal contract tracking.",
-    )
-    total_company_mrc = fields.Monetary(
-        "Company MRC",
-        currency_field="currency_id",
-        help="Total company monthly recurring costs.",
-    )
-    total_customer_mrc = fields.Monetary(
-        "Customer MRC",
-        currency_field="currency_id",
-        help="Total custemer monthly recurring costs.",
-    )
-    total_company_nrc = fields.Monetary(
-        "Company NRC",
-        currency_field="currency_id",
-        help="Total company non-recurring costs.",
-    )
-    total_customer_nrc = fields.Monetary(
-        "Customer NRC",
-        currency_field="currency_id",
-        help="Total custemer non-monthly recurring costs.",
     )
     increase_type_id = fields.Many2one(
         "agreement.increasetype",
@@ -146,25 +118,15 @@ class Agreement(models.Model):
         track_visibility="onchange",
         help="Date that the contract was terminated.",
     )
-    reviewed_date = fields.Date(
-        string="Reviewed Date",
-        track_visibility="onchange")
+    reviewed_date = fields.Date(string="Reviewed Date", track_visibility="onchange")
     reviewed_user_id = fields.Many2one(
-        "res.users",
-        string="Reviewed By",
-        track_visibility="onchange"
+        "res.users", string="Reviewed By", track_visibility="onchange"
     )
-    approved_date = fields.Date(
-        string="Approved Date",
-        track_visibility="onchange")
+    approved_date = fields.Date(string="Approved Date", track_visibility="onchange")
     approved_user_id = fields.Many2one(
-        "res.users",
-        string="Approved By",
-        track_visibility="onchange"
+        "res.users", string="Approved By", track_visibility="onchange"
     )
-    currency_id = fields.Many2one(
-        "res.currency",
-        string="Currency")
+    currency_id = fields.Many2one("res.currency", string="Currency")
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -214,16 +176,7 @@ class Agreement(models.Model):
         help="Select the sub-type of this agreement. Sub-Types are related to "
         "agreement types.",
     )
-    product_ids = fields.Many2many(
-        "product.template",
-        string="Products & Services")
-    sale_order_id = fields.Many2one(
-        "sale.order",
-        string="Sales Order",
-        track_visibility="onchange",
-        copy=False,
-        help="Select the Sales Order that this agreement is related to.",
-    )
+    product_ids = fields.Many2many("product.template", string="Products & Services")
     payment_term_id = fields.Many2one(
         "account.payment.term",
         string="Payment Term",
@@ -262,47 +215,17 @@ class Agreement(models.Model):
         track_visibility="onchange",
         help="Describes what happens after the contract expires.",
     )
-    order_lines_services_ids = fields.One2many(
-        related="sale_order_id.order_line",
-        string="Service Order Lines",
-        copy=False
-    )
     recital_ids = fields.One2many(
-        "agreement.recital",
-        "agreement_id",
-        string="Recitals",
-        copy=True
+        "agreement.recital", "agreement_id", string="Recitals", copy=True
     )
     sections_ids = fields.One2many(
-        "agreement.section",
-        "agreement_id",
-        string="Sections",
-        copy=True
+        "agreement.section", "agreement_id", string="Sections", copy=True
     )
     clauses_ids = fields.One2many(
-        "agreement.clause",
-        "agreement_id",
-        string="Clauses",
-        copy=True
+        "agreement.clause", "agreement_id", string="Clauses", copy=True
     )
     appendix_ids = fields.One2many(
-        "agreement.appendix",
-        "agreement_id",
-        string="Appendices",
-        copy=True
-    )
-    serviceprofile_ids = fields.One2many(
-        "agreement.serviceprofile",
-        "agreement_id",
-        string="Service Profiles"
-    )
-    analytic_id = fields.Many2one(
-        "account.analytic.account", string="Analytic Account", index=True
-    )
-    analytic_line_ids = fields.One2many(
-        "account.analytic.line",
-        "agreement_id",
-        string="Revenues and Costs", copy=False
+        "agreement.appendix", "agreement_id", string="Appendices", copy=True
     )
     previous_version_agreements_ids = fields.One2many(
         "agreement",
@@ -319,10 +242,7 @@ class Agreement(models.Model):
         domain=[("active", "=", True)],
     )
     line_ids = fields.One2many(
-        "agreement.line",
-        "agreement_id",
-        string="Products/Services",
-        copy=False
+        "agreement.line", "agreement_id", string="Products/Services", copy=False
     )
     state = fields.Selection(
         [("draft", "Draft"), ("active", "Active"), ("inactive", "Inactive")],
@@ -336,9 +256,7 @@ class Agreement(models.Model):
         "customer address.(Address Type = Other)",
     )
     signed_contract_filename = fields.Char(string="Filename")
-    signed_contract = fields.Binary(
-        string="Signed Document",
-        track_visibility="always")
+    signed_contract = fields.Binary(string="Signed Document", track_visibility="always")
     field_id = fields.Many2one(
         "ir.model.fields",
         string="Field",
@@ -375,8 +293,7 @@ class Agreement(models.Model):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            description = MailTemplates.with_context(
-                lang=lang)._render_template(
+            description = MailTemplates.with_context(lang=lang)._render_template(
                 agreement.description, "agreement", agreement.id
             )
             agreement.dynamic_description = description
@@ -386,47 +303,32 @@ class Agreement(models.Model):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            special_terms = MailTemplates.with_context(
-                lang=lang)._render_template(
+            special_terms = MailTemplates.with_context(lang=lang)._render_template(
                 agreement.special_terms, "agreement", agreement.id
             )
             agreement.dynamic_special_terms = special_terms
 
-    # compute contract_value field
-    @api.depends("total_customer_mrc", "total_customer_nrc", "term")
-    def _compute_contract_value(self):
-        for record in self:
-            record.contract_value = (
-                record.total_customer_mrc * record.term
-            ) + record.total_customer_nrc
-
-    # compute total_company_mrc field
-    @api.depends("order_lines_services_ids", "sale_order_id")
-    def _compute_company_mrc(self):
-        order_lines = self.env["sale.order.line"].search(
-            [("is_service", "=", True)])
-        amount_total = sum(order_lines.mapped("purchase_price"))
-        for record in self:
-            record.total_company_mrc = amount_total
-
-    @api.onchange('field_id', 'sub_model_object_field_id', 'default_value')
+    @api.onchange("field_id", "sub_model_object_field_id", "default_value")
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
         self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
-            self.copyvalue = "${object.%s or %s}" % \
-                             (self.field_id.name,
-                              self.default_value or '\'\'')
+            self.copyvalue = "${{object.{} or {}}}".format(
+                self.field_id.name,
+                self.default_value or "''",
+            )
             self.sub_model_object_field_id = False
         if self.field_id and self.field_id.relation:
-            self.sub_object_id = self.env['ir.model'].search(
-                [('model', '=', self.field_id.relation)])[0]
+            self.sub_object_id = self.env["ir.model"].search(
+                [("model", "=", self.field_id.relation)]
+            )[0]
         if self.sub_model_object_field_id:
-            self.copyvalue = "${object.%s.%s or %s}" %\
-                (self.field_id.name,
-                 self.sub_model_object_field_id.name,
-                 self.default_value or '\'\'')
+            self.copyvalue = "${{object.{}.{} or {}}}".format(
+                self.field_id.name,
+                self.sub_model_object_field_id.name,
+                self.default_value or "''",
+            )
 
     # Used for Kanban grouped_by view
     @api.model
@@ -484,8 +386,7 @@ class Agreement(models.Model):
     @api.model
     def create(self, vals):
         if vals.get("reference", _("New")) == _("New"):
-            vals["reference"] = self.env[
-                "ir.sequence"].next_by_code("agreement") or _(
+            vals["reference"] = self.env["ir.sequence"].next_by_code("agreement") or _(
                 "New"
             )
         return super(Agreement, self).create(vals)

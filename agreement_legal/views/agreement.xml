@@ -192,26 +192,6 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="serviceprofiles" string="Service Profiles">
-                            <field name="serviceprofile_ids" nolabel="1">
-                                <tree editable="top">
-                                    <field name="name"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page name="financials" string="Financials">
-                            <group>
-                                <group>
-                                    <field name="analytic_id"/>
-                                </group>
-                                <group></group>
-                            </group>
-                            <group string="Revenues and Costs">
-                                <field name="analytic_line_ids"
-                                       readonly="1"
-                                       nolabel="1"/>
-                            </group>
-                        </page>
                         <page name="child_agreements" string="Child Agreements">
                             <field name="child_agreements_ids">
                                 <tree default_order='version desc'>
@@ -359,19 +339,6 @@
         <field name="res_model">agreement</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
-    </record>
-
-    <!-- Adding a new filter to the order line search view -->
-    <record id="order_lines_search_view" model="ir.ui.view">
-        <field name="name">Order Lines Search</field>
-        <field name="model">sale.order.line</field>
-        <field name="type">search</field>
-        <field name="inherit_id" ref="sale.view_sales_order_line_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="/search/filter[1]" position="after">
-                <filter name="filter_service_product_type" string="Service Type" domain="[('type', '=', 'service')]"/>
-            </xpath>
-        </field>
     </record>
 
     <!-- actions opening views on models -->
