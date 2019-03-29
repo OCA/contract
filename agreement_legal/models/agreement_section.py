@@ -67,7 +67,6 @@ class AgreementSection(models.Model):
          template field.""",
     )
 
-
     @api.onchange('field_id', 'sub_model_object_field_id', 'default_value')
     def onchange_copyvalue(self):
         self.sub_object_id = False
@@ -86,7 +85,6 @@ class AgreementSection(models.Model):
                 (self.field_id.name,
                  self.sub_model_object_field_id.name,
                  self.default_value or '\'\'')
-
 
     # compute the dynamic content for mako expression
     @api.multi
