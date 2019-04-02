@@ -4,13 +4,14 @@
 {
     'name': 'Agreement - Project',
     'summary': 'Link projects to an agreement',
-    'version': '11.0.0.0.1',
+    'version': '12.0.1.0.0',
     'category': 'Contract',
     'author': 'Open Source Integrators, '
+              'Yves Goldberg (Ygol Internetwork), '
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
     'depends': [
-        'agreement',
+        'agreement_legal',
         'project',
     ],
     'data': [
@@ -22,6 +23,7 @@
     'development_status': 'Beta',
     'maintainers': [
         'smangukiya',
+        'ygol',
         'max3903',
     ],
 }
