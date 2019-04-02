@@ -96,18 +96,14 @@ class Agreement(models.Model):
         string="Dynamic Special Terms",
         help="Compute dynamic special terms",
     )
-    reference = fields.Char(
+    code = fields.Char(
         string="Reference",
-        copy=False,
         required=True,
         default=lambda self: _("New"),
         track_visibility="onchange",
+        copy=False,
         help="ID used for internal contract tracking.",
     )
-    code = fields.Char(
-        required=True,
-        default=lambda self: _("New"),
-        copy=False)
     increase_type_id = fields.Many2one(
         "agreement.increasetype",
         string="Increase Type",
@@ -372,13 +368,11 @@ class Agreement(models.Model):
                 "name": "{} - OLD VERSION".format(rec.name),
                 "active": False,
                 "parent_agreement_id": rec.id,
-                "code": "{} - OLD VERSION".format(rec.code),
             }
             # Make a current copy and mark it as old
             rec.copy(default=default_vals)
             # Increment the Version
             rec.version = rec.version + 1
-            rec.code = rec.code + "v" + str(rec.version)
         # Reset revision to 0 since it's a new version
         vals["revision"] = 0
         return super(Agreement, self).write(vals)
@@ -386,7 +380,6 @@ class Agreement(models.Model):
     def create_new_agreement(self):
         default_vals = {
             "name": "NEW",
-            "code": "NEW",
             "active": True,
             "version": 1,
             "revision": 0,
@@ -403,12 +396,10 @@ class Agreement(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("reference", _("New")) == _("New"):
-            vals["reference"] = self.env["ir.sequence"].next_by_code(
+        if vals.get("code", _("New")) == _("New"):
+            vals["code"] = self.env["ir.sequence"].next_by_code(
                 "agreement"
             ) or _("New")
-        if vals.get("code", _("New")) == _("New"):
-            vals["code"] = vals["reference"]
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
