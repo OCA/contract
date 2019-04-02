@@ -22,3 +22,21 @@ class AccountAnalyticAccount(models.Model):
             "view_mode": "pivot,tree",
             "context": context,
         }
+
+    @api.model
+    def _get_forecast_update_trigger_fields(self):
+        return []
+
+    @api.multi
+    def write(self, values):
+        res = super(AccountAnalyticAccount, self).write(values)
+        if any(
+                [
+                    field in values
+                    for field in self._get_forecast_update_trigger_fields()
+                ]
+        ):
+            for rec in self:
+                for contract_line in rec.recurring_invoice_line_ids:
+                    contract_line.with_delay()._generate_forecast_periods()
+        return res
