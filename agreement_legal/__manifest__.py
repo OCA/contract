@@ -12,7 +12,7 @@
     "category": "Partner",
     "license": "AGPL-3",
     "version": "12.0.1.0.0",
-    "depends": ["contacts", "agreement", "mail", "product"],
+    "depends": ["contacts", "agreement", "product"],
     "data": [
         "data/ir_sequence.xml",
         "data/module_category.xml",
