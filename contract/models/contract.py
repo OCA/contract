@@ -225,6 +225,7 @@ class AccountAnalyticAccount(models.Model):
             )
             new_lines += contract_line_model.new(vals)
         new_lines._onchange_date_start()
+        new_lines._onchange_is_auto_renew()
         return new_lines
 
     @api.multi
