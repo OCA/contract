@@ -17,5 +17,3 @@ class ProjectTask(models.Model):
                                    related="project_id.agreement_id",
                                    string='Agreement',
                                    store=True)
-    serviceprofile_id = fields.Many2one('agreement.serviceprofile',
-                                        'Service Profile')
