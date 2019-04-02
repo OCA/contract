@@ -6,8 +6,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-24 16:53+0000\n"
-"PO-Revision-Date: 2019-03-24 16:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: agreement_legal
 #: selection:agreement,state:0
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__active
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__active
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__active
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__active
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__active
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__active
 msgid "Active"
 msgstr ""
 
@@ -42,13 +34,12 @@ msgid "Advanced Features"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_account_analytic_line__agreement_id
+#: model:ir.model,name:agreement_legal.model_agreement
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__agreement_id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__agreement_id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_line__agreement_id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__agreement_id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__agreement_id
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__agreement_id
 #: model:ir.module.category,name:agreement_legal.agreement
 #: model:ir.module.category,name:agreement_legal.module_agreement_legal_category
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
@@ -72,6 +63,7 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.actions.act_window,name:agreement_legal.partner_agreement_action_increasetype
+#: model:ir.model,name:agreement_legal.model_agreement_increasetype
 msgid "Agreement Increase Type"
 msgstr ""
 
@@ -92,6 +84,7 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.actions.act_window,name:agreement_legal.partner_agreement_action_renewaltype
+#: model:ir.model,name:agreement_legal.model_agreement_renewaltype
 msgid "Agreement Renewal Type"
 msgstr ""
 
@@ -109,11 +102,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:agreement_legal.partner_agreement_action_section
 #: model:ir.model,name:agreement_legal.model_agreement_section
 msgid "Agreement Sections"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model,name:agreement_legal.model_agreement_serviceprofile
-msgid "Agreement Service Profiles"
 msgstr ""
 
 #. module: agreement_legal
@@ -161,10 +149,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:agreement_legal.action_agreement_report_order
 #: model:ir.actions.act_window,name:agreement_legal.agreement_dashboard_agreement
 #: model:ir.actions.act_window,name:agreement_legal.agreement_operations_agreement
+#: model:ir.model.fields,field_description:agreement_legal.field_product_product__agreements_ids
 #: model:ir.model.fields,field_description:agreement_legal.field_product_template__agreements_ids
 #: model:ir.model.fields,field_description:agreement_legal.field_res_partner__agreement_ids
+#: model:ir.model.fields,field_description:agreement_legal.field_res_users__agreement_ids
 #: model:ir.ui.menu,name:agreement_legal.agreement_agreement_reporting
-#: model:ir.ui.menu,name:agreement_legal.agreement_root
 #: model:ir.ui.menu,name:agreement_legal.dashboard_agreements
 #: model:ir.ui.menu,name:agreement_legal.operations_agreements
 #: model_terms:ir.ui.view,arch_db:agreement_legal.agreement_graph_view
@@ -190,16 +179,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_increasetype_form_view
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_renewaltype_form_view
 msgid "Agreements Type Form"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__analytic_id
-msgid "Analytic Account"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model,name:agreement_legal.model_account_analytic_line
-msgid "Analytic Line"
 msgstr ""
 
 #. module: agreement_legal
@@ -244,11 +223,6 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__assigned_user_id
 msgid "Assigned To"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_attachment_count
-msgid "Attachment Count"
 msgstr ""
 
 #. module: agreement_legal
@@ -312,16 +286,6 @@ msgid "Company Information"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__total_company_mrc
-msgid "Company MRC"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__total_company_nrc
-msgid "Company NRC"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__dynamic_description
 msgid "Compute dynamic description"
 msgstr ""
@@ -374,11 +338,6 @@ msgid "Contract Document Preview"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__contract_value
-msgid "Contract Value"
-msgstr ""
-
-#. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.agreement_appendix_form
 #: model_terms:ir.ui.view,arch_db:agreement_legal.agreement_recital_form
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_clause_form_view
@@ -402,7 +361,6 @@ msgid "Create an agreement when the sales order is confirmed"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__create_uid
@@ -410,7 +368,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__create_uid
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__create_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__create_uid
@@ -418,7 +375,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__create_date
@@ -426,7 +382,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__create_date
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__create_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__create_date
@@ -436,16 +391,6 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__currency_id
 msgid "Currency"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__total_customer_mrc
-msgid "Customer MRC"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__total_customer_nrc
-msgid "Customer NRC"
 msgstr ""
 
 #. module: agreement_legal
@@ -516,7 +461,6 @@ msgid "Description of the renewal type."
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__display_name
@@ -524,7 +468,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__display_name
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__display_name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__display_name
@@ -615,26 +558,6 @@ msgstr ""
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
-msgid "Financials"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_follower_ids
-msgid "Followers"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: agreement_legal
-#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 msgid "General"
 msgstr ""
 
@@ -644,7 +567,6 @@ msgid "Helpdesk"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__id
@@ -652,7 +574,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__id
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__id
@@ -662,21 +583,6 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__reference
 msgid "ID used for internal contract tracking."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_has_error
-msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: agreement_legal
@@ -699,11 +605,6 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement_recital__active
 msgid "If unchecked, it will allow you to hide this recital without removing it."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement_serviceprofile__active
-msgid "If unchecked, it will allow you to hide this service profile without removing it."
 msgstr ""
 
 #. module: agreement_legal
@@ -742,17 +643,11 @@ msgid "Is Folded"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__is_template
 msgid "Is a Template?"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype____last_update
@@ -760,7 +655,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section____last_update
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype____last_update
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type____last_update
@@ -768,7 +662,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__write_uid
@@ -776,7 +669,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__write_uid
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__write_uid
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__write_uid
@@ -784,7 +676,6 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_increasetype__write_date
@@ -792,7 +683,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_renewaltype__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__write_date
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__write_date
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__write_date
@@ -885,11 +775,6 @@ msgid "Link your transfers to an agreement"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_main_attachment_id
-msgid "Main Attachment"
-msgstr ""
-
-#. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.res_config_settings_view_form
 msgid "Maintenance"
 msgstr ""
@@ -925,21 +810,10 @@ msgid "Master Data"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_has_error
-msgid "Message Delivery error"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_ids
-msgid "Messages"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_recital__name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__name
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement_serviceprofile__name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_subtype__name
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__name
 msgid "Name"
@@ -951,9 +825,9 @@ msgid "Name:"
 msgstr ""
 
 #. module: agreement_legal
-#: code:addons/agreement_legal/models/agreement.py:108
-#: code:addons/agreement_legal/models/agreement.py:444
-#: code:addons/agreement_legal/models/agreement.py:445
+#: code:addons/agreement_legal/models/agreement.py:103
+#: code:addons/agreement_legal/models/agreement.py:398
+#: code:addons/agreement_legal/models/agreement.py:401
 #, python-format
 msgid "New"
 msgstr ""
@@ -979,11 +853,6 @@ msgid "Notification Address"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__expiration_notice
 msgid "Number of Days before expiration to be notified."
 msgstr ""
@@ -994,28 +863,8 @@ msgid "Number of Days to be notified before changes."
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_has_error_counter
-msgid "Number of error"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_has_error_counter
-msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__term
 msgid "Number of months this agreement/contract is in effect with the partner."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: agreement_legal
@@ -1064,16 +913,6 @@ msgstr ""
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_search_view
 msgid "Partners"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__payment_term_id
-msgid "Payment Term"
-msgstr ""
-
-#. module: agreement_legal
-#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
-msgid "Payment Terms"
 msgstr ""
 
 #. module: agreement_legal
@@ -1223,12 +1062,6 @@ msgid "Returns"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__analytic_line_ids
-#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
-msgid "Revenues and Costs"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__reviewed_user_id
 msgid "Reviewed By"
 msgstr ""
@@ -1264,11 +1097,6 @@ msgid "Sales"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__sale_order_id
-msgid "Sales Order"
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__section_id
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_section_form_view
 msgid "Section"
@@ -1296,11 +1124,6 @@ msgstr ""
 msgid "Select target field from the related document model. If it is a\n"
 "         relationship field you will be able to select a target field at the\n"
 "         destination of the relationship."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__sale_order_id
-msgid "Select the Sales Order that this agreement is related to."
 msgstr ""
 
 #. module: agreement_legal
@@ -1369,30 +1192,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__sequence
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__order_lines_services_ids
-msgid "Service Order Lines"
-msgstr ""
-
-#. module: agreement_legal
-#: model_terms:ir.ui.view,arch_db:agreement_legal.agreement_serviceprofile_form
-msgid "Service Profile"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.actions.act_window,name:agreement_legal.agreement_serviceprofile_action
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__serviceprofile_ids
-#: model:ir.ui.menu,name:agreement_legal.agreement_serviceprofiles
-#: model_terms:ir.ui.view,arch_db:agreement_legal.agreement_serviceprofile_tree
-#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
-msgid "Service Profiles"
-msgstr ""
-
-#. module: agreement_legal
-#: model_terms:ir.ui.view,arch_db:agreement_legal.order_lines_search_view
-msgid "Service Type"
 msgstr ""
 
 #. module: agreement_legal
@@ -1530,11 +1329,6 @@ msgid "Termination Requested Date"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__payment_term_id
-msgid "Terms of payments."
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__notification_address_id
 msgid "The address to send notificaitons to, if different from customer address.(Address Type = Other)"
 msgstr ""
@@ -1622,31 +1416,6 @@ msgid "Title:"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__total_company_mrc
-msgid "Total company monthly recurring costs."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__total_company_nrc
-msgid "Total company non-recurring costs."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__total_customer_mrc
-msgid "Total custemer monthly recurring costs."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__total_customer_nrc
-msgid "Total custemer non-monthly recurring costs."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__contract_value
-msgid "Total value of the contract over ther entire term."
-msgstr ""
-
-#. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_type_list_view
 msgid "Type Name"
 msgstr ""
@@ -1667,16 +1436,6 @@ msgid "Units Of Measure"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: agreement_legal
 #: model:res.groups,name:agreement_legal.group_agreement_user
 msgid "User"
 msgstr ""
@@ -1689,16 +1448,6 @@ msgstr ""
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 msgid "Version:"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: agreement_legal
@@ -1730,21 +1479,6 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__start_date
 msgid "When the agreement starts."
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model,name:agreement_legal.model_agreement
-msgid "agreement"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model,name:agreement_legal.model_agreement_increasetype
-msgid "agreement.increasetype"
-msgstr ""
-
-#. module: agreement_legal
-#: model:ir.model,name:agreement_legal.model_agreement_renewaltype
-msgid "agreement.renewaltype"
 msgstr ""
 
 #. module: agreement_legal
