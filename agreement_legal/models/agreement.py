@@ -50,7 +50,7 @@ class Agreement(models.Model):
     end_date = fields.Date(
         string="End Date",
         track_visibility="onchange",
-        help="When the agreement ends."
+        help="When the agreement ends.",
     )
     color = fields.Integer()
     active = fields.Boolean(
@@ -121,24 +121,18 @@ class Agreement(models.Model):
         help="Date that the contract was terminated.",
     )
     reviewed_date = fields.Date(
-        string="Reviewed Date",
-        track_visibility="onchange")
+        string="Reviewed Date", track_visibility="onchange"
+    )
     reviewed_user_id = fields.Many2one(
-        "res.users",
-        string="Reviewed By",
-        track_visibility="onchange"
+        "res.users", string="Reviewed By", track_visibility="onchange"
     )
     approved_date = fields.Date(
-        string="Approved Date",
-        track_visibility="onchange")
-    approved_user_id = fields.Many2one(
-        "res.users",
-        string="Approved By",
-        track_visibility="onchange"
+        string="Approved Date", track_visibility="onchange"
     )
-    currency_id = fields.Many2one(
-        "res.currency",
-        string="Currency")
+    approved_user_id = fields.Many2one(
+        "res.users", string="Approved By", track_visibility="onchange"
+    )
+    currency_id = fields.Many2one("res.currency", string="Currency")
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -158,12 +152,10 @@ class Agreement(models.Model):
         help="The primary partner contact (If Applicable).",
     )
     partner_contact_phone = fields.Char(
-        related="partner_contact_id.phone",
-        string="Phone"
+        related="partner_contact_id.phone", string="Phone"
     )
     partner_contact_email = fields.Char(
-        related="partner_contact_id.email",
-        string="Email"
+        related="partner_contact_id.email", string="Email"
     )
     company_contact_id = fields.Many2one(
         "res.partner",
@@ -172,12 +164,10 @@ class Agreement(models.Model):
         help="The primary contact in the company.",
     )
     company_contact_phone = fields.Char(
-        related="company_contact_id.phone",
-        string="Phone"
+        related="company_contact_id.phone", string="Phone"
     )
     company_contact_email = fields.Char(
-        related="company_contact_id.email",
-        string="Email"
+        related="company_contact_id.email", string="Email"
     )
     agreement_type_id = fields.Many2one(
         "agreement.type",
@@ -193,13 +183,7 @@ class Agreement(models.Model):
         "agreement types.",
     )
     product_ids = fields.Many2many(
-        "product.template",
-        string="Products & Services")
-    payment_term_id = fields.Many2one(
-        "account.payment.term",
-        string="Payment Term",
-        track_visibility="onchange",
-        help="Terms of payments.",
+        "product.template", string="Products & Services"
     )
     assigned_user_id = fields.Many2one(
         "res.users",
@@ -234,28 +218,16 @@ class Agreement(models.Model):
         help="Describes what happens after the contract expires.",
     )
     recital_ids = fields.One2many(
-        "agreement.recital",
-        "agreement_id",
-        string="Recitals",
-        copy=True
+        "agreement.recital", "agreement_id", string="Recitals", copy=True
     )
     sections_ids = fields.One2many(
-        "agreement.section",
-        "agreement_id",
-        string="Sections",
-        copy=True
+        "agreement.section", "agreement_id", string="Sections", copy=True
     )
     clauses_ids = fields.One2many(
-        "agreement.clause",
-        "agreement_id",
-        string="Clauses",
-        copy=True
+        "agreement.clause", "agreement_id", string="Clauses", copy=True
     )
     appendix_ids = fields.One2many(
-        "agreement.appendix",
-        "agreement_id",
-        string="Appendices",
-        copy=True
+        "agreement.appendix", "agreement_id", string="Appendices", copy=True
     )
     previous_version_agreements_ids = fields.One2many(
         "agreement",
@@ -275,12 +247,10 @@ class Agreement(models.Model):
         "agreement.line",
         "agreement_id",
         string="Products/Services",
-        copy=False
+        copy=False,
     )
     state = fields.Selection(
-        [("draft", "Draft"),
-         ("active", "Active"),
-         ("inactive", "Inactive")],
+        [("draft", "Draft"), ("active", "Active"), ("inactive", "Inactive")],
         default="draft",
         track_visibility="always",
     )
@@ -292,8 +262,8 @@ class Agreement(models.Model):
     )
     signed_contract_filename = fields.Char(string="Filename")
     signed_contract = fields.Binary(
-        string="Signed Document",
-        track_visibility="always")
+        string="Signed Document", track_visibility="always"
+    )
     field_id = fields.Many2one(
         "ir.model.fields",
         string="Field",
@@ -331,7 +301,8 @@ class Agreement(models.Model):
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             description = MailTemplates.with_context(
-                lang=lang)._render_template(
+                lang=lang
+            )._render_template(
                 agreement.description, "agreement", agreement.id
             )
             agreement.dynamic_description = description
@@ -342,7 +313,8 @@ class Agreement(models.Model):
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             special_terms = MailTemplates.with_context(
-                lang=lang)._render_template(
+                lang=lang
+            )._render_template(
                 agreement.special_terms, "agreement", agreement.id
             )
             agreement.dynamic_special_terms = special_terms
@@ -354,8 +326,7 @@ class Agreement(models.Model):
         self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
-                self.field_id.name,
-                self.default_value or "''",
+                self.field_id.name, self.default_value or "''"
             )
             self.sub_model_object_field_id = False
         if self.field_id and self.field_id.relation:
@@ -425,10 +396,9 @@ class Agreement(models.Model):
     @api.model
     def create(self, vals):
         if vals.get("reference", _("New")) == _("New"):
-            vals["reference"] = self.env[
-                "ir.sequence"].next_by_code("agreement") or _(
-                "New"
-            )
+            vals["reference"] = self.env["ir.sequence"].next_by_code(
+                "agreement"
+            ) or _("New")
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
