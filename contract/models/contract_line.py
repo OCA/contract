@@ -409,6 +409,14 @@ class AccountAnalyticInvoiceLine(models.Model):
                 rec.recurring_interval,
             )
 
+    @api.constrains('is_canceled', 'is_auto_renew')
+    def _check_auto_renew_canceled_lines(self):
+        for rec in self:
+            if rec.is_canceled and rec.is_auto_renew:
+                raise ValidationError(
+                    _("A canceled contract line can't be set to auto-renew")
+                )
+
     @api.constrains('recurring_next_date', 'date_start')
     def _check_recurring_next_date_start_date(self):
         for line in self.filtered('recurring_next_date'):
@@ -886,7 +894,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         self.mapped('predecessor_contract_line_id').write(
             {'successor_contract_line_id': False}
         )
-        return self.write({'is_canceled': True})
+        return self.write({'is_canceled': True, 'is_auto_renew': False})
 
     @api.multi
     def uncancel(self, recurring_next_date):
