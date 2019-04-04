@@ -12,10 +12,7 @@ class Agreement(models.Model):
 
     @api.multi
     def _compute_task_count(self):
-        data = self.env['project.task'].read_group(
-            [('agreement_id', 'in', self.ids)],
-            ['agreement_id'], ['agreement_id'])
-        count_data = dict((item['agreement_id'][0],
-                           item['agreement_id_count']) for item in data)
-        for agreement in self:
-            agreement.task_count = count_data.get(agreement.id, 0)
+        for ag in self:
+            count = self.env['project.task'].search_count(
+                [('agreement_id', 'in', self.ids)])
+            ag.task_count = count
