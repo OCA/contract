@@ -80,4 +80,5 @@ class AccountAnalyticContract(models.Model):
         domain = [
             ('type', '=', 'sale'),
             ('company_id', '=', company_id)]
-        return self.env['account.journal'].search(domain, limit=1)
+        return self.env['account.journal'].search(
+            domain, order='sequence asc', limit=1)
