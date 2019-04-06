@@ -11,7 +11,7 @@
     'website': 'https://github.com/oca/contract',
     'license': 'AGPL-3',
     'depends': [
-        'sale',
+        'sale_management',
         'agreement',
     ],
     'data': [
