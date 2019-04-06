@@ -10,5 +10,5 @@ class SaleOrder(models.Model):
 
     agreement_id = fields.Many2one(
         comodel_name='agreement', string='Agreement', ondelete='restrict',
-        track_visibility='onchange', readonly=True,
+        track_visibility='onchange', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
