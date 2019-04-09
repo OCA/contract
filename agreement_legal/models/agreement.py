@@ -96,12 +96,12 @@ class Agreement(models.Model):
         string="Dynamic Special Terms",
         help="Compute dynamic special terms",
     )
-    reference = fields.Char(
+    code = fields.Char(
         string="Reference",
-        copy=False,
         required=True,
         default=lambda self: _("New"),
         track_visibility="onchange",
+        copy=False,
         help="ID used for internal contract tracking.",
     )
     increase_type_id = fields.Many2one(
@@ -136,6 +136,7 @@ class Agreement(models.Model):
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
+        required=False,
         copy=True,
         help="The customer or vendor this agreement is related to.",
     )
@@ -395,8 +396,8 @@ class Agreement(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("reference", _("New")) == _("New"):
-            vals["reference"] = self.env["ir.sequence"].next_by_code(
+        if vals.get("code", _("New")) == _("New"):
+            vals["code"] = self.env["ir.sequence"].next_by_code(
                 "agreement"
             ) or _("New")
         return super(Agreement, self).create(vals)
