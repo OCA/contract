@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_view_agreement" model="ir.ui.view">
+        <field name="name">stock.picking.form.agreement</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="before">
+                <field name="agreement_id"
+                       domain="[('partner_id', '=', partner_id)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_form_agreement" model="ir.ui.view">
+        <field name="name">stock.move.form.agreement</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="before">
+                <field name="agreement_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_production_lot_form_agreement" model="ir.ui.view">
+        <field name="name">stock.production.lot.form.agreement</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main_group']" position="inside">
+                <group>
+                    <field name="agreement_id"/>
+                    <field name="serviceprofile_id"
+                           domain="[('agreement_id', '=', agreement_id)]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit stock lot search view-->
+    <record id="search_product_lot_filter_agreement" model="ir.ui.view">
+        <field name="name">stock.production.lot.select.agreement</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

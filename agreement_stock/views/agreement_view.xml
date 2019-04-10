@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_stock_picking_agreement_specific"
+            model="ir.actions.act_window">
+        <field name="name">Pickings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Pickings
+            </p>
+        </field>
+    </record>
+    <record id="action_stock_move_agreement_specific"
+            model="ir.actions.act_window">
+        <field name="name">Moves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Moves
+            </p>
+        </field>
+    </record>
+    <record id="action_stock_production_lot_agreement_specific"
+            model="ir.actions.act_window">
+        <field name="name">Lots/Serials</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.production.lot</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Lot/Serial
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_agreement_form_view_stock" model="ir.ui.view">
+        <field name="name">agreement.form.stock</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id"
+               ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_stock_picking_agreement_specific)d"
+                        type="action"
+                        class="oe_stat_button" icon="fa-truck">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="picking_count" widget="statinfo"
+                                   nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Pickings</span>
+                    </div>
+                </button>
+                <button name="%(action_stock_move_agreement_specific)d"
+                        type="action"
+                        class="oe_stat_button" icon="fa-arrows-v">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="move_count" widget="statinfo"
+                                   nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Moves</span>
+                    </div>
+                </button>
+                <button name="%(action_stock_production_lot_agreement_specific)d"
+                        type="action"
+                        class="oe_stat_button" icon="fa-arrows">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="lot_count" widget="statinfo"
+                                   nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Lots/Serials</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
