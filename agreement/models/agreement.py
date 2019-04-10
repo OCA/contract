@@ -16,8 +16,7 @@ class Agreement(models.Model):
         domain=[('parent_id', '=', False)])
     company_id = fields.Many2one(
         'res.company', string='Company',
-        default=lambda self: self.env['res.company']._company_default_get(
-            'agreement'))
+        default=lambda self: self.env['res.company']._company_default_get())
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
     start_date = fields.Date()
@@ -28,7 +27,7 @@ class Agreement(models.Model):
         for agr in self:
             name = agr.name
             if agr.code:
-                name = u'[%s] %s' % (agr.code, agr.name)
+                name = '[%s] %s' % (agr.code, agr.name)
             res.append((agr.id, name))
         return res
 
