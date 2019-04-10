@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_production_form_view_agreement" model="ir.ui.view">
+        <field name="name">mrp.production.form.agreement</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="agreement_id"/>
+                <field name="serviceprofile_id"
+                       domain="[('agreement_id', '=', agreement_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit mrp production search view-->
+    <record id="view_mrp_production_filter_agreement" model="ir.ui.view">
+        <field name="name">mrp.production.select.agreement</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
