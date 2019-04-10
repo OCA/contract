@@ -18,7 +18,6 @@
         'security/ir.model.access.csv',
         'views/agreement.xml',
         ],
-    'demo': [],
     'development_status': 'Beta',
     'maintainers': [
         'alexis-via',
