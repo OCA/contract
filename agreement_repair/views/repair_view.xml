@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_repair_order_form_agreement" model="ir.ui.view">
+        <field name="name">repair.order.form.agreement</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Agreement">
+                    <group>
+                        <group id="agreement-left">
+                            <field name="agreement_id"
+                                   domain="[('partner_id', '=', partner_id)]"/>
+                            <field name="serviceprofile_id"
+                                   domain="[('agreement_id', '=', agreement_id)]"/>
+                        </group>
+                        <group id="agreement-right"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Inherit mrp repair search view-->
+    <record id="view_repair_order_form_filter_agreement" model="ir.ui.view">
+        <field name="name">repair.order.select.agreement</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id"
+               ref="repair.view_repair_order_form_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_mrp_repair_agreement_specific"
+            model="ir.actions.act_window">
+        <field name="name">Repair Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">repair.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Repair Orders
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_agreement_form_view_repair" model="ir.ui.view">
+        <field name="name">agreement.form.repair</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id"
+               ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_mrp_repair_agreement_specific)d"
+                        type="action"
+                        class="oe_stat_button" icon="fa-wrench">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="repair_count" widget="statinfo"
+                                   nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Repair Orders</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
