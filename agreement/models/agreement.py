@@ -347,7 +347,12 @@ class Agreement(models.Model):
         if self.field_id and self.field_id.relation:
             self.sub_object_id = self.env['ir.model'].search(
                 [('model', '=', self.field_id.relation)])[0]
-            if self.sub_model_object_field_id:
+        if self.sub_model_object_field_id:
+            self.copyvalue = "${object.%s.%s or %s}" %\
+                             (self.field_id.name,
+                              self.sub_model_object_field_id.name,
+                              self.default_value or '\'\'')
+
                 self.copyvalue = "${object.%s.%s or %s}" %\
                                  (self.field_id.name,
                                   self.sub_model_object_field_id.name,
