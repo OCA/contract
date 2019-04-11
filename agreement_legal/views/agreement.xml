@@ -90,7 +90,15 @@
                         </p>
                     </group>
                     <group name="parties" string="Parties">
-                        <group name="partner"
+                        <group name="cust_parties">
+                            <field name="use_parties_content" string="Use custom content" />
+                        </group>
+                        <group name="cust_parties">
+                            <p>
+                                This section (on the left) allows you to replace the default listing of the parties with custom dynamic content.
+                            </p>
+                        </group>
+<group name="partner"
                                string="Partner">
                             <div class="o_address_format">
                                 <field name="partner_id"
@@ -118,6 +126,9 @@
                             <field name="company_contact_phone" widget="phone" readonly="1" nolabel="1"/>
                             <field name="company_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
+                    </group>
+                    <group name="parties_content" string="Parties Content" attrs="{'invisible':[('use_parties_content', '=', False)]}">
+                        <field name="parties" nolabel="1"/>
                     </group>
                     <group name="term_information">
                         <group name="termdates_left" string="Term Dates">
