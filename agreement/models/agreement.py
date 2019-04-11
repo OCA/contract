@@ -353,11 +353,6 @@ class Agreement(models.Model):
                               self.sub_model_object_field_id.name,
                               self.default_value or '\'\'')
 
-                self.copyvalue = "${object.%s.%s or %s}" %\
-                                 (self.field_id.name,
-                                  self.sub_model_object_field_id.name,
-                                  self.default_value or '\'\'')
-
     # Used for Kanban grouped_by view
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
