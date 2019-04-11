@@ -170,6 +170,20 @@ class Agreement(models.Model):
     company_contact_email = fields.Char(
         related="company_contact_id.email", string="Email"
     )
+    use_parties_content = fields.Boolean(
+        string="Use parties content",
+        default = False,
+        help="Use custom content for parties" )
+    parties = fields.Html(
+        string="Parties",
+        track_visibility="onchange",
+        help="Parties of the agreement",
+    )
+    dynamic_parties = fields.Html(
+        compute="_compute_dynamic_parties",
+        string="Dynamic Parties",
+        help="Compute dynamic parties",
+    )
     agreement_type_id = fields.Many2one(
         "agreement.type",
         string="Agreement Type",
@@ -307,6 +321,18 @@ class Agreement(models.Model):
                 agreement.description, "agreement", agreement.id
             )
             agreement.dynamic_description = description
+
+    @api.multi
+    def _compute_dynamic_parties(self):
+        MailTemplates = self.env["mail.template"]
+        for agreement in self:
+            lang = agreement.partner_id.lang or "en_US"
+            parties = MailTemplates.with_context(
+                lang=lang
+            )._render_template(
+                agreement.parties, "agreement", agreement.id
+            )
+            agreement.dynamic_parties = parties
 
     @api.multi
     def _compute_dynamic_special_terms(self):
