@@ -13,6 +13,7 @@ setuptools.setup(
         'odoo12-addon-agreement_maintenance',
         'odoo12-addon-agreement_mrp',
         'odoo12-addon-agreement_repair',
+        'odoo12-addon-agreement_sale',
         'odoo12-addon-agreement_serviceprofile',
         'odoo12-addon-agreement_stock',
         'odoo12-addon-contract',
