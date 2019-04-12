@@ -172,8 +172,7 @@ class Agreement(models.Model):
     )
     use_parties_content = fields.Boolean(
         string="Use parties content",
-        default = False,
-        help="Use custom content for parties" )
+        help="Use custom content for parties")
     parties = fields.Html(
         string="Parties",
         track_visibility="onchange",
