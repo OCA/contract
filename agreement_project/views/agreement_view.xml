@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window"
+            id="action_project_task_agreement_specific">
+        <field name="name">Tasks</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.task</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Tasks
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_agreement_form_view_task" model="ir.ui.view">
+        <field name="name">agreement.form.task</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_project_task_agreement_specific)d"
+                        type="action"
+                        class="oe_stat_button" icon="fa-tasks">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="task_count" widget="statinfo"
+                                   nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Tasks</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
