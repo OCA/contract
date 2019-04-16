@@ -173,9 +173,34 @@ class Agreement(models.Model):
     use_parties_content = fields.Boolean(
         string="Use parties content",
         help="Use custom content for parties")
+    def _get_default_parties(self):
+        deftext="""
+        <h3>Company Information</h3>
+        <p>
+        ${object.company_partner_id.name or ''}.<br>
+        ${object.company_partner_id.street or ''} <br>
+        ${object.company_partner_id.state_id.code or ''}
+        ${object.company_partner_id.zip or ''}
+        ${object.company_partner_id.city or ''}<br>
+        ${object.company_partner_id.country_id.name or ''}.<br><br>
+        Represented by <b>${object.company_contact_id.name or ''}.</b>
+        </p>
+        <p></p>
+        <h3>Partner Information</h3>
+        <p>
+        ${object.partner_id.name or ''}.<br>
+        ${object.partner_id.street or ''} <br>
+        ${object.partner_id.state_id.code or ''}
+        ${object.partner_id.zip or ''} ${object.partner_id.city or ''}<br>
+        ${object.partner_id.country_id.name or ''}.<br><br>
+        Represented by <b>${object.partner_contact_id.name or ''}.</b>
+        </p>
+        """
+        return deftext
     parties = fields.Html(
         string="Parties",
         track_visibility="onchange",
+        default=_get_default_parties,
         help="Parties of the agreement",
     )
     dynamic_parties = fields.Html(
