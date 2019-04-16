@@ -173,8 +173,9 @@ class Agreement(models.Model):
     use_parties_content = fields.Boolean(
         string="Use parties content",
         help="Use custom content for parties")
+
     def _get_default_parties(self):
-        deftext="""
+        deftext = """
         <h3>Company Information</h3>
         <p>
         ${object.company_partner_id.name or ''}.<br>
@@ -197,6 +198,7 @@ class Agreement(models.Model):
         </p>
         """
         return deftext
+
     parties = fields.Html(
         string="Parties",
         track_visibility="onchange",
