@@ -14,5 +14,5 @@ class Agreement(models.Model):
     def _compute_task_count(self):
         for ag in self:
             count = self.env['project.task'].search_count(
-                [('agreement_id', 'in', self.ids)])
+                [('agreement_id', '=', ag.id)])
             ag.task_count = count
