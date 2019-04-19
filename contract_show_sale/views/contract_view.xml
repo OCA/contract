@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="act_analytic_sales" model="ir.actions.act_window">
+        <field name="context">{'search_default_project_id':
+            active_id, 'default_project_id': active_id}</field>
+        <field name="name">Sales</field>
+        <field name="res_model">sale.order</field>
+        <field name="domain">[('project_id','=',active_id)]</field>
+        <field name="search_view_id" ref="sale.view_sales_order_filter" />
+    </record>
+
+    <record id="action_contract_show_sale_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="sale.view_order_tree"/>
+        <field name="act_window_id" ref="act_analytic_sales"/>
+    </record>
+
+    <record id="action_contract_show_sale_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale.view_order_form"/>
+        <field name="act_window_id" ref="act_analytic_sales"/>
+    </record>
+
+    <record id="view_account_analytic_account_sale_tree" model="ir.ui.view">
+        <field name="name">account.analytic.account.tree.sale</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="contract.view_account_analytic_account_journal_tree"/>
+        <field name="arch" type="xml">
+            <field name="debit" position="before">
+                <field name="total_sale" sum="Total Sales" string="Sales"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="account_analytic_account_button_sale" model="ir.ui.view">
+        <field name="name">account.analytic.account.button.sale</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//div[@name="button_box"]' position='inside'>
+                <button class="oe_stat_button" type="action" icon="fa-edit"
+                        name="%(contract_show_sale.act_analytic_sales)d"
+                        help="Sales related with this contract">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_sale" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Sales</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
