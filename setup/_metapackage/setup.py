@@ -16,6 +16,7 @@ setuptools.setup(
         'odoo11-addon-agreement_sale',
         'odoo11-addon-agreement_stock',
         'odoo11-addon-contract',
+        'odoo11-addon-contract_digitized_signature',
         'odoo11-addon-contract_payment_mode',
         'odoo11-addon-contract_price_revision',
         'odoo11-addon-contract_sale',
