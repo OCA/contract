@@ -61,13 +61,6 @@ class ContractLineForecastPeriod(models.Model):
         help='Discount that is applied in generated invoices.'
         ' It should be less or equal to 100',
     )
-    active = fields.Boolean(
-        string="Active",
-        related="contract_line_id.active",
-        store=True,
-        readonly=True,
-        default=True,
-    )
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
