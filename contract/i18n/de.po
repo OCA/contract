@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2019-01-21 15:41+0000\n"
+"PO-Revision-Date: 2019-02-22 17:50+0000\n"
 "Last-Translator: Maria Sparenberg <maria.sparenberg@gmx.net>\n"
 "Language-Team: German (https://www.transifex.com/oca/teams/23907/de/)\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.3\n"
+"X-Generator: Weblate 3.4\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -108,8 +108,8 @@ msgstr ""
 "\n"
 "    <br/>\n"
 "    <p>Bei Fragen zögern Sie bitte nicht, uns zu kontaktieren.</p>\n"
-"    <p>${object.company_id.name or 'Wir'} bedanken uns für Ihren Auftrag!</"
-"p>\n"
+"    <p>$Vielen Dank, dass Sie ${object.company_id.name or 'uns'} mit Ihrem "
+"Anliegen beauftragen!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
 "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
@@ -117,26 +117,26 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id."
-"name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\""
+">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo()."
-"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address="
+"True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
 "0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
 "0px; padding-left: 0px; \">\n"
-"                Phone: ${object.company_id.phone}\n"
+"                Tel.: ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\">${object."
-"company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\""
+">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -147,7 +147,7 @@ msgstr ""
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Vertrag (Ref ${object.name or 'n/a'})"
+msgstr "${object.company_id.name} Vertrag (Ref: ${object.name or 'k.A.'})"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
@@ -194,7 +194,7 @@ msgstr "<strong>Menge</strong>"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
-msgstr "<strong>Wiederkehrende Einträge</strong>"
+msgstr "<strong>Wiederkehrende Positionen</strong>"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
@@ -296,7 +296,7 @@ msgstr "Vertragsvorlagen"
 #: model:ir.model.fields,field_description:contract.field_project_project_contract_type
 #: model:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Contract Type"
-msgstr "Vertragsvorlage"
+msgstr "Vertragstyp"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_config_contract
@@ -352,7 +352,7 @@ msgstr "Enddatum"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_date_from
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_date_from
 msgid "Date From"
-msgstr "Von (Datum)"
+msgstr "Datum (von)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account_date_start
@@ -363,7 +363,7 @@ msgstr "Startdatum"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_date_to
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line_date_to
 msgid "Date To"
-msgstr "bis (Datum)"
+msgstr "Datum (bis)"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line_date_from
@@ -462,7 +462,7 @@ msgid ""
 "pricelist to the product. If not, you will be able to introduce a manual "
 "price"
 msgstr ""
-"Wenn der Haken gesetzt ist, wird Preis automatisch durch Anwenden der "
+"Wenn der Haken gesetzt ist, wird der Preis automatisch durch Anwenden der "
 "Preisliste gesetzt. Wenn der Haken nicht gesetzt ist, können Sie selbst "
 "einen Preis setzen"
 
@@ -563,7 +563,7 @@ msgstr "Partner und Untergeordnete"
 #: code:addons/contract/models/account_analytic_account.py:220
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
-msgstr "Legen Sie bitte ein Journal %s für das Unternehmen '%s' fest."
+msgstr "Legen Sie bitte ein %s-Journal für das Unternehmen '%s' fest."
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
@@ -647,7 +647,7 @@ msgstr "Verkaufsverträge"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Send by Email"
-msgstr "per Email versandt"
+msgstr "per Email versenden"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line_sequence
@@ -682,7 +682,7 @@ msgstr "Spezifischer Preis"
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_recurring_rule_type
 #: model:ir.model.fields,help:contract.field_project_project_recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
-msgstr "Legen Sie das Intervall für automatische Rechnungslegung fest."
+msgstr "Legen Sie das Intervall für die automatische Rechnungslegung fest."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account_recurring_invoicing_type
@@ -725,7 +725,7 @@ msgstr "Mengeneinheit"
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr "MwSt:"
+msgstr "USt-ID:"
 
 #. module: contract
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
@@ -763,7 +763,7 @@ msgstr "Sie müssen zuerst einen Kunden für den Vertrag '%s' auswählen!"
 #: code:addons/contract/models/account_analytic_account.py:207
 #, python-format
 msgid "You must first select a Supplier for Contract %s!"
-msgstr "Sie müssen zuerst einen Kunden für den Vertrag '%s' auswählen!"
+msgstr "Sie müssen zuerst einen Lieferanten für den Vertrag '%s' auswählen!"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:299
