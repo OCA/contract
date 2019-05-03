@@ -120,6 +120,7 @@ class AccountAnalyticAccount(models.Model):
         contracts = self.search([
             ('recurring_invoices', '=', True),
             ('recurring_next_date', '<=', today),
+            ('type', '=', 'sale'),
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),
