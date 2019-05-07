@@ -17,7 +17,7 @@ class AgreementSection(models.Model):
     agreement_id = fields.Many2one(
         "agreement", string="Agreement", ondelete="cascade")
     clauses_ids = fields.One2many(
-        "agreement.clause", "section_id", string="Clauses",copy=True)
+        "agreement.clause", "section_id", string="Clauses", copy=True)
     content = fields.Html(string="Section Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
