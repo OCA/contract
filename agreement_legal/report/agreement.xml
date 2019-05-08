@@ -36,7 +36,7 @@
                             <t t-if="not doc.use_parties_content">
                                 <h3>Company Information</h3>
                                 <div name="company_address">
-                                    <address t-field="doc.company_partner_id"
+                                    <address t-field="doc.company_id.partner_id"
                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                                 </div>
                                 <div name="company_contact">
@@ -121,7 +121,7 @@
                                             <p>Date: </p>
                                         </td>
                                         <td>
-                                            <p t-field="doc.company_partner_id"/>
+                                            <p t-field="doc.company_id.partner_id"/>
                                             <p>By: </p>
                                             <p>
                                                 Name: <span t-field="doc.company_contact_id.name"/>
