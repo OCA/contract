@@ -9,7 +9,7 @@
             <tree string="Agreements" default_order='name'>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="company_partner_id"/>
+                <field name="company_id"/>
                 <field name="parent_agreement_id"/>
                 <field name="agreement_type_id"/>
                 <field name="agreement_subtype_id"/>
@@ -110,7 +110,7 @@
                         <group name="company"
                                string="Company">
                             <div class="o_address_format">
-                                <field name="company_partner_id"
+                                <field name="company_id"
                                        readonly="1"
                                        context="{'show_address': 1}"
                                        options="{&quot;always_reload&quot;: True}"/>
@@ -122,7 +122,7 @@
                             <field name="partner_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
                         <group name="contact_right" string="Primary Contact">
-                            <field name="company_contact_id" domain="[('parent_id', '=', company_partner_id)]" nolabel="1"/>
+                            <field name="company_contact_id" domain="[('parent_id', '=', company_id.partner_id)]" nolabel="1"/>
                             <field name="company_contact_phone" widget="phone" readonly="1" nolabel="1"/>
                             <field name="company_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
@@ -136,7 +136,7 @@
                             <field name="end_date" attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"/>
                             <field name="expiration_notice"/>
                             <field name="change_notice"/>
-                            <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_partner_id)]"/>
+                            <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_id.partner_id)]"/>
                             <field name="termination_requested"/>
                             <field name="termination_date"/>
                         </group>
