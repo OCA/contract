@@ -65,7 +65,7 @@ class Agreement(models.Model):
         help="Date the contract was signed by Company.",
     )
     partner_signed_date = fields.Date(
-        string="Signed on",
+        string="Signed on (Partner)",
         track_visibility="onchange",
         help="Date the contract was signed by the Partner.",
     )
@@ -140,12 +140,6 @@ class Agreement(models.Model):
         copy=True,
         help="The customer or vendor this agreement is related to.",
     )
-    company_partner_id = fields.Many2one(
-        "res.partner",
-        string="Company",
-        copy=True,
-        default=lambda self: self.env.user.company_id.partner_id,
-    )
     partner_contact_id = fields.Many2one(
         "res.partner",
         string="Partner Contact",
@@ -153,10 +147,10 @@ class Agreement(models.Model):
         help="The primary partner contact (If Applicable).",
     )
     partner_contact_phone = fields.Char(
-        related="partner_contact_id.phone", string="Phone"
+        related="partner_contact_id.phone", string="Partner Phone"
     )
     partner_contact_email = fields.Char(
-        related="partner_contact_id.email", string="Email"
+        related="partner_contact_id.email", string="Partner Email"
     )
     company_contact_id = fields.Many2one(
         "res.partner",
@@ -178,12 +172,12 @@ class Agreement(models.Model):
         deftext = """
         <h3>Company Information</h3>
         <p>
-        ${object.company_partner_id.name or ''}.<br>
-        ${object.company_partner_id.street or ''} <br>
-        ${object.company_partner_id.state_id.code or ''}
-        ${object.company_partner_id.zip or ''}
-        ${object.company_partner_id.city or ''}<br>
-        ${object.company_partner_id.country_id.name or ''}.<br><br>
+        ${object.company_id.partner_id.name or ''}.<br>
+        ${object.company_id.partner_id.street or ''} <br>
+        ${object.company_id.partner_id.state_id.code or ''}
+        ${object.company_id.partner_id.zip or ''}
+        ${object.company_id.partner_id.city or ''}<br>
+        ${object.company_id.partner_id.country_id.name or ''}.<br><br>
         Represented by <b>${object.company_contact_id.name or ''}.</b>
         </p>
         <p></p>
@@ -241,7 +235,7 @@ class Agreement(models.Model):
     )
     partner_signed_user_id = fields.Many2one(
         "res.partner",
-        string="Signed By",
+        string="Signed By (Partner)",
         track_visibility="onchange",
         help="Contact on the account that signed the agreement/contract.",
     )
@@ -273,7 +267,7 @@ class Agreement(models.Model):
     previous_version_agreements_ids = fields.One2many(
         "agreement",
         "parent_agreement_id",
-        string="Child Agreements",
+        string="Previous Versions",
         copy=False,
         domain=[("active", "=", False)],
     )
