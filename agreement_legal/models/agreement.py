@@ -339,6 +339,7 @@ class Agreement(models.Model):
         "agreement.stage",
         string="Stage",
         group_expand="_read_group_stage_ids",
+        default=lambda self: self._default_stage_id(),
         help="Select the current stage of the agreement.",
         track_visibility="onchange",
         index=True)
@@ -370,8 +371,10 @@ class Agreement(models.Model):
             "version": 1,
             "revision": 0,
             "state": "draft",
+            "stage_id": self.env.ref("agreement_legal.agreement_stage_new").id,
         }
         res = self.copy(default=default_vals)
+        res.sections_ids.clauses_ids.write({'agreement_id': res.id})
         return {
             "res_model": "agreement",
             "type": "ir.actions.act_window",
