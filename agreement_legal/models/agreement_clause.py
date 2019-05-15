@@ -12,8 +12,7 @@ class AgreementClause(models.Model):
     name = fields.Char(string="Name", required=True)
     title = fields.Char(
         string="Title",
-        help="The title is displayed on the PDF." "The name is not."
-    )
+        help="The title is displayed on the PDF." "The name is not.")
     sequence = fields.Integer(string="Sequence")
     agreement_id = fields.Many2one(
         "agreement",
@@ -22,20 +21,17 @@ class AgreementClause(models.Model):
     section_id = fields.Many2one(
         "agreement.section",
         string="Section",
-        ondelete="cascade"
-    )
+        ondelete="cascade")
     content = fields.Html(string="Clause Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
         string="Dynamic Content",
-        help="compute dynamic Content",
-    )
+        help="compute dynamic Content")
     active = fields.Boolean(
         string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the agreement without "
-        "removing it.",
-    )
+        "removing it.")
 
     # Dynamic field editor
     field_id = fields.Many2one(
@@ -43,30 +39,25 @@ class AgreementClause(models.Model):
         string="Field",
         help="""Select target field from the related document model. If it is a
          relationship field you will be able to select a target field at the
-         destination of the relationship.""",
-    )
+         destination of the relationship.""")
     sub_object_id = fields.Many2one(
         "ir.model",
         string="Sub-model",
         help="""When a relationship field is selected as first field, this
-         field shows the document model the relationship goes to.""",
-    )
+         field shows the document model the relationship goes to.""")
     sub_model_object_field_id = fields.Many2one(
         "ir.model.fields",
         string="Sub-field",
         help="""When a relationship field is selected as first field, this
          field lets you select the target field within the destination document
-          model (sub-model).""",
-    )
+          model (sub-model).""")
     default_value = fields.Char(
         string="Default Value",
-        help="Optional value to use if the target field is empty.",
-    )
+        help="Optional value to use if the target field is empty.")
     copyvalue = fields.Char(
         string="Placeholder Expression",
         help="""Final placeholder expression, to be copy-pasted in the desired
-         template field.""",
-    )
+         template field.""")
 
     @api.onchange('field_id', 'sub_model_object_field_id', 'default_value')
     def onchange_copyvalue(self):
