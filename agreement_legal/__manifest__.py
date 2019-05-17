@@ -35,7 +35,11 @@
         "views/agreement.xml",
         "views/menu.xml",
     ],
+    "post_init_hook": "post_init_agreement_legal",
     "application": True,
     "development_status": "Beta",
-    "maintainers": ["max3903", "ygol"],
+    "maintainers": [
+        "max3903",
+        "ygol"
+    ],
 }
