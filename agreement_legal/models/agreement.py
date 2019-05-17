@@ -8,9 +8,6 @@ class Agreement(models.Model):
     _name = "agreement"
     _inherit = ["agreement", "mail.thread"]
 
-    def _default_stage_id(self):
-        return self.env.ref("agreement_legal.agreement_stage_new")
-
     # General
     name = fields.Char(string="Title", required=True)
     is_template = fields.Boolean(
@@ -339,7 +336,6 @@ class Agreement(models.Model):
         "agreement.stage",
         string="Stage",
         group_expand="_read_group_stage_ids",
-        default=lambda self: self._default_stage_id(),
         help="Select the current stage of the agreement.",
         track_visibility="onchange",
         index=True)
@@ -389,6 +385,9 @@ class Agreement(models.Model):
             vals["code"] = self.env["ir.sequence"].next_by_code(
                 "agreement"
             ) or _("New")
+        if not vals.get('stage_id'):
+            vals["stage_id"] = \
+                self.env.ref("agreement_legal.agreement_stage_new").id
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
