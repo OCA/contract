@@ -42,6 +42,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_section__agreement_id
 #: model:ir.module.category,name:agreement_legal.agreement
 #: model:ir.module.category,name:agreement_legal.module_agreement_legal_category
+#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
 msgid "Agreement"
 msgstr ""
@@ -166,11 +167,6 @@ msgid "Agreements"
 msgstr ""
 
 #. module: agreement_legal
-#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
-msgid "Agreements Form"
-msgstr ""
-
-#. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_stage_form_view
 msgid "Agreements Stage Form"
 msgstr ""
@@ -237,7 +233,6 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__child_agreements_ids
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__previous_version_agreements_ids
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 msgid "Child Agreements"
 msgstr ""
@@ -269,7 +264,6 @@ msgid "Color"
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__company_partner_id
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
 msgid "Company"
@@ -514,7 +508,6 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__company_contact_email
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_contact_email
 msgid "Email"
 msgstr ""
 
@@ -596,14 +589,9 @@ msgid "ID used for internal contract tracking."
 msgstr ""
 
 #. module: agreement_legal
-#: model:ir.model.fields,help:agreement_legal.field_agreement_section__active
-msgid "If unchecked, it will allow you to hide the\n"
-"                             agreement without removing it."
-msgstr ""
-
-#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__active
 #: model:ir.model.fields,help:agreement_legal.field_agreement_clause__active
+#: model:ir.model.fields,help:agreement_legal.field_agreement_section__active
 msgid "If unchecked, it will allow you to hide the agreement without removing it."
 msgstr ""
 
@@ -835,9 +823,9 @@ msgid "Name:"
 msgstr ""
 
 #. module: agreement_legal
-#: code:addons/agreement_legal/models/agreement.py:102
-#: code:addons/agreement_legal/models/agreement.py:451
-#: code:addons/agreement_legal/models/agreement.py:454
+#: code:addons/agreement_legal/models/agreement.py:84
+#: code:addons/agreement_legal/models/agreement.py:384
+#: code:addons/agreement_legal/models/agreement.py:387
 #, python-format
 msgid "New"
 msgstr ""
@@ -927,8 +915,18 @@ msgid "Partner Contact"
 msgstr ""
 
 #. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_contact_email
+msgid "Partner Email"
+msgstr ""
+
+#. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
 msgid "Partner Information"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_contact_phone
+msgid "Partner Phone"
 msgstr ""
 
 #. module: agreement_legal
@@ -953,7 +951,6 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__company_contact_phone
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_contact_phone
 msgid "Phone"
 msgstr ""
 
@@ -969,6 +966,11 @@ msgstr ""
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_form_view
 msgid "Preview"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__previous_version_agreements_ids
+msgid "Previous Versions"
 msgstr ""
 
 #. module: agreement_legal
@@ -1020,6 +1022,11 @@ msgstr ""
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_line__qty
 msgid "Quantity"
+msgstr ""
+
+#. module: agreement_legal
+#: model:res.groups,name:agreement_legal.group_agreement_readonly
+msgid "Read-Only Users"
 msgstr ""
 
 #. module: agreement_legal
@@ -1229,8 +1236,12 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__company_signed_user_id
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_signed_user_id
 msgid "Signed By"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_signed_user_id
+msgid "Signed By (Partner)"
 msgstr ""
 
 #. module: agreement_legal
@@ -1240,8 +1251,12 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__company_signed_date
-#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_signed_date
 msgid "Signed on"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__partner_signed_date
+msgid "Signed on (Partner)"
 msgstr ""
 
 #. module: agreement_legal
@@ -1380,10 +1395,14 @@ msgid "The revision will increase with every save event."
 msgstr ""
 
 #. module: agreement_legal
+#: model:ir.model.fields,help:agreement_legal.field_agreement_section__title
+msgid "The title is displayed on the PDF. The name is not."
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement_appendix__title
 #: model:ir.model.fields,help:agreement_legal.field_agreement_clause__title
 #: model:ir.model.fields,help:agreement_legal.field_agreement_recital__title
-#: model:ir.model.fields,help:agreement_legal.field_agreement_section__title
 msgid "The title is displayed on the PDF.The name is not."
 msgstr ""
 
