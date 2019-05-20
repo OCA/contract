@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
-# © 2004-2010 OpenERP SA
-# © 2014 Angel Moya <angel.moya@domatix.com>
-# © 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2004-2010 OpenERP SA
+# Copyright 2014 Angel Moya <angel.moya@domatix.com>
+# Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2017 Pesol (<http://pesol.es>)
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # Copyright 2018 Therp BV <https://therp.nl>.
+# Copyright 2019 Sylvain Van Hoof <sylvain@okia.be>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, models, fields
@@ -30,7 +30,12 @@ class AccountAnalyticAccount(models.Model):
         sale_line.product_id_change()
         sale_line_vals = sale_line._convert_to_write(sale_line._cache)
         # Insert markers
-        name = self._insert_markers(line.name)
+        contract = line.analytic_account_id
+        lang_obj = self.env['res.lang']
+        lang = lang_obj.search(
+            [('code', '=', contract.partner_id.lang)])
+        date_format = lang.date_format or '%m/%d/%Y'
+        name = self._insert_markers(line, date_format)
         sale_line_vals.update({
             'name': name,
             'discount': line.discount,
@@ -51,14 +56,14 @@ class AccountAnalyticAccount(models.Model):
             'origin': self.name,
             'company_id': self.company_id.id,
             'user_id': self.partner_id.user_id.id,
-            'project_id': self.id
+            'contract_id': self.id
         })
         # Get other invoice values from partner onchange
         sale.onchange_partner_id()
         return sale._convert_to_write(sale._cache)
 
     @api.multi
-    def _create_invoice(self):
+    def _create_invoice(self, invoice=False):
         """
         Create invoices
         @param self: single record of account.invoice
@@ -66,7 +71,8 @@ class AccountAnalyticAccount(models.Model):
         """
         self.ensure_one()
         if self.type == 'invoice':
-            return super(AccountAnalyticAccount, self)._create_invoice()
+            return super(AccountAnalyticAccount, self).\
+                _create_invoice(invoice=invoice)
         else:
             return self.env['account.invoice']
 
@@ -92,28 +98,46 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def recurring_create_sale(self):
-        """
-        Create sales from contracts
+        """Create sales from contracts
+
+        :param int limit:
+            Max of sales to create.
         :return: sales created
         """
         sales = self.env['sale.order']
         for contract in self:
-            if not contract.check_dates_valid():
-                continue
-            # Re-read contract with correct company
-            ctx = contract.get_invoice_context()
+            ref_date = contract.recurring_next_date or fields.Date.today()
+            if (contract.date_start > ref_date or
+                    contract.date_end and contract.date_end < ref_date):
+                if self.env.context.get('cron'):
+                    continue  # Don't fail on cron jobs
+                raise ValidationError(
+                    _("You must review start and end dates!\n%s") %
+                    contract.name
+                )
+            old_date = fields.Date.from_string(ref_date)
+            new_date = old_date + self.get_relative_delta(
+                contract.recurring_rule_type, contract.recurring_interval)
+            ctx = self.env.context.copy()
+            ctx.update({
+                'old_date': old_date,
+                'next_date': new_date,
+                # Force company for correct evaluation of domain access rules
+                'force_company': contract.company_id.id,
+            })
             sales |= contract.with_context(ctx)._create_sale()
             contract.write({
-                'recurring_next_date': fields.Date.to_string(ctx['next_date'])
+                'recurring_next_date': fields.Date.to_string(new_date)
             })
         return sales
 
     @api.model
     def cron_recurring_create_sale(self):
         today = fields.Date.today()
-        contracts = self.search([
+        contracts = self.with_context(cron=True).search([
             ('recurring_invoices', '=', True),
             ('recurring_next_date', '<=', today),
+            ('type', '=', 'sale'),
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),

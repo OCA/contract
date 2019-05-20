@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
-# © 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2016 Carlos Dauden <carlos.dauden@tecnativa.com>
 # Copyright 2017 Pesol (<http://pesol.es>)
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
+# Copyright 2019 Sylvain Van Hoof <sylvain@okia.be>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
@@ -59,14 +59,14 @@ class TestContractSale(TransactionCase):
         self.contract_line.price_unit = 100.0
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
-            [('project_id', '=', self.contract.id),
+            [('contract_id', '=', self.contract.id),
              ('state', '=', 'draft')])
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract.recurring_next_date, '2017-02-28')
         self.sale_line = self.sale_monthly.order_line[0]
         self.assertAlmostEqual(self.sale_line.price_subtotal, 50.0)
-        self.assertEqual(self.contract.partner_id.user_id,
-                         self.sale_monthly.user_id)
+        self.assertEqual(self.contract.partner_id.user_id.id or self.env.uid,
+                         self.sale_monthly.user_id.id)
 
     def test_contract_autoconfirm(self):
         self.contract.sale_autoconfirm = True
@@ -76,15 +76,15 @@ class TestContractSale(TransactionCase):
         self.contract_line.price_unit = 100.0
         self.contract.recurring_create_sale()
         self.sale_monthly = self.env['sale.order'].search(
-            [('project_id', '=', self.contract.id),
+            [('contract_id', '=', self.contract.id),
              ('state', '=', 'sale')])
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract.recurring_next_date, '2017-02-28')
 
         self.sale_line = self.sale_monthly.order_line[0]
         self.assertAlmostEqual(self.sale_line.price_subtotal, 50.0)
-        self.assertEqual(self.contract.partner_id.user_id,
-                         self.sale_monthly.user_id)
+        self.assertEqual(self.contract.partner_id.user_id.id or self.env.uid,
+                         self.sale_monthly.user_id.id)
 
     def test_onchange_contract_template_id(self):
         """ It should change the contract values to match the template. """
@@ -106,3 +106,9 @@ class TestContractSale(TransactionCase):
         sale_orders = self.contract.with_context(
             cron=True).recurring_create_sale()
         self.assertFalse(sale_orders)
+
+    def test_create_invoice(self):
+        """ The method _create_invoice should never
+        create an invoice from a sale contract """
+
+        self.assertFalse(self.contract._create_invoice())
