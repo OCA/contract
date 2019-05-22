@@ -39,7 +39,7 @@ contracts created by themselves.
 Usage
 =====
 
-#. Log with a user having sale but not account permissions.
+#. Log with an user having sale but not account permissions.
 #. Go to Sales > Sales > Contracts.
 #. Create a new record or edit another one.
 
