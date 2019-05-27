@@ -32,7 +32,7 @@ addon | version | summary
 [contract_sale_generation](contract_sale_generation/) | 10.0.3.0.0 | Contracts Management - Recurring Sales
 [contract_show_invoice](contract_show_invoice/) | 10.0.1.0.1 | Button in contracts to show their invoices
 [contract_variable_quantity](contract_variable_quantity/) | 10.0.1.2.0 | Variable quantity in contract recurrent invoicing
-[product_contract](product_contract/) | 10.0.1.0.0 | Product Contract
+[product_contract](product_contract/) | 10.0.1.1.0 | Product Contract
 [website_portal_contract](website_portal_contract/) | 10.0.1.0.0 | Extends website portal with contracts.
 
 [//]: # (end addons)
