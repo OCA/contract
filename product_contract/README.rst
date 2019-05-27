@@ -1,5 +1,5 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+   :target: https://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
 ================
@@ -7,8 +7,8 @@ Product Contract
 ================
 
 This module adds support for products to be linked to contract templates.
-It also adds functionality to automatically create a contract, from the template,
-when a ``sale.order`` contains a product that implements a contract.
+It also adds functionality to automatically create a contract from the
+template, when a ``sale.order`` contains a product that implements a contract.
 
 Usage
 =====
@@ -48,6 +48,7 @@ Contributors
 ------------
 
 * Ted Salmon <tsalmon@laslabs.com>
+* Ronald Portier <rportier@therp.nl>
 
 
 Maintainer

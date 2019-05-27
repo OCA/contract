@@ -15,7 +15,7 @@ class TestProductTemplate(TransactionCase):
         self.contract = self.env['account.analytic.contract'].create({
             'name': 'Test',
             'recurring_rule_type': 'yearly',
-            'recurring_interval': 12345,
+            'recurring_interval': 1,
         })
 
     def test_change_is_contract(self):
