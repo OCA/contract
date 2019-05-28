@@ -12,7 +12,7 @@ def migrate(cr, version):
     """
     set recurring_next_date to false for finished contract
     """
-    _logger.info("order all contract line")
+    _logger.info(">> Pre-Migration 12.0.2.0.0")
     with api.Environment(cr, SUPERUSER_ID, {}) as env:
         contracts = env["account.analytic.account"].search([])
         finished_contract = contracts.filtered(
