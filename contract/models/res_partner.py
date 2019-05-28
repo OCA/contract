@@ -15,7 +15,7 @@ class ResPartner(models.Model):
     )
 
     def _compute_contract_count(self):
-        contract_model = self.env['account.analytic.account']
+        contract_model = self.env['contract.contract']
         fetch_data = contract_model.read_group(
             [
                 ('recurring_invoices', '=', True),
@@ -69,9 +69,9 @@ class ResPartner(models.Model):
     def _get_act_window_contract_xml(self, contract_type):
         if contract_type == 'purchase':
             return self.env['ir.actions.act_window'].for_xml_id(
-                'contract', 'action_account_analytic_purchase_overdue_all'
+                'contract', 'action_supplier_contract'
             )
         else:
             return self.env['ir.actions.act_window'].for_xml_id(
-                'contract', 'action_account_analytic_sale_overdue_all'
+                'contract', 'action_customer_contract'
             )

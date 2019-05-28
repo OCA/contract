@@ -8,5 +8,5 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     contract_line_id = fields.Many2one(
-        'account.analytic.invoice.line', string='Contract Line', index=True
+        'contract.line', string='Contract Line', index=True
     )

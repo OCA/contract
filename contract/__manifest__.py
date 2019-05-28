@@ -9,7 +9,7 @@
 
 {
     'name': 'Recurring - Contracts Management',
-    'version': '12.0.3.0.1',
+    'version': '12.0.4.0.0',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
@@ -18,10 +18,9 @@
     "ACSONE SA/NV, "
     "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
-    'depends': ['base', 'account', 'analytic', 'product'],
+    'depends': ['base', 'account', 'product'],
     "external_dependencies": {"python": ["dateutil"]},
     'data': [
-        'wizards/contract_line_wizard.xml',
         'security/ir.model.access.csv',
         'security/contract_security.xml',
         'report/report_contract.xml',
@@ -29,11 +28,12 @@
         'data/contract_cron.xml',
         'data/contract_renew_cron.xml',
         'data/mail_template.xml',
+        'wizards/contract_line_wizard.xml',
         'views/abstract_contract_line.xml',
         'views/contract.xml',
-        'views/contract_template_line.xml',
-        'views/contract_template.xml',
         'views/contract_line.xml',
+        'views/contract_template.xml',
+        'views/contract_template_line.xml',
         'views/res_partner_view.xml',
     ],
     'installable': True,
