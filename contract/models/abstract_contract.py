@@ -9,8 +9,8 @@
 from odoo import api, models, fields
 
 
-class AbstractAccountAnalyticContract(models.AbstractModel):
-    _name = 'account.abstract.analytic.contract'
+class ContractAbstractContract(models.AbstractModel):
+    _name = 'contract.abstract.contract'
     _description = 'Abstract Recurring Contract'
 
     # These fields will not be synced to the contract
@@ -50,7 +50,7 @@ class AbstractAccountAnalyticContract(models.AbstractModel):
     @api.onchange('contract_type')
     def _onchange_contract_type(self):
         if self.contract_type == 'purchase':
-            self.recurring_invoice_line_ids.filtered('automatic_price').update(
+            self.contract_line_ids.filtered('automatic_price').update(
                 {'automatic_price': False}
             )
         self.journal_id = self.env['account.journal'].search(

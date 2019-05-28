@@ -9,5 +9,5 @@ class AccountInvoice(models.Model):
 
     # We keep this field for migration purpose
     old_contract_id = fields.Many2one(
-        'account.analytic.account', oldname="contract_id"
+        'contract.contract', oldname="contract_id"
     )

@@ -16,7 +16,7 @@ def to_date(date):
 class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractBase, cls).setUpClass()
+        super().setUpClass()
         cls.today = fields.Date.today()
         cls.partner = cls.env.ref('base.res_partner_2')
         cls.product_1 = cls.env.ref('product.product_product_1')
@@ -37,9 +37,9 @@ class TestContractBase(common.SavepointCase):
         }
         cls.template_vals = {
             'name': 'Test Contract Template',
-            'recurring_invoice_line_ids': [(0, 0, cls.line_template_vals)],
+            'contract_line_ids': [(0, 0, cls.line_template_vals)],
         }
-        cls.template = cls.env['account.analytic.contract'].create(
+        cls.template = cls.env['contract.template'].create(
             cls.template_vals
         )
         # For being sure of the applied price
@@ -51,22 +51,20 @@ class TestContractBase(common.SavepointCase):
                 'base': 'list_price',
             }
         )
-        cls.contract = cls.env['account.analytic.account'].create(
+        cls.contract = cls.env['contract.contract'].create(
             {
                 'name': 'Test Contract',
                 'partner_id': cls.partner.id,
                 'pricelist_id': cls.partner.property_product_pricelist.id,
-                'recurring_invoices': True,
             }
         )
-        cls.contract2 = cls.env['account.analytic.account'].create(
+        cls.contract2 = cls.env['contract.contract'].create(
             {
                 'name': 'Test Contract 2',
                 'partner_id': cls.partner.id,
                 'pricelist_id': cls.partner.property_product_pricelist.id,
-                'recurring_invoices': True,
                 'contract_type': 'purchase',
-                'recurring_invoice_line_ids': [
+                'contract_line_ids': [
                     (
                         0,
                         0,
@@ -100,7 +98,7 @@ class TestContractBase(common.SavepointCase):
             'recurring_next_date': '2018-01-15',
             'is_auto_renew': False,
         }
-        cls.acct_line = cls.env['account.analytic.invoice.line'].create(
+        cls.acct_line = cls.env['contract.line'].create(
             cls.line_vals
         )
         cls.acct_line.product_id.is_auto_renew = True
@@ -115,7 +113,7 @@ class TestContract(TestContractBase):
         del vals['date_start']
         vals['contract_id'] = self.template.id
         vals.update(overrides)
-        return self.env['account.analytic.contract.line'].create(vals)
+        return self.env['contract.template.line'].create(vals)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
@@ -141,8 +139,6 @@ class TestContract(TestContractBase):
         res = self.acct_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
         self.acct_line.price_unit = 100.0
-        with self.assertRaises(ValidationError):
-            self.contract.partner_id = False
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_invoice()
         self.invoice_monthly = self.contract._get_related_invoices()
@@ -360,7 +356,7 @@ class TestContract(TestContractBase):
         )
 
     def test_onchange_product_id(self):
-        line = self.env['account.analytic.invoice.line'].new()
+        line = self.env['contract.line'].new()
         res = line._onchange_product_id()
         self.assertFalse(res['domain']['uom_id'])
 
@@ -388,11 +384,6 @@ class TestContract(TestContractBase):
                 }
             )
 
-    def test_check_recurring_next_date_recurring_invoices(self):
-        with self.assertRaises(ValidationError):
-            self.contract.write({'recurring_invoices': True})
-            self.acct_line.write({'recurring_next_date': False})
-
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
         self.contract.contract_template_id = False
@@ -400,7 +391,7 @@ class TestContract(TestContractBase):
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
         res = {
-            'recurring_invoice_line_ids': [
+            'contract_line_ids': [
                 (
                     0,
                     0,
@@ -427,15 +418,15 @@ class TestContract(TestContractBase):
         self.contract.contract_template_id = self.template
 
         self.assertFalse(
-            self.contract.recurring_invoice_line_ids,
+            self.contract.contract_line_ids,
             'Recurring lines were not removed.',
         )
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
-        self.assertEqual(len(self.contract.recurring_invoice_line_ids), 1)
+        self.assertEqual(len(self.contract.contract_line_ids), 1)
 
         for key, value in self.line_template_vals.items():
-            test_value = self.contract.recurring_invoice_line_ids[0][key]
+            test_value = self.contract.contract_line_ids[0][key]
             try:
                 test_value = test_value.id
             except AttributeError:
@@ -456,7 +447,7 @@ class TestContract(TestContractBase):
         self.contract._onchange_contract_type()
         self.assertFalse(
             any(
-                self.contract.recurring_invoice_line_ids.mapped(
+                self.contract.contract_line_ids.mapped(
                     'automatic_price'
                 )
             )
@@ -464,7 +455,7 @@ class TestContract(TestContractBase):
 
     def test_contract_onchange_product_id_domain_blank(self):
         """It should return a blank UoM domain when no product."""
-        line = self.env['account.analytic.contract.line'].new()
+        line = self.env['contract.template.line'].new()
         res = line._onchange_product_id()
         self.assertFalse(res['domain']['uom_id'])
 
@@ -533,8 +524,8 @@ class TestContract(TestContractBase):
                 'name': 'Customer Contracts',
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
-                'res_model': 'account.analytic.account',
-                'xml_id': 'contract.action_account_analytic_sale_overdue_all',
+                'res_model': 'contract.contract',
+                'xml_id': 'contract.action_customer_contract',
             },
             show_contract,
             'There was an error and the view couldn\'t be opened.',
@@ -605,7 +596,7 @@ class TestContract(TestContractBase):
                 (to_date('2018-01-05'), 'post-paid', 'yearly', 1),
             ),
         ]
-        contract_line_env = self.env['account.analytic.invoice.line']
+        contract_line_env = self.env['contract.line']
         for recurring_next_date, combination in combinations:
             self.assertEqual(
                 recurring_next_date,
@@ -621,7 +612,7 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.contract.recurring_next_date,
             min(
-                self.contract.recurring_invoice_line_ids.mapped(
+                self.contract.contract_line_ids.mapped(
                     'recurring_next_date'
                 )
             ),
@@ -701,7 +692,7 @@ class TestContract(TestContractBase):
                 'is_auto_renew': True,
             }
         )
-        wizard = self.env['account.analytic.invoice.line.wizard'].create(
+        wizard = self.env['contract.line.wizard'].create(
             {
                 'date_end': self.today + relativedelta(months=3),
                 'contract_line_id': self.acct_line.id,
@@ -754,7 +745,7 @@ class TestContract(TestContractBase):
             suspension_start, suspension_end, True
         )
         self.assertEqual(self.acct_line.date_end, end_date)
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -785,7 +776,7 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.date_end, suspension_start - relativedelta(days=1)
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
@@ -826,7 +817,7 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.date_end, suspension_start - relativedelta(days=1)
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
@@ -868,7 +859,7 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.date_end, suspension_start - relativedelta(days=1)
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertTrue(new_line)
@@ -906,7 +897,7 @@ class TestContract(TestContractBase):
             self.acct_line.date_end,
             end_date + (suspension_end - start_date) + timedelta(days=1),
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -939,7 +930,7 @@ class TestContract(TestContractBase):
             self.acct_line.date_end,
             end_date + (suspension_end - start_date) + timedelta(days=1),
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -970,7 +961,7 @@ class TestContract(TestContractBase):
             start_date + (suspension_end - start_date) + timedelta(days=1),
         )
         self.assertFalse(self.acct_line.date_end)
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -1005,7 +996,7 @@ class TestContract(TestContractBase):
             self.acct_line.date_end,
             end_date + (suspension_end - suspension_start) + timedelta(days=1),
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -1038,7 +1029,7 @@ class TestContract(TestContractBase):
             + timedelta(days=1),
         )
         self.assertFalse(self.acct_line.date_end)
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -1055,7 +1046,7 @@ class TestContract(TestContractBase):
                 'date_end': end_date,
             }
         )
-        wizard = self.env['account.analytic.invoice.line.wizard'].create(
+        wizard = self.env['contract.line.wizard'].create(
             {
                 'date_start': suspension_start,
                 'date_end': suspension_end,
@@ -1074,7 +1065,7 @@ class TestContract(TestContractBase):
             self.acct_line.date_end,
             end_date + (suspension_end - suspension_start) + timedelta(days=1),
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(new_line)
@@ -1093,7 +1084,7 @@ class TestContract(TestContractBase):
             self.today + relativedelta(months=7),
             True,
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(self.acct_line.is_auto_renew)
@@ -1120,7 +1111,7 @@ class TestContract(TestContractBase):
             self.today + relativedelta(months=7),
             True,
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         with self.assertRaises(ValidationError):
@@ -1137,7 +1128,7 @@ class TestContract(TestContractBase):
                 'is_auto_renew': False,
             }
         )
-        wizard = self.env['account.analytic.invoice.line.wizard'].create(
+        wizard = self.env['contract.line.wizard'].create(
             {
                 'date_start': self.today + relativedelta(months=3),
                 'date_end': self.today + relativedelta(months=5),
@@ -1146,7 +1137,7 @@ class TestContract(TestContractBase):
             }
         )
         wizard.plan_successor()
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertFalse(self.acct_line.is_auto_renew)
@@ -1177,7 +1168,7 @@ class TestContract(TestContractBase):
     def test_uncancel_wizard(self):
         self.acct_line.cancel()
         self.assertTrue(self.acct_line.is_canceled)
-        wizard = self.env['account.analytic.invoice.line.wizard'].create(
+        wizard = self.env['contract.line.wizard'].create(
             {
                 'recurring_next_date': self.today,
                 'contract_line_id': self.acct_line.id,
@@ -1204,7 +1195,7 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.date_end, suspension_start - relativedelta(days=1)
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         self.assertEqual(self.acct_line.successor_contract_line_id, new_line)
@@ -1235,7 +1226,7 @@ class TestContract(TestContractBase):
         self.acct_line.stop_plan_successor(
             suspension_start, suspension_end, True
         )
-        new_line = self.env['account.analytic.invoice.line'].search(
+        new_line = self.env['contract.line'].search(
             [('predecessor_contract_line_id', '=', self.acct_line.id)]
         )
         new_line.cancel()
@@ -1324,12 +1315,13 @@ class TestContract(TestContractBase):
         contracts = self.contract2
         for i in range(10):
             contracts |= self.contract.copy()
-        self.env['account.analytic.account'].cron_recurring_create_invoice()
+        self.env['contract.contract'].cron_recurring_create_invoice()
         invoice_lines = self.env['account.invoice.line'].search(
-            [('account_analytic_id', 'in', contracts.ids)]
+            [('contract_line_id', 'in',
+              contracts.mapped('contract_line_ids').ids)]
         )
         self.assertEqual(
-            len(contracts.mapped('recurring_invoice_line_ids')),
+            len(contracts.mapped('contract_line_ids')),
             len(invoice_lines),
         )
 
@@ -1535,7 +1527,7 @@ class TestContract(TestContractBase):
             self.acct_line.unlink()
 
     def test_contract_line_state(self):
-        lines = self.env['account.analytic.invoice.line']
+        lines = self.env['contract.line']
         # upcoming
         lines |= self.acct_line.copy(
             {
@@ -1607,39 +1599,39 @@ class TestContract(TestContractBase):
         ]
         self.assertEqual(set(lines.mapped('state')), set(states))
         for state in states:
-            lines = self.env['account.analytic.invoice.line'].search(
+            lines = self.env['contract.line'].search(
                 [('state', '=', state)]
             )
             self.assertEqual(len(set(lines.mapped('state'))), 1, state)
             self.assertEqual(lines.mapped('state')[0], state, state)
 
         for state in states:
-            lines = self.env['account.analytic.invoice.line'].search(
+            lines = self.env['contract.line'].search(
                 [('state', '!=', state)]
             )
             self.assertFalse(state in lines.mapped('state'))
 
-        lines = self.env['account.analytic.invoice.line'].search(
+        lines = self.env['contract.line'].search(
             [('state', 'in', states)]
         )
         self.assertEqual(set(lines.mapped('state')), set(states))
-        lines = self.env['account.analytic.invoice.line'].search(
+        lines = self.env['contract.line'].search(
             [('state', 'in', [])]
         )
         self.assertFalse(lines.mapped('state'))
         with self.assertRaises(TypeError):
-            self.env['account.analytic.invoice.line'].search(
+            self.env['contract.line'].search(
                 [('state', 'in', 'upcoming')]
             )
-        lines = self.env['account.analytic.invoice.line'].search(
+        lines = self.env['contract.line'].search(
             [('state', 'not in', [])]
         )
         self.assertEqual(set(lines.mapped('state')), set(states))
-        lines = self.env['account.analytic.invoice.line'].search(
+        lines = self.env['contract.line'].search(
             [('state', 'not in', states)]
         )
         self.assertFalse(lines.mapped('state'))
-        lines = self.env['account.analytic.invoice.line'].search(
+        lines = self.env['contract.line'].search(
             [('state', 'not in', ['upcoming', 'in-progress'])]
         )
         self.assertEqual(
@@ -1780,10 +1772,10 @@ class TestContract(TestContractBase):
 
     def test_purchase_fields_view_get(self):
         purchase_tree_view = self.env.ref(
-            'contract.account_analytic_invoice_line_purchase_view_tree'
+            'contract.contract_line_supplier_tree_view'
         )
         purchase_form_view = self.env.ref(
-            'contract.account_analytic_invoice_line_purchase_view_form'
+            'contract.contract_line_supplier_form_view'
         )
         view = self.acct_line.with_context(
             default_contract_type='purchase'
@@ -1796,7 +1788,7 @@ class TestContract(TestContractBase):
 
     def test_sale_fields_view_get(self):
         sale_form_view = self.env.ref(
-            'contract.account_analytic_invoice_line_sale_view_form'
+            'contract.contract_line_customer_form_view'
         )
         view = self.acct_line.with_context(
             default_contract_type='sale'
@@ -1832,8 +1824,8 @@ class TestContract(TestContractBase):
         self.assertFalse(self.contract.create_invoice_visibility)
 
     def test_invoice_contract_without_lines(self):
-        self.contract.recurring_invoice_line_ids.cancel()
-        self.contract.recurring_invoice_line_ids.unlink()
+        self.contract.contract_line_ids.cancel()
+        self.contract.contract_line_ids.unlink()
         self.assertFalse(self.contract.recurring_create_invoice())
 
     def test_stop_at_last_date_invoiced(self):
