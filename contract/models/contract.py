@@ -188,6 +188,12 @@ class AccountAnalyticAccount(models.Model):
     def _onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist.id
         self.fiscal_position_id = self.partner_id.property_account_position_id
+        if self.contract_type == 'purchase':
+            self.payment_term_id = \
+                self.partner_id.property_supplier_payment_term_id
+        else:
+            self.payment_term_id = \
+                self.partner_id.property_payment_term_id
         self.invoice_partner_id = self.partner_id.address_get(['invoice'])[
             'invoice'
         ]
