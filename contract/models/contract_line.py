@@ -11,12 +11,15 @@ from odoo.exceptions import ValidationError
 from .contract_line_constraints import get_allowed
 
 
-class AccountAnalyticInvoiceLine(models.Model):
-    _name = 'account.analytic.invoice.line'
-    _inherit = 'account.abstract.analytic.contract.line'
+class ContractLine(models.Model):
+    _name = 'contract.line'
+    _inherit = 'contract.abstract.contract.line'
 
+    sequence = fields.Integer(
+        string="Sequence",
+    )
     contract_id = fields.Many2one(
-        comodel_name='account.analytic.account',
+        comodel_name='contract.contract',
         string='Contract',
         required=True,
         index=True,
@@ -43,7 +46,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         compute='_compute_create_invoice_visibility'
     )
     successor_contract_line_id = fields.Many2one(
-        comodel_name='account.analytic.invoice.line',
+        comodel_name='contract.line',
         string="Successor Contract Line",
         required=False,
         readonly=True,
@@ -53,7 +56,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         "contract line created.",
     )
     predecessor_contract_line_id = fields.Many2one(
-        comodel_name='account.analytic.invoice.line',
+        comodel_name='contract.line',
         string="Predecessor Contract Line",
         required=False,
         readonly=True,
@@ -452,7 +455,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.constrains('recurring_next_date')
     def _check_recurring_next_date_recurring_invoices(self):
-        for rec in self.filtered('contract_id.recurring_invoices'):
+        for rec in self:
             if not rec.recurring_next_date and (
                 not rec.date_end
                 or not rec.last_date_invoiced
@@ -511,12 +514,11 @@ class AccountAnalyticInvoiceLine(models.Model):
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         # Insert markers
-        contract = self.contract_id
         name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
                 'name': name,
-                'account_analytic_id': contract.id,
+                'account_analytic_id': self.contract_id.analytic_account_id.id,
                 'price_unit': self.price_unit,
             }
         )
@@ -737,7 +739,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         successor_contract_line
         :return: successor_contract_line
         """
-        contract_line = self.env['account.analytic.invoice.line']
+        contract_line = self.env['contract.line']
         for rec in self:
             if not rec.is_plan_successor_allowed:
                 raise ValidationError(
@@ -804,7 +806,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             raise ValidationError(
                 _('Stop/Plan successor not allowed for this line')
             )
-        contract_line = self.env['account.analytic.invoice.line']
+        contract_line = self.env['contract.line']
         for rec in self:
             if rec.date_start >= date_start:
                 if rec.date_start < date_end:
@@ -914,9 +916,9 @@ class AccountAnalyticInvoiceLine(models.Model):
             contract.message_post(body=msg)
         for rec in self:
             if rec.predecessor_contract_line_id:
-                rec.predecessor_contract_line_id.successor_contract_line_id = (
-                    rec
-                )
+                predecessor_contract_line = rec.predecessor_contract_line_id
+                assert not predecessor_contract_line.successor_contract_line_id
+                predecessor_contract_line.successor_contract_line_id = rec
             rec.is_canceled = False
             rec.recurring_next_date = recurring_next_date
         return True
@@ -935,7 +937,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Un-Cancel Contract Line',
-            'res_model': 'account.analytic.invoice.line.wizard',
+            'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
@@ -957,7 +959,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Plan contract line successor',
-            'res_model': 'account.analytic.invoice.line.wizard',
+            'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
@@ -979,7 +981,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Resiliate contract line',
-            'res_model': 'account.analytic.invoice.line.wizard',
+            'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
@@ -1001,7 +1003,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Suspend contract line',
-            'res_model': 'account.analytic.invoice.line.wizard',
+            'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
@@ -1020,7 +1022,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.multi
     def renew(self):
-        res = self.env['account.analytic.invoice.line']
+        res = self.env['contract.line']
         for rec in self:
             is_auto_renew = rec.is_auto_renew
             rec.stop(rec.date_end, post_message=False)
@@ -1050,7 +1052,6 @@ class AccountAnalyticInvoiceLine(models.Model):
         return [
             ('is_auto_renew', '=', True),
             ('is_canceled', '=', False),
-            ('contract_id.recurring_invoices', '=', True),
             ('termination_notice_date', '<=', fields.Date.context_today(self)),
         ]
 
@@ -1067,18 +1068,18 @@ class AccountAnalyticInvoiceLine(models.Model):
         default_contract_type = self.env.context.get('default_contract_type')
         if view_type == 'tree' and default_contract_type == 'purchase':
             view_id = self.env.ref(
-                'contract.account_analytic_invoice_line_purchase_view_tree'
+                'contract.contract_line_supplier_tree_view'
             ).id
         if view_type == 'form':
             if default_contract_type == 'purchase':
                 view_id = self.env.ref(
-                    'contract.account_analytic_invoice_line_purchase_view_form'
+                    'contract.contract_line_supplier_form_view'
                 ).id
             elif default_contract_type == 'sale':
                 view_id = self.env.ref(
-                    'contract.account_analytic_invoice_line_sale_view_form'
+                    'contract.contract_line_customer_form_view'
                 ).id
-        return super(AccountAnalyticInvoiceLine, self).fields_view_get(
+        return super().fields_view_get(
             view_id, view_type, toolbar, submenu
         )
 
@@ -1089,7 +1090,7 @@ class AccountAnalyticInvoiceLine(models.Model):
             raise ValidationError(
                 _("Contract line must be canceled before delete")
             )
-        return super(AccountAnalyticInvoiceLine, self).unlink()
+        return super().unlink()
 
     @api.multi
     def _get_quantity_to_invoice(

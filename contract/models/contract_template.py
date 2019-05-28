@@ -9,14 +9,15 @@
 from odoo import fields, models
 
 
-class AccountAnalyticContract(models.Model):
-    _name = 'account.analytic.contract'
-    _inherit = 'account.abstract.analytic.contract'
-    _description = "Account Analytic Contract"
+class ContractTemplate(models.Model):
+    _name = 'contract.template'
+    _inherit = 'contract.abstract.contract'
+    _description = "Contract Template"
 
-    recurring_invoice_line_ids = fields.One2many(
-        comodel_name='account.analytic.contract.line',
+    contract_line_ids = fields.One2many(
+        comodel_name='contract.template.line',
         inverse_name='contract_id',
         copy=True,
-        string='Invoice Lines',
+        string='Contract template lines',
+        oldname='contract_line_ids',
     )
