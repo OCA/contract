@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 def migrate(cr, version):
     """Copy recurrence info from contract to contract lines and compute
     last_date_invoiced"""
-
+    _logger.info(">> Post-Migration 12.0.2.0.0")
     cr.execute(
         """UPDATE account_analytic_invoice_line AS contract_line
         SET recurring_rule_type=contract.recurring_rule_type,
@@ -23,8 +23,6 @@ def migrate(cr, version):
         FROM account_analytic_account AS contract
         WHERE contract.id=contract_line.contract_id"""
     )
-
-    _logger.info("order all contract line")
     env = api.Environment(cr, SUPERUSER_ID, {})
     contract_lines = env["account.analytic.invoice.line"].search(
         [("recurring_next_date", "!=", False)]
