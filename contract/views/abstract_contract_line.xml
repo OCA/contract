@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_abstract_analytic_contract_line_view_form"
-            model="ir.ui.view">
-        <field name="name">Account Abstract Analytic Contract Line Form View
-        </field>
-        <field name="model">account.abstract.analytic.contract.line</field>
+    <!--FORM view-->
+    <record id="contract_abstract_contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.abstract.contract.line form view (in contract)</field>
+        <field name="model">contract.abstract.contract.line</field>
         <field name="arch" type="xml">
             <form>
+                <header/>
                 <sheet>
                     <group col="4">
                         <field colspan="4" name="product_id"/>
@@ -60,7 +60,7 @@
                         </group>
                         <group>
                             <field name="recurring_invoicing_type"
-                            attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
+                                   attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
                         </group>
                     </group>
                 </sheet>
