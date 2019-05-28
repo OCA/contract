@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_analytic_invoice_line_view_form" model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.form</field>
-        <field name="model">account.analytic.invoice.line</field>
-        <field name="inherit_id"
-               ref="account_abstract_analytic_contract_line_view_form"/>
+    <!--FORM view-->
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.line form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_abstract_contract_line_form_view"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
-                <header>
-                    <field name="state" widget="statusbar"/>
-                </header>
-            </xpath>
-            <xpath expr="//form" position="attributes">
-                <attribute name="string">Contract Line</attribute>
-            </xpath>
-            <xpath expr="//group[@name='recurrence_info']" position="inside">
+            <header position="inside">
+                <field name="state" widget="statusbar"/>
+            </header>
+            <group name="recurrence_info" position="inside">
                 <group>
                     <field name="create_invoice_visibility" invisible="1"/>
                     <field name="date_start" required="1"/>
@@ -33,23 +28,21 @@
                 <group>
                     <field name="manual_renew_needed"/>
                 </group>
-
                 <group>
                     <field name="predecessor_contract_line_id"/>
                 </group>
                 <group>
                     <field name="successor_contract_line_id"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 
-    <record id="account_analytic_invoice_line_sale_view_form"
-            model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.sale.form</field>
-        <field name="model">account.analytic.invoice.line</field>
-        <field name="inherit_id"
-               ref="account_analytic_invoice_line_view_form"/>
+    <!--Customer FORM view-->
+    <record id="contract_line_customer_form_view" model="ir.ui.view">
+        <field name="name">contract.line customer form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view"/>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
@@ -59,29 +52,27 @@
         </field>
     </record>
 
-    <record id="account_analytic_invoice_line_purchase_view_form"
-            model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.purchase.form</field>
-        <field name="model">account.analytic.invoice.line</field>
-        <field name="inherit_id"
-               ref="account_analytic_invoice_line_view_form"/>
+    <!--Supplier FORM view-->
+    <record id="contract_line_supplier_form_view" model="ir.ui.view">
+        <field name="name">contract.line supplier form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view"/>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
-                <attribute name="domain">[('purchase_ok', '=', True)]
-                </attribute>
+                <attribute name="domain">[('purchase_ok', '=', True)]</attribute>
             </field>
-            <xpath expr="//field[@name='automatic_price']"
-                   position="attributes">
+            <field name="automatic_price" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </xpath>
+            </field>
         </field>
     </record>
 
-    <record id="account_analytic_invoice_line_view_tree" model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.tree</field>
-        <field name="model">account.analytic.invoice.line</field>
+    <!--TREE view-->
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="name">contract.line tree view (in contract)</field>
+        <field name="model">contract.line</field>
         <field name="arch" type="xml">
             <tree decoration-muted="is_canceled"
                   decoration-info="create_invoice_visibility and not is_canceled">
@@ -155,19 +146,17 @@
         </field>
     </record>
 
-    <record id="account_analytic_invoice_line_purchase_view_tree"
-            model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.purchase.tree</field>
-        <field name="model">account.analytic.invoice.line</field>
+    <!--Supplier TREE view-->
+    <record id="contract_line_supplier_tree_view" model="ir.ui.view">
+        <field name="name">contract.line supplier tree view (in contract)</field>
+        <field name="model">contract.line</field>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
-        <field name="inherit_id"
-               ref="account_analytic_invoice_line_view_tree"/>
+        <field name="inherit_id" ref="contract_line_tree_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='automatic_price']"
-                   position="attributes">
+            <field name="automatic_price" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </xpath>
+            </field>
         </field>
     </record>
 
