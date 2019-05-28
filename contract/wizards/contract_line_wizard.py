@@ -4,9 +4,9 @@
 from odoo import api, fields, models
 
 
-class AccountAnalyticInvoiceLineWizard(models.TransientModel):
+class ContractLineWizard(models.TransientModel):
 
-    _name = 'account.analytic.invoice.line.wizard'
+    _name = 'contract.line.wizard'
     _description = 'Contract Line Wizard'
 
     date_start = fields.Date(string='Date Start')
@@ -21,7 +21,7 @@ class AccountAnalyticInvoiceLineWizard(models.TransientModel):
         "successor in advance",
     )
     contract_line_id = fields.Many2one(
-        comodel_name="account.analytic.invoice.line",
+        comodel_name="contract.line",
         string="Contract Line",
         required=True,
         index=True,
