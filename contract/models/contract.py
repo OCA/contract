@@ -11,21 +11,39 @@ from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 
-class AccountAnalyticAccount(models.Model):
-    _name = 'account.analytic.account'
-    _inherit = [
-        'account.analytic.account',
-        'account.abstract.analytic.contract',
-    ]
+class ContractContract(models.Model):
+    _name = 'contract.contract'
+    _inherit = ['mail.thread', 'contract.abstract.contract']
 
-    contract_template_id = fields.Many2one(
-        string='Contract Template', comodel_name='account.analytic.contract'
+    active = fields.Boolean(
+        default=True,
     )
-    recurring_invoice_line_ids = fields.One2many(
-        string='Invoice Lines',
-        comodel_name='account.analytic.invoice.line',
+    code = fields.Char(
+        string="Reference",
+    )
+    group_id = fields.Many2one(
+        string="Group",
+        comodel_name='account.analytic.account',
+        ondelete='restrict',
+    )
+    analytic_account_id = fields.Many2one(
+        string="Analytic account",
+        comodel_name='account.analytic.account',
+    )
+    currency_id = fields.Many2one(
+        related="company_id.currency_id",
+        string="Currency",
+        readonly=True,
+    )
+    contract_template_id = fields.Many2one(
+        string='Contract Template', comodel_name='contract.template'
+    )
+    contract_line_ids = fields.One2many(
+        string='Contract lines',
+        comodel_name='contract.line',
         inverse_name='contract_id',
         copy=True,
+        oldnae='contract_line_ids',
     )
     recurring_invoices = fields.Boolean(
         string='Generate recurring invoices automatically'
@@ -84,7 +102,7 @@ class AccountAnalyticAccount(models.Model):
                     (
                         'contract_line_id',
                         'in',
-                        self.recurring_invoice_line_ids.ids,
+                        self.contract_line_ids.ids,
                     )
                 ]
             )
@@ -127,31 +145,31 @@ class AccountAnalyticAccount(models.Model):
             action['views'] = [(tree_view.id, 'tree'), (form_view.id, 'form')]
         return action
 
-    @api.depends('recurring_invoice_line_ids.date_end')
+    @api.depends('contract_line_ids.date_end')
     def _compute_date_end(self):
         for contract in self:
             contract.date_end = False
-            date_end = contract.recurring_invoice_line_ids.mapped('date_end')
+            date_end = contract.contract_line_ids.mapped('date_end')
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
     @api.depends(
-        'recurring_invoice_line_ids.recurring_next_date',
-        'recurring_invoice_line_ids.is_canceled',
+        'contract_line_ids.recurring_next_date',
+        'contract_line_ids.is_canceled',
     )
     def _compute_recurring_next_date(self):
         for contract in self:
-            recurring_next_date = contract.recurring_invoice_line_ids.filtered(
+            recurring_next_date = contract.contract_line_ids.filtered(
                 lambda l: l.recurring_next_date and not l.is_canceled
             ).mapped('recurring_next_date')
             if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)
 
-    @api.depends('recurring_invoice_line_ids.create_invoice_visibility')
+    @api.depends('contract_line_ids.create_invoice_visibility')
     def _compute_create_invoice_visibility(self):
         for contract in self:
             contract.create_invoice_visibility = any(
-                contract.recurring_invoice_line_ids.mapped(
+                contract.contract_line_ids.mapped(
                     'create_invoice_visibility'
                 )
             )
@@ -160,7 +178,7 @@ class AccountAnalyticAccount(models.Model):
     def _onchange_contract_template_id(self):
         """Update the contract fields with that of the template.
 
-        Take special consideration with the `recurring_invoice_line_ids`,
+        Take special consideration with the `contract_line_ids`,
         which must be created using the data from the contract lines. Cascade
         deletion ensures that any errant lines that are created are also
         deleted.
@@ -169,9 +187,9 @@ class AccountAnalyticAccount(models.Model):
         if not contract_template_id:
             return
         for field_name, field in contract_template_id._fields.items():
-            if field.name == 'recurring_invoice_line_ids':
+            if field.name == 'contract_line_ids':
                 lines = self._convert_contract_lines(contract_template_id)
-                self.recurring_invoice_line_ids += lines
+                self.contract_line_ids += lines
             elif not any(
                 (
                     field.compute,
@@ -219,9 +237,9 @@ class AccountAnalyticAccount(models.Model):
     @api.multi
     def _convert_contract_lines(self, contract):
         self.ensure_one()
-        new_lines = self.env['account.analytic.invoice.line']
-        contract_line_model = self.env['account.analytic.invoice.line']
-        for contract_line in contract.recurring_invoice_line_ids:
+        new_lines = self.env['contract.line']
+        contract_line_model = self.env['contract.line']
+        for contract_line in contract.contract_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
             # Remove template link field
             vals.pop('contract_template_id', False)
@@ -282,7 +300,7 @@ class AccountAnalyticAccount(models.Model):
         template = self.env.ref('contract.email_contract_template', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
         ctx = dict(
-            default_model='account.analytic.account',
+            default_model='contract.contract',
             default_res_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
@@ -368,9 +386,9 @@ class AccountAnalyticAccount(models.Model):
     def _get_contracts_to_invoice_domain(self, date_ref=None):
         """
         This method builds the domain to use to find all
-        contracts (account.analytic.account) to invoice.
+        contracts (contract.contract) to invoice.
         :param date_ref: optional reference date to use instead of today
-        :return: list (domain) usable on account.analytic.account
+        :return: list (domain) usable on contract.contract
         """
         domain = []
         if not date_ref:
@@ -389,10 +407,10 @@ class AccountAnalyticAccount(models.Model):
         This method fetches and returns the lines to invoice on the contract
         (self), based on the given date.
         :param date_ref: date used as reference date to find lines to invoice
-        :return: contract lines (account.analytic.invoice.line recordset)
+        :return: contract lines (contract.line recordset)
         """
         self.ensure_one()
-        return self.recurring_invoice_line_ids.filtered(
+        return self.contract_line_ids.filtered(
             lambda l: not l.is_canceled
             and l.recurring_next_date
             and l.recurring_next_date <= date_ref
