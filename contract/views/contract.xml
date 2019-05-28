@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_analytic_account_recurring_form_form"
-            model="ir.ui.view">
-        <field name="name">Contract form</field>
-        <field name="model">account.analytic.account</field>
+    <!--Main FORM view-->
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract form view (in contract)</field>
+        <field name="model">contract.contract</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -70,15 +70,10 @@
                     <notebook>
                         <page name="recurring_invoice_line"
                               string="Recurring Invoices">
-                            <field name="recurring_invoice_line_ids"
+                            <field name="contract_line_ids"
                                    context="{'default_contract_type': contract_type}"/>
                         </page>
                         <page name="info" string="Other Information">
-                            <div invisible="1">
-                                <field name="recurring_invoices"
-                                       class="oe_inline"/>
-                                <label for="recurring_invoices"/>
-                            </div>
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
                             <group>
@@ -119,20 +114,18 @@
         </field>
     </record>
 
-    <record id="account_analytic_account_sale_form" model="ir.ui.view">
-        <field name="name">account.analytic.account.sale.form</field>
-        <field name="model">account.analytic.account</field>
-        <field name="inherit_id"
-               ref="account_analytic_account_recurring_form_form"/>
+    <!--Customer FORM view-->
+    <record id="contract_contract_customer_form_view" model="ir.ui.view">
+        <field name="name">contract.contract customer form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_contract_form_view"/>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Customer</attribute>
                 <attribute name="domain">[('customer', '=', True)]</attribute>
-                <attribute name="context">{'default_customer': True,
-                    'default_supplier': False}
-                </attribute>
+                <attribute name="context">{'default_customer': True, 'default_supplier': False}</attribute>
             </field>
             <field name="journal_id" position="attributes">
                 <attribute name="domain">[('type', '=', 'sale'),('company_id', '=', company_id)]</attribute>
@@ -140,20 +133,18 @@
         </field>
     </record>
 
-    <record id="account_analytic_account_purchase_form" model="ir.ui.view">
-        <field name="name">account.analytic.account.purchase.form</field>
-        <field name="model">account.analytic.account</field>
-        <field name="inherit_id"
-               ref="account_analytic_account_recurring_form_form"/>
+    <!--Supplier FORM view-->
+    <record id="contract_contract_supplier_form_view" model="ir.ui.view">
+        <field name="name">contract.contract supplier form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_contract_form_view"/>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Supplier</attribute>
                 <attribute name="domain">[('supplier', '=', True)]</attribute>
-                <attribute name="context">{'default_customer': False,
-                    'default_supplier': True}
-                </attribute>
+                <attribute name="context">{'default_customer': False, 'default_supplier': True}</attribute>
             </field>
             <field name="journal_id" position="attributes">
                 <attribute name="domain">[('type', '=', 'purchase'),('company_id', '=', company_id)]</attribute>
@@ -161,77 +152,78 @@
         </field>
     </record>
 
-    <!-- Inherited Analytic Account list for contracts -->
-    <record id="view_account_analytic_account_journal_tree" model="ir.ui.view">
-        <field name="name">Contract list</field>
-        <field name="model">account.analytic.account</field>
-        <field name="inherit_id"
-               ref="analytic.view_account_analytic_account_list"/>
-        <field name="mode">primary</field>
-        <field name="priority" eval="9999"/>
+    <!--TREE view-->
+    <record id="contract_contract_tree_view" model="ir.ui.view">
+        <field name="name">contract.contract tree view (in contract)</field>
+        <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <field name="partner_id" position="before">
+            <tree>
+                <field name="name" string="Name"/>
+                <field name="code"/>
                 <field name="journal_id" groups="account.group_account_user"/>
-            </field>
+                <field name="partner_id"/>
+                <field name="active" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
         </field>
     </record>
 
-    <!-- Analytic Account search view for contract -->
-    <record id="view_account_analytic_account_contract_search"
-            model="ir.ui.view">
-        <field name="name">Contract search</field>
-        <field name="model">account.analytic.account</field>
-        <field name="inherit_id"
-               ref="analytic.view_account_analytic_account_search"/>
+    <!--SEARCH view-->
+    <record id="contract_contract_search_view" model="ir.ui.view">
+        <field name="name">contract.contract search view (in contract)</field>
+        <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <search>
+                <field name="name"
+                       filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"/>
                 <field name="journal_id"/>
                 <field name="pricelist_id"/>
                 <separator/>
-                <filter name="recurring_invoices"
-                        string="Recurring Invoices"
-                        domain="[('recurring_invoices','=',True)]"
-                />
                 <separator/>
                 <filter name="not_finished"
                         string="In progress"
-                        domain="['|', ('date_end', '&gt;=', time.strftime('%Y-%m-%d')), ('date_end', '=', False)]"
+                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '=', False)]"
                 />
                 <filter name="finished"
                         string="Finished"
-                        domain="[('date_end', '&lt;', time.strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
+                        domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
                 />
+                <field name="partner_id"/>
+                <filter string="Archived"
+                        domain="[('active', '=', False)]"
+                        name="inactive"/>
                 <group expand="0" string="Group By...">
-                    <filter name="next_invoice"
+                    <filter string="Associated Partner"
+                            name="group_by_partner"
+                            domain="[]"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter name="group_by_next_invoice"
                             string="Next Invoice"
                             domain="[('recurring_next_date', '!=', False)]"
                             context="{'group_by':'recurring_next_date'}"
                     />
-                    <filter name="date_end"
+                    <filter name="group_by_date_end"
                             string="Date End"
                             domain="[]"
                             context="{'group_by':'date_end'}"
                     />
                 </group>
-            </field>
+            </search>
         </field>
     </record>
 
-    <!-- Action Sales/Sales/Contracts -->
-    <record id="action_account_analytic_sale_overdue_all"
-            model="ir.actions.act_window">
+    <!--ACTION customer contracts-->
+    <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
-        <field name="res_model">account.analytic.account</field>
+        <field name="res_model">contract.contract</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">{'is_contract':1,
-            'search_default_not_finished':1,
-            'search_default_recurring_invoices':1,
-            'default_recurring_invoices': 1, 'default_contract_type': 'sale'}
+                               'search_default_not_finished':1,
+                               'default_contract_type': 'sale'}
         </field>
-        <field name="search_view_id"
-               ref="view_account_analytic_account_contract_search"/>
+        <field name="search_view_id" ref="contract_contract_search_view"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new contract.
@@ -239,47 +231,38 @@
         </field>
     </record>
 
-    <record id="action_account_analytic_sale_overdue_all_tree"
-            model="ir.actions.act_window.view">
+    <record id="action_customer_contract_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id"
-               ref="view_account_analytic_account_journal_tree"/>
-        <field name="act_window_id"
-               ref="action_account_analytic_sale_overdue_all"/>
+        <field name="view_id" ref="contract_contract_tree_view"/>
+        <field name="act_window_id" ref="action_customer_contract"/>
     </record>
 
-    <record id="action_account_analytic_sale_overdue_all_form"
-            model="ir.actions.act_window.view">
+    <record id="action_customer_contract_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="account_analytic_account_sale_form"/>
-        <field name="act_window_id"
-               ref="action_account_analytic_sale_overdue_all"/>
+        <field name="view_id" ref="contract_contract_customer_form_view"/>
+        <field name="act_window_id" ref="action_customer_contract"/>
     </record>
 
-    <menuitem id="menu_action_account_analytic_sale_overdue_all"
+    <menuitem id="menu_contract_contract_customer"
               parent="account.menu_finance_receivables"
-              action="action_account_analytic_sale_overdue_all"
+              action="action_customer_contract"
               sequence="99"
     />
 
-    <!-- Action Purchases/Purchases/Contracts -->
-    <record id="action_account_analytic_purchase_overdue_all"
-            model="ir.actions.act_window">
+    <!--ACTION supplier contracts-->
+    <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
-        <field name="res_model">account.analytic.account</field>
+        <field name="res_model">contract.contract</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">{'is_contract':1,
-            'search_default_not_finished':1,
-            'search_default_recurring_invoices':1,
-            'default_recurring_invoices': 1, 'default_contract_type':
-            'purchase'}
+                               'search_default_not_finished':1,
+                               'default_contract_type': 'purchase'}
         </field>
-        <field name="search_view_id"
-               ref="view_account_analytic_account_contract_search"/>
+        <field name="search_view_id" ref="contract_contract_search_view"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new contract.
@@ -287,28 +270,23 @@
         </field>
     </record>
 
-    <record id="action_account_analytic_purchase_overdue_all_tree"
-            model="ir.actions.act_window.view">
+    <record id="action_supplier_contract_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id"
-               ref="view_account_analytic_account_journal_tree"/>
-        <field name="act_window_id"
-               ref="action_account_analytic_purchase_overdue_all"/>
+        <field name="view_id" ref="contract_contract_tree_view"/>
+        <field name="act_window_id" ref="action_supplier_contract"/>
     </record>
 
-    <record id="action_account_analytic_purchase_overdue_all_form"
-            model="ir.actions.act_window.view">
+    <record id="action_supplier_contract_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="account_analytic_account_purchase_form"/>
-        <field name="act_window_id"
-               ref="action_account_analytic_purchase_overdue_all"/>
+        <field name="view_id" ref="contract_contract_supplier_form_view"/>
+        <field name="act_window_id" ref="action_supplier_contract"/>
     </record>
 
-    <menuitem id="menu_action_account_analytic_purchase_overdue_all"
+    <menuitem id="menu_contract_contract_supplier"
               parent="account.menu_finance_payables"
-              action="action_account_analytic_purchase_overdue_all"
+              action="action_supplier_contract"
               sequence="99"
     />
 

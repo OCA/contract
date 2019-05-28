@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_analytic_contract_view_form" model="ir.ui.view">
-        <field name="name">Account Analytic Contract Form View</field>
-        <field name="model">account.analytic.contract</field>
+    <!--FORM view-->
+    <record id="contract_template_form_view" model="ir.ui.view">
+        <field name="name">contract.template form view (in contract)</field>
+        <field name="model">contract.template</field>
         <field name="arch" type="xml">
             <form string="Contract Template">
                 <group name="name">
@@ -17,9 +18,9 @@
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
                 </group>
-                <group name="group_invoice_lines" string="Invoice Lines">
-                    <field name="recurring_invoice_line_ids" nolabel="1">
-                        <tree string="Account Analytic Lines">
+                <group name="group_invoice_lines" string="Contract Template Lines">
+                    <field name="contract_line_ids" nolabel="1">
+                        <tree>
                             <field name="sequence" widget="handle" />
                             <field name="product_id" />
                             <field name="name" />
@@ -46,11 +47,12 @@
         </field>
     </record>
 
-    <record id="account_analytic_contract_view_tree" model="ir.ui.view">
-        <field name="name">Account Analytic Contract Tree View</field>
-        <field name="model">account.analytic.contract</field>
+    <!--TREE view-->
+    <record id="contract_template_tree_view" model="ir.ui.view">
+        <field name="name">contract.template tree view (in contract)</field>
+        <field name="model">contract.template</field>
         <field name="arch" type="xml">
-            <tree string="Contract Templates">
+            <tree>
                 <field name="name" />
                 <field name="contract_type" />
                 <field name="pricelist_id" />
@@ -58,11 +60,12 @@
         </field>
     </record>
 
-    <record id="account_analytic_contract_view_search" model="ir.ui.view">
-        <field name="name">Account Analytic Contract Search View</field>
-        <field name="model">account.analytic.contract</field>
+    <!--SEARCH view-->
+    <record id="contract_template_search_view" model="ir.ui.view">
+        <field name="name">contract.template search view (in contract)</field>
+        <field name="model">contract.template</field>
         <field name="arch" type="xml">
-            <search string="Contract Templates">
+            <search>
                 <field name="name" />
                 <field name="contract_type" />
                 <field name="pricelist_id" />
@@ -83,12 +86,13 @@
         </field>
     </record>
 
-    <record id="account_analytic_contract_action" model="ir.actions.act_window">
+    <!--ACTION-->
+    <record id="contract_template_action" model="ir.actions.act_window">
         <field name="name">Contract Templates</field>
-        <field name="res_model">account.analytic.contract</field>
+        <field name="res_model">contract.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="account_analytic_contract_view_search"/>
+        <field name="search_view_id" ref="contract_template_search_view"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new contract template.
@@ -102,9 +106,9 @@
               parent="account.menu_finance_configuration"
               />
 
-    <menuitem id="account_analytic_contract_menu"
+    <menuitem id="contract_template_menu"
               parent="menu_config_contract"
-              action="account_analytic_contract_action"
+              action="contract_template_action"
               sequence="1"
               />
 
