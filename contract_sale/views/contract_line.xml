@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="account_analytic_invoice_line_view_tree"
-            model="ir.ui.view">
-        <field name="name">account.analytic.invoice.line.tree (in contract_sale)</field>
-        <field name="model">account.analytic.invoice.line</field>
-        <field name="inherit_id"
-               ref="contract.account_analytic_invoice_line_view_tree"/>
+    <!--TREE view-->
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="name">contract.template.line tree view (in contract_sale)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='discount']" position="attributes">
-                <attribute name="groups">sale.group_discount_per_so_line
-                </attribute>
-            </xpath>
+            <field name="discount" position="attributes">
+                <attribute name="groups">sale.group_discount_per_so_line</attribute>
+            </field>
         </field>
     </record>
 
