@@ -195,11 +195,11 @@
                 <separator/>
                 <filter name="not_finished"
                         string="In progress"
-                        domain="['|', ('date_end', '&gt;=', time.strftime('%Y-%m-%d')), ('date_end', '=', False)]"
+                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '=', False)]"
                 />
                 <filter name="finished"
                         string="Finished"
-                        domain="[('date_end', '&lt;', time.strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
+                        domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
                 />
                 <group expand="0" string="Group By...">
                     <filter name="next_invoice"
