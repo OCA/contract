@@ -6,143 +6,35 @@
 
 <odoo noupdate="1">
 
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market1')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
-
     <record id="agreement.market1" model="agreement">
         <field name="description">Hardware IT (C2C-IT0042)</field>
-        <field name="agreement_type_id">1</field>
+        <field name="agreement_type_id" ref="agreement_type_agreement"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market1')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market2')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
 
     <record id="agreement.market2" model="agreement">
         <field name="description">Fiber access office Lausanne (C2C-IT0043)</field>
-        <field name="agreement_type_id">2</field>
+        <field name="agreement_type_id" ref="agreement_type_contract"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market2')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market3')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
 
     <record id="agreement.market3" model="agreement">
         <field name="description">Vétérinaire (AGR-VETO001)</field>
-        <field name="agreement_type_id">3</field>
+        <field name="agreement_type_id" ref="agreement_type_loi"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market3')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market4')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
 
     <record id="agreement.market4" model="agreement">
         <field name="description">Wazo IPBX deployment and maintenance (AGR-TEL001)</field>
-        <field name="agreement_type_id">3</field>
+        <field name="agreement_type_id" ref="agreement_type_loi"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market4')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market5')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
 
     <record id="agreement.market5" model="agreement">
         <field name="description">SIP Phones supply (BUY-VOIP012)</field>
-        <field name="agreement_type_id">1</field>
+        <field name="agreement_type_id" ref="agreement_type_agreement"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market5')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market6')]"
-            />
-        </function>
-
-        <value eval="{'noupdate': False}" />
-    </function>
 
     <record id="agreement.market6" model="agreement">
+        <field name="is_template">True</field>
         <field name="description">SIP-ISDN gateways (BUY-VOIP013)</field>
-        <field name="agreement_type_id">2</field>
+        <field name="agreement_type_id" ref="agreement_legal.agreement_type_contract"/>
     </record>
-
-    <function name="write" model="ir.model.data">
-        <function name="search" model="ir.model.data">
-            <value
-                eval="[('module', '=', 'agreement'), ('name', '=', 'market6')]"
-            />
-        </function>
-        <value eval="{'noupdate': True}" />
-    </function>
 
 </odoo>
