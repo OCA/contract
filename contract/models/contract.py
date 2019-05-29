@@ -45,9 +45,7 @@ class ContractContract(models.Model):
         copy=True,
         oldnae='contract_line_ids',
     )
-    recurring_invoices = fields.Boolean(
-        string='Generate recurring invoices automatically'
-    )
+
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Responsible',
@@ -80,7 +78,9 @@ class ContractContract(models.Model):
         ondelete='restrict',
     )
     partner_id = fields.Many2one(
-        comodel_name='res.partner', inverse='_inverse_partner_id'
+        comodel_name='res.partner',
+        inverse='_inverse_partner_id',
+        required=True
     )
 
     @api.multi
@@ -224,15 +224,6 @@ class ContractContract(models.Model):
                 ]
             }
         }
-
-    @api.constrains('partner_id', 'recurring_invoices')
-    def _check_partner_id_recurring_invoices(self):
-        for contract in self.filtered('recurring_invoices'):
-            if not contract.partner_id:
-                raise ValidationError(
-                    _("You must supply a partner for the contract '%s'")
-                    % contract.name
-                )
 
     @api.multi
     def _convert_contract_lines(self, contract):
@@ -393,12 +384,7 @@ class ContractContract(models.Model):
         domain = []
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain.extend(
-            [
-                ('recurring_invoices', '=', True),
-                ('recurring_next_date', '<=', date_ref),
-            ]
-        )
+        domain.extend([('recurring_next_date', '<=', date_ref)])
         return domain
 
     @api.multi
