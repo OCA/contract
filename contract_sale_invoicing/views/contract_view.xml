@@ -4,14 +4,14 @@
 
 <odoo>
 
-<record id="account_analytic_account_recurring_form_form" model="ir.ui.view">
-    <field name="model">account.analytic.account</field>
-    <field name="inherit_id" ref="contract.account_analytic_account_recurring_form_form"/>
-    <field name="arch" type="xml">
-        <field name="recurring_next_date" position="after">
-            <field name="invoicing_sales"/>
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view"/>
+        <field name="arch" type="xml">
+            <field name="recurring_next_date" position="after">
+                <field name="invoicing_sales"/>
+            </field>
         </field>
-    </field>
-</record>
+    </record>
 
 </odoo>
