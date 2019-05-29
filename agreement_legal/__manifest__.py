@@ -37,6 +37,8 @@
     ],
     "demo": [
         "demo/demo.xml"
+    'qweb': [
+        "static/src/xml/domain_widget_view.xml",
     ],
     "post_init_hook": "post_init_agreement_legal",
     "application": True,

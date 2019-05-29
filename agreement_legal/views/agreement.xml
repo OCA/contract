@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="assets_backend" name="agreement_legal assets"
+              inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript"
+                    src="/agreement_legal/static/src/js/domain_widget_ext.js"/>
+        </xpath>
+    </template>
+
     <!-- Agreement List View-->
     <record model="ir.ui.view" id="partner_agreement_list_view">
         <field name="name">Agreement List</field>
@@ -65,26 +73,17 @@
                                nolabel="1"/>
                     </group>
                     <group class="oe_edit_only">
+                        <field name="field_domain" widget="domain" nolabel="1"
+                               options="{'model': 'agreement',
+                                             'partial_use': True}" />
                         <group>
-                            <field name="field_id"
-                                   domain="[('model_id', '=', active_model),
-                                            ('ttype', '!=', 'one2many'),
-                                            ('ttype', '!=', 'many2many')]"/>
-                            <field name="sub_object_id" readonly="1"/>
-                            <field name="sub_model_object_field_id"
-                                   domain="[('model_id', '=', sub_object_id),
-                                            ('ttype', '!=', 'one2many'),
-                                            ('ttype', '!=', 'many2many')]"
-                                   attrs="{'readonly':[('sub_object_id', '=', False)],
-                                           'required':[('sub_object_id', '!=', False)]}"/>
                             <field name="default_value"/>
                             <field name="copyvalue"/>
                         </group>
                         <p>
                             This section (on the left) allows you to add dynamic fields inside the description and special terms.
                             <ol>
-                                <li>Select the agreement field</li>
-                                <li>Select the sub-field</li>
+                                <li>Select the agreement field using the popup</li>
                                 <li>Enter the default value if the field is empty</li>
                                 <li>Copy and paste the placeholder expression in the description or the special terms</li>
                             </ol>
