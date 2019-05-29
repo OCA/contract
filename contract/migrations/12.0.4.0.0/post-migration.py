@@ -8,8 +8,11 @@ from openupgradelib import openupgrade
 _logger = logging.getLogger(__name__)
 
 
-def migrate(cr, version):
-    cr.execute(
+@openupgrade.migrate()
+def migrate(env, version):
+    cr = env.cr
+    openupgrade.logged_query(
+        cr,
         """
         INSERT INTO contract_contract (
             id,
@@ -24,7 +27,6 @@ def migrate(cr, version):
             code,
             group_id,
             contract_template_id,
-            recurring_invoices,
             user_id,
             recurring_next_date,
             date_end,
@@ -49,7 +51,6 @@ def migrate(cr, version):
                code,
                group_id,
                contract_template_id,
-               recurring_invoices,
                user_id,
                recurring_next_date,
                date_end,
@@ -62,10 +63,13 @@ def migrate(cr, version):
                write_uid,
                write_date
         FROM account_analytic_account
-        WHERE recurring_invoices = TRUE
+        WHERE id in (
+            SELECT DISTINCT contract_id FROM account_analytic_invoice_line
+        )
         """
     )
-    cr.execute(
+    openupgrade.logged_query(
+        cr,
         """
         INSERT INTO contract_line (
             id,
@@ -126,18 +130,21 @@ def migrate(cr, version):
     )
     openupgrade.rename_models(cr, [('account.analytic.invoice.line',
                                     'contract.line')])
-    cr.execute(
+    openupgrade.logged_query(
+        cr,
         """
         DROP TABLE account_analytic_invoice_line
         """
     )
-    cr.execute(
+    openupgrade.logged_query(
+        cr,
         """
         UPDATE account_invoice_line
         SET contract_line_id = contract_line_id_tmp
         """
     )
-    cr.execute(
+    openupgrade.logged_query(
+        cr,
         """
         ALTER TABLE account_invoice_line
         DROP COLUMN contract_line_id_tmp

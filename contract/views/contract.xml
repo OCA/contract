@@ -74,11 +74,6 @@
                                    context="{'default_contract_type': contract_type}"/>
                         </page>
                         <page name="info" string="Other Information">
-                            <div invisible="1">
-                                <field name="recurring_invoices"
-                                       class="oe_inline"/>
-                                <label for="recurring_invoices"/>
-                            </div>
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
                             <group>
@@ -184,10 +179,6 @@
                 <field name="journal_id"/>
                 <field name="pricelist_id"/>
                 <separator/>
-                <filter name="recurring_invoices"
-                        string="Recurring Invoices"
-                        domain="[('recurring_invoices','=',True)]"
-                />
                 <separator/>
                 <filter name="not_finished"
                         string="In progress"
@@ -230,8 +221,6 @@
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">{'is_contract':1,
                                'search_default_not_finished':1,
-                               'search_default_recurring_invoices':1,
-                               'default_recurring_invoices': 1,
                                'default_contract_type': 'sale'}
         </field>
         <field name="search_view_id" ref="contract_contract_search_view"/>
@@ -271,10 +260,7 @@
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">{'is_contract':1,
                                'search_default_not_finished':1,
-                               'search_default_recurring_invoices':1,
-                               'default_recurring_invoices': 1,
-                               'default_contract_type':
-                               'purchase'}
+                               'default_contract_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="contract_contract_search_view"/>
         <field name="help" type="html">

@@ -455,7 +455,7 @@ class ContractLine(models.Model):
 
     @api.constrains('recurring_next_date')
     def _check_recurring_next_date_recurring_invoices(self):
-        for rec in self.filtered('contract_id.recurring_invoices'):
+        for rec in self:
             if not rec.recurring_next_date and (
                 not rec.date_end
                 or not rec.last_date_invoiced
@@ -916,9 +916,9 @@ class ContractLine(models.Model):
             contract.message_post(body=msg)
         for rec in self:
             if rec.predecessor_contract_line_id:
-                rec.predecessor_contract_line_id.successor_contract_line_id = (
-                    rec
-                )
+                predecessor_contract_line = rec.predecessor_contract_line_id
+                assert not predecessor_contract_line.successor_contract_line_id
+                predecessor_contract_line.successor_contract_line_id = rec
             rec.is_canceled = False
             rec.recurring_next_date = recurring_next_date
         return True
@@ -1052,7 +1052,6 @@ class ContractLine(models.Model):
         return [
             ('is_auto_renew', '=', True),
             ('is_canceled', '=', False),
-            ('contract_id.recurring_invoices', '=', True),
             ('termination_notice_date', '<=', fields.Date.context_today(self)),
         ]
 
@@ -1080,7 +1079,7 @@ class ContractLine(models.Model):
                 view_id = self.env.ref(
                     'contract.contract_line_customer_form_view'
                 ).id
-        return super(ContractLine, self).fields_view_get(
+        return super().fields_view_get(
             view_id, view_type, toolbar, submenu
         )
 
@@ -1091,7 +1090,7 @@ class ContractLine(models.Model):
             raise ValidationError(
                 _("Contract line must be canceled before delete")
             )
-        return super(ContractLine, self).unlink()
+        return super().unlink()
 
     @api.multi
     def _get_quantity_to_invoice(
