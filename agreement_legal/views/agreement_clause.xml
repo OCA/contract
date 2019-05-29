@@ -45,26 +45,17 @@
                     </group>
                     <field name="content" widget="html"/>
                     <group class="oe_edit_only">
+                        <field name="field_domain" widget="domain" nolabel="1"
+                               options="{'model': 'agreement.clause',
+                                             'partial_use': True}" />
                         <group>
-                            <field name="field_id"
-                                   domain="[('model_id', '=', active_model),
-                                            ('ttype', '!=', 'one2many'),
-                                            ('ttype', '!=', 'many2many')]"/>
-                            <field name="sub_object_id" readonly="1"/>
-                            <field name="sub_model_object_field_id"
-                                   domain="[('model_id', '=', sub_object_id),
-                                            ('ttype', '!=', 'one2many'),
-                                            ('ttype', '!=', 'many2many')]"
-                                   attrs="{'readonly':[('sub_object_id', '=', False)],
-                                           'required':[('sub_object_id', '!=', False)]}"/>
                             <field name="default_value"/>
                             <field name="copyvalue"/>
                         </group>
                         <p>
                             This section (on the left) allows you to add dynamic fields inside the content.
                             <ol>
-                                <li>Select the clause field</li>
-                                <li>Select the sub-field</li>
+                                <li>Select the field using the popup</li>
                                 <li>Enter the default value if the field is empty</li>
                                 <li>Copy and paste the placeholder expression in the content</li>
                             </ol>
