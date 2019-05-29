@@ -13,10 +13,9 @@
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
-    "Tecnativa, "
-    "LasLabs, "
-    "ACSONE SA/NV, "
-    "Odoo Community Association (OCA)",
+              "Tecnativa, "
+              "LasLabs, "
+              "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
     'depends': ['base', 'account', 'product'],
     "external_dependencies": {"python": ["dateutil"]},

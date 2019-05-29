@@ -16,7 +16,7 @@ def to_date(date):
 class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractBase, cls).setUpClass()
+        super().setUpClass()
         cls.today = fields.Date.today()
         cls.partner = cls.env.ref('base.res_partner_2')
         cls.product_1 = cls.env.ref('product.product_product_1')
@@ -56,7 +56,6 @@ class TestContractBase(common.SavepointCase):
                 'name': 'Test Contract',
                 'partner_id': cls.partner.id,
                 'pricelist_id': cls.partner.property_product_pricelist.id,
-                'recurring_invoices': True,
             }
         )
         cls.contract2 = cls.env['contract.contract'].create(
@@ -64,7 +63,6 @@ class TestContractBase(common.SavepointCase):
                 'name': 'Test Contract 2',
                 'partner_id': cls.partner.id,
                 'pricelist_id': cls.partner.property_product_pricelist.id,
-                'recurring_invoices': True,
                 'contract_type': 'purchase',
                 'contract_line_ids': [
                     (
@@ -141,8 +139,6 @@ class TestContract(TestContractBase):
         res = self.acct_line._onchange_product_id()
         self.assertIn('uom_id', res['domain'])
         self.acct_line.price_unit = 100.0
-        with self.assertRaises(ValidationError):
-            self.contract.partner_id = False
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_invoice()
         self.invoice_monthly = self.contract._get_related_invoices()
@@ -387,11 +383,6 @@ class TestContract(TestContractBase):
                     'recurring_next_date': '2017-01-01',
                 }
             )
-
-    def test_check_recurring_next_date_recurring_invoices(self):
-        with self.assertRaises(ValidationError):
-            self.contract.write({'recurring_invoices': True})
-            self.acct_line.write({'recurring_next_date': False})
 
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
