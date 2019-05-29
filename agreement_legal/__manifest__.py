@@ -18,7 +18,6 @@
         "data/module_category.xml",
         "data/agreement_stage.xml",
         "data/agreement_type.xml",
-        "demo/demo.xml",
         "security/res_groups.xml",
         "security/ir.model.access.csv",
         "report/agreement.xml",
@@ -38,9 +37,9 @@
     ],
     "demo": [
         "demo/demo.xml"
+    ],
     'qweb': [
         "static/src/xml/domain_widget_view.xml",
-    ],
     "post_init_hook": "post_init_agreement_legal",
     "application": True,
     "development_status": "Beta",
