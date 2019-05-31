@@ -354,3 +354,14 @@ class AccountAnalyticAccount(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    def button_show_recurring_invoices(self):
+        self.ensure_one()
+        if self.contract_type == 'sale':
+            action = self.env.ref(
+                'contract.act_recurring_invoices')
+        else:
+            action = self.env.ref(
+                'contract.act_purchase_recurring_invoices')
+        return action.read()[0]
