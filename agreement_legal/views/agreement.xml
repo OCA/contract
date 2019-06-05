@@ -122,7 +122,7 @@
                             <field name="partner_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
                         <group name="contact_right" string="Primary Contact">
-                            <field name="company_contact_id" domain="[('parent_id', '=', company_id.partner_id)]" nolabel="1"/>
+                            <field name="company_contact_id" domain="[('parent_id', '=', company_id)]" nolabel="1"/>
                             <field name="company_contact_phone" widget="phone" readonly="1" nolabel="1"/>
                             <field name="company_contact_email" widget="email" readonly="1" nolabel="1"/>
                         </group>
@@ -136,7 +136,7 @@
                             <field name="end_date" attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"/>
                             <field name="expiration_notice"/>
                             <field name="change_notice"/>
-                            <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_id.partner_id)]"/>
+                            <field name="notification_address_id" domain="['|', ('parent_id', '=', partner_id), ('parent_id', '=', company_contact_id)]"/>
                             <field name="termination_requested"/>
                             <field name="termination_date"/>
                         </group>
