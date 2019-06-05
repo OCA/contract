@@ -370,7 +370,7 @@ class Agreement(models.Model):
             "stage_id": self.env.ref("agreement_legal.agreement_stage_new").id,
         }
         res = self.copy(default=default_vals)
-        res.sections_ids.clauses_ids.write({'agreement_id': res.id})
+        res.sections_ids.write({'agreement_id': res.id})
         return {
             "res_model": "agreement",
             "type": "ir.actions.act_window",
