@@ -185,12 +185,17 @@ msgid "Click to create a new contract."
 msgstr ""
 
 #. module: contract
+#: model:ir.model,name:contract.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_company_id
 msgid "Company"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:370
+#: code:addons/contract/models/account_analytic_account.py:386
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -204,7 +209,7 @@ msgid "Contract"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:142
+#: code:addons/contract/models/account_analytic_account.py:144
 #, python-format
 msgid "Contract '%s' start date can't be later than end date"
 msgstr ""
@@ -282,6 +287,19 @@ msgstr ""
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Day(s)"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_res_company_contract_pregenerate_days
+msgid ""
+"Days before next invoice date to generate draft invoices.\n"
+"This allows users to check the invoices before confirmation,\n"
+" and to send invoices to customers, before the invoice date."
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_company_contract_pregenerate_days
+msgid "Days to prepare invoices"
 msgstr ""
 
 #. module: contract
@@ -444,7 +462,7 @@ msgid "Partner and dependents"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:231
+#: code:addons/contract/models/account_analytic_account.py:233
 #, python-format
 msgid "Please define a sale journal for the company '%s'."
 msgstr ""
@@ -591,20 +609,20 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:115
+#: code:addons/contract/models/account_analytic_account.py:117
 #, python-format
 msgid ""
 "You can't have a next invoicing date before the start of the contract '%s'"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:223
+#: code:addons/contract/models/account_analytic_account.py:225
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:313
+#: code:addons/contract/models/account_analytic_account.py:315
 #, python-format
 msgid ""
 "You must review start and end dates!\n"
@@ -612,19 +630,19 @@ msgid ""
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:106
+#: code:addons/contract/models/account_analytic_account.py:108
 #, python-format
 msgid "You must supply a customer for the contract '%s'"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:124
+#: code:addons/contract/models/account_analytic_account.py:126
 #, python-format
 msgid "You must supply a next invoicing date for contract '%s'"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_account.py:133
+#: code:addons/contract/models/account_analytic_account.py:135
 #, python-format
 msgid "You must supply a start date for contract '%s'"
 msgstr ""
