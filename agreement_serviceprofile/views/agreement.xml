@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Agreement Form View -->
+    <record id="agreement_fsm_order_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.fsm.order.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="serviceprofiles" string="Service Profiles">
+                    <field name="serviceprofile_ids">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                        <form>
+                            <field name="name"/>
+                            <field name="notes" placeholder="Add Notes Here..."/>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
