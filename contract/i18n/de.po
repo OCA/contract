@@ -117,14 +117,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -135,8 +135,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -402,7 +402,7 @@ msgid "Discount (%)"
 msgstr "Rabatt (%)"
 
 #. module: contract
-#: code:addons/contract/models/account_analytic_contract_line.py:179
+#: code:addons/contract/models/account_analytic_contract_line.py:180
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "Rabatt muss kleiner oder gleich 100 sein"
@@ -731,6 +731,11 @@ msgstr "USt-ID:"
 #: model:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Valid"
 msgstr "Gültig"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.act_purchase_recurring_invoices
+msgid "Vendor Bills"
+msgstr ""
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
