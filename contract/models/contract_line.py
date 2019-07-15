@@ -13,6 +13,7 @@ from .contract_line_constraints import get_allowed
 
 class ContractLine(models.Model):
     _name = 'contract.line'
+    _description = "Contract Line"
     _inherit = 'contract.abstract.contract.line'
 
     sequence = fields.Integer(
@@ -25,6 +26,10 @@ class ContractLine(models.Model):
         index=True,
         ondelete='cascade',
         oldname='analytic_account_id',
+    )
+    analytic_account_id = fields.Many2one(
+        string="Analytic account",
+        comodel_name='account.analytic.account',
     )
     date_start = fields.Date(
         string='Date Start',
@@ -518,7 +523,7 @@ class ContractLine(models.Model):
         invoice_line_vals.update(
             {
                 'name': name,
-                'account_analytic_id': self.contract_id.analytic_account_id.id,
+                'account_analytic_id': self.analytic_account_id.id,
                 'price_unit': self.price_unit,
             }
         )
@@ -597,6 +602,9 @@ class ContractLine(models.Model):
     def _init_last_date_invoiced(self):
         """Used to init last_date_invoiced for migration purpose"""
         for rec in self:
+            last_date_invoiced = rec.recurring_next_date - relativedelta(
+                days=1
+            )
             if rec.recurring_rule_type == 'monthlylastday':
                 last_date_invoiced = (
                     rec.recurring_next_date
