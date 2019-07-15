@@ -8,6 +8,4 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     # We keep this field for migration purpose
-    old_contract_id = fields.Many2one(
-        'contract.contract', oldname="contract_id"
-    )
+    old_contract_id = fields.Many2one('contract.contract')
