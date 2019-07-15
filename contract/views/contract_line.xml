@@ -35,6 +35,11 @@
                     <field name="successor_contract_line_id"/>
                 </group>
             </group>
+            <group name="recurrence_info" position="after">
+                <group name="analytic" groups="analytic.group_analytic_accounting">
+                    <field name="analytic_account_id"/>
+                </group>
+            </group>
         </field>
     </record>
 
@@ -79,6 +84,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="product_id"/>
                 <field name="name"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="quantity"/>
                 <field name="uom_id"/>
                 <field name="automatic_price"/>
