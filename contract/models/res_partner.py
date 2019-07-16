@@ -14,13 +14,14 @@ class ResPartner(models.Model):
     )
 
     def _compute_contract_count(self):
-        Contract = self.env['account.analytic.account']
-        today = fields.Date.today()
+        contract_model = self.env['account.analytic.account']
+        # localized date is also the default for date_start.
+        today = fields.Date.context_today(contract_model)
         for partner in self:
-            partner.contract_count = Contract.search_count([
+            partner.contract_count = contract_model.search_count([
                 ('recurring_invoices', '=', True),
                 ('partner_id', '=', partner.id),
-                ('date_start', '<=', today),
+                ('date_start', '<=', today),  # required for contracts
                 '|',
                 ('date_end', '=', False),
                 ('date_end', '>=', today),
