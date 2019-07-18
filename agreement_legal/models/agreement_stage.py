@@ -24,5 +24,8 @@ class AgreementStage(models.Model):
     fold = fields.Boolean(
         string="Is Folded",
         required=False,
-        help="This stage is folded in the kanban view by deafault.",
+        help="This stage is folded in the kanban view by default.",
     )
+    stage_type = fields.Selection(
+        [('agreement', 'Agreement')],
+        string='Type', required=True)
