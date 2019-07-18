@@ -81,6 +81,7 @@ msgid "Advanced Features"
 msgstr "Fonctionnalités avancées"
 
 #. module: agreement_legal
+#: selection:agreement.stage,stage_type:0
 #: model:ir.model,name:agreement_legal.model_agreement
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_appendix__agreement_id
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_clause__agreement_id
@@ -966,8 +967,8 @@ msgstr "Nom :"
 
 #. module: agreement_legal
 #: code:addons/agreement_legal/models/agreement.py:84
-#: code:addons/agreement_legal/models/agreement.py:364
-#: code:addons/agreement_legal/models/agreement.py:367
+#: code:addons/agreement_legal/models/agreement.py:365
+#: code:addons/agreement_legal/models/agreement.py:368
 #, python-format
 msgid "New"
 msgstr "Nouveau"
@@ -1393,6 +1394,11 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: agreement_legal
+#: selection:agreement.stage,stage_type:0
+msgid "Service Profile"
+msgstr "Profil de service"
+
+#. module: agreement_legal
 #: model:ir.actions.act_window,name:agreement_legal.action_agreement_config
 #: model:ir.ui.menu,name:agreement_legal.agreement_settings
 msgid "Settings"
@@ -1625,7 +1631,9 @@ msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement_stage__fold
-msgid "This stage is folded in the kanban view by deafault."
+#, fuzzy
+#| msgid "This stage is folded in the kanban view by deafault."
+msgid "This stage is folded in the kanban view by default."
 msgstr "Cette étape est repliée dans la vue kanban par défaut."
 
 #. module: agreement_legal
@@ -1643,6 +1651,13 @@ msgstr "Titre"
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
 msgid "Title:"
 msgstr "Titre :"
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__stage_type
+#, fuzzy
+#| msgid "Types"
+msgid "Type"
+msgstr "Types"
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_type_list_view
@@ -1958,9 +1973,6 @@ msgstr "| Créé le :"
 
 #~ msgid "Service Order Lines"
 #~ msgstr "Lignes de commande de service"
-
-#~ msgid "Service Profile"
-#~ msgstr "Profil de service"
 
 #~ msgid "Service Profiles"
 #~ msgstr "Profils de service"
