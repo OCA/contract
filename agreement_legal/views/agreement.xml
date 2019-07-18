@@ -28,7 +28,7 @@
                 <header>
                     <button string="New Version" type="object" name="create_new_version" class="oe_highlight" attrs="{'invisible': [('state', '=', 'active')]}"/>
                     <button string="New Agreement" type="object" name="create_new_agreement" class="oe_highlight" attrs="{'invisible': [('is_template', '=', False)]}"/>
-                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
+                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" domain="[('stage_type', '=', 'agreement')]"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
