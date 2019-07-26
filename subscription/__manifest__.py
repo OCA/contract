@@ -1,26 +1,19 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+# Copyright Odoo S.A. (https://www.odoo.com/)
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 
 {
     'name': 'Recurring Documents',
+    'version': '12.0.1.0.0',
     'category': 'Extra Tools',
-    'description': """
-Create recurring documents.
-===========================
-
-This module allows to create new documents and add subscriptions on that document.
-
-e.g. To have an invoice generated automatically periodically:
--------------------------------------------------------------
-    * Define a document type based on Invoice object
-    * Define a subscription whose source document is the document defined as
-      above. Specify the interval information and partner to be invoiced.
-    """,
-    'depends': ['base'],
+    'summary': 'Generate recurring invoices, sale orders, purchase orders, etc.',
+    'license': 'LGPL-3',
+    'author': 'Odoo SA, Odoo Community Association (OCA)',
+    'website': 'https://github.com/OCA/server-ux',
+    'depends': ['mail'],
     'data': [
         'security/ir.model.access.csv',
-        'views/subscription_view.xml'
+        'views/subscription.xml',
     ],
-    'demo': ['data/subscription_demo.xml'],
+    'demo': ['demo/subscription_demo.xml'],
+    'installable': True,
 }

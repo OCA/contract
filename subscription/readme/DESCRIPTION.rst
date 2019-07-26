@@ -1,0 +1,3 @@
+This module allows you to automate the periodic duplication of a document (sale order, purchase order, invoice or any other document). It is useful to generate recurring invoices, recurring orders, etc. Note that you can also use the *contract* module from `the OCA contract project <https://github.com/OCA/contract>`_ to manage recurring invoices; the *contract* module has many more features that this *subscription* module, but the *subscription* module can generate any kind of documents, not only invoices.
+
+This module was part of the official addons up to Odoo Community v10 and was removed from Odoo Community in v11. This is a port of the module from Odoo Community v10.
