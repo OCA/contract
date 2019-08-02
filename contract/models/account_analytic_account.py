@@ -176,6 +176,7 @@ class AccountAnalyticAccount(models.Model):
     def _prepare_invoice_line(self, line, invoice_id):
         invoice_line = self.env['account.invoice.line'].new({
             'invoice_id': invoice_id,
+            'contract_line_id': line.id,
             'product_id': line.product_id.id,
             'quantity': line.quantity,
             'uom_id': line.uom_id.id,

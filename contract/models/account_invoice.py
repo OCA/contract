@@ -10,3 +10,12 @@ class AccountInvoice(models.Model):
     contract_id = fields.Many2one(
         'account.analytic.account',
         string='Contract')
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = 'account.invoice.line'
+
+    contract_line_id = fields.Many2one(
+        comodel_name='account.analytic.invoice.line',
+        string='Contract Lines', ondelete='set null', index=True,
+        readonly=True)
