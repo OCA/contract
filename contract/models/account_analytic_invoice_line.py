@@ -18,12 +18,12 @@ class AccountAnalyticInvoiceLine(models.Model):
             for inv_line in line.invoice_lines:
                 if inv_line.invoice_id.state not in ['cancel']:
                     if inv_line.invoice_id.type in [
-                        'in_invoice', 'out_refund'
+                        'in_invoice', 'out_invoice'
                     ]:
                         qty += inv_line.uom_id._compute_quantity(
                             inv_line.quantity, line.uom_id)
                     elif inv_line.invoice_id.type in [
-                        'out_invoice', 'in_refund'
+                        'out_refund', 'in_refund'
                     ]:
                         qty -= inv_line.uom_id._compute_quantity(
                             inv_line.quantity, line.uom_id)
