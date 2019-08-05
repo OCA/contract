@@ -352,19 +352,21 @@ class AccountAnalyticAccount(models.Model):
         """
         today = datetime.today()
         company_model = self.env['res.company']
+        contracts = self.with_context(cron=True)
         for company in company_model.search([]):
             days_before = company.contract_pregenerate_days or 0
             cutoffdate = (
                 today + relativedelta(days=days_before)
             ).strftime(DEFAULT_SERVER_DATE_FORMAT)
-            contracts = self.with_context(cron=True).search([
+            contracts = contracts.concat(self.with_context(cron=True).search([
                 ('company_id', '=', company.id),
                 ('recurring_invoices', '=', True),
                 ('recurring_next_date', '<=', cutoffdate),
                 '|',
                 ('date_end', '=', False),
                 ('date_end', '>=', cutoffdate),
-            ])
+            ]))
+
         return contracts.recurring_create_invoice(limit)
 
     @api.multi
