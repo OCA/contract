@@ -1,0 +1,1 @@
+You can filter or group by Commercial Entity from the Contract list
