@@ -6,7 +6,7 @@
             [active_id], 'default_analytic_account_ids': [active_id]}</field>
         <field name="name">Invoices</field>
         <field name="res_model">account.invoice</field>
-        <field name="domain">[('analytic_account_ids','=',active_id)]</field>
+        <field name="domain">[('analytic_account_ids','=',active_id), ('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter" />
     </record>
 
@@ -22,6 +22,17 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="account.invoice_form"/>
         <field name="act_window_id" ref="act_analytic_invoices"/>
+    </record>
+
+    <record id="invoice_tree_show_total_untaxed" model="ir.ui.view">
+        <field name="name">account.invoice.tree.show.total.untaxed</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_total_signed" position="after">
+                <field name="amount_untaxed_signed" sum="Total Untaxed"/>
+            </field>
+        </field>
     </record>
 
     <record id="account_analytic_account_button_invoice" model="ir.ui.view">
