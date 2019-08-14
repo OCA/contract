@@ -18,7 +18,7 @@ class TestContractShowInvoice(TransactionCase):
         self.invoice._onchange_partner_id()
         self.a_sale = self.env['account.account'].search([
             ('user_type_id', '=',
-            self.env.ref('account.data_account_type_revenue').id)
+                self.env.ref('account.data_account_type_revenue').id)
         ], limit=1)
         self.invoice_line = self.env['account.invoice.line'].create(
             {'product_id': self.env.ref('product.product_product_2').id,
