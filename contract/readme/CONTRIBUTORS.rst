@@ -8,3 +8,4 @@
 * Thomas Binsfeld <thomas.binsfeld@acsone.eu>
 * Rafael Blasco <rafael.blasco@tecnativa.com>
 * Guillaume Vandamme <guillaume.vandamme@acsone.eu>
+* Raphaël Reverdy <raphael.reverdy@akretion.com>
