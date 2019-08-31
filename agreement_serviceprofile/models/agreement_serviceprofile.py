@@ -26,7 +26,10 @@ class AgreementServiceProfile(models.Model):
 
     notes = fields.Text(string="Notes")
     product_id = fields.Many2one('product.template', 'Service',
-                                 domain="[('type', '=', 'service')]")
+                                 domain="[('type', '=', 'service')]",
+                                 required=True)
+    partner_id = fields.Many2one(related='agreement_id.partner_id',
+                                 string='Partner')
 
     # Used for Kanban grouped_by view
     @api.model
