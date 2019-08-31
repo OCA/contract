@@ -1,10 +1,10 @@
-# Copyright (C) 2018 - TODAY, Pavlov Media
+# Copyright (C) 2018 Pavlov Media
+# Copyright (C) 2019 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 {
     'name': 'Agreement Service Profile',
     'summary': "Adds an Agreement Service Profile object",
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Contract',
     'author': 'Pavlov Media, '
               'Open Source Integrators, '
