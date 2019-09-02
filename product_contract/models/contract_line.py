@@ -7,6 +7,7 @@ from odoo import api, fields, models
 
 class AccountAnalyticInvoiceLine(models.Model):
     _inherit = 'account.analytic.invoice.line'
+    _rec_name = 'display_name'
 
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -51,3 +52,8 @@ class AccountAnalyticInvoiceLine(models.Model):
                 rec.termination_notice_rule_type = (
                     rec.product_id.termination_notice_rule_type
                 )
+
+    @api.depends('name', 'date_start')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = ("%s - %s") % (rec.date_start, rec.name)
