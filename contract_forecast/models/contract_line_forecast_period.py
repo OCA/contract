@@ -61,6 +61,7 @@ class ContractLineForecastPeriod(models.Model):
         help='Discount that is applied in generated invoices.'
         ' It should be less or equal to 100',
     )
+    company_id = fields.Many2one(comodel_name="res.company", string="Company")
 
     @api.multi
     @api.depends('quantity', 'price_unit', 'discount')
