@@ -1,0 +1,46 @@
+<!-- # Copyright (C) 2018 Pavlov Media
+     # Copyright (C) 2019 Open Source Integrators
+     # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="maintenance_equipment_form_view_agreement" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.agreement</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id"
+               ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <field name="owner_user_id" position="after">
+                <field name="agreement_id"/>
+            </field>
+            <xpath expr="//notebook" position="inside">
+                <page string="Services" id="services">
+                    <field name="serviceprofile_ids"
+                           domain="[('equipment_id', '=', False)]"
+                           widget="many2many">
+                        <tree>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                            <field name="stage_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit maintenance equipment search view-->
+    <record id="view_maintenance_equipment_filter_agreement" model="ir.ui.view">
+        <field name="name">maintenance.equipment.select.agreement</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id"
+               ref="maintenance.hr_equipment_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Agreement" name="agreement_id" domain="[]"
+                        context="{'group_by': 'agreement_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -2,5 +2,7 @@
 
 from . import (
     agreement,
+    agreement_serviceprofile,
     maintenance_request,
+    maintenance_equipment,
 )
