@@ -16,6 +16,7 @@
         'security/ir.model.access.csv',
         'security/agreement_security.xml',
         'views/agreement.xml',
+        'views/agreement_type.xml',
         ],
     'demo': ['demo/demo.xml'],
     'development_status': 'Beta',

@@ -21,7 +21,11 @@
             </div>
             <group name="main">
                 <group name="left">
-                    <field name="partner_id"/>
+                    <field name="agreement_type_id"
+                           groups="agreement.group_use_agreement_type"/>
+                    <field name="is_template" groups="agreement.group_use_agreement_template"/>
+                    <field name="partner_id"
+                           attrs="{'required': [('is_template', '=', False)]}"/>
                     <field name="name"/>
                     <field name="signature_date"/>
                 </group>
