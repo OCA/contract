@@ -1,31 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement
+# 	* agreement
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2019-05-04 21:02+0000\n"
-"Last-Translator: JC <rdc02271@yahoo.com>\n"
+"PO-Revision-Date: 2020-02-15 01:13+0000\n"
+"Last-Translator: alvarorib <alvaro.ribeiro@exo.pt>\n"
 "Language-Team: none\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.5.1\n"
+"X-Generator: Weblate 3.10\n"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__active
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__active
 msgid "Active"
-msgstr "Activo"
+msgstr "Ativo"
 
 #. module: agreement
 #: model:ir.model,name:agreement.model_agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_form
 msgid "Agreement"
 msgstr "Contrato"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__agreement_type_id
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_form_view
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
+msgid "Agreement Type"
+msgstr "Tipo de Contrato"
+
+#. module: agreement
+#: model:ir.actions.act_window,name:agreement.agreement_type_action
+#: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.menu,name:agreement.agreement_type_menu
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
+msgid "Agreement Types"
+msgstr "Tipos de Contrato"
 
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_action
@@ -36,6 +52,7 @@ msgstr "Contratos"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Archived"
 msgstr "Arquivado"
 
@@ -51,53 +68,71 @@ msgstr "Configuração"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__create_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__create_uid
 msgid "Created by"
 msgstr "Criado por"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__create_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__create_date
 msgid "Created on"
 msgstr "Criado em"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__display_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__display_name
 msgid "Display Name"
-msgstr "Nome"
+msgstr "Exibir Nome"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__end_date
 msgid "End Date"
-msgstr "Fim de Contrato"
+msgstr "Data de Fim"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__id
 msgid "ID"
-msgstr "Código"
+msgstr "ID"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__code
 msgid "ID used for internal contract tracking."
-msgstr "Código usado internamente para acompanhamento do contrato."
+msgstr "ID usado internamente para acompanhamento do contrato."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__active
-msgid "If unchecked, it will allow you to hide the agreement without removing it."
-msgstr "Desmarcar se quiser esconder o contrato mas sem o apagar."
+msgid ""
+"If unchecked, it will allow you to hide the agreement without removing it."
+msgstr "Desmarcar, se quiser esconder o contrato mas sem o apagar."
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__is_template
+msgid "Is a Template?"
+msgstr "É um Modelo?"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement____last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_type____last_update
 msgid "Last Modified on"
 msgstr "Modificado em"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__write_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__write_uid
 msgid "Last Updated by"
 msgstr "Actualizado por"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__write_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__write_date
 msgid "Last Updated on"
 msgstr "Actualizado em"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__name
+msgid "Name"
+msgstr "Nome"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
@@ -121,6 +156,20 @@ msgid "Search Agreements"
 msgstr "Pesquisar Contratos"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__agreement_type_id
+msgid "Select the type of agreement"
+msgstr "Selecione o tipo de contrato"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__is_template
+msgid ""
+"Set if the agreement is a template. Template agreements don't require a "
+"partner."
+msgstr ""
+"Definir se o contrato for um modelo. Modelos de contrato não obrigam um "
+"parceiro."
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__signature_date
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 msgid "Signature Date"
@@ -129,7 +178,7 @@ msgstr "Data da assinatura"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__start_date
 msgid "Start Date"
-msgstr "Data Inicial"
+msgstr "Data de Início"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__partner_id
@@ -145,6 +194,21 @@ msgstr "Este código de contrato já existe para este parceiro!"
 #: model:ir.model.fields,field_description:agreement.field_agreement__name
 msgid "Title"
 msgstr "Título"
+
+#. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
+msgid "Type Name"
+msgstr "Escrever Nome"
+
+#. module: agreement
+#: model:res.groups,name:agreement.group_use_agreement_template
+msgid "Use agreement template"
+msgstr "Usar o modelo de contrato"
+
+#. module: agreement
+#: model:res.groups,name:agreement.group_use_agreement_type
+msgid "Use agreement type"
+msgstr "Usar o tipo de contrato"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__end_date

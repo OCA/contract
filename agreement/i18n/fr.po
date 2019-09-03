@@ -18,6 +18,7 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__active
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__active
 msgid "Active"
 msgstr "Actif"
 
@@ -28,6 +29,25 @@ msgid "Agreement"
 msgstr "Accord"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__agreement_type_id
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_form_view
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
+#, fuzzy
+#| msgid "Agreement"
+msgid "Agreement Type"
+msgstr "Accord"
+
+#. module: agreement
+#: model:ir.actions.act_window,name:agreement.agreement_type_action
+#: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.menu,name:agreement.agreement_type_menu
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
+#, fuzzy
+#| msgid "Agreements"
+msgid "Agreement Types"
+msgstr "Accords"
+
+#. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_action
 #: model:ir.ui.menu,name:agreement.agreement_menu
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_tree
@@ -36,6 +56,7 @@ msgstr "Accords"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Archived"
 msgstr "Archivé"
 
@@ -51,16 +72,19 @@ msgstr "Configuration"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__create_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__create_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__create_date
 msgid "Created on"
 msgstr "Créé le"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__display_name
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
@@ -71,6 +95,7 @@ msgstr "Date de fin"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__id
 msgid "ID"
 msgstr "ID"
 
@@ -86,19 +111,32 @@ msgid ""
 msgstr "Si coché, Cela vous permettra de cacher le contrat sans l'enlever."
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__is_template
+msgid "Is a Template?"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement____last_update
+#: model:ir.model.fields,field_description:agreement.field_agreement_type____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__write_uid
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__write_date
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__name
+msgid "Name"
+msgstr "Nom"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
@@ -120,6 +158,18 @@ msgstr "Référence"
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 msgid "Search Agreements"
 msgstr "Recherche Accords"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__agreement_type_id
+msgid "Select the type of agreement"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__is_template
+msgid ""
+"Set if the agreement is a template. Template agreements don't require a "
+"partner."
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__signature_date
@@ -148,6 +198,27 @@ msgid "Title"
 msgstr "Titre"
 
 #. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
+#, fuzzy
+#| msgid "Name"
+msgid "Type Name"
+msgstr "Nom"
+
+#. module: agreement
+#: model:res.groups,name:agreement.group_use_agreement_template
+#, fuzzy
+#| msgid "When the agreement starts."
+msgid "Use agreement template"
+msgstr "Quand le contrat débute."
+
+#. module: agreement
+#: model:res.groups,name:agreement.group_use_agreement_type
+#, fuzzy
+#| msgid "When the agreement ends."
+msgid "Use agreement type"
+msgstr "Quand le contrat finit."
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__end_date
 msgid "When the agreement ends."
 msgstr "Quand le contrat finit."
@@ -159,6 +230,3 @@ msgstr "Quand le contrat débute."
 
 #~ msgid "Code"
 #~ msgstr "Code"
-
-#~ msgid "Name"
-#~ msgstr "Nom"
