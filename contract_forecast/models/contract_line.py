@@ -27,6 +27,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         return {
             "name": self._insert_markers(period_date_start, period_date_end),
             "contract_id": self.contract_id.id,
+            "company_id": self.contract_id.company_id.id,
             "contract_line_id": self.id,
             "product_id": self.product_id.id,
             "date_start": period_date_start,
