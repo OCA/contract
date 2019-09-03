@@ -25,7 +25,7 @@ class AgreementServiceProfile(models.Model):
                             " without removing it.")
 
     notes = fields.Text(string="Notes")
-    product_id = fields.Many2one('product.template', 'Service',
+    product_id = fields.Many2one('product.template', 'Service Product',
                                  domain="[('type', '=', 'service')]",
                                  required=True)
     partner_id = fields.Many2one(related='agreement_id.partner_id',
