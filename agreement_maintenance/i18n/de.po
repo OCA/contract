@@ -28,9 +28,18 @@ msgstr "<span class=\"o_stat_text\">Wartungsanfragen</span>"
 
 #. module: agreement_maintenance
 #: model:ir.model,name:agreement_maintenance.model_agreement
+#: model:ir.model.fields,field_description:agreement_maintenance.field_maintenance_equipment__agreement_id
 #: model:ir.model.fields,field_description:agreement_maintenance.field_maintenance_request__agreement_id
+#: model_terms:ir.ui.view,arch_db:agreement_maintenance.view_maintenance_equipment_filter_agreement
 msgid "Agreement"
 msgstr "Vereinbarung"
+
+#. module: agreement_maintenance
+#: model:ir.model,name:agreement_maintenance.model_agreement_serviceprofile
+#, fuzzy
+#| msgid "Service Profile"
+msgid "Agreement Service Profiles"
+msgstr "Dienstleistungsprofil"
 
 #. module: agreement_maintenance
 #: model_terms:ir.actions.act_window,help:agreement_maintenance.action_maintenance_request_agreement_specific
@@ -38,9 +47,16 @@ msgid "Create Maintenance Requests"
 msgstr "Wartungsanfrage erzeugen"
 
 #. module: agreement_maintenance
-#: model:ir.actions.act_window,name:agreement_maintenance.action_maintenance_request_agreement_specific
-msgid "Maaintenance Requests"
-msgstr "Wartungsanfragen"
+#: model:ir.model.fields,field_description:agreement_maintenance.field_agreement_serviceprofile__equipment_id
+msgid "Equipment"
+msgstr ""
+
+#. module: agreement_maintenance
+#: model:ir.model,name:agreement_maintenance.model_maintenance_equipment
+#, fuzzy
+#| msgid "Maintenance Request"
+msgid "Maintenance Equipment"
+msgstr "Wartungsanfrage"
 
 #. module: agreement_maintenance
 #: model:ir.model,name:agreement_maintenance.model_maintenance_request
@@ -48,9 +64,30 @@ msgid "Maintenance Request"
 msgstr "Wartungsanfrage"
 
 #. module: agreement_maintenance
+#: model:ir.actions.act_window,name:agreement_maintenance.action_maintenance_request_agreement_specific
+#, fuzzy
+#| msgid "Maaintenance Requests"
+msgid "Maintenance Requests"
+msgstr "Wartungsanfragen"
+
+#. module: agreement_maintenance
 #: model:ir.model.fields,field_description:agreement_maintenance.field_maintenance_request__serviceprofile_id
 #: model_terms:ir.ui.view,arch_db:agreement_maintenance.view_maintenance_request_filter_agreement
 msgid "Service Profile"
+msgstr "Dienstleistungsprofil"
+
+#. module: agreement_maintenance
+#: model:ir.model.fields,field_description:agreement_maintenance.field_maintenance_equipment__serviceprofile_ids
+#, fuzzy
+#| msgid "Service Profile"
+msgid "Service Profiles"
+msgstr "Dienstleistungsprofil"
+
+#. module: agreement_maintenance
+#: model_terms:ir.ui.view,arch_db:agreement_maintenance.maintenance_equipment_form_view_agreement
+#, fuzzy
+#| msgid "Service Profile"
+msgid "Services"
 msgstr "Dienstleistungsprofil"
 
 #~ msgid "agreement"
