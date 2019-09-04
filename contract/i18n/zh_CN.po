@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2017-11-21 18:22+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"PO-Revision-Date: 2019-09-05 19:23+0000\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/oca/teams/23907/"
 "zh_CN/)\n"
 "Language: zh_CN\n"
@@ -18,6 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.8\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -82,125 +83,184 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>你好${object.partner_id.name or ''},</p>\n"
+"    <p>已经创建了一份新合同： </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>参考</strong><br />\n"
+"       &nbsp;&nbsp;合同： <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;合同日期开始： ${object.date_start or ''}<br />\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;您的联系人：<a href=\"mailto:${object.user_id.email or "
+"''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;您的联系人：${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>如果您有任何疑问，请随时与我们联系。</p>\n"
+"    <p>感谢您的选择 ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\""
+">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address="
+"True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                电话：${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                网址：<a href=\"${object.company_id.website}\""
+">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} 合同(参考 ${object.name or 'n/a'})"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#END#</strong>: End date of the invoiced period"
-msgstr ""
+msgstr "<strong>#结束#</strong>: 发票日期的结束日期"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
-msgstr ""
+msgstr "<strong>#开始#</strong>: 发票日期的开始日期"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Contract: </strong>"
-msgstr ""
+msgstr "<strong>合同：</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Date Start: </strong>"
-msgstr ""
+msgstr "<strong>开始日期： </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>说明</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Partner:</strong>"
-msgstr ""
+msgstr "<strong>业务伙伴：</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
-msgstr ""
+msgstr "<strong>价格</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>数量</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
-msgstr ""
+msgstr "<strong>重复项目</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Responsible: </strong>"
-msgstr ""
+msgstr "<strong>负责人：</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>合计</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>单价</strong>"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract
 msgid "Account Analytic Contract"
-msgstr ""
+msgstr "账户分析合同"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "账户分析行"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_account
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__name
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__analytic_account_id
 msgid "Analytic Account"
-msgstr "核算科目"
+msgstr "分析账户"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__automatic_price
 msgid "Auto-price?"
-msgstr ""
+msgstr "自动价格？"
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.account_analytic_contract_action
 msgid "Click to create a new contract template."
-msgstr ""
+msgstr "单击以创建新的合同模板。"
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.action_account_analytic_purchase_overdue_all
 #: model_terms:ir.actions.act_window,help:contract.action_account_analytic_sale_overdue_all
 msgid "Click to create a new contract."
-msgstr ""
+msgstr "单击以创建新合同。"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__company_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__company_id
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:342
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "编写Email"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "联系人"
 
 #. module: contract
 #: model:ir.actions.report,name:contract.report_contract
@@ -208,24 +268,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_account_invoice__contract_id
 #: model:mail.template,report_name:contract.email_contract_template
 msgid "Contract"
-msgstr ""
+msgstr "合同"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:138
 #, python-format
 msgid "Contract '%s' start date can't be later than end date"
-msgstr ""
+msgstr "合同'%s'的开始日期不能晚于结束日期"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_contract_line
 msgid "Contract Lines"
-msgstr ""
+msgstr "合同行"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__contract_template_id
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Contract Template"
-msgstr ""
+msgstr "合同模板"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.account_analytic_contract_action
@@ -233,29 +293,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_tree
 msgid "Contract Templates"
-msgstr ""
+msgstr "合同模板"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__contract_type
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__contract_type
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Contract Type"
-msgstr ""
+msgstr "合同类型"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_config_contract
 msgid "Contracts"
-msgstr ""
+msgstr "合同"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__create_invoice_visibility
 msgid "Create Invoice Visibility"
-msgstr ""
+msgstr "创建可见性发票"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Create invoices"
-msgstr ""
+msgstr "创建发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__create_uid
@@ -277,77 +337,77 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__partner_id
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_sale_form
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_sale_overdue_all
 #: model:ir.ui.menu,name:contract.menu_action_account_analytic_sale_overdue_all
 msgid "Customer Contracts"
-msgstr ""
+msgstr "客户合同"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__date_end
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Date End"
-msgstr ""
+msgstr "结束于"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__date_from
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__date_from
 msgid "Date From"
-msgstr ""
+msgstr "开始于"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__date_start
 msgid "Date Start"
-msgstr ""
+msgstr "开始日期"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__date_to
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__date_to
 msgid "Date To"
-msgstr ""
+msgstr "日期到"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line__date_from
 #: model:ir.model.fields,help:contract.field_account_analytic_invoice_line__date_from
 msgid "Date from invoiced period"
-msgstr ""
+msgstr "发票开具日期"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_next_date
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "下一个发票的日期"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line__date_to
 #: model:ir.model.fields,help:contract.field_account_analytic_invoice_line__date_to
 msgid "Date to invoiced period"
-msgstr ""
+msgstr "发票期限的日期"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "天"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__name
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__name
 msgid "Description"
-msgstr ""
+msgstr "说明"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "折扣(%)"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_contract_line.py:179
 #, python-format
 msgid "Discount should be less or equal to 100"
-msgstr ""
+msgstr "折扣应小于或等于100"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line__discount
@@ -355,7 +415,7 @@ msgstr ""
 msgid ""
 "Discount that is applied in generated invoices. It should be less or equal "
 "to 100"
-msgstr ""
+msgstr "在生成的发票中应用的折扣。它应该小于或等于100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__display_name
@@ -367,24 +427,24 @@ msgstr "显示名称"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Finished"
-msgstr ""
+msgstr "已完成"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.account_analytic_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.account_analytic_cron_for_invoice
 #: model:ir.cron,name:contract.account_analytic_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
-msgstr ""
+msgstr "从合同生成定期发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_invoices
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "自动生成定期发票"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__id
@@ -400,38 +460,38 @@ msgid ""
 "If this is marked, the price will be obtained automatically applying the "
 "pricelist to the product. If not, you will be able to introduce a manual "
 "price"
-msgstr ""
+msgstr "如果已标记，将自动将价格表应用于产品。如果没有，您将能够引入手动价格"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_invoice_line_ids
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__recurring_invoice_line_ids
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Invoice Lines"
-msgstr ""
+msgstr "发票行"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.act_recurring_invoices
 msgid "Invoices"
-msgstr ""
+msgstr "发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__recurring_invoicing_type
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Invoicing type"
-msgstr ""
+msgstr "发票类型"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__journal_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__journal_id
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Journal"
-msgstr ""
+msgstr "日记账"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract____last_update
@@ -452,25 +512,25 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__write_date
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__write_date
 msgid "Last Updated on"
-msgstr "上次更新日期"
+msgstr "最后更新时间"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_form
 msgid "Legend (for the markers inside invoice lines description)"
-msgstr ""
+msgstr "图例（用于发票行内的标记）"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "月"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Month(s) last day"
-msgstr ""
+msgstr "月底"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__name
@@ -480,220 +540,220 @@ msgstr "名称"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Next Invoice"
-msgstr ""
+msgstr "下一张发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__partner_id
 msgid "Partner (always False)"
-msgstr ""
+msgstr "合作伙伴（总是空）"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Partner and dependents"
-msgstr ""
+msgstr "合作伙伴和合作伙伴关联的"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:220
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
-msgstr ""
+msgstr "请为定义一个%s日记账，公司 '%s'。"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Post-paid"
-msgstr ""
+msgstr "后付"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_invoicing_type:0
 #: selection:account.analytic.contract,recurring_invoicing_type:0
 msgid "Pre-paid"
-msgstr ""
+msgstr "预付"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__pricelist_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__pricelist_id
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Pricelist"
-msgstr ""
+msgstr "价格表"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__product_id
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__purchase_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Purchase Contracts"
-msgstr ""
+msgstr "采购合同"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__quantity
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_rule_type
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__recurring_rule_type
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_contract_view_search
 msgid "Recurrence"
-msgstr ""
+msgstr "重新发起"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "重新发起发票"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract__recurring_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "重复"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account__recurring_interval
 #: model:ir.model.fields,help:contract.field_account_analytic_contract__recurring_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "重复间隔 (日/周/月/年)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_account__user_id
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Sale Contracts"
-msgstr ""
+msgstr "销售合同"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "Send by Email"
-msgstr ""
+msgstr "通过Email发送"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__sequence
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "序列"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_account_analytic_invoice_line__sequence
 msgid "Sequence of the contract line when displaying contracts"
-msgstr ""
+msgstr "显示合同时合同行的序列"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the purchase contracts for this partner"
-msgstr ""
+msgstr "显示此合作伙伴的采购合同"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the sale contracts for this partner"
-msgstr ""
+msgstr "显示此合作伙伴的销售合同"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__specific_price
 msgid "Specific Price"
-msgstr ""
+msgstr "实际价格"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract__recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
-msgstr ""
+msgstr "指定自动发票生成的间隔。"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_account_analytic_account__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_account_analytic_contract__recurring_invoicing_type
 msgid "Specify if process date is 'from' or 'to' invoicing date"
-msgstr ""
+msgstr "指定处理日期是“从”还是“到”发票日期"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__price_subtotal
 msgid "Sub Total"
-msgstr ""
+msgstr "小计"
 
 #. module: contract
 #: selection:account.analytic.account,contract_type:0
 #: selection:account.analytic.contract,contract_type:0
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_purchase_form
 msgid "Supplier"
-msgstr ""
+msgstr "供应商"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_account_analytic_purchase_overdue_all
 #: model:ir.ui.menu,name:contract.menu_action_account_analytic_purchase_overdue_all
 msgid "Supplier Contracts"
-msgstr ""
+msgstr "供应商合同"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__price_unit
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "单价"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_analytic_contract_line__uom_id
 #: model:ir.model.fields,field_description:contract.field_account_analytic_invoice_line__uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr ""
+msgstr "增值税："
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_account_analytic_account_contract_search
 msgid "Valid"
-msgstr ""
+msgstr "有效"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.act_purchase_recurring_invoices
 msgid "Vendor Bills"
-msgstr ""
+msgstr "供应商账单"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "周"
 
 #. module: contract
 #: selection:account.analytic.account,recurring_rule_type:0
 #: selection:account.analytic.contract,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "年"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:111
 #, python-format
 msgid ""
 "You can't have a next invoicing date before the start of the contract '%s'"
-msgstr ""
+msgstr "在合同'%s'开始之前不能有下一个发票日期"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:211
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr ""
+msgstr "您必须先选择合同%s的客户！"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:207
 #, python-format
 msgid "You must first select a Supplier for Contract %s!"
-msgstr ""
+msgstr "您必须先选择合同%s的供应商！"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:294
@@ -702,31 +762,33 @@ msgid ""
 "You must review start and end dates!\n"
 "%s"
 msgstr ""
+"您必须查看开始和结束日期！\n"
+"%s"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:102
 #, python-format
 msgid "You must supply a customer for the contract '%s'"
-msgstr ""
+msgstr "您必须为合同'%s'提供客户"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:120
 #, python-format
 msgid "You must supply a next invoicing date for contract '%s'"
-msgstr ""
+msgstr "您必须为合同'%s'提供下一个开票日期"
 
 #. module: contract
 #: code:addons/contract/models/account_analytic_account.py:129
 #, python-format
 msgid "You must supply a start date for contract '%s'"
-msgstr ""
+msgstr "必须提供合同'%s'的开始日期"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_analytic_invoice_line
 msgid "account.analytic.invoice.line"
-msgstr ""
+msgstr "account.analytic.invoice.line"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.account_analytic_account_recurring_form_form
 msgid "⇒ Show recurring invoices"
-msgstr ""
+msgstr "⇒ 显示定期发票"
