@@ -15,7 +15,7 @@ class AccountAnalyticInvoiceLine(models.Model):
         required=False,
         copy=False,
     )
-
+    display_name = fields.Char(compute='_compute_display_name_2')
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
         res = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
@@ -54,6 +54,9 @@ class AccountAnalyticInvoiceLine(models.Model):
                 )
 
     @api.depends('name', 'date_start')
-    def _compute_display_name(self):
+    def _compute_display_name_2(self):
+        # FIXME: _compute_display_name depends on rec_name (display_name)
+        #  and this trigger a WARNING : display_name depends on itself;
+        #  please fix its decorator
         for rec in self:
             rec.display_name = ("%s - %s") % (rec.date_start, rec.name)
