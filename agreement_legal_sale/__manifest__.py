@@ -15,7 +15,6 @@
     ],
     'data': [
         'views/agreement.xml',
-        'views/product.xml',
         'views/sale_order.xml',
     ],
     'installable': True,
