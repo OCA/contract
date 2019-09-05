@@ -1,12 +1,12 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement_serviceprofile
+# 	* agreement_serviceprofile
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2019-09-04 18:23+0000\n"
+"PO-Revision-Date: 2019-09-17 18:24+0000\n"
 "Last-Translator: 黎伟杰 <674416404@qq.com>\n"
 "Language-Team: none\n"
 "Language: zh_CN\n"
@@ -45,6 +45,12 @@ msgid "Agreement Stages"
 msgstr "协议阶段"
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product__is_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template__is_serviceprofile
+msgid "Create Service Profiles"
+msgstr "创建服务配置"
+
+#. module: agreement_serviceprofile
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__create_uid
 msgid "Created by"
 msgstr "创建者"
@@ -65,8 +71,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,help:agreement_serviceprofile.field_product_product__is_serviceprofile
+#: model:ir.model.fields,help:agreement_serviceprofile.field_product_template__is_serviceprofile
+msgid ""
+"If True, this product will create a service profile on the\n"
+"         agreement when the sales order is confirmed."
+msgstr "如果为真，则当确认销售订单时，此产品将在协议上创建服务配置。"
+
+#. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__active
-msgid "If unchecked, it will allow you to hide this service profile without removing it."
+msgid ""
+"If unchecked, it will allow you to hide this service profile without "
+"removing it."
 msgstr "如果未选中，则允许您隐藏此服务配置文件而不删除它。"
 
 #. module: agreement_serviceprofile
@@ -105,6 +121,16 @@ msgstr "业务伙伴"
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_search
 msgid "Product"
 msgstr "产品"
+
+#. module: agreement_serviceprofile
+#: model:ir.model,name:agreement_serviceprofile.model_product_template
+msgid "Product Template"
+msgstr "产品模版"
+
+#. module: agreement_serviceprofile
+#: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.product_template_form_view
+msgid "Service"
+msgstr "服务"
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__product_id
