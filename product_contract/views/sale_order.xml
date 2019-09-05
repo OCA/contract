@@ -12,6 +12,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="need_contract_creation" invisible="1"/>
+                <button name="action_create_contract"
+                        string="Create Contracts"
+                        type="object"
+                        class="oe_highlight" attrs="{'invisible': [('need_contract_creation', '=', False)]}"/>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_show_contracts"
                         type="object" icon="fa-book"

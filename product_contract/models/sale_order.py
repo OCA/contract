@@ -12,6 +12,27 @@ class SaleOrder(models.Model):
         string='Is a contract', compute='_compute_is_contract'
     )
     contract_count = fields.Integer(compute='_compute_contract_count')
+    need_contract_creation = fields.Boolean(
+        compute='_compute_need_contract_creation'
+    )
+
+    @api.depends('order_line.contract_id', 'state')
+    def _compute_need_contract_creation(self):
+        for rec in self:
+            if rec.state not in ('draft', 'sent'):
+                line_to_create_contract = rec.order_line.filtered(
+                    lambda r: not r.contract_id and r.product_id.is_contract
+                )
+                line_to_update_contract = rec.order_line.filtered(
+                    lambda r: r.contract_id
+                    and r.product_id.is_contract
+                    and r
+                    not in r.contract_id.recurring_invoice_line_ids.mapped(
+                        'sale_order_line_id'
+                    )
+                )
+                if line_to_create_contract or line_to_update_contract:
+                    rec.need_contract_creation = True
 
     @api.depends('order_line')
     def _compute_is_contract(self):
@@ -34,15 +55,20 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def action_confirm(self):
-        """ If we have a contract in the order, set it up """
+    def action_create_contract(self):
         contract_env = self.env['account.analytic.account']
+        contracts = self.env['account.analytic.account']
         for rec in self.filtered('is_contract'):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
             )
             line_to_update_contract = rec.order_line.filtered(
-                lambda r: r.contract_id and r.product_id.is_contract
+                lambda r: r.contract_id
+                and r.product_id.is_contract
+                and r
+                not in r.contract_id.recurring_invoice_line_ids.mapped(
+                    'sale_order_line_id'
+                )
             )
             for contract_template in line_to_create_contract.mapped(
                 'product_id.contract_template_id'
@@ -54,11 +80,20 @@ class SaleOrder(models.Model):
                 contract = contract_env.create(
                     rec._prepare_contract_value(contract_template)
                 )
+                contracts |= contract
                 contract._onchange_contract_template_id()
                 order_lines.create_contract_line(contract)
                 order_lines.write({'contract_id': contract.id})
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
+        return contracts
+
+    @api.multi
+    def action_confirm(self):
+        """ If we have a contract in the order, set it up """
+        self.filtered(
+            lambda order: order.company_id.create_contract_at_sale_order_confirmation
+        ).action_create_contract()
         return super(SaleOrder, self).action_confirm()
 
     @api.multi
