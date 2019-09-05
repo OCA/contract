@@ -13,6 +13,6 @@ For Project related extensions please see the
 
 
 ## Translation Status
-[![Transifex Status](https://www.transifex.com/projects/p/OCA-contract-12-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-contract-12-0)
+[![Translation Status](https://translation.odoo-community.org/widgets/contract-12-0/-/multi-auto.svg)](https://translation.odoo-community.org/engage/contract-12-0/?utm_source=widget)
 
 
