@@ -3,5 +3,4 @@
 from . import (
     sale_order,
     agreement,
-    product,
 )
