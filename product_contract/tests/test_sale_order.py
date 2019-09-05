@@ -110,7 +110,29 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             contract_line.recurring_next_date, Date.to_date('2018-01-31')
         )
-
+    
+    def test_action_confirm_without_contract_creation(self):
+        """ It should create a contract for each contract template used in
+        order_line """
+        self.sale.company_id.create_contract_at_sale_order_confirmation = False
+        self.order_line1.onchange_product()
+        self.sale.action_confirm()
+        self.assertEqual(len(self.sale.order_line.mapped('contract_id')), 0)
+        self.assertTrue(self.sale.need_contract_creation)
+        self.sale.action_create_contract()
+        self.assertEqual(len(self.sale.order_line.mapped('contract_id')), 2)
+        self.assertFalse(self.sale.need_contract_creation)
+        self.assertEqual(
+            self.order_line1.contract_id.contract_template_id,
+            self.contract_template1,
+        )
+        contract_line = self.order_line1.contract_id.recurring_invoice_line_ids
+        self.assertEqual(contract_line.date_start, Date.to_date('2018-01-01'))
+        self.assertEqual(contract_line.date_end, Date.to_date('2018-12-31'))
+        self.assertEqual(
+            contract_line.recurring_next_date, Date.to_date('2018-01-31')
+        )
+        
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used
         in order_line"""
