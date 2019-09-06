@@ -15,8 +15,9 @@
     'data': [
         'data/serviceprofile_stage.xml',
         'security/ir.model.access.csv',
+        'views/product.xml',
         'views/agreement_serviceprofile.xml',
-        'views/agreement.xml'
+        'views/agreement.xml',
     ],
     'development_status': 'Beta',
     'maintainers': [

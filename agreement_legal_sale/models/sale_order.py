@@ -36,10 +36,11 @@ class SaleOrder(models.Model):
                         'sale_line_id': line.id,
                         'uom_id': line.product_uom.id
                     })
-                    # If the product is a service profile, create one
+                    # If the product creates service profiles, create one
                     if line.product_id.product_tmpl_id.is_serviceprofile:
                         self.env['agreement.serviceprofile'].create({
                             'name': line.name,
+                            'product_id': line.product_id.product_tmpl_id.id,
                             'agreement_id': order.agreement_id.id,
                         })
         return res
