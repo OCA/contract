@@ -7,6 +7,7 @@
 
 from dateutil.relativedelta import relativedelta
 
+import datetime as date
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
@@ -53,6 +54,21 @@ class AccountAnalyticAccount(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute='_compute_create_invoice_visibility',
     )
+    generate_before = fields.Integer(
+        string = "Generate before",
+        help = "Days before how many to generate invoice",
+    )
+    generate_invoice_date = fields.Date(
+        compute='_compute_generate_before_date',
+        copy=False,
+        store=True,
+        string='Generate Invoice Date',
+    )
+
+    @api.depends('recurring_next_date', 'generate_before')
+    def _compute_generate_before_date(self):
+        for contract in self:
+            contract.generate_invoice_date = contract.recurring_next_date - date.timedelta(contract.generate_before)
 
     @api.depends('recurring_next_date', 'date_end')
     def _compute_create_invoice_visibility(self):
@@ -235,7 +251,7 @@ class AccountAnalyticAccount(models.Model):
                 ['invoice'])['invoice'],
             'currency_id': currency.id,
             'journal_id': journal.id,
-            'date_invoice': self.recurring_next_date,
+            'date_invoice': self.recurring_next_date - date.timedelta(self.generate_before),
             'origin': self.name,
             'company_id': self.company_id.id,
             'contract_id': self.id,
@@ -316,7 +332,7 @@ class AccountAnalyticAccount(models.Model):
         today = fields.Date.today()
         contracts = self.with_context(cron=True).search([
             ('recurring_invoices', '=', True),
-            ('recurring_next_date', '<=', today),
+            ('generate_invoice_date', '<=', today),
             '|',
             ('date_end', '=', False),
             ('date_end', '>=', today),
