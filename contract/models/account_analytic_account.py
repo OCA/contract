@@ -253,7 +253,7 @@ class AccountAnalyticAccount(models.Model):
             'currency_id': currency.id,
             'journal_id': journal.id,
             'date_invoice': self.recurring_next_date
-                - date.timedelta(self.generate_before),
+            - date.timedelta(self.generate_before),
             'origin': self.name,
             'company_id': self.company_id.id,
             'contract_id': self.id,
