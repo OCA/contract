@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.contract_id', 'state')
     def _compute_need_contract_creation(self):
         for rec in self:
-            if rec.state not in ('draft', 'sent'):
+            if rec.state in ('sale', 'done'):
                 line_to_create_contract = rec.order_line.filtered(
                     lambda r: not r.contract_id and r.product_id.is_contract
                 )
