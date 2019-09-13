@@ -19,5 +19,4 @@ class ContractTemplate(models.Model):
         inverse_name='contract_id',
         copy=True,
         string='Contract template lines',
-        oldname='contract_line_ids',
     )

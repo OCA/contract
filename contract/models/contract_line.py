@@ -25,7 +25,6 @@ class ContractLine(models.Model):
         required=True,
         index=True,
         ondelete='cascade',
-        oldname='analytic_account_id',
     )
     analytic_account_id = fields.Many2one(
         string="Analytic account",
