@@ -14,6 +14,7 @@ from odoo.tools.translate import _
 class ContractContract(models.Model):
     _name = 'contract.contract'
     _description = "Contract"
+    _order = 'code, name asc'
     _inherit = [
         'mail.thread',
         'mail.activity.mixin',
@@ -44,7 +45,6 @@ class ContractContract(models.Model):
         comodel_name='contract.line',
         inverse_name='contract_id',
         copy=True,
-        oldnae='contract_line_ids',
     )
 
     user_id = fields.Many2one(
@@ -273,7 +273,7 @@ class ContractContract(models.Model):
         if self.contract_type == 'purchase':
             invoice_type = 'in_invoice'
         return {
-            'reference': self.code,
+            'name': self.code,
             'type': invoice_type,
             'partner_id': self.invoice_partner_id.id,
             'currency_id': currency.id,
