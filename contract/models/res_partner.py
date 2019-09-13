@@ -15,6 +15,11 @@ class ResPartner(models.Model):
         string='Purchase Contracts',
         compute='_compute_contract_count',
     )
+    contract_ids = fields.One2many(
+        comodel_name='contract.contract',
+        inverse='partner_id',
+        string="Contracts",
+    )
 
     def _compute_contract_count(self):
         contract_model = self.env['contract.contract']
