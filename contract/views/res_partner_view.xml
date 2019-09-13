@@ -3,7 +3,7 @@
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
 
-<record id="view_partner_form" model="ir.ui.view">
+    <record id="view_partner_form" model="ir.ui.view">
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
@@ -21,7 +21,22 @@
                 <field name="purchase_contract_count" widget="statinfo" string="Purchase Contracts"/>
             </button>
         </xpath>
-    </field>
-</record>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="model">res.partner</field>
+        <field type="xml" name="arch">
+            <filter name="inactive" position="after">
+                <separator/>
+                <filter
+                    name="filter_running_contract"
+                    string="With running contracts"
+                    domain="['|', ('contract_ids.date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('contract_ids.date_end', '=', False)]"
+                />
+            </filter>
+        </field>
+    </record>
 
 </odoo>
