@@ -113,7 +113,6 @@ class ContractAbstractContractLine(models.AbstractModel):
         comodel_name='contract.abstract.contract',
         required=True,
         ondelete='cascade',
-        oldname='analytic_account_id',
     )
 
     @api.depends(
