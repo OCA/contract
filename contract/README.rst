@@ -1,5 +1,5 @@
 ================================
-Contracts Management - Recurring
+Recurring - Contracts Management
 ================================
 
 .. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -44,33 +44,31 @@ user access rights.
 Usage
 =====
 
-To use this module, you need to:
+#. Contracts are in Invoicing -> Customers -> Customer and Invoicing -> Vendors -> Supplier Contracts
+#. When creating a contract, fill fields for selecting the invoicing parameters:
 
-#. Go to Accounting -> Contracts and select or create a new contract.
-#. Check *Generate recurring invoices automatically*.
-#. Fill fields for selecting the recurrency and invoice parameters:
+   * a journal
+   * a price list (optional)
 
-   * Journal
-   * Pricelist
-   * Period. It can be any interval of days, weeks, months, months last day or
-     years.
-   * Start date and next invoice date.
-   * Invoicing type: pre-paid or post-paid.
+#. And add the lines to be invoiced with:
 
-#. Add the lines to be invoiced with the product, description, quantity and
-   price.
-#. You can mark Auto-price? for having a price automatically obtained applying
-   the pricelist to the product price.
-#. You have the possibility to use the markers #START# or #END# in the
-   description field to show the start and end date of the invoiced period.
-#. Choosing between pre-paid and post-paid, you modify the dates that are shown
-   with the markers.
-#. A cron is created with daily interval, but if you are in debug mode, you can
-   click on *Create invoices* to force this action.
-#. Click *Show recurring invoices* link to show all invoices created by the
+   * the product with a description, a quantity and a price
+   * the recurrence parameters: interval (days, weeks, months, months last day or years),
+     start date, date of next invoice (automatically computed, can be modified) and end date (optional)
+   * auto-price, for having a price automatically obtained from the price list
+   * #START# or #END# in the description field to display the start/end date of
+     the invoiced period in the invoice line description
+   * pre-paid (invoice at period start) or post-paid (invoice at start of next period)
+
+#. The "Generate Recurring Invoices from Contracts" cron runs daily to generate the invoices.
+   If you are in debug mode, you can click on the invoice creation button.
+#. The *Show recurring invoices* shortcut on contracts shows all invoices created from the
    contract.
-#. Click on *Print > Contract* menu to print contract report.
-#. Click on *Send by Email* button to send contract by email.
+#. The contract report can be printed from the Print menu
+#. The contract can be sent by email with the *Send by Email* button
+#. Contract templates can be created from the Configuration -> Contracts -> Contract Templates menu.
+   They allow to define default journal, price list and lines when creating a contract.
+   To use it, just select the template on the contract and fields will be filled automatically.
 
 Known issues / Roadmap
 ======================
@@ -108,6 +106,9 @@ Contributors
 * Vicent Cubells <vicent.cubells@tecnativa.com>
 * Miquel Raïch <miquel.raich@eficent.com>
 * Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+* Thomas Binsfeld <thomas.binsfeld@acsone.eu>
+* Rafael Blasco <rafael.blasco@tecnativa.com>
+* Guillaume Vandamme <guillaume.vandamme@acsone.eu>
 
 Maintainers
 ~~~~~~~~~~~
