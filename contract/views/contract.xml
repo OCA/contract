@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Main FORM view-->
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_contract_send"
+                            type="object"
+                            string="Send by Email"
+                            groups="base.group_user"/>
+                    <button name="recurring_create_invoice"
+                            type="object"
+                            attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"
+                            string="Create invoices"
+                            groups="base.group_no_one"/>
+                </header>
+                <sheet string="Contract">
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="toggle_active" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                        <button name="action_show_invoices"
+                                type="object" icon="fa-list"
+                                class="oe_stat_button">
+                            <field string="Invoices"
+                                   name="invoice_count"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Contract Name"
+                               class="oe_edit_only"/>
+                        <h3>
+                            <field name="name" class="oe_inline"
+                                   placeholder="e.g. Contract XYZ"/>
+                        </h3>
+                    </div>
+                    <group name="main">
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="payment_term_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="contract_template_id"
+                                   domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
+                                   context="{'default_contract_type': contract_type}"/>
+                            <field name="contract_type" invisible="1"
+                                   required="1"/>
+                            <field name="fiscal_position_id"/>
+                        </group>
+                    </group>
+
+                    <group name="recurring_invoices">
+                        <group>
+                            <field name="journal_id" required="1"/>
+                            <field name="recurring_next_date"/>
+                        </group>
+                        <group>
+                            <field name="pricelist_id"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="recurring_invoice_line"
+                              string="Recurring Invoices">
+                            <field name="contract_line_ids"
+                                   context="{'default_contract_type': contract_type}"/>
+                        </page>
+                        <page name="info" string="Other Information">
+                            <field name="create_invoice_visibility"
+                                   invisible="1"/>
+                            <group>
+                                <field name="code"/>
+                                <field name="group_id"/>
+                                <field name="company_id"
+                                       options="{'no_create': True}"
+                                       groups="base.group_multi_company"/>
+                                <field name="currency_id"
+                                       options="{'no_create': True}"
+                                       groups="base.group_multi_currency"/>
+                                <field name="invoice_partner_id"
+                                       required="1"/>
+                            </group>
+                            <group string="Legend (for the markers inside invoice lines description)"
+                                   name="group_legend">
+                                <p colspan="2"><strong>#START#</strong>: Start
+                                    date
+                                    of the
+                                    invoiced period
+                                </p>
+                                <p colspan="2"><strong>#END#</strong>: End date
+                                    of
+                                    the
+                                    invoiced period
+                                </p>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+
+        </field>
+    </record>
+
+    <!--Customer FORM view-->
+    <record id="contract_contract_customer_form_view" model="ir.ui.view">
+        <field name="name">contract.contract customer form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_contract_form_view"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Customer</attribute>
+                <attribute name="domain">[('customer', '=', True)]</attribute>
+                <attribute name="context">{'default_customer': True, 'default_supplier': False}</attribute>
+            </field>
+            <field name="journal_id" position="attributes">
+                <attribute name="domain">[('type', '=', 'sale'),('company_id', '=', company_id)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!--Supplier FORM view-->
+    <record id="contract_contract_supplier_form_view" model="ir.ui.view">
+        <field name="name">contract.contract supplier form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_contract_form_view"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Supplier</attribute>
+                <attribute name="domain">[('supplier', '=', True)]</attribute>
+                <attribute name="context">{'default_customer': False, 'default_supplier': True}</attribute>
+            </field>
+            <field name="journal_id" position="attributes">
+                <attribute name="domain">[('type', '=', 'purchase'),('company_id', '=', company_id)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!--TREE view-->
+    <record id="contract_contract_tree_view" model="ir.ui.view">
+        <field name="name">contract.contract tree view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Name"/>
+                <field name="code"/>
+                <field name="journal_id" groups="account.group_account_user"/>
+                <field name="partner_id"/>
+                <field name="active" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--SEARCH view-->
+    <record id="contract_contract_search_view" model="ir.ui.view">
+        <field name="name">contract.contract search view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"
+                       filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"/>
+                <field name="journal_id"/>
+                <field name="pricelist_id"/>
+                <separator/>
+                <separator/>
+                <filter name="not_finished"
+                        string="In progress"
+                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '=', False)]"
+                />
+                <filter name="finished"
+                        string="Finished"
+                        domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
+                />
+                <field name="partner_id"/>
+                <filter string="Archived"
+                        domain="[('active', '=', False)]"
+                        name="inactive"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Associated Partner"
+                            name="group_by_partner"
+                            domain="[]"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter name="group_by_next_invoice"
+                            string="Next Invoice"
+                            domain="[('recurring_next_date', '!=', False)]"
+                            context="{'group_by':'recurring_next_date'}"
+                    />
+                    <filter name="group_by_date_end"
+                            string="Date End"
+                            domain="[]"
+                            context="{'group_by':'date_end'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--ACTION customer contracts-->
+    <record id="action_customer_contract" model="ir.actions.act_window">
+        <field name="name">Customer Contracts</field>
+        <field name="res_model">contract.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_type', '=', 'sale')]</field>
+        <field name="context">{'is_contract':1,
+                               'search_default_not_finished':1,
+                               'default_contract_type': 'sale'}
+        </field>
+        <field name="search_view_id" ref="contract_contract_search_view"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_customer_contract_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="contract_contract_tree_view"/>
+        <field name="act_window_id" ref="action_customer_contract"/>
+    </record>
+
+    <record id="action_customer_contract_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="contract_contract_customer_form_view"/>
+        <field name="act_window_id" ref="action_customer_contract"/>
+    </record>
+
+    <menuitem id="menu_contract_contract_customer"
+              parent="account.menu_finance_receivables"
+              action="action_customer_contract"
+              sequence="99"
+    />
+
+    <!--ACTION supplier contracts-->
+    <record id="action_supplier_contract" model="ir.actions.act_window">
+        <field name="name">Supplier Contracts</field>
+        <field name="res_model">contract.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_type', '=', 'purchase')]</field>
+        <field name="context">{'is_contract':1,
+                               'search_default_not_finished':1,
+                               'default_contract_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="contract_contract_search_view"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_supplier_contract_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="contract_contract_tree_view"/>
+        <field name="act_window_id" ref="action_supplier_contract"/>
+    </record>
+
+    <record id="action_supplier_contract_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="contract_contract_supplier_form_view"/>
+        <field name="act_window_id" ref="action_supplier_contract"/>
+    </record>
+
+    <menuitem id="menu_contract_contract_supplier"
+              parent="account.menu_finance_payables"
+              action="action_supplier_contract"
+              sequence="99"
+    />
+
+</odoo>

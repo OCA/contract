@@ -7,6 +7,5 @@ from odoo import fields, models
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    contract_id = fields.Many2one(
-        'account.analytic.account',
-        string='Contract')
+    # We keep this field for migration purpose
+    old_contract_id = fields.Many2one('contract.contract')

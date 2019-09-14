@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--FORM view-->
+    <record id="contract_abstract_contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.abstract.contract.line form view (in contract)</field>
+        <field name="model">contract.abstract.contract.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header/>
+                <sheet>
+                    <group col="4">
+                        <field colspan="4" name="product_id"/>
+                        <field colspan="4" name="name"/>
+                        <field colspan="2" name="quantity"/>
+                        <field colspan="2" name="uom_id"/>
+                        <field colspan="2" name="automatic_price"/>
+                        <field name="specific_price" invisible="1"/>
+                        <field colspan="2" name="price_unit"
+                               attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                        <field colspan="2" name="discount" groups="base.group_no_one"/>
+                    </group>
+                    <group col="4">
+                        <field colspan="2" name="is_auto_renew"/>
+                        <field colspan="2" name="is_canceled" invisible="1"/>
+                    </group>
+                    <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                        <group>
+                            <label for="auto_renew_interval"/>
+                            <div>
+                                <field name="auto_renew_interval"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                                <field name="auto_renew_rule_type"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="termination_notice_interval"/>
+                            <div>
+                                <field name="termination_notice_interval"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                                <field name="termination_notice_rule_type"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group name="recurrence_info">
+                        <group>
+                            <label for="recurring_interval"/>
+                            <div>
+                                <field name="recurring_interval"
+                                       class="oe_inline" nolabel="1"/>
+                                <field name="recurring_rule_type"
+                                       class="oe_inline" nolabel="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="recurring_invoicing_type"
+                                   attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

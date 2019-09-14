@@ -16,7 +16,6 @@
                         </div>
                         <div class="row" id="header_info">
                             <div class="col-xs-3">
-                                <strong>Date Start: </strong><p t-field="o.date_start"/>
                                 <strong>Responsible: </strong><p t-field="o.user_id"/>
                                 <strong>Contract: </strong><p t-field="o.code"/>
                             </div>
@@ -33,6 +32,7 @@
                                             <th class="text-right"><strong>Quantity</strong></th>
                                             <th class="text-right"><strong>Unit Price</strong></th>
                                             <th class="text-right"><strong>Price</strong></th>
+                                            <th class="text-right"><strong>Date Start</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -48,6 +48,9 @@
                                             </td>
                                             <td class="text-right">
                                                 <span t-field="l.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l.date_start"/>
                                             </td>
                                             <t t-set="total" t-value="total + l.price_subtotal"/>
                                         </tr>

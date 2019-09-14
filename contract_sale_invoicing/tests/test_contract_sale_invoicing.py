@@ -8,6 +8,8 @@ class TestContractSaleInvoicing(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super(TestContractSaleInvoicing, cls).setUpClass()
+        cls.contract.analytic_account_id = \
+            cls.env['account.analytic.account'].search([], limit=1)
         cls.product_so = cls.env.ref(
             'product.product_product_1')
         cls.product_so.invoice_policy = 'order'
@@ -21,7 +23,7 @@ class TestContractSaleInvoicing(TestContractBase):
                                    'product_uom': cls.product_so.uom_id.id,
                                    'price_unit': cls.product_so.list_price})],
             'pricelist_id': cls.partner.property_product_pricelist.id,
-            'analytic_account_id': cls.contract.id,
+            'analytic_account_id': cls.contract.analytic_account_id.id,
             'date_order': '2016-02-15',
         })
 

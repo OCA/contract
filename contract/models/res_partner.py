@@ -15,16 +15,16 @@ class ResPartner(models.Model):
         string='Purchase Contracts',
         compute='_compute_contract_count',
     )
+    contract_ids = fields.One2many(
+        comodel_name='contract.contract',
+        inverse='partner_id',
+        string="Contracts",
+    )
 
     def _compute_contract_count(self):
-        contract_model = self.env['account.analytic.account']
-        today = fields.Date.today()
+        contract_model = self.env['contract.contract']
         fetch_data = contract_model.read_group([
-            ('recurring_invoices', '=', True),
-            ('partner_id', 'child_of', self.ids),
-            '|',
-            ('date_end', '=', False),
-            ('date_end', '>=', today)],
+            ('partner_id', 'child_of', self.ids)],
             ['partner_id', 'contract_type'], ['partner_id', 'contract_type'],
             lazy=False)
         result = [[data['partner_id'][0], data['contract_type'],
@@ -49,11 +49,8 @@ class ResPartner(models.Model):
         res.update(
             context=dict(
                 self.env.context,
-                search_default_recurring_invoices=True,
-                search_default_not_finished=True,
                 search_default_partner_id=self.id,
                 default_partner_id=self.id,
-                default_recurring_invoices=True,
                 default_pricelist_id=self.property_product_pricelist.id,
             ),
         )
@@ -62,7 +59,9 @@ class ResPartner(models.Model):
     def _get_act_window_contract_xml(self, contract_type):
         if contract_type == 'purchase':
             return self.env['ir.actions.act_window'].for_xml_id(
-                'contract', 'action_account_analytic_purchase_overdue_all')
+                'contract', 'action_supplier_contract'
+            )
         else:
             return self.env['ir.actions.act_window'].for_xml_id(
-                'contract', 'action_account_analytic_sale_overdue_all')
+                'contract', 'action_customer_contract'
+            )
