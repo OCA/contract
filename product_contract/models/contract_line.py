@@ -1,12 +1,13 @@
 # Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
 from odoo import api, fields, models
 
 
-class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'account.analytic.invoice.line'
+class ContractLine(models.Model):
+    _inherit = 'contract.line'
     _rec_name = 'display_name'
 
     sale_order_line_id = fields.Many2one(
@@ -16,9 +17,10 @@ class AccountAnalyticInvoiceLine(models.Model):
         copy=False,
     )
     display_name = fields.Char(compute='_compute_display_name_2')
+
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False):
-        res = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
+        res = super(ContractLine, self)._prepare_invoice_line(
             invoice_id=invoice_id
         )
         if self.sale_order_line_id and res:

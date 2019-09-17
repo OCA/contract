@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
                     lambda r: r.contract_id
                     and r.product_id.is_contract
                     and r
-                    not in r.contract_id.recurring_invoice_line_ids.mapped(
+                    not in r.contract_id.contract_line_ids.mapped(
                         'sale_order_line_id'
                     )
                 )
@@ -46,7 +46,6 @@ class SaleOrder(models.Model):
                 template_name=contract_template.name, sale_name=self.name
             ),
             'partner_id': self.partner_id.id,
-            'recurring_invoices': True,
             'contract_template_id': contract_template.id,
             'user_id': self.user_id.id,
             'payment_term_id': self.payment_term_id.id,
@@ -56,8 +55,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_create_contract(self):
-        contract_env = self.env['account.analytic.account']
-        contracts = self.env['account.analytic.account']
+        contract_model = self.env['contract.contract']
+        contracts = self.env['contract.contract']
         for rec in self.filtered('is_contract'):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
@@ -66,7 +65,7 @@ class SaleOrder(models.Model):
                 lambda r: r.contract_id
                 and r.product_id.is_contract
                 and r
-                not in r.contract_id.recurring_invoice_line_ids.mapped(
+                not in r.contract_id.contract_line_ids.mapped(
                     'sale_order_line_id'
                 )
             )
@@ -74,10 +73,10 @@ class SaleOrder(models.Model):
                 'product_id.contract_template_id'
             ):
                 order_lines = line_to_create_contract.filtered(
-                    lambda r: r.product_id.contract_template_id
-                    == contract_template
+                    lambda r, template=contract_template:
+                        r.product_id.contract_template_id == template
                 )
-                contract = contract_env.create(
+                contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
                 )
                 contracts |= contract
@@ -92,7 +91,9 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         """ If we have a contract in the order, set it up """
         self.filtered(
-            lambda order: order.company_id.create_contract_at_sale_order_confirmation
+            lambda order: (
+                order.company_id.create_contract_at_sale_order_confirmation
+            )
         ).action_create_contract()
         return super(SaleOrder, self).action_confirm()
 
@@ -109,7 +110,7 @@ class SaleOrder(models.Model):
             "contract.action_account_analytic_sale_overdue_all"
         ).read()[0]
         contracts = (
-            self.env['account.analytic.invoice.line']
+            self.env['contract.line']
             .search([('sale_order_line_id', 'in', self.order_line.ids)])
             .mapped('contract_id')
         )

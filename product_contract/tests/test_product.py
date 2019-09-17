@@ -11,7 +11,7 @@ class TestProductTemplate(TransactionCase):
         super(TestProductTemplate, self).setUp()
         self.service_product = self.env.ref('product.product_product_1')
         self.consu_product = self.env.ref('product.product_product_5')
-        self.contract = self.env['account.analytic.contract'].create(
+        self.contract = self.env['contract.template'].create(
             {'name': 'Test'}
         )
 
