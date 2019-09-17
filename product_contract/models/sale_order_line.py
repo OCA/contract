@@ -14,10 +14,10 @@ class SaleOrderLine(models.Model):
         string='Is a contract', related="product_id.is_contract"
     )
     contract_id = fields.Many2one(
-        comodel_name='account.analytic.account', string='Contract', copy=False
+        comodel_name='contract.contract', string='Contract', copy=False
     )
     contract_template_id = fields.Many2one(
-        comodel_name='account.analytic.contract',
+        comodel_name='contract.template',
         string='Contract Template',
         related='product_id.product_tmpl_id.contract_template_id',
         readonly=True,
@@ -45,7 +45,7 @@ class SaleOrderLine(models.Model):
     date_end = fields.Date(string='Date End')
 
     contract_line_id = fields.Many2one(
-        comodel_name="account.analytic.invoice.line",
+        comodel_name="contract.line",
         string="Contract Line to replace",
         required=False,
         copy=False,
@@ -61,7 +61,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product(self):
-        contract_line_env = self.env['account.analytic.invoice.line']
+        contract_line_model = self.env['contract.line']
         for rec in self:
             if rec.product_id.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
@@ -73,7 +73,7 @@ class SaleOrderLine(models.Model):
 
                 rec.date_end = (
                     rec.date_start
-                    + contract_line_env.get_relative_delta(
+                    + contract_line_model.get_relative_delta(
                         rec._get_auto_renew_rule_type(),
                         int(rec.product_uom_qty),
                     )
@@ -82,14 +82,14 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
     def onchange_date_start(self):
-        contract_line_env = self.env['account.analytic.invoice.line']
+        contract_line_model = self.env['contract.line']
         for rec in self.filtered('product_id.is_contract'):
             if not rec.date_start:
                 rec.date_end = False
             else:
                 rec.date_end = (
                     rec.date_start
-                    + contract_line_env.get_relative_delta(
+                    + contract_line_model.get_relative_delta(
                         rec._get_auto_renew_rule_type(),
                         int(rec.product_uom_qty),
                     )
@@ -107,7 +107,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         recurring_next_date = self.env[
-            'account.analytic.invoice.line'
+            'contract.line'
         ]._compute_first_recurring_next_date(
             self.date_start or fields.Date.today(),
             self.recurring_invoicing_type,
@@ -158,8 +158,8 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def create_contract_line(self, contract):
-        contract_line_env = self.env['account.analytic.invoice.line']
-        contract_line = self.env['account.analytic.invoice.line']
+        contract_line_model = self.env['contract.line']
+        contract_line = self.env['contract.line']
         predecessor_contract_line = False
         for rec in self:
             if rec.contract_line_id:
@@ -180,7 +180,7 @@ class SaleOrderLine(models.Model):
                     )
                     predecessor_contract_line = rec.contract_line_id
             if predecessor_contract_line:
-                new_contract_line = contract_line_env.create(
+                new_contract_line = contract_line_model.create(
                     rec._prepare_contract_line_values(
                         contract, predecessor_contract_line.id
                     )
@@ -189,7 +189,7 @@ class SaleOrderLine(models.Model):
                     new_contract_line
                 )
             else:
-                new_contract_line = contract_line_env.create(
+                new_contract_line = contract_line_model.create(
                     rec._prepare_contract_line_values(contract)
                 )
             contract_line |= new_contract_line
@@ -221,9 +221,10 @@ class SaleOrderLine(models.Model):
                     )
 
     def _compute_invoice_status(self):
-        super(SaleOrderLine, self)._compute_invoice_status()
+        res = super(SaleOrderLine, self)._compute_invoice_status()
         for line in self.filtered('contract_id'):
             line.invoice_status = 'no'
+        return res
 
     @api.multi
     def invoice_line_create(self, invoice_id, qty):
