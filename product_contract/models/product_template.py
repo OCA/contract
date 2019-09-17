@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
 
     is_contract = fields.Boolean('Is a contract')
     contract_template_id = fields.Many2one(
-        comodel_name='account.analytic.contract', string='Contract Template'
+        comodel_name='contract.template', string='Contract Template'
     )
     default_qty = fields.Integer(string="Default Quantity", default=1)
     recurring_rule_type = fields.Selection(
