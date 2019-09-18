@@ -101,6 +101,26 @@ def create_contract_records(cr):
             sql.Identifier(contract_field_name),
         ),
     )
+    mapping = [
+        ('ir_attachment', 'res_model', 'res_id'),
+        ('mail_message', 'model', 'res_id'),
+        ('mail_activity', 'res_model', 'res_id'),
+        ('mail_followers', 'res_model', 'res_id'),
+    ]
+    for table, model_column, id_column in mapping:
+        # Move common stuff from one table to the other
+        openupgrade.logged_query(
+            cr, sql.SQL("""
+            UPDATE {table} SET {model_column}='contract.contract'
+            WHERE {model_column}='account.analytic.account'
+                AND {id_column} IN (SELECT DISTINCT {col} FROM contract_line)
+            """).format(
+                table=sql.Identifier(table),
+                model_column=sql.Identifier(model_column),
+                id_column=sql.Identifier(id_column),
+                col=sql.Identifier(contract_field_name),
+            ),
+        )
 
 
 @openupgrade.migrate()
