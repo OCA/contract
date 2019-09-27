@@ -10,11 +10,6 @@ class Agreement(models.Model):
 
     # General
     name = fields.Char(string="Title", required=True)
-    is_template = fields.Boolean(
-        string="Is a Template?",
-        default=False,
-        copy=False,
-        help="Make this agreement a template.")
     version = fields.Integer(
         string="Version",
         default=1,
@@ -170,10 +165,8 @@ class Agreement(models.Model):
         string="Dynamic Parties",
         help="Compute dynamic parties")
     agreement_type_id = fields.Many2one(
-        "agreement.type",
-        string="Agreement Type",
         track_visibility="onchange",
-        help="Select the type of agreement.")
+    )
     agreement_subtype_id = fields.Many2one(
         "agreement.subtype",
         string="Agreement Sub-type",
