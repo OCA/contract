@@ -5,11 +5,8 @@ from odoo import fields, models
 
 
 class AgreementType(models.Model):
-    _inherit = "agreement.type"
+    _name = "agreement.type"
     _description = "Agreement Types"
 
-    agreement_subtypes_ids = fields.One2many(
-        "agreement.subtype",
-        "agreement_type_id",
-        string="Subtypes"
-    )
+    name = fields.Char(string="Name", required=True)
+    active = fields.Boolean(default=True)
