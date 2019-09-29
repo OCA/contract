@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="agreement_parameter_value_search" model="ir.ui.view">
+    <field name="name">agreement.parameter.value.search</field>
+    <field name="model">agreement.parameter.value</field>
+    <field name="arch" type="xml">
+      <search string="Agreement Parameter Values" >
+        <field name="code"/>
+        <field name="name"/>
+        <field name="parameter"/>
+        <group expand="0" string="Group By">
+          <filter string="Parameter" name="parameter" domain="[]" context="{'group_by': 'parameter'}"/>
+        </group>
+      </search>
+    </field>
+</record>
+
+<record id="agreement_parameter_value_tree" model="ir.ui.view">
+    <field name="name">agreement.parameter.value.tree</field>
+    <field name="model">agreement.parameter.value</field>
+    <field name="arch" type="xml">
+      <tree string="Agreement Parameter Values" >
+        <field name="sequence" widget="handle"/>
+        <field name="code"/>
+        <field name="name"/>
+        <field name="parameter"/>
+      </tree>
+    </field>
+</record>
+
+<record id="agreement_parameter_value_action" model="ir.actions.act_window">
+    <field name="name">Agreement Parameter Values</field>
+    <field name="res_model">agreement.parameter.value</field>
+    <field name="view_mode">tree</field>
+</record>
+
+<menuitem id="agreement_parameter_value_menu"
+          action="agreement_parameter_value_action"
+          parent="service_definition_menu"
+          sequence="13"/>
+
+
+</odoo>
