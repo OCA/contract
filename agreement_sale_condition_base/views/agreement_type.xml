@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="agreement_type_form" model="ir.ui.view">
+    <field name="name">agreement.type.form</field>
+    <field name="model">agreement.type</field>
+    <field name="inherit_id" ref="agreement.agreement_type_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//sheet/div[1]" position="after">
+            <group name="main">
+                <group name="left">
+                    <field name="code"/>
+                </group>
+                <group name="right">
+                    <field name="default_agreement_id"/>
+                </group>
+            </group>
+        </xpath>
+    </field>
+</record>
+
+<record id="agreement_type_tree" model="ir.ui.view">
+    <field name="name">agreement.type.tree</field>
+    <field name="model">agreement.type</field>
+    <field name="inherit_id" ref="agreement.agreement_type_list_view"/>
+    <field name="arch" type="xml">
+        <field name="name" position="before">
+            <field name="sequence" widget="handle"/>
+        </field>
+        <field name="name" position="after">
+            <field name="code"/>
+        </field>
+    </field>
+</record>
+
+<record id="agreement_type_search" model="ir.ui.view">
+    <field name="name">agreement.type.search</field>
+    <field name="model">agreement.type</field>
+    <field name="inherit_id" ref="agreement.agreement_type_search"/>
+    <field name="arch" type="xml">
+        <field name="name" position="after">
+            <field name="code"  required="1"/>
+        </field>
+    </field>
+</record>
+
+<menuitem id="agreement_type_menu"
+          action="agreement.agreement_type_action"
+          parent="service_definition_menu"
+          sequence="12"/>
+
+</odoo>

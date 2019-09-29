@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="agreement" id="agreement_standard">
+        <field name="name">Standard Template</field>
+        <field name="code">standard_tmpl</field>
+        <field name="agreement_type_id" ref="agreement_type_standard"/>
+        <field name="is_template" eval="True"/>
+  </record>
+
+  <!-- data loaded from xml does not call write, so the override is not called -> force it-->
+  <function model="agreement"
+            name="write"
+            eval="(ref('agreement_standard'), {'agreement_type_id': ref('agreement_type_standard')})"/>
+</odoo>

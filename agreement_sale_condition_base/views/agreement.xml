@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="template_agreement_tree" model="ir.ui.view">
+        <field name="name">agreement.tree (template version)</field>
+        <field name="model">agreement</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <tree string="Agreement Templates">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="agreement_type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="template_agreement_form" model="ir.ui.view">
+        <field name="name">agreement.form (template version)</field>
+        <field name="model">agreement</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <form string="Agreement Template">
+                <div class="oe_button_box" name="button_box">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                               options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+                <group name="main">
+                    <group name="left">
+                        <field name="name"/>
+                        <field name="partner_id" invisible='1'/>
+                    </group>
+                    <group name="right">
+                        <field name="code"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="is_template" invisible='1'/>
+                        <field name="is_customer_requirement" invisible='1'/>
+                        <field name="is_sale_agreement" invisible="1"/>
+                    </group>
+                </group>
+                <notebook name="agreement_condition">
+                    <!-- put the condition fields in pages here -->
+                    <page string="Sales Conditions" name="sale_condition">
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="customer_agreement_tree" model="ir.ui.view">
+        <field name="name">agreement.tree (customer preferences)</field>
+        <field name="model">agreement</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <tree string="Customer Preferences">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="customer_agreement_form" model="ir.ui.view">
+        <field name="name">agreement.form (customer preferences)</field>
+        <field name="model">agreement</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <form string="Customer Preferences">
+                <div class="oe_button_box" name="button_box">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                               options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+                <group name="main">
+                    <group name="left">
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <group name="right">
+                        <field name="code"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="is_customer_requirement" invisible='1'/>
+                    </group>
+                </group>
+                <notebook name="customer_preferences">
+                    <!-- display the fields in there -->
+                    <page string="Customer Preferences" name="page1">
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- FIXME: needs merging with the template version -->
+    <record id="agreement_form" model="ir.ui.view">
+        <field name="name">agreement.form (sale order version)</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_form"/>
+        <field name="arch" type="xml">
+            <field name="signature_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="end_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="start_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <xpath expr="//group[@name='main']" position="after">
+                <group name="metadata">
+                    <group groups="base.group_no_one">
+                        <field name="is_template" invisible='1'/>
+                        <field name="is_sale_agreement" invisible="1"/>
+                        <field name="is_customer_requirement" invisible='1'/>
+                    </group>
+                </group>
+            </xpath>
+            <field name="code" position="after">
+                <field name="agreement_type_id" readonly="1"/>
+            </field>
+            <field name="code" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="name" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+
+            <xpath expr="//notebook/page[@name='config']" position="before">
+                <page string="Sales Conditions">
+                </page>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="agreement_tree" model="ir.ui.view">
+        <field name="name">agreement.tree (sale order version)</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_tree"/>
+        <field name="arch" type="xml">
+            <field name="signature_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="end_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="start_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="agreement.agreement_action" model="ir.actions.act_window">
+        <field name="name">Agreement Templates</field>
+        <field name="res_model">agreement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_template', '=', 1)]</field>
+        <field name="context">{"default_is_template": 1}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="agreement_action_form">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="template_agreement_form"/>
+        <field name="act_window_id" ref="agreement.agreement_action"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="agreement_action_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="template_agreement_tree"/>
+        <field name="act_window_id" ref="agreement.agreement_action"/>
+    </record>
+
+    <record id="customer_agreement_action" model="ir.actions.act_window">
+        <field name="name">Customer Requirements</field>
+        <field name="res_model">agreement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[("is_customer_requirement", "=", 1)]</field>
+        <field name="context">{"default_is_customer_requirement": 1}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="customer_agreement_action_form">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="customer_agreement_form"/>
+        <field name="act_window_id" ref="customer_agreement_action"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="customer_agreement_action_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="customer_agreement_tree"/>
+        <field name="act_window_id" ref="customer_agreement_action"/>
+    </record>
+
+    <menuitem id="service_definition_menu"
+              string="Service Definition"
+              parent="sale.menu_sale_config"
+              sequence="100"
+              />
+    <menuitem id="agreement.agreement_menu"
+              action="agreement.agreement_action"
+              parent="service_definition_menu"
+              sequence="10"/>
+
+    <menuitem id="customer_agreement_menu"
+              action="customer_agreement_action"
+              parent="service_definition_menu"
+              sequence="11"/>
+
+</odoo>
