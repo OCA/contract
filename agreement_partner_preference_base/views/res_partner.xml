@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record model="ir.ui.view" id="partner_form">
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='internal_notes']" position="before">
+        <page name="agreement" string="Agreements">
+          <group>
+            <field name="default_agreement_type_id"/>
+            <field name="customer_agreement_settings_id"
+                   context="{'default_partner_id': id, 'default_is_customer_requirement': 1, 'default_code': ref, 'form_view_ref': 'agreement_partner_preference.customer_agreement_form'}"/>
+          </group>
+          <group groups='base.group_no_one'>
+            <field name="customer_agreements" nolabel="1" />
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>
