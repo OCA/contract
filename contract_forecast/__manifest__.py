@@ -9,7 +9,7 @@
     "license": "AGPL-3",
     "author": "ACSONE SA/NV," "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
-    "depends": ["base", "contract", "queue_job", "product_contract"],
+    "depends": ["base", "contract", "queue_job"],
     "data": [
         "security/contract_line_forecast_period.xml",
         "views/contract_line_forecast_period.xml",
