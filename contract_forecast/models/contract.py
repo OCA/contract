@@ -4,9 +4,9 @@
 from odoo import _, api, models
 
 
-class AccountAnalyticAccount(models.Model):
+class ContractContract(models.Model):
 
-    _inherit = "account.analytic.account"
+    _inherit = "contract.contract"
 
     @api.multi
     def action_show_contract_forecast(self):
@@ -29,7 +29,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def write(self, values):
-        res = super(AccountAnalyticAccount, self).write(values)
+        res = super(ContractContract, self).write(values)
         if any(
                 [
                     field in values

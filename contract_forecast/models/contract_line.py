@@ -8,9 +8,9 @@ from odoo.addons.queue_job.job import job
 QUEUE_CHANNEL = "root.CONTRACT_FORECAST"
 
 
-class AccountAnalyticInvoiceLine(models.Model):
+class ContractLine(models.Model):
 
-    _inherit = "account.analytic.invoice.line"
+    _inherit = "contract.line"
 
     forecast_period_ids = fields.One2many(
         comodel_name="contract.line.forecast.period",
@@ -105,7 +105,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.model
     def create(self, values):
-        contract_lines = super(AccountAnalyticInvoiceLine, self).create(values)
+        contract_lines = super(ContractLine, self).create(values)
         for contract_line in contract_lines:
             contract_line.with_delay()._generate_forecast_periods()
         return contract_lines
@@ -132,7 +132,7 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.multi
     def write(self, values):
-        res = super(AccountAnalyticInvoiceLine, self).write(values)
+        res = super(ContractLine, self).write(values)
         if any(
             [
                 field in values
