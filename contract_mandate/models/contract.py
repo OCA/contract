@@ -32,9 +32,8 @@ class ContractContract(models.Model):
             self.mandate_id = False
 
     @api.multi
-    def _prepare_invoice(self, date_invoice, journal=None):
-        invoice_vals = super(ContractContract, self)._prepare_invoice(
-            date_invoice, journal)
+    def _prepare_invoice(self, date_ref=False):
+        invoice_vals = super(ContractContract, self)._prepare_invoice(date_ref)
         if self.mandate_id:
             invoice_vals['mandate_id'] = self.mandate_id.id
         elif self.payment_mode_id.payment_method_id.mandate_required:
