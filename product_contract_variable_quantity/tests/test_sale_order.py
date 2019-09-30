@@ -11,7 +11,7 @@ class TestSaleOrder(TransactionCase):
         super(TestSaleOrder, self).setUp()
         self.product1 = self.env.ref('product.product_product_1')
         self.sale = self.env.ref('sale.sale_order_2')
-        self.contract_template1 = self.env['account.analytic.contract'].create(
+        self.contract_template1 = self.env['contract.template'].create(
             {'name': 'Template 1'}
         )
         self.formula = self.env['contract.line.qty.formula'].create(
@@ -51,7 +51,7 @@ class TestSaleOrder(TransactionCase):
         self.order_line1.onchange_product()
         self.sale.action_confirm()
         contract = self.order_line1.contract_id
-        contract_line = contract.recurring_invoice_line_ids.filtered(
+        contract_line = contract.contract_line_ids.filtered(
             lambda line: line.product_id == self.product1
         )
         self.assertEqual(
