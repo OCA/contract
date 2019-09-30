@@ -294,3 +294,11 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.contract_line.termination_notice_rule_type, 'weekly'
         )
+
+    def test_action_show_contracts(self):
+        self.sale.action_confirm()
+        action = self.sale.action_show_contracts()
+        self.assertEqual(
+            self.env['contract.contract'].search(action['domain']),
+            self.sale.order_line.mapped('contract_id'),
+        )
