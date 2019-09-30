@@ -3,7 +3,7 @@
 
 {
     "name": "Contract Forecast",
-    "description": """
+    "summary": """
     Contract forecast""",
     "version": "12.0.1.0.1",
     "license": "AGPL-3",
