@@ -6,8 +6,8 @@
 from odoo import fields, models
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = "account.analytic.account"
+class ContractContract(models.Model):
+    _inherit = "contract.contract"
 
     skip_zero_qty = fields.Boolean(
         string='Skip Zero Qty Lines',
