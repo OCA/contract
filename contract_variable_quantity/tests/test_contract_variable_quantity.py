@@ -16,12 +16,11 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
         self.product = self.env['product.product'].create(
             {'name': 'Test product'}
         )
-        self.contract = self.env['account.analytic.account'].create(
+        self.contract = self.env['contract.contract'].create(
             {
                 'name': 'Test Contract',
                 'partner_id': self.partner.id,
                 'pricelist_id': self.partner.property_product_pricelist.id,
-                'recurring_invoices': True,
             }
         )
         self.formula = self.env['contract.line.qty.formula'].create(
@@ -40,7 +39,7 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
                 'result = 12',
             }
         )
-        self.contract_line = self.env['account.analytic.invoice.line'].create(
+        self.contract_line = self.env['contract.line'].create(
             {
                 'contract_id': self.contract.id,
                 'product_id': self.product.id,
