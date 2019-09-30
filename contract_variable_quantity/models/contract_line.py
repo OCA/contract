@@ -9,7 +9,7 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'account.analytic.invoice.line'
+    _inherit = 'contract.line'
 
     @api.multi
     def _get_quantity_to_invoice(
