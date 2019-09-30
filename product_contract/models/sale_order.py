@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
     def action_show_contracts(self):
         self.ensure_one()
         action = self.env.ref(
-            "contract.action_account_analytic_sale_overdue_all"
+            "contract.contract_contract_customer_form_view"
         ).read()[0]
         contracts = (
             self.env['contract.line']
