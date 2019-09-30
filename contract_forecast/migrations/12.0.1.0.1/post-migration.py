@@ -12,7 +12,7 @@ def migrate(cr, version):
     cr.execute("""
     UPDATE contract_line_forecast_period AS forecast
     SET company_id=contract.company_id
-    FROM account_analytic_account AS contract
+    FROM contract_contract AS contract
     WHERE forecast.contract_id=contract.id
     AND forecast.contract_id IS NOT NULL
     """)
