@@ -16,7 +16,7 @@ class ContractLineForecastPeriod(models.Model):
         string="Sequence", related="contract_line_id.sequence", store=True
     )
     contract_id = fields.Many2one(
-        comodel_name="account.analytic.account",
+        comodel_name="contract.contract",
         string="Contract",
         required=True,
         readonly=True,
@@ -26,7 +26,7 @@ class ContractLineForecastPeriod(models.Model):
         index=True,
     )
     contract_line_id = fields.Many2one(
-        comodel_name="account.analytic.invoice.line",
+        comodel_name="contract.line",
         string="Contract Line",
         required=True,
         readonly=True,
