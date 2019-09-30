@@ -2,9 +2,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.tests import common
+from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
-class TestContractMandate(common.SavepointCase):
+class TestContractMandate(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super(TestContractMandate, cls).setUpClass()
@@ -42,37 +43,30 @@ class TestContractMandate(common.SavepointCase):
             'sale_ok': True,
             'taxes_id': [(6, 0, [])],
         })
-        cls.contract = cls.env['contract.contract'].create({
-            'name': 'Test contract',
-            'partner_id': cls.partner.id,
-            'recurring_interval': 1,
-            'contract_line_ids': [(0, 0, {
-                'quantity': 2.0,
-                'price_unit': 200.0,
-                'name': 'Test contract line',
-                'product_id': cls.product.id,
-                'uom_id': cls.product.uom_id.id,
-            })],
-            'payment_mode_id': cls.payment_mode.id,
-            'mandate_id': cls.mandate.id,
-        })
+        cls.contract_with_mandate = cls.contract2.copy(
+            {
+                'partner_id': cls.partner.id,
+                'payment_mode_id': cls.payment_mode.id,
+                'mandate_id': cls.mandate.id,
+            }
+        )
 
     def test_contract_mandate(self):
-        new_invoice = self.contract.recurring_create_invoice()
+        new_invoice = self.contract_with_mandate.recurring_create_invoice()
         self.assertEqual(new_invoice.mandate_id, self.mandate)
 
     def test_contract_not_mandate(self):
-        self.contract.mandate_id = False
-        self.mandate2 = self.mandate.copy({
-            'unique_mandate_reference': 'BM0000XX2',
-        })
+        self.contract_with_mandate.mandate_id = False
+        self.mandate2 = self.mandate.copy(
+            {'unique_mandate_reference': 'BM0000XX2'}
+        )
         self.mandate2.validate()
         self.mandate.state = 'expired'
-        new_invoice = self.contract.recurring_create_invoice()
+        new_invoice = self.contract_with_mandate.recurring_create_invoice()
         self.assertEqual(new_invoice.mandate_id, self.mandate2)
 
     def test_contract_mandate_default(self):
         self.payment_mode.mandate_required = False
-        self.contract.mandate_id = False
-        new_invoice = self.contract.recurring_create_invoice()
+        self.contract_with_mandate.mandate_id = False
+        new_invoice = self.contract_with_mandate.recurring_create_invoice()
         self.assertFalse(new_invoice.mandate_id)
