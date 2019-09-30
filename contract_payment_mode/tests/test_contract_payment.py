@@ -38,6 +38,7 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
         })
         self.contract = self.env['contract.contract'].create({
             'name': 'Maintenance of Servers',
+            'partner_id': self.partner.id,
         })
         company = self.env.ref('base.main_company')
         self.journal = self.env['account.journal'].create({
