@@ -8,7 +8,9 @@ from odoo.addons.product_contract.tests.test_sale_order import TestSaleOrder
 class TestSaleOrderPaymentMode(TestSaleOrder):
     def setUp(self):
         super(TestSaleOrderPaymentMode, self).setUp()
-        self.payment_mode = self.env['account.payment.mode'].search([], limit=1)
+        self.payment_mode = self.env['account.payment.mode'].search(
+            [], limit=1
+        )
         self.sale.payment_mode_id = self.payment_mode
 
     def test_action_confirm_with_payment_mode(self):

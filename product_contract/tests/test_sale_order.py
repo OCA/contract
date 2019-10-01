@@ -110,6 +110,17 @@ class TestSaleOrder(TransactionCase):
             contract_line.recurring_next_date, Date.to_date('2018-01-31')
         )
 
+    def test_sale_order_invoice_status(self):
+        """
+        sale line linked to contracts must not be invoiced from sale order
+        """
+        self.sale.action_confirm()
+        self.assertEqual(self.order_line1.invoice_status, 'no')
+        invoice = self.order_line1.contract_id.recurring_create_invoice()
+        self.assertTrue(invoice)
+        self.assertEqual(self.order_line1.invoice_qty, 1)
+        self.assertEqual(self.order_line1.qty_to_invoice, 0)
+
     def test_action_confirm_without_contract_creation(self):
         """ It should create a contract for each contract template used in
         order_line """
