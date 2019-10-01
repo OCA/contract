@@ -231,3 +231,18 @@ class SaleOrderLine(models.Model):
         return super(
             SaleOrderLine, self.filtered(lambda l: not l.contract_id)
         ).invoice_line_create(invoice_id, qty)
+
+    @api.depends(
+        'qty_invoiced',
+        'qty_delivered',
+        'product_uom_qty',
+        'order_id.state',
+        'product_id.is_contract',
+    )
+    def _get_to_invoice_qty(self):
+        """
+        sale line linked to contracts must not be invoiced from sale order
+        """
+        res = super()._get_to_invoice_qty()
+        self.filtered('product_id.is_contract').update({'qty_to_invoice': 0.0})
+        return res

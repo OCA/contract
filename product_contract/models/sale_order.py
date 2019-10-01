@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
     def action_show_contracts(self):
         self.ensure_one()
         action = self.env.ref(
-            "contract.contract_contract_customer_form_view"
+            "contract.action_customer_contract"
         ).read()[0]
         contracts = (
             self.env['contract.line']
