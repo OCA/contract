@@ -39,6 +39,13 @@ class TestSaleOrder(TransactionCase):
             lambda l: l.product_id == self.product1
         )
 
+    def test_change_is_contract(self):
+        product_tmpl = self.product1.product_tmpl_id
+        product_tmpl.is_contract = False
+        self.assertTrue(product_tmpl.qty_type)
+        product_tmpl._change_is_contract()
+        self.assertFalse(product_tmpl.qty_type)
+
     def test_onchange_product_id(self):
         self.order_line1.onchange_product()
         self.assertEqual(
@@ -57,3 +64,7 @@ class TestSaleOrder(TransactionCase):
             contract_line.qty_formula_id, self.product1.qty_formula_id
         )
         self.assertEqual(contract_line.qty_type, self.product1.qty_type)
+        self.assertEqual(contract_line.qty_type, 'variable')
+        self.product1.product_tmpl_id.qty_type = 'fixed'
+        contract_line._onchange_product_id_recurring_info()
+        self.assertEqual(contract_line.qty_type, 'fixed')
