@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="contract_variable_qty_prorated"
+            model="contract.line.qty.formula">
+        <field name='name'>Prorated Quantity</field>
+        <field name="code">
+result = 0
+if line:
+    result = line.quantity * line.compute_prorated(period_first_date, period_last_date, invoice_date)
+
+        </field>
+    </record>
+</odoo>
