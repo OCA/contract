@@ -19,6 +19,7 @@ setuptools.setup(
         'odoo12-addon-agreement_serviceprofile',
         'odoo12-addon-agreement_stock',
         'odoo12-addon-contract',
+        'odoo12-addon-contract_payment_mode',
         'odoo12-addon-contract_sale',
         'odoo12-addon-contract_sale_invoicing',
         'odoo12-addon-contract_variable_quantity',
