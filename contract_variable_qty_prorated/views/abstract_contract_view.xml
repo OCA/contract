@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+
+<odoo>
+
+    <record id="contract_abstract_contract_line_form_view" model="ir.ui.view">
+        <field name="name">Contract Line Form View (in abstract_contract_view.xml)</field>
+        <field name="model">contract.abstract.contract.line</field>
+        <field name="inherit_id" ref="contract.contract_abstract_contract_line_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="attrs"/>
+                <attribute name="required">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
