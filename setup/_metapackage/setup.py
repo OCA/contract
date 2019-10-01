@@ -21,6 +21,7 @@ setuptools.setup(
         'odoo12-addon-contract',
         'odoo12-addon-contract_sale',
         'odoo12-addon-contract_sale_invoicing',
+        'odoo12-addon-contract_variable_quantity',
     ],
     classifiers=[
         'Programming Language :: Python',
