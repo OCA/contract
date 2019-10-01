@@ -1,7 +1,6 @@
 # Copyright 2017 Carlos Dauden - Tecnativa <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.tests import common
 from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
@@ -33,15 +32,6 @@ class TestContractMandate(TestContractBase):
             'partner_id': cls.partner.id,
             'partner_bank_id': cls.partner_bank.id,
             'signature_date': '2017-01-01',
-        })
-        cls.uom = cls.env.ref('product.product_uom_hour')
-        cls.product = cls.env['product.product'].create({
-            'name': 'Custom Service',
-            'type': 'service',
-            'uom_id': cls.uom.id,
-            'uom_po_id': cls.uom.id,
-            'sale_ok': True,
-            'taxes_id': [(6, 0, [])],
         })
         cls.contract_with_mandate = cls.contract2.copy(
             {
