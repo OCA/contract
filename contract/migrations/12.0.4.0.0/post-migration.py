@@ -36,6 +36,21 @@ def _init_invoicing_partner_id_on_contracts(env):
     contracts._inverse_partner_id()
 
 
+def assign_salesman(env):
+    """As v11 takes salesman from linked partner and now the salesman is a
+    field in the contract that is initialized to current user, we need
+    to assign to the recently converted contracts following old logic, or they
+    will have admin as responsible.
+    """
+    openupgrade.logged_query(
+        env.cr, """
+        UPDATE contract_contract cc
+        SET user_id = rp.user_id
+        FROM res_partner rp
+        WHERE rp.id = cc.partner_id""",
+    )
+
+
 @openupgrade.migrate()
 def migrate(env, version):
     _update_no_update_ir_cron(env)
@@ -45,3 +60,4 @@ def migrate(env, version):
         # it was a PR
         _init_last_date_invoiced_on_contract_lines(env)
         _init_invoicing_partner_id_on_contracts(env)
+    assign_salesman(env)
