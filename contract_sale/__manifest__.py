@@ -19,6 +19,7 @@
         'views/contract.xml',
         'views/contract_line.xml',
         'views/contract_template.xml',
+        'views/res_partner_view.xml',
     ],
     'license': 'AGPL-3',
     'installable': True,
