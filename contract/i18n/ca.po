@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-17 13:50+0000\n"
-"PO-Revision-Date: 2018-01-17 13:50+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"PO-Revision-Date: 2019-10-10 16:37+0000\n"
+"Last-Translator: Albert Pons <a.pons@escaner.ad>\n"
 "Language-Team: Catalan (https://www.transifex.com/oca/teams/23907/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.8\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -81,11 +82,71 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Hola ${object.partner_id.name or ''},</p>\n"
+"    <p>S'ha creat un nou contracte: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERÈNCIES</strong><br />\n"
+"       &nbsp;&nbsp;Contracte: <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;Data Inici del Contracte: ${object.date_start or ''}<br />"
+"\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.user_id.email "
+"or ''}?subject=Contracte%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;El seu contacte: ${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Si te qualsevol pregunta, no dubti a contactar-nos.</p>\n"
+"    <p>Moltes gràcies per escollir ${object.company_id.name or '-nos'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\""
+">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address="
+"True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone: ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web: <a href=\"${object.company_id.website}\""
+">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Contracte (Ref ${object.name or 'n/d'})"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -95,11 +156,14 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#END#</strong>: Data Final\n"
+"                                    del\n"
+"                                    periode facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "<strong>#END#</strong>: End date of the invoiced period"
-msgstr ""
+msgstr "<strong>#END#</strong>: Data final del periode facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -109,41 +173,44 @@ msgid ""
 "                                    of the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#START#</strong>: Data inicial\n"
+"                                    del\n"
+"                                    període facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
-msgstr ""
+msgstr "<strong>#START#</strong>: Data inicial del periode facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Contract: </strong>"
-msgstr ""
+msgstr "<strong>Contracte: </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Date Start</strong>"
-msgstr ""
+msgstr "<strong>Data Inicial</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Descripció</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Partner:</strong>"
-msgstr ""
+msgstr "<strong>Tercer:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
-msgstr ""
+msgstr "<strong>Preu</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantitat</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -153,23 +220,23 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Responsible: </strong>"
-msgstr ""
+msgstr "<strong>Responsable: </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Total</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Preu unitari</strong>"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:424
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
-msgstr ""
+msgstr "Una línia de contracte cancel·lat no es pot activar per auto-renovar"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:321
@@ -196,23 +263,23 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Acció necessària"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__active
 #: model:ir.model.fields,field_description:contract.field_contract_line__active
 msgid "Active"
-msgstr ""
+msgstr "Actiu"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Activitats"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Estat de l'Activitat"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:328
@@ -222,30 +289,28 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
-#, fuzzy
-#| msgid "Analytic Account"
 msgid "Analytic account"
 msgstr "Compte analític"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arxivat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Are you sure you want to cancel this line"
-msgstr ""
+msgstr "Esta segur de voler cancel·lar aquesta línia"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Associated Partner"
-msgstr ""
+msgstr "Tercer Associat"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Nombre d'adjunts"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
@@ -253,14 +318,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
 msgid "Auto Renew"
-msgstr ""
+msgstr "Renovació automàtica"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__automatic_price
 msgid "Auto-price?"
-msgstr ""
+msgstr "Preu automàtic?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
@@ -269,12 +334,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_uncancel_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·lar"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_cancel_allowed
 msgid "Cancel allowed?"
-msgstr ""
+msgstr "Es permet cancel·lar?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:890
@@ -288,23 +353,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_canceled
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 msgid "Canceled"
-msgstr ""
+msgstr "Cancel·lat"
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
 msgid "Click to create a new contract template."
-msgstr ""
+msgstr "Click per crear un nou model de contracte."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.action_customer_contract
 #: model_terms:ir.actions.act_window,help:contract.action_supplier_contract
 msgid "Click to create a new contract."
-msgstr ""
+msgstr "Click per crear un nou contracte."
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Tancat"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
@@ -317,18 +382,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_contract__company_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__company_id
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:310
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Redacta Email"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacte"
 
 #. module: contract
 #: model:ir.actions.report,name:contract.report_contract
@@ -339,14 +404,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model:mail.template,report_name:contract.email_contract_template
 msgid "Contract"
-msgstr ""
+msgstr "Contracte"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
 #: model:ir.model.fields,field_description:contract.field_account_invoice_line__contract_line_id
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__contract_line_id
 msgid "Contract Line"
-msgstr ""
+msgstr "Línia de Contracte"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line_wizard
@@ -361,31 +426,31 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Contract Name"
-msgstr ""
+msgstr "Nom del Contracte"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_template
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_template_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Contract Template"
-msgstr ""
+msgstr "Model de Contracte"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_template_line
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_line_form_view
 msgid "Contract Template Line"
-msgstr ""
+msgstr "Línia del Model de Contracte"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Contract Template Lines"
-msgstr ""
+msgstr "Línies del Model de Contracte"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.contract_template_action
 #: model:ir.ui.menu,name:contract.contract_template_menu
 msgid "Contract Templates"
-msgstr ""
+msgstr "Models de Contractes"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__contract_type
@@ -393,13 +458,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_type
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Contract Type"
-msgstr ""
+msgstr "Tipus de Contracte"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:482
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr ""
+"Línia de Contracte '%s' la data d'inici no pot ser posterior a la data de fi"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:919
@@ -475,24 +541,24 @@ msgstr ""
 #: code:addons/contract/models/contract_line.py:1098
 #, python-format
 msgid "Contract line must be canceled before delete"
-msgstr ""
+msgstr "La línia de Contracte ha de ser cancel·lada abans d'esborrar-la"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_ids
 msgid "Contract lines"
-msgstr ""
+msgstr "Línies de Contracte"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
 msgid "Contract template lines"
-msgstr ""
+msgstr "Línies de model de Contracte"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:contract.field_res_users__contract_ids
 #: model:ir.ui.menu,name:contract.menu_config_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Contractes"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
@@ -503,7 +569,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Create invoices"
-msgstr ""
+msgstr "Generar factures"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_uid
@@ -526,7 +592,7 @@ msgstr "Creat el"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: contract
 #: selection:contract.abstract.contract,contract_type:0
@@ -534,13 +600,13 @@ msgstr ""
 #: selection:contract.template,contract_type:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_customer_form_view
 msgid "Customer"
-msgstr ""
+msgstr "Client"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_customer
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Contractes de Clients"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
@@ -548,7 +614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__date_end
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Date End"
-msgstr ""
+msgstr "Data Fi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__date_start
@@ -556,7 +622,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__date_start
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
 msgid "Date Start"
-msgstr ""
+msgstr "Data Inici"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_next_date
@@ -564,7 +630,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_next_date
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_next_date
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Data de Propera Factura"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -577,27 +643,27 @@ msgstr ""
 #: selection:contract.template.line,recurring_rule_type:0
 #: selection:contract.template.line,termination_notice_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Dia(es)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__name
 #: model:ir.model.fields,field_description:contract.field_contract_line__name
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__name
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Descompte (%)"
 
 #. module: contract
 #: code:addons/contract/models/abstract_contract_line.py:173
 #, python-format
 msgid "Discount should be less or equal to 100"
-msgstr ""
+msgstr "El descompte ha de ser inferior o igual a 100"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__discount
@@ -607,6 +673,8 @@ msgid ""
 "Discount that is applied in generated invoices. It should be less or equal "
 "to 100"
 msgstr ""
+"Descompte que s'aplicarà en les factures generades. Ha de ser inferior o "
+"igual a 100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__display_name
@@ -622,7 +690,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Finished"
-msgstr ""
+msgstr "Finalitzat"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__fiscal_position_id
@@ -632,34 +700,34 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidors"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidors (Canals)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidors (Tercers)"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
 #: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
-msgstr ""
+msgstr "Generar Factures Recurrents des dels Contractes"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__group_id
 msgid "Group"
-msgstr ""
+msgstr "Agrupar"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa Per..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__id
@@ -707,58 +775,58 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "In progress"
-msgstr ""
+msgstr "En curs"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "In-progress"
-msgstr ""
+msgstr "En curs"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Nombre de Factures"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_interval
 msgid "Invoice Every"
-msgstr ""
+msgstr "Facturar Cada"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Línia de Factura"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_interval
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_interval
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_interval
 msgid "Invoice every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Facturar Cada (Dies/Setmana/Mes/Any)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
 msgid "Invoicing contact"
-msgstr ""
+msgstr "Contacte de Facturació"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
 msgid "Invoicing type"
-msgstr ""
+msgstr "Tipus de Facturació"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
@@ -782,10 +850,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__last_date_invoiced
 #: model:ir.model.fields,field_description:contract.field_contract_line__last_date_invoiced
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__last_date_invoiced
-#, fuzzy
-#| msgid "Last Updated on"
 msgid "Last Date Invoiced"
-msgstr "Darrera Actualització el"
+msgstr "Darrera Data de Facturació"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract____last_update
@@ -796,7 +862,7 @@ msgstr "Darrera Actualització el"
 #: model:ir.model.fields,field_description:contract.field_contract_template____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Darrera Modificació el"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__write_uid
@@ -836,12 +902,12 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error d'Entrega de Missatge"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Missatges"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -854,7 +920,7 @@ msgstr ""
 #: selection:contract.template.line,recurring_rule_type:0
 #: selection:contract.template.line,termination_notice_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Mes(os)"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_rule_type:0
@@ -889,12 +955,12 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Next Invoice"
-msgstr ""
+msgstr "Següent Factura"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__recurring_next_date
 msgid "Next Invoice Date"
-msgstr ""
+msgstr "Data de la Següent Factura"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
@@ -929,7 +995,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Other Information"
-msgstr ""
+msgstr "Altra informació"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -973,21 +1039,21 @@ msgstr ""
 #: code:addons/contract/models/contract.py:272
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
-msgstr ""
+msgstr "Si us plau estableixi un %s diari per a l'empresa '%s'."
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_invoicing_type:0
 #: selection:contract.line,recurring_invoicing_type:0
 #: selection:contract.template.line,recurring_invoicing_type:0
 msgid "Post-paid"
-msgstr ""
+msgstr "Post-pagat"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_invoicing_type:0
 #: selection:contract.line,recurring_invoicing_type:0
 #: selection:contract.template.line,recurring_invoicing_type:0
 msgid "Pre-paid"
-msgstr ""
+msgstr "Pre-pagat"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__predecessor_contract_line_id
@@ -1000,28 +1066,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Pricelist"
-msgstr ""
+msgstr "Llista de preus"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__purchase_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Purchase Contracts"
-msgstr ""
+msgstr "Contractes de Compra"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__quantity
 #: model:ir.model.fields,field_description:contract.field_contract_line__quantity
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Quantitat"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_rule_type
@@ -1033,74 +1099,74 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Factures Recurrents"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 msgid "Reference"
-msgstr ""
+msgstr "Referència"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Renew"
-msgstr ""
+msgstr "Renovar"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
 #: model:ir.cron,name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
-msgstr ""
+msgstr "Renovar línies de Contracte"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__auto_renew_interval
 #: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_interval
 msgid "Renew Every"
-msgstr ""
+msgstr "Renovar Cada"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__auto_renew_interval
 #: model:ir.model.fields,help:contract.field_contract_line__auto_renew_interval
 #: model:ir.model.fields,help:contract.field_contract_template_line__auto_renew_interval
 msgid "Renew every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Renovar cada (Dies/Setmana/Mes/Any)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_rule_type
 msgid "Renewal type"
-msgstr ""
+msgstr "Tipus de Renovació"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuari Responsable"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Sale Contracts"
-msgstr ""
+msgstr "Contractes de Venda"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Send by Email"
-msgstr ""
+msgstr "Enviar per Email"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
 #: model:ir.model.fields,field_description:contract.field_contract_line__sequence
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Seqüència"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__sequence
@@ -1112,19 +1178,19 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the purchase contracts for this partner"
-msgstr ""
+msgstr "Mostrar els contractes de compra per a aquest tercer"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the sale contracts for this partner"
-msgstr ""
+msgstr "Mostrar els contractes de venda per a aquest tercer"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__specific_price
 msgid "Specific Price"
-msgstr ""
+msgstr "Preu Específic"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_rule_type
@@ -1150,7 +1216,7 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
 msgid "State"
-msgstr ""
+msgstr "Estat"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
@@ -1164,12 +1230,12 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop"
-msgstr ""
+msgstr "Aturar"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Stop Date"
-msgstr ""
+msgstr "Data d'aturada"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
@@ -1203,7 +1269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
 msgid "Sub Total"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__successor_contract_line_id
@@ -1216,13 +1282,13 @@ msgstr ""
 #: selection:contract.template,contract_type:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_supplier_form_view
 msgid "Supplier"
-msgstr ""
+msgstr "Proveïdor"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_supplier
 msgid "Supplier Contracts"
-msgstr ""
+msgstr "Contractes de Proveïdors"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
@@ -1264,12 +1330,12 @@ msgstr ""
 #. module: contract
 #: selection:contract.line,state:0
 msgid "To renew"
-msgstr ""
+msgstr "A renovar"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
 msgid "Today"
-msgstr ""
+msgstr "Avui"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_un_cancel_allowed
@@ -1292,19 +1358,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_unit
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Preu Unitari"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__uom_id
 #: model:ir.model.fields,field_description:contract.field_contract_line__uom_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitat de Mesura"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Missatges no Llegits"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
@@ -1324,7 +1390,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr ""
+msgstr "NIF:"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_plan_successor_form_view
@@ -1332,7 +1398,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_uncancel_form_view
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
@@ -1355,7 +1421,7 @@ msgstr ""
 #: selection:contract.template.line,recurring_rule_type:0
 #: selection:contract.template.line,termination_notice_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Setmana(es)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
@@ -1370,7 +1436,7 @@ msgstr ""
 #: selection:contract.template.line,auto_renew_rule_type:0
 #: selection:contract.template.line,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Any(s)"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:647
@@ -1411,7 +1477,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "e.g. Contract XYZ"
-msgstr ""
+msgstr "p.ex. Contracte XYZ"
 
 #~ msgid "account.analytic.invoice.line"
 #~ msgstr "account.analytic.invoice.line"
