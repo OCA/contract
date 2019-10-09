@@ -3,7 +3,7 @@
 
 {
     'name': 'Contract from Sale',
-    'version': '12.0.2.0.0',
+    'version': '12.0.2.1.0',
     'category': 'Sales',
     'author': 'Tecnativa, '
               'Odoo Community Association (OCA)',
@@ -19,6 +19,7 @@
         'views/contract.xml',
         'views/contract_line.xml',
         'views/contract_template.xml',
+        'views/res_partner_view.xml',
     ],
     'license': 'AGPL-3',
     'installable': True,
