@@ -14,5 +14,3 @@ For Project related extensions please see the
 
 ## Translation Status
 [![Translation Status](https://translation.odoo-community.org/widgets/contract-13-0/-/multi-auto.svg)](https://translation.odoo-community.org/engage/contract-13-0/?utm_source=widget)
-
-
