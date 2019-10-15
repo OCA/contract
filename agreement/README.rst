@@ -34,6 +34,12 @@ This module adds an *Agreement* object with the following properties:
 * start date.
 * end date.
 
+Optionally, you can also enable using:
+* agreement types
+* a flag to set an agreement as a template agreement
+
+(Install agreement_sale to get the configuration settings for these).
+
 **Table of contents**
 
 .. contents::
@@ -63,6 +69,7 @@ Contributors
 
 * Alexis de Lattre <alexis.delattre@akretion.com>
 * Yves Goldberg <yves@ygol.com>
+* Alexandre Fayolle <alexandre.fayolle@camptocamp.com>
 
 Maintainers
 ~~~~~~~~~~~
