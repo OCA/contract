@@ -99,7 +99,7 @@ def create_contract_records(cr):
         WHERE id IN (SELECT DISTINCT {} FROM contract_line)
         """).format(
             sql.Identifier(contract_field_name),
-        ),
+        ).as_string(cr._cnx)
     )
     mapping = [
         ('ir_attachment', 'res_model', 'res_id'),
@@ -119,7 +119,7 @@ def create_contract_records(cr):
                 model_column=sql.Identifier(model_column),
                 id_column=sql.Identifier(id_column),
                 col=sql.Identifier(contract_field_name),
-            ),
+            ).as_string(cr._cnx)
         )
 
 
