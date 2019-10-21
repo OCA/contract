@@ -19,7 +19,7 @@ class ContractContract(models.Model):
         if not self.invoicing_sales:
             return invoices
         sales = self.env['sale.order'].search([
-            ('analytic_account_id', '=', self.analytic_account_id.id),
+            ('analytic_account_id', '=', self.group_id.id),
             ('partner_invoice_id', 'child_of',
              self.partner_id.commercial_partner_id.ids),
             ('invoice_status', '=', 'to invoice'),
