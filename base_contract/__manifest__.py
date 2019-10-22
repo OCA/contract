@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Agreement",
-    "summary": "Adds an agreement object",
+    "name": "Base Contract",
+    "summary": "Adds an contract object",
     "version": "13.0.1.0.0",
     "category": "Contract",
     "author": "Akretion, "
