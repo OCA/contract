@@ -101,6 +101,13 @@ def create_contract_records(cr):
             sql.Identifier(contract_field_name),
         ),
     )
+    # Handle id sequence
+    cr.execute("CREATE SEQUENCE IF NOT EXISTS contract_contract_id_seq")
+    cr.execute("SELECT setval('contract_contract_id_seq', "
+               "(SELECT MAX(id) FROM contract_contract))")
+    cr.execute("ALTER TABLE contract_contract ALTER id "
+               "SET DEFAULT NEXTVAL('contract_contract_id_seq')")
+    # Move common stuff from one table to the other
     mapping = [
         ('ir_attachment', 'res_model', 'res_id'),
         ('mail_message', 'model', 'res_id'),
@@ -108,7 +115,6 @@ def create_contract_records(cr):
         ('mail_followers', 'res_model', 'res_id'),
     ]
     for table, model_column, id_column in mapping:
-        # Move common stuff from one table to the other
         openupgrade.logged_query(
             cr, sql.SQL("""
             UPDATE {table} SET {model_column}='contract.contract'
