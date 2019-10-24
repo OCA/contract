@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.model.access" id="contract_tag_access">
+        <field name="name">contract.tag access</field>
+        <field name="model_id" ref="model_contract_tag"/>
+        <field name="group_id" ref="account.group_account_invoice"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="contract_tag_multi_company_rule" model="ir.rule">
+        <field name="name">Contract tag multi-company</field>
+        <field name="model_id" ref="model_contract_tag"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+    </record>
+
+</odoo>
