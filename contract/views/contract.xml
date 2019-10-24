@@ -9,59 +9,69 @@
             <form>
                 <field name="is_terminated" invisible="1"/>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('is_terminated','=',False)]}">
-                    <p>This contract was terminated for the reason <strong><field name="terminate_reason_id" options="{'no_open':True}"/></strong> on <field name="terminate_date"/>.</p>
-                    <p><field name="terminate_comment"/></p>
+                    <p>
+                        This contract was terminated for the reason
+                        <strong>
+                            <field name="terminate_reason_id" options="{'no_open':True}"/>
+                        </strong>
+                        on
+                        <field name="terminate_date"/>
+                        .
+                    </p>
+                    <p>
+                        <field name="terminate_comment"/>
+                    </p>
                 </div>
                 <header>
                     <button name="action_contract_send"
-                            type="object"
-                            string="Send by Email"
-                            attrs="{'invisible': [('is_terminated','=',True)]}"
-                            groups="base.group_user"/>
+                        type="object"
+                        string="Send by Email"
+                        attrs="{'invisible': [('is_terminated','=',True)]}"
+                        groups="base.group_user"/>
                     <button name="recurring_create_invoice"
-                            type="object"
-                            attrs="{'invisible': ['|', ('create_invoice_visibility', '=', False)]}"
-                            string="Create invoices"
-                            groups="base.group_no_one"/>
+                        type="object"
+                        attrs="{'invisible': ['|', ('create_invoice_visibility', '=', False)]}"
+                        string="Create invoices"
+                        groups="base.group_no_one"/>
                     <button name="action_terminate_contract"
-                            type="object"
-                            string="Terminate Contract"
-                            attrs="{'invisible': [('is_terminated','=',True)]}"
-                            groups="contract.can_terminate_contract"/>
+                        type="object"
+                        string="Terminate Contract"
+                        attrs="{'invisible': [('is_terminated','=',True)]}"
+                        groups="contract.can_terminate_contract"/>
                     <button name="action_terminate_contract"
-                            type="object"
-                            string="Update Termination Details"
-                            attrs="{'invisible': [('is_terminated','=',False)]}"
-                            groups="contract.can_terminate_contract"/>
+                        type="object"
+                        string="Update Termination Details"
+                        attrs="{'invisible': [('is_terminated','=',False)]}"
+                        groups="contract.can_terminate_contract"/>
                     <button name="action_cancel_contract_termination"
-                            type="object"
-                            confirm="Are you sure you want to re-activate this contract?"
-                            string="Cancel Contract Termination"
-                            attrs="{'invisible': [('is_terminated','=',False)]}"
-                            groups="contract.can_terminate_contract"/>
+                        type="object"
+                        confirm="Are you sure you want to re-activate this contract?"
+                        string="Cancel Contract Termination"
+                        attrs="{'invisible': [('is_terminated','=',False)]}"
+                        groups="contract.can_terminate_contract"/>
                 </header>
                 <sheet string="Contract">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object"
-                                name="toggle_active" icon="fa-archive">
+                            name="toggle_active" icon="fa-archive">
                             <field name="active" widget="boolean_button"
-                                   options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                                options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
                         </button>
                         <button name="action_show_invoices"
-                                type="object" icon="fa-list"
-                                class="oe_stat_button">
+                            type="object" icon="fa-list"
+                            class="oe_stat_button">
                             <field string="Invoices"
-                                   name="invoice_count"
-                                   widget="statinfo"/>
+                                name="invoice_count"
+                                widget="statinfo"/>
                         </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Contract Name"
-                               class="oe_edit_only"/>
+                            class="oe_edit_only"/>
                         <h3>
                             <field name="name" class="oe_inline"
-                                   attrs="{'readonly': [('is_terminated','=',True)]}"
-                                   placeholder="e.g. Contract XYZ"/>
+                                attrs="{'readonly': [('is_terminated','=',True)]}"
+                                placeholder="e.g. Contract XYZ"/>
                         </h3>
                     </div>
                     <group name="main">
@@ -73,11 +83,11 @@
                         </group>
                         <group>
                             <field name="contract_template_id"
-                                   attrs="{'readonly': [('is_terminated','=',True)]}"
-                                   domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
-                                   context="{'default_contract_type': contract_type}"/>
+                                attrs="{'readonly': [('is_terminated','=',True)]}"
+                                domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
+                                context="{'default_contract_type': contract_type}"/>
                             <field name="contract_type" invisible="1"
-                                   required="1"/>
+                                required="1"/>
                             <field name="fiscal_position_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
@@ -95,37 +105,41 @@
                     </group>
                     <notebook>
                         <page name="recurring_invoice_line"
-                              string="Recurring Invoices">
+                            string="Recurring Invoices">
                             <field name="contract_line_ids" attrs="{'readonly': [('is_terminated','=',True)]}"
-                                   context="{'default_contract_type': contract_type}"/>
+                                context="{'default_contract_type': contract_type}"/>
                             <field name="note"/>
                         </page>
                         <page name="info" string="Other Information">
                             <field name="create_invoice_visibility"
-                                   invisible="1"/>
+                                invisible="1"/>
                             <group>
                                 <field name="code" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                                 <field name="group_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                                 <field name="company_id"
-                                       attrs="{'readonly': [('is_terminated','=',True)]}"
-                                       options="{'no_create': True}"
-                                       groups="base.group_multi_company"/>
+                                    attrs="{'readonly': [('is_terminated','=',True)]}"
+                                    options="{'no_create': True}"
+                                    groups="base.group_multi_company"/>
                                 <field name="currency_id"
-                                       attrs="{'readonly': [('is_terminated','=',True)]}"
-                                       options="{'no_create': True}"
-                                       groups="base.group_multi_currency"/>
+                                    attrs="{'readonly': [('is_terminated','=',True)]}"
+                                    options="{'no_create': True}"
+                                    groups="base.group_multi_currency"/>
                                 <field name="invoice_partner_id"
-                                       attrs="{'readonly': [('is_terminated','=',True)]}"
-                                       required="1"/>
+                                    attrs="{'readonly': [('is_terminated','=',True)]}"
+                                    required="1"/>
                             </group>
                             <group string="Legend (for the markers inside invoice lines description)"
-                                   name="group_legend">
-                                <p colspan="2"><strong>#START#</strong>: Start
+                                name="group_legend">
+                                <p colspan="2">
+                                    <strong>#START#</strong>
+                                    : Start
                                     date
                                     of the
                                     invoiced period
                                 </p>
-                                <p colspan="2"><strong>#END#</strong>: End date
+                                <p colspan="2">
+                                    <strong>#END#</strong>
+                                    : End date
                                     of
                                     the
                                     invoiced period
@@ -205,42 +219,42 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"
-                       filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"/>
+                    filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"/>
                 <field name="journal_id"/>
                 <field name="pricelist_id"/>
                 <separator/>
                 <separator/>
                 <filter name="not_finished"
-                        string="In progress"
-                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
-                />
+                    string="In progress"
+                    domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
+                    />
                 <filter name="finished"
-                        string="Finished"
-                        domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
-                />
+                    string="Finished"
+                    domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
+                    />
                 <field name="partner_id"/>
                 <field name="commercial_partner_id"/>
                 <filter string="Archived"
-                        domain="[('active', '=', False)]"
-                        name="inactive"/>
+                    domain="[('active', '=', False)]"
+                    name="inactive"/>
                 <group expand="0" string="Group By...">
                     <filter string="Associated Partner"
-                            name="group_by_partner"
-                            domain="[]"
-                            context="{'group_by':'partner_id'}"/>
+                        name="group_by_partner"
+                        domain="[]"
+                        context="{'group_by':'partner_id'}"/>
                     <filter name="commercial_partner_groupby"
-                            string="Commercial Entity"
-                            context="{'group_by': 'commercial_partner_id'}"/>
+                        string="Commercial Entity"
+                        context="{'group_by': 'commercial_partner_id'}"/>
                     <filter name="group_by_next_invoice"
-                            string="Next Invoice"
-                            domain="[('recurring_next_date', '!=', False)]"
-                            context="{'group_by':'recurring_next_date'}"
-                    />
+                        string="Next Invoice"
+                        domain="[('recurring_next_date', '!=', False)]"
+                        context="{'group_by':'recurring_next_date'}"
+                        />
                     <filter name="group_by_date_end"
-                            string="Date End"
-                            domain="[]"
-                            context="{'group_by':'date_end'}"
-                    />
+                        string="Date End"
+                        domain="[]"
+                        context="{'group_by':'date_end'}"
+                        />
                 </group>
             </search>
         </field>
@@ -253,9 +267,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
-        <field name="context">{'is_contract':1,
-                               'search_default_not_finished':1,
-                               'default_contract_type': 'sale'}
+        <field name="context">
+            {'is_contract':1,
+            'search_default_not_finished':1,
+            'default_contract_type': 'sale'}
         </field>
         <field name="search_view_id" ref="contract_contract_search_view"/>
         <field name="help" type="html">
@@ -280,10 +295,10 @@
     </record>
 
     <menuitem id="menu_contract_contract_customer"
-              parent="account.menu_finance_receivables"
-              action="action_customer_contract"
-              sequence="99"
-    />
+        parent="account.menu_finance_receivables"
+        action="action_customer_contract"
+        sequence="99"
+        />
 
     <!--ACTION supplier contracts-->
     <record id="action_supplier_contract" model="ir.actions.act_window">
@@ -292,9 +307,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
-        <field name="context">{'is_contract':1,
-                               'search_default_not_finished':1,
-                               'default_contract_type': 'purchase'}
+        <field name="context">
+            {'is_contract':1,
+            'search_default_not_finished':1,
+            'default_contract_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="contract_contract_search_view"/>
         <field name="help" type="html">
@@ -319,9 +335,9 @@
     </record>
 
     <menuitem id="menu_contract_contract_supplier"
-              parent="account.menu_finance_payables"
-              action="action_supplier_contract"
-              sequence="99"
-    />
+        parent="account.menu_finance_payables"
+        action="action_supplier_contract"
+        sequence="99"
+        />
 
 </odoo>
