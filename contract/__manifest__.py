@@ -20,6 +20,7 @@
     'depends': ['base', 'account', 'product'],
     "external_dependencies": {"python": ["dateutil"]},
     'data': [
+        'security/contract_tag.xml',
         'security/ir.model.access.csv',
         'security/contract_security.xml',
         'report/report_contract.xml',
