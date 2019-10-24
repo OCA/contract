@@ -4,7 +4,7 @@
 {
     'name': 'Contract Mandate',
     'summary': 'Mandate in contracts and their invoices',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.0.1',
     'author': 'Odoo Community Association (OCA), '
               'Tecnativa',
     'website': 'https://github.com/OCA/contract',
