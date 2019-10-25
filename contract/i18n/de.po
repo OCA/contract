@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2019-10-09 13:36+0000\n"
-"Last-Translator: Maria Sparenberg <maria.sparenberg@gmx.net>\n"
+"PO-Revision-Date: 2019-10-29 21:33+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (https://www.transifex.com/oca/teams/23907/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -157,6 +157,9 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#END#</strong>: Enddatum\n"
+"                                    der\n"
+"                                    Abrechnungsperiode"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -171,6 +174,10 @@ msgid ""
 "                                    of the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#START#</strong>: Anfangs-\n"
+"                                    datum\n"
+"                                    der\n"
+"                                    Abrechnungsperiode"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -232,12 +239,15 @@ msgstr "<strong>Einzelpreis</strong>"
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr ""
+"Eine stornierte Vertragsposition darf nicht auf auto-erneuern gesetzt werden"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:321
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr ""
+"Eine Vertragsposition mit Nachfolger darf nicht auf auto-erneuern gesetzt "
+"werden"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:333
@@ -255,7 +265,7 @@ msgstr "Wiederkehrende Rechnungen von Verträgen erzeugen"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Wiederkehrende Vertragspositionen erstellen"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
@@ -282,7 +292,7 @@ msgstr "Aktivitätsstatus"
 #: code:addons/contract/models/contract_line.py:328
 #, python-format
 msgid "An auto-renew line must have a end date"
-msgstr ""
+msgstr "Eine auto-erneuern Position muss ein Enddatum besitzen"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -315,7 +325,7 @@ msgstr "Anhangsanzahl"
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
 msgid "Auto Renew"
-msgstr ""
+msgstr "Auto-Erneuern"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__automatic_price
@@ -372,7 +382,7 @@ msgstr "Geschlossen"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Gewerbliche Einheit"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__company_id
@@ -459,16 +469,15 @@ msgstr "Vertragstyp"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:482
-#, fuzzy, python-format
-#| msgid "Contract '%s' start date can't be later than end date"
+#, python-format
 msgid "Contract line '%s' start date can't be later than end date"
-msgstr "Vertragsbeginn '%s' kann nicht später als das Vertragsende sein"
+msgstr "Vertragsbeginn '%s' darf nicht nach dem Vertragsende liegen"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:919
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
-msgstr ""
+msgstr "Vertragsposition Storno aufgehoben: %s<br/>- "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:354
@@ -497,6 +506,10 @@ msgid ""
 "                            - <strong>End</strong>: {old_end} -- {new_end}\n"
 "                            "
 msgstr ""
+"Vertragsposition für <strong>{product}</strong>\n"
+"                            beendet: <br/>\n"
+"                            - <strong>Ende</strong>: {old_end} -- {new_end}\n"
+"                            "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:770
@@ -509,6 +522,12 @@ msgid ""
 "                    - <strong>End</strong>: {new_date_end}\n"
 "                    "
 msgstr ""
+"Vertragsposition für <strong>{product}</strong>\n"
+"                    hat neu geplanten Nachfolger: <br/>\n"
+"                    - <strong>Start</strong>: {new_date_start}\n"
+"                    <br/>\n"
+"                    - <strong>Ende</strong>: {new_date_end}\n"
+"                    "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1048
@@ -521,6 +540,12 @@ msgid ""
 "                - <strong>End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
+"Vertragsposition für <strong>{product}</strong>\n"
+"                erneuert: <br/>\n"
+"                - <strong>Start</strong>: {new_date_start}\n"
+"                <br/>\n"
+"                - <strong>Ende</strong>: {new_date_end}\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:878
@@ -533,6 +558,12 @@ msgid ""
 "                - <strong>Suspension End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
+"Vertragsposition für <strong>{product}</strong>\n"
+"                ausgesetzt: <br/>\n"
+"                - <strong>Aussetzung Start</strong>: {new_date_start}\n"
+"                <br/>\n"
+"                - <strong>Aussezung Ende</strong>: {new_date_end}\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1098
@@ -773,6 +804,8 @@ msgid ""
 "In case of restart after suspension, this field contain the new contract "
 "line created."
 msgstr ""
+"Bei Fortsetzung nach Aussetzung enthält dieses Feld die neu erstellte "
+"Vertragsposition."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -798,10 +831,8 @@ msgstr "Rechnungsanzahl"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_interval
-#, fuzzy
-#| msgid "Invoice"
 msgid "Invoice Every"
-msgstr "Rechnung"
+msgstr "Abrechnungsintervall"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice_line
@@ -825,14 +856,14 @@ msgstr "Rechnungen"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
 msgid "Invoicing contact"
-msgstr "Rechnungsadresse"
+msgstr "Rechnungsempfänger"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
 msgid "Invoicing type"
-msgstr "Rechnungsstellung"
+msgstr "Abrechnungsart"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
@@ -842,7 +873,7 @@ msgstr "Ist Abonnent"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Is suspension without end date"
-msgstr ""
+msgstr "Ist Aussetzung ohne Enddatum"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__journal_id
@@ -903,12 +934,12 @@ msgstr "Haupt-Anhang"
 #: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
 msgid "Manual renew needed"
-msgstr ""
+msgstr "Manuelles Erneuern erforderlich"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
 msgid "Message Delivery error"
-msgstr "Nachrichten-Übertragungsfehler"
+msgstr "Nachrichten-Zustellfehler"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_ids
@@ -966,7 +997,7 @@ msgstr "Nächste Rechnung"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__recurring_next_date
 msgid "Next Invoice Date"
-msgstr "Datum der nächste Rechnung"
+msgstr "Datum der nächsten Rechnung"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
@@ -1022,21 +1053,19 @@ msgstr "Zahlungsbedingungen"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
-#, fuzzy
-#| msgid "Date Start"
 msgid "Plan Start"
-msgstr "Startdatum"
+msgstr "Planbeginn"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_plan_successor_allowed
 msgid "Plan successor allowed?"
-msgstr ""
+msgstr "Nachfolger planen erlaubt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:753
 #, python-format
 msgid "Plan successor not allowed for this line"
-msgstr ""
+msgstr "Nachfolger planen für diese Position nicht zulässig"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -1117,7 +1146,7 @@ msgstr "Referenz"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Renew"
-msgstr ""
+msgstr "Erneuern"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
@@ -1145,7 +1174,7 @@ msgstr "Erneuerung alle (Tage/Wochen/Monate/Jahre)"
 #: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_rule_type
 msgid "Renewal type"
-msgstr ""
+msgstr "Art der Erneuerung"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
@@ -1247,34 +1276,34 @@ msgstr "Stopp"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Stop Date"
-msgstr ""
+msgstr "Enddatum"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop Plan Successor"
-msgstr ""
+msgstr "Plan-Nachfolger beenden"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_allowed
 msgid "Stop allowed?"
-msgstr ""
+msgstr "Beenden erlaubt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:672
 #, python-format
 msgid "Stop not allowed for this line"
-msgstr ""
+msgstr "Beenden für diese Position nicht zulässig"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_plan_successor_allowed
 msgid "Stop/Plan successor allowed?"
-msgstr ""
+msgstr "Nachfolger beenden/planen erlaubt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:814
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
-msgstr ""
+msgstr "Nachfolger beenden/planen in dieser Position nicht zulässig"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_subtotal
@@ -1305,31 +1334,31 @@ msgstr "Lieferantenverträge"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension End Date"
-msgstr ""
+msgstr "Aussetzungsenddatum"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension Start Date"
-msgstr ""
+msgstr "Aussetzungsanfangsdatum"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_interval
 msgid "Termination Notice Before"
-msgstr ""
+msgstr "Abschluss Vorausbenachtigung"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
 msgid "Termination Notice type"
-msgstr ""
+msgstr "Abschluss Meldungsart"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
 msgid "Termination notice date"
-msgstr ""
+msgstr "Abschluss Meldungsdatum"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
@@ -1338,11 +1367,13 @@ msgid ""
 "This flag is used to make a difference between a definitive stopand "
 "temporary one for which a user is not able to plan asuccessor in advance"
 msgstr ""
+"Dieses Kennzeichen dient der Unterscheidung zwischen endgültigen Ende und "
+"vorläufigem für den der Anwender im Voraus keinen Nachfolger planen darf"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "To renew"
-msgstr ""
+msgstr "Zu erneuern"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -1352,18 +1383,18 @@ msgstr "Heute"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_un_cancel_allowed
 msgid "Un-Cancel allowed?"
-msgstr ""
+msgstr "Stornoaufhebung erlaubt?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Un-cancel"
-msgstr ""
+msgstr "Stornoaufhebung"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:911
 #, python-format
 msgid "Un-cancel not allowed for this line"
-msgstr ""
+msgstr "Stornoaufhebung für diese Position nicht zulässig"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_unit
@@ -1392,12 +1423,12 @@ msgstr "Zähler für ungelesene Nachrichten"
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming"
-msgstr ""
+msgstr "Anstehend"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming Close"
-msgstr ""
+msgstr "Anstehende Schließung"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -1438,7 +1469,7 @@ msgstr "Woche(n)"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
 msgid "With running contracts"
-msgstr ""
+msgstr "Mit laufenden Verträgen"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -1455,6 +1486,8 @@ msgstr "Jahr(e)"
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr ""
+"Sie dürfen eine Vertragsposition nicht verzögern, wenn diese mind. ein mal "
+"abgerechnet wurde."
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:433
