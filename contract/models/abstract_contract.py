@@ -14,7 +14,7 @@ class ContractAbstractContract(models.AbstractModel):
     _description = 'Abstract Recurring Contract'
 
     # These fields will not be synced to the contract
-    NO_SYNC = ['name', 'partner_id']
+    NO_SYNC = ['name', 'partner_id', 'company_id']
 
     name = fields.Char(required=True)
     # Needed for avoiding errors on several inherited behaviors
