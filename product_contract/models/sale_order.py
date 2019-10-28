@@ -46,6 +46,7 @@ class SaleOrder(models.Model):
                 template_name=contract_template.name, sale_name=self.name
             ),
             'partner_id': self.partner_id.id,
+            'company_id': self.company_id.id,
             'contract_template_id': contract_template.id,
             'user_id': self.user_id.id,
             'payment_term_id': self.payment_term_id.id,
