@@ -110,6 +110,19 @@ class TestSaleOrder(TransactionCase):
             contract_line.recurring_next_date, Date.to_date('2018-01-31')
         )
 
+    def test_contract_company(self):
+        """
+        contract company must be the sale order company and not the user one
+        """
+        self.assertTrue(self.sale.company_id)
+        other_company = self.env['res.company'].create(
+            {'name': 'other company', 'parent_id': self.sale.company_id.id}
+        )
+        self.sale.company_id = other_company
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped('contract_id')
+        self.assertEqual(contracts.mapped('company_id'), other_company)
+
     def test_sale_order_invoice_status(self):
         """
         sale line linked to contracts must not be invoiced from sale order
