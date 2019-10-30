@@ -11,8 +11,8 @@ msgstr ""
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
 "PO-Revision-Date: 2019-10-10 20:36+0000\n"
 "Last-Translator: Eder Brito <britoederr@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/teams/"
-"23907/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/"
+"teams/23907/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,8 +93,8 @@ msgstr ""
 "       &nbsp;&nbsp;<strong>REFERÊNCIAS</strong><br />\n"
 "       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
 "       % if object.date_start:\n"
-"       &nbsp;&nbsp;Data Inicial do Contrato: ${object.date_start or ''}<br />"
-"\n"
+"       &nbsp;&nbsp;Data Inicial do Contrato: ${object.date_start or ''}<br /"
+">\n"
 "       % endif\n"
 "\n"
 "       % if object.user_id:\n"
@@ -109,8 +109,8 @@ msgstr ""
 "\n"
 "    <br/>\n"
 "    <p>Em caso de dúvidas não hesite entrar em contato.</p>\n"
-"    <p>Obrigado por escolher a ${object.company_id.name or 'nossa "
-"empresa'}!</p>\n"
+"    <p>Obrigado por escolher a ${object.company_id.name or 'nossa empresa'}!"
+"</p>\n"
 "    <br/>\n"
 "    <br/>\n"
 "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
@@ -118,14 +118,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -136,8 +136,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Site: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Site: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -236,7 +236,7 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Preço Unitário</strong>"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:424
+#: code:addons/contract/models/contract_line.py:425
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr ""
@@ -244,7 +244,7 @@ msgstr ""
 "automática"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:321
+#: code:addons/contract/models/contract_line.py:322
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr ""
@@ -252,7 +252,7 @@ msgstr ""
 "automática"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:333
+#: code:addons/contract/models/contract_line.py:334
 #, python-format
 msgid "A contract line with a successor must have a end date"
 msgstr "Uma linha de contrato com uma sucessora deve ter uma data final"
@@ -289,7 +289,7 @@ msgid "Activity State"
 msgstr "Estado da Atividade"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:328
+#: code:addons/contract/models/contract_line.py:329
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "Uma linha de renovação automática deve possuir uma data final"
@@ -349,7 +349,7 @@ msgid "Cancel allowed?"
 msgstr "Cancelar Permitido?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:890
+#: code:addons/contract/models/contract_line.py:891
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr "Não é permitido o cancelamento para esta linha"
@@ -468,38 +468,38 @@ msgid "Contract Type"
 msgstr "Tipo de Contrato"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:482
+#: code:addons/contract/models/contract_line.py:483
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr ""
 "Data inicial '%s' da linha do contrato não pode ser maior que a data final"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:919
+#: code:addons/contract/models/contract_line.py:920
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr "Linha do Contrato Não Cancelada: %s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:354
+#: code:addons/contract/models/contract_line.py:355
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "A linha do contrato e sua antecessor se sobrepuseram"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:345
+#: code:addons/contract/models/contract_line.py:346
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "A linha do contrato e seu sucessora se sobrepuseram"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:898
+#: code:addons/contract/models/contract_line.py:899
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr "Linha do contrato cancelada: %s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:692
+#: code:addons/contract/models/contract_line.py:693
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -513,7 +513,7 @@ msgstr ""
 "                            "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:770
+#: code:addons/contract/models/contract_line.py:771
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -531,7 +531,7 @@ msgstr ""
 "                    "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1048
+#: code:addons/contract/models/contract_line.py:1049
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -549,7 +549,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:878
+#: code:addons/contract/models/contract_line.py:879
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -567,7 +567,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1098
+#: code:addons/contract/models/contract_line.py:1099
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr "Linha do contrato deve ser cancelada antes de ser deletada"
@@ -1038,8 +1038,8 @@ msgstr "Vencido"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
-msgid "Partner (always False)"
-msgstr "Parceiro (sempre falso)"
+msgid "Partner"
+msgstr "Parceiro"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__payment_term_id
@@ -1057,7 +1057,7 @@ msgid "Plan successor allowed?"
 msgstr "Plano sucessor permitido?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:753
+#: code:addons/contract/models/contract_line.py:754
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Plano sucessor não permitido para esta linha"
@@ -1284,7 +1284,7 @@ msgid "Stop allowed?"
 msgstr "Parar permitido?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:672
+#: code:addons/contract/models/contract_line.py:673
 #, python-format
 msgid "Stop not allowed for this line"
 msgstr "Parar não permitido para esta linha"
@@ -1295,7 +1295,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Parar/Plano sucessor permitido?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:814
+#: code:addons/contract/models/contract_line.py:815
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr "Parar/Plano sucessor não permitido para esta linha"
@@ -1386,7 +1386,7 @@ msgid "Un-cancel"
 msgstr "Cancelar Cancelamento"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:911
+#: code:addons/contract/models/contract_line.py:912
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr "Cancelar cancelamento não permitido para esta linha"
@@ -1477,13 +1477,13 @@ msgid "Year(s)"
 msgstr "Ano(s)"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:647
+#: code:addons/contract/models/contract_line.py:648
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr "Você não pode adiar uma linha de contrato faturada pelo menos uma vez."
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:433
+#: code:addons/contract/models/contract_line.py:434
 #, python-format
 msgid ""
 "You can't have a date of next invoice anterior to the start of the contract "
@@ -1493,7 +1493,7 @@ msgstr ""
 "contrato '%s'"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:453
+#: code:addons/contract/models/contract_line.py:454
 #, python-format
 msgid ""
 "You can't have the end date before the date of last invoice for the contract "
@@ -1503,7 +1503,7 @@ msgstr ""
 "do contrato '%s'"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:445
+#: code:addons/contract/models/contract_line.py:446
 #, python-format
 msgid ""
 "You can't have the start date after the date of last invoice for the "
@@ -1513,7 +1513,7 @@ msgstr ""
 "do contrato '%s\""
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:469
+#: code:addons/contract/models/contract_line.py:470
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
 msgstr ""
