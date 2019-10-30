@@ -14,12 +14,12 @@ class ContractAbstractContract(models.AbstractModel):
     _description = 'Abstract Recurring Contract'
 
     # These fields will not be synced to the contract
-    NO_SYNC = ['name', 'partner_id']
+    NO_SYNC = ['name', 'partner_id', 'company_id']
 
     name = fields.Char(required=True)
     # Needed for avoiding errors on several inherited behaviors
     partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Partner (always False)", index=True
+        comodel_name="res.partner", string="Partner", index=True
     )
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist', string='Pricelist'
