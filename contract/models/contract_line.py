@@ -24,6 +24,7 @@ class ContractLine(models.Model):
         string='Contract',
         required=True,
         index=True,
+        auto_join=True,
         ondelete='cascade',
     )
     analytic_account_id = fields.Many2one(
