@@ -60,7 +60,7 @@ Icon
 ----
 
 * https://openclipart.org/detail/125071/pie-graph
-* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>_ from
+* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>`_ from
   www.flaticon.com
 
 Maintainer
