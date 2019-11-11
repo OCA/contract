@@ -41,8 +41,8 @@ Contributors
 Icon
 ----
 
-* https://openclipart.org/detail/125071/pie-graph
-* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>`_ from
+* `Icon <https://openclipart.org/detail/125071/pie-graph>`__
+* Subicon made by `Freepik <http://www.flaticon.com/authors/freepik>`__ from
   www.flaticon.com
 
 Maintainer
