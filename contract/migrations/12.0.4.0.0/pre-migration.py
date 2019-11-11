@@ -97,6 +97,7 @@ def create_contract_records(cr):
         INSERT INTO contract_contract
         SELECT * FROM account_analytic_account
         WHERE id IN (SELECT DISTINCT {} FROM contract_line)
+        AND recurring_invoices
         """).format(
             sql.Identifier(contract_field_name),
         ),
@@ -120,6 +121,7 @@ def create_contract_records(cr):
             UPDATE {table} SET {model_column}='contract.contract'
             WHERE {model_column}='account.analytic.account'
                 AND {id_column} IN (SELECT DISTINCT {col} FROM contract_line)
+                AND recurring_invoices
             """).format(
                 table=sql.Identifier(table),
                 model_column=sql.Identifier(model_column),
