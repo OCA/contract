@@ -18,7 +18,13 @@ class TestContractBase(common.SavepointCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.today = fields.Date.today()
-        cls.partner = cls.env.ref('base.res_partner_2')
+        cls.pricelist = cls.env['product.pricelist'].create({
+            'name': 'pricelist for contract test',
+        })
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'partner test contract',
+            'property_product_pricelist': cls.pricelist.id,
+        })
         cls.product_1 = cls.env.ref('product.product_product_1')
         cls.product_2 = cls.env.ref('product.product_product_2')
         cls.product_1.taxes_id += cls.env['account.tax'].search(
