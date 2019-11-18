@@ -94,12 +94,10 @@ def create_contract_records(cr):
     )
     openupgrade.logged_query(
         cr, sql.SQL("""
-        INSERT INTO contract_contract
-        SELECT * FROM account_analytic_account
-        WHERE id IN (SELECT DISTINCT {} FROM contract_line)
-        """).format(
-            sql.Identifier(contract_field_name),
-        ),
+            INSERT INTO contract_contract
+            SELECT * FROM account_analytic_account
+            WHERE partner_id IS NOT NULL
+            """),
     )
     # Deactivate disabled contracts
     openupgrade.logged_query(
