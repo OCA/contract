@@ -96,7 +96,7 @@ def create_contract_records(cr):
         cr, sql.SQL("""
         INSERT INTO contract_contract
         SELECT * FROM account_analytic_account
-        WHERE id IN (SELECT DISTINCT {} FROM contract_line)
+        WHERE id IN (SELECT DISTINCT {} FROM contract_line UNION SELECT contract_id FROM account_invoice)
         """).format(
             sql.Identifier(contract_field_name),
         ),
