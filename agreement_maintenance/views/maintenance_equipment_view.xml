@@ -9,9 +9,9 @@
         <field name="inherit_id"
                ref="maintenance.hr_equipment_view_form"/>
         <field name="arch" type="xml">
-            <field name="owner_user_id" position="after">
+            <xpath expr="//group/group[1]" position="inside">
                 <field name="agreement_id"/>
-            </field>
+            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Services" id="services">
                     <field name="serviceprofile_ids"
