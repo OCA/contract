@@ -1839,3 +1839,81 @@ class TestContract(TestContractBase):
         self.assertTrue(self.acct_line.recurring_next_date)
         self.acct_line.stop(self.acct_line.last_date_invoiced)
         self.assertFalse(self.acct_line.recurring_next_date)
+
+    def test_contract_monthly_pre_paid_custom_first_period(self):
+        recurring_next_date = to_date('2019-04-01')
+        last_date_invoiced = to_date('2019-03-31')
+        self.acct_line.recurring_next_date = '2019-03-22'
+        self.acct_line.date_start = '2019-03-22'
+        self.acct_line.first_period_invoice_to_date = '2019-03-31'
+        self.acct_line.recurring_rule_type = 'monthly'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.contract.recurring_create_invoice()
+        invoices = self.contract._get_related_invoices()
+        self.assertTrue(invoices)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_monthly_post_paid_custom_first_period(self):
+        recurring_next_date = to_date('2019-05-01')
+        last_date_invoiced = to_date('2019-03-31')
+        self.acct_line.recurring_next_date = '2019-04-22'
+        self.acct_line.date_start = '2019-03-22'
+        self.acct_line.first_period_invoice_to_date = '2019-03-31'
+        self.acct_line.recurring_rule_type = 'monthly'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
+        invoices = self.contract._get_related_invoices()
+        self.assertTrue(invoices)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_monthlylastday_custom_first_period(self):
+        recurring_next_date = to_date('2019-03-31')
+        last_date_invoiced = to_date('2019-03-28')
+        self.acct_line.recurring_next_date = '2019-04-22'
+        self.acct_line.date_start = '2019-03-22'
+        self.acct_line.first_period_invoice_to_date = '2019-03-28'
+        self.acct_line.recurring_rule_type = 'monthlylastday'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
+        invoices = self.contract._get_related_invoices()
+        self.assertTrue(invoices)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_check_first_period_invoice_to_date(self):
+        self.acct_line.recurring_next_date = '2019-04-22'
+        self.acct_line.date_start = '2019-03-22'
+        self.acct_line.date_end = '2019-05-22'
+        with self.assertRaises(ValidationError):
+            self.acct_line.first_period_invoice_to_date = '2019-03-22'
+        with self.assertRaises(ValidationError):
+            self.acct_line.first_period_invoice_to_date = '2019-05-22'
+        with self.assertRaises(ValidationError):
+            self.acct_line.last_date_invoiced = '2019-04-22'
+        self.acct_line.first_period_invoice_to_date = False
+        self.acct_line.last_date_invoiced = '2019-04-22'
+        with self.assertRaises(ValidationError):
+            self.acct_line.first_period_invoice_to_date = '2019-04-22'
+
+    def test_onchange_first_period_invoice_to_date(self):
+        self.acct_line.recurring_next_date = '2019-04-22'
+        self.acct_line.date_start = '2019-03-22'
+        self.acct_line.recurring_rule_type = 'monthly'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.acct_line._onchange_date_start()
+        self.assertEqual(
+            self.acct_line.first_period_invoice_to_date, to_date('2019-04-21')
+        )
+        self.acct_line.first_period_invoice_to_date = '2019-03-31'
+        self.acct_line._onchange_first_period_invoice_to_date()
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2019-03-31')
+        )
