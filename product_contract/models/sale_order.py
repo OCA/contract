@@ -82,6 +82,7 @@ class SaleOrder(models.Model):
                 )
                 contracts |= contract
                 contract._onchange_contract_template_id()
+                contract._onchange_contract_type()
                 order_lines.create_contract_line(contract)
                 order_lines.write({'contract_id': contract.id})
             for line in line_to_update_contract:
