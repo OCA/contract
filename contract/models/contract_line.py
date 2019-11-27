@@ -602,8 +602,9 @@ class ContractLine(models.Model):
     def _init_last_date_invoiced(self):
         """Used to init last_date_invoiced for migration purpose"""
         for rec in self:
-            last_date_invoiced = rec.recurring_next_date - relativedelta(
-                days=1
+            last_date_invoiced = (
+                rec.recurring_next_date - self.get_relative_delta(
+                    rec.recurring_rule_type, rec.recurring_interval)
             )
             if rec.recurring_rule_type == 'monthlylastday':
                 last_date_invoiced = (
