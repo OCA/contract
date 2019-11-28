@@ -108,7 +108,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         recurring_next_date = self.env[
             'contract.line'
-        ]._compute_first_recurring_next_date(
+        ]._get_recurring_next_date(
             self.date_start or fields.Date.today(),
             self.recurring_invoicing_type,
             self.recurring_rule_type,

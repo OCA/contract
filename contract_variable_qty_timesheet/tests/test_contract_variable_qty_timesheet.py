@@ -35,6 +35,7 @@ class TestContractVariableQtyTimesheet(common.SavepointCase):
         }
         cls.contract_line = cls.env['contract.line'].create(
             contract_line_vals)
+        cls.contract_line._onchange_date_start()
         cls.project = cls.env['project.project'].create({
             'name': 'Test project',
             'analytic_account_id': cls.analytic_account.id,

@@ -40,6 +40,7 @@ class TestContractMandate(TestContractBase):
                 'mandate_id': cls.mandate.id,
             }
         )
+        cls.contract_with_mandate.contract_line_ids._onchange_date_start()
 
     def test_contract_mandate(self):
         new_invoice = self.contract_with_mandate.recurring_create_invoice()

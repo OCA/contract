@@ -56,6 +56,7 @@ class TestContractVariableQuantity(odoo.tests.HttpCase):
                 'recurring_next_date': '2016-02-29',
             }
         )
+        self.contract_line._onchange_date_start()
 
     def test_check_invalid_code(self):
         with self.assertRaises(exceptions.ValidationError):

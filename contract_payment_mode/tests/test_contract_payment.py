@@ -82,6 +82,7 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
                 'is_auto_renew': False,
             })]
         })
+        self.contract.contract_line_ids._onchange_date_start()
         self.contract.recurring_create_invoice()
         new_invoice = self.contract._get_related_invoices()
         self.assertTrue(new_invoice)
