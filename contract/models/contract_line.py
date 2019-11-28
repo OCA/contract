@@ -41,6 +41,9 @@ class ContractLine(models.Model):
     last_date_invoiced = fields.Date(
         string='Last Date Invoiced', readonly=True, copy=False
     )
+    next_period_end_date = fields.Date(
+        string='Next Period End Date', copy=False
+    )
     termination_notice_date = fields.Date(
         string='Termination notice date',
         compute="_compute_termination_notice_date",
@@ -356,7 +359,7 @@ class ContractLine(models.Model):
                     )
 
     @api.model
-    def _compute_first_recurring_next_date(
+    def _get_recurring_next_date(
         self,
         date_start,
         recurring_invoicing_type,
@@ -374,7 +377,7 @@ class ContractLine(models.Model):
         )
 
     @api.model
-    def compute_first_date_end(
+    def _get_date_end(
         self, date_start, auto_renew_rule_type, auto_renew_interval
     ):
         return (
@@ -382,6 +385,20 @@ class ContractLine(models.Model):
             + self.get_relative_delta(
                 auto_renew_rule_type, auto_renew_interval
             )
+            - relativedelta(days=1)
+        )
+
+    @api.model
+    def _get_next_period_end_date(
+        self, next_period_start_date, recurring_rule_type, recurring_interval
+    ):
+        if recurring_rule_type == 'monthlylastday':
+            return next_period_start_date + self.get_relative_delta(
+                recurring_rule_type, recurring_interval - 1
+            )
+        return (
+            next_period_start_date
+            + self.get_relative_delta(recurring_rule_type, recurring_interval)
             - relativedelta(days=1)
         )
 
@@ -396,7 +413,7 @@ class ContractLine(models.Model):
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
             if rec.date_start:
-                rec.date_end = self.compute_first_date_end(
+                rec.date_end = self._get_date_end(
                     rec.date_start,
                     rec.auto_renew_rule_type,
                     rec.auto_renew_interval,
@@ -407,14 +424,18 @@ class ContractLine(models.Model):
         'recurring_invoicing_type',
         'recurring_rule_type',
         'recurring_interval',
+        'last_date_invoiced',
     )
     def _onchange_date_start(self):
         for rec in self.filtered('date_start'):
-            rec.recurring_next_date = self._compute_first_recurring_next_date(
+            rec.recurring_next_date = self._get_recurring_next_date(
                 rec.date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
+            )
+            rec.next_period_end_date = self._get_next_period_end_date(
+                rec.date_start, rec.recurring_rule_type, rec.recurring_interval
             )
 
     @api.constrains('is_canceled', 'is_auto_renew')
@@ -487,6 +508,20 @@ class ContractLine(models.Model):
                         % line.name
                     )
 
+    @api.constrains('next_period_end_date', 'last_date_invoiced')
+    def _check_next_period_end_date(self):
+        for line in self.filtered('next_period_end_date'):
+            if line.next_period_end_date < line.date_start or (
+                line.date_end and line.next_period_end_date > line.date_end
+            ):
+                raise ValidationError(
+                    _(
+                        "Next period end date must be between the "
+                        "start and the end of the contract line: %s"
+                    )
+                    % line.name
+                )
+
     @api.depends('recurring_next_date', 'date_start', 'date_end')
     def _compute_create_invoice_visibility(self):
         today = fields.Date.context_today(self)
@@ -542,23 +577,9 @@ class ContractLine(models.Model):
             if last_date_invoiced
             else self.date_start
         )
-        if self.recurring_rule_type == 'monthlylastday':
-            last_date_invoiced = recurring_next_date
-        else:
-            if self.recurring_invoicing_type == 'pre-paid':
-                last_date_invoiced = (
-                    recurring_next_date
-                    + self.get_relative_delta(
-                        self.recurring_rule_type, self.recurring_interval
-                    )
-                    - relativedelta(days=1)
-                )
-            else:
-                last_date_invoiced = recurring_next_date - relativedelta(
-                    days=1
-                )
+        last_date_invoiced = self.next_period_end_date
         if stop_at_date_end:
-            if self.date_end and self.date_end < last_date_invoiced:
+            if not self.next_period_end_date and self.date_end:
                 last_date_invoiced = self.date_end
         return first_date_invoiced, last_date_invoiced, recurring_next_date
 
@@ -580,23 +601,32 @@ class ContractLine(models.Model):
     @api.multi
     def _update_recurring_next_date(self):
         for rec in self:
-            old_date = rec.recurring_next_date
-            new_date = old_date + self.get_relative_delta(
-                rec.recurring_rule_type, rec.recurring_interval
-            )
-            if rec.recurring_rule_type == 'monthlylastday':
-                last_date_invoiced = old_date
-            elif rec.recurring_invoicing_type == 'post-paid':
-                last_date_invoiced = old_date - relativedelta(days=1)
-            elif rec.recurring_invoicing_type == 'pre-paid':
-                last_date_invoiced = new_date - relativedelta(days=1)
-
-            if rec.date_end and last_date_invoiced >= rec.date_end:
-                rec.last_date_invoiced = rec.date_end
-                rec.recurring_next_date = False
-            else:
-                rec.last_date_invoiced = last_date_invoiced
-                rec.recurring_next_date = new_date
+            if rec.next_period_end_date:
+                last_date_invoiced = rec.next_period_end_date
+                next_period_start_date = last_date_invoiced + relativedelta(
+                    days=1
+                )
+                next_period_end_date = self._get_next_period_end_date(
+                    next_period_start_date,
+                    rec.recurring_rule_type,
+                    rec.recurring_interval,
+                )
+                recurring_next_date = self._get_recurring_next_date(
+                    next_period_start_date,
+                    rec.recurring_invoicing_type,
+                    rec.recurring_rule_type,
+                    rec.recurring_interval,
+                )
+                if rec.date_end and next_period_end_date > rec.date_end:
+                    next_period_end_date = rec.date_end
+                if rec.date_end and last_date_invoiced >= rec.date_end:
+                    rec.last_date_invoiced = rec.date_end
+                    rec.recurring_next_date = False
+                    rec.next_period_end_date = False
+                else:
+                    rec.last_date_invoiced = last_date_invoiced
+                    rec.recurring_next_date = recurring_next_date
+                    rec.next_period_end_date = next_period_end_date
 
     @api.multi
     def _init_last_date_invoiced(self):
@@ -651,7 +681,7 @@ class ContractLine(models.Model):
                     )
                 )
             new_date_start = rec.date_start + delay_delta
-            rec.recurring_next_date = self._compute_first_recurring_next_date(
+            rec.recurring_next_date = self._get_recurring_next_date(
                 new_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_rule_type,
@@ -684,6 +714,7 @@ class ContractLine(models.Model):
                     }
                     if rec.last_date_invoiced == date_end:
                         values['recurring_next_date'] = False
+                        values['next_period_end_date'] = False
                     rec.write(values)
                     if post_message:
                         msg = _(
@@ -712,12 +743,15 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         if not recurring_next_date:
-            recurring_next_date = self._compute_first_recurring_next_date(
+            recurring_next_date = self._get_recurring_next_date(
                 date_start,
                 self.recurring_invoicing_type,
                 self.recurring_rule_type,
                 self.recurring_interval,
             )
+        next_period_end_date = self._get_next_period_end_date(
+            date_start, self.recurring_rule_type, self.recurring_interval
+        )
         new_vals = self.read()[0]
         new_vals.pop("id", None)
         new_vals.pop("last_date_invoiced", None)
@@ -725,6 +759,7 @@ class ContractLine(models.Model):
         values['date_start'] = date_start
         values['date_end'] = date_end
         values['recurring_next_date'] = recurring_next_date
+        values['next_period_end_date'] = next_period_end_date
         values['is_auto_renew'] = is_auto_renew
         values['predecessor_contract_line_id'] = self.id
         return values
@@ -1023,7 +1058,7 @@ class ContractLine(models.Model):
     def _get_renewal_dates(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
-        date_end = self.compute_first_date_end(
+        date_end = self._get_date_end(
             date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
         return date_start, date_end
