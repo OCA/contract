@@ -631,7 +631,7 @@ class TestContract(TestContractBase):
         self.acct_line.write({'date_end': False, 'is_auto_renew': False})
         self.assertFalse(self.contract.date_end)
 
-    def test_stop_contract_line(self):
+    def test_cancel_contract_line(self):
         """It should raise a validation error"""
         self.acct_line.cancel()
         with self.assertRaises(ValidationError):
@@ -1808,7 +1808,7 @@ class TestContract(TestContractBase):
         self.contract._compute_invoice_count()
         self.assertEqual(self.contract.invoice_count, 3)
 
-    def test_contract_count_invoice(self):
+    def test_contract_count_invoice_2(self):
         invoices = self.env['account.invoice']
         invoices |= self.contract.recurring_create_invoice()
         invoices |= self.contract.recurring_create_invoice()
