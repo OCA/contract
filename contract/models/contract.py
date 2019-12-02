@@ -281,19 +281,26 @@ class ContractContract(models.Model):
         invoice_type = 'out_invoice'
         if self.contract_type == 'purchase':
             invoice_type = 'in_invoice'
-        return {
-            'name': self.code,
-            'type': invoice_type,
+        vinvoice = self.env['account.invoice'].new({
             'partner_id': self.invoice_partner_id.id,
+            'type': invoice_type,
+        })
+        vinvoice._onchange_partner_id()
+        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
+        invoice_vals.update({
+            'name': self.code,
             'currency_id': currency.id,
             'date_invoice': date_invoice,
             'journal_id': journal.id,
             'origin': self.name,
             'company_id': self.company_id.id,
             'user_id': self.user_id.id,
-            'payment_term_id': self.payment_term_id.id,
-            'fiscal_position_id': self.fiscal_position_id.id,
-        }
+        })
+        if self.payment_term_id:
+            invoice_vals['payment_term_id'] = self.payment_term_id.id
+        if self.fiscal_position_id:
+            invoice_vals['fiscal_position_id'] = self.fiscal_position_id.id
+        return invoice_vals
 
     @api.multi
     def action_contract_send(self):
@@ -354,12 +361,6 @@ class ContractContract(models.Model):
 
     @api.model
     def _finalize_invoice_creation(self, invoices):
-        for invoice in invoices:
-            payment_term = invoice.payment_term_id
-            fiscal_position = invoice.fiscal_position_id
-            invoice._onchange_partner_id()
-            invoice.payment_term_id = payment_term
-            invoice.fiscal_position_id = fiscal_position
         invoices.compute_taxes()
 
     @api.model
