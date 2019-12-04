@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+
+    <record model="ir.ui.view" id="contract_line_forecast_period_search_view">
+        <field name="name">contract.line.forecast.period.search (in
+            contract_forecast)
+        </field>
+        <field name="model">contract.line.forecast.period</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id" string="Contract"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="0" string="Group By">
+                    <filter string="Date Start" name="groupby_date_start"
+                            context="{'group_by':'date_start'}"/>
+                    <filter string="Date End" name="groupby_date_end"
+                            context="{'group_by':'date_end'}"/>
+                    <filter string="Date Invoice" name="groupby_date_invoice"
+                            context="{'group_by':'date_invoice:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="contract_line_forecast_period_tree_view">
+        <field name="name">contract.line.forecast.period.tree (in
+            contract_forecast)
+        </field>
+        <field name="model">contract.line.forecast.period</field>
+        <field name="arch" type="xml">
+            <tree editable="top" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="date_invoice"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="contract_line_forecast_period_pivot_view" model="ir.ui.view">
+        <field name="name">contract.line.forecast.period.tree (in
+            contract_forecast)
+        </field>
+        <field name="model">contract.line.forecast.period</field>
+        <field name="arch" type="xml">
+            <pivot string="Contract Forecast">
+                <field name="product_id" type="col"/>
+                <field name="date_invoice" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="contract_contract_form_view">
+        <field name="name">contract.contract.form (in contract_forcast)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id"
+               ref="contract.contract_contract_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object"
+                        icon="fa-area-chart"
+                        name="action_show_contract_forecast"
+                        help="Forecast">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">Forecast
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
