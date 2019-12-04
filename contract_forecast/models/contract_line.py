@@ -76,14 +76,17 @@ class ContractLine(models.Model):
                 )
                 period_date_end = last_date_invoiced
                 recurring_next_date = rec.recurring_next_date
+                first_p_invoice_to_date = rec.first_period_invoice_to_date
                 while rec._get_generate_forecast_periods_criteria(
                     period_date_end
                 ):
                     period_dates = rec._get_period_to_invoice(
                         last_date_invoiced,
                         recurring_next_date,
+                        first_period_invoice_to_date=first_p_invoice_to_date,
                         stop_at_date_end=not rec.is_auto_renew,
                     )
+                    first_p_invoice_to_date = False
                     period_date_start, period_date_end, recurring_next_date = (
                         period_dates
                     )
@@ -95,12 +98,13 @@ class ContractLine(models.Model):
                         )
                     )
                     last_date_invoiced = period_date_end
-                    recurring_next_date = (
-                        recurring_next_date
-                        + self.get_relative_delta(
-                            rec.recurring_rule_type, rec.recurring_interval
+                    recurring_next_date = \
+                        self._compute_first_recurring_next_date(
+                            last_date_invoiced + relativedelta(days=1),
+                            rec.recurring_invoicing_type,
+                            rec.recurring_rule_type,
+                            rec.recurring_interval,
                         )
-                    )
         return self.env["contract.line.forecast.period"].create(values)
 
     @api.model
@@ -118,6 +122,7 @@ class ContractLine(models.Model):
             "product_id",
             "date_start",
             "date_end",
+            "first_period_invoice_to_date",
             "quantity",
             "price_unit",
             "discount",

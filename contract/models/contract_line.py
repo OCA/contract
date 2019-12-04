@@ -573,7 +573,9 @@ class ContractLine(models.Model):
     def _prepare_invoice_line(self, invoice_id=False):
         self.ensure_one()
         dates = self._get_period_to_invoice(
-            self.last_date_invoiced, self.recurring_next_date
+            self.last_date_invoiced,
+            self.recurring_next_date,
+            first_period_invoice_to_date=self.first_period_invoice_to_date,
         )
         invoice_line_vals = {
             'product_id': self.product_id.id,
@@ -601,7 +603,11 @@ class ContractLine(models.Model):
 
     @api.multi
     def _get_period_to_invoice(
-        self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
+        self,
+        last_date_invoiced,
+        recurring_next_date,
+        first_period_invoice_to_date=False,
+        stop_at_date_end=True,
     ):
         self.ensure_one()
         first_date_invoiced = False
@@ -612,8 +618,8 @@ class ContractLine(models.Model):
             if last_date_invoiced
             else self.date_start
         )
-        if self.first_period_invoice_to_date:
-            last_date_invoiced = self.first_period_invoice_to_date
+        if first_period_invoice_to_date:
+            last_date_invoiced = first_period_invoice_to_date
         else:
             if self.recurring_rule_type == 'monthlylastday':
                 last_date_invoiced = recurring_next_date
