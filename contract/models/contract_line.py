@@ -364,6 +364,23 @@ class ContractLine(models.Model):
                     )
 
     @api.model
+    def _compute_first_recurring_next_date(
+        self,
+        date_start,
+        recurring_invoicing_type,
+        recurring_rule_type,
+        recurring_interval
+    ):
+        # deprecated method for backward compatibility
+        return self._get_recurring_next_date(
+            date_start,
+            recurring_invoicing_type,
+            recurring_rule_type,
+            recurring_interval,
+            max_date_end=False,
+        )
+
+    @api.model
     def _get_recurring_next_date(
         self,
         next_period_date_start,
