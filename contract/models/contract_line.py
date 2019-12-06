@@ -358,20 +358,51 @@ class ContractLine(models.Model):
     @api.model
     def _get_recurring_next_date(
         self,
-        date_start,
+        next_period_date_start,
         recurring_invoicing_type,
         recurring_rule_type,
         recurring_interval,
     ):
-        if recurring_rule_type == 'monthlylastday':
-            return date_start + self.get_relative_delta(
-                recurring_rule_type, recurring_interval - 1
-            )
-        if recurring_invoicing_type == 'pre-paid':
-            return date_start
-        return date_start + self.get_relative_delta(
-            recurring_rule_type, recurring_interval
+        next_period_date_end = self._get_next_period_date_end(
+            next_period_date_start,
+            recurring_rule_type,
+            recurring_interval,
+            max_date_end=False,  # TODO
         )
+        if recurring_rule_type == 'monthlylastday':
+            return next_period_date_end
+        elif recurring_invoicing_type == 'pre-paid':
+            return next_period_date_start
+        else:  # post-paid
+            return next_period_date_end + relativedelta(days=1)
+
+    @api.model
+    def _get_next_period_date_end(
+        self,
+        next_period_date_start,
+        recurring_rule_type,
+        recurring_interval,
+        max_date_end,
+    ):
+        """Compute the end date for the next period"""
+        if recurring_rule_type == 'monthlylastday':
+            next_period_date_end = (
+                next_period_date_start
+                + self.get_relative_delta(
+                    recurring_rule_type, recurring_interval - 1
+                )
+            )
+        else:
+            next_period_date_end = (
+                next_period_date_start
+                + self.get_relative_delta(
+                    recurring_rule_type, recurring_interval
+                )
+                - relativedelta(days=1)
+            )
+        if max_date_end and next_period_date_end > max_date_end:
+            next_period_date_end = max_date_end
+        return next_period_date_end
 
     @api.model
     def _get_first_date_end(
