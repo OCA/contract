@@ -537,7 +537,7 @@ class TestContract(TestContractBase):
             'There was an error and the view couldn\'t be opened.',
         )
 
-    def test_compute_first_recurring_next_date(self):
+    def test_get_recurring_next_date(self):
         """Test different combination to compute recurring_next_date
         Combination format
         {
@@ -547,6 +547,7 @@ class TestContract(TestContractBase):
                 recurring_rule_type,      # ('daily', 'weekly', 'monthly',
                                           #  'monthlylastday', 'yearly'),
                 recurring_interval,       # integer
+                max_date_end,             # date
             ),
         }
         """
@@ -556,57 +557,88 @@ class TestContract(TestContractBase):
             recurring_invoicing_type,
             recurring_rule_type,
             recurring_interval,
+            max_date_end,
         ):
-            return "Error in %s every %d %s case, start with %s " % (
+            return "Error in %s every %d %s case, start with %s (max_date_end=%s)" % (
                 recurring_invoicing_type,
                 recurring_interval,
                 recurring_rule_type,
                 date_start,
+                max_date_end,
             )
 
         combinations = [
             (
                 to_date('2018-01-01'),
-                (to_date('2018-01-01'), 'pre-paid', 'monthly', 1),
+                (to_date('2018-01-01'), 'pre-paid', 'monthly', 1,
+                 False),
             ),
             (
                 to_date('2018-01-01'),
-                (to_date('2018-01-01'), 'pre-paid', 'monthly', 2),
+                (to_date('2018-01-01'), 'pre-paid', 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                False,
+                (to_date('2018-01-16'), 'pre-paid', 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                to_date('2018-01-01'),
+                (to_date('2018-01-01'), 'pre-paid', 'monthly', 2,
+                 False),
             ),
             (
                 to_date('2018-02-01'),
-                (to_date('2018-01-01'), 'post-paid', 'monthly', 1),
+                (to_date('2018-01-01'), 'post-paid', 'monthly', 1,
+                 False),
+            ),
+            (
+                to_date('2018-01-16'),
+                (to_date('2018-01-01'), 'post-paid', 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                False,
+                (to_date('2018-01-16'), 'post-paid', 'monthly', 1,
+                 to_date('2018-01-15')),
             ),
             (
                 to_date('2018-03-01'),
-                (to_date('2018-01-01'), 'post-paid', 'monthly', 2),
+                (to_date('2018-01-01'), 'post-paid', 'monthly', 2,
+                 False),
             ),
             (
                 to_date('2018-01-31'),
-                (to_date('2018-01-05'), 'post-paid', 'monthlylastday', 1),
+                (to_date('2018-01-05'), 'post-paid', 'monthlylastday', 1,
+                 False),
             ),
             (
                 to_date('2018-01-31'),
-                (to_date('2018-01-06'), 'pre-paid', 'monthlylastday', 1),
+                (to_date('2018-01-06'), 'pre-paid', 'monthlylastday', 1,
+                 False),
             ),
             (
                 to_date('2018-02-28'),
-                (to_date('2018-01-05'), 'pre-paid', 'monthlylastday', 2),
+                (to_date('2018-01-05'), 'pre-paid', 'monthlylastday', 2,
+                 False),
             ),
             (
                 to_date('2018-01-05'),
-                (to_date('2018-01-05'), 'pre-paid', 'yearly', 1),
+                (to_date('2018-01-05'), 'pre-paid', 'yearly', 1,
+                 False),
             ),
             (
                 to_date('2019-01-05'),
-                (to_date('2018-01-05'), 'post-paid', 'yearly', 1),
+                (to_date('2018-01-05'), 'post-paid', 'yearly', 1,
+                 False),
             ),
         ]
         contract_line_env = self.env['contract.line']
         for recurring_next_date, combination in combinations:
             self.assertEqual(
                 recurring_next_date,
-                contract_line_env._compute_first_recurring_next_date(
+                contract_line_env._get_recurring_next_date(
                     *combination
                 ),
                 error_message(*combination),
