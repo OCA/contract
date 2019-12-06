@@ -537,7 +537,7 @@ class TestContract(TestContractBase):
             'There was an error and the view couldn\'t be opened.',
         )
 
-    def test_compute_first_recurring_next_date(self):
+    def test_get_recurring_next_date(self):
         """Test different combination to compute recurring_next_date
         Combination format
         {
@@ -606,7 +606,7 @@ class TestContract(TestContractBase):
         for recurring_next_date, combination in combinations:
             self.assertEqual(
                 recurring_next_date,
-                contract_line_env._compute_first_recurring_next_date(
+                contract_line_env._get_recurring_next_date(
                     *combination
                 ),
                 error_message(*combination),
