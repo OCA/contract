@@ -70,8 +70,19 @@ class ContractAbstractContractLine(models.AbstractModel):
         [('pre-paid', 'Pre-paid'), ('post-paid', 'Post-paid')],
         default='pre-paid',
         string='Invoicing type',
-        help="Specify if process date is 'from' or 'to' invoicing date",
+        help=(
+            "Specify if the invoice must be generated at the beginning "
+            "(pre-paid) or end (post-paid) of the period."
+        ),
         required=True,
+    )
+    recurring_invoicing_offset = fields.Integer(
+        compute="_compute_recurring_invoicing_offset",
+        string="Invoicing offset",
+        help=(
+            "Number of days to offset the invoice from the period end "
+            "date (in post-paid mode) or beginning date (in pre-paid mode)."
+        )
     )
     recurring_interval = fields.Integer(
         default=1,
@@ -114,6 +125,27 @@ class ContractAbstractContractLine(models.AbstractModel):
         required=True,
         ondelete='cascade',
     )
+
+    @api.model
+    def _get_default_recurring_invoicing_offset(
+        self, recurring_invoicing_type, recurring_rule_type
+    ):
+        if (
+            recurring_invoicing_type == 'pre-paid'
+            or recurring_rule_type == 'monthlylastday'
+        ):
+            return 0
+        else:
+            return 1
+
+    @api.depends('recurring_invoicing_type', 'recurring_rule_type')
+    def _compute_recurring_invoicing_offset(self):
+        for rec in self:
+            rec.recurring_invoicing_offset = (
+                self._get_default_recurring_invoicing_offset(
+                    rec.recurring_invoicing_type, rec.recurring_rule_type
+                )
+            )
 
     @api.depends(
         'automatic_price',
