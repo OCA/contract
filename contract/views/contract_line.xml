@@ -15,11 +15,13 @@
                 <group>
                     <field name="create_invoice_visibility" invisible="1"/>
                     <field name="date_start" required="1"/>
+                    <field name="next_period_date_start"/>
                     <field name="recurring_next_date"/>
                 </group>
                 <group>
                     <field name="date_end"
                            attrs="{'required': [('is_auto_renew', '=', True)]}"/>
+                    <field name="next_period_date_end"/>
                 </group>
                 <group groups="base.group_no_one">
                     <field name="last_date_invoiced" readonly="True"/>

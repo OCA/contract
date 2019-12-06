@@ -41,6 +41,14 @@ class ContractLine(models.Model):
     last_date_invoiced = fields.Date(
         string='Last Date Invoiced', readonly=True, copy=False
     )
+    next_period_date_start = fields.Date(
+        string='Next Period Start',
+        compute='_compute_next_period_date_start',
+    )
+    next_period_date_end = fields.Date(
+        string='Next Period End',
+        compute='_compute_next_period_date_end',
+    )
     termination_notice_date = fields.Date(
         string='Termination notice date',
         compute="_compute_termination_notice_date",
@@ -389,6 +397,8 @@ class ContractLine(models.Model):
         max_date_end,
     ):
         """Compute the end date for the next period"""
+        if not next_period_date_start:
+            return False
         if max_date_end and next_period_date_start > max_date_end:
             # start is past max date end: there is no next period
             return False
@@ -411,6 +421,34 @@ class ContractLine(models.Model):
             # end date is past max_date_end: trim it
             next_period_date_end = max_date_end
         return next_period_date_end
+
+    @api.depends('last_date_invoiced', 'date_start', 'date_end')
+    def _compute_next_period_date_start(self):
+        for rec in self:
+            if rec.last_date_invoiced:
+                next_period_date_start = (
+                    rec.last_date_invoiced + relativedelta(days=1)
+                )
+            else:
+                next_period_date_start = rec.date_start
+            if rec.date_end and next_period_date_start > rec.date_end:
+                next_period_date_start = False
+            rec.next_period_date_start = next_period_date_start
+
+    @api.depends(
+        'next_period_date_start',
+        'recurring_rule_type',
+        'recurring_interval',
+        'date_end',
+    )
+    def _compute_next_period_date_end(self):
+        for rec in self:
+            rec.next_period_date_end = self._get_next_period_date_end(
+                rec.next_period_date_start,
+                rec.recurring_rule_type,
+                rec.recurring_interval,
+                max_date_end=rec.date_end,
+            )
 
     @api.model
     def _get_first_date_end(
