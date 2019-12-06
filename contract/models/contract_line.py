@@ -356,7 +356,7 @@ class ContractLine(models.Model):
                     )
 
     @api.model
-    def _compute_first_recurring_next_date(
+    def _get_recurring_next_date(
         self,
         date_start,
         recurring_invoicing_type,
@@ -374,7 +374,7 @@ class ContractLine(models.Model):
         )
 
     @api.model
-    def compute_first_date_end(
+    def _get_first_date_end(
         self, date_start, auto_renew_rule_type, auto_renew_interval
     ):
         return (
@@ -396,7 +396,7 @@ class ContractLine(models.Model):
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
             if rec.date_start:
-                rec.date_end = self.compute_first_date_end(
+                rec.date_end = self._get_first_date_end(
                     rec.date_start,
                     rec.auto_renew_rule_type,
                     rec.auto_renew_interval,
@@ -410,7 +410,7 @@ class ContractLine(models.Model):
     )
     def _onchange_date_start(self):
         for rec in self.filtered('date_start'):
-            rec.recurring_next_date = self._compute_first_recurring_next_date(
+            rec.recurring_next_date = self._get_recurring_next_date(
                 rec.date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_rule_type,
@@ -651,7 +651,7 @@ class ContractLine(models.Model):
                     )
                 )
             new_date_start = rec.date_start + delay_delta
-            rec.recurring_next_date = self._compute_first_recurring_next_date(
+            rec.recurring_next_date = self._get_recurring_next_date(
                 new_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_rule_type,
@@ -712,7 +712,7 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         if not recurring_next_date:
-            recurring_next_date = self._compute_first_recurring_next_date(
+            recurring_next_date = self._get_recurring_next_date(
                 date_start,
                 self.recurring_invoicing_type,
                 self.recurring_rule_type,
@@ -1023,7 +1023,7 @@ class ContractLine(models.Model):
     def _get_renewal_dates(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
-        date_end = self.compute_first_date_end(
+        date_end = self._get_first_date_end(
             date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
         return date_start, date_end
