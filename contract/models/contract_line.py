@@ -675,23 +675,18 @@ class ContractLine(models.Model):
     @api.multi
     def _update_recurring_next_date(self):
         for rec in self:
-            old_date = rec.recurring_next_date
-            new_date = old_date + self.get_relative_delta(
-                rec.recurring_rule_type, rec.recurring_interval
+            last_date_invoiced = rec.next_period_date_end
+            recurring_next_date = rec._get_recurring_next_date(
+                last_date_invoiced + relativedelta(days=1),
+                rec.recurring_invoicing_type,
+                rec.recurring_rule_type,
+                rec.recurring_interval,
+                max_date_end=rec.date_end,
             )
-            if rec.recurring_rule_type == 'monthlylastday':
-                last_date_invoiced = old_date
-            elif rec.recurring_invoicing_type == 'post-paid':
-                last_date_invoiced = old_date - relativedelta(days=1)
-            elif rec.recurring_invoicing_type == 'pre-paid':
-                last_date_invoiced = new_date - relativedelta(days=1)
-
-            if rec.date_end and last_date_invoiced >= rec.date_end:
-                rec.last_date_invoiced = rec.date_end
-                rec.recurring_next_date = False
-            else:
-                rec.last_date_invoiced = last_date_invoiced
-                rec.recurring_next_date = new_date
+            rec.write({
+                "recurring_next_date": recurring_next_date,
+                "last_date_invoiced": last_date_invoiced,
+            })
 
     @api.multi
     def _init_last_date_invoiced(self):
