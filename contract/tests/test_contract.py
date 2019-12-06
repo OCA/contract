@@ -247,7 +247,7 @@ class TestContract(TestContractBase):
         self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
     def test_contract_monthly_lastday(self):
-        recurring_next_date = to_date('2018-03-31')
+        recurring_next_date = to_date('2018-02-28')
         last_date_invoiced = to_date('2018-02-22')
         self.acct_line.recurring_next_date = '2018-02-22'
         self.acct_line.recurring_invoicing_type = 'post-paid'
@@ -279,7 +279,7 @@ class TestContract(TestContractBase):
         )
         self.contract.recurring_create_invoice()
         self.assertEqual(
-            self.acct_line.recurring_next_date, to_date('2018-04-01')
+            self.acct_line.recurring_next_date, to_date('2018-3-16')
         )
         self.assertEqual(
             self.acct_line.last_date_invoiced, to_date('2018-02-28')
