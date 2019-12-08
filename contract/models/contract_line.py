@@ -424,21 +424,13 @@ class ContractLine(models.Model):
             return False
         if not next_invoice_date:
             # regular algorithm
-            if recurring_rule_type == 'monthlylastday':
-                next_period_date_end = (
-                    next_period_date_start
-                    + self.get_relative_delta(
-                        recurring_rule_type, recurring_interval - 1
-                    )
+            next_period_date_end = (
+                next_period_date_start
+                + self.get_relative_delta(
+                    recurring_rule_type, recurring_interval
                 )
-            else:
-                next_period_date_end = (
-                    next_period_date_start
-                    + self.get_relative_delta(
-                        recurring_rule_type, recurring_interval
-                    )
-                    - relativedelta(days=1)
-                )
+                - relativedelta(days=1)
+            )
         else:
             # special algorithm when the next invoice date is forced
             if recurring_rule_type == 'monthlylastday':
@@ -717,8 +709,9 @@ class ContractLine(models.Model):
                 last_date_invoiced = (
                     rec.recurring_next_date
                     - self.get_relative_delta(
-                        rec.recurring_rule_type, rec.recurring_interval
+                        rec.recurring_rule_type, rec.recurring_interval - 1
                     )
+                    - relativedelta(days=1)
                 )
             elif rec.recurring_invoicing_type == 'post-paid':
                 last_date_invoiced = (
@@ -726,12 +719,18 @@ class ContractLine(models.Model):
                     - self.get_relative_delta(
                         rec.recurring_rule_type, rec.recurring_interval
                     )
-                ) - relativedelta(days=1)
+                    - relativedelta(days=1)
+                )
             if last_date_invoiced > rec.date_start:
                 rec.last_date_invoiced = last_date_invoiced
 
     @api.model
     def get_relative_delta(self, recurring_rule_type, interval):
+        """Return a relativedelta for one period.
+
+        When added to the first day of the period,
+        it gives the first day of the next period.
+        """
         if recurring_rule_type == 'daily':
             return relativedelta(days=interval)
         elif recurring_rule_type == 'weekly':
@@ -739,7 +738,7 @@ class ContractLine(models.Model):
         elif recurring_rule_type == 'monthly':
             return relativedelta(months=interval)
         elif recurring_rule_type == 'monthlylastday':
-            return relativedelta(months=interval, day=31)
+            return relativedelta(months=interval, day=1)
         else:
             return relativedelta(years=interval)
 
