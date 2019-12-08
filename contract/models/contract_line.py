@@ -381,6 +381,22 @@ class ContractLine(models.Model):
         )
 
     @api.model
+    def _get_offset(self, recurring_invoicing_type, recurring_rule_type):
+        """Return a relativedelta to offset the invoice date compared
+        to the period start or end date.
+
+        This method will disappear when the offset becomes user controlled.
+        """
+        if (
+            recurring_invoicing_type == 'pre-paid'
+            or recurring_rule_type == 'monthlylastday'
+        ):
+            offset = 0
+        else:
+            offset = 1
+        return relativedelta(days=offset)
+
+    @api.model
     def _get_recurring_next_date(
         self,
         next_period_date_start,
@@ -398,12 +414,11 @@ class ContractLine(models.Model):
         )
         if not next_period_date_end:
             return False
-        if recurring_rule_type == 'monthlylastday':
-            recurring_next_date = next_period_date_end
-        elif recurring_invoicing_type == 'pre-paid':
-            recurring_next_date = next_period_date_start
+        offset = self._get_offset(recurring_invoicing_type, recurring_rule_type)
+        if recurring_invoicing_type == 'pre-paid':
+            recurring_next_date = next_period_date_start + offset
         else:  # post-paid
-            recurring_next_date = next_period_date_end + relativedelta(days=1)
+            recurring_next_date = next_period_date_end + offset
         return recurring_next_date
 
     @api.model
@@ -433,20 +448,18 @@ class ContractLine(models.Model):
             )
         else:
             # special algorithm when the next invoice date is forced
-            if recurring_rule_type == 'monthlylastday':
-                next_period_date_end = next_invoice_date
-            elif recurring_invoicing_type == 'pre-paid':
+            offset = self._get_offset(recurring_invoicing_type, recurring_rule_type)
+            if recurring_invoicing_type == 'pre-paid':
                 next_period_date_end = (
                     next_invoice_date
+                    - offset
                     + self.get_relative_delta(
                         recurring_rule_type, recurring_interval
                     )
                     - relativedelta(days=1)
                 )
             else:  # post-paid
-                next_period_date_end = next_invoice_date - relativedelta(
-                    days=1
-                )
+                next_period_date_end = next_invoice_date - offset
         if max_date_end and next_period_date_end > max_date_end:
             # end date is past max_date_end: trim it
             next_period_date_end = max_date_end
