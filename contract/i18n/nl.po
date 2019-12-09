@@ -237,7 +237,7 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Prijs per eenheid</strong>"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:425
+#: code:addons/contract/models/contract_line.py:556
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr ""
@@ -245,7 +245,7 @@ msgstr ""
 "verlengen"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:322
+#: code:addons/contract/models/contract_line.py:330
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr ""
@@ -253,7 +253,7 @@ msgstr ""
 "te verlengen"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:334
+#: code:addons/contract/models/contract_line.py:342
 #, python-format
 msgid "A contract line with a successor must have a end date"
 msgstr "Een contractregel met een opvolger moet een einddatum hebben"
@@ -290,7 +290,7 @@ msgid "Activity State"
 msgstr "Activiteitsstatus"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:329
+#: code:addons/contract/models/contract_line.py:337
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "Een automatische verlengingsregel moet een einddatum hebben"
@@ -352,7 +352,7 @@ msgid "Cancel allowed?"
 msgstr "Annuleren toestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:891
+#: code:addons/contract/models/contract_line.py:1027
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr "Annuleren niet toegestaan voor deze regel"
@@ -471,37 +471,37 @@ msgid "Contract Type"
 msgstr "Soort Contract"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:483
+#: code:addons/contract/models/contract_line.py:614
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr "Contract '%s' startdatum kan niet later zijn dan einddatum"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:920
+#: code:addons/contract/models/contract_line.py:1056
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr "Contractregel annuleren ongedaan gemaakt: %s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:355
+#: code:addons/contract/models/contract_line.py:363
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "Contractregel en zijn voorganger overlappen"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:346
+#: code:addons/contract/models/contract_line.py:354
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "Contractlijn en zijn opvolger overlappen elkaar"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:899
+#: code:addons/contract/models/contract_line.py:1035
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr "Contractregel geannuleerd: %s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:693
+#: code:addons/contract/models/contract_line.py:827
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -516,7 +516,7 @@ msgstr ""
 "                            "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:771
+#: code:addons/contract/models/contract_line.py:907
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -534,7 +534,7 @@ msgstr ""
 "                    "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1049
+#: code:addons/contract/models/contract_line.py:1185
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -552,7 +552,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:879
+#: code:addons/contract/models/contract_line.py:1015
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -570,7 +570,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1099
+#: code:addons/contract/models/contract_line.py:1235
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr "Contractregel moet worden geannuleerd voordat deze wordt verwijderd"
@@ -692,7 +692,7 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: contract
-#: code:addons/contract/models/abstract_contract_line.py:173
+#: code:addons/contract/models/abstract_contract_line.py:205
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "De korting moet kleiner of gelijk aan 100 zijn"
@@ -861,6 +861,15 @@ msgid "Invoicing contact"
 msgstr "Factuuradres"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_offset
+#, fuzzy
+#| msgid "Invoicing type"
+msgid "Invoicing offset"
+msgstr "Factuur soort"
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
@@ -1002,9 +1011,28 @@ msgid "Next Invoice Date"
 msgstr "Volgende factuurdatum"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_end
+msgid "Next Period End"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_start
+msgid "Next Period Start"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
 msgid "Number of Actions"
 msgstr "#akties"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_offset
+msgid ""
+"Number of days to offset the invoice from the period end date (in post-paid "
+"mode) or start date (in pre-paid mode)."
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
@@ -1064,7 +1092,7 @@ msgid "Plan successor allowed?"
 msgstr "Opvolger plannen toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:754
+#: code:addons/contract/models/contract_line.py:890
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Plannen opvolger niet toegestaan voor deze regel"
@@ -1251,9 +1279,10 @@ msgstr "Specificeer de interval voor het automatisch vernieuwen."
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_type
-msgid "Specify if process date is 'from' or 'to' invoicing date"
+msgid ""
+"Specify if the invoice must be generated at the beginning (pre-paid) or end "
+"(post-paid) of the period."
 msgstr ""
-"Specificeer als de verwerkingsdatum de 'van' of  't/m' factuur datum is"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
@@ -1294,7 +1323,7 @@ msgid "Stop allowed?"
 msgstr "Stoppen toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:673
+#: code:addons/contract/models/contract_line.py:807
 #, python-format
 msgid "Stop not allowed for this line"
 msgstr "Stoppen niet toegestaan voor deze regel"
@@ -1305,7 +1334,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Stoppen / Plannen opvolger toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:815
+#: code:addons/contract/models/contract_line.py:951
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr "Stoppen / Plannen opvolger is niet toegestaan"
@@ -1397,7 +1426,7 @@ msgid "Un-cancel"
 msgstr "Terugdraaien van annuleren"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:912
+#: code:addons/contract/models/contract_line.py:1048
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr "Terugdraaien van annuleren niet toegestaan voor deze regel"
@@ -1488,7 +1517,7 @@ msgid "Year(s)"
 msgstr "Jaar/Jaren"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:648
+#: code:addons/contract/models/contract_line.py:774
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr ""
@@ -1496,7 +1525,7 @@ msgstr ""
 "uitstellen."
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:434
+#: code:addons/contract/models/contract_line.py:565
 #, python-format
 msgid ""
 "You can't have a date of next invoice anterior to the start of the contract "
@@ -1505,7 +1534,7 @@ msgstr ""
 "U kunt geen volgende factuurdatum vóór het begin van het contract '%s' hebben"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:454
+#: code:addons/contract/models/contract_line.py:585
 #, python-format
 msgid ""
 "You can't have the end date before the date of last invoice for the contract "
@@ -1515,7 +1544,7 @@ msgstr ""
 "contractregel '%s'"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:446
+#: code:addons/contract/models/contract_line.py:577
 #, python-format
 msgid ""
 "You can't have the start date after the date of last invoice for the "
@@ -1525,7 +1554,7 @@ msgstr ""
 "contractregel '%s'"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:470
+#: code:addons/contract/models/contract_line.py:601
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
 msgstr "U moet een volgende factuurdatum opgeven voor contract '%s'"
@@ -1534,6 +1563,10 @@ msgstr "U moet een volgende factuurdatum opgeven voor contract '%s'"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "e.g. Contract XYZ"
 msgstr "bijv. Contract ABC"
+
+#~ msgid "Specify if process date is 'from' or 'to' invoicing date"
+#~ msgstr ""
+#~ "Specificeer als de verwerkingsdatum de 'van' of  't/m' factuur datum is"
 
 #, fuzzy
 #~ msgid "Account Analytic Contract"
