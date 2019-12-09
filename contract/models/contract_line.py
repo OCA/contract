@@ -393,10 +393,8 @@ class ContractLine(models.Model):
         recurring_interval,
         max_date_end,
     ):
-        next_period_date_end = self._get_next_period_date_end(
+        next_period_date_end = self.get_next_period_date_end(
             next_period_date_start,
-            recurring_invoicing_type,
-            recurring_invoicing_offset,
             recurring_rule_type,
             recurring_interval,
             max_date_end=max_date_end,
@@ -416,17 +414,24 @@ class ContractLine(models.Model):
         return recurring_next_date
 
     @api.model
-    def _get_next_period_date_end(
+    def get_next_period_date_end(
         self,
         next_period_date_start,
-        recurring_invoicing_type,
-        recurring_invoicing_offset,
         recurring_rule_type,
         recurring_interval,
         max_date_end,
         next_invoice_date=False,
+        recurring_invoicing_type=False,
+        recurring_invoicing_offset=False,
     ):
-        """Compute the end date for the next period"""
+        """Compute the end date for the next period.
+
+        The next period normally depends on recurrence options only.
+        It is however possible to provide it a next invoice date, in
+        which case this method can adjust the next period based on that
+        too. In that scenario it required the invoicing type and offset
+        arguments.
+        """
         if not next_period_date_start:
             return False
         if max_date_end and next_period_date_start > max_date_end:
@@ -486,14 +491,14 @@ class ContractLine(models.Model):
     )
     def _compute_next_period_date_end(self):
         for rec in self:
-            rec.next_period_date_end = self._get_next_period_date_end(
+            rec.next_period_date_end = self.get_next_period_date_end(
                 rec.next_period_date_start,
-                rec.recurring_invoicing_type,
-                rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=rec.date_end,
                 next_invoice_date=rec.recurring_next_date,
+                recurring_invoicing_type=rec.recurring_invoicing_type,
+                recurring_invoicing_offset=rec.recurring_invoicing_offset,
             )
 
     @api.model
@@ -670,14 +675,14 @@ class ContractLine(models.Model):
             if last_date_invoiced
             else self.date_start
         )
-        last_date_invoiced = self._get_next_period_date_end(
+        last_date_invoiced = self.get_next_period_date_end(
             first_date_invoiced,
-            self.recurring_invoicing_type,
-            self.recurring_invoicing_offset,
             self.recurring_rule_type,
             self.recurring_interval,
             max_date_end=(self.date_end if stop_at_date_end else False),
             next_invoice_date=recurring_next_date,
+            recurring_invoicing_type=self.recurring_invoicing_type,
+            recurring_invoicing_offset=self.recurring_invoicing_offset,
         )
         return first_date_invoiced, last_date_invoiced, recurring_next_date
 
