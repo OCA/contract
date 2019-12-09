@@ -227,19 +227,19 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>单价</strong>"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:425
+#: code:addons/contract/models/contract_line.py:556
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr "已取消的合同行无法设置为自动续订"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:322
+#: code:addons/contract/models/contract_line.py:330
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr "与接替的合同行不能设置为自动更新"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:334
+#: code:addons/contract/models/contract_line.py:342
 #, python-format
 msgid "A contract line with a successor must have a end date"
 msgstr "与接替的合同行必须有结束日期"
@@ -276,7 +276,7 @@ msgid "Activity State"
 msgstr "活动状态"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:329
+#: code:addons/contract/models/contract_line.py:337
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "自动续订行必须有结束日期"
@@ -336,7 +336,7 @@ msgid "Cancel allowed?"
 msgstr "取消允许？"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:891
+#: code:addons/contract/models/contract_line.py:1027
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr "取消此行不允许"
@@ -455,37 +455,37 @@ msgid "Contract Type"
 msgstr "合同类型"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:483
+#: code:addons/contract/models/contract_line.py:614
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr "合同行'%s'的开始日期不能晚于结束日期"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:920
+#: code:addons/contract/models/contract_line.py:1056
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr "合同行未取消：%s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:355
+#: code:addons/contract/models/contract_line.py:363
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "与其原先合同行重叠"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:346
+#: code:addons/contract/models/contract_line.py:354
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "与接替的合同行重叠"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:899
+#: code:addons/contract/models/contract_line.py:1035
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr "合同行取消：%s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:693
+#: code:addons/contract/models/contract_line.py:827
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -499,7 +499,7 @@ msgstr ""
 "                            "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:771
+#: code:addons/contract/models/contract_line.py:907
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -517,7 +517,7 @@ msgstr ""
 "                    "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1049
+#: code:addons/contract/models/contract_line.py:1185
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -535,7 +535,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:879
+#: code:addons/contract/models/contract_line.py:1015
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -553,7 +553,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1099
+#: code:addons/contract/models/contract_line.py:1235
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr "必须在删除前取消合同行"
@@ -675,7 +675,7 @@ msgid "Discount (%)"
 msgstr "折扣(%)"
 
 #. module: contract
-#: code:addons/contract/models/abstract_contract_line.py:173
+#: code:addons/contract/models/abstract_contract_line.py:205
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "折扣应小于或等于100"
@@ -835,6 +835,15 @@ msgid "Invoicing contact"
 msgstr "发票联系人"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_offset
+#, fuzzy
+#| msgid "Invoicing type"
+msgid "Invoicing offset"
+msgstr "发票类型"
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
@@ -976,9 +985,28 @@ msgid "Next Invoice Date"
 msgstr "下一个发票日期"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_end
+msgid "Next Period End"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_start
+msgid "Next Period Start"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
 msgid "Number of Actions"
 msgstr "行动数量"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_offset
+msgid ""
+"Number of days to offset the invoice from the period end date (in post-paid "
+"mode) or start date (in pre-paid mode)."
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
@@ -1038,7 +1066,7 @@ msgid "Plan successor allowed?"
 msgstr "计划接替允许吗？"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:754
+#: code:addons/contract/models/contract_line.py:890
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "计划接替不允许此行"
@@ -1223,8 +1251,10 @@ msgstr "指定自动续订的间隔。"
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_type
-msgid "Specify if process date is 'from' or 'to' invoicing date"
-msgstr "指定处理日期是“从”还是“到”发票日期"
+msgid ""
+"Specify if the invoice must be generated at the beginning (pre-paid) or end "
+"(post-paid) of the period."
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
@@ -1265,7 +1295,7 @@ msgid "Stop allowed?"
 msgstr "停止允许？"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:673
+#: code:addons/contract/models/contract_line.py:807
 #, python-format
 msgid "Stop not allowed for this line"
 msgstr "停止不允许此行"
@@ -1276,7 +1306,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "允许停止/计划接替？"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:815
+#: code:addons/contract/models/contract_line.py:951
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr "此线路不允许停止/计划接替"
@@ -1365,7 +1395,7 @@ msgid "Un-cancel"
 msgstr "不要取消"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:912
+#: code:addons/contract/models/contract_line.py:1048
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr "此行不允许取消"
@@ -1456,13 +1486,13 @@ msgid "Year(s)"
 msgstr "年"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:648
+#: code:addons/contract/models/contract_line.py:774
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr "您不能延迟至少一次开具发票的合同行。"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:434
+#: code:addons/contract/models/contract_line.py:565
 #, python-format
 msgid ""
 "You can't have a date of next invoice anterior to the start of the contract "
@@ -1470,7 +1500,7 @@ msgid ""
 msgstr "在合同行'%s'开头之前，您不能拥有下一张发票的日期"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:454
+#: code:addons/contract/models/contract_line.py:585
 #, python-format
 msgid ""
 "You can't have the end date before the date of last invoice for the contract "
@@ -1478,7 +1508,7 @@ msgid ""
 msgstr "您不能在合同行'%s'的最后一张发票日期之前有结束日期"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:446
+#: code:addons/contract/models/contract_line.py:577
 #, python-format
 msgid ""
 "You can't have the start date after the date of last invoice for the "
@@ -1486,7 +1516,7 @@ msgid ""
 msgstr "在合同行'%s'的最后一张发票日期之后，您不能拥有开始日期"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:470
+#: code:addons/contract/models/contract_line.py:601
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
 msgstr "您必须为合同行'%s'提供下一张发票的日期"
@@ -1495,6 +1525,9 @@ msgstr "您必须为合同行'%s'提供下一张发票的日期"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "e.g. Contract XYZ"
 msgstr "例如 合同XYZ"
+
+#~ msgid "Specify if process date is 'from' or 'to' invoicing date"
+#~ msgstr "指定处理日期是“从”还是“到”发票日期"
 
 #~ msgid "Account Analytic Contract"
 #~ msgstr "账户分析合同"
