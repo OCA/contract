@@ -375,32 +375,20 @@ class ContractLine(models.Model):
         return self._get_recurring_next_date(
             date_start,
             recurring_invoicing_type,
+            self._get_default_recurring_invoicing_offset(
+                recurring_invoicing_type, recurring_rule_type
+            ),
             recurring_rule_type,
             recurring_interval,
             max_date_end=False,
         )
 
     @api.model
-    def _get_offset(self, recurring_invoicing_type, recurring_rule_type):
-        """Return a relativedelta to offset the invoice date compared
-        to the period start or end date.
-
-        This method will disappear when the offset becomes user controlled.
-        """
-        if (
-            recurring_invoicing_type == 'pre-paid'
-            or recurring_rule_type == 'monthlylastday'
-        ):
-            offset = 0
-        else:
-            offset = 1
-        return relativedelta(days=offset)
-
-    @api.model
     def _get_recurring_next_date(
         self,
         next_period_date_start,
         recurring_invoicing_type,
+        recurring_invoicing_offset,
         recurring_rule_type,
         recurring_interval,
         max_date_end,
@@ -408,17 +396,23 @@ class ContractLine(models.Model):
         next_period_date_end = self._get_next_period_date_end(
             next_period_date_start,
             recurring_invoicing_type,
+            recurring_invoicing_offset,
             recurring_rule_type,
             recurring_interval,
             max_date_end=max_date_end,
         )
         if not next_period_date_end:
             return False
-        offset = self._get_offset(recurring_invoicing_type, recurring_rule_type)
         if recurring_invoicing_type == 'pre-paid':
-            recurring_next_date = next_period_date_start + offset
+            recurring_next_date = (
+                next_period_date_start
+                + relativedelta(days=recurring_invoicing_offset)
+            )
         else:  # post-paid
-            recurring_next_date = next_period_date_end + offset
+            recurring_next_date = (
+                next_period_date_end
+                + relativedelta(days=recurring_invoicing_offset)
+            )
         return recurring_next_date
 
     @api.model
@@ -426,6 +420,7 @@ class ContractLine(models.Model):
         self,
         next_period_date_start,
         recurring_invoicing_type,
+        recurring_invoicing_offset,
         recurring_rule_type,
         recurring_interval,
         max_date_end,
@@ -448,18 +443,20 @@ class ContractLine(models.Model):
             )
         else:
             # special algorithm when the next invoice date is forced
-            offset = self._get_offset(recurring_invoicing_type, recurring_rule_type)
             if recurring_invoicing_type == 'pre-paid':
                 next_period_date_end = (
                     next_invoice_date
-                    - offset
+                    - relativedelta(days=recurring_invoicing_offset)
                     + self.get_relative_delta(
                         recurring_rule_type, recurring_interval
                     )
                     - relativedelta(days=1)
                 )
             else:  # post-paid
-                next_period_date_end = next_invoice_date - offset
+                next_period_date_end = (
+                    next_invoice_date
+                    - relativedelta(days=recurring_invoicing_offset)
+                )
         if max_date_end and next_period_date_end > max_date_end:
             # end date is past max_date_end: trim it
             next_period_date_end = max_date_end
@@ -481,6 +478,7 @@ class ContractLine(models.Model):
     @api.depends(
         'next_period_date_start',
         'recurring_invoicing_type',
+        'recurring_invoicing_offset',
         'recurring_rule_type',
         'recurring_interval',
         'date_end',
@@ -491,6 +489,7 @@ class ContractLine(models.Model):
             rec.next_period_date_end = self._get_next_period_date_end(
                 rec.next_period_date_start,
                 rec.recurring_invoicing_type,
+                rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=rec.date_end,
@@ -538,6 +537,7 @@ class ContractLine(models.Model):
             rec.recurring_next_date = self._get_recurring_next_date(
                 rec.date_start,
                 rec.recurring_invoicing_type,
+                rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=rec.date_end,
@@ -673,6 +673,7 @@ class ContractLine(models.Model):
         last_date_invoiced = self._get_next_period_date_end(
             first_date_invoiced,
             self.recurring_invoicing_type,
+            self.recurring_invoicing_offset,
             self.recurring_rule_type,
             self.recurring_interval,
             max_date_end=(self.date_end if stop_at_date_end else False),
@@ -702,6 +703,7 @@ class ContractLine(models.Model):
             recurring_next_date = rec._get_recurring_next_date(
                 last_date_invoiced + relativedelta(days=1),
                 rec.recurring_invoicing_type,
+                rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=rec.date_end,
@@ -778,6 +780,7 @@ class ContractLine(models.Model):
             new_recurring_next_date = self._get_recurring_next_date(
                 new_date_start,
                 rec.recurring_invoicing_type,
+                rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=new_date_end
@@ -842,6 +845,7 @@ class ContractLine(models.Model):
             recurring_next_date = self._get_recurring_next_date(
                 date_start,
                 self.recurring_invoicing_type,
+                self.recurring_invoicing_offset,
                 self.recurring_rule_type,
                 self.recurring_interval,
                 max_date_end=date_end,
