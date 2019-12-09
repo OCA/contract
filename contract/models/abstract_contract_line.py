@@ -81,7 +81,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         string="Invoicing offset",
         help=(
             "Number of days to offset the invoice from the period end "
-            "date (in post-paid mode) or beginning date (in pre-paid mode)."
+            "date (in post-paid mode) or start date (in pre-paid mode)."
         )
     )
     recurring_interval = fields.Integer(
