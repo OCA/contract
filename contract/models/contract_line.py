@@ -667,9 +667,8 @@ class ContractLine(models.Model):
         # TODO this method can now be removed, since
         # TODO self.next_period_date_start/end have the same values
         self.ensure_one()
-        first_date_invoiced = False
         if not recurring_next_date:
-            return first_date_invoiced, last_date_invoiced, recurring_next_date
+            return False, False, False
         first_date_invoiced = (
             last_date_invoiced + relativedelta(days=1)
             if last_date_invoiced
