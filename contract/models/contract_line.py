@@ -664,7 +664,7 @@ class ContractLine(models.Model):
         self.ensure_one()
         first_date_invoiced = False
         if not recurring_next_date:
-            return first_date_invoiced, last_date_invoiced, recurring_next_date
+            return first_date_invoiced, False, recurring_next_date
         first_date_invoiced = (
             last_date_invoiced + relativedelta(days=1)
             if last_date_invoiced
