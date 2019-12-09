@@ -372,7 +372,7 @@ class ContractLine(models.Model):
         recurring_interval
     ):
         # deprecated method for backward compatibility
-        return self._get_recurring_next_date(
+        return self.get_next_invoice_date(
             date_start,
             recurring_invoicing_type,
             self._get_default_recurring_invoicing_offset(
@@ -384,7 +384,7 @@ class ContractLine(models.Model):
         )
 
     @api.model
-    def _get_recurring_next_date(
+    def get_next_invoice_date(
         self,
         next_period_date_start,
         recurring_invoicing_type,
@@ -539,7 +539,7 @@ class ContractLine(models.Model):
     )
     def _onchange_date_start(self):
         for rec in self.filtered('date_start'):
-            rec.recurring_next_date = self._get_recurring_next_date(
+            rec.recurring_next_date = self.get_next_invoice_date(
                 rec.date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
@@ -705,7 +705,7 @@ class ContractLine(models.Model):
     def _update_recurring_next_date(self):
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
-            recurring_next_date = rec._get_recurring_next_date(
+            recurring_next_date = rec.get_next_invoice_date(
                 last_date_invoiced + relativedelta(days=1),
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
@@ -782,7 +782,7 @@ class ContractLine(models.Model):
                 new_date_end = rec.date_end + delay_delta
             else:
                 new_date_end = False
-            new_recurring_next_date = self._get_recurring_next_date(
+            new_recurring_next_date = self.get_next_invoice_date(
                 new_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
@@ -847,7 +847,7 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         if not recurring_next_date:
-            recurring_next_date = self._get_recurring_next_date(
+            recurring_next_date = self.get_next_invoice_date(
                 date_start,
                 self.recurring_invoicing_type,
                 self.recurring_invoicing_offset,
