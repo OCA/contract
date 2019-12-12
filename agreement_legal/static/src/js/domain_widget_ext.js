@@ -17,10 +17,10 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
             // Add Additional options
             this.partialUse = this.nodeOptions.partial_use || false;
         },
-        
-        //--------------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
         // Private
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         /**
          * @private
@@ -37,15 +37,17 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
             // Convert char value to array value
             var value = this.value || "[]";
 
-            // Create the domain selector or change the value of the current one...
+            // Create the domain selector or change the value of the current
+            // one...
             var def;
             if (!this.domainSelector) {
-                this.domainSelector = new DomainSelector(this, this._domainModel, value, {
-                    readonly: this.mode === "readonly" || this.inDialog,
-                    filters: this.fsFilters,
-                    debugMode: session.debug,
-                    partialUse: this.partialUse || false,
-                });
+                this.domainSelector = new DomainSelector(
+                    this, this._domainModel, value, {
+                        readonly: this.mode === "readonly" || this.inDialog,
+                        filters: this.fsFilters,
+                        debugMode: session.debug,
+                        partialUse: this.partialUse || false,
+                    });
                 def = this.domainSelector.prependTo(this.$el);
             } else {
                 def = this.domainSelector.setDomain(value);
@@ -54,9 +56,10 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
             return def.then(this._replaceContent.bind(this));
         },
         /**
-         * Render the field DOM except for the domain selector part. The full field
-         * DOM is composed of a DIV which contains the domain selector widget,
-         * followed by other content. This other content is handled by this method.
+         * Render the field DOM except for the domain selector part. The full
+         * field DOM is composed of a DIV which contains the domain selector
+         * widget, followed by other content. This other content is handled by
+         * this method.
          *
          * @private
          */
