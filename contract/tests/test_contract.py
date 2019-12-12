@@ -2,6 +2,7 @@
 # Copyright 2018 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from collections import namedtuple
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import fields
@@ -247,7 +248,7 @@ class TestContract(TestContractBase):
         self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
     def test_contract_monthly_lastday(self):
-        recurring_next_date = to_date('2018-03-31')
+        recurring_next_date = to_date('2018-02-28')
         last_date_invoiced = to_date('2018-02-22')
         self.acct_line.recurring_next_date = '2018-02-22'
         self.acct_line.recurring_invoicing_type = 'post-paid'
@@ -279,7 +280,7 @@ class TestContract(TestContractBase):
         )
         self.contract.recurring_create_invoice()
         self.assertEqual(
-            self.acct_line.recurring_next_date, to_date('2018-04-01')
+            self.acct_line.recurring_next_date, to_date('2018-3-16')
         )
         self.assertEqual(
             self.acct_line.last_date_invoiced, to_date('2018-02-28')
@@ -537,7 +538,34 @@ class TestContract(TestContractBase):
             'There was an error and the view couldn\'t be opened.',
         )
 
-    def test_compute_first_recurring_next_date(self):
+    def test_get_default_recurring_invoicing_offset(self):
+        clm = self.env['contract.line']
+        self.assertEqual(
+            clm._get_default_recurring_invoicing_offset(
+                "pre-paid", "monthly"
+            ),
+            0
+        )
+        self.assertEqual(
+            clm._get_default_recurring_invoicing_offset(
+                "post-paid", "monthly"
+            ),
+            1
+        )
+        self.assertEqual(
+            clm._get_default_recurring_invoicing_offset(
+                "pre-paid", "monthlylastday"
+            ),
+            0
+        )
+        self.assertEqual(
+            clm._get_default_recurring_invoicing_offset(
+                "post-paid", "monthlylastday"
+            ),
+            0
+        )
+
+    def test_get_next_invoice_date(self):
         """Test different combination to compute recurring_next_date
         Combination format
         {
@@ -547,6 +575,7 @@ class TestContract(TestContractBase):
                 recurring_rule_type,      # ('daily', 'weekly', 'monthly',
                                           #  'monthlylastday', 'yearly'),
                 recurring_interval,       # integer
+                max_date_end,             # date
             ),
         }
         """
@@ -554,62 +583,413 @@ class TestContract(TestContractBase):
         def error_message(
             date_start,
             recurring_invoicing_type,
+            recurring_invoicing_offset,
             recurring_rule_type,
             recurring_interval,
+            max_date_end,
         ):
-            return "Error in %s every %d %s case, start with %s " % (
-                recurring_invoicing_type,
-                recurring_interval,
-                recurring_rule_type,
-                date_start,
+            return (
+                "Error in %s-%d every %d %s case, "
+                "start with %s (max_date_end=%s)" % (
+                    recurring_invoicing_type,
+                    recurring_invoicing_offset,
+                    recurring_interval,
+                    recurring_rule_type,
+                    date_start,
+                    max_date_end,
+                )
             )
 
         combinations = [
             (
                 to_date('2018-01-01'),
-                (to_date('2018-01-01'), 'pre-paid', 'monthly', 1),
+                (to_date('2018-01-01'), 'pre-paid', 0, 'monthly', 1,
+                 False),
             ),
             (
                 to_date('2018-01-01'),
-                (to_date('2018-01-01'), 'pre-paid', 'monthly', 2),
+                (to_date('2018-01-01'), 'pre-paid', 0, 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                False,
+                (to_date('2018-01-16'), 'pre-paid', 0, 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                to_date('2018-01-01'),
+                (to_date('2018-01-01'), 'pre-paid', 0, 'monthly', 2,
+                 False),
             ),
             (
                 to_date('2018-02-01'),
-                (to_date('2018-01-01'), 'post-paid', 'monthly', 1),
+                (to_date('2018-01-01'), 'post-paid', 1, 'monthly', 1,
+                 False),
+            ),
+            (
+                to_date('2018-01-16'),
+                (to_date('2018-01-01'), 'post-paid', 1, 'monthly', 1,
+                 to_date('2018-01-15')),
+            ),
+            (
+                False,
+                (to_date('2018-01-16'), 'post-paid', 1, 'monthly', 1,
+                 to_date('2018-01-15')),
             ),
             (
                 to_date('2018-03-01'),
-                (to_date('2018-01-01'), 'post-paid', 'monthly', 2),
+                (to_date('2018-01-01'), 'post-paid', 1, 'monthly', 2,
+                 False),
             ),
             (
                 to_date('2018-01-31'),
-                (to_date('2018-01-05'), 'post-paid', 'monthlylastday', 1),
+                (to_date('2018-01-05'), 'post-paid', 0, 'monthlylastday', 1,
+                 False),
             ),
             (
-                to_date('2018-01-31'),
-                (to_date('2018-01-06'), 'pre-paid', 'monthlylastday', 1),
+                to_date('2018-01-06'),
+                (to_date('2018-01-06'), 'pre-paid', 0, 'monthlylastday', 1,
+                 False),
             ),
             (
                 to_date('2018-02-28'),
-                (to_date('2018-01-05'), 'pre-paid', 'monthlylastday', 2),
+                (to_date('2018-01-05'), 'post-paid', 0, 'monthlylastday', 2,
+                 False),
             ),
             (
                 to_date('2018-01-05'),
-                (to_date('2018-01-05'), 'pre-paid', 'yearly', 1),
+                (to_date('2018-01-05'), 'pre-paid', 0, 'monthlylastday', 2,
+                 False),
+            ),
+            (
+                to_date('2018-01-05'),
+                (to_date('2018-01-05'), 'pre-paid', 0, 'yearly', 1,
+                 False),
             ),
             (
                 to_date('2019-01-05'),
-                (to_date('2018-01-05'), 'post-paid', 'yearly', 1),
+                (to_date('2018-01-05'), 'post-paid', 1, 'yearly', 1,
+                 False),
             ),
         ]
         contract_line_env = self.env['contract.line']
         for recurring_next_date, combination in combinations:
             self.assertEqual(
                 recurring_next_date,
-                contract_line_env._compute_first_recurring_next_date(
+                contract_line_env.get_next_invoice_date(
                     *combination
                 ),
                 error_message(*combination),
+            )
+
+    def test_next_invoicing_period(self):
+        """Test different combination for next invoicing period
+        {
+            (
+                'recurring_next_date',    # date
+                'next_period_date_start', # date
+                'next_period_date_end'    # date
+                ): (
+                date_start,               # date
+                date_end,                 # date
+                last_date_invoiced,       # date
+                recurring_next_date,      # date
+                recurring_invoicing_type, # ('pre-paid','post-paid',)
+                recurring_rule_type,      # ('daily', 'weekly', 'monthly',
+                                          #  'monthlylastday', 'yearly'),
+                recurring_interval,       # integer
+                max_date_end,             # date
+            ),
+        }
+        """
+
+        def _update_contract_line(
+            case,
+            date_start,
+            date_end,
+            last_date_invoiced,
+            recurring_next_date,
+            recurring_invoicing_type,
+            recurring_rule_type,
+            recurring_interval,
+            max_date_end,
+        ):
+            self.acct_line.write(
+                {
+                    'date_start': date_start,
+                    'date_end': date_end,
+                    'last_date_invoiced': last_date_invoiced,
+                    'recurring_next_date': recurring_next_date,
+                    'recurring_invoicing_type': recurring_invoicing_type,
+                    'recurring_rule_type': recurring_rule_type,
+                    'recurring_interval': recurring_interval,
+                    'max_date_end': max_date_end,
+                }
+            )
+
+        def _get_result():
+            return Result(
+                recurring_next_date=self.acct_line.recurring_next_date,
+                next_period_date_start=self.acct_line.next_period_date_start,
+                next_period_date_end=self.acct_line.next_period_date_end,
+            )
+
+        def _error_message(
+            case,
+            date_start,
+            date_end,
+            last_date_invoiced,
+            recurring_next_date,
+            recurring_invoicing_type,
+            recurring_rule_type,
+            recurring_interval,
+            max_date_end,
+        ):
+            return (
+                "Error in case %s:"
+                "date_start: %s, "
+                "date_end: %s, "
+                "last_date_invoiced: %s, "
+                "recurring_next_date: %s, "
+                "recurring_invoicing_type: %s, "
+                "recurring_rule_type: %s, "
+                "recurring_interval: %s, "
+                "max_date_end: %s, "
+            ) % (
+                case,
+                date_start,
+                date_end,
+                last_date_invoiced,
+                recurring_next_date,
+                recurring_invoicing_type,
+                recurring_rule_type,
+                recurring_interval,
+                max_date_end,
+            )
+
+        Result = namedtuple(
+            'Result',
+            [
+                'recurring_next_date',
+                'next_period_date_start',
+                'next_period_date_end',
+            ],
+        )
+        Combination = namedtuple(
+            'Combination',
+            [
+                'case',
+                'date_start',
+                'date_end',
+                'last_date_invoiced',
+                'recurring_next_date',
+                'recurring_invoicing_type',
+                'recurring_rule_type',
+                'recurring_interval',
+                'max_date_end',
+            ],
+        )
+        combinations = {
+            Result(
+                recurring_next_date=to_date('2019-01-01'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-31'),
+            ): Combination(
+                case="1",
+                date_start='2019-01-01',
+                date_end=False,
+                last_date_invoiced=False,
+                recurring_next_date='2019-01-01',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-01'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-15'),
+            ): Combination(
+                case="2",
+                date_start='2019-01-01',
+                date_end='2019-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2019-01-01',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-05'),
+                next_period_date_start=to_date('2019-01-05'),
+                next_period_date_end=to_date('2019-01-15'),
+            ): Combination(
+                case="3",
+                date_start='2019-01-05',
+                date_end='2019-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2019-01-05',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-05'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-15'),
+            ): Combination(
+                case="4",
+                date_start='2019-01-01',
+                date_end='2019-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2019-01-05',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-02-01'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-31'),
+            ): Combination(
+                case="5",
+                date_start='2019-01-01',
+                date_end=False,
+                last_date_invoiced=False,
+                recurring_next_date='2019-02-01',
+                recurring_invoicing_type='post-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-02-01'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-15'),
+            ): Combination(
+                case="6",
+                date_start='2019-01-01',
+                date_end='2019-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2019-02-01',
+                recurring_invoicing_type='post-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-02-01'),
+                next_period_date_start=to_date('2019-01-05'),
+                next_period_date_end=to_date('2019-01-31'),
+            ): Combination(
+                case="7",
+                date_start='2019-01-05',
+                date_end=False,
+                last_date_invoiced=False,
+                recurring_next_date='2019-02-01',
+                recurring_invoicing_type='post-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-05'),
+                next_period_date_start=to_date('2019-01-01'),
+                next_period_date_end=to_date('2019-01-15'),
+            ): Combination(
+                case="8",
+                date_start='2019-01-01',
+                date_end='2019-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2019-01-05',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-01'),
+                next_period_date_start=to_date('2018-12-16'),
+                next_period_date_end=to_date('2019-01-31'),
+            ): Combination(
+                case="9",
+                date_start='2018-01-01',
+                date_end='2020-01-15',
+                last_date_invoiced='2018-12-15',
+                recurring_next_date='2019-01-01',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2019-01-01'),
+                next_period_date_start=to_date('2018-12-16'),
+                next_period_date_end=to_date('2018-12-31'),
+            ): Combination(
+                case="10",
+                date_start='2018-01-01',
+                date_end='2020-01-15',
+                last_date_invoiced='2018-12-15',
+                recurring_next_date='2019-01-01',
+                recurring_invoicing_type='post-paid',
+                recurring_rule_type='monthly',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2018-12-31'),
+                next_period_date_start=to_date('2018-12-16'),
+                next_period_date_end=to_date('2018-12-31'),
+            ): Combination(
+                case="11",
+                date_start='2018-01-01',
+                date_end='2020-01-15',
+                last_date_invoiced='2018-12-15',
+                recurring_next_date='2018-12-31',
+                recurring_invoicing_type='post-paid',
+                recurring_rule_type='monthlylastday',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2018-12-16'),
+                next_period_date_start=to_date('2018-12-16'),
+                next_period_date_end=to_date('2018-12-31'),
+            ): Combination(
+                case="12",
+                date_start='2018-01-01',
+                date_end='2020-01-15',
+                last_date_invoiced='2018-12-15',
+                recurring_next_date='2018-12-16',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthlylastday',
+                recurring_interval=1,
+                max_date_end=False,
+            ),
+            Result(
+                recurring_next_date=to_date('2018-01-05'),
+                next_period_date_start=to_date('2018-01-05'),
+                next_period_date_end=to_date('2018-03-31'),
+            ): Combination(
+                case="12",
+                date_start='2018-01-05',
+                date_end='2020-01-15',
+                last_date_invoiced=False,
+                recurring_next_date='2018-01-05',
+                recurring_invoicing_type='pre-paid',
+                recurring_rule_type='monthlylastday',
+                recurring_interval=3,
+                max_date_end=False,
+            ),
+        }
+        for result, combination in combinations.items():
+            _update_contract_line(*combination)
+            self.assertEqual(
+                result, _get_result(), _error_message(*combination)
             )
 
     def test_recurring_next_date(self):
@@ -1331,7 +1711,7 @@ class TestContract(TestContractBase):
             len(invoice_lines),
         )
 
-    def test_get_period_to_invoice_monthlylastday(self):
+    def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = '2018-01-05'
         self.acct_line.recurring_invoicing_type = 'post-paid'
         self.acct_line.recurring_rule_type = 'monthlylastday'
@@ -1361,6 +1741,67 @@ class TestContract(TestContractBase):
         self.assertEqual(first, to_date('2018-03-01'))
         self.assertEqual(last, to_date('2018-03-15'))
         self.acct_line.manual_renew_needed = True
+
+    def test_get_period_to_invoice_monthlylastday_prepaid(self):
+        self.acct_line.date_start = '2018-01-05'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.acct_line.recurring_rule_type = 'monthlylastday'
+        self.acct_line.date_end = '2018-03-15'
+        self.acct_line._onchange_date_start()
+        first, last, recurring_next_date = \
+            self.acct_line._get_period_to_invoice(
+                self.acct_line.last_date_invoiced,
+                self.acct_line.recurring_next_date,
+            )
+        self.assertEqual(first, to_date('2018-01-05'))
+        self.assertEqual(last, to_date('2018-01-31'))
+        self.assertEqual(recurring_next_date, to_date('2018-01-05'))
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-01-05')
+        )
+        self.contract.recurring_create_invoice()
+        first, last, recurring_next_date = \
+            self.acct_line._get_period_to_invoice(
+                self.acct_line.last_date_invoiced,
+                self.acct_line.recurring_next_date,
+            )
+        self.assertEqual(first, to_date('2018-02-01'))
+        self.assertEqual(last, to_date('2018-02-28'))
+        self.assertEqual(recurring_next_date, to_date('2018-02-01'))
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-02-01')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-01-31')
+        )
+        self.contract.recurring_create_invoice()
+        first, last, recurring_next_date = \
+            self.acct_line._get_period_to_invoice(
+                self.acct_line.last_date_invoiced,
+                self.acct_line.recurring_next_date,
+            )
+        self.assertEqual(first, to_date('2018-03-01'))
+        self.assertEqual(last, to_date('2018-03-15'))
+        self.assertEqual(recurring_next_date, to_date('2018-03-01'))
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2018-03-01')
+        )
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-02-28')
+        )
+        self.contract.recurring_create_invoice()
+        first, last, recurring_next_date = \
+            self.acct_line._get_period_to_invoice(
+                self.acct_line.last_date_invoiced,
+                self.acct_line.recurring_next_date,
+            )
+        self.assertFalse(first)
+        self.assertFalse(last)
+        self.assertFalse(recurring_next_date)
+        self.assertFalse(self.acct_line.recurring_next_date)
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-03-15')
+        )
 
     def test_get_period_to_invoice_monthly_pre_paid_2(self):
         self.acct_line.date_start = '2018-01-05'

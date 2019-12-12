@@ -26,6 +26,7 @@ class TestContractSaleMandate(TestContractBase):
                 'is_contract': True,
                 'default_qty': 12,
                 'recurring_rule_type': "monthlylastday",
+                'recurring_invoicing_type': "post-paid",
                 'contract_template_id': cls.contract_template1.id,
             }
         )
