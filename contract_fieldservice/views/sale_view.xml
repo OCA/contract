@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="view_order_form_inherit_contract_fieldservice" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="fsm_location_id" position="attributes">
+                <attribute name="domain">[('contract_ids', 'in', parent.contract_id)]</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
