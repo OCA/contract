@@ -1,5 +1,5 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class ContractContract(models.Model):
@@ -7,7 +7,7 @@ class ContractContract(models.Model):
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
-        invoices_values =   super(ContractContract, self).\
+        invoices_values = super(ContractContract, self).\
             _prepare_recurring_invoices_values(date_ref=date_ref)
         return invoices_values
 
