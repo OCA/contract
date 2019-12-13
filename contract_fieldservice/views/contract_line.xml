@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="contract_line_form_view_inherit_fsm" model="ir.ui.view">
+        <field name="name">contract.line form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view"/>
+        <field name="arch" type="xml">
+            <field name="price_unit" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
