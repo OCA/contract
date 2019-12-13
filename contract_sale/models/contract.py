@@ -7,12 +7,14 @@ class ContractContract(models.Model):
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
-        invoices_values = super(ContractContract, self)._prepare_recurring_invoices_values(date_ref=date_ref)
+        invoices_values =   super(ContractContract, self).\
+            _prepare_recurring_invoices_values(date_ref=date_ref)
         return invoices_values
 
     def _compute_sale_order_count(self):
         super(ContractContract, self)._compute_sale_order_count()
-        contract_count = self.contract_line_ids.mapped('sale_order_line_id.order_id.contract_id')
+        contract_count = self.contract_line_ids.\
+            mapped('sale_order_line_id.order_id.contract_id')
         self.sale_order_count += contract_count
 
     @api.multi
