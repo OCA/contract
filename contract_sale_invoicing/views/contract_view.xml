@@ -10,6 +10,8 @@
         <field name="arch" type="xml">
             <field name="recurring_next_date" position="after">
                 <field name="invoicing_sales"/>
+                <field name="group_by"
+                       attrs="{'invisible': [('invoicing_sales', '=', False)]}"/>
             </field>
         </field>
     </record>
