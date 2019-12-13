@@ -71,6 +71,10 @@ Contributors
 
 * Levent Karakaş
 * Bejaoui Souheil <souheil.bejaoui@acsone.eu>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
+
+  * Nikul Chaudhary <nikul.chaudhary.serpentcs@gmail.com>
+
 
 Maintainers
 ~~~~~~~~~~~
