@@ -6,6 +6,7 @@ python:
   - "3.5"
 
 addons:
+  postgresql: "9.6"
   apt:
 # only add the two lines below if you need wkhtmltopdf for your tests
 #    sources:
@@ -25,7 +26,7 @@ addons:
 
 env:
   global:
-  - VERSION="11.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
+  - VERSION="11.0" TESTS="0" LINT_CHECK="0" MAKEPOT="0"
 
   matrix:
   - LINT_CHECK="1"
