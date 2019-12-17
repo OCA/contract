@@ -1,71 +1,44 @@
-# Copyright 2019 Tecnativa - Vicent Cubells <vicent.cubells@tecnativa.com>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2019 Tecnativa - Vicent Cubells
+# Copyright 2019 Tecnativa - Carlos Dauden
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from dateutil.relativedelta import relativedelta
-
-from odoo.tests import common
-from odoo import fields
+from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
-class TestContractPriceRevision(common.SavepointCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestContractPriceRevision, cls).setUpClass()
-        partner = cls.env['res.partner'].create({
-            'name': 'Partner test',
-        })
-        product = cls.env['product.product'].create({
-            'name': 'Test Product',
-        })
-        cls.contract = cls.env['account.analytic.account'].create({
-            'name': 'Contract test',
-            'partner_id': partner.id,
-            'date_start': fields.Date.today(),
-            'recurring_next_date': fields.Date.to_string(
-                fields.date.today() + relativedelta(days=7)),
-            'recurring_rule_type': 'monthly',
-            'recurring_invoice_line_ids': [(0, 0, {
-                'product_id': product.id,
-                'quantity': 1.0,
-                'uom_id': product.uom_id.id,
-                'name': product.name,
-                'price_unit': 33.0,
-                'automatic_price': True,
-            }), (0, 0, {
-                'product_id': product.id,
-                'quantity': 1.0,
-                'uom_id': product.uom_id.id,
-                'name': product.name,
-                'price_unit': 25.0,
-                'automatic_price': False,
-            })]
-        })
+class TestContractPriceRevision(TestContractBase):
 
     def execute_wizard(self):
-        wizard = self.env['create.revision.line.wizard'].create({
-            'date_start': fields.Date.today(),
-            'date_end': fields.Date.to_string(
-                fields.date.today() + relativedelta(years=1)),
+        wizard = self.env['contract.price.revision.wizard'].create({
+            'date_start': '2018-02-15',
             'variation_percent': 100.0,
         })
         wizard.with_context(
             {'active_ids': [self.contract.id]}).action_apply()
 
     def test_contract_price_revision_wizard(self):
-        self.assertEqual(len(self.contract.recurring_invoice_line_ids.ids), 2)
+        # This is for checking if this line is not versioned
+        self.acct_line.copy({'automatic_price': True})
+        self.assertEqual(len(self.contract.contract_line_ids.ids), 2)
         self.execute_wizard()
-        self.assertEqual(len(self.contract.recurring_invoice_line_ids.ids), 3)
-        lines = self.contract.mapped('recurring_invoice_line_ids').filtered(
-            lambda x: x.price_unit == 50.0)
+        self.assertEqual(len(self.contract.contract_line_ids.ids), 3)
+        lines = self.contract.contract_line_ids.filtered(
+            lambda x: x.price_unit == 200.0)
         self.assertEqual(len(lines), 1)
 
     def test_contract_price_revision_invoicing(self):
+        self.acct_line.copy({'automatic_price': True})
         self.execute_wizard()
-        self.contract.recurring_create_invoice()
+        invoice = self.contract.recurring_create_invoice()
         invoices = self.env['account.invoice'].search([
-            ('contract_id', '=', self.contract.id)])
+            ('invoice_line_ids.contract_line_id', 'in',
+             self.contract.contract_line_ids.ids)])
         self.assertEqual(len(invoices), 1)
-        lines = invoices.mapped('invoice_line_ids')
+        lines = invoice.invoice_line_ids
         self.assertEqual(len(lines), 2)
-        lines = lines.filtered(lambda x: x.price_unit == 50.0)
+        lines = lines.filtered(lambda x: x.price_unit == 100.0)
+        self.assertEqual(len(lines), 1)
+        invoice = self.contract.recurring_create_invoice()
+        lines = invoice.invoice_line_ids
+        self.assertEqual(len(lines), 2)
+        lines = lines.filtered(lambda x: x.price_unit == 200.0)
         self.assertEqual(len(lines), 1)
