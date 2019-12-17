@@ -11,10 +11,12 @@ class ContractContract(models.Model):
             _prepare_recurring_invoices_values(date_ref=date_ref)
         return invoices_values
 
+    @api.depends('contract_line_ids')
     def _compute_sale_order_count(self):
         super(ContractContract, self)._compute_sale_order_count()
-        contract_count = self.contract_line_ids.\
-            mapped('sale_order_line_id.order_id.contract_id')
+        contract_count = len(
+            self.contract_line_ids.
+            mapped('sale_order_line_id.order_id.contract_id')) or 0
         self.sale_order_count += contract_count
 
     @api.multi
