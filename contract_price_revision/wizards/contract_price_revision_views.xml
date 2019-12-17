@@ -3,7 +3,7 @@
 
     <record id="contract_line_duplicate_wizard_view" model="ir.ui.view">
         <field name="name">Create Revision Line</field>
-        <field name="model">create.revision.line.wizard</field>
+        <field name="model">contract.price.revision.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <div>
@@ -31,8 +31,8 @@
 
     <act_window id="contract_line_duplicate_wizard_action"
         name="Create revision of contract lines"
-        src_model="account.analytic.account"
-        res_model="create.revision.line.wizard"
+        src_model="contract.contract"
+        res_model="contract.price.revision.wizard"
         view_type="form" view_mode="form"
         key2="client_action_multi" target="new"
     />
