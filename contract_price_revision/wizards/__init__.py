@@ -1,1 +1,1 @@
-from . import create_revision_line
+from . import contract_price_revision
