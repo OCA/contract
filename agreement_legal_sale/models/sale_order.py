@@ -44,3 +44,18 @@ class SaleOrder(models.Model):
                             'agreement_id': order.agreement_id.id,
                         })
         return res
+
+    def action_confirm(self):
+        # If sale_timesheet is installed, the _action_confirm()
+        # may be setting an Analytic Account on the SO.
+        # But since it is not a dependency, that can happen after
+        # we create the Agreement.
+        # To work around that, we check if that is the case,
+        # and make sure the SO Analytic Account is copied to the Agreement.
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            agreement = order.agreement_id
+            if (order.analytic_account_id and agreement and
+                    not agreement.analytic_account_id):
+                agreement.analytic_account_id = order.analytic_account_id
+        return res

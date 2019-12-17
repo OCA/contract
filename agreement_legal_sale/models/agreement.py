@@ -9,7 +9,8 @@ class Agreement(models.Model):
 
     sale_id = fields.Many2one('sale.order', string='Sales Order')
     analytic_account_id = fields.Many2one(
-        'account.analytic.account', 'Analytic Account', readonly=True,
+        'account.analytic.account',
+        'Analytic Account',
         copy=False)
 
 
