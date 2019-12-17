@@ -1,6 +1,6 @@
 To use this module:
 
-#. Go to **Invoicing > Documents > Customer Contracts** if you are a billing
+#. Go to **Invoicing > Customers > Customer Contracts** if you are a billing
    user.
 #. Select as many contracts as you want to update line prices.
 #. Click on Action button and execute the wizard **Create revision of contract
