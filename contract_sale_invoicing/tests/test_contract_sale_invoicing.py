@@ -45,3 +45,10 @@ class TestContractSaleInvoicing(TestContractBase):
         self.sale_order.action_confirm()
         self.contract.recurring_create_invoice()
         self.assertEqual(self.sale_order.invoice_status, 'to invoice')
+
+    def test_multi_contract_recurring_create_invoice(self):
+        self.contract.copy()
+        self.contract.copy()
+        self.contract.copy()
+        self.contract.copy()
+        self.env['contract.contract'].cron_recurring_create_invoice()
