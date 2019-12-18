@@ -23,7 +23,7 @@ class ContractContract(models.Model):
                 continue
             invoice_values = contract._prepare_invoice(date_ref)
 
-            #Search Contract in sale order
+            # Search Contract in sale order
             order_ids = self.env['sale.order'].search([
                 ('partner_id', '=', contract.partner_id.id),
                 ('contract_id', '=', contract.id),
@@ -36,13 +36,16 @@ class ContractContract(models.Model):
                 )
                 if invoice_line_values:
 
-                    #Check Invoice and If It's Not Created then Updated Qty
+                    # Check Invoice and If It's Not Created then Updated Qty
                     for order_id in order_ids:
-                        invoice_ids = order_id.order_line.mapped('invoice_lines')
+                        invoice_ids =\
+                            order_id.order_line.mapped('invoice_lines')
                         if not invoice_ids:
                             for line in order_id.order_line:
-                                if line.product_id.id == invoice_line_values.get('product_id', False):
-                                    invoice_line_values['quantity'] += line.product_uom_qty
+                                if line.product_id.id == invoice_line_values.\
+                                        get('product_id', False):
+                                    invoice_line_values['quantity'
+                                        ] += line.product_uom_qty
 
                     invoice_values['invoice_line_ids'].append(
                         (0, 0, invoice_line_values)
