@@ -158,3 +158,105 @@ class TestContractLineForecastPeriod(TestContractBase):
         )
         self.assertTrue(self.acct_line.forecast_period_ids)
         self.assertEqual(len(self.acct_line.forecast_period_ids), 1)
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_9(self):
+        self.acct_line.write(
+            {
+                'date_start': "2019-01-14",
+                'recurring_next_date': "2019-01-31",
+                'date_end': "2020-01-14",
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'post-paid',
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[0].date_start,
+                self.acct_line.forecast_period_ids[0].date_end,
+                self.acct_line.forecast_period_ids[0].date_invoice,
+            ),
+            (
+                Date.to_date("2019-01-14"),
+                Date.to_date("2019-01-31"),
+                Date.to_date("2019-01-31"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[1].date_start,
+                self.acct_line.forecast_period_ids[1].date_end,
+                self.acct_line.forecast_period_ids[1].date_invoice,
+            ),
+            (
+                Date.to_date("2019-02-01"),
+                Date.to_date("2019-02-28"),
+                Date.to_date("2019-02-28"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[-1].date_start,
+                self.acct_line.forecast_period_ids[-1].date_end,
+                self.acct_line.forecast_period_ids[-1].date_invoice,
+            ),
+            (
+                Date.to_date("2020-01-01"),
+                Date.to_date("2020-01-14"),
+                Date.to_date("2020-01-14"),
+            ),
+        )
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_10(self):
+        self.acct_line.write(
+            {
+                'date_start': "2019-01-14",
+                'recurring_next_date': "2019-01-14",
+                'date_end': "2020-01-14",
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'pre-paid',
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[0].date_start,
+                self.acct_line.forecast_period_ids[0].date_end,
+                self.acct_line.forecast_period_ids[0].date_invoice,
+            ),
+            (
+                Date.to_date("2019-01-14"),
+                Date.to_date("2019-01-31"),
+                Date.to_date("2019-01-14"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[1].date_start,
+                self.acct_line.forecast_period_ids[1].date_end,
+                self.acct_line.forecast_period_ids[1].date_invoice,
+            ),
+            (
+                Date.to_date("2019-02-01"),
+                Date.to_date("2019-02-28"),
+                Date.to_date("2019-02-01"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[-1].date_start,
+                self.acct_line.forecast_period_ids[-1].date_end,
+                self.acct_line.forecast_period_ids[-1].date_invoice,
+            ),
+            (
+                Date.to_date("2020-01-01"),
+                Date.to_date("2020-01-14"),
+                Date.to_date("2020-01-01"),
+            ),
+        )
