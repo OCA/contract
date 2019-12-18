@@ -7,8 +7,49 @@ class ContractContract(models.Model):
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
-        invoices_values = super(ContractContract, self).\
-            _prepare_recurring_invoices_values(date_ref=date_ref)
+        """
+        overwrite Base Contract Method
+        """
+        invoices_values = []
+        for contract in self:
+            if not date_ref:
+                date_ref = contract.recurring_next_date
+            if not date_ref:
+                # this use case is possible when recurring_create_invoice is
+                # called for a finished contract
+                continue
+            contract_lines = contract._get_lines_to_invoice(date_ref)
+            if not contract_lines:
+                continue
+            invoice_values = contract._prepare_invoice(date_ref)
+
+            #Search Contract in sale order
+            order_ids = self.env['sale.order'].search([
+                ('partner_id', '=', contract.partner_id.id),
+                ('contract_id', '=', contract.id),
+            ])
+
+            for line in contract_lines:
+                invoice_values.setdefault('invoice_line_ids', [])
+                invoice_line_values = line._prepare_invoice_line(
+                    invoice_id=False
+                )
+                if invoice_line_values:
+
+                    #Check Invoice and If It's Not Created then Updated Qty
+                    for order_id in order_ids:
+                        invoice_ids = order_id.order_line.mapped('invoice_lines')
+                        if not invoice_ids:
+                            for line in order_id.order_line:
+                                if line.product_id.id == invoice_line_values.get('product_id', False):
+                                    invoice_line_values['quantity'] += line.product_uom_qty
+
+                    invoice_values['invoice_line_ids'].append(
+                        (0, 0, invoice_line_values)
+                    )
+
+            invoices_values.append(invoice_values)
+            contract_lines._update_recurring_next_date()
         return invoices_values
 
     @api.depends('contract_line_ids')
