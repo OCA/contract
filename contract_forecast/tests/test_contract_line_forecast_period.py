@@ -1,9 +1,9 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 
+from odoo.fields import Date
 from odoo.addons.contract.tests.test_contract import TestContractBase
 from odoo.tools import mute_logger
 
@@ -15,9 +15,9 @@ class TestContractLineForecastPeriod(TestContractBase):
             context=dict(self.env.context, test_queue_job_no_delay=True)
         )
         super(TestContractLineForecastPeriod, self).setUp()
-        self.this_year = date.today().year
-        self.line_vals["date_start"] = date.today()
-        self.line_vals["recurring_next_date"] = date.today()
+        self.this_year = Date.today().year
+        self.line_vals["date_start"] = Date.today()
+        self.line_vals["recurring_next_date"] = Date.today()
         self.acct_line = self.env["contract.line"].create(self.line_vals)
 
     @mute_logger("odoo.addons.queue_job.models.base")
@@ -132,7 +132,7 @@ class TestContractLineForecastPeriod(TestContractBase):
     def test_forecast_period_on_contract_line_update_7(self):
         self.acct_line.write(
             {
-                'date_end': date.today() + relativedelta(months=3),
+                'date_end': Date.today() + relativedelta(months=3),
                 'recurring_rule_type': "monthlylastday",
                 'recurring_invoicing_type': 'pre-paid',
                 'is_auto_renew': True,
@@ -140,7 +140,7 @@ class TestContractLineForecastPeriod(TestContractBase):
         )
         self.acct_line._onchange_date_start()
         self.assertTrue(self.acct_line.forecast_period_ids)
-        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 4)
 
     @mute_logger("odoo.addons.queue_job.models.base")
     def test_forecast_period_on_contract_line_update_8(self):
