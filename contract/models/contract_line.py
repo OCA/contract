@@ -540,7 +540,7 @@ class ContractLine(models.Model):
     def _onchange_date_start(self):
         for rec in self.filtered('date_start'):
             rec.recurring_next_date = self.get_next_invoice_date(
-                rec.date_start,
+                rec.next_period_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
@@ -809,6 +809,23 @@ class ContractLine(models.Model):
             })
 
     @api.multi
+    def _prepare_value_for_stop(self, date_end, manual_renew_needed):
+        self.ensure_one()
+        return {
+            'date_end': date_end,
+            'is_auto_renew': False,
+            'manual_renew_needed': manual_renew_needed,
+            'recurring_next_date': self.get_next_invoice_date(
+                self.next_period_date_start,
+                self.recurring_invoicing_type,
+                self.recurring_invoicing_offset,
+                self.recurring_rule_type,
+                self.recurring_interval,
+                max_date_end=date_end,
+            ),
+        }
+
+    @api.multi
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
         Put date_end on contract line
@@ -824,14 +841,11 @@ class ContractLine(models.Model):
             else:
                 if not rec.date_end or rec.date_end > date_end:
                     old_date_end = rec.date_end
-                    values = {
-                        'date_end': date_end,
-                        'is_auto_renew': False,
-                        'manual_renew_needed': manual_renew_needed,
-                    }
-                    if rec.last_date_invoiced == date_end:
-                        values['recurring_next_date'] = False
-                    rec.write(values)
+                    rec.write(
+                        rec._prepare_value_for_stop(
+                            date_end, manual_renew_needed
+                        )
+                    )
                     if post_message:
                         msg = _(
                             """Contract line for <strong>{product}</strong>
