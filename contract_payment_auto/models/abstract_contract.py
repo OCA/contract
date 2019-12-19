@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -6,11 +5,11 @@ from odoo import api, fields, models
 
 
 def _context_mail_templates(env):
-    return env['account.analytic.contract']._context_mail_templates()
+    return env['contract.abstract.contract']._context_mail_templates()
 
 
-class AccountAnalyticContract(models.Model):
-    _inherit = 'account.analytic.contract'
+class AbstractContract(models.AbstractModel):
+    _inherit = 'contract.abstract.contract'
 
     invoice_mail_template_id = fields.Many2one(
         string='Invoice Message',
@@ -44,7 +43,7 @@ class AccountAnalyticContract(models.Model):
     )
     is_auto_pay = fields.Boolean(
         string='Auto Pay?',
-        default=True,
+        default=False,
         help="Check this to enable automatic payment for invoices that are "
              "created for this contract.",
     )

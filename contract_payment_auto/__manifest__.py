@@ -5,7 +5,7 @@
 {
     "name": "Contract - Auto Payment",
     "summary": "Adds automatic payments to contracts.",
-    "version": "10.0.1.0.1",
+    "version": "12.0.1.0.0",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "LasLabs, "
@@ -18,8 +18,8 @@
     "data": [
         "data/mail_template_data.xml",
         "data/ir_cron_data.xml",
-        "views/account_analytic_account_view.xml",
-        "views/account_analytic_contract_view.xml",
+        "views/contract_view.xml",
+        "views/contract_template_view.xml",
         "views/res_partner_view.xml",
     ],
     "installable": True,

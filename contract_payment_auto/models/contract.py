@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -12,8 +11,8 @@ from odoo import api, fields, models, _
 _logger = logging.getLogger(__name__)
 
 
-class AccountAnalyticAccount(models.Model):
-    _inherit = 'account.analytic.account'
+class Contract(models.Model):
+    _inherit = 'contract.contract'
 
     payment_token_id = fields.Many2one(
         string='Payment Token',
@@ -38,25 +37,25 @@ class AccountAnalyticAccount(models.Model):
         invoice_lines = self.env['account.invoice.line'].search([
             ('invoice_id.state', '=', 'open'),
             ('invoice_id.auto_pay_attempts', '>', 0),
-            ('account_analytic_id.is_auto_pay', '=', True),
+            ('contract_line_id.contract_id.is_auto_pay', '=', True),
         ])
         now = datetime.now()
 
         for invoice_line in invoice_lines:
 
-            account = invoice_line.account_analytic_id
+            contract = invoice_line.contract_line_id.contract_id
             invoice = invoice_line.invoice_id
-            fail_time = fields.Datetime.from_string(invoice.auto_pay_failed)
-            retry_delta = timedelta(hours=account.auto_pay_retry_hours)
+            fail_time = invoice.auto_pay_failed
+            retry_delta = timedelta(hours=contract.auto_pay_retry_hours)
             retry_time = fail_time + retry_delta
 
             if retry_time < now:
-                account._do_auto_pay(invoice)
+                contract._do_auto_pay(invoice)
 
     @api.multi
-    def _create_invoice(self):
+    def _recurring_create_invoice(self):
         """ If automatic payment is enabled, perform auto pay actions. """
-        invoice = super(AccountAnalyticAccount, self)._create_invoice()
+        invoice = super(Contract, self)._recurring_create_invoice()
         if not self.is_auto_pay:
             return invoice
         self._do_auto_pay(invoice)
@@ -140,9 +139,7 @@ class AccountAnalyticAccount(models.Model):
         """ Return values for create of payment.transaction for invoice."""
         amount_due = invoice.residual
         partner = token.partner_id
-        reference = self.env['payment.transaction'].get_next_reference(
-            invoice.number,
-        )
+        reference = self.env['payment.transaction']._compute_reference()
         return {
             'reference': '%s' % reference,
             'acquirer_id': token.acquirer_id.id,
