@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo.tests.common import TransactionCase
 
 
-class TestAccountAnalyticContract(TransactionCase):
+class TestContractTemplate(TransactionCase):
 
     def setUp(self):
-        super(TestAccountAnalyticContract, self).setUp()
-        self.Model = self.env['account.analytic.contract']
+        super(TestContractTemplate, self).setUp()
+        self.Model = self.env['contract.template']
 
     def test_default_invoice_mail_template_id(self):
         """ It should return a mail template associated with invoice. """
