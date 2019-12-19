@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="view_order_form_form_view" model="ir.ui.view">
+        <field name="name">sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="contract_id" domain="[('partner_id', '=', partner_id)]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
