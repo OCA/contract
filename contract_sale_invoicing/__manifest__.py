@@ -16,5 +16,6 @@
     ],
     'data': [
         'views/contract_view.xml',
+        'views/sale_order.xml',
     ],
 }
