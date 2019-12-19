@@ -2315,3 +2315,19 @@ class TestContract(TestContractBase):
                 'recurring_next_date': '2019-01-01',
                 'last_date_invoiced': '2019-06-01',
             })
+
+    def test_stop_and_update_recurring_invoice_date(self):
+        self.acct_line.write(
+            {
+                'date_start': '2019-01-01',
+                'date_end': '2019-12-31',
+                'recurring_next_date': '2020-01-01',
+                'recurring_invoicing_type': 'post-paid',
+                'recurring_rule_type': 'yearly',
+            }
+        )
+        self.acct_line.stop(to_date('2019-05-31'))
+        self.assertEqual(self.acct_line.date_end, to_date('2019-05-31'))
+        self.assertEqual(
+            self.acct_line.recurring_next_date, to_date('2019-06-01')
+        )
