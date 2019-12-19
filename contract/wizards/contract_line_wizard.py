@@ -27,7 +27,6 @@ class ContractLineWizard(models.TransientModel):
         index=True,
     )
 
-    @api.multi
     def stop(self):
         for wizard in self:
             wizard.contract_line_id.stop(
@@ -35,7 +34,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def plan_successor(self):
         for wizard in self:
             wizard.contract_line_id.plan_successor(
@@ -43,7 +41,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def stop_plan_successor(self):
         for wizard in self:
             wizard.contract_line_id.stop_plan_successor(
@@ -51,7 +48,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def uncancel(self):
         for wizard in self:
             wizard.contract_line_id.uncancel(wizard.recurring_next_date)

@@ -16,14 +16,27 @@ class ContractAbstractContract(models.AbstractModel):
     # These fields will not be synced to the contract
     NO_SYNC = ['name', 'partner_id', 'company_id']
 
+    @api.model
+    def _get_default_invoice_incoterm(self):
+        ''' Get the default incoterm for invoice. '''
+        return self.env.company.incoterm_id
+
+    incoterm_id = fields.Many2one('account.incoterms', string='Incoterm',
+        default=_get_default_invoice_incoterm,
+        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
+
     name = fields.Char(required=True)
+    date = fields.Date( string='Signed Date', default=lambda self: fields.Date.today())
+
     # Needed for avoiding errors on several inherited behaviors
     partner_id = fields.Many2one(
         comodel_name="res.partner", string="Partner", index=True
     )
-    pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist', string='Pricelist'
-    )
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
+    currency_id = fields.Many2one(
+        related="pricelist_id.currency_id",
+        string="Pricelist currency",
+        store=True,  )
     contract_type = fields.Selection(
         selection=[('sale', 'Customer'), ('purchase', 'Supplier')],
         default='sale',
@@ -46,6 +59,8 @@ class ContractAbstractContract(models.AbstractModel):
             self._name
         ),
     )
+
+
 
     @api.onchange('contract_type')
     def _onchange_contract_type(self):

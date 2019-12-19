@@ -18,6 +18,8 @@
                         <field name="specific_price" invisible="1"/>
                         <field colspan="2" name="price_unit"
                                attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                        <field colspan="2" name="tax_id" widget='many2many_tags'/>
+                               
                         <field colspan="2" name="discount" groups="base.group_no_one"/>
                     </group>
                     <group col="4">
@@ -59,8 +61,8 @@
                             </div>
                         </group>
                         <group>
-                            <field name="recurring_invoicing_type"
-                                   attrs="{'invisible': [('recurring_rule_type', '=', 'monthlylastday')]}"/>
+                            <field name="recurring_invoicing_type"/>
+                            <field name="recurring_invoicing_offset"/>
                         </group>
                     </group>
                 </sheet>

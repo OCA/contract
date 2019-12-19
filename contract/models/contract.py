@@ -7,7 +7,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 from odoo.tools.translate import _
 
 
@@ -21,9 +21,7 @@ class ContractContract(models.Model):
         'contract.abstract.contract',
     ]
 
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean( default=True,)
     code = fields.Char(
         string="Reference",
     )
@@ -32,11 +30,7 @@ class ContractContract(models.Model):
         comodel_name='account.analytic.account',
         ondelete='restrict',
     )
-    currency_id = fields.Many2one(
-        related="company_id.currency_id",
-        string="Currency",
-        readonly=True,
-    )
+
     contract_template_id = fields.Many2one(
         string='Contract Template', comodel_name='contract.template'
     )
@@ -92,7 +86,6 @@ class ContractContract(models.Model):
         index=True
     )
 
-    @api.multi
     def _inverse_partner_id(self):
         for rec in self:
             if not rec.invoice_partner_id:
@@ -100,54 +93,32 @@ class ContractContract(models.Model):
                     ['invoice']
                 )['invoice']
 
-    @api.multi
     def _get_related_invoices(self):
         self.ensure_one()
-
         invoices = (
-            self.env['account.invoice.line']
-            .search(
-                [
-                    (
-                        'contract_line_id',
-                        'in',
-                        self.contract_line_ids.ids,
-                    )
-                ]
-            )
-            .mapped('invoice_id')
-        )
-        invoices |= self.env['account.invoice'].search(
-            [('old_contract_id', '=', self.id)]
-        )
+            self.env['account.move'].search([('contract_id','=',self.id),]) )
         return invoices
 
-    @api.multi
     def _compute_invoice_count(self):
         for rec in self:
             rec.invoice_count = len(rec._get_related_invoices())
 
-    @api.multi
     def action_show_invoices(self):
         self.ensure_one()
         tree_view_ref = (
-            'account.invoice_supplier_tree'
-            if self.contract_type == 'purchase'
-            else 'account.invoice_tree_with_onboarding'
+            'account.move_supplier_tree' if self.contract_type == 'purchase' else 'account.move_tree_with_onboarding'
         )
         form_view_ref = (
-            'account.invoice_supplier_form'
-            if self.contract_type == 'purchase'
-            else 'account.invoice_form'
+            'account.move_supplier_form' if self.contract_type == 'purchase' else 'account.move_form'
         )
         tree_view = self.env.ref(tree_view_ref, raise_if_not_found=False)
         form_view = self.env.ref(form_view_ref, raise_if_not_found=False)
         action = {
             'type': 'ir.actions.act_window',
             'name': 'Invoices',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'view_type': 'form',
-            'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
+            'view_mode': 'tree,form,activity',
             'domain': [('id', 'in', self._get_related_invoices().ids)],
         }
         if tree_view and form_view:
@@ -173,7 +144,7 @@ class ContractContract(models.Model):
             ).mapped('recurring_next_date')
             if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)
-
+                
     @api.depends('contract_line_ids.create_invoice_visibility')
     def _compute_create_invoice_visibility(self):
         for contract in self:
@@ -234,7 +205,6 @@ class ContractContract(models.Model):
             }
         }
 
-    @api.multi
     def _convert_contract_lines(self, contract):
         self.ensure_one()
         new_lines = self.env['contract.line']
@@ -252,49 +222,55 @@ class ContractContract(models.Model):
         new_lines._onchange_is_auto_renew()
         return new_lines
 
-    @api.multi
+
     def _prepare_invoice(self, date_invoice, journal=None):
+        """
+        Taken from sale/models/sale.py
+        Prepare the dict of values to create the new invoice for a sales order. This method may be
+        overridden to implement custom invoice generation (making sure to call super() to establish
+        a clean extension chain).
+        """
         self.ensure_one()
+        if self.contract_type == 'sale':
+            invoice_type = 'out_invoice'
+        else: #purchase
+            invoice_type = 'in_invoice'
         if not journal:
-            journal = (
-                self.journal_id
-                if self.journal_id.type == self.contract_type
-                else self.env['account.journal'].search(
-                    [
-                        ('type', '=', self.contract_type),
-                        ('company_id', '=', self.company_id.id),
-                    ],
-                    limit=1,
-                )
-            )
-        if not journal:
-            raise ValidationError(
-                _("Please define a %s journal for the company '%s'.")
-                % (self.contract_type, self.company_id.name or '')
-            )
+            if self.journal_id:
+                journal = self.journal_id
+            else:
+                journal = self.env['account.move'].with_context(force_company=self.company_id.id, default_type=invoice_type)._get_default_journal()
+                if not journal:
+                    raise UserError(_('Please define an accounting %s journal for the company %s (%s).') % (self.contract_type, self.company_id.name, self.company_id.id))
+
         currency = (
             self.pricelist_id.currency_id
             or self.partner_id.property_product_pricelist.currency_id
             or self.company_id.currency_id
         )
-        invoice_type = 'out_invoice'
-        if self.contract_type == 'purchase':
-            invoice_type = 'in_invoice'
-        return {
-            'name': self.code,
-            'type': invoice_type,
-            'partner_id': self.invoice_partner_id.id,
-            'currency_id': currency.id,
-            'date_invoice': date_invoice,
-            'journal_id': journal.id,
-            'origin': self.name,
-            'company_id': self.company_id.id,
-            'user_id': self.user_id.id,
-            'payment_term_id': self.payment_term_id.id,
-            'fiscal_position_id': self.fiscal_position_id.id,
-        }
 
-    @api.multi
+        invoice_vals = {
+            'name' : '/',
+            'date': date_invoice,
+            'ref':  '%s contract id=%s'%(self.contract_type,self.id),
+            'type': invoice_type,
+            'journal_id': journal.id,
+            'invoice_origin': 'Contract'+self.name+'id='+str(self.id),
+            'company_id': self.company_id.id,
+            'currency_id': currency.id,
+            'invoice_user_id': self.user_id and self.user_id.id,
+            'partner_id': self.invoice_partner_id.id,
+#            'partner_shipping_id': self.partner_id.id,
+            'fiscal_position_id': self.fiscal_position_id.id or self.invoice_partner_id.property_account_position_id.id,
+            'invoice_incoterm_id': self.incoterm_id.id, 
+            'invoice_payment_term_id': self.payment_term_id.id,
+            'invoice_line_ids': [],
+            'user_id': self.user_id.id,
+            'contract_id':self.id,
+        }
+        return invoice_vals
+
+
     def action_contract_send(self):
         self.ensure_one()
         template = self.env.ref('contract.email_contract_template', False)
@@ -335,31 +311,24 @@ class ContractContract(models.Model):
         # taken from the invoice's journal in _onchange_product_id
         # This code is not in finalize_creation_from_contract because it's
         # not possible to create an invoice line with no account
-        new_invoice = self.env['account.invoice'].new(invoice_values)
-        for invoice_line in new_invoice.invoice_line_ids:
+        new_invoice = self.env['account.move'].new(invoice_values)
+
+      
+        for invoice_line in new_invoice.line_ids:
             name = invoice_line.name
-            account_analytic_id = invoice_line.account_analytic_id
+            analytic_account_id = invoice_line.analytic_account_id
             price_unit = invoice_line.price_unit
             invoice_line.invoice_id = new_invoice
             invoice_line._onchange_product_id()
             invoice_line.update(
                 {
-                    'name': name,
-                    'account_analytic_id': account_analytic_id,
-                    'price_unit': price_unit,
-                }
-            )
+                     'name': name,
+                     'analytic_account_id': analytic_account_id,
+                     'price_unit': price_unit,
+                }             )
+        return new_invoice._convert_to_record(new_invoice._cache)
         return new_invoice._convert_to_write(new_invoice._cache)
 
-    @api.model
-    def _finalize_invoice_creation(self, invoices):
-        for invoice in invoices:
-            payment_term = invoice.payment_term_id
-            fiscal_position = invoice.fiscal_position_id
-            invoice._onchange_partner_id()
-            invoice.payment_term_id = payment_term
-            invoice.fiscal_position_id = fiscal_position
-        invoices.compute_taxes()
 
     @api.model
     def _finalize_and_create_invoices(self, invoices_values):
@@ -369,7 +338,7 @@ class ContractContract(models.Model):
          - creates the invoices
          - finalizes the created invoices (onchange's, tax computation...)
         :param invoices_values: list of dictionaries (invoices values)
-        :return: created invoices (account.invoice)
+        :return: created invoices (account.move)
         """
         if isinstance(invoices_values, dict):
             invoices_values = [invoices_values]
@@ -378,8 +347,7 @@ class ContractContract(models.Model):
             final_invoices_values.append(
                 self._finalize_invoice_values(invoice_values)
             )
-        invoices = self.env['account.invoice'].create(final_invoices_values)
-        self._finalize_invoice_creation(invoices)
+        invoices = self.env['account.move'].create(final_invoices_values)
         return invoices
 
     @api.model
@@ -396,7 +364,6 @@ class ContractContract(models.Model):
         domain.extend([('recurring_next_date', '<=', date_ref)])
         return domain
 
-    @api.multi
     def _get_lines_to_invoice(self, date_ref):
         """
         This method fetches and returns the lines to invoice on the contract
@@ -411,7 +378,6 @@ class ContractContract(models.Model):
             and l.recurring_next_date <= date_ref
         )
 
-    @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
         """
         This method builds the list of invoices values to create, based on
@@ -433,9 +399,7 @@ class ContractContract(models.Model):
             invoice_values = contract._prepare_invoice(date_ref)
             for line in contract_lines:
                 invoice_values.setdefault('invoice_line_ids', [])
-                invoice_line_values = line._prepare_invoice_line(
-                    invoice_id=False
-                )
+                invoice_line_values = line._prepare_invoice_line() # function in contact_line
                 if invoice_line_values:
                     invoice_values['invoice_line_ids'].append(
                         (0, 0, invoice_line_values)
@@ -444,7 +408,6 @@ class ContractContract(models.Model):
             contract_lines._update_recurring_next_date()
         return invoices_values
 
-    @api.multi
     def recurring_create_invoice(self):
         """
         This method triggers the creation of the next invoices of the contracts
@@ -452,7 +415,6 @@ class ContractContract(models.Model):
         """
         return self._recurring_create_invoice()
 
-    @api.multi
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
         return self._finalize_and_create_invoices(invoices_values)

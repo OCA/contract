@@ -16,43 +16,43 @@ class ContractAbstractContractLine(models.AbstractModel):
     _name = 'contract.abstract.contract.line'
     _description = 'Abstract Recurring Contract Line'
 
-    product_id = fields.Many2one(
-        'product.product', string='Product', required=True
-    )
+    product_id = fields.Many2one('product.product', string='Product', required=True)
 
     name = fields.Text(string='Description', required=True)
     quantity = fields.Float(default=1.0, required=True)
-    uom_id = fields.Many2one(
-        'uom.uom', string='Unit of Measure', required=True
-    )
-    automatic_price = fields.Boolean(
-        string="Auto-price?",
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
+    automatic_price = fields.Boolean(string="Auto-price",
         help="If this is marked, the price will be obtained automatically "
         "applying the pricelist to the product. If not, you will be "
         "able to introduce a manual price",
     )
     specific_price = fields.Float(string='Specific Price')
-    price_unit = fields.Float(
-        string='Unit Price',
+    price_unit = fields.Float(string='Unit Price',
         compute="_compute_price_unit",
         inverse="_inverse_price_unit",
     )
-    price_subtotal = fields.Float(
-        compute='_compute_price_subtotal',
-        digits=dp.get_precision('Account'),
-        string='Sub Total',
-    )
-    discount = fields.Float(
-        string='Discount (%)',
-        digits=dp.get_precision('Discount'),
-        help='Discount that is applied in generated invoices.'
-        ' It should be less or equal to 100',
-    )
+    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+
+    contract_id = fields.Many2one(string='Contract', comodel_name='contract.contract', required=True,ondelete='cascade',)
+
+    pricelist_id = fields.Many2one(related='contract_id.pricelist_id', depends=['contract_id'], string='Pricelist',store=True)
+    currency_id = fields.Many2one(related='contract_id.currency_id', depends=['contract_id'], store=True, string='Currency')
+    company_id = fields.Many2one(related='contract_id.company_id', string='Company',  readonly=True, index=True)
+
+
+
+    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True,currency_field='currency_id')
+    price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True,currency_field='currency_id')
+    price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True,currency_field='currency_id')
+
+    # discount does not have any sense because can be a discounted pricelist or directly in price
+    discount = fields.Float(string='Discount (%)',digits=dp.get_precision('Discount'),help='Discount that is applied in generated invoices.'' It should be less or equal to 100',)
     sequence = fields.Integer(
         string="Sequence",
         default=10,
         help="Sequence of the contract line when displaying contracts",
     )
+   
     recurring_rule_type = fields.Selection(
         [
             ('daily', 'Day(s)'),
@@ -70,8 +70,16 @@ class ContractAbstractContractLine(models.AbstractModel):
         [('pre-paid', 'Pre-paid'), ('post-paid', 'Post-paid')],
         default='pre-paid',
         string='Invoicing type',
-        help="Specify if process date is 'from' or 'to' invoicing date",
+        help="Specify if the invoice must be generated at the beginning (pre-paid) or end (post-paid) of the period.",
         required=True,
+    )
+    recurring_invoicing_offset = fields.Integer(
+        compute="_compute_recurring_invoicing_offset",
+        string="Invoicing offset",
+        help=(
+            "Number of days to offset the invoice from the period end "
+            "date (in post-paid mode) or start date (in pre-paid mode)."
+        )
     )
     recurring_interval = fields.Integer(
         default=1,
@@ -108,12 +116,27 @@ class ContractAbstractContractLine(models.AbstractModel):
         default='monthly',
         string='Termination Notice type',
     )
-    contract_id = fields.Many2one(
-        string='Contract',
-        comodel_name='contract.abstract.contract',
-        required=True,
-        ondelete='cascade',
-    )
+
+    @api.model
+    def _get_default_recurring_invoicing_offset(
+        self, recurring_invoicing_type, recurring_rule_type
+    ):
+        if (
+            recurring_invoicing_type == 'pre-paid'
+            or recurring_rule_type == 'monthlylastday'
+        ):
+            return 0
+        else:
+            return 1
+
+    @api.depends('recurring_invoicing_type', 'recurring_rule_type')
+    def _compute_recurring_invoicing_offset(self):
+        for rec in self:
+            rec.recurring_invoicing_offset = (
+                self._get_default_recurring_invoicing_offset(
+                    rec.recurring_invoicing_type, rec.recurring_rule_type
+                )
+            )
 
     @api.depends(
         'automatic_price',
@@ -151,20 +174,32 @@ class ContractAbstractContractLine(models.AbstractModel):
         for line in self.filtered(lambda x: not x.automatic_price):
             line.specific_price = line.price_unit
 
-    @api.multi
-    @api.depends('quantity', 'price_unit', 'discount')
-    def _compute_price_subtotal(self):
+    @api.depends('quantity', 'price_unit', 'discount','tax_id')
+    def _compute_amount(self):
+        """
+        Compute the amounts of the contract line.
+        """
         for line in self:
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.tax_id.compute_all(price, line.contract_id.currency_id, line.quantity, product=line.product_id, partner=line.contract_id.partner_id)
+#            print(f"{line}")
+            line.update({
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+            })
+
             subtotal = line.quantity * line.price_unit
             discount = line.discount / 100
             subtotal *= 1 - discount
-            if line.contract_id.pricelist_id:
+            if line.contract_id.pricelist_id:    
                 cur = line.contract_id.pricelist_id.currency_id
+                line.price_subtotal = subtotal
                 line.price_subtotal = cur.round(subtotal)
             else:
                 line.price_subtotal = subtotal
 
-    @api.multi
+
     @api.constrains('discount')
     def _check_discount(self):
         for line in self:
@@ -173,7 +208,6 @@ class ContractAbstractContractLine(models.AbstractModel):
                     _("Discount should be less or equal to 100")
                 )
 
-    @api.multi
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if not self.product_id:
@@ -201,6 +235,8 @@ class ContractAbstractContractLine(models.AbstractModel):
             uom=self.uom_id.id,
         )
         vals['name'] = self.product_id.get_product_multiline_description_sale()
-        vals['price_unit'] = product.price
+        vals['price_unit'] = product.lst_price  # or .price?
+        vals['tax_id'] = product.taxes_id if self.contract_id.contract_type == 'sale' else product.supplier_taxes_id
+
         self.update(vals)
         return {'domain': domain}

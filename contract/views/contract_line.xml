@@ -10,11 +10,16 @@
         <field name="arch" type="xml">
             <header position="inside">
                 <field name="state" widget="statusbar"/>
+ 
             </header>
             <group name="recurrence_info" position="inside">
                 <group>
+ 	               <field name="company_id" invisible='False'/>
+ 	               <field name="currency_id" invisible='False'/>
+ 
                     <field name="create_invoice_visibility" invisible="1"/>
                     <field name="date_start" required="1"/>
+                    <field name="next_period_date_start"/>
                     <field name="recurring_next_date"/>
                 </group>
                 <group>
@@ -47,7 +52,7 @@
     <record id="contract_line_customer_form_view" model="ir.ui.view">
         <field name="name">contract.line customer form view (in contract)</field>
         <field name="model">contract.line</field>
-        <field name="inherit_id" ref="contract_line_form_view"/>
+        <field name="inherit_id" ref="contract_line_form_view"/> 
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
@@ -81,6 +86,7 @@
         <field name="arch" type="xml">
             <tree decoration-muted="is_canceled"
                   decoration-info="create_invoice_visibility and not is_canceled">
+                <field name="company_id" invisible='True'/>
                 <field name="sequence" widget="handle"/>
                 <field name="product_id"/>
                 <field name="name"/>
@@ -90,6 +96,8 @@
                 <field name="automatic_price"/>
                 <field name="price_unit"
                        attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                
                 <field name="specific_price"
                        invisible="1"/>
                 <field name="discount"
