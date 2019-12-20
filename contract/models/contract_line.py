@@ -1169,17 +1169,18 @@ class ContractLine(models.Model):
         }
 
     @api.multi
-    def _get_renewal_dates(self):
+    def _get_renewal_new_date_end(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
         date_end = self._get_first_date_end(
             date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
-        return date_start, date_end
+        return date_end
 
     @api.multi
-    def _renew_create_line(self, date_start, date_end):
+    def _renew_create_line(self, date_end):
         self.ensure_one()
+        date_start = self.date_end + relativedelta(days=1)
         is_auto_renew = self.is_auto_renew
         self.stop(self.date_end, post_message=False)
         new_line = self.plan_successor(
@@ -1199,9 +1200,10 @@ class ContractLine(models.Model):
         res = self.env['contract.line']
         for rec in self:
             company = rec.contract_id.company_id
-            date_start, date_end = rec._get_renewal_dates()
+            date_end = rec._get_renewal_new_date_end()
+            date_start = rec.date_end + relativedelta(days=1)
             if company.create_new_line_at_contract_line_renew:
-                new_line = rec._renew_create_line(date_start, date_end)
+                new_line = rec._renew_create_line(date_end)
             else:
                 new_line = rec._renew_extend_line(date_end)
             res |= new_line
