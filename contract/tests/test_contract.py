@@ -109,6 +109,7 @@ class TestContractBase(common.SavepointCase):
             cls.line_vals
         )
         cls.acct_line.product_id.is_auto_renew = True
+        cls.contract.company_id.create_new_line_at_contract_line_renew = True
 
 
 class TestContract(TestContractBase):
