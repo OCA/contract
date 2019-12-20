@@ -1178,16 +1178,26 @@ class ContractLine(models.Model):
         return date_start, date_end
 
     @api.multi
+    def _renew_create_line(self, date_start, date_end):
+        self.ensure_one()
+        is_auto_renew = self.is_auto_renew
+        self.stop(self.date_end, post_message=False)
+        new_line = self.plan_successor(
+            date_start, date_end, is_auto_renew, post_message=False
+        )
+        new_line._onchange_date_start()
+        return new_line
+
+    @api.multi
     def renew(self):
         res = self.env['contract.line']
         for rec in self:
-            is_auto_renew = rec.is_auto_renew
-            rec.stop(rec.date_end, post_message=False)
+            company = rec.contract_id.company_id
             date_start, date_end = rec._get_renewal_dates()
-            new_line = rec.plan_successor(
-                date_start, date_end, is_auto_renew, post_message=False
-            )
-            new_line._onchange_date_start()
+            if company.create_new_line_at_contract_line_renew:
+                new_line = rec._renew_create_line(date_start, date_end)
+            else:
+                raise NotImplementedError
             res |= new_line
             msg = _(
                 """Contract line for <strong>{product}</strong>
