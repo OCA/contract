@@ -13,7 +13,21 @@ class ContractContract(models.Model):
     group_by = fields.Selection([
         ('analytic_account', 'Analytic Account'),
         ('contract', 'Contract')],
-        default='analytic_account', string='Group By')
+        default='analytic_account', string='Group invoices by')
+
+    def get_sale_order_domain(self):
+        domain = [
+            ('partner_invoice_id', 'child_of',
+             self.partner_id.commercial_partner_id.ids),
+            ('invoice_status', '=', 'to invoice'),
+            ('date_order', '<=',
+             '{} 23:59:59'.format(self.recurring_next_date)),
+            ]
+        if self.group_by == 'analytic_account':
+            domain.append(('analytic_account_id', '=', self.group_id.id))
+        elif self.group_by == 'contract':
+            domain.append(('contract_id', '=', self.id))
+        return domain
 
     @api.multi
     def _recurring_create_invoice(self, date_ref=False):
@@ -21,14 +35,8 @@ class ContractContract(models.Model):
         for rec in self:
             if not rec.invoicing_sales:
                 return invoices
-            sales = self.env['sale.order'].search([
-                ('analytic_account_id', '=', rec.group_id.id),
-                ('partner_invoice_id', 'child_of',
-                 rec.partner_id.commercial_partner_id.ids),
-                ('invoice_status', '=', 'to invoice'),
-                ('date_order', '<=',
-                 '{} 23:59:59'.format(rec.recurring_next_date)),
-            ])
+            so_domain = rec.get_sale_order_domain()
+            sales = self.env['sale.order'].search(so_domain)
             if sales:
                 invoice_ids = sales.action_invoice_create()
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
