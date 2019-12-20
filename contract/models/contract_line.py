@@ -1189,6 +1189,12 @@ class ContractLine(models.Model):
         return new_line
 
     @api.multi
+    def _renew_extend_line(self, date_end):
+        self.ensure_one()
+        self.date_end = date_end
+        return self
+
+    @api.multi
     def renew(self):
         res = self.env['contract.line']
         for rec in self:
@@ -1197,7 +1203,7 @@ class ContractLine(models.Model):
             if company.create_new_line_at_contract_line_renew:
                 new_line = rec._renew_create_line(date_start, date_end)
             else:
-                raise NotImplementedError
+                new_line = rec._renew_extend_line(date_end)
             res |= new_line
             msg = _(
                 """Contract line for <strong>{product}</strong>
