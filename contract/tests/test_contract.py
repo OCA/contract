@@ -109,6 +109,7 @@ class TestContractBase(common.SavepointCase):
             cls.line_vals
         )
         cls.acct_line.product_id.is_auto_renew = True
+        cls.contract.company_id.create_new_line_at_contract_line_renew = True
 
 
 class TestContract(TestContractBase):
@@ -1668,7 +1669,7 @@ class TestContract(TestContractBase):
         self.assertTrue(line_3.successor_contract_line_id)
         self.assertFalse(line_4.successor_contract_line_id)
 
-    def test_renew(self):
+    def test_renew_create_new_line(self):
         date_start = self.today - relativedelta(months=9)
         date_end = (
             date_start + relativedelta(months=12) - relativedelta(days=1)
@@ -1691,6 +1692,31 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(
             new_line.date_end, date_end + relativedelta(months=12)
+        )
+
+    def test_renew_extend_original_line(self):
+        self.contract.company_id.create_new_line_at_contract_line_renew = False
+        date_start = self.today - relativedelta(months=9)
+        date_end = (
+            date_start + relativedelta(months=12) - relativedelta(days=1)
+        )
+        self.acct_line.write(
+            {
+                'is_auto_renew': True,
+                'date_start': date_start,
+                'recurring_next_date': date_start,
+                'date_end': self.today,
+            }
+        )
+        self.acct_line._onchange_is_auto_renew()
+        self.assertEqual(self.acct_line.date_end, date_end)
+        self.acct_line.renew()
+        self.assertTrue(self.acct_line.is_auto_renew)
+        self.assertEqual(
+            self.acct_line.date_start, date_start
+        )
+        self.assertEqual(
+            self.acct_line.date_end, date_end + relativedelta(months=12)
         )
 
     def test_cron_recurring_create_invoice(self):
@@ -2280,3 +2306,12 @@ class TestContract(TestContractBase):
         self.assertTrue(self.acct_line.recurring_next_date)
         self.acct_line.stop(self.acct_line.last_date_invoiced)
         self.assertFalse(self.acct_line.recurring_next_date)
+
+    def test_check_last_date_invoiced_before_next_invoice_date(self):
+        with self.assertRaises(ValidationError):
+            self.acct_line.write({
+                'date_start': '2019-01-01',
+                'date_end': '2019-12-01',
+                'recurring_next_date': '2019-01-01',
+                'last_date_invoiced': '2019-06-01',
+            })
