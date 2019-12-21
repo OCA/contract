@@ -569,7 +569,9 @@ class ContractLine(models.Model):
                         % line.name
                     )
 
-    @api.constrains('date_start', 'date_end', 'last_date_invoiced')
+    @api.constrains(
+        'date_start', 'date_end', 'last_date_invoiced', 'recurring_next_date'
+    )
     def _check_last_date_invoiced(self):
         for rec in self.filtered('last_date_invoiced'):
             if rec.date_start and rec.date_start > rec.last_date_invoiced:
@@ -585,6 +587,17 @@ class ContractLine(models.Model):
                     _(
                         "You can't have the end date before the date of last "
                         "invoice for the contract line '%s'"
+                    )
+                    % rec.name
+                )
+            if (
+                rec.recurring_next_date
+                and rec.recurring_next_date <= rec.last_date_invoiced
+            ):
+                raise ValidationError(
+                    _(
+                        "You can't have the next invoice date before the date "
+                        "of last invoice for the contract line '%s'"
                     )
                     % rec.name
                 )
