@@ -78,10 +78,10 @@ class TestContract(common.HttpCase):
         self.assertEqual(len(invoice), 1)
         self.assertEqual(invoice._name, 'account.invoice')
 
-    def _create_invoice(self, open=False, sent=False):
+    def _create_invoice(self, opened=False, sent=False):
         self.contract.is_auto_pay = False
         invoice = self.contract._recurring_create_invoice()
-        if open or sent:
+        if opened or sent:
             invoice.action_invoice_open()
         if sent:
             invoice.sent = True
