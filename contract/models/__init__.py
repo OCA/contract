@@ -9,3 +9,4 @@ from . import contract_line
 from . import account_invoice
 from . import account_invoice_line
 from . import res_partner
+from . import contract_tag
