@@ -8,4 +8,4 @@ class ContractLine(models.Model):
     _inherit = 'contract.line'
 
     fsm_location_id = fields.Many2one('fsm.location', string='Service To',
-                                      index=True)
+                                      required=True, index=True)
