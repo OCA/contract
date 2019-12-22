@@ -10,10 +10,16 @@ class ContractContract(models.Model):
     invoicing_sales = fields.Boolean(
         string='Invoice Pending Sales Orders',
         help='Include sales to invoice on the contract invoice.')
-    group_by = fields.Selection([
+    filter_with = fields.Selection([
         ('analytic_account', 'Analytic Account'),
         ('contract', 'Contract')],
-        default='analytic_account', string='Group invoices by')
+        default='analytic_account', string='Filter with the same',
+        help="Select the sale orders with the same analytic account or "
+             "contract")
+    group_by = fields.Selection([
+        ('sale_order', 'Sale Order'),
+        ('contract', 'Contract')],
+        default='sale_order', string='Create one invoice per')
 
     def get_sale_order_domain(self):
         domain = [
@@ -23,9 +29,9 @@ class ContractContract(models.Model):
             ('date_order', '<=',
              '{} 23:59:59'.format(self.recurring_next_date)),
             ]
-        if self.group_by == 'analytic_account':
+        if self.filter_with == 'analytic_account':
             domain.append(('analytic_account_id', '=', self.group_id.id))
-        elif self.group_by == 'contract':
+        elif self.filter_with == 'contract':
             domain.append(('contract_id', '=', self.id))
         return domain
 
@@ -37,7 +43,7 @@ class ContractContract(models.Model):
                 return invoices
             so_domain = rec.get_sale_order_domain()
             sales = self.env['sale.order'].search(so_domain)
-            if sales:
+            if sales and self.group_by == 'sale_order':
                 invoice_ids = sales.action_invoice_create()
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
 
@@ -58,8 +64,7 @@ class ContractContract(models.Model):
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
-        invoices_values = super(ContractContract, self
-                                )._prepare_recurring_invoices_values()
+        invoices_values = super()._prepare_recurring_invoices_values()
         updated_invoices_values = []
         for invoice_val in invoices_values:
             invoice_line_values = {}
@@ -69,12 +74,11 @@ class ContractContract(models.Model):
                 contract_line_rec = self.env['contract.line'].\
                     browse(invoice_line.get('contract_line_id', False))
                 if contract_line_rec and contract_line_rec.contract_id and\
-                        contract_line_rec.contract_id.invoicing_sales:
-                    order_ids = self.env['sale.order'].search([
-                        ('partner_id', '=',
-                         contract_line_rec.contract_id.partner_id.id),
-                        ('contract_id', '=', contract_line_rec.contract_id.id),
-                    ])
+                        contract_line_rec.contract_id.invoicing_sales and \
+                        contract_line_rec.contract_id.group_by == 'contract':
+                    so_domain = \
+                        contract_line_rec.contract_id.get_sale_order_domain()
+                    order_ids = self.env['sale.order'].search(so_domain)
                     sale_order_line_product_qty = {}
                     for order_id in order_ids:
                         if not order_id.order_line.mapped('invoice_lines'):
@@ -121,7 +125,6 @@ class ContractContract(models.Model):
     def action_view_sales_orders(self):
         res = super(ContractContract, self).action_view_sales_orders()
         contracts = self.contract_line_ids.mapped(
-            'sale_order_line_id.order_id.contract_id'
-        )
+            'sale_order_line_id.order_id.contract_id')
         res.get('domain')[0][2].extend(contracts)
         return res
