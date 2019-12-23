@@ -1,9 +1,9 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 
+from odoo.fields import Date
 from odoo.addons.contract.tests.test_contract import TestContractBase
 from odoo.tools import mute_logger
 
@@ -15,9 +15,9 @@ class TestContractLineForecastPeriod(TestContractBase):
             context=dict(self.env.context, test_queue_job_no_delay=True)
         )
         super(TestContractLineForecastPeriod, self).setUp()
-        self.this_year = date.today().year
-        self.line_vals["date_start"] = date.today()
-        self.line_vals["recurring_next_date"] = date.today()
+        self.this_year = Date.today().year
+        self.line_vals["date_start"] = Date.today()
+        self.line_vals["recurring_next_date"] = Date.today()
         self.acct_line = self.env["contract.line"].create(self.line_vals)
 
     @mute_logger("odoo.addons.queue_job.models.base")
@@ -132,7 +132,7 @@ class TestContractLineForecastPeriod(TestContractBase):
     def test_forecast_period_on_contract_line_update_7(self):
         self.acct_line.write(
             {
-                'date_end': date.today() + relativedelta(months=3),
+                'date_end': Date.today() + relativedelta(months=3),
                 'recurring_rule_type': "monthlylastday",
                 'recurring_invoicing_type': 'pre-paid',
                 'is_auto_renew': True,
@@ -140,7 +140,7 @@ class TestContractLineForecastPeriod(TestContractBase):
         )
         self.acct_line._onchange_date_start()
         self.assertTrue(self.acct_line.forecast_period_ids)
-        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 4)
 
     @mute_logger("odoo.addons.queue_job.models.base")
     def test_forecast_period_on_contract_line_update_8(self):
@@ -158,3 +158,105 @@ class TestContractLineForecastPeriod(TestContractBase):
         )
         self.assertTrue(self.acct_line.forecast_period_ids)
         self.assertEqual(len(self.acct_line.forecast_period_ids), 1)
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_9(self):
+        self.acct_line.write(
+            {
+                'date_start': "2019-01-14",
+                'recurring_next_date': "2019-01-31",
+                'date_end': "2020-01-14",
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'post-paid',
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[0].date_start,
+                self.acct_line.forecast_period_ids[0].date_end,
+                self.acct_line.forecast_period_ids[0].date_invoice,
+            ),
+            (
+                Date.to_date("2019-01-14"),
+                Date.to_date("2019-01-31"),
+                Date.to_date("2019-01-31"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[1].date_start,
+                self.acct_line.forecast_period_ids[1].date_end,
+                self.acct_line.forecast_period_ids[1].date_invoice,
+            ),
+            (
+                Date.to_date("2019-02-01"),
+                Date.to_date("2019-02-28"),
+                Date.to_date("2019-02-28"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[-1].date_start,
+                self.acct_line.forecast_period_ids[-1].date_end,
+                self.acct_line.forecast_period_ids[-1].date_invoice,
+            ),
+            (
+                Date.to_date("2020-01-01"),
+                Date.to_date("2020-01-14"),
+                Date.to_date("2020-01-14"),
+            ),
+        )
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_on_contract_line_update_10(self):
+        self.acct_line.write(
+            {
+                'date_start': "2019-01-14",
+                'recurring_next_date': "2019-01-14",
+                'date_end': "2020-01-14",
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'pre-paid',
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[0].date_start,
+                self.acct_line.forecast_period_ids[0].date_end,
+                self.acct_line.forecast_period_ids[0].date_invoice,
+            ),
+            (
+                Date.to_date("2019-01-14"),
+                Date.to_date("2019-01-31"),
+                Date.to_date("2019-01-14"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[1].date_start,
+                self.acct_line.forecast_period_ids[1].date_end,
+                self.acct_line.forecast_period_ids[1].date_invoice,
+            ),
+            (
+                Date.to_date("2019-02-01"),
+                Date.to_date("2019-02-28"),
+                Date.to_date("2019-02-01"),
+            ),
+        )
+        self.assertEqual(
+            (
+                self.acct_line.forecast_period_ids[-1].date_start,
+                self.acct_line.forecast_period_ids[-1].date_end,
+                self.acct_line.forecast_period_ids[-1].date_invoice,
+            ),
+            (
+                Date.to_date("2020-01-01"),
+                Date.to_date("2020-01-14"),
+                Date.to_date("2020-01-01"),
+            ),
+        )
