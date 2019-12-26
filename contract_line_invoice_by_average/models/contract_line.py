@@ -3,8 +3,8 @@
 from odoo import api, fields, models
 
 
-class ContractLine(models.AbstractModel):
-    _inherit = 'contract.abstract.contract.line'
+class ContractLine(models.Model):
+    _inherit = 'contract.line'
 
     products_invoiced_by_avg_ids = fields.Many2many(
         comodel_name='product.product',

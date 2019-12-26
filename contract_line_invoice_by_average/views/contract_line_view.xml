@@ -1,14 +1,14 @@
 <odoo>
 
-	<record id='contract_abstract_contract_line_form_view' model='ir.ui.view'>
-		<field name='name'>inherit.contract.line.form.view</field>
-		<field name='model'>contract.abstract.contract.line</field>
-		<field name='inherit_id' ref='contract.contract_abstract_contract_line_form_view'/>
-		<field name='arch' type='xml'>
-			<field name='discount' position='before'>
-				<field name='products_invoiced_by_avg_ids' widget="many2many_tags"/>
-			</field>
-		</field>
-	</record>
+    <record id='contract_line_form_view' model='ir.ui.view'>
+        <field name='name'>inherit.contract.line.form.view</field>
+        <field name='model'>contract.line</field>
+        <field name='inherit_id' ref="contract.contract_line_form_view"/>
+        <field name='arch' type='xml'>
+            <field name='price_unit' position='after'>
+                <field name='products_invoiced_by_avg_ids' widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
 
 </odoo>
