@@ -45,3 +45,32 @@ class TestContractSaleInvoicing(TestContractBase):
         self.sale_order.action_confirm()
         self.contract.recurring_create_invoice()
         self.assertEqual(self.sale_order.invoice_status, 'to invoice')
+
+    def test_contract_sale_invoicing(self):
+        contract_copy = self.contract.copy({
+            'filter_with': 'contract',
+            'group_by': 'contract',
+            'invoicing_sales': True
+        })
+        so_val = {
+            'date_order': '2016-02-15',
+            'contract_id': contract_copy.id
+        }
+        sale_order_copy1 = self.sale_order.copy(so_val)
+        sale_order_copy2 = self.sale_order.copy(so_val)
+        sale_order_copy1.action_confirm()
+        sale_order_copy2.action_confirm()
+        self.env['contract.contract'].cron_recurring_create_invoice()
+        contract_line_list = [contract_copy.contract_line_ids.id,
+                              self.contract.contract_line_ids.id]
+        invoice_line = self.env['account.invoice.line'].search([
+            ('contract_line_id', 'in', contract_line_list)], order='id asc')
+        self.assertEqual(invoice_line[0].quantity, 1)
+        self.assertEqual(invoice_line[0].product_id,
+                         sale_order_copy1.order_line.product_id)
+        self.assertEqual(invoice_line[1].quantity, 1)
+        self.assertEqual(invoice_line[1].product_id,
+                         sale_order_copy1.order_line.product_id)
+        self.assertEqual(invoice_line[2].quantity, 3)
+        self.assertEqual(invoice_line[2].product_id,
+                         sale_order_copy1.order_line.product_id)

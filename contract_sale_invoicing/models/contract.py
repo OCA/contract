@@ -43,7 +43,7 @@ class ContractContract(models.Model):
                 return invoices
             so_domain = rec.get_sale_order_domain()
             sales = self.env['sale.order'].search(so_domain)
-            if sales and self.group_by == 'sale_order':
+            if sales and rec.group_by == 'sale_order':
                 invoice_ids = sales.action_invoice_create()
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
 
