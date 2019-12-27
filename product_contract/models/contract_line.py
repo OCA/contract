@@ -44,7 +44,7 @@ class ContractLine(models.Model):
                 rec.recurring_invoicing_type = (
                     rec.product_id.recurring_invoicing_type
                 )
-                rec.recurring_interval = 1
+                rec.recurring_interval = rec.product_id.recurring_interval
                 rec.is_auto_renew = rec.product_id.is_auto_renew
                 rec.auto_renew_interval = rec.product_id.auto_renew_interval
                 rec.auto_renew_rule_type = rec.product_id.auto_renew_rule_type
