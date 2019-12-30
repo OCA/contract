@@ -154,6 +154,7 @@ class SaleOrderLine(models.Model):
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
             'predecessor_contract_line_id': predecessor_contract_line_id,
+            'analytic_account_id': self.order_id.analytic_account_id.id,
         }
 
     @api.multi
