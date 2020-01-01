@@ -11,7 +11,8 @@ class ContractContract(models.Model):
         invoices = super()._recurring_create_invoice(date_ref)
         for contract_to_invoice in self:
             product_avg_qty_dict = {}
-            for each_contract_line in contract_to_invoice.contract_line_ids.filtered(lambda l: l.products_invoiced_by_avg_ids):
+            for each_contract_line in contract_to_invoice.contract_line_ids.\
+                filtered(lambda l: l.products_invoiced_by_avg_ids):
                 for each_avg_product in each_contract_line.products_invoiced_by_avg_ids:
                     product_avg_qty_dict.update(
                         {each_avg_product.id: each_contract_line.quantity})
