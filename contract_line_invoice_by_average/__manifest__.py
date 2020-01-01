@@ -8,7 +8,7 @@
     'category': 'Contract',
     'summary': "Contract Line Invoice By Average.",
     'author': 'Open Source Integrators, '
-			  'Serpent Consulting Services Pvt. Ltd.,'
+              'Serpent Consulting Services Pvt. Ltd.,'
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/oca/contract',
     'depends': [
