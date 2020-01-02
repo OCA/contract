@@ -2306,3 +2306,12 @@ class TestContract(TestContractBase):
         self.assertTrue(self.acct_line.recurring_next_date)
         self.acct_line.stop(self.acct_line.last_date_invoiced)
         self.assertFalse(self.acct_line.recurring_next_date)
+
+    def test_check_last_date_invoiced_before_next_invoice_date(self):
+        with self.assertRaises(ValidationError):
+            self.acct_line.write({
+                'date_start': '2019-01-01',
+                'date_end': '2019-12-01',
+                'recurring_next_date': '2019-01-01',
+                'last_date_invoiced': '2019-06-01',
+            })
