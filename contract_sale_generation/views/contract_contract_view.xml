@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <record id="account_analytic_contract_sale_view_form" model="ir.ui.view"> 
+        <field name="name">Account Analytic Contract Sale Form View</field> <field 
+        name="model">account.analytic.contract</field> <field name="inherit_id" ref="contract.account_analytic_contract_view_form"/> 
+        <field name="arch" type="xml"> <xpath expr="//field[@name='recurring_invoicing_type']" 
+        position="before"> <field name="type"/> </xpath> </field> </record> -->
+    <record id="contract_contract_customer_form_view"
+        model="ir.ui.view">
+        <field name="name">contract.contract sales form view (in
+            contract)
+        </field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id"
+            ref="contract.contract_contract_customer_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//button[@name='recurring_create_invoice']"
+                position="attributes">
+                <attribute name="attrs">{'invisible':
+                    [('type','!=','invoice')]}
+                </attribute>
+            </xpath>
+            <xpath
+                expr="//button[@name='recurring_create_invoice']"
+                position="before">
+                <button name="recurring_create_sale"
+                    type="object"
+                    attrs="{'invisible': [('type','!=','sale')]}"
+                    string="Create sales" />
+            </xpath>
+            <xpath expr="//group[@name='recurring_invoices']"
+                position="after">
+                <group name="recurring_sales">
+                    <group>
+                        <field name="type" />
+                        <field name="client_order_ref"
+                            attrs="{'invisible':[('type','!=', 'sale')]}" />
+                        <field name="sale_autoconfirm"
+                            attrs="{'invisible':[('type','!=', 'sale')]}" />
+                    </group>
+                    <group>
+                        <field name="invoice_group_method_id"
+                            attrs="{'invisible':[('type','!=', 'sale')]}" />
+                        <field name="agreement_id"
+                            attrs="{'invisible':[('type','!=', 'sale')]}" />
+                        
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//div[@name='button_box']"
+                position="inside">
+                <button name="action_show_sales" type="object"
+                    icon="fa-usd"
+                    attrs="{'invisible':[('type','!=', 'sale')]}"
+                    class="oe_stat_button">
+                    <field string="Sales" name="sale_count"
+                        widget="statinfo" />
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
