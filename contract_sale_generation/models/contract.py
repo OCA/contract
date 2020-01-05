@@ -20,6 +20,7 @@ class ContractContract(models.Model):
     sale_count = fields.Integer(compute="_compute_sale_count")
     invoice_group_method_id = fields.Many2one(comodel_name="sale.invoice.group.method")
     agreement_id = fields.Many2one(comodel_name="agreement")
+    analytic_account_id = fields.Many2one(comodel_name="account.analytic.account")
     
 
     @api.multi
@@ -115,6 +116,8 @@ class ContractContract(models.Model):
         sale.pricelist_id = self.pricelist_id
         sale.invoice_group_method_id = self.invoice_group_method_id
         sale.mandate_id = self.mandate_id
+        sale.analytic_account_id = self.analytic_account_id
+        sale.agreement_id = self.agreement_id
         
         return sale._convert_to_write(sale._cache)
 
