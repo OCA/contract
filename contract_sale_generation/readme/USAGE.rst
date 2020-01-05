@@ -1,3 +1,4 @@
+
 To use this module, you need to:
 
 #. Go to Accounting -> Contracts and select or create a new contract.
