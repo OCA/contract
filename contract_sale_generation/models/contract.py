@@ -67,7 +67,8 @@ class ContractContract(models.Model):
         !!! The date of next invoice (recurring_next_date) is updated here !!!
         :return: list of dictionaries (invoices values)
         """
-        sales_values = []
+        sales = self.env['sale.order']
+        sol_model = self.env['sale.order.line']
         for contract in self:
             if not date_ref:
                 date_ref = contract.recurring_next_date
@@ -79,16 +80,13 @@ class ContractContract(models.Model):
             if not contract_lines:
                 continue
             sale_values = contract._prepare_sale(date_ref)
+            so_id = self.env['sale.order'].create(sale_values)
             for line in contract_lines:
-                sale_values.setdefault('order_line', [])
-                sale_line_values = line._prepare_sale_line(order_id=False)
-                if sale_line_values:
-                    sale_values['order_line'].append(
-                        (0, 0, sale_line_values)
-                    )
-            sales_values.append(sale_values)
+                sale_line_values = line._prepare_sale_line(order_id=so_id)
+                sol_model.create(sale_line_values)
+            sales |= so_id
             contract_lines._update_recurring_next_date()
-        return sales_values
+        return sales
 
 
     @api.multi
@@ -105,7 +103,7 @@ class ContractContract(models.Model):
             'client_order_ref': self.client_order_ref or '',
             'company_id': self.company_id.id,
             'user_id': self.user_id.id,
-            'contract_id': self.id
+            'contract_id': self.id,
         })
         # Get other invoice values from partner onchange
         sale.onchange_partner_id()
@@ -139,8 +137,8 @@ class ContractContract(models.Model):
         """
         sale_model = self.env['sale.order']
         sales = self.env['sale.order']
-        for so_vals in sales_values:
-            so_id = sale_model.create(so_vals)
+        for so_id in sales_values:
+#             so_id = sale_model.create(so_vals)
             if self.sale_autoconfirm:
                 so_id.action_confirm()
             sales |= so_id
