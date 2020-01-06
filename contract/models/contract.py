@@ -253,7 +253,8 @@ class ContractContract(models.Model):
 
         invoice_vals = {
             'name' : '/',
-            'date': date_invoice,
+            'invoice_date': date_invoice,
+            'auto_post':self.auto_post,
             'ref':  _('%s contract')%self.contract_type +' %s'%self.name,
             'type': invoice_type,
             'journal_id': journal.id,

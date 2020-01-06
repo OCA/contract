@@ -51,6 +51,9 @@ class ContractAbstractContract(models.AbstractModel):
         "('company_id', '=', company_id)]",
         index=True,
     )
+    auto_post = fields.Boolean(string='Auto Post Invoice', default=False,
+        help='If this checkbox is ticked, the generated invoice will have auto_post=True meaning that at the invoice date the invoice will be posted/validated')
+
     company_id = fields.Many2one(
         'res.company',
         string='Company',
