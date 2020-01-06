@@ -46,7 +46,7 @@ class ContractAbstractContractLine(models.AbstractModel):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True,currency_field='currency_id')
 
     # discount does not have any sense because can be a discounted pricelist or directly in price
-    discount = fields.Float(string='Discount (%)',digits=dp.get_precision('Discount'),help='Discount that is applied in generated invoices.'' It should be less or equal to 100',)
+    discount = fields.Float(string='Discount (%)',digits='Discount',help='Discount that is applied in generated invoices.'' It should be less or equal to 100',)
     sequence = fields.Integer(
         string="Sequence",
         default=10,
