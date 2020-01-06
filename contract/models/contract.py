@@ -144,6 +144,8 @@ class ContractContract(models.Model):
             ).mapped('recurring_next_date')
             if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)
+            else:
+                contract.recurring_next_date = False 
                 
     @api.depends('contract_line_ids.create_invoice_visibility')
     def _compute_create_invoice_visibility(self):
@@ -252,10 +254,10 @@ class ContractContract(models.Model):
         invoice_vals = {
             'name' : '/',
             'date': date_invoice,
-            'ref':  '%s contract id=%s'%(self.contract_type,self.id),
+            'ref':  _('%s contract')%self.contract_type +' %s'%self.name,
             'type': invoice_type,
             'journal_id': journal.id,
-            'invoice_origin': 'Contract'+self.name+'id='+str(self.id),
+            'invoice_origin': _('Contract')+' '+self.name,
             'company_id': self.company_id.id,
             'currency_id': currency.id,
             'invoice_user_id': self.user_id and self.user_id.id,
