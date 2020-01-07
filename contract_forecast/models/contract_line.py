@@ -74,6 +74,7 @@ class ContractLine(models.Model):
                     if rec.last_date_invoiced
                     else rec.date_start - relativedelta(days=1)
                 )
+                max_date_end = rec.date_end if not rec.is_auto_renew else False
                 while (
                     period_date_end
                     and rec._get_generate_forecast_periods_criteria(
@@ -85,7 +86,7 @@ class ContractLine(models.Model):
                         period_date_start,
                         rec.recurring_rule_type,
                         rec.recurring_interval,
-                        max_date_end=rec.date_end,
+                        max_date_end=max_date_end,
                     )
                     recurring_next_date = rec.get_next_invoice_date(
                         period_date_start,
@@ -93,7 +94,7 @@ class ContractLine(models.Model):
                         rec.recurring_invoicing_offset,
                         rec.recurring_rule_type,
                         rec.recurring_interval,
-                        rec.date_end,
+                        max_date_end=max_date_end,
                     )
                     if period_date_end and recurring_next_date:
                         values.append(
