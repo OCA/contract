@@ -658,7 +658,9 @@ class ContractLine(models.Model):
         }
         if invoice_id:
             invoice_line_vals['invoice_id'] = invoice_id.id
-        invoice_line = self.env['account.invoice.line'].new(invoice_line_vals)
+        invoice_line = self.env['account.invoice.line'].with_context(
+            force_company=self.contract_id.company_id.id,
+        ).new(invoice_line_vals)
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
