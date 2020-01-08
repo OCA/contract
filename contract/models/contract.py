@@ -283,7 +283,9 @@ class ContractContract(models.Model):
         invoice_type = 'out_invoice'
         if self.contract_type == 'purchase':
             invoice_type = 'in_invoice'
-        vinvoice = self.env['account.invoice'].new({
+        vinvoice = self.env['account.invoice'].with_context(
+            force_company=self.company_id.id,
+        ).new({
             'partner_id': self.invoice_partner_id.id,
             'type': invoice_type,
         })
@@ -345,7 +347,9 @@ class ContractContract(models.Model):
         # taken from the invoice's journal in _onchange_product_id
         # This code is not in finalize_creation_from_contract because it's
         # not possible to create an invoice line with no account
-        new_invoice = self.env['account.invoice'].new(invoice_values)
+        new_invoice = self.env['account.invoice'].with_context(
+            force_company=invoice_values['company_id'],
+        ).new(invoice_values)
         for invoice_line in new_invoice.invoice_line_ids:
             name = invoice_line.name
             account_analytic_id = invoice_line.account_analytic_id
