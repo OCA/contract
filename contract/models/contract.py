@@ -332,56 +332,32 @@ class ContractContract(models.Model):
 
     @api.model
     def _finalize_invoice_values(self, invoice_values):
-        """
-        This method adds the missing values in the invoice lines dictionaries.
-
-        If no account on the product, the invoice lines account is
-        taken from the invoice's journal in _onchange_product_id
-        This code is not in finalize_creation_from_contract because it's
-        not possible to create an invoice line with no account
-
-        :param invoice_values: dictionary (invoice values)
-        :return: updated dictionary (invoice values)
-        """
-        # If no account on the product, the invoice lines account is
-        # taken from the invoice's journal in _onchange_product_id
-        # This code is not in finalize_creation_from_contract because it's
-        # not possible to create an invoice line with no account
-        new_invoice = self.env['account.invoice'].with_context(
-            force_company=invoice_values['company_id'],
-        ).new(invoice_values)
-        for invoice_line in new_invoice.invoice_line_ids:
-            name = invoice_line.name
-            account_analytic_id = invoice_line.account_analytic_id
-            price_unit = invoice_line.price_unit
-            invoice_line.invoice_id = new_invoice
-            invoice_line._onchange_product_id()
-            invoice_line.update(
-                {
-                    'name': name,
-                    'account_analytic_id': account_analytic_id,
-                    'price_unit': price_unit,
-                }
-            )
-        return new_invoice._convert_to_write(new_invoice._cache)
+        """Provided for keeping compatibility in this version."""
+        # TODO: Must be removed in >=13.0
+        return invoice_values
 
     @api.model
     def _finalize_invoice_creation(self, invoices):
+        """This method is called right after the creation of the invoices.
+
+        Override it when you need to do something after the records are created
+        in the DB. If you need to modify any value, better to do it on the
+        _prepare_* methods on contract or contract line.
+        """
         invoices.compute_taxes()
 
     @api.model
     def _finalize_and_create_invoices(self, invoices_values):
-        """
-        This method:
-         - finalizes the invoices values (onchange's...)
+        """This method:
+
          - creates the invoices
-         - finalizes the created invoices (onchange's, tax computation...)
+         - finalizes the created invoices (tax computation...)
+
         :param invoices_values: list of dictionaries (invoices values)
         :return: created invoices (account.invoice)
         """
-        if isinstance(invoices_values, dict):
-            invoices_values = [invoices_values]
         final_invoices_values = []
+        # TODO: This call must be removed in >=13.0
         for invoice_values in invoices_values:
             final_invoices_values.append(
                 self._finalize_invoice_values(invoice_values)
@@ -442,7 +418,7 @@ class ContractContract(models.Model):
             for line in contract_lines:
                 invoice_values.setdefault('invoice_line_ids', [])
                 invoice_line_values = line._prepare_invoice_line(
-                    invoice_id=False
+                    invoice_values=invoice_values,
                 )
                 if invoice_line_values:
                     invoice_values['invoice_line_ids'].append(
