@@ -644,7 +644,7 @@ class ContractLine(models.Model):
                     )
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id=False):
+    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
         self.ensure_one()
         dates = self._get_period_to_invoice(
             self.last_date_invoiced, self.recurring_next_date
@@ -661,6 +661,11 @@ class ContractLine(models.Model):
         invoice_line = self.env['account.invoice.line'].with_context(
             force_company=self.contract_id.company_id.id,
         ).new(invoice_line_vals)
+        if invoice_values and not invoice_id:
+            invoice = self.env['account.invoice'].with_context(
+                force_company=self.contract_id.company_id.id,
+            ).new(invoice_values)
+            invoice_line.invoice_id = invoice
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
