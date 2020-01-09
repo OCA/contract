@@ -17,7 +17,6 @@
     ],
     'data': [
         'views/contract_line.xml',
-        'views/sale_view.xml'
     ],
     'license': 'AGPL-3',
     'installable': True,
