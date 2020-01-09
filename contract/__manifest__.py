@@ -9,7 +9,7 @@
 
 {
     'name': 'Recurring - Contracts Management',
-    'version': '12.0.5.0.0',
+    'version': '12.0.5.1.1',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
@@ -20,6 +20,7 @@
     'depends': ['base', 'account', 'product'],
     "external_dependencies": {"python": ["dateutil"]},
     'data': [
+        'security/contract_tag.xml',
         'security/ir.model.access.csv',
         'security/contract_security.xml',
         'report/report_contract.xml',
@@ -34,6 +35,7 @@
         'views/contract_template.xml',
         'views/contract_template_line.xml',
         'views/res_partner_view.xml',
+        'views/res_config_settings.xml',
     ],
     'installable': True,
 }
