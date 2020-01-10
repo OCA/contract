@@ -5,4 +5,5 @@ from . import (
     contract_contract,
     contract_line,
     fsm_location,
+    sale_order,
 )
