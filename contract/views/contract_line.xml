@@ -87,13 +87,13 @@
             <tree decoration-muted="is_canceled"
                   decoration-info="create_invoice_visibility and not is_canceled">
                 <field name="company_id" invisible='True'/>
-                <field name="sequence" widget="handle"/>
-                <field name="product_id"/>
+                <field name="sequence" widget="handle" optional="hide"/>
+                <field name="product_id" optional="hide"/>
                 <field name="name"/>
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" optional="hide"/>
                 <field name="quantity"/>
-                <field name="uom_id"/>
-                <field name="automatic_price"/>
+                <field name="uom_id" string="UoM" groups="uom.group_uom" optional="hide"/>
+                <field name="automatic_price" string='AutoPrice'/>
                 <field name="price_unit"
                        attrs="{'readonly': [('automatic_price', '=', True)]}"/>
                 <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
@@ -101,15 +101,15 @@
                 <field name="specific_price"
                        invisible="1"/>
                 <field name="discount"
-                       groups="base.group_no_one"/>
-                <field name="price_subtotal"/>
+                       groups="base.group_no_one" optional="hide"/>
+                <field name="price_subtotal" optional="hide"/>
                 <field name="recurring_interval"
                        invisible="1"/>
                 <field name="recurring_rule_type"
                        invisible="1"/>
                 <field name="recurring_invoicing_type"
                        invisible="1"/>
-                <field name="date_start" required="1"/>
+                <field name="date_start" required="1" optional='hide'/>
                 <field name="date_end"/>
                 <field name="recurring_next_date"
                        required="1"/>
