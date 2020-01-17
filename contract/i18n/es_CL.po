@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* contract
+# 	* contract
 #
 msgid ""
 msgstr ""
@@ -18,8 +18,10 @@ msgstr ""
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
-msgid "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "    <p>Hello ${object.partner_id.name or ''},</p>\n"
 "    <p>A new contract has been created: </p>\n"
 "\n"
@@ -32,7 +34,8 @@ msgid "\n"
 "\n"
 "       % if object.user_id:\n"
 "       % if object.user_id.email:\n"
-"       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
 "       % else:\n"
 "       &nbsp;&nbsp;Your Contact: ${object.user_id.name}\n"
 "       % endif\n"
@@ -44,22 +47,31 @@ msgid "\n"
 "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
 "                Phone: ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -100,14 +112,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -118,8 +130,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -134,7 +146,8 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-msgid "<strong>#END#</strong>: End date\n"
+msgid ""
+"<strong>#END#</strong>: End date\n"
 "                                    of\n"
 "                                    the\n"
 "                                    invoiced period"
@@ -151,7 +164,8 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-msgid "<strong>#START#</strong>: Start\n"
+msgid ""
+"<strong>#START#</strong>: Start\n"
 "                                    date\n"
 "                                    of the\n"
 "                                    invoiced period"
@@ -371,7 +385,7 @@ msgid "Company"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:320
+#: code:addons/contract/models/contract.py:321
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -490,7 +504,8 @@ msgstr ""
 #. module: contract
 #: code:addons/contract/models/contract_line.py:856
 #, python-format
-msgid "Contract line for <strong>{product}</strong>\n"
+msgid ""
+"Contract line for <strong>{product}</strong>\n"
 "                            stopped: <br/>\n"
 "                            - <strong>End</strong>: {old_end} -- {new_end}\n"
 "                            "
@@ -499,7 +514,8 @@ msgstr ""
 #. module: contract
 #: code:addons/contract/models/contract_line.py:936
 #, python-format
-msgid "Contract line for <strong>{product}</strong>\n"
+msgid ""
+"Contract line for <strong>{product}</strong>\n"
 "                    planned a successor: <br/>\n"
 "                    - <strong>Start</strong>: {new_date_start}\n"
 "                    <br/>\n"
@@ -510,7 +526,8 @@ msgstr ""
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1232
 #, python-format
-msgid "Contract line for <strong>{product}</strong>\n"
+msgid ""
+"Contract line for <strong>{product}</strong>\n"
 "                renewed: <br/>\n"
 "                - <strong>Start</strong>: {new_date_start}\n"
 "                <br/>\n"
@@ -521,7 +538,8 @@ msgstr ""
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1044
 #, python-format
-msgid "Contract line for <strong>{product}</strong>\n"
+msgid ""
+"Contract line for <strong>{product}</strong>\n"
 "                suspended: <br/>\n"
 "                - <strong>Suspension Start</strong>: {new_date_start}\n"
 "                <br/>\n"
@@ -669,7 +687,9 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__discount
 #: model:ir.model.fields,help:contract.field_contract_line__discount
 #: model:ir.model.fields,help:contract.field_contract_template_line__discount
-msgid "Discount that is applied in generated invoices. It should be less or equal to 100"
+msgid ""
+"Discount that is applied in generated invoices. It should be less or equal "
+"to 100"
 msgstr ""
 
 #. module: contract
@@ -746,7 +766,10 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,help:contract.field_res_company__create_new_line_at_contract_line_renew
 #: model:ir.model.fields,help:contract.field_res_config_settings__create_new_line_at_contract_line_renew
-msgid "If checked, a new line will be generated at contract line renew and linked to the original one as successor. The default behavior is to extend the end date of the contract by a new subscription period"
+msgid ""
+"If checked, a new line will be generated at contract line renew and linked "
+"to the original one as successor. The default behavior is to extend the end "
+"date of the contract by a new subscription period"
 msgstr ""
 
 #. module: contract
@@ -763,12 +786,17 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__automatic_price
 #: model:ir.model.fields,help:contract.field_contract_line__automatic_price
 #: model:ir.model.fields,help:contract.field_contract_template_line__automatic_price
-msgid "If this is marked, the price will be obtained automatically applying the pricelist to the product. If not, you will be able to introduce a manual price"
+msgid ""
+"If this is marked, the price will be obtained automatically applying the "
+"pricelist to the product. If not, you will be able to introduce a manual "
+"price"
 msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__successor_contract_line_id
-msgid "In case of restart after suspension, this field contain the new contract line created."
+msgid ""
+"In case of restart after suspension, this field contain the new contract "
+"line created."
 msgstr ""
 
 #. module: contract
@@ -991,7 +1019,9 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_offset
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_offset
-msgid "Number of days to offset the invoice from the period end date (in post-paid mode) or start date (in pre-paid mode)."
+msgid ""
+"Number of days to offset the invoice from the period end date (in post-paid "
+"mode) or start date (in pre-paid mode)."
 msgstr ""
 
 #. module: contract
@@ -1063,7 +1093,7 @@ msgid "Planned"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:273
+#: code:addons/contract/models/contract.py:274
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
 msgstr ""
@@ -1237,7 +1267,9 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_type
-msgid "Specify if the invoice must be generated at the beginning (pre-paid) or end (post-paid) of the period."
+msgid ""
+"Specify if the invoice must be generated at the beginning (pre-paid) or end "
+"(post-paid) of the period."
 msgstr ""
 
 #. module: contract
@@ -1247,7 +1279,8 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
-msgid "Status based on activities\n"
+msgid ""
+"Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
@@ -1353,7 +1386,9 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,help:contract.field_contract_line_wizard__manual_renew_needed
-msgid "This flag is used to make a difference between a definitive stopand temporary one for which a user is not able to plan asuccessor in advance"
+msgid ""
+"This flag is used to make a difference between a definitive stopand "
+"temporary one for which a user is not able to plan asuccessor in advance"
 msgstr ""
 
 #. module: contract
@@ -1476,25 +1511,33 @@ msgstr ""
 #. module: contract
 #: code:addons/contract/models/contract_line.py:565
 #, python-format
-msgid "You can't have a date of next invoice anterior to the start of the contract line '%s'"
+msgid ""
+"You can't have a date of next invoice anterior to the start of the contract "
+"line '%s'"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:587
 #, python-format
-msgid "You can't have the end date before the date of last invoice for the contract line '%s'"
+msgid ""
+"You can't have the end date before the date of last invoice for the contract "
+"line '%s'"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:598
 #, python-format
-msgid "You can't have the next invoice date before the date of last invoice for the contract line '%s'"
+msgid ""
+"You can't have the next invoice date before the date of last invoice for the "
+"contract line '%s'"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:579
 #, python-format
-msgid "You can't have the start date after the date of last invoice for the contract line '%s'"
+msgid ""
+"You can't have the start date after the date of last invoice for the "
+"contract line '%s'"
 msgstr ""
 
 #. module: contract
