@@ -13,6 +13,7 @@
     'depends': [
         'contract',
         'sale_management',
+        'product_contract',
     ],
     'data': [
         'views/contract_view.xml',
