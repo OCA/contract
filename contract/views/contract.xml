@@ -7,16 +7,32 @@
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
             <form>
+                <field name="is_resiliated" invisible="1"/>
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('is_resiliated','=',False)]}">
+                    <p>This contract was resiliated for the reason <strong><field name="resiliate_reason_id" options="{'no_open':True}"/></strong> on <field name="resiliate_date"/>.</p>
+                    <p><field name="resiliate_comment"/></p>
+                </div>
                 <header>
                     <button name="action_contract_send"
                             type="object"
                             string="Send by Email"
+                            attrs="{'invisible': [('is_resiliated','=',True)]}"
                             groups="base.group_user"/>
                     <button name="recurring_create_invoice"
                             type="object"
-                            attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"
+                            attrs="{'invisible': ['|', ('create_invoice_visibility', '=', False)]}"
                             string="Create invoices"
                             groups="base.group_no_one"/>
+                    <button name="action_resiliate_contract"
+                            type="object"
+                            string="Resiliate Contract"
+                            attrs="{'invisible': [('is_resiliated','=',True)]}"
+                            groups="contract.can_resiliate_contract"/>
+                    <button name="action_cancel_contract_resiliation"
+                            type="object"
+                            string="Cancel Contract Resiliation"
+                            attrs="{'invisible': [('is_resiliated','=',False)]}"
+                            groups="contract.can_resiliate_contract"/>
                 </header>
                 <sheet string="Contract">
                     <div class="oe_button_box" name="button_box">
@@ -38,41 +54,43 @@
                                class="oe_edit_only"/>
                         <h3>
                             <field name="name" class="oe_inline"
+                                   attrs="{'readonly': [('is_resiliated','=',True)]}"
                                    placeholder="e.g. Contract XYZ"/>
                         </h3>
                     </div>
                     <group name="main">
                         <group>
                             <field name="commercial_partner_id" invisible="1"/>
-                            <field name="partner_id" required="1"/>
-                            <field name="payment_term_id"/>
-                            <field name="user_id"/>
+                            <field name="partner_id" required="1" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
+                            <field name="payment_term_id" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
+                            <field name="user_id" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
                         </group>
                         <group>
                             <field name="contract_template_id"
+                                   attrs="{'readonly': [('is_resiliated','=',True)]}"
                                    domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
                                    context="{'default_contract_type': contract_type}"/>
                             <field name="contract_type" invisible="1"
                                    required="1"/>
-                            <field name="fiscal_position_id"/>
+                            <field name="fiscal_position_id" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
 
                     <group name="recurring_invoices">
                         <group>
-                            <field name="journal_id" required="1"/>
+                            <field name="journal_id" required="1" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
                             <field name="recurring_next_date"/>
                         </group>
                         <group>
-                            <field name="pricelist_id"/>
+                            <field name="pricelist_id" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
                             <field name="date_end"/>
                         </group>
                     </group>
                     <notebook>
                         <page name="recurring_invoice_line"
                               string="Recurring Invoices">
-                            <field name="contract_line_ids"
+                            <field name="contract_line_ids" attrs="{'readonly': [('is_resiliated','=',True)]}"
                                    context="{'default_contract_type': contract_type}"/>
                             <field name="note"/>
                         </page>
@@ -80,15 +98,18 @@
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
                             <group>
-                                <field name="code"/>
-                                <field name="group_id"/>
+                                <field name="code" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
+                                <field name="group_id" attrs="{'readonly': [('is_resiliated','=',True)]}"/>
                                 <field name="company_id"
+                                       attrs="{'readonly': [('is_resiliated','=',True)]}"
                                        options="{'no_create': True}"
                                        groups="base.group_multi_company"/>
                                 <field name="currency_id"
+                                       attrs="{'readonly': [('is_resiliated','=',True)]}"
                                        options="{'no_create': True}"
                                        groups="base.group_multi_currency"/>
                                 <field name="invoice_partner_id"
+                                       attrs="{'readonly': [('is_resiliated','=',True)]}"
                                        required="1"/>
                             </group>
                             <group string="Legend (for the markers inside invoice lines description)"

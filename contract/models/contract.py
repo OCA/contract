@@ -7,7 +7,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
 
 
@@ -93,6 +93,15 @@ class ContractContract(models.Model):
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
     note = fields.Text(string="Notes")
+    is_resiliated = fields.Boolean(string="Resiliated", readonly=True)
+    resiliate_reason_id = fields.Many2one(
+        comodel_name="contract.resiliate.reason",
+        string="Resiliate Reason",
+        ondelete="restrict",
+        readonly=True
+    )
+    resiliate_comment = fields.Text(string="Resiliate Comment", readonly=True)
+    resiliate_date = fields.Date(string="Resiliate Date", readonly=True)
 
     @api.multi
     def _inverse_partner_id(self):
@@ -458,3 +467,43 @@ class ContractContract(models.Model):
         domain = self._get_contracts_to_invoice_domain(date_ref)
         contracts_to_invoice = self.search(domain)
         return contracts_to_invoice._recurring_create_invoice(date_ref)
+
+    @api.multi
+    def action_resiliate_contract(self):
+        self.ensure_one()
+        context = {"default_contract_id": self.id}
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Resiliate Contract'),
+            'res_model': 'contract.contract.resiliate',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': context,
+        }
+
+    @api.multi
+    def _resiliate_contract(
+        self, resiliate_reason_id, resiliate_comment, resiliate_date
+    ):
+        self.ensure_one()
+        if not self.env.user.has_group("contract.can_resiliate_contract"):
+            raise UserError(_('You are not allowed to resiliate contracts.'))
+        self.contract_line_ids.filtered('is_stop_allowed').stop(resiliate_date)
+        self.write({
+            'is_resiliated': True,
+            'resiliate_reason_id': resiliate_reason_id.id,
+            'resiliate_comment': resiliate_comment,
+            'resiliate_date': resiliate_date,
+        })
+        return True
+
+    @api.multi
+    def action_cancel_contract_resiliation(self):
+        self.ensure_one()
+        self.write({
+            'is_resiliated': False,
+            'resiliate_reason_id': False,
+            'resiliate_comment': False,
+            'resiliate_date': False,
+        })
