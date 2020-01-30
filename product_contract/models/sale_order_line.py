@@ -67,6 +67,17 @@ class SaleOrderLine(models.Model):
         help="Specify Interval for automatic renewal.",
     )
 
+    @api.constrains('contract_id')
+    def check_contact_is_not_resiliated(self):
+        for rec in self:
+            if (
+                rec.order_id.state not in ('sale', 'done', 'cancel')
+                and rec.contract_id.is_resiliated
+            ):
+                raise ValidationError(
+                    _("You can't upsell or downsell a resiliated contract")
+                )
+
     @api.multi
     @api.depends('product_id')
     def _compute_contract_template_id(self):
