@@ -17,6 +17,18 @@ class SaleOrder(models.Model):
         compute='_compute_need_contract_creation'
     )
 
+    @api.constrains('state')
+    def check_contact_is_not_resiliated(self):
+        for rec in self:
+            if rec.state not in (
+                'sale',
+                'done',
+                'cancel',
+            ) and rec.order_line.filtered('contract_id.is_resiliated'):
+                raise ValidationError(
+                    _("You can't upsell or downsell a resiliated contract")
+                )
+
     @api.depends('order_line.contract_id', 'state')
     def _compute_need_contract_creation(self):
         for rec in self:
