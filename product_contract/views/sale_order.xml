@@ -41,6 +41,7 @@
                        domain="['|',('contract_template_id','=',contract_template_id),
                        ('contract_template_id','=',False),
                        ('partner_id','=',parent.partner_id),
+                       ('is_resiliated','=',False),
                        ]"/>
                 <field name="contract_line_id"
                        attrs="{'invisible': [('is_contract', '=', False)]}"
