@@ -342,3 +342,18 @@ class TestSaleOrder(TransactionCase):
             self.env['contract.contract'].search(action['domain']),
             self.sale.order_line.mapped('contract_id'),
         )
+
+    def test_check_contact_is_not_resiliated(self):
+        self.contract.is_resiliated = True
+        with self.assertRaises(ValidationError):
+            self.order_line1.contract_id = self.contract
+
+    def test_check_contact_is_not_resiliated(self):
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        self.contract.is_resiliated = True
+        self.sale.action_cancel()
+        with self.assertRaises(ValidationError):
+            self.sale.action_draft()
+        self.contract.is_resiliated = False
+        self.sale.action_draft()
