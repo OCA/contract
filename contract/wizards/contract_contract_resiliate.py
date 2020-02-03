@@ -21,8 +21,11 @@ class ContractContractResiliate(models.TransientModel):
         required=True,
         ondelete="cascade",
     )
-    resiliate_comment = fields.Text(string="Resiliate Comment", required=True)
+    resiliate_comment = fields.Text(string="Resiliate Comment")
     resiliate_date = fields.Date(string="Resiliate Date", required=True)
+    resiliate_comment_required = fields.Boolean(
+        related="resiliate_reason_id.resiliate_comment_required"
+    )
 
     @api.multi
     def resiliate_contract(self):

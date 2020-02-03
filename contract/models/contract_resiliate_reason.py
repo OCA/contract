@@ -10,3 +10,6 @@ class ContractResiliateReason(models.Model):
     _description = 'Contract Resiliation Reason'
 
     name = fields.Char(required=True)
+    resiliate_comment_required = fields.Boolean(
+        string="Require a resiliation comment", default=True
+    )

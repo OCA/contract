@@ -10,9 +10,10 @@
             <form string="Contract Contract Resiliate">
                 <group>
                     <field name="contract_id" invisible="True"/>
+                    <field name="resiliate_comment_required" invisible="True"/>
                     <field name="resiliate_date"/>
                     <field name="resiliate_reason_id" widget="selection"/>
-                    <field name="resiliate_comment"/>
+                    <field name="resiliate_comment" attrs="{'required': [('resiliate_comment_required', '=', True)]}"/>
                 </group>
                 <footer>
                     <button name="resiliate_contract"
