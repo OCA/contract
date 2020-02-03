@@ -93,15 +93,22 @@ class ContractContract(models.Model):
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
     note = fields.Text(string="Notes")
-    is_resiliated = fields.Boolean(string="Resiliated", readonly=True)
+    is_resiliated = fields.Boolean(
+        string="Resiliated", readonly=True, copy=False
+    )
     resiliate_reason_id = fields.Many2one(
         comodel_name="contract.resiliate.reason",
         string="Resiliate Reason",
         ondelete="restrict",
-        readonly=True
+        readonly=True,
+        copy=False,
     )
-    resiliate_comment = fields.Text(string="Resiliate Comment", readonly=True)
-    resiliate_date = fields.Date(string="Resiliate Date", readonly=True)
+    resiliate_comment = fields.Text(
+        string="Resiliate Comment", readonly=True, copy=False
+    )
+    resiliate_date = fields.Date(
+        string="Resiliate Date", readonly=True, copy=False
+    )
 
     @api.multi
     def _inverse_partner_id(self):
