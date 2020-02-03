@@ -147,13 +147,13 @@ class ContractContract(models.Model):
 
     @api.multi
     def _recurring_create_sales(self, date_ref=False):
-        sales_values = self._prepare_recurring_sales_values(date_ref)
-        return self._finalize_and_create_sales(sales_values)
+        for contract in self:
+            sales_values = contract._prepare_recurring_sales_values(date_ref)
+            contract._finalize_and_create_sales(sales_values)
 
     @api.multi
     def recurring_create_sale(self, ):
-        for contract in self:
-            contract._recurring_create_sales()
+        self.contract._recurring_create_sales()
         return True
 
 
