@@ -152,7 +152,9 @@ class ContractContract(models.Model):
 
     @api.multi
     def recurring_create_sale(self, ):
-        return self._recurring_create_sales()
+        for contract in self:
+            contract._recurring_create_sales()
+        return True
 
 
     @api.model
