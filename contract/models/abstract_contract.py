@@ -33,8 +33,9 @@ class ContractAbstractContract(models.AbstractModel):
         comodel_name="res.partner", string="Partner", index=True
     )
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
-    currency_id = fields.Many2one(
-        related="pricelist_id.currency_id",
+    currency_id = fields.Many2one('res.currency',
+        compute='_compute_currency_id',
+#        related="pricelist_id.currency_id",
         string="Pricelist currency",
         store=True,  )
     contract_type = fields.Selection(
@@ -64,7 +65,14 @@ class ContractAbstractContract(models.AbstractModel):
     )
 
 
-
+    @api.depends('pricelist_id')
+    def _compute_currency_id(self):
+        for rec in self:
+            if rec.pricelist_id:
+                rec.currency_id = rec.pricelist_id.currency_id.id
+            else:
+                rec.currency_id = self.env.company.currency_id.id
+                
     @api.onchange('contract_type')
     def _onchange_contract_type(self):
         if self.contract_type == 'purchase':
