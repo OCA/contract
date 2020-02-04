@@ -106,13 +106,13 @@ class ContractLine(models.Model):
         compute="_compute_state",
         search='_search_state',
     )
-    active = fields.Boolean(
-        string="Active",
-        related="contract_id.active",
-        store=True,
-        readonly=True,
-        default=True,
-    )
+#     active = fields.Boolean(
+#         string="Active",
+#         related="contract_id.active",
+#         store=True,
+#         readonly=True,
+#         default=True,
+#     )
 
     @api.depends(
         'date_end',
