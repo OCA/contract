@@ -23,7 +23,7 @@
                 <button name="action_show_contracts"
                         type="object" icon="fa-book"
                         class="oe_stat_button"
-                        attrs="{'invisible': ['|', ('is_contract', '!=', True), ('state', 'not in', ['sale', 'done'])]}">
+                        attrs="{'invisible': ['|', '|', ('is_contract', '!=', True), ('state', 'not in', ['sale', 'done']), ('contract_count', '=', 0)]}">
                     <field string="Contracts"
                            name="contract_count"
                            widget="statinfo"/>
