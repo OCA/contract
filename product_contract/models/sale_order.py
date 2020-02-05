@@ -103,7 +103,9 @@ class SaleOrder(models.Model):
     @api.depends("order_line")
     def _compute_contract_count(self):
         for rec in self:
-            rec.contract_count = len(rec.order_line.mapped('contract_id'))
+            rec.contract_count = len(
+                rec.order_line.mapped('contract_id').filtered(
+                    lambda r: r.active))
 
     @api.multi
     def action_show_contracts(self):
