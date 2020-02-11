@@ -19,8 +19,7 @@ class SaleOrderLine(models.Model):
     contract_template_id = fields.Many2one(
         comodel_name='contract.template',
         string='Contract Template',
-        related='product_id.product_tmpl_id.contract_template_id',
-        readonly=True,
+        compute='_compute_contract_template_id',
     )
     recurring_rule_type = fields.Selection(
         [
@@ -67,6 +66,14 @@ class SaleOrderLine(models.Model):
         string='Renewal type',
         help="Specify Interval for automatic renewal.",
     )
+
+    @api.multi
+    @api.depends('product_id')
+    def _compute_contract_template_id(self):
+        for rec in self:
+            rec.contract_template_id = rec.product_id.with_context(
+                force_company=rec.order_id.company_id.id
+            ).property_contract_template_id
 
     @api.multi
     def _get_auto_renew_rule_type(self):
