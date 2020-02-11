@@ -2,7 +2,8 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, api, models
+from odoo import _, fields, api, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -70,12 +71,23 @@ class SaleOrder(models.Model):
                     'sale_order_line_id'
                 )
             )
-            for contract_template in line_to_create_contract.mapped(
-                'product_id.contract_template_id'
-            ):
+            for order_line in line_to_create_contract:
+                contract_template = order_line.product_id.with_context(
+                    force_company=rec.company_id.id
+                ).property_contract_template_id
+                if not contract_template:
+                    raise ValidationError(
+                        _("You must specify a contract "
+                          "template for '{}' product in '{}' company.").format(
+                            order_line.product_id.name,
+                            rec.company_id.name
+                        )
+                    )
                 order_lines = line_to_create_contract.filtered(
                     lambda r, template=contract_template:
-                        r.product_id.contract_template_id == template
+                        r.product_id.with_context(
+                            force_company=r.order_id.company_id.id
+                        ).property_contract_template_id == template
                 )
                 contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
