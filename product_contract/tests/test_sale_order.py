@@ -38,19 +38,21 @@ class TestSaleOrder(TransactionCase):
                 ],
             }
         )
-        self.product1.write(
+        self.product1.with_context(
+            force_company=self.sale.company_id.id).write(
             {
                 'is_contract': True,
                 'default_qty': 12,
                 'recurring_rule_type': "monthlylastday",
                 'recurring_invoicing_type': "post-paid",
-                'contract_template_id': self.contract_template1.id,
+                'property_contract_template_id': self.contract_template1.id,
             }
         )
-        self.product2.write(
+        self.product2.with_context(
+            force_company=self.sale.company_id.id).write(
             {
                 'is_contract': True,
-                'contract_template_id': self.contract_template2.id,
+                'property_contract_template_id': self.contract_template2.id,
             }
         )
         self.order_line1 = self.sale.order_line.filtered(
@@ -111,14 +113,27 @@ class TestSaleOrder(TransactionCase):
             contract_line.recurring_next_date, Date.to_date('2018-01-31')
         )
 
-    def test_contract_company(self):
-        """
-        contract company must be the sale order company and not the user one
-        """
+    def test_change_sale_company(self):
         self.assertTrue(self.sale.company_id)
         other_company = self.env['res.company'].create(
             {'name': 'other company', 'parent_id': self.sale.company_id.id}
         )
+        self.sale.company_id = other_company
+        with self.assertRaises(ValidationError):
+            self.sale.action_confirm()
+
+    def test_change_sale_company_2(self):
+        """Contract company must be the sale order company."""
+        self.assertTrue(self.sale.company_id)
+        other_company = self.env['res.company'].create(
+            {'name': 'other company', 'parent_id': self.sale.company_id.id}
+        )
+        self.product1.with_context(
+            force_company=other_company.id
+        ).property_contract_template_id = self.contract_template1
+        self.product2.with_context(
+            force_company=other_company.id
+        ).property_contract_template_id = self.contract_template2
         self.sale.company_id = other_company
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped('contract_id')
@@ -132,7 +147,7 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(self.order_line1.invoice_status, 'no')
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice)
-        self.assertEqual(self.order_line1.invoice_qty, 1)
+        self.assertEqual(self.order_line1.qty_invoiced, 1)
         self.assertEqual(self.order_line1.qty_to_invoice, 0)
 
     def test_action_confirm_without_contract_creation(self):
@@ -217,7 +232,7 @@ class TestSaleOrder(TransactionCase):
         self.sale.action_confirm()
         self.assertEqual(self.order_line1.invoice_status, 'no')
 
-    def test_sale_order_invoice_status(self):
+    def test_sale_order_invoice_status_2(self):
         """Sale order with only contract product should have nothing to
         invoice status directtly"""
         self.sale.order_line.filtered(

@@ -10,8 +10,10 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     is_contract = fields.Boolean('Is a contract')
-    contract_template_id = fields.Many2one(
-        comodel_name='contract.template', string='Contract Template'
+    property_contract_template_id = fields.Many2one(
+        comodel_name='contract.template',
+        string='Contract Template',
+        company_dependent=True,
     )
     default_qty = fields.Integer(string="Default Quantity", default=1)
     recurring_rule_type = fields.Selection(
@@ -58,13 +60,13 @@ class ProductTemplate(models.Model):
         help="Specify Interval for automatic renewal.",
     )
 
-    @api.onchange('is_contract')
-    def _change_is_contract(self):
-        """ Clear the relation to contract_template_id when downgrading
-        product from contract
-        """
-        if not self.is_contract:
-            self.contract_template_id = False
+    @api.multi
+    def write(self, vals):
+        if 'is_contract' in vals and vals['is_contract'] is False:
+            for company in self.env['res.company'].search([]):
+                self.with_context(force_company=company.id).write(
+                    {'property_contract_template_id': False})
+        super().write(vals)
 
     @api.constrains('is_contract', 'type')
     def _check_contract_product_type(self):
