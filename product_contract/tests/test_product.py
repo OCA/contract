@@ -16,13 +16,14 @@ class TestProductTemplate(TransactionCase):
         )
 
     def test_change_is_contract(self):
-        """ It should verify that the contract_template_id is removed
-        when is_contract is False """
+        """ It should verify that the property_contract_template_id
+        field value is removed for all the companies when
+        is_contract is set to False """
         self.service_product.is_contract = True
-        self.service_product.contract_template_id = self.contract.id
+        self.service_product.property_contract_template_id = self.contract.id
         self.service_product.is_contract = False
-        self.service_product.product_tmpl_id._change_is_contract()
-        self.assertEquals(len(self.service_product.contract_template_id), 0)
+        self.assertEquals(len(
+            self.service_product.property_contract_template_id), 0)
 
     def test_check_contract_product_type(self):
         """
