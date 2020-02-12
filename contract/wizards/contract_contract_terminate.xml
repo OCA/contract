@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="contract_contract_terminate_form_view">
+        <field name="model">contract.contract.terminate</field>
+        <field name="arch" type="xml">
+            <form string="Contract Contract Terminate">
+                <group>
+                    <field name="contract_id" invisible="True"/>
+                    <field name="terminate_comment_required" invisible="True"/>
+                    <field name="terminate_date"/>
+                    <field name="terminate_reason_id" widget="selection"/>
+                    <field name="terminate_comment" attrs="{'required': [('terminate_comment_required', '=', True)]}"/>
+                </group>
+                <footer>
+                    <button name="terminate_contract"
+                            string="Terminate Contract"
+                            class="btn-primary"
+                            confirm="Are you sure you want to terminate this contract?"
+                            type="object"/>
+                    <button string="Cancel"
+                            class="btn-default"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+
+</odoo>
