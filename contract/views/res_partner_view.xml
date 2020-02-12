@@ -34,7 +34,7 @@
                 <filter
                     name="filter_running_contract"
                     string="With running contracts"
-                    domain="['|', ('contract_ids.date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('contract_ids.date_end', '=', False)]"
+                    domain="['|', ('contract_ids.date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('contract_ids.date_end', '=', False), ('contract_ids.recurring_next_date', '!=', False)]"
                 />
             </filter>
         </field>
