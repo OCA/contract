@@ -296,9 +296,19 @@ class ContractLine(models.Model):
         'successor_contract_line_id',
         'predecessor_contract_line_id',
         'is_canceled',
+        'contract_id.is_terminated',
     )
     def _compute_allowed(self):
         for rec in self:
+            if rec.contract_id.is_terminated:
+                rec.update({
+                    'is_plan_successor_allowed': False,
+                    'is_stop_plan_successor_allowed': False,
+                    'is_stop_allowed': False,
+                    'is_cancel_allowed': False,
+                    'is_un_cancel_allowed': False,
+                })
+                continue
             if rec.date_start:
                 allowed = get_allowed(
                     rec.date_start,
@@ -310,13 +320,14 @@ class ContractLine(models.Model):
                     rec.is_canceled,
                 )
                 if allowed:
-                    rec.is_plan_successor_allowed = allowed.plan_successor
-                    rec.is_stop_plan_successor_allowed = (
-                        allowed.stop_plan_successor
-                    )
-                    rec.is_stop_allowed = allowed.stop
-                    rec.is_cancel_allowed = allowed.cancel
-                    rec.is_un_cancel_allowed = allowed.uncancel
+                    rec.update({
+                        'is_plan_successor_allowed': allowed.plan_successor,
+                        'is_stop_plan_successor_allowed':
+                            allowed.stop_plan_successor,
+                        'is_stop_allowed': allowed.stop,
+                        'is_cancel_allowed': allowed.cancel,
+                        'is_un_cancel_allowed': allowed.uncancel,
+                    })
 
     @api.constrains('is_auto_renew', 'successor_contract_line_id', 'date_end')
     def _check_allowed(self):
@@ -1163,7 +1174,7 @@ class ContractLine(models.Model):
         ).id
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Resiliate contract line',
+            'name': 'Terminate contract line',
             'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
@@ -1251,6 +1262,7 @@ class ContractLine(models.Model):
     @api.model
     def _contract_line_to_renew_domain(self):
         return [
+            ('contract_id.is_terminated', '=', False),
             ('is_auto_renew', '=', True),
             ('is_canceled', '=', False),
             ('termination_notice_date', '<=', fields.Date.context_today(self)),
