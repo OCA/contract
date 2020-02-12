@@ -184,7 +184,7 @@
                 <separator/>
                 <filter name="not_finished"
                         string="In progress"
-                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '=', False)]"
+                        domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
                 />
                 <filter name="finished"
                         string="Finished"
