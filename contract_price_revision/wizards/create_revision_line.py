@@ -25,10 +25,9 @@ class CreateRevisionLineWizard(models.TransientModel):
         contract_obj = self.env['account.analytic.account']
         line_obj = self.env['account.analytic.invoice.line']
         active_ids = self.env.context['active_ids']
+        contracts = contract_obj.browse(active_ids)
         line_news = line_obj
-        for item in contract_obj.browse(active_ids).mapped(
-                'recurring_invoice_line_ids').filtered(
-                lambda x: not x.automatic_price):
+        for item in self._get_contract_lines_to_revise(contracts):
             line_news |= item.copy({
                 'date_start': self.date_start,
                 'date_end': self.date_end,
@@ -48,3 +47,14 @@ class CreateRevisionLineWizard(models.TransientModel):
                 'form')]
             action['res_id'] = active_ids[0]
         return action
+
+    def _get_contract_lines_to_revise(self, contracts):
+        self.ensure_one()
+        to_revise = (
+            contracts.mapped("recurring_invoice_line_ids")
+            .filtered(
+                lambda x: not x.automatic_price
+                and (not x.date_end or x.date_end >= self.date_start)
+            )
+        )
+        return to_revise
