@@ -4,7 +4,7 @@
 {
     'name': 'Contract Price Revision',
     'summary': 'Easy revision of contract prices',
-    'version': '11.0.1.0.0',
+    'version': '11.0.1.0.1',
     'category': 'Contract',
     'author': 'Tecnativa, '
               'Odoo Community Association (OCA)',
