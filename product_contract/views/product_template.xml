@@ -38,15 +38,30 @@
                     </group>
                     <group>
                         <field name="is_auto_renew"/>
-                        <label for="termination_notice_interval" attrs="{'invisible': [('is_auto_renew', '=', False)],
-                               'required':[('is_contract', '=', True)]}"/>
-                        <div attrs="{'invisible': [('is_auto_renew', '=', False)],
-                               'required':[('is_auto_renew', '=', True)]}">
-                            <field name="termination_notice_interval"
-                                   class="oe_inline" nolabel="1"/>
-                            <field name="termination_notice_rule_type"
-                                   class="oe_inline" nolabel="1"/>
-                        </div>
+                    </group>
+                    <group>
+                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                            <label for="auto_renew_interval"/>
+                            <div>
+                                <field name="auto_renew_interval"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                                <field name="auto_renew_rule_type"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                            <label for="termination_notice_interval"/>
+                            <div>
+                                <field name="termination_notice_interval"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                                <field name="termination_notice_rule_type"
+                                       class="oe_inline" nolabel="1"
+                                       attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                            </div>
+                        </group>
                     </group>
                 </page>
             </xpath>
