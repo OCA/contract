@@ -313,8 +313,8 @@ class TestSaleOrder(TransactionCase):
         )
         self.assertEqual(self.contract_line.recurring_interval, 1)
         self.assertEqual(self.contract_line.is_auto_renew, True)
-        self.assertEqual(self.contract_line.auto_renew_interval, 12)
-        self.assertEqual(self.contract_line.auto_renew_rule_type, 'monthly')
+        self.assertEqual(self.contract_line.auto_renew_interval, 1)
+        self.assertEqual(self.contract_line.auto_renew_rule_type, 'yearly')
         self.assertEqual(self.contract_line.termination_notice_interval, 6)
         self.assertEqual(
             self.contract_line.termination_notice_rule_type, 'weekly'
