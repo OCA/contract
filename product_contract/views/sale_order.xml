@@ -67,6 +67,22 @@
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="date_end" attrs="{'required': [('is_contract', '=', True)]}"/>
                 </group>
+                <group
+                    attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field name="is_auto_renew"/>
+                </group>
+                <group
+                    attrs="{'invisible': [('is_auto_renew', '=', False)]}">
+                    <label for="auto_renew_interval"/>
+                    <div>
+                        <field name="auto_renew_interval"
+                               class="oe_inline" nolabel="1"
+                               attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                        <field name="auto_renew_rule_type"
+                               class="oe_inline" nolabel="1"
+                               attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                    </div>
+                </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']"
                    position="after">
