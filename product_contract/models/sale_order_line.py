@@ -50,6 +50,23 @@ class SaleOrderLine(models.Model):
         required=False,
         copy=False,
     )
+    is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    auto_renew_interval = fields.Integer(
+        default=1,
+        string='Renew Every',
+        help="Renew every (Days/Week/Month/Year)",
+    )
+    auto_renew_rule_type = fields.Selection(
+        [
+            ('daily', 'Day(s)'),
+            ('weekly', 'Week(s)'),
+            ('monthly', 'Month(s)'),
+            ('yearly', 'Year(s)'),
+        ],
+        default='yearly',
+        string='Renewal type',
+        help="Specify Interval for automatic renewal.",
+    )
 
     @api.multi
     def _get_auto_renew_rule_type(self):
@@ -79,6 +96,14 @@ class SaleOrderLine(models.Model):
                     )
                     - relativedelta(days=1)
                 )
+                rec.is_auto_renew = rec.product_id.is_auto_renew
+                if rec.is_auto_renew:
+                    rec.auto_renew_interval = (
+                        rec.product_id.auto_renew_interval
+                    )
+                    rec.auto_renew_rule_type = (
+                        rec.product_id.auto_renew_rule_type
+                    )
 
     @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
     def onchange_date_start(self):
@@ -146,9 +171,9 @@ class SaleOrderLine(models.Model):
             'recurring_interval': 1,
             'recurring_invoicing_type': self.recurring_invoicing_type,
             'recurring_rule_type': self.recurring_rule_type,
-            'is_auto_renew': self.product_id.is_auto_renew,
-            'auto_renew_interval': self.product_uom_qty,
-            'auto_renew_rule_type': self._get_auto_renew_rule_type(),
+            'is_auto_renew': self.is_auto_renew,
+            'auto_renew_interval': self.auto_renew_interval,
+            'auto_renew_rule_type': self.auto_renew_rule_type,
             'termination_notice_interval': termination_notice_interval,
             'termination_notice_rule_type': termination_notice_rule_type,
             'contract_id': contract.id,
