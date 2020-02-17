@@ -129,6 +129,7 @@ class Agreement(models.Model):
     use_parties_content = fields.Boolean(
         string="Use parties content",
         help="Use custom content for parties")
+    company_partner_id = fields.Many2one(related="company_id.partner_id")
 
     def _get_default_parties(self):
         deftext = """
