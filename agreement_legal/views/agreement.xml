@@ -103,7 +103,7 @@
                                string="Partner">
                             <div class="o_address_format">
                                 <field name="partner_id"
-                                       domain="[('customer', '=', True)]"
+                                       domain="['|',('customer', '=', True),('supplier', '=', True)]"
                                        context="{'show_address': 1}"
                                        options="{&quot;always_reload&quot;: True}"/>
                             </div>
