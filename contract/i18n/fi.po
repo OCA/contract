@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2020-02-14 14:13+0000\n"
+"PO-Revision-Date: 2020-02-20 11:13+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (https://www.transifex.com/oca/teams/23907/fi/)\n"
 "Language: fi\n"
@@ -82,6 +82,66 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Hei ${object.partner_id.name or ''},</p>\n"
+"    <p>Uusi sopimus on luotu: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>VIITTEET</strong><br />\n"
+"       &nbsp;&nbsp;Sopimus: <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;Sopimuksen alkamispäivä: ${object.date_start or ''}<br />"
+"\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;Yhteyshenkilönne: <a href=\"mailto:${object.user_id.email "
+"or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;Yhteyshenkilönne: ${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Epäselvissä tilanteissa voit olla meihin yhteydessä.</p>\n"
+"    <p>Kiitos kun valitsit ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\""
+">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address="
+"True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Puhelin: ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Verkkosivu: <a href=\"${object.company_id.website}\""
+">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
@@ -668,7 +728,7 @@ msgstr "Päättymispäivä"
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__date_start
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
 msgid "Date Start"
-msgstr "Alkupäivä"
+msgstr "Alkamispäivä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_next_date
@@ -802,16 +862,19 @@ msgid ""
 "to the original one as successor. The default behavior is to extend the end "
 "date of the contract by a new subscription period"
 msgstr ""
+"Jos valittu, uusi rivi luodaan kun sopimuksen rivi uusitaan. Uusi rivi "
+"linkitetään vanhan rivin seuraajaksi. Oletusmallina on jatkaa sopimuksen "
+"päättymispäivää uudella sopimuskaudella"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat toimenpiteitä."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Jos valittu, joissain viesteissä on ollut toimitusvirhe."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__automatic_price
@@ -822,6 +885,8 @@ msgid ""
 "pricelist to the product. If not, you will be able to introduce a manual "
 "price"
 msgstr ""
+"Jos valittu, hinta haetaan automaattisesti tuotteen hinnaston perusteella. "
+"Jos ei, riville valitaan kiinteä hinta"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__successor_contract_line_id
@@ -829,6 +894,8 @@ msgid ""
 "In case of restart after suspension, this field contain the new contract "
 "line created."
 msgstr ""
+"Jos sopimus aloitetaan uudelleen keskeytyksen jälkeen, tässä kentässä on "
+"tieto uudesta luodusta sopimusrivistä."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1076,26 +1143,28 @@ msgid ""
 "Number of days to offset the invoice from the period end date (in post-paid "
 "mode) or start date (in pre-paid mode)."
 msgstr ""
+"Montako päivää lasku eroaa jakson päättymispäivästä (jälkimaksu) tai "
+"alkupäivästä (ennakkomaksu)."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Virheen numero"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Toimia vaativien viestien määrä"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Monenko viestin kohdalla on tapahtunut toimitusvirhe"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Lukemattomien viestien määrä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_invoice__old_contract_id
@@ -1149,7 +1218,7 @@ msgstr "Suunniteltu"
 #: code:addons/contract/models/contract.py:274
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
-msgstr ""
+msgstr "Aseta %s-päiväkirja yritykselle '%s'."
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_invoicing_type:0
@@ -1283,38 +1352,38 @@ msgstr "Järjestys"
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Sequence of the contract line when displaying contracts"
-msgstr ""
+msgstr "Sopimusrivin järjestys, kun sopimuksia esitetään"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the purchase contracts for this partner"
-msgstr ""
+msgstr "Näytä tämän kumppanin ostosopimukset"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the sale contracts for this partner"
-msgstr ""
+msgstr "Näytä tämän kumppanin myyntisopimukset"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__specific_price
 msgid "Specific Price"
-msgstr ""
+msgstr "Erityishinta"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_line__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
-msgstr ""
+msgstr "Määritä automaattisen laskujen luonnin aikaväli."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,help:contract.field_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__auto_renew_rule_type
 msgid "Specify Interval for automatic renewal."
-msgstr ""
+msgstr "Määritä sopimusten automaattisen uusinnan aikaväli."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_type
@@ -1324,11 +1393,13 @@ msgid ""
 "Specify if the invoice must be generated at the beginning (pre-paid) or end "
 "(post-paid) of the period."
 msgstr ""
+"Määritä luodaanko lasku sopimuskauden alussa (ennakkomaksu) vai lopussa "
+"(jälkimaksu)."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
@@ -1338,55 +1409,59 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Toimintoihin perustuva tila\n"
+"Erääntynyt: Määräaika on jo ohitettu\n"
+"Tänään: Määräaika on tänään\n"
+"Suunniteltu: Tulevat toiminnot."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop"
-msgstr ""
+msgstr "Päätä"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Stop Date"
-msgstr ""
+msgstr "Päättymispäivä"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop Plan Successor"
-msgstr ""
+msgstr "Päätä sopimuksen seuraaja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_allowed
 msgid "Stop allowed?"
-msgstr ""
+msgstr "Päättäminen sallittu"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:844
 #, python-format
 msgid "Stop not allowed for this line"
-msgstr ""
+msgstr "Päättäminen ei ole sallittu tälle riville"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_plan_successor_allowed
 msgid "Stop/Plan successor allowed?"
-msgstr ""
+msgstr "Päättäminen/sopimuksen seuraaja sallittu"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:985
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
-msgstr ""
+msgstr "Päättäminen/sopimuksen seuraaja ei ole sallittu tälle riville"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
 msgid "Sub Total"
-msgstr ""
+msgstr "Välisumma"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__successor_contract_line_id
 msgid "Successor Contract Line"
-msgstr ""
+msgstr "Sopimusrivin seuraaja"
 
 #. module: contract
 #: selection:contract.abstract.contract,contract_type:0
@@ -1395,47 +1470,47 @@ msgstr ""
 #: selection:contract.template,contract_type:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_supplier_form_view
 msgid "Supplier"
-msgstr ""
+msgstr "Toimittaja"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_supplier
 msgid "Supplier Contracts"
-msgstr ""
+msgstr "Toimittajan sopimukset"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension End Date"
-msgstr ""
+msgstr "Keskeytyksen päättymispäivä"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension Start Date"
-msgstr ""
+msgstr "Keskeytyksen alkamispäivä"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Tunnisteet"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_interval
 msgid "Termination Notice Before"
-msgstr ""
+msgstr "Irtisanomisilmoitus ennen"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
 msgid "Termination Notice type"
-msgstr ""
+msgstr "Irtisanomisilmoituksen tyyppi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
 msgid "Termination notice date"
-msgstr ""
+msgstr "Irtisanomisilmoituksen päivämäärä"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
@@ -1444,11 +1519,13 @@ msgid ""
 "This flag is used to make a difference between a definitive stopand "
 "temporary one for which a user is not able to plan asuccessor in advance"
 msgstr ""
+"Tällä merkinnällä erotellaan lopullinen päättyminen ja väliaikainen "
+"keskeytys, jossa käyttäjä ei pysty suunnittelemaan jatkoa etukäteen"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "To renew"
-msgstr ""
+msgstr "Uusittavaksi"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -1458,18 +1535,18 @@ msgstr "Tänään"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_un_cancel_allowed
 msgid "Un-Cancel allowed?"
-msgstr ""
+msgstr "Perumisen peruminen sallittu"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Un-cancel"
-msgstr ""
+msgstr "Peru peruminen"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1082
 #, python-format
 msgid "Un-cancel not allowed for this line"
-msgstr ""
+msgstr "Perumisen perumista ei ole sallittu tälle riville"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_unit
@@ -1493,17 +1570,17 @@ msgstr "Lukemattomat viestit"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Lukemattomien viestien laskuri"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming"
-msgstr ""
+msgstr "Tulossa"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming Close"
-msgstr ""
+msgstr "Päättyminen tulossa"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -1521,12 +1598,12 @@ msgstr "Vahvista"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Verkkosivun viestit"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Verkkosivun kommunikaatiohistoria"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -1544,7 +1621,7 @@ msgstr "Viikkoa"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
 msgid "With running contracts"
-msgstr ""
+msgstr "Käynnissäolevia sopimuksia"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -1560,7 +1637,7 @@ msgstr "Vuotta"
 #: code:addons/contract/models/contract_line.py:794
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
-msgstr ""
+msgstr "Et voi viivästyttää sopimusriviä, jos sitä on jo laskutettu."
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:565
@@ -1569,6 +1646,7 @@ msgid ""
 "You can't have a date of next invoice anterior to the start of the contract "
 "line '%s'"
 msgstr ""
+"Seuraavan laskun päiväys ei voi olla ennen sopimusrivin '%s' alkamispäivää"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:587
@@ -1577,6 +1655,7 @@ msgid ""
 "You can't have the end date before the date of last invoice for the contract "
 "line '%s'"
 msgstr ""
+"Sopimusrivin '%s' päättymispäivä ei voi olla ennen viimeisen laskun päiväystä"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:598
@@ -1585,6 +1664,8 @@ msgid ""
 "You can't have the next invoice date before the date of last invoice for the "
 "contract line '%s'"
 msgstr ""
+"Sopimusrivin seuraavan laskun päiväys ei voi olla ennen edellisen laskun "
+"päiväystä '%s'"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:579
@@ -1592,15 +1673,15 @@ msgstr ""
 msgid ""
 "You can't have the start date after the date of last invoice for the "
 "contract line '%s'"
-msgstr ""
+msgstr "Sopimusrivin '%s' alkupäivä ei voi olla päättymispäivän jälkeen"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:614
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
-msgstr ""
+msgstr "Sopimusriville '%s' on määritettävä seuraavan laskun päiväys"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "e.g. Contract XYZ"
-msgstr ""
+msgstr "esim. Sopimus XYZ"
