@@ -13,8 +13,6 @@ class SaleOrder(models.Model):
         for order in self:
             agreement_ids = self.env['agreement'].\
                 search([('sale_id', '=', order.id)])
-            service_location_id = order.partner_id.service_location_id
             agreement_ids.write({
-                'fsm_location_id': order.partner_id.service_location_id,
-			})
+                'fsm_location_id': order.partner_id.service_location_id})
         return res
