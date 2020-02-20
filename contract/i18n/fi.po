@@ -92,8 +92,8 @@ msgstr ""
 "       &nbsp;&nbsp;<strong>VIITTEET</strong><br />\n"
 "       &nbsp;&nbsp;Sopimus: <strong>${object.name}</strong><br />\n"
 "       % if object.date_start:\n"
-"       &nbsp;&nbsp;Sopimuksen alkamispäivä: ${object.date_start or ''}<br />"
-"\n"
+"       &nbsp;&nbsp;Sopimuksen alkamispäivä: ${object.date_start or ''}<br /"
+">\n"
 "       % endif\n"
 "\n"
 "       % if object.user_id:\n"
@@ -116,14 +116,14 @@ msgstr ""
 "background-repeat: repeat no-repeat;\">\n"
 "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
 "#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\""
-">${object.company_id.name}</strong></h3>\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address="
-"True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -134,8 +134,8 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Verkkosivu: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Verkkosivu: <a href=\"${object.company_id.website}\">"
+"${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
@@ -162,8 +162,8 @@ msgstr ""
 "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
 "                                laskutettava sopimus\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible': [("
-"'contract_to_invoice_count', '&lt;', 1)]}\">\n"
+"                            <span attrs=\"{'invisible': "
+"[('contract_to_invoice_count', '&lt;', 1)]}\">\n"
 "                                laskutettavat sopimukset\n"
 "                            </span>"
 
@@ -638,6 +638,8 @@ msgid "Contract template lines"
 msgstr "Sopimusmallin rivit"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_fsm_location__contract_ids
+#: model:ir.model.fields,field_description:contract.field_fsm_person__contract_ids
 #: model:ir.model.fields,field_description:contract.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:contract.field_res_users__contract_ids
 #: model:ir.ui.menu,name:contract.menu_config_contract
@@ -1255,6 +1257,8 @@ msgid "Product"
 msgstr "Tuote"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_fsm_location__purchase_contract_count
+#: model:ir.model.fields,field_description:contract.field_fsm_person__purchase_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_partner__purchase_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
@@ -1329,6 +1333,8 @@ msgid "Responsible User"
 msgstr "Vastuukäyttäjä"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_fsm_location__sale_contract_count
+#: model:ir.model.fields,field_description:contract.field_fsm_person__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
