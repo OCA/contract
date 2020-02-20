@@ -11,8 +11,10 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         res = super(SaleOrder, self)._action_confirm()
         for order in self:
-            agreement_id = self.env['agreement'].\
+            agreement_ids = self.env['agreement'].\
                 search([('sale_id', '=', order.id)])
-            agreement_id.fsm_location_id = order.partner_id.\
-                service_location_id
+            service_location_id = order.partner_id.service_location_id
+            agreement_ids.write({
+                'fsm_location_id': order.partner_id.service_location_id,
+			})
         return res
