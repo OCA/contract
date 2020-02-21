@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo12-addon-agreement',
         'odoo12-addon-agreement_legal',
         'odoo12-addon-agreement_legal_sale',
+        'odoo12-addon-agreement_legal_sale_fieldservice',
         'odoo12-addon-agreement_maintenance',
         'odoo12-addon-agreement_mrp',
         'odoo12-addon-agreement_project',

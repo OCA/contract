@@ -135,12 +135,15 @@ class TestContractLineForecastPeriod(TestContractBase):
                 'date_end': Date.today() + relativedelta(months=3),
                 'recurring_rule_type': "monthlylastday",
                 'recurring_invoicing_type': 'pre-paid',
-                'is_auto_renew': True,
+                'is_auto_renew': False,
             }
         )
         self.acct_line._onchange_date_start()
         self.assertTrue(self.acct_line.forecast_period_ids)
         self.assertEqual(len(self.acct_line.forecast_period_ids), 4)
+        self.acct_line.write({'is_auto_renew': True})
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
 
     @mute_logger("odoo.addons.queue_job.models.base")
     def test_forecast_period_on_contract_line_update_8(self):
@@ -260,3 +263,50 @@ class TestContractLineForecastPeriod(TestContractBase):
                 Date.to_date("2020-01-01"),
             ),
         )
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_for_auto_renew_contract(self):
+        """If a contract line is set to auto renew the forecast should continue
+        after the date end and stop at the company forecast period"""
+        # Set the company forecast period to three years
+        self.acct_line.contract_id.company_id.contract_forecast_interval = 36
+        self.acct_line.write(
+            {
+                'date_start': Date.today(),
+                'recurring_next_date': Date.today(),
+                'date_end': Date.today() + relativedelta(years=1),
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'pre-paid',
+                'is_auto_renew': False,
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+
+        self.acct_line.write({'is_auto_renew': True})
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 37)
+
+    @mute_logger("odoo.addons.queue_job.models.base")
+    def test_forecast_period_for_undefined_date_end_contract(self):
+        """If a contract line have and undefined date end the forecast should
+        continue to the company forecast period"""
+        self.acct_line.contract_id.company_id.contract_forecast_interval = 36
+        self.acct_line.write(
+            {
+                'date_start': Date.today(),
+                'recurring_next_date': Date.today(),
+                'date_end': Date.today() + relativedelta(years=1),
+                'recurring_rule_type': "monthlylastday",
+                'last_date_invoiced': False,
+                'recurring_invoicing_type': 'pre-paid',
+                'is_auto_renew': False,
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+
+        self.acct_line.write({'date_end': False})
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 37)

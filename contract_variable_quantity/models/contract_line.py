@@ -44,9 +44,9 @@ class AccountAnalyticInvoiceLine(models.Model):
         return quantity
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id=False):
+    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
         vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id=invoice_id
+            invoice_id=invoice_id, invoice_values=invoice_values,
         )
         if (
             'quantity' in vals
