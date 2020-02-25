@@ -119,4 +119,15 @@ class SaleOrder(models.Model):
             .mapped('contract_id')
         )
         action["domain"] = [("id", "in", contracts.ids)]
+        if len(contracts) == 1:
+            # If there is only one contract, open it directly
+            action.update(
+                {
+                    "res_id": contracts.id,
+                    "view_mode": "form",
+                    "views": filter(
+                        lambda view: view[1] == 'form', action['views']
+                    ),
+                }
+            )
         return action
