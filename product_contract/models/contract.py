@@ -30,10 +30,14 @@ class ContractContract(models.Model):
         orders = self.contract_line_ids.mapped(
             'sale_order_line_id.order_id'
         )
-        return {
+        action = {
             "name": _("Sales Orders"),
             "view_mode": "tree,form",
             "res_model": "sale.order",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", orders.ids)],
         }
+        if len(orders) == 1:
+            # If there is only one order, open it directly
+            action.update({'view_mode': "form", "res_id": orders.id})
+        return action
