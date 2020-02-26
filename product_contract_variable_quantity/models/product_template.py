@@ -25,8 +25,6 @@ class ProductTemplate(models.Model):
         """ Clear the relation to contract_template_id when downgrading
         product from contract
         """
-        res = super(ProductTemplate, self)._change_is_contract()
         if not self.is_contract:
             self.qty_type = False
             self.qty_formula_id = False
-        return res
