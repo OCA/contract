@@ -31,6 +31,10 @@ class ContractLine(models.Model):
         string="Analytic account",
         comodel_name='account.analytic.account',
     )
+    analytic_tag_ids = fields.Many2many(
+        comodel_name='account.analytic.tag',
+        string='Analytic Tags',
+    )
     date_start = fields.Date(
         string='Date Start',
         required=True,
@@ -675,6 +679,7 @@ class ContractLine(models.Model):
             {
                 'name': name,
                 'account_analytic_id': self.analytic_account_id.id,
+                'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
                 'price_unit': self.price_unit,
             }
         )
