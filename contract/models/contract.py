@@ -92,6 +92,7 @@ class ContractContract(models.Model):
         index=True
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
+    note = fields.Text(string="Notes")
 
     @api.multi
     def _inverse_partner_id(self):
