@@ -241,6 +241,7 @@ msgstr "<strong>Prix unitaire</strong>"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:556
+#: code:addons/contract/models/contract_line.py:560
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr ""
@@ -248,12 +249,14 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:330
+#: code:addons/contract/models/contract_line.py:334
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:342
+#: code:addons/contract/models/contract_line.py:346
 #, python-format
 msgid "A contract line with a successor must have a end date"
 msgstr ""
@@ -293,9 +296,17 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:337
+#: code:addons/contract/models/contract_line.py:341
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
+#, fuzzy
+#| msgid "Analytic Account"
+msgid "Analytic Tags"
+msgstr "Compte analytique"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -356,6 +367,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1061
+#: code:addons/contract/models/contract_line.py:1066
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr ""
@@ -533,6 +545,7 @@ msgstr "Type de contrat"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:627
+#: code:addons/contract/models/contract_line.py:631
 #, fuzzy, python-format
 #| msgid "Contract '%s' start date can't be later than end date"
 msgid "Contract line '%s' start date can't be later than end date"
@@ -540,30 +553,35 @@ msgstr "Le contrat '%s' ne peut pas démarrer après la date de fin"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1090
+#: code:addons/contract/models/contract_line.py:1095
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:363
+#: code:addons/contract/models/contract_line.py:367
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:354
+#: code:addons/contract/models/contract_line.py:358
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1069
+#: code:addons/contract/models/contract_line.py:1074
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:861
+#: code:addons/contract/models/contract_line.py:866
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -574,6 +592,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:941
+#: code:addons/contract/models/contract_line.py:946
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -586,6 +605,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1237
+#: code:addons/contract/models/contract_line.py:1242
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -598,6 +618,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1049
+#: code:addons/contract/models/contract_line.py:1054
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -610,6 +631,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1287
+#: code:addons/contract/models/contract_line.py:1292
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr ""
@@ -1234,6 +1256,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:924
+#: code:addons/contract/models/contract_line.py:929
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr ""
@@ -1479,6 +1502,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:844
+#: code:addons/contract/models/contract_line.py:849
 #, python-format
 msgid "Stop not allowed for this line"
 msgstr ""
@@ -1490,6 +1514,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:985
+#: code:addons/contract/models/contract_line.py:990
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr ""
@@ -1587,6 +1612,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1082
+#: code:addons/contract/models/contract_line.py:1087
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr ""
@@ -1680,12 +1706,14 @@ msgstr "Année(s)"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:794
+#: code:addons/contract/models/contract_line.py:799
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:565
+#: code:addons/contract/models/contract_line.py:569
 #, fuzzy, python-format
 #| msgid ""
 #| "You can't have a next invoicing date before the start of the contract '%s'"
@@ -1698,6 +1726,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:587
+#: code:addons/contract/models/contract_line.py:591
 #, fuzzy, python-format
 #| msgid ""
 #| "You can't have a next invoicing date before the start of the contract '%s'"
@@ -1710,6 +1739,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:598
+#: code:addons/contract/models/contract_line.py:602
 #, python-format
 msgid ""
 "You can't have the next invoice date before the date of last invoice for the "
@@ -1720,6 +1750,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:579
+#: code:addons/contract/models/contract_line.py:583
 #, fuzzy, python-format
 #| msgid ""
 #| "You can't have a next invoicing date before the start of the contract '%s'"
@@ -1732,6 +1763,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:614
+#: code:addons/contract/models/contract_line.py:618
 #, fuzzy, python-format
 #| msgid "You must supply a next invoicing date for contract '%s'"
 msgid "You must supply a date of next invoice for contract line '%s'"
