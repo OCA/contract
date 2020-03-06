@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement
+# 	* agreement
 #
 msgid ""
 msgstr ""
@@ -13,14 +13,33 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
-"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 3.8\n"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction
+msgid "Action Needed"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__active
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__active
 msgid "Active"
+msgstr "Aktivan"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_ids
+#, fuzzy
+#| msgid "Active"
+msgid "Activities"
+msgstr "Aktivan"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_state
+#, fuzzy
+#| msgid "Active"
+msgid "Activity State"
 msgstr "Aktivan"
 
 #. module: agreement
@@ -58,6 +77,11 @@ msgid "Archived"
 msgstr "Arhivirano"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__company_id
 msgid "Company"
 msgstr "Tvrtka"
@@ -91,6 +115,21 @@ msgid "End Date"
 msgstr "Završni datum"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__id
 msgid "ID"
@@ -102,9 +141,30 @@ msgid "ID used for internal contract tracking."
 msgstr "ID za interno praćenje sporazuma"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__active
-msgid "If unchecked, it will allow you to hide the agreement without removing it."
+msgid ""
+"If unchecked, it will allow you to hide the agreement without removing it."
 msgstr "Ako nije označeno, omogućuje vam skrivanje porazuma bez brisanja."
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__is_template
@@ -130,6 +190,21 @@ msgid "Last Updated on"
 msgstr "Zadnje ažuriranje"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr "Naziv"
@@ -140,6 +215,51 @@ msgid "Name or Number"
 msgstr "Naziv ili broj"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__partner_id
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #, fuzzy
@@ -147,9 +267,19 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__code
 msgid "Reference"
 msgstr "Referenca"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
+msgid "Responsible User"
+msgstr ""
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
@@ -163,7 +293,9 @@ msgstr "Odaberi tip sporazuma"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__is_template
-msgid "Set if the agreement is a template. Template agreements don't require a partner."
+msgid ""
+"Set if the agreement is a template. Template agreements don't require a "
+"partner."
 msgstr ""
 
 #. module: agreement
@@ -175,6 +307,15 @@ msgstr ""
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__start_date
 msgid "Start Date"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
 
 #. module: agreement
@@ -193,8 +334,23 @@ msgid "Title"
 msgstr ""
 
 #. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Type Name"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_unread_counter
+msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: agreement

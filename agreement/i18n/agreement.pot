@@ -14,9 +14,24 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__active
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__active
 msgid "Active"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_state
+msgid "Activity State"
 msgstr ""
 
 #. module: agreement
@@ -54,6 +69,11 @@ msgid "Archived"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__company_id
 msgid "Company"
 msgstr ""
@@ -87,6 +107,21 @@ msgid "End Date"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__id
 msgid "ID"
@@ -98,8 +133,28 @@ msgid "ID used for internal contract tracking."
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__active
 msgid "If unchecked, it will allow you to hide the agreement without removing it."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: agreement
@@ -126,6 +181,21 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr ""
@@ -136,14 +206,69 @@ msgid "Name or Number"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__partner_id
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 msgid "Partner"
 msgstr ""
 
 #. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__code
 msgid "Reference"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
+msgid "Responsible User"
 msgstr ""
 
 #. module: agreement
@@ -173,6 +298,14 @@ msgid "Start Date"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__partner_id
 msgid "The customer or vendor this agreement is related to."
 msgstr ""
@@ -188,8 +321,23 @@ msgid "Title"
 msgstr ""
 
 #. module: agreement
+#: selection:agreement,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Type Name"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_unread_counter
+msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: agreement
