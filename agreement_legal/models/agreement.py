@@ -5,8 +5,7 @@ from odoo import _, api, fields, models
 
 
 class Agreement(models.Model):
-    _name = "agreement"
-    _inherit = ["agreement", "mail.thread"]
+    _inherit = "agreement"
 
     # General
     name = fields.Char(string="Title", required=True)
