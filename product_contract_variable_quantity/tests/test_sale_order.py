@@ -26,11 +26,12 @@ class TestSaleOrder(TransactionCase):
                 'result = 12',
             }
         )
-        self.product1.write(
+        self.product1.with_context(
+            force_company=self.sale.company_id.id).write(
             {
                 'is_contract': True,
                 'default_qty': 12,
-                'contract_template_id': self.contract_template1.id,
+                'property_contract_template_id': self.contract_template1.id,
                 'qty_formula_id': self.formula.id,
                 'qty_type': 'variable',
             }
