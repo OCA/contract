@@ -102,12 +102,19 @@ class ContractContract(models.Model):
         ondelete="restrict",
         readonly=True,
         copy=False,
+        track_visibility="onchange",
     )
     resiliate_comment = fields.Text(
-        string="Resiliate Comment", readonly=True, copy=False
+        string="Resiliate Comment",
+        readonly=True,
+        copy=False,
+        track_visibility="onchange",
     )
     resiliate_date = fields.Date(
-        string="Resiliate Date", readonly=True, copy=False
+        string="Resiliate Date",
+        readonly=True,
+        copy=False,
+        track_visibility="onchange",
     )
 
     @api.multi
