@@ -72,20 +72,22 @@ msgid "Contract Line to replace"
 msgstr "Ligne de contrat à remplacer"
 
 #. module: product_contract
-#: model:ir.model.fields,field_description:product_contract.field_product_product__contract_template_id
-#: model:ir.model.fields,field_description:product_contract.field_product_template__contract_template_id
+#: model:ir.model.fields,field_description:product_contract.field_product_product__property_contract_template_id
+#: model:ir.model.fields,field_description:product_contract.field_product_template__property_contract_template_id
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__contract_template_id
 msgid "Contract Template"
 msgstr "Modèle de contrat"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order_line.py:221
+#: code:addons/product_contract/models/sale_order_line.py:228
 #, fuzzy, python-format
 msgid "Contract product has different contract template"
 msgstr "L'article a des modèles de contrat différents"
 
 #. module: product_contract
 #: code:addons/product_contract/models/product_template.py:59
+#: code:addons/product_contract/models/product_template.py:61
 #, python-format
 msgid "Contract product should be service type"
 msgstr "L'article de contrat devrait être de types service"
@@ -210,6 +212,7 @@ msgstr "Ligne de Commande"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order_line.py:205
+#: code:addons/product_contract/models/sale_order_line.py:212
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr "La commande et le contrat devraient être liés au même partenaire"
@@ -264,3 +267,9 @@ msgstr "Semaine(s)"
 #: selection:sale.order.line,recurring_rule_type:0
 msgid "Year(s)"
 msgstr "Année(s)"
+
+#. module: product_contract
+#: code:addons/product_contract/models/sale_order.py:80
+#, python-format
+msgid "You must specify a contract template for '{}' product in '{}' company."
+msgstr ""
