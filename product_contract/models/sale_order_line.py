@@ -68,14 +68,14 @@ class SaleOrderLine(models.Model):
     )
 
     @api.constrains('contract_id')
-    def check_contact_is_not_resiliated(self):
+    def check_contact_is_not_terminated(self):
         for rec in self:
             if (
                 rec.order_id.state not in ('sale', 'done', 'cancel')
-                and rec.contract_id.is_resiliated
+                and rec.contract_id.is_terminated
             ):
                 raise ValidationError(
-                    _("You can't upsell or downsell a resiliated contract")
+                    _("You can't upsell or downsell a terminated contract")
                 )
 
     @api.multi
