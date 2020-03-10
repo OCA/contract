@@ -93,25 +93,25 @@ class ContractContract(models.Model):
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
     note = fields.Text(string="Notes")
-    is_resiliated = fields.Boolean(
-        string="Resiliated", readonly=True, copy=False
+    is_terminated = fields.Boolean(
+        string="Terminated", readonly=True, copy=False
     )
-    resiliate_reason_id = fields.Many2one(
-        comodel_name="contract.resiliate.reason",
-        string="Resiliate Reason",
+    terminate_reason_id = fields.Many2one(
+        comodel_name="contract.terminate.reason",
+        string="Termination Reason",
         ondelete="restrict",
         readonly=True,
         copy=False,
         track_visibility="onchange",
     )
-    resiliate_comment = fields.Text(
-        string="Resiliate Comment",
+    terminate_comment = fields.Text(
+        string="Termination Comment",
         readonly=True,
         copy=False,
         track_visibility="onchange",
     )
-    resiliate_date = fields.Date(
-        string="Resiliate Date",
+    terminate_date = fields.Date(
+        string="Termination Date",
         readonly=True,
         copy=False,
         track_visibility="onchange",
@@ -483,13 +483,13 @@ class ContractContract(models.Model):
         return contracts_to_invoice._recurring_create_invoice(date_ref)
 
     @api.multi
-    def action_resiliate_contract(self):
+    def action_terminate_contract(self):
         self.ensure_one()
         context = {"default_contract_id": self.id}
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Resiliate Contract'),
-            'res_model': 'contract.contract.resiliate',
+            'name': _('Terminate Contract'),
+            'res_model': 'contract.contract.terminate',
             'view_type': 'form',
             'view_mode': 'form',
             'target': 'new',
@@ -497,27 +497,27 @@ class ContractContract(models.Model):
         }
 
     @api.multi
-    def _resiliate_contract(
-        self, resiliate_reason_id, resiliate_comment, resiliate_date
+    def _terminate_contract(
+        self, terminate_reason_id, terminate_comment, terminate_date
     ):
         self.ensure_one()
-        if not self.env.user.has_group("contract.can_resiliate_contract"):
-            raise UserError(_('You are not allowed to resiliate contracts.'))
-        self.contract_line_ids.filtered('is_stop_allowed').stop(resiliate_date)
+        if not self.env.user.has_group("contract.can_terminate_contract"):
+            raise UserError(_('You are not allowed to terminate contracts.'))
+        self.contract_line_ids.filtered('is_stop_allowed').stop(terminate_date)
         self.write({
-            'is_resiliated': True,
-            'resiliate_reason_id': resiliate_reason_id.id,
-            'resiliate_comment': resiliate_comment,
-            'resiliate_date': resiliate_date,
+            'is_terminated': True,
+            'terminate_reason_id': terminate_reason_id.id,
+            'terminate_comment': terminate_comment,
+            'terminate_date': terminate_date,
         })
         return True
 
     @api.multi
-    def action_cancel_contract_resiliation(self):
+    def action_cancel_contract_termination(self):
         self.ensure_one()
         self.write({
-            'is_resiliated': False,
-            'resiliate_reason_id': False,
-            'resiliate_comment': False,
-            'resiliate_date': False,
+            'is_terminated': False,
+            'terminate_reason_id': False,
+            'terminate_comment': False,
+            'terminate_date': False,
         })

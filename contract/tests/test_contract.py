@@ -110,8 +110,8 @@ class TestContractBase(common.SavepointCase):
         )
         cls.acct_line.product_id.is_auto_renew = True
         cls.contract.company_id.create_new_line_at_contract_line_renew = True
-        cls.resiliate_reason = cls.env['contract.resiliate.reason'].create({
-            'name': 'resiliate_reason'
+        cls.terminate_reason = cls.env['contract.terminate.reason'].create({
+            'name': 'terminate_reason'
         })
 
 
@@ -2368,50 +2368,50 @@ class TestContract(TestContractBase):
             self.acct_line.recurring_next_date, to_date('2019-06-01')
         )
 
-    def test_action_resiliate_contract(self):
-        action = self.contract.action_resiliate_contract()
+    def test_action_terminate_contract(self):
+        action = self.contract.action_terminate_contract()
         wizard = (
             self.env[action['res_model']]
                 .with_context(action['context'])
                 .create(
                 {
-                    'resiliate_date': '2018-03-01',
-                    'resiliate_reason_id': self.resiliate_reason.id,
-                    'resiliate_comment': 'resiliate_comment',
+                    'terminate_date': '2018-03-01',
+                    'terminate_reason_id': self.terminate_reason.id,
+                    'terminate_comment': 'terminate_comment',
                 }
             )
         )
         self.assertEqual(wizard.contract_id, self.contract)
         with self.assertRaises(UserError):
-            wizard.resiliate_contract()
-        group_can_resiliate_contract = self.env.ref(
-            "contract.can_resiliate_contract"
+            wizard.terminate_contract()
+        group_can_terminate_contract = self.env.ref(
+            "contract.can_terminate_contract"
         )
-        group_can_resiliate_contract.users |= self.env.user
-        wizard.resiliate_contract()
-        self.assertTrue(self.contract.is_resiliated)
-        self.assertEqual(self.contract.resiliate_date, to_date('2018-03-01'))
+        group_can_terminate_contract.users |= self.env.user
+        wizard.terminate_contract()
+        self.assertTrue(self.contract.is_terminated)
+        self.assertEqual(self.contract.terminate_date, to_date('2018-03-01'))
         self.assertEqual(
-            self.contract.resiliate_reason_id.id, self.resiliate_reason.id
+            self.contract.terminate_reason_id.id, self.terminate_reason.id
         )
-        self.assertEqual(self.contract.resiliate_comment, 'resiliate_comment')
-        self.contract.action_cancel_contract_resiliation()
-        self.assertFalse(self.contract.is_resiliated)
-        self.assertFalse(self.contract.resiliate_reason_id)
-        self.assertFalse(self.contract.resiliate_comment)
+        self.assertEqual(self.contract.terminate_comment, 'terminate_comment')
+        self.contract.action_cancel_contract_termination()
+        self.assertFalse(self.contract.is_terminated)
+        self.assertFalse(self.contract.terminate_reason_id)
+        self.assertFalse(self.contract.terminate_comment)
 
-    def test_resiliate_date_before_last_date_invoiced(self):
+    def test_terminate_date_before_last_date_invoiced(self):
         self.contract.recurring_create_invoice()
         self.assertEqual(
             self.acct_line.last_date_invoiced, to_date('2018-02-14')
         )
-        group_can_resiliate_contract = self.env.ref(
-            "contract.can_resiliate_contract"
+        group_can_terminate_contract = self.env.ref(
+            "contract.can_terminate_contract"
         )
-        group_can_resiliate_contract.users |= self.env.user
+        group_can_terminate_contract.users |= self.env.user
         with self.assertRaises(ValidationError):
-            self.contract._resiliate_contract(
-                self.resiliate_reason,
-                'resiliate_comment',
+            self.contract._terminate_contract(
+                self.terminate_reason,
+                'terminate_comment',
                 to_date('2018-02-13'),
             )

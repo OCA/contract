@@ -296,11 +296,11 @@ class ContractLine(models.Model):
         'successor_contract_line_id',
         'predecessor_contract_line_id',
         'is_canceled',
-        'contract_id.is_resiliated',
+        'contract_id.is_terminated',
     )
     def _compute_allowed(self):
         for rec in self:
-            if rec.contract_id.is_resiliated:
+            if rec.contract_id.is_terminated:
                 rec.update({
                     'is_plan_successor_allowed': False,
                     'is_stop_plan_successor_allowed': False,
@@ -1174,7 +1174,7 @@ class ContractLine(models.Model):
         ).id
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Resiliate contract line',
+            'name': 'Terminate contract line',
             'res_model': 'contract.line.wizard',
             'view_type': 'form',
             'view_mode': 'form',
@@ -1262,7 +1262,7 @@ class ContractLine(models.Model):
     @api.model
     def _contract_line_to_renew_domain(self):
         return [
-            ('contract_id.is_resiliated', '=', False),
+            ('contract_id.is_terminated', '=', False),
             ('is_auto_renew', '=', True),
             ('is_canceled', '=', False),
             ('termination_notice_date', '<=', fields.Date.context_today(self)),

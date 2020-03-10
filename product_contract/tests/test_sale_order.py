@@ -343,17 +343,17 @@ class TestSaleOrder(TransactionCase):
             self.sale.order_line.mapped('contract_id'),
         )
 
-    def test_check_contact_is_not_resiliated(self):
-        self.contract.is_resiliated = True
+    def test_check_contact_is_not_terminated(self):
+        self.contract.is_terminated = True
         with self.assertRaises(ValidationError):
             self.order_line1.contract_id = self.contract
 
-    def test_check_contact_is_not_resiliated(self):
+    def test_check_contact_is_not_terminated(self):
         self.order_line1.contract_id = self.contract
         self.sale.action_confirm()
-        self.contract.is_resiliated = True
+        self.contract.is_terminated = True
         self.sale.action_cancel()
         with self.assertRaises(ValidationError):
             self.sale.action_draft()
-        self.contract.is_resiliated = False
+        self.contract.is_terminated = False
         self.sale.action_draft()
