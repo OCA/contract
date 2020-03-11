@@ -342,3 +342,18 @@ class TestSaleOrder(TransactionCase):
             self.env['contract.contract'].search(action['domain']),
             self.sale.order_line.mapped('contract_id'),
         )
+
+    def test_check_contact_is_not_terminated(self):
+        self.contract.is_terminated = True
+        with self.assertRaises(ValidationError):
+            self.order_line1.contract_id = self.contract
+
+    def test_check_contact_is_not_terminated(self):
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        self.contract.is_terminated = True
+        self.sale.action_cancel()
+        with self.assertRaises(ValidationError):
+            self.sale.action_draft()
+        self.contract.is_terminated = False
+        self.sale.action_draft()
