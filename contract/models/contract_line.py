@@ -516,7 +516,7 @@ class ContractLine(models.Model):
         auto_renew"""
         for rec in self.filtered('is_auto_renew'):
             if rec.date_start:
-                rec.date_end = self.compute_first_date_end(
+                rec.date_end = self._get_frist_date_end(
                     rec.date_start,
                     rec.auto_renew_rule_type,
                     rec.auto_renew_interval,
