@@ -19,11 +19,19 @@
                     </group>
                 </group>
                 <group name="group_invoice_lines" string="Contract Template Lines">
-                    <field name="contract_line_ids" nolabel="1">
+                    <field name="contract_line_ids"
+                           widget="section_and_note_one2many"
+                           nolabel="1">
                         <tree>
+                            <control>
+                                <create string="Add a line"/>
+                                <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="display_type" invisible="1"/>
                             <field name="sequence" widget="handle" />
                             <field name="product_id" />
-                            <field name="name" />
+                            <field name="name" widget="section_and_note_text"/>
                             <field name="quantity" />
                             <field name="uom_id" />
                             <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"/>
