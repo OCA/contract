@@ -5,27 +5,27 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
+                    <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                    <t t-set="address">
+                        <p id="partner_info"><strong>Partner:</strong></p>
+                        <div t-field="o.partner_id"
+                             t-options='{"widget": "contact", "fields": ["address", "name", "phone", "mobile", "fax", "email"], "no_marker": true, "phone_icons": true}'/>
+                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                    </t>
                     <div class="page">
                         <div class="oe_structure"/>
-                        <div class="row" id="partner_info">
-                            <div class="col-xs-5 col-xs-offset-7">
-                                <p id="partner_info"><strong>Partner:</strong></p>
-                                <div t-field="o.partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "mobile", "fax", "email"], "no_marker": true, "phone_icons": true}'/>
-                                <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                            </div>
-                        </div>
                         <div class="row" id="header_info">
-                            <div class="col-xs-3">
+                            <div class="col-3">
                                 <strong>Responsible: </strong><p t-field="o.user_id"/>
                                 <strong>Contract: </strong><p t-field="o.code"/>
                             </div>
                         </div>
                         <div class="row" id="invoice_info">
                             <t t-set="total" t-value="0"/>
-                            <div class="col-xs-12">
+                            <div class="col-12">
                                 <t t-set="total" t-value="0"/>
                                 <p id="services_info"><strong>Recurring Items</strong></p>
-                                <table class="table table-condensed">
+                                <table class="table table-sm">
                                     <thead>
                                         <tr>
                                             <th><strong>Description</strong></th>
@@ -36,30 +36,61 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr t-foreach="o.contract_line_ids" t-as="l">
-                                            <td>
-                                                <span t-field="l.name"/>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-field="l.quantity"/>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-field="l.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-field="l.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                            <td>
-                                                <span t-field="l.date_start"/>
-                                            </td>
-                                            <t t-set="total" t-value="total + l.price_subtotal"/>
-                                        </tr>
+                                        <t t-set="current_subtotal" t-value="0"/>
+                                        <t t-foreach="o.contract_line_ids" t-as="l">
+                                            <t t-set="current_subtotal" t-value="current_subtotal + l.price_subtotal"/>
+                                            <tr t-att-class="'bg-200 font-weight-bold o_line_section' if l.display_type == 'line_section' else 'font-italic o_line_note' if l.display_type == 'line_note' else ''">
+                                                <t t-if="not l.display_type">
+                                                    <td>
+                                                        <span t-field="l.name"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-field="l.quantity"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-field="l.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-field="l.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-field="l.date_start"/>
+                                                    </td>
+                                                    <t t-set="total" t-value="total + l.price_subtotal"/>
+                                                </t>
+                                                <t t-if="l.display_type == 'line_section'">
+                                                    <td colspan="99">
+                                                        <span t-field="l.name"/>
+                                                    </td>
+                                                    <t t-set="current_section" t-value="l"/>
+                                                    <t t-set="current_subtotal" t-value="0"/>
+                                                </t>
+                                                <t t-if="l.display_type == 'line_note'">
+                                                    <td colspan="99">
+                                                        <span t-field="l.name"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                            <t t-if="current_section and (l_last or o.contract_line_ids[l_index+1].display_type == 'line_section')">
+                                                <tr class="is-subtotal text-right">
+                                                    <td colspan="99">
+                                                        <strong class="mr16">Subtotal</strong>
+                                                        <span
+                                                            t-esc="current_subtotal"
+                                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-xs-4 pull-right">
-                                <table class="table table-condensed">
-                                    <tr class="border-black">
+                        </div>
+                        <div id="total" class="row" name="total">
+                             <div class="col-4 ml-auto">
+                                <table class="table table-sm">
+                                    <tr class="border-black o_subtotal" style="">
                                         <td><strong>Total</strong></td>
                                         <td class="text-right">
                                             <span t-esc="total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -68,10 +99,13 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row" id="note">
-                            <strong>Notes: </strong>
-                            <br></br>
-                            <p t-field="o.note"/>
+                        <div>
+                            <div class="row mt-4" id="note">
+                                <div><strong>Notes: </strong></div>
+                            </div>
+                            <div class="row">
+                                <p t-field="o.note"/>
+                            </div>
                         </div>
                     </div>
                 </t>
