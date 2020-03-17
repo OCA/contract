@@ -287,6 +287,7 @@ class ContractLine(models.Model):
     )
     def _compute_allowed(self):
         for rec in self:
+            not_changed = True
             if rec.date_start:
                 allowed = get_allowed(
                     rec.date_start,
@@ -298,6 +299,7 @@ class ContractLine(models.Model):
                     rec.is_canceled,
                 )
                 if allowed:
+                    not_changed = False
                     rec.is_plan_successor_allowed = allowed.plan_successor
                     rec.is_stop_plan_successor_allowed = (
                         allowed.stop_plan_successor
@@ -305,6 +307,13 @@ class ContractLine(models.Model):
                     rec.is_stop_allowed = allowed.stop
                     rec.is_cancel_allowed = allowed.cancel
                     rec.is_un_cancel_allowed = allowed.uncancel
+            if not_changed:  #      "in v13 it must always return a value "
+                    rec.is_plan_successor_allowed = False
+                    rec.is_stop_plan_successor_allowed = False
+                    rec.is_stop_allowed = False
+                    rec.is_cancel_allowed = False
+                    rec.is_un_cancel_allowed = False
+                    
 
     @api.constrains('is_auto_renew', 'successor_contract_line_id', 'date_end')
     def _check_allowed(self):
@@ -649,7 +658,7 @@ class ContractLine(models.Model):
             'tax_ids': [(6, 0, self.tax_id.ids)],
             'analytic_account_id': self.analytic_account_id.id,
 #            'analytic_tag_ids': [(6, 0, self.product_id.analytic_tag_ids.ids)],
-            'contract_line_id': [(4, self.id)],
+            'contract_line_id': [(4, self.id, 0)],
         }
 
 

@@ -159,7 +159,6 @@ class ContractContract(models.Model):
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         """Update the contract fields with that of the template.
-
         Take special consideration with the `contract_line_ids`,
         which must be created using the data from the contract lines. Cascade
         deletion ensures that any errant lines that are created are also
@@ -168,21 +167,31 @@ class ContractContract(models.Model):
         contract_template_id = self.contract_template_id
         if not contract_template_id:
             return
+        lines_dict = []
         for field_name, field in contract_template_id._fields.items():
             if field.name == 'contract_line_ids':
-                lines = self._convert_contract_lines(contract_template_id)
-                self.contract_line_ids += lines
-            elif not any(
-                (
+                for template_line in contract_template_id.contract_line_ids:
+                    line ={}
+                    for line_field_name, field in template_line._fields.items():
+                        if line_field_name!='contract_id'  and not any((field.compute, field.related, field.automatic, field.readonly,field.company_dependent)):
+                            line[line_field_name] = template_line[line_field_name]
+                    line['create_invoice_visibility'] = False
+                    line['date_start'] = self.date
+                    line['recurring_next_date'] = self.date
+                    lines_dict += [line]
+                    
+            elif not any((
                     field.compute,
                     field.related,
                     field.automatic,
                     field.readonly,
                     field.company_dependent,
                     field.name in self.NO_SYNC,
-                )
-            ):
-                self[field_name] = self.contract_template_id[field_name]
+                )):
+                if self.contract_template_id[field_name]:
+                    self[field_name] = self.contract_template_id[field_name]
+        if lines_dict:
+            self.contract_line_ids = [(5,0,0)]+[(0,0,x) for x in lines_dict]
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -206,23 +215,6 @@ class ContractContract(models.Model):
                 ]
             }
         }
-
-    def _convert_contract_lines(self, contract):
-        self.ensure_one()
-        new_lines = self.env['contract.line']
-        contract_line_model = self.env['contract.line']
-        for contract_line in contract.contract_line_ids:
-            vals = contract_line._convert_to_write(contract_line.read()[0])
-            # Remove template link field
-            vals.pop('contract_template_id', False)
-            vals['date_start'] = fields.Date.context_today(contract_line)
-            vals['recurring_next_date'] = fields.Date.context_today(
-                contract_line
-            )
-            new_lines += contract_line_model.new(vals)
-        new_lines._onchange_date_start()
-        new_lines._onchange_is_auto_renew()
-        return new_lines
 
 
     def _prepare_invoice(self, date_invoice, journal=None):
@@ -317,19 +309,21 @@ class ContractContract(models.Model):
         new_invoice = self.env['account.move'].new(invoice_values)
 
       
-        for invoice_line in new_invoice.line_ids:
+        for invoice_line in new_invoice.invoice_line_ids:
             name = invoice_line.name
             analytic_account_id = invoice_line.analytic_account_id
             price_unit = invoice_line.price_unit
             invoice_line.invoice_id = new_invoice
-            invoice_line._onchange_product_id()
+            tax_ids = invoice_line.tax_ids
+            invoice_line._onchange_product_id()  # is overwriting also the taxes
             invoice_line.update(
                 {
                      'name': name,
                      'analytic_account_id': analytic_account_id,
                      'price_unit': price_unit,
+                     'tax_ids' : tax_ids,
                 }             )
-        return new_invoice._convert_to_record(new_invoice._cache)
+#        return new_invoice._convert_to_record(new_invoice._cache)    #???????????
         return new_invoice._convert_to_write(new_invoice._cache)
 
 
@@ -347,9 +341,9 @@ class ContractContract(models.Model):
             invoices_values = [invoices_values]
         final_invoices_values = []
         for invoice_values in invoices_values:
-            final_invoices_values.append(
-                self._finalize_invoice_values(invoice_values)
-            )
+            print(invoice_values)
+            final_invoices_values += [ self._finalize_invoice_values(invoice_values)]
+            print(final_invoices_values)
         invoices = self.env['account.move'].create(final_invoices_values)
         return invoices
 
