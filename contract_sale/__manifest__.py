@@ -3,7 +3,7 @@
 
 {
     'name': 'Contract from Sale',
-    'version': '12.0.2.1.0',
+    'version': '12.0.3.0.0',
     'category': 'Sales',
     'author': 'Tecnativa, '
               'Odoo Community Association (OCA)',
