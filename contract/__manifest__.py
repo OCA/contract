@@ -35,6 +35,7 @@
         'wizards/contract_manually_create_invoice.xml',
         'wizards/contract_contract_terminate.xml',
         'views/contract_tag.xml',
+        'views/assets.xml',
         'views/abstract_contract_line.xml',
         'views/contract.xml',
         'views/contract_line.xml',
