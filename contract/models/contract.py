@@ -341,9 +341,7 @@ class ContractContract(models.Model):
             invoices_values = [invoices_values]
         final_invoices_values = []
         for invoice_values in invoices_values:
-            print(invoice_values)
             final_invoices_values += [ self._finalize_invoice_values(invoice_values)]
-            print(final_invoices_values)
         invoices = self.env['account.move'].create(final_invoices_values)
         return invoices
 
