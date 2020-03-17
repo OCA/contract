@@ -8,6 +8,16 @@
             <xpath expr="//field[@name='code']" position="after">
                 <field name="skip_zero_qty"/>
             </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='quantity']" position="before">
+                <field name="qty_type"/>
+                <field
+                    name="qty_formula_id"
+                    attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='quantity']" position="attributes">
+                <attribute name="attrs">{'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
+            </xpath>
         </field>
     </record>
 
