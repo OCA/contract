@@ -357,3 +357,26 @@ class TestSaleOrder(TransactionCase):
             self.sale.action_draft()
         self.contract.is_terminated = False
         self.sale.action_draft()
+
+    def test_order_lines_with_the_same_contract_template(self):
+        """ It should create one contract with two lines grouped by contract
+        template"""
+        self.product2.with_context(
+            force_company=self.sale.company_id.id
+        ).write(
+            {
+                'is_contract': True,
+                'property_contract_template_id': self.contract_template1.id,
+            }
+        )
+        self.sale.order_line.onchange_product()
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped('contract_id')
+        self.assertEqual(len(contracts), 1)
+        self.assertEqual(len(contracts.contract_line_ids), 2)
+        contracts = (
+            self.env['contract.line']
+            .search([('sale_order_line_id', 'in', self.sale.order_line.ids)])
+            .mapped('contract_id')
+        )
+        self.assertEqual(len(contracts), 1)
