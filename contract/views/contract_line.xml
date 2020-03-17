@@ -38,7 +38,9 @@
                 </group>
             </group>
             <group name="recurrence_info" position="after">
-                <group name="analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
+                <group name="analytic"
+                       groups="analytic.group_analytic_accounting,analytic.group_analytic_tags"
+                       attrs="{'invisible': [('display_type', '!=', False)]}">
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                 </group>
@@ -77,6 +79,7 @@
         </field>
     </record>
 
+    <!-- TODO: Delete this view in migration to v13 or further migrations -->
     <!--TREE view-->
     <record id="contract_line_tree_view" model="ir.ui.view">
         <field name="name">contract.line tree view (in contract)</field>
