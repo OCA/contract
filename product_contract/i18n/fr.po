@@ -29,6 +29,7 @@ msgstr "<span class=\"o_stat_text\">Commandes</span>"
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__is_auto_renew
 #: model:ir.model.fields,field_description:product_contract.field_product_template__is_auto_renew
+#: model:ir.model.fields,field_description:product_contract.field_sale_order_line__is_auto_renew
 msgid "Auto Renew"
 msgstr "Renouvellement automatique"
 
@@ -80,12 +81,14 @@ msgstr "Modèle de contrat"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order_line.py:239
+#: code:addons/product_contract/models/sale_order_line.py:264
 #, python-format
 msgid "Contract product has different contract template"
 msgstr "L'article a un modèle de contrat différent"
 
 #. module: product_contract
 #: code:addons/product_contract/models/product_template.py:61
+#: code:addons/product_contract/models/product_template.py:77
 #, python-format
 msgid "Contract product should be service type"
 msgstr "L'article de contrat devrait être de type service"
@@ -111,8 +114,10 @@ msgid "Date Start"
 msgstr "Date de début"
 
 #. module: product_contract
+#: selection:product.template,auto_renew_rule_type:0
 #: selection:product.template,recurring_rule_type:0
 #: selection:product.template,termination_notice_rule_type:0
+#: selection:sale.order.line,auto_renew_rule_type:0
 #: selection:sale.order.line,recurring_rule_type:0
 msgid "Day(s)"
 msgstr "Jour(s)"
@@ -151,8 +156,10 @@ msgid "Is a contract"
 msgstr "Est un contrat"
 
 #. module: product_contract
+#: selection:product.template,auto_renew_rule_type:0
 #: selection:product.template,recurring_rule_type:0
 #: selection:product.template,termination_notice_rule_type:0
+#: selection:sale.order.line,auto_renew_rule_type:0
 #: selection:sale.order.line,recurring_rule_type:0
 msgid "Month(s)"
 msgstr "Mois"
@@ -191,6 +198,29 @@ msgid "Recurrence Invoicing"
 msgstr "Fréquence de facturation"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_interval
+#: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_interval
+#: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_interval
+#, fuzzy
+#| msgid "Invoice Every"
+msgid "Renew Every"
+msgstr "Facturer tous les"
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_interval
+#: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_interval
+#: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_interval
+msgid "Renew every (Days/Week/Month/Year)"
+msgstr ""
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_rule_type
+#: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_rule_type
+#: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_rule_type
+msgid "Renewal type"
+msgstr ""
+
+#. module: product_contract
 #: model:ir.model,name:product_contract.model_sale_order
 msgid "Sale Order"
 msgstr "Commande"
@@ -207,6 +237,7 @@ msgstr "Ligne de commande"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order_line.py:223
+#: code:addons/product_contract/models/sale_order_line.py:248
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr "La commande et le contrat doivent être liés au même partenaire"
@@ -226,6 +257,15 @@ msgstr "Commandes"
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_template__recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
+msgstr "Spécifier un intervalle pour la création automatique des factures."
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_rule_type
+#: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_rule_type
+#: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_rule_type
+#, fuzzy
+#| msgid "Specify Interval for automatic invoice generation."
+msgid "Specify Interval for automatic renewal."
 msgstr "Spécifier un intervalle pour la création automatique des factures."
 
 #. module: product_contract
@@ -250,14 +290,18 @@ msgid "Termination Notice type"
 msgstr "Type d'avis d'échéance"
 
 #. module: product_contract
+#: selection:product.template,auto_renew_rule_type:0
 #: selection:product.template,recurring_rule_type:0
 #: selection:product.template,termination_notice_rule_type:0
+#: selection:sale.order.line,auto_renew_rule_type:0
 #: selection:sale.order.line,recurring_rule_type:0
 msgid "Week(s)"
 msgstr "Semaine(s)"
 
 #. module: product_contract
+#: selection:product.template,auto_renew_rule_type:0
 #: selection:product.template,recurring_rule_type:0
+#: selection:sale.order.line,auto_renew_rule_type:0
 #: selection:sale.order.line,recurring_rule_type:0
 msgid "Year(s)"
 msgstr "Année(s)"
@@ -265,6 +309,7 @@ msgstr "Année(s)"
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order.py:29
 #: code:addons/product_contract/models/sale_order_line.py:61
+#: code:addons/product_contract/models/sale_order_line.py:78
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
 msgstr "Vous ne pouvez pas augmenter ou diminuer un contrat résilié"
