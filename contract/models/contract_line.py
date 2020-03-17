@@ -146,6 +146,9 @@ class ContractLine(models.Model):
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
+            if rec.display_type:
+                rec.state = False
+                continue
             if rec.is_canceled:
                 rec.state = 'canceled'
                 continue
@@ -648,15 +651,15 @@ class ContractLine(models.Model):
 
     @api.depends('recurring_next_date', 'date_start', 'date_end')
     def _compute_create_invoice_visibility(self):
+        # TODO: depending on the lines, and their order, some sections
+        # have no meaning in certain invoices
         today = fields.Date.context_today(self)
         for rec in self:
-            if rec.date_start:
-                if today < rec.date_start:
-                    rec.create_invoice_visibility = False
-                else:
-                    rec.create_invoice_visibility = bool(
-                        rec.recurring_next_date
-                    )
+            if (not rec.display_type and
+                    rec.date_start and today >= rec.date_start):
+                rec.create_invoice_visibility = bool(rec.recurring_next_date)
+            else:
+                rec.create_invoice_visibility = False
 
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
@@ -665,6 +668,7 @@ class ContractLine(models.Model):
             self.last_date_invoiced, self.recurring_next_date
         )
         invoice_line_vals = {
+            'display_type': self.display_type,
             'product_id': self.product_id.id,
             'quantity': self._get_quantity_to_invoice(*dates),
             'uom_id': self.uom_id.id,
@@ -1299,10 +1303,11 @@ class ContractLine(models.Model):
     @api.multi
     def unlink(self):
         """stop unlink uncnacled lines"""
-        if not all(self.mapped('is_canceled')):
-            raise ValidationError(
-                _("Contract line must be canceled before delete")
-            )
+        for record in self:
+            if not (record.is_canceled or record.display_type):
+                raise ValidationError(
+                    _("Contract line must be canceled before delete")
+                )
         return super().unlink()
 
     @api.multi

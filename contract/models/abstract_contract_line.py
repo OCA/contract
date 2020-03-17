@@ -17,13 +17,13 @@ class ContractAbstractContractLine(models.AbstractModel):
     _description = 'Abstract Recurring Contract Line'
 
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True
+        'product.product', string='Product'
     )
 
     name = fields.Text(string='Description', required=True)
     quantity = fields.Float(default=1.0, required=True)
     uom_id = fields.Many2one(
-        'uom.uom', string='Unit of Measure', required=True
+        'uom.uom', string='Unit of Measure'
     )
     automatic_price = fields.Boolean(
         string="Auto-price?",
@@ -125,6 +125,9 @@ class ContractAbstractContractLine(models.AbstractModel):
         required=True,
         ondelete='cascade',
     )
+    display_type = fields.Selection([
+        ('line_section', "Section"),
+        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
     @api.model
     def _get_default_recurring_invoicing_offset(

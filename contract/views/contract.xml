@@ -105,9 +105,76 @@
                     </group>
                     <notebook>
                         <page name="recurring_invoice_line"
-                            string="Recurring Invoices">
-                            <field name="contract_line_ids" attrs="{'readonly': [('is_terminated','=',True)]}"
-                                context="{'default_contract_type': contract_type}"/>
+                              string="Recurring Invoices">
+                            <field name="contract_line_ids"
+                                   attrs="{'readonly': [('is_terminated','=',True)]}"
+                                   widget="section_and_note_one2many"
+                                   context="{'default_contract_type': contract_type}">
+                                <tree decoration-muted="is_canceled"
+                                      decoration-info="create_invoice_visibility and not is_canceled">
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+                                    <field name="display_type" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="automatic_price" attrs="{'column_invisible': [('parent.contract_type', '=', 'purchase')]}"/>
+                                    <field name="price_unit"
+                                           attrs="{'readonly': [('automatic_price', '=', True)]}"/>
+                                    <field name="specific_price" invisible="1"/>
+                                    <field name="discount" groups="base.group_no_one"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="recurring_interval" invisible="1"/>
+                                    <field name="recurring_rule_type" invisible="1"/>
+                                    <field name="recurring_invoicing_type" invisible="1"/>
+                                    <field name="date_start" required="1"/>
+                                    <field name="date_end"/>
+                                    <field name="recurring_next_date" required="1"/>
+                                    <field name="last_date_invoiced" groups="base.group_no_one"/>
+                                    <field name="create_invoice_visibility" invisible="1"/>
+                                    <field name="is_plan_successor_allowed" invisible="1"/>
+                                    <field name="is_stop_plan_successor_allowed" invisible="1"/>
+                                    <field name="is_stop_allowed" invisible="1"/>
+                                    <field name="is_cancel_allowed" invisible="1"/>
+                                    <field name="is_un_cancel_allowed" invisible="1"/>
+                                    <field name="is_auto_renew" invisible="1"/>
+                                    <field name="is_canceled" invisible="1"/>
+                                    <button name="action_plan_successor"
+                                            string="Plan Start" type="object"
+                                            icon="fa-calendar text-success"
+                                            attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"/>
+                                    <button name="action_stop_plan_successor"
+                                            string="Stop Plan Successor"
+                                            type="object"
+                                            icon="fa-pause text-muted"
+                                            attrs="{'invisible': [('is_stop_plan_successor_allowed', '=', False)]}"/>
+                                    <button name="action_stop" string="Stop"
+                                            type="object"
+                                            icon="fa-stop text-danger"
+                                            attrs="{'invisible': [('is_stop_allowed', '=', False)]}"/>
+                                    <button name="cancel" string="Cancel"
+                                            type="object"
+                                            icon="fa-ban text-danger"
+                                            confirm="Are you sure you want to cancel this line"
+                                            attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"/>
+                                    <button name="action_uncancel"
+                                            string="Un-cancel" type="object"
+                                            icon="fa-ban text-success"
+                                            attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"/>
+                                    <button name="renew" string="Renew"
+                                            type="object"
+                                            icon="fa-fast-forward text-success"
+                                            groups="base.group_no_one"
+                                            attrs="{'invisible': [('is_auto_renew', '=', False)]}"/>
+                                </tree>
+                            </field>
                             <field name="note"/>
                         </page>
                         <page name="info" string="Other Information">
