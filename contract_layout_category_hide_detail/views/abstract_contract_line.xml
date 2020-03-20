@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="contract_abstract_contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.abstract.contract.line.hide.details</field>
+        <field name="model">contract.abstract.contract.line</field>
+        <field name="inherit_id" ref="contract.contract_abstract_contract_line_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <group attrs="{'invisible': [('display_type', '!=', 'line_section')]}">
+                    <field name="show_details"/>
+                    <field name="show_subtotal"
+                           attrs="{'invisible': [('show_details', '!=', True)]}"/>
+                </group>
+            </field>
+        </field>
+    </record>
+
+</odoo>
