@@ -309,6 +309,7 @@ class ContractContract(models.Model):
         vinvoice = self.env['account.invoice'].with_context(
             force_company=self.company_id.id,
         ).new({
+            'company_id': self.company_id.id,
             'partner_id': self.invoice_partner_id.id,
             'type': invoice_type,
         })
@@ -320,7 +321,6 @@ class ContractContract(models.Model):
             'date_invoice': date_invoice,
             'journal_id': journal.id,
             'origin': self.name,
-            'company_id': self.company_id.id,
             'user_id': self.user_id.id,
         })
         if self.payment_term_id:
