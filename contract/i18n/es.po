@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2020-01-17 04:13+0000\n"
+"PO-Revision-Date: 2020-03-25 18:13+0000\n"
 "Last-Translator: Nelson Ramírez Sánchez <info@konos.cl>\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
 "Language: es\n"
@@ -158,6 +158,13 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"                                contrato a facturar\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible': [("
+"'contract_to_invoice_count', '&lt;', 1)]}\">\n"
+"                                contracts to invoice\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -216,6 +223,8 @@ msgid ""
 "<strong>Notes: </strong>\n"
 "                            <br/>"
 msgstr ""
+"<strong>Notas: </strong>\n"
+"                            <br/>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -310,10 +319,8 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
-#, fuzzy
-#| msgid "Analytic account"
 msgid "Analytic Tags"
-msgstr "Cuenta analítica"
+msgstr "Etiquetas Analíticas"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -332,17 +339,13 @@ msgstr "Estás seguro de que deseas cancelar esta línea"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#, fuzzy
-#| msgid "Are you sure you want to cancel this line"
 msgid "Are you sure you want to re-activate this contract?"
-msgstr "Estás seguro de que deseas cancelar esta línea"
+msgstr "¿Estás segura de que quieres volver a activar este contrato?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
-#, fuzzy
-#| msgid "Are you sure you want to cancel this line"
 msgid "Are you sure you want to terminate this contract?"
-msgstr "Estás seguro de que deseas cancelar esta línea"
+msgstr "¿Estás segura de que quieres rescindir este contrato?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -382,10 +385,8 @@ msgstr "Cancelar"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#, fuzzy
-#| msgid "Contract Template Line"
 msgid "Cancel Contract Termination"
-msgstr "Línea de plantilla de contrato"
+msgstr "Cancelar la Rescisión del contrato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_cancel_allowed
@@ -472,10 +473,8 @@ msgstr "Contrato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
-#, fuzzy
-#| msgid "Contract Template"
 msgid "Contract Contract Terminate"
-msgstr "Plantilla de contrato"
+msgstr "Contrato Contrato Terminar"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
@@ -497,14 +496,12 @@ msgstr "Origen de la línea de contrato de este."
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Contract Manually Create Invoice"
-msgstr ""
+msgstr "Contrato Crear factura manualmente"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_manually_create_invoice
-#, fuzzy
-#| msgid "Contract Line Wizard"
 msgid "Contract Manually Create Invoice Wizard"
-msgstr "Asistente Línea de contrato"
+msgstr "Asistente de creación manual de facturas de contrato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -544,24 +541,18 @@ msgstr "Plantillas de contrato"
 #: model:ir.actions.act_window,name:contract.contract_terminate_reason_act_window
 #: model:ir.model,name:contract.model_contract_terminate_reason
 #: model:ir.ui.menu,name:contract.contract_terminate_reason_menu
-#, fuzzy
-#| msgid "Contract Template Lines"
 msgid "Contract Termination Reason"
-msgstr "Líneas de plantilla de contrato"
+msgstr "Motivo de rescisión del contrato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_ids
-#, fuzzy
-#| msgid "Contract Type"
 msgid "Contract To Invoice"
-msgstr "Tipo de contrato"
+msgstr "Contrato para facturar"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_count
-#, fuzzy
-#| msgid "Invoice Count"
 msgid "Contract To Invoice Count"
-msgstr "Total de Facturas"
+msgstr "Contrato a la cuenta de la factura"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__contract_type
@@ -690,6 +681,8 @@ msgid ""
 "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
 "\"%s\">Invoice</a>"
 msgstr ""
+"Contratos facturados manualmente: <a href=\"#\" data-oe-model=\"%s\" data-oe-"
+"id=\"%s\">Factura</a>"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
@@ -1228,7 +1221,7 @@ msgstr "Próximo Período de Inicio"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__note
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
@@ -1424,7 +1417,7 @@ msgstr "Tipo renovación"
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_comment_required
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__terminate_comment_required
 msgid "Require a termination comment"
-msgstr ""
+msgstr "Requerir un comentario de terminación"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
@@ -1672,7 +1665,7 @@ msgstr "Fecha de aviso de terminación"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "This contract was terminated for the reason"
-msgstr ""
+msgstr "Este contrato fue rescindido por la razón"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
@@ -1748,7 +1741,7 @@ msgstr "Próximo cierre"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Update Termination Details"
-msgstr ""
+msgstr "Actualizar detalles de terminación"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -1805,7 +1798,7 @@ msgstr "Año(s)"
 #: code:addons/contract/models/contract.py:505
 #, python-format
 msgid "You are not allowed to terminate contracts."
-msgstr ""
+msgstr "No tiene permitido rescindir contratos."
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:810
@@ -1869,7 +1862,7 @@ msgstr "ejemplo Contrato XYZ"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "on"
-msgstr ""
+msgstr "en"
 
 #~ msgid "Specify if process date is 'from' or 'to' invoicing date"
 #~ msgstr ""
