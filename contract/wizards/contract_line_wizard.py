@@ -25,6 +25,7 @@ class ContractLineWizard(models.TransientModel):
         string="Contract Line",
         required=True,
         index=True,
+        ondelete="cascade",
     )
 
     @api.multi
