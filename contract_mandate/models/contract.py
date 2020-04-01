@@ -42,6 +42,7 @@ class ContractContract(models.Model):
             mandate = self.env['account.banking.mandate'].search([
                 ('partner_id', '=', self.partner_id.commercial_partner_id.id),
                 ('state', '=', 'valid'),
+                ('company_id', '=', self.company_id.id),
             ], limit=1)
             invoice_vals['mandate_id'] = mandate.id
         return invoice_vals
