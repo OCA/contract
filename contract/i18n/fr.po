@@ -160,12 +160,12 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible' : [('contract_to_invoice_count', '&gt ;', 1)]}\">"
-"\n"
+"<span attrs=\"{'invisible' : [('contract_to_invoice_count', '&gt ;', "
+"1)]}\">\n"
 "                                contrat à facturer\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible' : [("
-"'contract_to_invoice_count', '&lt ;', 1)]}\">\n"
+"                            <span attrs=\"{'invisible' : "
+"[('contract_to_invoice_count', '&lt ;', 1)]}\">\n"
 "                                contrats à facturer\n"
 "                            </span>"
 
@@ -515,7 +515,15 @@ msgstr "Nom du contrat"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_tag
+#: model:ir.ui.menu,name:contract.contract_tag_menu
 msgid "Contract Tag"
+msgstr "Étiquette du contrat"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.contract_tag_act_window
+#, fuzzy
+#| msgid "Contract Tag"
+msgid "Contract Tags"
 msgstr "Étiquette du contrat"
 
 #. module: contract
@@ -662,8 +670,8 @@ msgid ""
 msgstr ""
 "Ligne de contrat <strong>{product}</strong>\n"
 "                mise en suspens : <br/>\n"
-"                - <strong>Début de la suspension</strong> : {new_date_start}"
-"\n"
+"                - <strong>Début de la suspension</strong> : "
+"{new_date_start}\n"
 "                <br/>\n"
 "                - <strong>Fin de la suspension</strong> : {new_date_end}\n"
 "                "
