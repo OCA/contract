@@ -16,6 +16,7 @@
         'fieldservice_sale',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/contract_line.xml',
     ],
     'license': 'AGPL-3',
