@@ -12,6 +12,7 @@
     'depends': [
         'agreement_legal',
         'agreement_sale',
+        'agreement_serviceprofile'
     ],
     'data': [
         'views/agreement.xml',
