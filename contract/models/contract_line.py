@@ -540,7 +540,7 @@ class ContractLine(models.Model):
     def _onchange_date_start(self):
         for rec in self.filtered('date_start'):
             rec.recurring_next_date = self.get_next_invoice_date(
-                rec.date_start,
+                rec.next_period_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
                 rec.recurring_rule_type,
@@ -569,7 +569,9 @@ class ContractLine(models.Model):
                         % line.name
                     )
 
-    @api.constrains('date_start', 'date_end', 'last_date_invoiced')
+    @api.constrains(
+        'date_start', 'date_end', 'last_date_invoiced', 'recurring_next_date'
+    )
     def _check_last_date_invoiced(self):
         for rec in self.filtered('last_date_invoiced'):
             if rec.date_start and rec.date_start > rec.last_date_invoiced:
@@ -585,6 +587,17 @@ class ContractLine(models.Model):
                     _(
                         "You can't have the end date before the date of last "
                         "invoice for the contract line '%s'"
+                    )
+                    % rec.name
+                )
+            if (
+                rec.recurring_next_date
+                and rec.recurring_next_date <= rec.last_date_invoiced
+            ):
+                raise ValidationError(
+                    _(
+                        "You can't have the next invoice date before the date "
+                        "of last invoice for the contract line '%s'"
                     )
                     % rec.name
                 )
@@ -631,7 +644,7 @@ class ContractLine(models.Model):
                     )
 
     @api.multi
-    def _prepare_invoice_line(self, invoice_id=False):
+    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
         self.ensure_one()
         dates = self._get_period_to_invoice(
             self.last_date_invoiced, self.recurring_next_date
@@ -645,7 +658,14 @@ class ContractLine(models.Model):
         }
         if invoice_id:
             invoice_line_vals['invoice_id'] = invoice_id.id
-        invoice_line = self.env['account.invoice.line'].new(invoice_line_vals)
+        invoice_line = self.env['account.invoice.line'].with_context(
+            force_company=self.contract_id.company_id.id,
+        ).new(invoice_line_vals)
+        if invoice_values and not invoice_id:
+            invoice = self.env['account.invoice'].with_context(
+                force_company=self.contract_id.company_id.id,
+            ).new(invoice_values)
+            invoice_line.invoice_id = invoice
         # Get other invoice line values from product onchange
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
@@ -796,6 +816,23 @@ class ContractLine(models.Model):
             })
 
     @api.multi
+    def _prepare_value_for_stop(self, date_end, manual_renew_needed):
+        self.ensure_one()
+        return {
+            'date_end': date_end,
+            'is_auto_renew': False,
+            'manual_renew_needed': manual_renew_needed,
+            'recurring_next_date': self.get_next_invoice_date(
+                self.next_period_date_start,
+                self.recurring_invoicing_type,
+                self.recurring_invoicing_offset,
+                self.recurring_rule_type,
+                self.recurring_interval,
+                max_date_end=date_end,
+            ),
+        }
+
+    @api.multi
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
         Put date_end on contract line
@@ -811,14 +848,11 @@ class ContractLine(models.Model):
             else:
                 if not rec.date_end or rec.date_end > date_end:
                     old_date_end = rec.date_end
-                    values = {
-                        'date_end': date_end,
-                        'is_auto_renew': False,
-                        'manual_renew_needed': manual_renew_needed,
-                    }
-                    if rec.last_date_invoiced == date_end:
-                        values['recurring_next_date'] = False
-                    rec.write(values)
+                    rec.write(
+                        rec._prepare_value_for_stop(
+                            date_end, manual_renew_needed
+                        )
+                    )
                     if post_message:
                         msg = _(
                             """Contract line for <strong>{product}</strong>
@@ -1156,25 +1190,43 @@ class ContractLine(models.Model):
         }
 
     @api.multi
-    def _get_renewal_dates(self):
+    def _get_renewal_new_date_end(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
         date_end = self._get_first_date_end(
             date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
-        return date_start, date_end
+        return date_end
+
+    @api.multi
+    def _renew_create_line(self, date_end):
+        self.ensure_one()
+        date_start = self.date_end + relativedelta(days=1)
+        is_auto_renew = self.is_auto_renew
+        self.stop(self.date_end, post_message=False)
+        new_line = self.plan_successor(
+            date_start, date_end, is_auto_renew, post_message=False
+        )
+        new_line._onchange_date_start()
+        return new_line
+
+    @api.multi
+    def _renew_extend_line(self, date_end):
+        self.ensure_one()
+        self.date_end = date_end
+        return self
 
     @api.multi
     def renew(self):
         res = self.env['contract.line']
         for rec in self:
-            is_auto_renew = rec.is_auto_renew
-            rec.stop(rec.date_end, post_message=False)
-            date_start, date_end = rec._get_renewal_dates()
-            new_line = rec.plan_successor(
-                date_start, date_end, is_auto_renew, post_message=False
-            )
-            new_line._onchange_date_start()
+            company = rec.contract_id.company_id
+            date_end = rec._get_renewal_new_date_end()
+            date_start = rec.date_end + relativedelta(days=1)
+            if company.create_new_line_at_contract_line_renew:
+                new_line = rec._renew_create_line(date_end)
+            else:
+                new_line = rec._renew_extend_line(date_end)
             res |= new_line
             msg = _(
                 """Contract line for <strong>{product}</strong>

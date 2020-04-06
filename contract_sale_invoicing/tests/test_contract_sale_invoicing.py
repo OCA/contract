@@ -104,6 +104,5 @@ class TestContractSaleInvoicing(TestContractBase):
         self.assertEqual(invoice_line[1].quantity, 1)
         self.assertEqual(invoice_line[1].product_id,
                          sale_order_copy1.order_line.product_id)
-        self.assertEqual(invoice_line[2].quantity, 3)
         self.assertEqual(invoice_line[2].product_id,
                          sale_order_copy1.order_line.product_id)
