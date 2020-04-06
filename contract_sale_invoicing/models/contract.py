@@ -48,24 +48,6 @@ class ContractContract(models.Model):
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
 
     @api.multi
-#<<<<<<< HEAD
-#    def _prepare_invoice_line_dict(self, contract_line_rec, invoice_line,
-#                                   remain_qty):
-#        return {
-#            'invoice_id': False,
-#            'uom_id': contract_line_rec.uom_id.id,
-#            'product_id': invoice_line.get('product_id'),
-#            'quantity': remain_qty or 0,
-#            'discount': contract_line_rec.discount,
-#            'contract_line_id': contract_line_rec.id,
-#            'name': contract_line_rec.name,
-#            'account_analytic_id': False,
-#            'price_unit': contract_line_rec.price_unit
-#        }
-#
-#    @api.multi
-#=======
-#>>>>>>> fbf7d2ee51866a93dc5d6e75af0e58d55460dff7
     def _prepare_recurring_invoices_values(self, date_ref=False):
         invoices_values = super()._prepare_recurring_invoices_values()
         updated_invoices_values = []
