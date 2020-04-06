@@ -4,7 +4,7 @@
 
 {
     'name': 'Recurring - Product Contract',
-    'version': '12.0.5.0.3',
+    'version': '12.0.5.0.4',
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "LasLabs, "
