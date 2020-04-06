@@ -46,6 +46,7 @@ class ContractContract(models.Model):
             if sales and rec.group_by == 'sale_order':
                 invoice_ids = sales.action_invoice_create()
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
+        return invoices
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
