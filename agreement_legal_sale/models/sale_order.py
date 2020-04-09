@@ -40,7 +40,7 @@ class SaleOrder(models.Model):
         """ Create line.product_uom_qty SP's """
         if line.product_id.product_tmpl_id.is_serviceprofile:
             for i in range(1, int(line.product_uom_qty)+1):
-                sp = self.env['agreement.serviceprofile'].\
+                self.env['agreement.serviceprofile'].\
                     create(self._get_sp_vals(line, order, i))
 
     def _get_agreement_line_vals(self, line):
