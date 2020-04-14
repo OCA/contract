@@ -22,6 +22,8 @@ class ProductTemplate(models.Model):
             ('weekly', 'Week(s)'),
             ('monthly', 'Month(s)'),
             ('monthlylastday', 'Month(s) last day'),
+            ('quarterly', 'Quarter(s)'),
+            ('semesterly', 'Semester(s)'),
             ('yearly', 'Year(s)'),
         ],
         default='monthly',
