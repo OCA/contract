@@ -78,13 +78,13 @@ msgid "Contract Template"
 msgstr "Vertragsvorlage"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:264
+#: code:addons/product_contract/models/sale_order_line.py:266
 #, python-format
 msgid "Contract product has different contract template"
 msgstr "Vertragsprodukt hat andere Vertragsvorlage"
 
 #. module: product_contract
-#: code:addons/product_contract/models/product_template.py:77
+#: code:addons/product_contract/models/product_template.py:79
 #, python-format
 msgid "Contract product should be service type"
 msgstr "Vertragsprodukt muss Dienstleistungsprodukt sein"
@@ -189,6 +189,12 @@ msgid "Product Template"
 msgstr "Produktvorlage"
 
 #. module: product_contract
+#: selection:product.template,recurring_rule_type:0
+#: selection:sale.order.line,recurring_rule_type:0
+msgid "Quarter(s)"
+msgstr ""
+
+#. module: product_contract
 #: model_terms:ir.ui.view,arch_db:product_contract.view_order_form
 msgid "Recurrence Invoicing"
 msgstr "Wiederkehrende Abrechnung"
@@ -198,7 +204,6 @@ msgstr "Wiederkehrende Abrechnung"
 #: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_interval
 #, fuzzy
-#| msgid "Invoice Every"
 msgid "Renew Every"
 msgstr "Abrechnungsintervall"
 
@@ -232,7 +237,7 @@ msgid "Sale Order Line"
 msgstr "Auftragszeile"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:248
+#: code:addons/product_contract/models/sale_order_line.py:250
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr ""
@@ -250,6 +255,12 @@ msgid "Sales Orders"
 msgstr "Verkaufsaufträge"
 
 #. module: product_contract
+#: selection:product.template,recurring_rule_type:0
+#: selection:sale.order.line,recurring_rule_type:0
+msgid "Semester(s)"
+msgstr ""
+
+#. module: product_contract
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_template__recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
@@ -260,7 +271,6 @@ msgstr "Legen Sie das Intervall für die automatische Rechnungslegung fest."
 #: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_rule_type
 #, fuzzy
-#| msgid "Specify Interval for automatic invoice generation."
 msgid "Specify Interval for automatic renewal."
 msgstr "Legen Sie das Intervall für die automatische Rechnungslegung fest."
 
@@ -302,7 +312,7 @@ msgstr "Jahr(e)"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order.py:29
-#: code:addons/product_contract/models/sale_order_line.py:78
+#: code:addons/product_contract/models/sale_order_line.py:80
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
 msgstr ""
