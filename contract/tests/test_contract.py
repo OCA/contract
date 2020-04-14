@@ -272,6 +272,66 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
 
+    def test_contract_quarterly_pre_paid(self):
+        recurring_next_date = to_date('2018-05-22')
+        last_date_invoiced = to_date('2018-05-21')
+        self.acct_line.date_end = '2020-02-22'
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'quarterly'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.contract._get_related_invoices()
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_quarterly_post_paid(self):
+        recurring_next_date = to_date('2018-05-22')
+        last_date_invoiced = to_date('2018-02-21')
+        self.acct_line.date_end = '2020-02-22'
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'quarterly'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.contract._get_related_invoices()
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_semesterly_pre_paid(self):
+        recurring_next_date = to_date('2018-08-22')
+        last_date_invoiced = to_date('2018-08-21')
+        self.acct_line.date_end = '2020-02-22'
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'semesterly'
+        self.acct_line.recurring_invoicing_type = 'pre-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.contract._get_related_invoices()
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_semesterly_post_paid(self):
+        recurring_next_date = to_date('2018-08-22')
+        last_date_invoiced = to_date('2018-02-21')
+        self.acct_line.date_end = '2020-02-22'
+        self.acct_line.recurring_next_date = '2018-02-22'
+        self.acct_line.recurring_rule_type = 'semesterly'
+        self.acct_line.recurring_invoicing_type = 'post-paid'
+        self.contract.recurring_create_invoice()
+        invoices_weekly = self.contract._get_related_invoices()
+        self.assertTrue(invoices_weekly)
+        self.assertEqual(
+            self.acct_line.recurring_next_date, recurring_next_date
+        )
+        self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
     def test_last_invoice_post_paid(self):
         self.acct_line.date_start = '2018-01-01'
         self.acct_line.recurring_invoicing_type = 'post-paid'
