@@ -428,7 +428,7 @@ msgid "Cancel allowed?"
 msgstr "Annuleren toestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1082
+#: code:addons/contract/models/contract_line.py:1086
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr "Annuleren niet toegestaan voor deze regel"
@@ -626,7 +626,7 @@ msgid "Contract line '%s' start date can't be later than end date"
 msgstr "Contract '%s' startdatum kan niet later zijn dan einddatum"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1111
+#: code:addons/contract/models/contract_line.py:1115
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr "Contractregel annuleren ongedaan gemaakt: %s<br/>- "
@@ -644,13 +644,13 @@ msgid "Contract line and its successor overlapped"
 msgstr "Contractlijn en zijn opvolger overlappen elkaar"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1090
+#: code:addons/contract/models/contract_line.py:1094
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr "Contractregel geannuleerd: %s<br/>- "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:882
+#: code:addons/contract/models/contract_line.py:886
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -665,7 +665,7 @@ msgstr ""
 "                            "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:962
+#: code:addons/contract/models/contract_line.py:966
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -683,7 +683,7 @@ msgstr ""
 "                    "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1258
+#: code:addons/contract/models/contract_line.py:1262
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -701,7 +701,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1070
+#: code:addons/contract/models/contract_line.py:1074
 #, python-format
 msgid ""
 "Contract line for <strong>{product}</strong>\n"
@@ -719,7 +719,7 @@ msgstr ""
 "                "
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1310
+#: code:addons/contract/models/contract_line.py:1314
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr "Contractregel moet worden geannuleerd voordat deze wordt verwijderd"
@@ -910,7 +910,7 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: contract
-#: code:addons/contract/models/abstract_contract_line.py:233
+#: code:addons/contract/models/abstract_contract_line.py:235
 #, python-format
 msgid "Discount should be less or equal to 100"
 msgstr "De korting moet kleiner of gelijk aan 100 zijn"
@@ -1398,7 +1398,7 @@ msgid "Plan successor allowed?"
 msgstr "Opvolger plannen toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:945
+#: code:addons/contract/models/contract_line.py:949
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Plannen opvolger niet toegestaan voor deze regel"
@@ -1463,6 +1463,13 @@ msgstr "Inkoop Contracten"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__quantity
 msgid "Quantity"
 msgstr "Hoeveelheid"
+
+#. module: contract
+#: selection:contract.abstract.contract.line,recurring_rule_type:0
+#: selection:contract.line,recurring_rule_type:0
+#: selection:contract.template.line,recurring_rule_type:0
+msgid "Quarter(s)"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_rule_type
@@ -1551,6 +1558,13 @@ msgstr "Verkoop Contracten"
 #| msgid "Description"
 msgid "Section"
 msgstr "Omschrijving"
+
+#. module: contract
+#: selection:contract.abstract.contract.line,recurring_rule_type:0
+#: selection:contract.line,recurring_rule_type:0
+#: selection:contract.template.line,recurring_rule_type:0
+msgid "Semester(s)"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1652,7 +1666,7 @@ msgid "Stop allowed?"
 msgstr "Stoppen toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:865
+#: code:addons/contract/models/contract_line.py:869
 #, python-format
 msgid "Stop not allowed for this line"
 msgstr "Stoppen niet toegestaan voor deze regel"
@@ -1663,7 +1677,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Stoppen / Plannen opvolger toegestaan?"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1006
+#: code:addons/contract/models/contract_line.py:1010
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr "Stoppen / Plannen opvolger is niet toegestaan"
@@ -1821,7 +1835,7 @@ msgid "Un-cancel"
 msgstr "Terugdraaien van annuleren"
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:1103
+#: code:addons/contract/models/contract_line.py:1107
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr "Terugdraaien van annuleren niet toegestaan voor deze regel"
@@ -1937,7 +1951,7 @@ msgid "You are not allowed to terminate contracts."
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract_line.py:815
+#: code:addons/contract/models/contract_line.py:819
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr ""
