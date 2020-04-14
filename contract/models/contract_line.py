@@ -251,6 +251,8 @@ class ContractLine(models.Model):
             ]
         if state == 'canceled':
             return [('is_canceled', '=', True)]
+        if not state:
+            return [('display_type', '!=', False)]
 
     @api.model
     def _search_state(self, operator, value):
@@ -261,11 +263,8 @@ class ContractLine(models.Model):
             'upcoming-close',
             'closed',
             'canceled',
+            False,
         ]
-        if operator == '!=' and not value:
-            return []
-        if operator == '=' and not value:
-            return [('id', '=', False)]
         if operator == '=':
             return self._get_state_domain(value)
         if operator == '!=':
@@ -278,8 +277,6 @@ class ContractLine(models.Model):
             return domain
         if operator == 'in':
             domain = []
-            if not value:
-                return [('id', '=', False)]
             for state in value:
                 if domain:
                     domain.insert(0, '|')
@@ -287,6 +284,8 @@ class ContractLine(models.Model):
             return domain
 
         if operator == 'not in':
+            if set(value) == set(states):
+                return [('id', '=', False)]
             return self._search_state(
                 'in', [state for state in states if state not in value]
             )
