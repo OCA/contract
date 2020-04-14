@@ -799,6 +799,10 @@ class ContractLine(models.Model):
             return relativedelta(months=interval)
         elif recurring_rule_type == 'monthlylastday':
             return relativedelta(months=interval, day=1)
+        elif recurring_rule_type == 'quarterly':
+            return relativedelta(months=3 * interval)
+        elif recurring_rule_type == 'semesterly':
+            return relativedelta(months=6 * interval)
         else:
             return relativedelta(years=interval)
 
