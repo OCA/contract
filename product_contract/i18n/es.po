@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-10 03:15+0000\n"
-"PO-Revision-Date: 2020-03-25 18:13+0000\n"
-"Last-Translator: Nelson Ramírez Sánchez <info@konos.cl>\n"
+"PO-Revision-Date: 2020-06-17 11:28+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "<span class=\"o_stat_text\">Pedidos de Venta</span>"
 #: model:ir.model.fields,field_description:product_contract.field_product_template__is_auto_renew
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__is_auto_renew
 msgid "Auto Renew"
-msgstr "Auto Renovación"
+msgstr "Auto-renovación"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_res_company__create_contract_at_sale_order_confirmation
@@ -79,13 +79,13 @@ msgid "Contract Template"
 msgstr "Plantilla de contrato"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:264
+#: code:addons/product_contract/models/sale_order_line.py:266
 #, python-format
 msgid "Contract product has different contract template"
 msgstr "El producto del contrato tiene una plantilla de contrato diferente"
 
 #. module: product_contract
-#: code:addons/product_contract/models/product_template.py:77
+#: code:addons/product_contract/models/product_template.py:79
 #, python-format
 msgid "Contract product should be service type"
 msgstr "El producto del contrato debe ser del tipo de servicio"
@@ -190,6 +190,12 @@ msgid "Product Template"
 msgstr "Plantilla de producto"
 
 #. module: product_contract
+#: selection:product.template,recurring_rule_type:0
+#: selection:sale.order.line,recurring_rule_type:0
+msgid "Quarter(s)"
+msgstr ""
+
+#. module: product_contract
 #: model_terms:ir.ui.view,arch_db:product_contract.view_order_form
 msgid "Recurrence Invoicing"
 msgstr "Facturación Recurrente"
@@ -231,7 +237,7 @@ msgid "Sale Order Line"
 msgstr "Línea de Pedido de Venta"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:248
+#: code:addons/product_contract/models/sale_order_line.py:250
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr "La orden de venta y el contrato deben estar vinculados al mismo socio"
@@ -246,6 +252,12 @@ msgstr "Línea de pedido de venta"
 #, python-format
 msgid "Sales Orders"
 msgstr "Pedidos de Ventas"
+
+#. module: product_contract
+#: selection:product.template,recurring_rule_type:0
+#: selection:sale.order.line,recurring_rule_type:0
+msgid "Semester(s)"
+msgstr ""
 
 #. module: product_contract
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_rule_type
@@ -300,7 +312,7 @@ msgstr "Años"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order.py:29
-#: code:addons/product_contract/models/sale_order_line.py:78
+#: code:addons/product_contract/models/sale_order_line.py:80
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
 msgstr "No puede vender o vender un contrato terminado"
