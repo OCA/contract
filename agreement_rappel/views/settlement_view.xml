@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="agreement_rappel_settlement_search" model="ir.ui.view">
+        <field name="name">agreement.rappel.settlement.search</field>
+        <field name="model">agreement.rappel.settlement</field>
+        <field name="arch" type="xml">
+            <search string="Search agreement settlements">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('agreement_id.code', 'ilike', self)]"
+                       string="Name or agreement code"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <group name="groupby">
+                    <filter name="partner_groupby" string="Partner"
+                        context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="agreement_rappel_settlement_tree" model="ir.ui.view">
+        <field name="name">agreement.rappel.settlement</field>
+        <field name="model">agreement.rappel.settlement</field>
+        <field name="arch" type="xml">
+            <tree string="Rappel Settlements">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="agreement_id"/>
+                <field name="date"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="amount_invoiced"/>
+                <field name="amount_rappel"/>
+                <field name="rappel_type"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="agreement_rappel_settlement_form" model="ir.ui.view">
+        <field name="name">agreement.rappel.settlement</field>
+        <field name="model">agreement.rappel.settlement</field>
+        <field name="arch" type="xml">
+            <form string="Rappel Settlements">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_agreement" type="object"
+                            class="oe_stat_button" icon="fa-pencil-square-o">
+                            <span>Agreement</span>
+                        </button>
+                        <button name="action_show_detail" type="object"
+                            class="oe_stat_button" icon="fa-pencil-square-o">
+                            <span>Details</span>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="rappel_type"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="amount_invoiced"/>
+                        <field name="amount_rappel"/>
+                    </group>
+                    <group string="Lines">
+                        <field name="line_ids" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="agreement_rappel_settlement_line_tree" model="ir.ui.view">
+        <field name="name">agreement.rappel.settlement.line</field>
+        <field name="model">agreement.rappel.settlement.line</field>
+        <field name="arch" type="xml">
+            <tree string="Rappel Settlement lines">
+                <field name="amount_from" attrs="{'column_invisible': [('parent.rappel_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                <field name="amount_to" attrs="{'column_invisible': [('parent.rappel_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                <field name="amount_invoiced"/>
+                <field name="percent"/>
+                <field name="amount_rappel"/>
+                <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"
+                        attrs="{'column_invisible': [('parent.rappel_type', '!=', 'line')]}"/>
+                <field name="target_domain" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="agreement_rappel_settlement_action" model="ir.actions.act_window">
+        <field name="name">Agreement settlements</field>
+        <field name="res_model">agreement.rappel.settlement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="agreement_rappel_settlement_menu_root"
+              name="Settlements"
+              parent="agreement.agreement_menu_root"
+              groups="group_use_agreement_rappel"
+              sequence="10"/>
+
+    <menuitem id="agreement_rappel_settlement_menu"
+              action="agreement_rappel_settlement_action"
+              name="Settlements"
+              parent="agreement_rappel_settlement_menu_root"
+              sequence="10"/>
+
+</odoo>

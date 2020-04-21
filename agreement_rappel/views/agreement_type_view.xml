@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="agreement_type_form_view" model="ir.ui.view">
+        <field name="model">agreement.type</field>
+        <field name="inherit_id" ref="agreement.agreement_type_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='name']/.." position="after">
+                <group>
+                    <field name="journal_type"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
