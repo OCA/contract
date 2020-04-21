@@ -73,11 +73,11 @@ class ContractContract(models.Model):
                                         get(line.product_id.id):
                                     sale_order_line_product_qty[
                                         line.product_id.id
-                                    ] += line.product_uom_qty
+                                    ] += line.qty_to_invoice
                                 else:
                                     sale_order_line_product_qty[
                                         line.product_id.id
-                                    ] = line.product_uom_qty
+                                    ] = line.qty_to_invoice
                                 if invoice_line.get(
                                     'product_id'
                                 ) in sale_order_line_product_qty:
@@ -144,5 +144,6 @@ class ContractContract(models.Model):
     @api.multi
     def action_view_sales_orders(self):
         res = super(ContractContract, self).action_view_sales_orders()
-        res['domain'] = [('contract_id', '=', self.id)]
+        res['domain'].insert(0, '|')
+        res['domain'].append(('contract_id', '=', self.id))
         return res
