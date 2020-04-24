@@ -1154,7 +1154,6 @@ class ContractLine(models.Model):
             'context': context,
         }
 
-    @api.multi
     def _get_renewal_new_date_end(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
