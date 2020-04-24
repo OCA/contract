@@ -116,6 +116,10 @@ class ContractAbstractContractLine(models.AbstractModel):
         default='monthly',
         string='Termination Notice type',
     )
+    display_type = fields.Selection([
+        ('line_section', "Section"),
+        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+
 
     @api.model
     def _get_default_recurring_invoicing_offset(
