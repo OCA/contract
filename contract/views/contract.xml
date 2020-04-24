@@ -7,9 +7,14 @@
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
             <form>
+               <field name="is_terminated" invisible="1"/>
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('is_terminated','=',False)]}">
+                    <p>This contract was terminated for the reason <strong><field name="terminate_reason_id" options="{'no_open':True}"/></strong> on <field name="terminate_date"/>.</p>
+                    <p><field name="terminate_comment"/></p>
+                </div>
                 <header>
                     <button name="action_contract_send"
-                            type="object"
+                            type="object" attrs="{'invisible': [('is_terminated','=',True)]}"
                             string="Send by Email"
                             groups="base.group_user"/>
                     <button name="recurring_create_invoice"
@@ -17,6 +22,23 @@
                             attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"
                             string="Create invoices"
                             groups="base.group_no_one"/>
+                    <button name="action_terminate_contract"
+                            type="object"
+                            string="Terminate Contract"
+                            attrs="{'invisible': [('is_terminated','=',True)]}"
+                            groups="contract.can_terminate_contract"/>
+                    <button name="action_terminate_contract"
+                            type="object"
+                            string="Update Termination Details"
+                            attrs="{'invisible': [('is_terminated','=',False)]}"
+                            groups="contract.can_terminate_contract"/>
+                    <button name="action_cancel_contract_termination"
+                            type="object"
+                            confirm="Are you sure you want to re-activate this contract?"
+                            string="Cancel Contract Termination"
+                            attrs="{'invisible': [('is_terminated','=',False)]}"
+                            groups="contract.can_terminate_contract"/>
+
                 </header>
                 <sheet string="Contract">
 					<widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -37,6 +59,7 @@
 
                         <h3>
                             <field name="name" class="oe_inline"
+                                   attrs="{'readonly': [('is_terminated','=',True)]}"
                                    placeholder="e.g. Contract XYZ"/>
                             
                             <field name="date" class="oe_inline" style="text-indent: 2em;"/>
@@ -48,29 +71,31 @@
                         <group>
 		                	<field name="active" invisible="1"/>
                             <field name="commercial_partner_id" invisible="1"/>
-                            <field name="partner_id" required="1"/>
-                            <field name="user_id"/>
+                            <field name="partner_id" required="1" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                            <field name="user_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                         </group>
                         <group>
                             <field name="contract_template_id"
+                            		attrs="{'readonly': [('is_terminated','=',True)]}"
                                    domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
                                    context="{'default_contract_type': contract_type}"/>
                             <field name="contract_type" invisible="1"
                                    required="1"/>
                             <field name="fiscal_position_id"/>
-                            <field name="incoterm_id"/>
-                            <field name="payment_term_id"/>
+                            <field name="incoterm_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                            <field name="payment_term_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                              <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
 
                     <group name="recurring_invoices">
                         <group>
-                            <field name="journal_id" required="1"/>
+                            <field name="journal_id" required="1" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                             <field name="recurring_next_date"/>
                         </group>
                         <group>
                             <field name="auto_post"/>
-                            <field name="pricelist_id"/>
+                            <field name="pricelist_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
                             <field name="currency_id"/>
                             <field name="date_end"/>
                         </group>
@@ -80,20 +105,21 @@
                               string="Recurring Invoices">
                             <field name="contract_line_ids"
                                    context="{'default_contract_type': contract_type}"/>
+                        	<field name="note"/>
                         </page>
                         <page name="info" string="Other Information">
                             <field name="create_invoice_visibility"
                                    invisible="1"/>
                             <group>
-                                <field name="code"/>
-                                <field name="group_id"/>
-                                <field name="company_id"
+                                <field name="code" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                                <field name="group_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
+                                <field name="company_id" attrs="{'readonly': [('is_terminated','=',True)]}"
                                        options="{'no_create': True}"
                                        groups="base.group_multi_company"/>
-                                <field name="currency_id"
+                                <field name="currency_id" attrs="{'readonly': [('is_terminated','=',True)]}"
                                        options="{'no_create': True}"
                                        groups="base.group_multi_currency"/>
-                                <field name="invoice_partner_id"
+                                <field name="invoice_partner_id" attrs="{'readonly': [('is_terminated','=',True)]}"
                                        required="1"/>
                             </group>
                             <group string="Legend (for the markers inside invoice lines description)"

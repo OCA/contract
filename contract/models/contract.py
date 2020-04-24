@@ -77,13 +77,37 @@ class ContractContract(models.Model):
         inverse='_inverse_partner_id',
         required=True
     )
-
     commercial_partner_id = fields.Many2one(
         'res.partner',
         related='partner_id.commercial_partner_id',
         store=True,
         string='Commercial Entity',
         index=True
+    )
+    tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
+    note = fields.Text(string="Notes")
+    is_terminated = fields.Boolean(
+        string="Terminated", readonly=True, copy=False
+    )
+    terminate_reason_id = fields.Many2one(
+        comodel_name="contract.terminate.reason",
+        string="Termination Reason",
+        ondelete="restrict",
+        readonly=True,
+        copy=False,
+        track_visibility="onchange",
+    )
+    terminate_comment = fields.Text(
+        string="Termination Comment",
+        readonly=True,
+        copy=False,
+        track_visibility="onchange",
+    )
+    terminate_date = fields.Date(
+        string="Termination Date",
+        readonly=True,
+        copy=False,
+        track_visibility="onchange",
     )
 
     def _inverse_partner_id(self):
@@ -420,3 +444,41 @@ class ContractContract(models.Model):
         contracts_to_invoice = self.search(domain)
         date_ref = fields.Date.context_today(contracts_to_invoice)
         contracts_to_invoice._recurring_create_invoice(date_ref)
+        
+    def action_terminate_contract(self):
+        self.ensure_one()
+        context = {"default_contract_id": self.id}
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Terminate Contract'),
+            'res_model': 'contract.contract.terminate',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': context,
+        }
+        
+    def _terminate_contract(
+        self, terminate_reason_id, terminate_comment, terminate_date
+    ):
+        self.ensure_one()
+        if not self.env.user.has_group("contract.can_terminate_contract"):
+            raise UserError(_('You are not allowed to terminate contracts.'))
+        self.contract_line_ids.filtered('is_stop_allowed').stop(terminate_date)
+        self.write({
+            'is_terminated': True,
+            'terminate_reason_id': terminate_reason_id.id,
+            'terminate_comment': terminate_comment,
+            'terminate_date': terminate_date,
+        })
+        return True
+
+    def action_cancel_contract_termination(self):
+        self.ensure_one()
+        self.write({
+            'is_terminated': False,
+            'terminate_reason_id': False,
+            'terminate_comment': False,
+            'terminate_date': False,
+        })
+

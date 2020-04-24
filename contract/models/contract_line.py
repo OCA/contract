@@ -24,6 +24,10 @@ class ContractLine(models.Model):
         string="Analytic account",
         comodel_name='account.analytic.account',
     )
+    analytic_tag_ids = fields.Many2many(
+        comodel_name='account.analytic.tag',
+        string='Analytic Tags',
+    )
 
     date_start = fields.Date(
         string='Date Start',
@@ -134,6 +138,9 @@ class ContractLine(models.Model):
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
+            if rec.display_type:
+                rec.state = False
+                continue
             if rec.is_canceled:
                 rec.state = 'canceled'
                 continue
@@ -284,10 +291,19 @@ class ContractLine(models.Model):
         'successor_contract_line_id',
         'predecessor_contract_line_id',
         'is_canceled',
+        'contract_id.is_terminated',
     )
     def _compute_allowed(self):
         for rec in self:
-            not_changed = True
+            if rec.contract_id.is_terminated:
+                rec.update({
+                    'is_plan_successor_allowed': False,
+                    'is_stop_plan_successor_allowed': False,
+                    'is_stop_allowed': False,
+                    'is_cancel_allowed': False,
+                    'is_un_cancel_allowed': False,
+                })
+                continue
             if rec.date_start:
                 allowed = get_allowed(
                     rec.date_start,
@@ -299,20 +315,14 @@ class ContractLine(models.Model):
                     rec.is_canceled,
                 )
                 if allowed:
-                    not_changed = False
-                    rec.is_plan_successor_allowed = allowed.plan_successor
-                    rec.is_stop_plan_successor_allowed = (
-                        allowed.stop_plan_successor
-                    )
-                    rec.is_stop_allowed = allowed.stop
-                    rec.is_cancel_allowed = allowed.cancel
-                    rec.is_un_cancel_allowed = allowed.uncancel
-            if not_changed:  #      "in v13 it must always return a value "
-                    rec.is_plan_successor_allowed = False
-                    rec.is_stop_plan_successor_allowed = False
-                    rec.is_stop_allowed = False
-                    rec.is_cancel_allowed = False
-                    rec.is_un_cancel_allowed = False
+                    rec.update({
+                        'is_plan_successor_allowed': allowed.plan_successor,
+                        'is_stop_plan_successor_allowed':
+                            allowed.stop_plan_successor,
+                        'is_stop_allowed': allowed.stop,
+                        'is_cancel_allowed': allowed.cancel,
+                        'is_un_cancel_allowed': allowed.uncancel,
+                    })
                     
 
     @api.constrains('is_auto_renew', 'successor_contract_line_id', 'date_end')
@@ -1144,6 +1154,14 @@ class ContractLine(models.Model):
             'context': context,
         }
 
+    @api.multi
+    def _get_renewal_new_date_end(self):
+        self.ensure_one()
+        date_start = self.date_end + relativedelta(days=1)
+        date_end = self._get_first_date_end(
+            date_start, self.auto_renew_rule_type, self.auto_renew_interval
+        )
+        return date_end
     def _get_renewal_dates(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
@@ -1151,6 +1169,22 @@ class ContractLine(models.Model):
             date_start, self.auto_renew_rule_type, self.auto_renew_interval
         )
         return date_start, date_end
+
+    def _renew_create_line(self, date_end):
+        self.ensure_one()
+        date_start = self.date_end + relativedelta(days=1)
+        is_auto_renew = self.is_auto_renew
+        self.stop(self.date_end, post_message=False)
+        new_line = self.plan_successor(
+            date_start, date_end, is_auto_renew, post_message=False
+        )
+        new_line._onchange_date_start()
+        return new_line
+
+    def _renew_extend_line(self, date_end):
+        self.ensure_one()
+        self.date_end = date_end
+        return self
 
     def renew(self):
         res = self.env['contract.line']
@@ -1213,10 +1247,11 @@ class ContractLine(models.Model):
 
     def unlink(self):
         """stop unlink uncnacled lines"""
-        if not all(self.mapped('is_canceled')):
-            raise ValidationError(
-                _("Contract line must be canceled before delete")
-            )
+        for record in self:
+            if not (record.is_canceled or record.display_type):
+                raise ValidationError(
+                    _("Contract line must be canceled before delete")
+                )
         return super().unlink()
 
     def _get_quantity_to_invoice(
