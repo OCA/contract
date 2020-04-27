@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import models, fields
+from odoo import _, api, models, fields
 
 
 class Agreement(models.Model):
@@ -10,7 +10,7 @@ class Agreement(models.Model):
     _description = 'Agreement'
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    code = fields.Char(required=True, copy=False)
+    code = fields.Char(required=True)
     name = fields.Char(required=True)
     partner_id = fields.Many2one(
         'res.partner', string='Partner', ondelete='restrict',
@@ -49,3 +49,12 @@ class Agreement(models.Model):
         'unique(code, partner_id, company_id)',
         'This agreement code already exists for this partner!'
         )]
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        """Always assign a value for code because is required"""
+        default = dict(default or {})
+        if default.get('code', False):
+            return super().copy(default)
+        default.setdefault('code', _("%s (copy)") % (self.code))
+        return super().copy(default)

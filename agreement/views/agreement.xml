@@ -91,7 +91,18 @@
     <field name="view_mode">tree,form</field>
 </record>
 
-<menuitem id="agreement_menu" action="agreement_action"
-   sequence="100"/>
+
+<!-- Top menu item -->
+<menuitem id="agreement_menu_root"
+    name="Agreements"
+    web_icon="agreement,static/description/icon.png"
+    sequence="10"/>
+
+<menuitem id="agreement_menu"
+    name="Agreements"
+    parent="agreement_menu_root"
+    sequence="0"
+    action="agreement_action"
+/>
 
 </odoo>
