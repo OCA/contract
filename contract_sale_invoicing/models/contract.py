@@ -17,8 +17,6 @@ class ContractContract(models.Model):
     def _recurring_create_invoice(self, date_ref=False):
         invoices = super()._recurring_create_invoice(date_ref)
         for rec in self:
-            if not rec.invoicing_sales:
-                return invoices
             sales = self.env['sale.order'].search([
                 ('analytic_account_id', '=', rec.group_id.id),
                 ('partner_invoice_id', 'child_of',
@@ -31,4 +29,3 @@ class ContractContract(models.Model):
                 invoice_ids = sales.action_invoice_create()
                 invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
         return invoices
-
