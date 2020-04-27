@@ -67,6 +67,8 @@ class ContractContract(models.Model):
                         so_domain, order='id asc')
                     sale_order_line_product_qty = {}
                     for order_id in order_ids:
+                        invoice_val.update({'fiscal_position_id':
+                                            order_id.fiscal_position_id.id})
                         if not order_id.order_line.mapped('invoice_lines'):
                             for line in order_id.order_line:
                                 if sale_order_line_product_qty.\
@@ -108,8 +110,8 @@ class ContractContract(models.Model):
                                             'price_unit':
                                             contract_line_rec.price_unit,
                                             'account_id':
-                                            order_id.partner_id.
-                                            property_account_receivable_id.id,
+                                            line.product_id.categ_id.
+                                            property_account_income_categ_id.id
                                         })
                                         sale_order_line_product_qty[
                                             line.product_id.id] -= remain_qty
@@ -124,8 +126,8 @@ class ContractContract(models.Model):
                                         'name': line.name,
                                         'sale_line_ids': [(6, 0, [line.id])],
                                         'price_unit': line.price_unit,
-                                        'account_id': order_id.partner_id.
-                                        property_account_receivable_id.id,
+                                        'account_id': line.product_id.categ_id.
+                                        property_account_income_categ_id.id
                                     })
             invoice_val['invoice_line_ids'] +=\
                 [(0, 0, invoice_line_val
