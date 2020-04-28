@@ -194,7 +194,8 @@ class ContractContract(models.Model):
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
-                lambda l: l.recurring_next_date and not l.is_canceled
+                lambda l: (l.recurring_next_date and not l.is_canceled
+                           and (not l.display_type or l.is_recurring_note))
             ).mapped('recurring_next_date')
             if recurring_next_date:
                 contract.recurring_next_date = min(recurring_next_date)
@@ -412,11 +413,35 @@ class ContractContract(models.Model):
         :return: contract lines (contract.line recordset)
         """
         self.ensure_one()
-        return self.contract_line_ids.filtered(
-            lambda l: not l.is_canceled
-            and l.recurring_next_date
-            and l.recurring_next_date <= date_ref
-        )
+
+        def can_be_invoiced(l):
+            return (not l.is_canceled and l.recurring_next_date
+                    and l.recurring_next_date <= date_ref)
+
+        lines2invoice = previous = self.env['contract.line']
+        current_section = current_note = False
+        for line in self.contract_line_ids:
+            if line.display_type == 'line_section':
+                current_section = line
+            elif (line.display_type == 'line_note' and
+                    not line.is_recurring_note):
+                if line.note_invoicing_mode == "with_previous_line":
+                    if previous in lines2invoice:
+                        lines2invoice |= line
+                    current_note = False
+                elif line.note_invoicing_mode == "with_next_line":
+                    current_note = line
+            elif line.is_recurring_note or not line.display_type:
+                if can_be_invoiced(line):
+                    if current_section:
+                        lines2invoice |= current_section
+                        current_section = False
+                    if current_note:
+                        lines2invoice |= current_note
+                    lines2invoice |= line
+                    current_note = False
+            previous = line
+        return lines2invoice.sorted()
 
     @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
