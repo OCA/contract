@@ -34,6 +34,10 @@
                     <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                     <field name="name" nolabel="1"/>
 
+                    <group name="note_invoicing_mode" attrs="{'invisible': [('display_type', '!=', 'line_note')]}">
+                        <field name="note_invoicing_mode" widget="radio"/>
+                    </group>
+
                     <group col="4" attrs="{'invisible': [('display_type', '!=', False)]}">
                         <field colspan="2" name="is_auto_renew"/>
                         <field colspan="2" name="is_canceled" invisible="1"/>
@@ -62,7 +66,7 @@
                             </div>
                         </group>
                     </group>
-                    <group name="recurrence_info" attrs="{'invisible': [('display_type', '!=', False)]}">
+                    <group name="recurrence_info" attrs="{'invisible': ['|', ('display_type', '=', 'line_section'), '&amp;', ('display_type', '=', 'line_note'), ('note_invoicing_mode', '!=', 'custom')]}">
                         <group>
                             <label for="recurring_interval"/>
                             <div class="o_row">

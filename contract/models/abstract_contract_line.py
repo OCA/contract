@@ -125,9 +125,27 @@ class ContractAbstractContractLine(models.AbstractModel):
         required=True,
         ondelete='cascade',
     )
-    display_type = fields.Selection([
-        ('line_section', "Section"),
-        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+    display_type = fields.Selection(
+        selection=[
+            ('line_section', "Section"),
+            ('line_note', "Note"),
+        ],
+        default=False,
+        help="Technical field for UX purpose."
+    )
+    note_invoicing_mode = fields.Selection(
+        selection=[
+            ('with_previous_line', 'With previous line'),
+            ('with_next_line', 'With next line'),
+            ('custom', 'Custom'),
+        ],
+        default='with_previous_line',
+        help="Defines when the Note is invoiced:\n"
+             "- With previous line: If the previous line can be invoiced.\n"
+             "- With next line: If the next line can be invoiced.\n"
+             "- Custom: Depending on the recurrence to be define."
+    )
+    is_recurring_note = fields.Boolean(compute="_compute_is_recurring_note")
 
     @api.model
     def _get_default_recurring_invoicing_offset(
@@ -140,6 +158,13 @@ class ContractAbstractContractLine(models.AbstractModel):
             return 0
         else:
             return 1
+
+    def is_recurring_note(self):
+        for record in self:
+            record.is_recurring_note = (
+                record.display_type == 'line_note'
+                and record.note_invoicing_mode == 'custom'
+            )
 
     @api.depends('recurring_invoicing_type', 'recurring_rule_type')
     def _compute_recurring_invoicing_offset(self):
