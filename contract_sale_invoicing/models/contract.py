@@ -66,9 +66,9 @@ class ContractContract(models.Model):
                     order_ids = self.env['sale.order'].search(
                         so_domain, order='id asc')
                     sale_order_line_product_qty = {}
+                    fpos = contract_line_rec.contract_id.fiscal_position_id
                     for order_id in order_ids:
-                        invoice_val.update({'fiscal_position_id':
-                                            order_id.fiscal_position_id.id})
+                        invoice_val.update({'fiscal_position_id': fpos.id})
                         if not order_id.order_line.mapped('invoice_lines'):
                             for line in order_id.order_line:
                                 if sale_order_line_product_qty.\
@@ -80,6 +80,12 @@ class ContractContract(models.Model):
                                     sale_order_line_product_qty[
                                         line.product_id.id
                                     ] = line.qty_to_invoice
+
+                                account = line.product_id.categ_id.\
+                                    property_account_income_categ_id
+                                if fpos and account:
+                                    account = fpos.map_account(account)
+
                                 if invoice_line.get(
                                     'product_id'
                                 ) in sale_order_line_product_qty:
@@ -107,11 +113,11 @@ class ContractContract(models.Model):
                                             analytic_account_id.id,
                                             'sale_line_ids':
                                             [(6, 0, [line.id])],
+                                            'invoice_line_tax_ids':
+                                            [(6, 0, line.tax_id.ids)],
                                             'price_unit':
                                             contract_line_rec.price_unit,
-                                            'account_id':
-                                            line.product_id.categ_id.
-                                            property_account_income_categ_id.id
+                                            'account_id': account.id
                                         })
                                         sale_order_line_product_qty[
                                             line.product_id.id] -= remain_qty
@@ -124,10 +130,11 @@ class ContractContract(models.Model):
                                         'contract_line_id':
                                         contract_line_rec.id,
                                         'name': line.name,
+                                        'invoice_line_tax_ids':
+                                        [(6, 0, line.tax_id.ids)],
                                         'sale_line_ids': [(6, 0, [line.id])],
                                         'price_unit': line.price_unit,
-                                        'account_id': line.product_id.categ_id.
-                                        property_account_income_categ_id.id
+                                        'account_id': account.id
                                     })
             invoice_val['invoice_line_ids'] +=\
                 [(0, 0, invoice_line_val
