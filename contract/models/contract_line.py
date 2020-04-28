@@ -15,6 +15,7 @@ class ContractLine(models.Model):
     _name = 'contract.line'
     _description = "Contract Line"
     _inherit = 'contract.abstract.contract.line'
+    _order = 'sequence,id'
 
     sequence = fields.Integer(
         string="Sequence",
@@ -654,8 +655,8 @@ class ContractLine(models.Model):
         # have no meaning in certain invoices
         today = fields.Date.context_today(self)
         for rec in self:
-            if (not rec.display_type and
-                    rec.date_start and today >= rec.date_start):
+            if ((not rec.display_type or rec.is_recurring_note)
+                    and rec.date_start and today >= rec.date_start):
                 rec.create_invoice_visibility = bool(rec.recurring_next_date)
             else:
                 rec.create_invoice_visibility = False
@@ -691,6 +692,7 @@ class ContractLine(models.Model):
         name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
+                'sequence': self.sequence,
                 'name': name,
                 'account_analytic_id': self.analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
