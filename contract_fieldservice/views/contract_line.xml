@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="contract.contract_line_form_view"/>
         <field name="arch" type="xml">
             <field name="price_unit" position="after">
-                <field name="fsm_location_id"/>
+                <field name="fsm_location_id"
+                       domain="[('customer_id', '=', parent.partner_id)]"/>
             </field>
         </field>
     </record>
