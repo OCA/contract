@@ -12,11 +12,12 @@ class ContractContract(models.Model):
         'contract_id', 'fsm_location_id', string='Service Locations',
         compute='compute_fsm_locations', readonly=True, store=True, index=True)
 
-    @api.depends('contract_line_ids.fsm_location_id')
     @api.model
+    @api.depends('contract_line_ids.fsm_location_id')
     def compute_fsm_locations(self):
-        location_ids = []
-        for line in self.contract_line_ids:
-            location_ids.append(line.fsm_location_id and
-                                line.fsm_location_id.id)
-        self.fsm_location_ids = [(6, 0, location_ids)]
+        for rec in self:
+            location_ids = []
+            for line in rec.contract_line_ids:
+                location_ids.append(
+                    line.fsm_location_id and line.fsm_location_id.id)
+            rec.fsm_location_ids = [(6, 0, location_ids)]
