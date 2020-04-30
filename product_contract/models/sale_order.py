@@ -2,7 +2,8 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, api, models
+from odoo import _, fields, api, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -15,6 +16,18 @@ class SaleOrder(models.Model):
     need_contract_creation = fields.Boolean(
         compute='_compute_need_contract_creation'
     )
+
+    @api.constrains('state')
+    def check_contact_is_not_terminated(self):
+        for rec in self:
+            if rec.state not in (
+                'sale',
+                'done',
+                'cancel',
+            ) and rec.order_line.filtered('contract_id.is_terminated'):
+                raise ValidationError(
+                    _("You can't upsell or downsell a terminated contract")
+                )
 
     @api.depends('order_line.contract_id', 'state')
     def _compute_need_contract_creation(self):
@@ -70,12 +83,26 @@ class SaleOrder(models.Model):
                     'sale_order_line_id'
                 )
             )
-            for contract_template in line_to_create_contract.mapped(
-                'product_id.contract_template_id'
-            ):
+            contract_templates = self.env["contract.template"]
+            for order_line in line_to_create_contract:
+                contract_template = order_line.product_id.with_context(
+                    force_company=rec.company_id.id
+                ).property_contract_template_id
+                if not contract_template:
+                    raise ValidationError(
+                        _("You must specify a contract "
+                          "template for '{}' product in '{}' company.").format(
+                            order_line.product_id.name,
+                            rec.company_id.name
+                        )
+                    )
+                contract_templates |= contract_template
+            for contract_template in contract_templates:
                 order_lines = line_to_create_contract.filtered(
                     lambda r, template=contract_template:
-                        r.product_id.contract_template_id == template
+                        r.product_id.with_context(
+                            force_company=r.order_id.company_id.id
+                        ).property_contract_template_id == template
                 )
                 contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
@@ -103,7 +130,9 @@ class SaleOrder(models.Model):
     @api.depends("order_line")
     def _compute_contract_count(self):
         for rec in self:
-            rec.contract_count = len(rec.order_line.mapped('contract_id'))
+            rec.contract_count = len(
+                rec.order_line.mapped('contract_id').filtered(
+                    lambda r: r.active))
 
     @api.multi
     def action_show_contracts(self):
@@ -117,4 +146,15 @@ class SaleOrder(models.Model):
             .mapped('contract_id')
         )
         action["domain"] = [("id", "in", contracts.ids)]
+        if len(contracts) == 1:
+            # If there is only one contract, open it directly
+            action.update(
+                {
+                    "res_id": contracts.id,
+                    "view_mode": "form",
+                    "views": filter(
+                        lambda view: view[1] == 'form', action['views']
+                    ),
+                }
+            )
         return action

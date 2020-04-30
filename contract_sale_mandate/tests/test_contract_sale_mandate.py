@@ -21,16 +21,17 @@ class TestContractSaleMandate(TestContractBase):
         cls.contract_template1 = cls.env['contract.template'].create(
             {'name': 'Template 1'}
         )
-        cls.product1.write(
+        cls.sale = cls.env.ref('sale.sale_order_2')
+        cls.product1.with_context(
+            force_company=cls.sale.company_id.id).write(
             {
                 'is_contract': True,
                 'default_qty': 12,
                 'recurring_rule_type': "monthlylastday",
                 'recurring_invoicing_type': "post-paid",
-                'contract_template_id': cls.contract_template1.id,
+                'property_contract_template_id': cls.contract_template1.id,
             }
         )
-        cls.sale = cls.env.ref('sale.sale_order_2')
         cls.sale.mandate_id = cls.mandate
         cls.order_line1 = cls.sale.order_line.filtered(
             lambda l: l.product_id == cls.product1

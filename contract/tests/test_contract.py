@@ -6,7 +6,7 @@ from collections import namedtuple
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tests import common
 
 
@@ -42,9 +42,16 @@ class TestContractBase(common.SavepointCase):
             'recurring_rule_type': 'yearly',
             'recurring_interval': 1,
         }
+        cls.section_template_vals = {
+            'display_type': 'line_section',
+            'name': 'Test section',
+        }
         cls.template_vals = {
             'name': 'Test Contract Template',
-            'contract_line_ids': [(0, 0, cls.line_template_vals)],
+            'contract_line_ids': [
+                (0, 0, cls.section_template_vals),
+                (0, 0, cls.line_template_vals),
+            ],
         }
         cls.template = cls.env['contract.template'].create(
             cls.template_vals
@@ -110,6 +117,9 @@ class TestContractBase(common.SavepointCase):
         )
         cls.acct_line.product_id.is_auto_renew = True
         cls.contract.company_id.create_new_line_at_contract_line_renew = True
+        cls.terminate_reason = cls.env['contract.terminate.reason'].create({
+            'name': 'terminate_reason'
+        })
 
 
 class TestContract(TestContractBase):
@@ -404,6 +414,14 @@ class TestContract(TestContractBase):
                     0,
                     0,
                     {
+                        'display_type': 'line_section',
+                        'name': 'Test section',
+                    }
+                ),
+                (
+                    0,
+                    0,
+                    {
                         'product_id': self.product_1.id,
                         'name': 'Services from #START# to #END#',
                         'quantity': 1,
@@ -431,15 +449,19 @@ class TestContract(TestContractBase):
         )
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
-        self.assertEqual(len(self.contract.contract_line_ids), 1)
-
-        for key, value in self.line_template_vals.items():
-            test_value = self.contract.contract_line_ids[0][key]
-            try:
-                test_value = test_value.id
-            except AttributeError:
-                pass
-            self.assertEqual(test_value, value)
+        self.assertEqual(len(self.contract.contract_line_ids), 2)
+        for index, vals in [
+            (0, self.section_template_vals),
+            (1, self.line_template_vals)
+        ]:
+            contract_line = self.contract.contract_line_ids[index]
+            for key, value in vals.items():
+                test_value = contract_line[key]
+                try:
+                    test_value = test_value.id
+                except AttributeError:
+                    pass
+                self.assertEqual(test_value, value)
 
     def test_send_mail_contract(self):
         result = self.contract.action_contract_send()
@@ -2095,6 +2117,12 @@ class TestContract(TestContractBase):
                 'is_canceled': True,
             }
         )
+        # section
+        lines |= self.env['contract.line'].create({
+            "contract_id": self.contract.id,
+            "display_type": "line_section",
+            "name": "Test section",
+        })
         states = [
             'upcoming',
             'in-progress',
@@ -2102,48 +2130,29 @@ class TestContract(TestContractBase):
             'upcoming-close',
             'closed',
             'canceled',
+            False,
         ]
         self.assertEqual(set(lines.mapped('state')), set(states))
+        # Test search method
         for state in states:
-            lines = self.env['contract.line'].search(
-                [('state', '=', state)]
-            )
-            self.assertEqual(len(set(lines.mapped('state'))), 1, state)
-            self.assertEqual(lines.mapped('state')[0], state, state)
-
-        for state in states:
-            lines = self.env['contract.line'].search(
-                [('state', '!=', state)]
-            )
-            self.assertFalse(state in lines.mapped('state'))
-
-        lines = self.env['contract.line'].search(
-            [('state', 'in', states)]
-        )
+            lines = self.env['contract.line'].search([('state', '=', state)])
+            self.assertTrue(lines, state)
+            self.assertTrue(state in lines.mapped('state'), state)
+            lines = self.env['contract.line'].search([('state', '!=', state)])
+            self.assertFalse(state in lines.mapped('state'), state)
+        lines = self.env['contract.line'].search([('state', 'in', states)])
         self.assertEqual(set(lines.mapped('state')), set(states))
-        lines = self.env['contract.line'].search(
-            [('state', 'in', [])]
-        )
+        lines = self.env['contract.line'].search([('state', 'in', [])])
         self.assertFalse(lines.mapped('state'))
         with self.assertRaises(TypeError):
-            self.env['contract.line'].search(
-                [('state', 'in', 'upcoming')]
-            )
-        lines = self.env['contract.line'].search(
-            [('state', 'not in', [])]
-        )
+            self.env['contract.line'].search([('state', 'in', 'upcoming')])
+        lines = self.env['contract.line'].search([('state', 'not in', [])])
         self.assertEqual(set(lines.mapped('state')), set(states))
-        lines = self.env['contract.line'].search(
-            [('state', 'not in', states)]
-        )
+        lines = self.env['contract.line'].search([('state', 'not in', states)])
         self.assertFalse(lines.mapped('state'))
-        lines = self.env['contract.line'].search(
-            [('state', 'not in', ['upcoming', 'in-progress'])]
-        )
-        self.assertEqual(
-            set(lines.mapped('state')),
-            set(['to-renew', 'upcoming-close', 'closed', 'canceled']),
-        )
+        state2 = ['upcoming', 'in-progress']
+        lines = self.env['contract.line'].search([('state', 'not in', state2)])
+        self.assertEqual(set(lines.mapped('state')), set(states) - set(state2))
 
     def test_check_auto_renew_contract_line_with_successor(self):
         """
@@ -2328,6 +2337,12 @@ class TestContract(TestContractBase):
         )
         self.assertFalse(self.acct_line.create_invoice_visibility)
         self.assertFalse(self.contract.create_invoice_visibility)
+        section = self.env['contract.line'].create({
+            "contract_id": self.contract.id,
+            "display_type": "line_section",
+            "name": "Test section",
+        })
+        self.assertFalse(section.create_invoice_visibility)
 
     def test_invoice_contract_without_lines(self):
         self.contract.contract_line_ids.cancel()
@@ -2364,3 +2379,51 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line.recurring_next_date, to_date('2019-06-01')
         )
+
+    def test_action_terminate_contract(self):
+        action = self.contract.action_terminate_contract()
+        wizard = (
+            self.env[action['res_model']]
+                .with_context(action['context'])
+                .create(
+                {
+                    'terminate_date': '2018-03-01',
+                    'terminate_reason_id': self.terminate_reason.id,
+                    'terminate_comment': 'terminate_comment',
+                }
+            )
+        )
+        self.assertEqual(wizard.contract_id, self.contract)
+        with self.assertRaises(UserError):
+            wizard.terminate_contract()
+        group_can_terminate_contract = self.env.ref(
+            "contract.can_terminate_contract"
+        )
+        group_can_terminate_contract.users |= self.env.user
+        wizard.terminate_contract()
+        self.assertTrue(self.contract.is_terminated)
+        self.assertEqual(self.contract.terminate_date, to_date('2018-03-01'))
+        self.assertEqual(
+            self.contract.terminate_reason_id.id, self.terminate_reason.id
+        )
+        self.assertEqual(self.contract.terminate_comment, 'terminate_comment')
+        self.contract.action_cancel_contract_termination()
+        self.assertFalse(self.contract.is_terminated)
+        self.assertFalse(self.contract.terminate_reason_id)
+        self.assertFalse(self.contract.terminate_comment)
+
+    def test_terminate_date_before_last_date_invoiced(self):
+        self.contract.recurring_create_invoice()
+        self.assertEqual(
+            self.acct_line.last_date_invoiced, to_date('2018-02-14')
+        )
+        group_can_terminate_contract = self.env.ref(
+            "contract.can_terminate_contract"
+        )
+        group_can_terminate_contract.users |= self.env.user
+        with self.assertRaises(ValidationError):
+            self.contract._terminate_contract(
+                self.terminate_reason,
+                'terminate_comment',
+                to_date('2018-02-13'),
+            )
