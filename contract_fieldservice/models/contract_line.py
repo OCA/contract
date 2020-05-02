@@ -7,5 +7,6 @@ from odoo import fields, models
 class ContractLine(models.Model):
     _inherit = 'contract.line'
 
-    fsm_location_id = fields.Many2one('fsm.location', string='Service To',
-                                      required=True, index=True)
+    fsm_location_id = fields.Many2one(
+        'fsm.location', string='Service To', required=True, index=True,
+        domain="[('customer_id', '=', parent.partner_id)]")
