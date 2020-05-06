@@ -59,9 +59,7 @@ class ContractAbstractContract(models.AbstractModel):
         'res.company',
         string='Company',
         required=True,
-        default=lambda self: self.env['res.company']._company_default_get(
-            self._name
-        ),
+        default=lambda self: self.env.company.id,
     )
 
 
