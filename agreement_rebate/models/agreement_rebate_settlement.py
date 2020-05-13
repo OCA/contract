@@ -13,8 +13,11 @@ class AgreementRebateSettlement(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one(
-        comodel_name='res.company', string='Company',
-        related='agreement_id.company_id',
+        comodel_name='res.company',
+        string='Company',
+        required=True,
+        index=True,
+        default=lambda self: self.env.user.company_id.id,
     )
     state = fields.Selection(
         selection=[
@@ -28,19 +31,9 @@ class AgreementRebateSettlement(models.Model):
     date = fields.Date(default=fields.Date.today())
     date_from = fields.Date()
     date_to = fields.Date()
-    agreement_id = fields.Many2one(
-        comodel_name='agreement',
-        string='Agreement',
-        required=True,
-    )
-    rebate_type = fields.Selection(
-        related='agreement_id.rebate_type',
-        string='Rebate type',
-    )
     partner_id = fields.Many2one(
         comodel_name='res.partner',
-        related='agreement_id.partner_id',
-        store=True,
+        string='Partner',
     )
     line_ids = fields.One2many(
         comodel_name='agreement.rebate.settlement.line',
@@ -155,11 +148,13 @@ class AgreementRebateSettlement(models.Model):
         return invoices
 
     def action_show_detail(self):
-        if self.rebate_type == 'line' and len(self.line_ids) > 1:
-            domain = expression.OR([safe_eval(
-                l.target_domain) for l in self.line_ids])
-        else:
-            domain = safe_eval(self.line_ids[:1].target_domain)
+        target_domains = self.line_ids.mapped('target_domain')
+        domain = expression.OR([safe_eval(d) for d in set(target_domains)])
+        # if self.rebate_type == 'line' and len(self.line_ids) > 1:
+        #     domain = expression.OR([safe_eval(
+        #         l.target_domain) for l in self.line_ids])
+        # else:
+        #     domain = safe_eval(self.line_ids[:1].target_domain)
         return {
             'name': _('Details'),
             'type': 'ir.actions.act_window',
@@ -182,13 +177,25 @@ class AgreementRebateSettlement(models.Model):
         return action
 
     def action_show_agreement(self):
-        return self.agreement_id.get_formview_action()
+        agreements = self.line_ids.mapped('agreement_id')
+        action = self.env.ref('agreement.agreement_action').read()[0]
+        if len(agreements) == 1:
+            form = self.env.ref('agreement.agreement_form')
+            action['views'] = [(form.id, 'form')]
+            action['res_id'] = agreements.id
+        else:
+            action['domain'] = [('id', 'in', agreements.ids)]
+        return action
 
 
 class AgreementRebateSettlementLine(models.Model):
     _name = 'agreement.rebate.settlement.line'
     _description = 'Agreement Rebate Settlement Lines'
 
+    company_id = fields.Many2one(
+        comodel_name='res.company', string='Company',
+        related='rebate_settlement_id.company_id',
+    )
     rebate_settlement_id = fields.Many2one(
         comodel_name='agreement.rebate.settlement',
         string='Rebate settlement',
@@ -209,13 +216,22 @@ class AgreementRebateSettlementLine(models.Model):
     amount_gross = fields.Float(string='Amount gross')
     amount_invoiced = fields.Float(string='Amount invoiced')
     amount_rebate = fields.Float(string='Amount rebate')
+    agreement_id = fields.Many2one(
+        comodel_name='agreement',
+        string='Agreement',
+        required=True,
+    )
+    rebate_type = fields.Selection(
+        related='agreement_id.rebate_type',
+        string='Rebate type',
+    )
 
     def action_show_detail(self):
         return {
             'name': _('Details'),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.invoice.line',
-            'view_mode': 'tree',
+            'res_model': 'account.invoice.report',
+            'view_mode': 'pivot,tree',
             'domain': self.target_domain,
             'context': self.env.context,
         }

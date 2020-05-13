@@ -27,13 +27,11 @@
             <tree string="Rebate Settlements">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="agreement_id"/>
                 <field name="date"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="amount_invoiced"/>
                 <field name="amount_rebate"/>
-                <field name="rebate_type"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -66,9 +64,6 @@
                         <group>
                             <field name="date"/>
                         </group>
-                        <group>
-                            <field name="rebate_type"/>
-                        </group>
                     </group>
                     <group>
                         <field name="date_from"/>
@@ -79,7 +74,19 @@
                         <field name="amount_rebate"/>
                     </group>
                     <group string="Lines">
-                        <field name="line_ids" nolabel="1"/>
+                        <field name="line_ids" nolabel="1">
+                            <tree string="Rebate Settlement lines">
+                                <field name="rebate_type" invisible="1"/>
+                                <field name="amount_from" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                                <field name="amount_to" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                                <field name="amount_invoiced"/>
+                                <field name="percent"/>
+                                <field name="amount_rebate"/>
+                                <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"
+                                        attrs="{'invisible': [('rebate_type', '!=', 'line')]}"/>
+                                <field name="target_domain" groups="base.group_no_one"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
@@ -90,14 +97,13 @@
         <field name="name">agreement.rebate.settlement.line</field>
         <field name="model">agreement.rebate.settlement.line</field>
         <field name="arch" type="xml">
-            <tree string="Rebate Settlement lines">
-                <field name="amount_from" attrs="{'column_invisible': [('parent.rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
-                <field name="amount_to" attrs="{'column_invisible': [('parent.rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+            <tree string="Rebate Settlement lines" create="false" edit="false">
+                <field name="amount_from"/>
+                <field name="amount_to"/>
                 <field name="amount_invoiced"/>
                 <field name="percent"/>
                 <field name="amount_rebate"/>
-                <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"
-                        attrs="{'column_invisible': [('parent.rebate_type', '!=', 'line')]}"/>
+                <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"/>
                 <field name="target_domain" groups="base.group_no_one"/>
             </tree>
         </field>
@@ -109,6 +115,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="agreement_rebate_settlement_line_action" model="ir.actions.act_window">
+        <field name="name">Agreement settlement lines</field>
+        <field name="res_model">agreement.rebate.settlement.line</field>
+        <field name="view_mode">tree,form,pivot</field>
+    </record>
+
     <menuitem id="agreement_rebate_settlement_menu_root"
               name="Settlements"
               parent="agreement.agreement_menu_root"
@@ -118,6 +130,12 @@
     <menuitem id="agreement_rebate_settlement_menu"
               action="agreement_rebate_settlement_action"
               name="Settlements"
+              parent="agreement_rebate_settlement_menu_root"
+              sequence="10"/>
+
+    <menuitem id="agreement_rebate_settlement_line_menu"
+              action="agreement_rebate_settlement_line_action"
+              name="Settlement Lines"
               parent="agreement_rebate_settlement_menu_root"
               sequence="10"/>
 
