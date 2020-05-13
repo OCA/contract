@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="agreement_rebate_settlement_sequence" model="ir.sequence">
+        <field name="name">Agreement rebate settlement</field>
+        <field name="code">agreement.rebate.settlement</field>
+        <field eval="4" name="padding" />
+        <field name="prefix">ARS</field>
+    </record>
+    <record id="agreement_type_rebate_sale" model="agreement.type">
+        <field name="name">Rebate agreements for sales</field>
+        <field name="is_rebate">True</field>
+        <field name="domain">sale</field>
+    </record>
+    <record id="agreement_type_rebate_purchase" model="agreement.type">
+        <field name="name">Rebate agreements for purchases</field>
+        <field name="is_rebate">True</field>
+        <field name="domain">purchase</field>
+    </record>
+</odoo>
