@@ -2,8 +2,8 @@
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
-    'name': 'Agreement Rappel',
-    'summary': 'rappel in agreements',
+    'name': 'Agreement Rebate',
+    'summary': 'Rebate in agreements',
     'version': '12.0.1.0.0',
     'development_status': 'Beta',
     'category': 'Contract',
@@ -17,12 +17,12 @@
         'agreement',
     ],
     'data': [
-        'data/agreement_rappel_data.xml',
-        'security/agreement_security.xml',
+        'data/agreement_rebate_data.xml',
+        'security/agreement_rebate_security.xml',
         'security/ir.model.access.csv',
         'views/agreement_type_view.xml',
         'views/agreement_view.xml',
-        'views/settlement_view.xml',
+        'views/agreement_rebate_settlement_view.xml',
         'wizards/invoice_create_views.xml',
         'wizards/settlement_create_views.xml',
     ],

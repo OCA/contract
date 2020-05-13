@@ -9,7 +9,7 @@ class AgreementType(models.Model):
 
     journal_type = fields.Selection(
         selection=[
-            ('sale', 'Rappel Sales'),
+            ('sale', 'Rebate Sales'),
         ],
         string='Journal type',
         default='sale',

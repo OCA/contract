@@ -15,7 +15,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date_to = fields.Date(string='To', required=True)
     journal_type = fields.Selection(
         selection=[
-            ('sale', 'Rappel Sales'),
+            ('sale', 'Rebate Sales'),
         ],
         string='Journal type',
         default='sale',
@@ -35,7 +35,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
 
     def _prepare_agreement_domain(self):
         domain = [
-            ('rappel_type', '!=', False),
+            ('rebate_type', '!=', False),
         ]
         settlement_domain = []
         if self.date_from:
@@ -71,7 +71,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         return domain
 
     def _get_existing_settlement(self, domain):
-        return self.env['agreement.rappel.settlement'].search(domain)
+        return self.env['agreement.rebate.settlement'].search(domain)
 
     def _get_target_model(self):
         return self.env['account.invoice.line']
@@ -100,10 +100,10 @@ class AgreementSettlementCreateWiz(models.TransientModel):
 
     def _target_line_domain(self, agreement_domain, agreement, line=False):
         if line:
-            return agreement_domain + safe_eval(line.rappel_domain)
-        if agreement.rappel_line_ids:
+            return agreement_domain + safe_eval(line.rebate_domain)
+        if agreement.rebate_line_ids:
             domain = expression.OR(
-                [safe_eval(l.rappel_domain) for l in agreement.rappel_line_ids]
+                [safe_eval(l.rebate_domain) for l in agreement.rebate_line_ids]
             )
             return expression.AND([agreement_domain, domain])
         return agreement_domain
@@ -122,52 +122,52 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             'date_from': self.date_from,
             'date_to': self.date_to,
         }
-        if agreement.rappel_type == 'line':
-            rappel = amount * line.rappel_discount / 100
+        if agreement.rebate_type == 'line':
+            rebate = amount * line.rebate_discount / 100
             vals.update({
-                'rappel_line_id': line.id,
-                'percent': line.rappel_discount,
+                'rebate_line_id': line.id,
+                'percent': line.rebate_discount,
             })
-        elif agreement.rappel_type == 'section_prorated':
+        elif agreement.rebate_type == 'section_prorated':
             if amount >= section.amount_to:
                 amount_section = section.amount_to
             elif amount >= section.amount_from:
                 amount_section = amount - section.amount_from
-            rappel = amount_section * section.rappel_discount / 100
+            rebate = amount_section * section.rebate_discount / 100
             vals.update({
-                'rappel_section_id': section.id,
+                'rebate_section_id': section.id,
                 'amount_from': section.amount_from,
                 'amount_to': section.amount_to,
-                'percent': section.rappel_discount,
+                'percent': section.rebate_discount,
             })
-        elif agreement.rappel_type == 'global':
-            rappel = amount * agreement.rappel_discount / 100
+        elif agreement.rebate_type == 'global':
+            rebate = amount * agreement.rebate_discount / 100
             vals.update({
-                'percent': agreement.rappel_discount,
+                'percent': agreement.rebate_discount,
             })
-        elif agreement.rappel_type == 'section_total':
-            section = agreement.rappel_section_ids.filtered(
+        elif agreement.rebate_type == 'section_total':
+            section = agreement.rebate_section_ids.filtered(
                 lambda s: s.amount_from <= amount <= s.amount_to)
-            rappel = amount * section.rappel_discount / 100
+            rebate = amount * section.rebate_discount / 100
             vals.update({
-                'percent': section.rappel_discount,
+                'percent': section.rebate_discount,
                 'amount_from': section.amount_from,
                 'amount_to': section.amount_to,
             })
         vals.update({
             'target_domain': domain,
             'amount_invoiced': agreement.company_id.currency_id.round(amount),
-            'amount_rappel': agreement.company_id.currency_id.round(rappel),
+            'amount_rebate': agreement.company_id.currency_id.round(rebate),
         })
         return vals
 
-    def _get_rappel_discount(self, agreement, amount):
-        if agreement.rappel_type == 'global':
-            return agreement.rappel_discount
-        if agreement.rappel_type == 'section_total':
-            section = agreement.rappel_section_ids.filtered(
+    def _get_rebate_discount(self, agreement, amount):
+        if agreement.rebate_type == 'global':
+            return agreement.rebate_discount
+        if agreement.rebate_type == 'section_total':
+            section = agreement.rebate_section_ids.filtered(
                 lambda s: s.amount_from <= amount <= s.amount_to)
-            return section.rappel_discount
+            return section.rebate_discount
 
     def _partner_domain(self, agreement):
         return [
@@ -184,12 +184,12 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         })
         agreements = Agreement.search(self._prepare_agreement_domain())
         for agreement in agreements:
-            rappel = amount = total_rappel = total_amount = 0.0
+            rebate = amount = total_rebate = total_amount = 0.0
             agreement_domain = orig_domain + self._partner_domain(agreement)
-            if agreement.rappel_type == 'line':
-                if not agreement.rappel_line_ids:
+            if agreement.rebate_type == 'line':
+                if not agreement.rebate_line_ids:
                     continue
-                for line in agreement.rappel_line_ids:
+                for line in agreement.rebate_line_ids:
                     domain = self._target_line_domain(
                         agreement_domain, agreement, line=line)
                     groups = target_model.read_group(
@@ -198,23 +198,23 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                         continue
                     vals = self._prepare_settlement_line(
                         domain, groups, agreement, line=line)
-                    total_rappel += vals['amount_rappel']
+                    total_rebate += vals['amount_rebate']
                     total_amount += vals['amount_invoiced']
                     settlement_dic[agreement]['lines'].append((0, 0, vals))
-            elif agreement.rappel_type == 'section_prorated':
+            elif agreement.rebate_type == 'section_prorated':
                 domain = self._target_line_domain(agreement_domain, agreement)
                 groups = target_model.read_group(
                     domain, self.get_agregate_fields(), [])
                 if not groups[0]['__count']:
                     continue
                 amount = groups and groups[0][self._get_amount_field()] or 0.0
-                for section in agreement.rappel_section_ids:
+                for section in agreement.rebate_section_ids:
                     if (amount < section.amount_to and amount <
                             section.amount_from):
                         break
                     vals = self._prepare_settlement_line(
                         domain, groups, agreement, section=section)
-                    total_rappel += vals['amount_rappel']
+                    total_rebate += vals['amount_rebate']
                     settlement_dic[agreement]['lines'].append((0, 0, vals))
             else:
                 domain = self._target_line_domain(agreement_domain, agreement)
@@ -225,8 +225,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 vals = self._prepare_settlement_line(domain, groups, agreement)
                 settlement_dic[agreement]['lines'].append((0, 0, vals))
 
-            settlement_dic[agreement]['amount_rappel'] = (
-                total_rappel or vals['amount_rappel'])
+            settlement_dic[agreement]['amount_rebate'] = (
+                total_rebate or vals['amount_rebate'])
             settlement_dic[agreement]['amount_invoiced'] = (
                 total_amount or vals['amount_invoiced'])
         settlements = self._create_settlement(settlement_dic)
@@ -234,7 +234,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
 
     def _filter_settlement_lines(self, settlement_lines):
         return [line for line in filter(
-            lambda l: l[2]['amount_rappel'] > 0.0, settlement_lines)]
+            lambda l: l[2]['amount_rebate'] > 0.0, settlement_lines)]
 
     def _prepare_settlement(self, agreement, settlement_lines):
         lines = self._filter_settlement_lines(settlement_lines['lines'])
@@ -246,7 +246,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             'date_to': self.date_to,
             'agreement_id': agreement.id,
             'line_ids': lines,
-            'amount_rappel': settlement_lines['amount_rappel'],
+            'amount_rebate': settlement_lines['amount_rebate'],
             'amount_invoiced': settlement_lines['amount_invoiced'],
         }
 
@@ -256,4 +256,4 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             vals = self._prepare_settlement(agreement, settlement_lines)
             if vals:
                 vals_list.append(vals)
-        return self.env['agreement.rappel.settlement'].create(vals_list)
+        return self.env['agreement.rebate.settlement'].create(vals_list)

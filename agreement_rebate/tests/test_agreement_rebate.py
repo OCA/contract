@@ -11,7 +11,7 @@ from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestAgreementRappel(TransactionCase):
+class TestAgreementRebate(TransactionCase):
 
     def setUp(self):
         super().setUp()
@@ -30,7 +30,7 @@ class TestAgreementRappel(TransactionCase):
             'product.template.attribute.value']
         self.AgreementSettlementCreateWiz = self.env[
             'agreement.settlement.create.wiz']
-        self.rappel_type = [
+        self.rebate_type = [
             'global',
             'line',
             'section_total',
@@ -83,23 +83,23 @@ class TestAgreementRappel(TransactionCase):
             ],
         })
         self.partner_1 = self.Partner.create({
-            'name': 'partner test rappel 1',
+            'name': 'partner test rebate 1',
             'customer': True,
             'ref': 'TST-001',
         })
         self.partner_2 = self.Partner.create({
-            'name': 'partner test rappel 2',
+            'name': 'partner test rebate 2',
             'customer': True,
             'ref': 'TST-002',
         })
         self.invoice_partner_1 = self.create_invoice(self.partner_1)
         self.invoice_partner_2 = self.create_invoice(self.partner_2)
         self.agreement_type = self.AgreementType.create({
-            'name': 'Rappel',
+            'name': 'Rebate',
             'journal_type': 'sale',
         })
-        # self.create_agreements_rappel(self.partner_1)
-        # self.create_agreements_rappel(self.partner_2)
+        # self.create_agreements_rebate(self.partner_1)
+        # self.create_agreements_rebate(self.partner_2)
 
     # Create some invoices for partner
     def create_invoice(self, partner):
@@ -135,73 +135,73 @@ class TestAgreementRappel(TransactionCase):
             val_list.append(inv_line._convert_to_write(inv_line._cache))
         self.AccountInvoiceLine.create(val_list)
 
-    # Create Agreements rappels for customers for all available types
-    def create_agreements_rappel(self, rappel_type, partner):
+    # Create Agreements rebates for customers for all available types
+    def create_agreements_rebate(self, rebate_type, partner):
         agreement = self.Agreement.create({
-            'rappel_type': rappel_type,
+            'rebate_type': rebate_type,
             'name': 'A discount {} for all lines for {}'.format(
-                rappel_type, partner.name),
-            'code': 'R-{}-{}'.format(rappel_type, partner.ref),
+                rebate_type, partner.name),
+            'code': 'R-{}-{}'.format(rebate_type, partner.ref),
             'partner_id': partner.id,
             'agreement_type_id': self.agreement_type.id,
-            'rappel_discount': 10,
-            'rappel_line_ids': [
+            'rebate_discount': 10,
+            'rebate_line_ids': [
                 (0, 0, {
-                    'rappel_target': 'product',
-                    'rappel_product_ids': [(6, 0, self.product_1.ids)],
-                    'rappel_discount': 20
+                    'rebate_target': 'product',
+                    'rebate_product_ids': [(6, 0, self.product_1.ids)],
+                    'rebate_discount': 20
                 }),
                 (0, 0, {
-                    'rappel_target': 'product',
-                    'rappel_product_ids': [
+                    'rebate_target': 'product',
+                    'rebate_product_ids': [
                         (6, 0,
                          self.product_template.product_variant_ids[0].ids)],
-                    'rappel_discount': 30
+                    'rebate_discount': 30
                 }),
                 (0, 0, {
-                    'rappel_target': 'product_tmpl',
-                    'rappel_product_tmpl_ids': [
+                    'rebate_target': 'product_tmpl',
+                    'rebate_product_tmpl_ids': [
                         (6, 0, self.product_2.product_tmpl_id.ids)],
-                    'rappel_discount': 40,
+                    'rebate_discount': 40,
                 }),
                 (0, 0, {
-                    'rappel_target': 'category',
-                    'rappel_category_ids': [
+                    'rebate_target': 'category',
+                    'rebate_category_ids': [
                         (6, 0, self.category_all.ids)],
-                    'rappel_discount': 40,
+                    'rebate_discount': 40,
                 }),
             ],
-            'rappel_section_ids': [
+            'rebate_section_ids': [
                         (0, 0, {
                             'amount_from': 0.00,
                             'amount_to': 100.00,
-                            'rappel_discount': 10,
+                            'rebate_discount': 10,
                         }),
                         (0, 0, {
                             'amount_from': 100.01,
                             'amount_to': 300.00,
-                            'rappel_discount': 20,
+                            'rebate_discount': 20,
                         }),
                         (0, 0, {
                             'amount_from': 300.01,
                             'amount_to': 6000.00,
-                            'rappel_discount': 30,
+                            'rebate_discount': 30,
                         }),
                     ],
             })
         # agreement_line = agreement_global.copy({
-        #     'rappel_type': 'line',
+        #     'rebate_type': 'line',
         #     'code': 'R-L-{}'.format(partner.ref),
         #     'name': 'A discount for every line for {}'.format(partner.name),
         # })
         # agreement_section_total = agreement_global.copy({
-        #     'rappel_type': 'section_total',
+        #     'rebate_type': 'section_total',
         #     'code': 'R-S-T-{}'.format(partner.ref),
         #     'name': 'Compute total and apply discount '
         #             'rule match for {}'.format(partner.name),
         # })
         # agreement_section_prorated = agreement_global.copy({
-        #     'rappel_type': 'section_prorated',
+        #     'rebate_type': 'section_prorated',
         #     'code': 'R-S-P-{}'.format(partner.ref),
         #     'name': 'Compute multi-dicounts by sections amount '
         #             'for {}'.format(partner.name),
@@ -215,43 +215,43 @@ class TestAgreementRappel(TransactionCase):
         # Product 2: 2000
         # Total by invoice: 3800 amount invoiced
 
-        # Global rappel without filters
-        agreement_global = self.create_agreements_rappel(
+        # Global rebate without filters
+        agreement_global = self.create_agreements_rebate(
             'global', self.partner_1)
-        agreement_global.rappel_line_ids = False
+        agreement_global.rebate_line_ids = False
         settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
         settlements = settlement_wiz.action_create_settlement()
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
-        self.assertEqual(settlements.amount_rappel, 380)
+        self.assertEqual(settlements.amount_rebate, 380)
 
-        # Line rappel without filters
-        agreement = self.create_agreements_rappel(
+        # Line rebate without filters
+        agreement = self.create_agreements_rebate(
             'line', self.partner_1)
-        agreement.rappel_line_ids = False
+        agreement.rebate_line_ids = False
         settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
         settlements = settlement_wiz.action_create_settlement()
         self.assertEqual(len(settlements), 0)
 
-        # section_total rappel without filters
-        agreement = self.create_agreements_rappel(
+        # section_total rebate without filters
+        agreement = self.create_agreements_rebate(
             'section_total', self.partner_1)
-        agreement.rappel_line_ids = False
+        agreement.rebate_line_ids = False
         settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
         settlements = settlement_wiz.action_create_settlement()
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
-        self.assertEqual(settlements.amount_rappel, 1140)
+        self.assertEqual(settlements.amount_rebate, 1140)
 
-        # section_prorated rappel without filters
-        agreement = self.create_agreements_rappel(
+        # section_prorated rebate without filters
+        agreement = self.create_agreements_rebate(
             'section_prorated', self.partner_1)
-        agreement.rappel_line_ids = False
+        agreement.rebate_line_ids = False
         settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
         settlements = settlement_wiz.action_create_settlement()
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
-        self.assertAlmostEqual(settlements.amount_rappel, 1120.00, 2)
+        self.assertAlmostEqual(settlements.amount_rebate, 1120.00, 2)
 
     def test_create_settlement_products_filters(self):
         # Invoice Lines:
@@ -260,23 +260,23 @@ class TestAgreementRappel(TransactionCase):
         # Product 2: 2000
         # Total by invoice: 3800 amount invoiced
 
-        for rappel_type in self.rappel_type:
-            agreement = self.create_agreements_rappel(
-                rappel_type, self.partner_1)
-            agreement.rappel_line_ids = [(5, 0), (0, 0, {
-                'rappel_target': 'product',
-                'rappel_product_ids': [(6, 0, self.product_1.ids)],
-                'rappel_discount': 20,
+        for rebate_type in self.rebate_type:
+            agreement = self.create_agreements_rebate(
+                rebate_type, self.partner_1)
+            agreement.rebate_line_ids = [(5, 0), (0, 0, {
+                'rebate_target': 'product',
+                'rebate_product_ids': [(6, 0, self.product_1.ids)],
+                'rebate_discount': 20,
             })]
             settlement_wiz = self.AgreementSettlementCreateWiz.create({})
             settlements = settlement_wiz.action_create_settlement()
             self.assertEqual(len(settlements), 1)
             self.assertEqual(settlements.amount_invoiced, 1000)
-            if rappel_type == 'global':
-                self.assertEqual(settlements.amount_rappel, 100)
-            if rappel_type == 'line':
-                self.assertEqual(settlements.amount_rappel, 200)
-            if rappel_type == 'section_total':
-                self.assertEqual(settlements.amount_rappel, 300)
-            if rappel_type == 'section_prorated':
-                self.assertAlmostEqual(settlements.amount_rappel, 280, 2)
+            if rebate_type == 'global':
+                self.assertEqual(settlements.amount_rebate, 100)
+            if rebate_type == 'line':
+                self.assertEqual(settlements.amount_rebate, 200)
+            if rebate_type == 'section_total':
+                self.assertEqual(settlements.amount_rebate, 300)
+            if rebate_type == 'section_prorated':
+                self.assertAlmostEqual(settlements.amount_rebate, 280, 2)

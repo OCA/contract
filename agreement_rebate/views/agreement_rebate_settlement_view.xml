@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="agreement_rappel_settlement_search" model="ir.ui.view">
-        <field name="name">agreement.rappel.settlement.search</field>
-        <field name="model">agreement.rappel.settlement</field>
+    <record id="agreement_rebate_settlement_search" model="ir.ui.view">
+        <field name="name">agreement.rebate.settlement.search</field>
+        <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
             <search string="Search agreement settlements">
                 <field name="name" filter_domain="['|', ('name', 'ilike', self), ('agreement_id.code', 'ilike', self)]"
@@ -20,11 +20,11 @@
         </field>
     </record>
 
-    <record id="agreement_rappel_settlement_tree" model="ir.ui.view">
-        <field name="name">agreement.rappel.settlement</field>
-        <field name="model">agreement.rappel.settlement</field>
+    <record id="agreement_rebate_settlement_tree" model="ir.ui.view">
+        <field name="name">agreement.rebate.settlement</field>
+        <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
-            <tree string="Rappel Settlements">
+            <tree string="Rebate Settlements">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="agreement_id"/>
@@ -32,18 +32,18 @@
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="amount_invoiced"/>
-                <field name="amount_rappel"/>
-                <field name="rappel_type"/>
+                <field name="amount_rebate"/>
+                <field name="rebate_type"/>
                 <field name="state"/>
             </tree>
         </field>
     </record>
 
-    <record id="agreement_rappel_settlement_form" model="ir.ui.view">
-        <field name="name">agreement.rappel.settlement</field>
-        <field name="model">agreement.rappel.settlement</field>
+    <record id="agreement_rebate_settlement_form" model="ir.ui.view">
+        <field name="name">agreement.rebate.settlement</field>
+        <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
-            <form string="Rappel Settlements">
+            <form string="Rebate Settlements">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -67,7 +67,7 @@
                             <field name="date"/>
                         </group>
                         <group>
-                            <field name="rappel_type"/>
+                            <field name="rebate_type"/>
                         </group>
                     </group>
                     <group>
@@ -76,7 +76,7 @@
                     </group>
                     <group>
                         <field name="amount_invoiced"/>
-                        <field name="amount_rappel"/>
+                        <field name="amount_rebate"/>
                     </group>
                     <group string="Lines">
                         <field name="line_ids" nolabel="1"/>
@@ -86,39 +86,39 @@
         </field>
     </record>
 
-    <record id="agreement_rappel_settlement_line_tree" model="ir.ui.view">
-        <field name="name">agreement.rappel.settlement.line</field>
-        <field name="model">agreement.rappel.settlement.line</field>
+    <record id="agreement_rebate_settlement_line_tree" model="ir.ui.view">
+        <field name="name">agreement.rebate.settlement.line</field>
+        <field name="model">agreement.rebate.settlement.line</field>
         <field name="arch" type="xml">
-            <tree string="Rappel Settlement lines">
-                <field name="amount_from" attrs="{'column_invisible': [('parent.rappel_type', 'not in', ['section_total', 'section_prorated'])]}"/>
-                <field name="amount_to" attrs="{'column_invisible': [('parent.rappel_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+            <tree string="Rebate Settlement lines">
+                <field name="amount_from" attrs="{'column_invisible': [('parent.rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                <field name="amount_to" attrs="{'column_invisible': [('parent.rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
                 <field name="amount_invoiced"/>
                 <field name="percent"/>
-                <field name="amount_rappel"/>
+                <field name="amount_rebate"/>
                 <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"
-                        attrs="{'column_invisible': [('parent.rappel_type', '!=', 'line')]}"/>
+                        attrs="{'column_invisible': [('parent.rebate_type', '!=', 'line')]}"/>
                 <field name="target_domain" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
 
-    <record id="agreement_rappel_settlement_action" model="ir.actions.act_window">
+    <record id="agreement_rebate_settlement_action" model="ir.actions.act_window">
         <field name="name">Agreement settlements</field>
-        <field name="res_model">agreement.rappel.settlement</field>
+        <field name="res_model">agreement.rebate.settlement</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="agreement_rappel_settlement_menu_root"
+    <menuitem id="agreement_rebate_settlement_menu_root"
               name="Settlements"
               parent="agreement.agreement_menu_root"
-              groups="group_use_agreement_rappel"
+              groups="group_use_agreement_rebate"
               sequence="10"/>
 
-    <menuitem id="agreement_rappel_settlement_menu"
-              action="agreement_rappel_settlement_action"
+    <menuitem id="agreement_rebate_settlement_menu"
+              action="agreement_rebate_settlement_action"
               name="Settlements"
-              parent="agreement_rappel_settlement_menu_root"
+              parent="agreement_rebate_settlement_menu_root"
               sequence="10"/>
 
 </odoo>

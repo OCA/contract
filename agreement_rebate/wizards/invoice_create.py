@@ -14,7 +14,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     date_to = fields.Date(string='To')
     journal_type = fields.Selection(
         selection=[
-            ('sale', 'Rappel Sales'),
+            ('sale', 'Rebate Sales'),
         ],
         string='Journal type',
         default='sale',
@@ -33,8 +33,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         string='Agreements',
     )
     settlements_ids = fields.Many2many(
-        comodel_name='agreement.rappel.settlement',
-        string='Rappel settlements',
+        comodel_name='agreement.rebate.settlement',
+        string='Rebate settlements',
     )
     product_id = fields.Many2one(
         comodel_name='product.product',
@@ -65,7 +65,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     def _prepare_settlement_domain(self):
         domain = [
             ('invoice_id', '=', False),
-            ('agreement_id.rappel_type', '!=', False),
+            ('agreement_id.rebate_type', '!=', False),
         ]
         if self.date_from:
             domain.extend([
@@ -92,7 +92,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     def action_create_invoice(self):
         self.ensure_one()
-        settlements = self.env['agreement.rappel.settlement'].search(
+        settlements = self.env['agreement.rebate.settlement'].search(
             self._prepare_settlement_domain())
         settlements.with_context(
             partner_invoice=self.invoice_partner_id,

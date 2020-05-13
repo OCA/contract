@@ -7,9 +7,9 @@ from odoo.tools import safe_eval
 from odoo.exceptions import UserError
 
 
-class AgreementRappelSettlement(models.Model):
-    _name = 'agreement.rappel.settlement'
-    _description = 'Agreement Rappel Settlement'
+class AgreementRebateSettlement(models.Model):
+    _name = 'agreement.rebate.settlement'
+    _description = 'Agreement Rebate Settlement'
 
     name = fields.Char()
     company_id = fields.Many2one(
@@ -33,9 +33,9 @@ class AgreementRappelSettlement(models.Model):
         string='Agreement',
         required=True,
     )
-    rappel_type = fields.Selection(
-        related='agreement_id.rappel_type',
-        string='Rappel type',
+    rebate_type = fields.Selection(
+        related='agreement_id.rebate_type',
+        string='Rebate type',
     )
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -43,12 +43,12 @@ class AgreementRappelSettlement(models.Model):
         store=True,
     )
     line_ids = fields.One2many(
-        comodel_name='agreement.rappel.settlement.line',
-        inverse_name='rappel_settlement_id',
+        comodel_name='agreement.rebate.settlement.line',
+        inverse_name='rebate_settlement_id',
         string='Settlement Lines',
     )
     amount_invoiced = fields.Float(string='Amount invoiced')
-    amount_rappel = fields.Float(string='Amount rappel')
+    amount_rebate = fields.Float(string='Amount rebate')
     invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='Invoice'
@@ -65,8 +65,8 @@ class AgreementRappelSettlement(models.Model):
             if vals.get('name', False):
                 continue
             vals['name'] = self.env['ir.sequence'].next_by_code(
-                'agreement.rappel.settlement')
-        return super(AgreementRappelSettlement, self).create(vals_list)
+                'agreement.rebate.settlement')
+        return super(AgreementRebateSettlement, self).create(vals_list)
 
     def _prepare_invoice(self):
         """
@@ -129,7 +129,7 @@ class AgreementRappelSettlement(models.Model):
         invoice_line_vals.update({
             # 'account_analytic_id': self.analytic_account_id.id,
             # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'price_unit': settlement_line.amount_rappel,
+            'price_unit': settlement_line.amount_rebate,
         })
         return invoice_line_vals
 
@@ -155,7 +155,7 @@ class AgreementRappelSettlement(models.Model):
         return invoices
 
     def action_show_detail(self):
-        if self.rappel_type == 'line' and len(self.line_ids) > 1:
+        if self.rebate_type == 'line' and len(self.line_ids) > 1:
             domain = expression.OR([safe_eval(
                 l.target_domain) for l in self.line_ids])
         else:
@@ -171,10 +171,10 @@ class AgreementRappelSettlement(models.Model):
 
     def action_show_settlement(self):
         action = self.env.ref(
-            'agreement_rappel.agreement_rappel_settlement_action').read()[0]
+            'agreement_rebate.agreement_rebate_settlement_action').read()[0]
         if len(self) == 1:
             form = self.env.ref(
-                'agreement_rappel.agreement_rappel_settlement_form')
+                'agreement_rebate.agreement_rebate_settlement_form')
             action['views'] = [(form.id, 'form')]
             action['res_id'] = self.id
         else:
@@ -185,22 +185,22 @@ class AgreementRappelSettlement(models.Model):
         return self.agreement_id.get_formview_action()
 
 
-class AgreementRappelSettlementLine(models.Model):
-    _name = 'agreement.rappel.settlement.line'
-    _description = 'Agreement Rappel Settlement Lines'
+class AgreementRebateSettlementLine(models.Model):
+    _name = 'agreement.rebate.settlement.line'
+    _description = 'Agreement Rebate Settlement Lines'
 
-    rappel_settlement_id = fields.Many2one(
-        comodel_name='agreement.rappel.settlement',
-        string='Rappel settlement',
+    rebate_settlement_id = fields.Many2one(
+        comodel_name='agreement.rebate.settlement',
+        string='Rebate settlement',
         ondelete='cascade',
     )
-    rappel_line_id = fields.Many2one(
-        comodel_name='agreement.rappel.line',
-        string='Rappel Line',
+    rebate_line_id = fields.Many2one(
+        comodel_name='agreement.rebate.line',
+        string='Rebate Line',
     )
-    rappel_section_id = fields.Many2one(
-        comodel_name='agreement.rappel.section',
-        string='Rappel section',
+    rebate_section_id = fields.Many2one(
+        comodel_name='agreement.rebate.section',
+        string='Rebate section',
     )
     target_domain = fields.Char()
     amount_from = fields.Float(string="From", readonly=True)
@@ -208,7 +208,7 @@ class AgreementRappelSettlementLine(models.Model):
     percent = fields.Float(string="Percent", readonly=True)
     amount_gross = fields.Float(string='Amount gross')
     amount_invoiced = fields.Float(string='Amount invoiced')
-    amount_rappel = fields.Float(string='Amount rappel')
+    amount_rebate = fields.Float(string='Amount rebate')
 
     def action_show_detail(self):
         return {
