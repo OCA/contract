@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-13 02:40+0000\n"
-"PO-Revision-Date: 2020-02-12 05:03+0000\n"
-"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/"
-"teams/23907/pt_BR/)\n"
+"PO-Revision-Date: 2020-05-13 21:11+0000\n"
+"Last-Translator: Eduardo Aparicio <eduardo.caparica@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/teams/"
+"23907/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "Empresas"
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_res_config_settings
 msgid "Config Settings"
-msgstr "Definições de configuração"
+msgstr "Configurações"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_contract_contract
@@ -60,7 +60,7 @@ msgstr "Contrato"
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_sale_order__contract_count
 msgid "Contract Count"
-msgstr "Contagem de Contrato"
+msgstr "Número de Contratos"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_contract_line
@@ -151,7 +151,7 @@ msgstr "Tipo de Fatuamento"
 #: model:ir.model.fields,field_description:product_contract.field_sale_order__is_contract
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__is_contract
 msgid "Is a contract"
-msgstr "É um contato"
+msgstr "É um contrato"
 
 #. module: product_contract
 #: selection:product.template,auto_renew_rule_type:0
@@ -199,24 +199,22 @@ msgstr "Faturamento Recorrente"
 #: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_interval
-#, fuzzy
-#| msgid "Invoice Every"
 msgid "Renew Every"
-msgstr "Faturar a Cada"
+msgstr "Renovar a Cada"
 
 #. module: product_contract
 #: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_interval
 #: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_interval
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_interval
 msgid "Renew every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Renovar a cada (Dias/Semanas/Meses/Anos)"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_rule_type
 msgid "Renewal type"
-msgstr ""
+msgstr "Tipo de renovação"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_sale_order
@@ -260,10 +258,8 @@ msgstr "Especifique o intervalo para geração automática da fatura"
 #: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_rule_type
-#, fuzzy
-#| msgid "Specify Interval for automatic invoice generation."
 msgid "Specify Interval for automatic renewal."
-msgstr "Especifique o intervalo para geração automática da fatura"
+msgstr "Especifique o intervalo para renovação automática."
 
 #. module: product_contract
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_invoicing_type
@@ -307,10 +303,12 @@ msgstr "Ano(s)"
 #: code:addons/product_contract/models/sale_order_line.py:78
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
-msgstr ""
+msgstr "Não se pode adicionar ou remover ao contrato terminado"
 
 #. module: product_contract
 #: code:addons/product_contract/models/sale_order.py:93
 #, python-format
 msgid "You must specify a contract template for '{}' product in '{}' company."
 msgstr ""
+"Você deve especificar um modelo de contrato para o produto '{}' na empresa "
+"'{}'."
