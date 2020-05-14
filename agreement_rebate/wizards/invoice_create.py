@@ -65,7 +65,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     def _prepare_settlement_domain(self):
         domain = [
             ('invoice_id', '=', False),
-            ('agreement_id.rebate_type', '!=', False),
+            ('line_ids.rebate_type', '!=', False),
         ]
         if self.date_from:
             domain.extend([
@@ -78,15 +78,17 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         if self.settlements_ids:
             domain.extend([('id', 'in', self.settlements_ids.ids)])
         elif self.agreement_ids:
-            domain.extend([('agreement_id', 'in', self.agreement_ids.ids)])
+            domain.extend([
+                ('line_ids.agreement_id', 'in', self.agreement_ids.ids)])
         elif self.agreement_type_ids:
             domain.extend([
-                ('agreement_id.agreement_type_id', 'in',
+                ('line_ids.agreement_id.agreement_type_id', 'in',
                  self.agreement_type_ids.ids)
             ])
         else:
             domain.extend([
-                ('agreement_id.agreement_type_id.journal_type', '=', self.journal_type),
+                ('line_ids.agreement_id.agreement_type_id.journal_type', '=',
+                 self.journal_type),
             ])
         return domain
 

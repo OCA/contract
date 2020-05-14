@@ -121,6 +121,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             'date_from': self.date_from,
             'date_to': self.date_to,
             'agreement_id': agreement.id,
+            'partner_id': agreement.partner_id.id,
         }
         if agreement.rebate_type == 'line':
             rebate = amount * line.rebate_discount / 100

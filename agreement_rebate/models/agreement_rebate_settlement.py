@@ -69,7 +69,8 @@ class AgreementRebateSettlement(models.Model):
         """
         self.ensure_one()
         company_id = self.company_id.id or self.env.user.company_id.id
-        partner = self.env.context.get('partner_invoice', self.partner_id)
+        partner = (self.env.context.get('partner_invoice', False) or
+                   self.partner_id)
         invoice_type = self.env.context.get('invoice_type', 'out_invoice')
         journal_id = (
             self.env.context.get('journal_id') or
@@ -89,7 +90,7 @@ class AgreementRebateSettlement(models.Model):
         vinvoice._onchange_partner_id()
         invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
         invoice_vals.update({
-            'name': (self.agreement_id.name or ''),
+            'name': (self.line_ids[:1].agreement_id.name or ''),
             'origin': self.name,
             'invoice_line_ids': [],
             'currency_id': partner.currency_id.id,
@@ -200,6 +201,18 @@ class AgreementRebateSettlementLine(models.Model):
         comodel_name='agreement.rebate.settlement',
         string='Rebate settlement',
         ondelete='cascade',
+    )
+    state = fields.Selection(
+        related='rebate_settlement_id.state',
+        store=True,
+    )
+    date = fields.Date(
+        related='rebate_settlement_id.date',
+        store=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
     )
     rebate_line_id = fields.Many2one(
         comodel_name='agreement.rebate.line',

@@ -77,11 +77,11 @@
                         <field name="line_ids" nolabel="1">
                             <tree string="Rebate Settlement lines">
                                 <field name="rebate_type" invisible="1"/>
-                                <field name="amount_from" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
-                                <field name="amount_to" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
                                 <field name="amount_invoiced"/>
                                 <field name="percent"/>
                                 <field name="amount_rebate"/>
+                                <field name="amount_from" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
+                                <field name="amount_to" attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"/>
                                 <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"
                                         attrs="{'invisible': [('rebate_type', '!=', 'line')]}"/>
                                 <field name="target_domain" groups="base.group_no_one"/>
@@ -98,14 +98,42 @@
         <field name="model">agreement.rebate.settlement.line</field>
         <field name="arch" type="xml">
             <tree string="Rebate Settlement lines" create="false" edit="false">
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="agreement_id"/>
+                <field name="amount_invoiced" sum="Total"/>
+                <field name="percent"/>
+                <field name="amount_rebate" sum="Total"/>
                 <field name="amount_from"/>
                 <field name="amount_to"/>
-                <field name="amount_invoiced"/>
-                <field name="percent"/>
-                <field name="amount_rebate"/>
+                <field name="state"/>
                 <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"/>
                 <field name="target_domain" groups="base.group_no_one"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="agreement_rebate_settlement_line_search" model="ir.ui.view">
+        <field name="name">agreement.rebate.settlement.line.search</field>
+        <field name="model">agreement.rebate.settlement.line</field>
+        <field name="arch" type="xml">
+            <search string="Search settlement lines">
+                <field name="partner_id" operator="child_of"/>
+                <separator/>
+                <field name="agreement_id" string="Agreement"/>
+                <separator/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <separator/>
+                <filter name="date" string="Period" date="date"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
+                    <filter name="group_by_agreement_id" string="Agreement" context="{'group_by':'agreement_id'}"/>
+                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                </group>
+           </search>
         </field>
     </record>
 
