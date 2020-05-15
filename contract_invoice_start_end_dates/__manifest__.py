@@ -4,11 +4,12 @@
 
 {
     'name': 'Contract Invoice Start End Dates',
-    'version': '12.0.1.0.0',
+    'version': '10.0.1.0.0',
     'category': 'Contract Management',
     'author': 'Akretion, '
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
+    'maintainers': ["florian-dacosta"],
     'depends': [
         'account_invoice_start_end_dates',
         'contract',
