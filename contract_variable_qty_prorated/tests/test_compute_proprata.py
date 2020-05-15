@@ -1,6 +1,7 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
@@ -306,7 +307,7 @@ class TestProductTemplate(TransactionCase):
                 ),
             ),
             (
-                0.032,
+                1.0,
                 (
                     "Case 18",
                     "monthly",
@@ -315,7 +316,7 @@ class TestProductTemplate(TransactionCase):
                     to_date("2017-02-15"),
                     to_date("2018-01-01"),
                     False,
-                    to_date("2018-01-30"),
+                    to_date("2017-12-31"),
                 ),
             ),
             (
@@ -329,19 +330,6 @@ class TestProductTemplate(TransactionCase):
                     to_date("2018-02-01"),
                     False,
                     to_date("2018-01-30"),
-                ),
-            ),
-            (
-                1.0,
-                (
-                    "Case 18",
-                    "monthlylastday",
-                    1,
-                    "pre-paid",
-                    to_date("2017-02-15"),
-                    to_date("2018-01-31"),
-                    False,
-                    to_date("2017-12-31"),
                 ),
             ),
             (
@@ -377,6 +365,30 @@ class TestProductTemplate(TransactionCase):
                     "pre-paid",
                     to_date("2018-03-15"),
                     to_date("2018-04-30"),
+                    False,
+                ),
+            ),
+            (
+                1,
+                (
+                    "Case 22",
+                    "monthlylastday",
+                    1,
+                    "pre-paid",
+                    to_date("2018-03-01"),
+                    to_date("2018-03-01"),
+                    False,
+                ),
+            ),
+            (
+                0.5,
+                (
+                    "Case 23",
+                    "monthlylastday",
+                    1,
+                    "pre-paid",
+                    to_date("2018-04-16"),
+                    to_date("2018-04-16"),
                     False,
                 ),
             ),
