@@ -28,6 +28,7 @@ setuptools.setup(
         'odoo12-addon-contract_sale_invoicing',
         'odoo12-addon-contract_sale_mandate',
         'odoo12-addon-contract_sale_payment_mode',
+        'odoo12-addon-contract_transmit_method',
         'odoo12-addon-contract_variable_qty_prorated',
         'odoo12-addon-contract_variable_qty_timesheet',
         'odoo12-addon-contract_variable_quantity',
