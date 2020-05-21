@@ -2,10 +2,14 @@
 
 <odoo>
 
-    <menuitem id="agreement_account_menu" action="agreement.agreement_action"
-              parent="account.account_management_menu" sequence="100"/>
-    <menuitem id="agreement_type_account_menu" action="agreement.agreement_type_action"
-              parent="account.account_management_menu" sequence="105" groups="agreement.group_use_agreement_type"/>
+    <record id="agreement.agreement_menu" model="ir.ui.menu">
+        <field name="parent_id" ref="account.account_management_menu"/>
+        <field name="sequence">150</field>
+    </record>
+    <record id="agreement.agreement_type_menu" model="ir.ui.menu">
+        <field name="parent_id" ref="account.account_management_menu"/>
+        <field name="sequence">155</field>
+    </record>
 
     <record id="account_invoice_in_invoice_refund_action" model="ir.actions.act_window">
         <field name="name">Vendor Bills</field>
