@@ -1,4 +1,5 @@
-# © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+# Copyright 2017-2020 Akretion France
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
@@ -18,3 +19,8 @@ class SaleOrder(models.Model):
         ondelete="restrict",
         track_visibility='onchange', readonly=True, copy=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+
+    def _prepare_invoice(self):
+        vals = super()._prepare_invoice()
+        vals['agreement_id'] = self.agreement_id.id or False
+        return vals
