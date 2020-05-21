@@ -12,7 +12,8 @@
     'license': 'AGPL-3',
     'depends': [
         'sale_management',
-        'agreement',
+        'agreement_account',
+        'sale_commercial_partner',
     ],
     'data': [
         'security/ir.model.access.csv',
