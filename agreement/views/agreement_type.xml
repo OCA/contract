@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Agreement Types" default_order="name">
                 <field name="name" string="Type Name"/>
+                <field name="domain"/>
             </tree>
         </field>
     </record>
@@ -29,6 +30,9 @@
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                     </div>
+                    <group name="main">
+                        <field name="domain" widget="radio"/>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -40,7 +44,14 @@
         <field name="arch" type="xml">
             <search string="Agreement Type">
                 <field name="name"/>
+                <separator/>
+                <filter name="sale" string="Sale" domain="[('domain', '=', 'sale')]"/>
+                <filter name="purchase" string="Purchase" domain="[('domain', '=', 'purchase')]"/>
+                <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group name="groupby">
+                    <filter name="domain_groupby" string="Domain" context="{'group_by': 'domain'}"/>
+                </group>
             </search>
         </field>
     </record>
