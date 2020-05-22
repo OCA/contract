@@ -1,10 +1,7 @@
 # Copyright 2020 Tecnativa - Carlos Dauden
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from collections import defaultdict
 from odoo import models, fields
-from odoo.tools import safe_eval
-from odoo.osv import expression
 
 
 class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
@@ -12,7 +9,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
-    journal_type = fields.Selection(
+    journal_rebate_type = fields.Selection(
         selection=[
             ('sale', 'Rebate Sales'),
         ],
@@ -64,7 +61,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     def _prepare_settlement_domain(self):
         domain = [
-            ('invoice_id', '=', False),
+            ('line_ids.invoice_line_id', '=', False),
             ('line_ids.rebate_type', '!=', False),
         ]
         if self.date_from:
@@ -87,8 +84,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('line_ids.agreement_id.agreement_type_id.journal_type', '=',
-                 self.journal_type),
+                ('line_ids.agreement_id.agreement_type_id.journal_rebate_type',
+                 '=', self.journal_rebate_type),
             ])
         return domain
 
@@ -96,10 +93,39 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         self.ensure_one()
         settlements = self.env['agreement.rebate.settlement'].search(
             self._prepare_settlement_domain())
-        settlements.with_context(
+        invoices = settlements.with_context(
             partner_invoice=self.invoice_partner_id,
             product=self.product_id,
             journal_id=self.journal_id.id,
             invoice_type=self.invoice_type,
             invoice_group=self.invoice_group,
+            date_from=self.date_from,
+            date_to=self.date_to,
         ).create_invoice()
+        return self.action_show_invoices(invoices)
+
+    def action_show_invoices(self, invoices):
+        self.ensure_one()
+        tree_view_ref = (
+            'account.invoice_supplier_tree'
+            if 'in_' in self.invoice_type
+            else 'account.invoice_tree_with_onboarding'
+        )
+        form_view_ref = (
+            'account.invoice_supplier_form'
+            if 'in_' in self.invoice_type
+            else 'account.invoice_form'
+        )
+        tree_view = self.env.ref(tree_view_ref, raise_if_not_found=False)
+        form_view = self.env.ref(form_view_ref, raise_if_not_found=False)
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoices',
+            'res_model': 'account.invoice',
+            'view_type': 'form',
+            'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
+            'domain': [('id', 'in', invoices.ids)],
+        }
+        if tree_view and form_view:
+            action['views'] = [(tree_view.id, 'tree'), (form_view.id, 'form')]
+        return action

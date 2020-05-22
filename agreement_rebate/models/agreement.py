@@ -80,22 +80,24 @@ class AgreementRebateLine(models.Model):
         'rebate_category_ids', 'rebate_condition_id')
     def _compute_rebate_domain(self):
         for line in self:
+            rebate_domain = []
             if line.rebate_target == 'product':
-                line.rebate_domain = [
+                rebate_domain = [
                     ('product_id', 'in', line.rebate_product_ids.ids)
                 ]
             elif line.rebate_target == 'product_tmpl':
-                line.rebate_domain = [
+                rebate_domain = [
                     ('product_id.product_tmpl_id', 'in',
                      line.rebate_product_tmpl_ids.ids)
                 ]
             elif line.rebate_target == 'category':
-                line.rebate_domain = [
+                rebate_domain = [
                     ('product_id.categ_id', 'in',
                      line.rebate_category_ids.ids)
                 ]
             elif line.rebate_target == 'condition':
-                line.rebate_domain = line.rebate_condition_id.rebate_domain
+                rebate_domain = line.rebate_condition_id.rebate_domain
+            line.rebate_domain = str(rebate_domain)
 
 
 class AgreementRebateCondition(models.Model):

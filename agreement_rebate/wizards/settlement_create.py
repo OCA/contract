@@ -13,7 +13,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date = fields.Date(default=fields.Date.today())
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To', required=True)
-    journal_type = fields.Selection(
+    journal_rebate_type = fields.Selection(
         selection=[
             ('sale', 'Rebate Sales'),
         ],
@@ -61,7 +61,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('agreement_type_id.journal_type', '=', self.journal_type),
+                ('agreement_type_id.journal_rebate_type', '=',
+                 self.journal_rebate_type),
             ])
         settlements = self._get_existing_settlement(settlement_domain)
         if settlements:
@@ -83,7 +84,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('invoice_id.journal_id.type', '=', self.journal_type),
+                ('invoice_id.journal_id.type', '=', self.journal_rebate_type),
             ])
         if self.date_from:
             domain.extend([
@@ -115,7 +116,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         return 'price_total'
 
     def _prepare_settlement_line(
-        self, domain, groups, agreement, line=False, section=False):
+            self, domain, groups, agreement, line=False, section=False):
         amount = groups[0][self._get_amount_field()]
         vals = {
             'date_from': self.date_from,
@@ -206,8 +207,10 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                         continue
                     vals = self._prepare_settlement_line(
                         domain, groups, agreement, line=line)
-                    settlement_dic[key]['amount_rebate'] += vals['amount_rebate']
-                    settlement_dic[key]['amount_invoiced'] += vals['amount_invoiced']
+                    settlement_dic[key]['amount_rebate'] +=\
+                        vals['amount_rebate']
+                    settlement_dic[key]['amount_invoiced'] += \
+                        vals['amount_invoiced']
                     settlement_dic[key]['lines'].append((0, 0, vals))
             elif agreement.rebate_type == 'section_prorated':
                 domain = self._target_line_domain(agreement_domain, agreement)
@@ -222,9 +225,11 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                         break
                     vals = self._prepare_settlement_line(
                         domain, groups, agreement, section=section)
-                    settlement_dic[key]['amount_rebate'] += vals['amount_rebate']
+                    settlement_dic[key]['amount_rebate'] +=\
+                        vals['amount_rebate']
                     settlement_dic[key]['lines'].append((0, 0, vals))
-                settlement_dic[key]['amount_invoiced'] += vals['amount_invoiced']
+                settlement_dic[key]['amount_invoiced'] +=\
+                    vals['amount_invoiced']
             else:
                 domain = self._target_line_domain(agreement_domain, agreement)
                 groups = target_model.read_group(
@@ -233,8 +238,10 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                     continue
                 vals = self._prepare_settlement_line(domain, groups, agreement)
                 settlement_dic[key]['lines'].append((0, 0, vals))
-                settlement_dic[key]['amount_rebate'] += vals['amount_rebate']
-                settlement_dic[key]['amount_invoiced'] += vals['amount_invoiced']
+                settlement_dic[key]['amount_rebate'] +=\
+                    vals['amount_rebate']
+                settlement_dic[key]['amount_invoiced'] +=\
+                    vals['amount_invoiced']
         settlements = self._create_settlement(settlement_dic)
         return settlements.action_show_settlement()
 

@@ -7,7 +7,7 @@ from odoo import models, fields
 class AgreementType(models.Model):
     _inherit = 'agreement.type'
 
-    journal_type = fields.Selection(
+    journal_rebate_type = fields.Selection(
         selection=[
             ('sale', 'Rebate Sales'),
         ],

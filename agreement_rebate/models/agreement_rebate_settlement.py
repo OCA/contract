@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 class AgreementRebateSettlement(models.Model):
     _name = 'agreement.rebate.settlement'
     _description = 'Agreement Rebate Settlement'
+    _order = 'date DESC'
 
     name = fields.Char()
     company_id = fields.Many2one(
@@ -18,15 +19,6 @@ class AgreementRebateSettlement(models.Model):
         required=True,
         index=True,
         default=lambda self: self.env.user.company_id.id,
-    )
-    state = fields.Selection(
-        selection=[
-            ('draft', 'Draft'),
-            ('invoiced', 'Invoiced'),
-        ],
-        compute='_compute_state',
-        string='State',
-        store=True,
     )
     date = fields.Date(default=fields.Date.today())
     date_from = fields.Date()
@@ -37,7 +29,7 @@ class AgreementRebateSettlement(models.Model):
     )
     line_ids = fields.One2many(
         comodel_name='agreement.rebate.settlement.line',
-        inverse_name='rebate_settlement_id',
+        inverse_name='settlement_id',
         string='Settlement Lines',
     )
     amount_invoiced = fields.Float(string='Amount invoiced')
@@ -46,11 +38,6 @@ class AgreementRebateSettlement(models.Model):
         comodel_name='account.invoice',
         string='Invoice'
     )
-
-    @api.depends('invoice_id')
-    def _compute_state(self):
-        for rec in self:
-            rec.state = rec.invoice_id and 'invoiced' or 'draft'
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -75,7 +62,7 @@ class AgreementRebateSettlement(models.Model):
         journal_id = (
             self.env.context.get('journal_id') or
             self.env['account.invoice'].with_context(
-                company_id=company_id
+                force_company=company_id
             ).default_get(['journal_id'])['journal_id'])
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for'
@@ -105,10 +92,10 @@ class AgreementRebateSettlement(models.Model):
         company_id = self.company_id.id or self.env.user.company_id.id
         product = self.env.context.get('product', False)
         invoice_line_vals = {
-            # 'display_type': self.display_type,
             'product_id': product.id,
             'quantity': 1.0,
             'uom_id': product.uom_id.id,
+            'agreement_rebate_settlement_line_ids': [(4, settlement_line.id)],
         }
         invoice_line = self.env['account.invoice.line'].with_context(
             force_company=company_id,
@@ -121,6 +108,11 @@ class AgreementRebateSettlement(models.Model):
         invoice_line._onchange_product_id()
         invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
         invoice_line_vals.update({
+            'name': _('{} - Period: {} - {}'.format(
+                invoice_line_vals['name'],
+                settlement_line.settlement_id.date_from,
+                settlement_line.settlement_id.date_to)
+            ),
             # 'account_analytic_id': self.analytic_account_id.id,
             # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'price_unit': settlement_line.amount_rebate,
@@ -138,7 +130,7 @@ class AgreementRebateSettlement(models.Model):
         invoice_dic = {}
         for settlement in self:
             key = settlement._get_invoice_key()
-            if not key in invoice_dic:
+            if key not in invoice_dic:
                 invoice_dic[key] = settlement._prepare_invoice()
             for line in settlement.line_ids:
                 invoice_dic[key]['invoice_line_ids'].append(
@@ -192,22 +184,19 @@ class AgreementRebateSettlement(models.Model):
 class AgreementRebateSettlementLine(models.Model):
     _name = 'agreement.rebate.settlement.line'
     _description = 'Agreement Rebate Settlement Lines'
+    _order = 'date DESC'
 
     company_id = fields.Many2one(
         comodel_name='res.company', string='Company',
-        related='rebate_settlement_id.company_id',
+        related='settlement_id.company_id',
     )
-    rebate_settlement_id = fields.Many2one(
+    settlement_id = fields.Many2one(
         comodel_name='agreement.rebate.settlement',
         string='Rebate settlement',
         ondelete='cascade',
     )
-    state = fields.Selection(
-        related='rebate_settlement_id.state',
-        store=True,
-    )
     date = fields.Date(
-        related='rebate_settlement_id.date',
+        related='settlement_id.date',
         store=True,
     )
     partner_id = fields.Many2one(
@@ -237,6 +226,10 @@ class AgreementRebateSettlementLine(models.Model):
     rebate_type = fields.Selection(
         related='agreement_id.rebate_type',
         string='Rebate type',
+    )
+    invoice_line_id = fields.Many2one(
+        comodel_name='account.invoice.line',
+        string='Invoice line',
     )
 
     def action_show_detail(self):

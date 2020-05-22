@@ -2,11 +2,6 @@
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from collections import namedtuple
-from datetime import timedelta
-from dateutil.relativedelta import relativedelta
-from odoo import fields
-from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -60,14 +55,16 @@ class TestAgreementRebate(TransactionCase):
             'name': 'Test',
             'create_variant': 'always',
         })
-        self.product_attribute_value_test_1 = self.ProductAttributeValue.create({
-            'name': 'Test v1',
-            'attribute_id': self.product_attribute.id,
-        })
-        self.product_attribute_value_test_2 = self.ProductAttributeValue.create({
-            'name': 'Test v2',
-            'attribute_id': self.product_attribute.id,
-        })
+        self.product_attribute_value_test_1 =\
+            self.ProductAttributeValue.create({
+                'name': 'Test v1',
+                'attribute_id': self.product_attribute.id,
+            })
+        self.product_attribute_value_test_2 =\
+            self.ProductAttributeValue.create({
+                'name': 'Test v2',
+                'attribute_id': self.product_attribute.id,
+            })
         self.product_template = self.ProductTemplate.create({
             'name': 'Product template with variant test',
             'type': 'consu',
@@ -96,7 +93,7 @@ class TestAgreementRebate(TransactionCase):
         self.invoice_partner_2 = self.create_invoice(self.partner_2)
         self.agreement_type = self.AgreementType.create({
             'name': 'Rebate',
-            'journal_type': 'sale',
+            'journal_rebate_type': 'sale',
         })
         # self.create_agreements_rebate(self.partner_1)
         # self.create_agreements_rebate(self.partner_2)

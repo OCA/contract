@@ -10,8 +10,8 @@
                        string="Name or agreement code"/>
                 <field name="partner_id"/>
                 <separator/>
-                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                <filter name="invoiced" string="Invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter name="not_invoiced" string="Not invoiced" domain="[('line_ids.invoice_line_id', '=', False)]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('line_ids.invoice_line_id', '!=', False)]"/>
                 <group name="groupby">
                     <filter name="partner_groupby" string="Partner"
                         context="{'group_by': 'partner_id'}"/>
@@ -32,7 +32,6 @@
                 <field name="date_to"/>
                 <field name="amount_invoiced"/>
                 <field name="amount_rebate"/>
-                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -42,9 +41,6 @@
         <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
             <form string="Rebate Settlements">
-                <header>
-                    <field name="state" widget="statusbar"/>
-                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_show_agreement" type="object"
@@ -106,7 +102,6 @@
                 <field name="amount_rebate" sum="Total"/>
                 <field name="amount_from"/>
                 <field name="amount_to"/>
-                <field name="state"/>
                 <button name="action_show_detail" type="object" icon="fa-pencil-square-o" string="Show details"/>
                 <field name="target_domain" groups="base.group_no_one"/>
             </tree>
@@ -122,14 +117,13 @@
                 <separator/>
                 <field name="agreement_id" string="Agreement"/>
                 <separator/>
-                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                <filter name="invoiced" string="Invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter name="not_invoiced" string="Not invoiced" domain="[('invoice_line_id', '=', False)]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('invoice_line_id', '!=', False)]"/>
                 <separator/>
                 <filter name="date" string="Period" date="date"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
                     <filter name="group_by_agreement_id" string="Agreement" context="{'group_by':'agreement_id'}"/>
-                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
                     <separator/>
                     <filter string="Date" name="date" context="{'group_by':'date'}"/>
                 </group>
@@ -141,12 +135,14 @@
         <field name="name">Agreement settlements</field>
         <field name="res_model">agreement.rebate.settlement</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_not_invoiced': 1}</field>
     </record>
 
     <record id="agreement_rebate_settlement_line_action" model="ir.actions.act_window">
         <field name="name">Agreement settlement lines</field>
         <field name="res_model">agreement.rebate.settlement.line</field>
         <field name="view_mode">tree,form,pivot</field>
+        <field name="context">{'search_default_not_invoiced': 1}</field>
     </record>
 
     <menuitem id="agreement_rebate_settlement_menu_root"
