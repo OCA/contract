@@ -11,13 +11,13 @@ class SaleOrder(models.Model):
 
     agreement_id = fields.Many2one(
         comodel_name='agreement', string='Agreement', ondelete='restrict',
-        track_visibility='onchange', readonly=True, copy=False,
+        tracking=True, readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
 
     agreement_type_id = fields.Many2one(
         comodel_name="agreement.type", string="Agreement Type",
         ondelete="restrict",
-        track_visibility='onchange', readonly=True, copy=True,
+        tracking=True, readonly=True, copy=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
 
     def _prepare_invoice(self):

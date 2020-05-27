@@ -2,21 +2,21 @@
 
 <odoo>
 
-    <record id="agreement.agreement_menu_root" model="ir.ui.menu">
+    <record id="base_contract.agreement_menu_root" model="ir.ui.menu">
         <field name="parent_id" ref="sale.menu_sale_config"/>
         <field name="sequence">150</field>
     </record>
 
-    <menuitem id="sale_agreement_menu" action="agreement.agreement_action"
-              parent="agreement.agreement_menu_root" sequence="10"/>
-    <menuitem id="sale_agreement_type_menu" action="agreement.agreement_type_action"
-              parent="agreement.agreement_menu_root" sequence="20"
-              groups="agreement.group_use_agreement_type"/>
+    <menuitem id="sale_agreement_menu" action="base_contract.agreement_action"
+              parent="base_contract.agreement_menu_root" sequence="10"/>
+    <menuitem id="sale_agreement_type_menu" action="base_contract.agreement_type_action"
+              parent="base_contract.agreement_menu_root" sequence="20"
+              groups="base_contract.group_use_agreement_type"/>
 
     <record id="agreement_form" model="ir.ui.view">
         <field name="name">sale.button.agreement.form</field>
         <field name="model">agreement</field>
-        <field name="inherit_id" ref="agreement.agreement_form"/>
+        <field name="inherit_id" ref="base_contract.agreement_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="action"

@@ -5,19 +5,19 @@
 {
     'name': 'Agreement Account',
     'summary': "Agreement on invoices",
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'category': 'Contract',
     'author': 'Akretion, Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
     'license': 'AGPL-3',
     'depends': [
-        'agreement',
+        'base_contract',
         'account',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/agreement.xml',
-        'views/account_invoice.xml',
+        'views/account_move.xml',
         ],
     'development_status': 'Beta',
     'maintainers': [

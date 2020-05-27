@@ -6,9 +6,9 @@ class ResConfigSettings(models.TransientModel):
 
     group_use_agreement_type = fields.Boolean(
         'Use agreement types',
-        implied_group='agreement.group_use_agreement_type'
+        implied_group='base_contract.group_use_agreement_type'
     )
     group_use_agreement_template = fields.Boolean(
         'Use agreement template',
-        implied_group='agreement.group_use_agreement_template'
+        implied_group='base_contract.group_use_agreement_template'
     )

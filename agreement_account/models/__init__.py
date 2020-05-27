@@ -1,2 +1,2 @@
 from . import agreement
-from . import account_invoice
+from . import account_move

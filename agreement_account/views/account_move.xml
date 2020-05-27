@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2017-2020 Akretion France (http://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+
+
+<record id="view_move_form" model="ir.ui.view">
+    <field name="name">agreement.invoice.form</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+        <!-- Find a way to filter on domain sale/purchase depending on type ? -->
+        <xpath expr="//page[@name='other_info']//field[@name='invoice_incoterm_id']" position="before">
+            <field name="agreement_id" string="Agreement"
+                domain="[('partner_id', 'child_of', commercial_partner_id)]"
+                context="{'default_partner_id': commercial_partner_id}"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="view_account_invoice_filter" model="ir.ui.view">
+    <field name="name">agreement.invoice.search</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+    <field name="arch" type="xml">
+        <field name="journal_id" position="after">
+            <field name="agreement_id"/>
+        </field>
+        <group expand="0" position="inside">
+            <filter string="Agreement" name="agreement_groupby"
+                context="{'group_by': 'agreement_id'}"/>
+        </group>
+    </field>
+</record>
+
+
+</odoo>
