@@ -3,26 +3,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Agreement Account',
-    'summary': "Agreement on invoices",
-    'version': '13.0.1.0.0',
-    'category': 'Contract',
-    'author': 'Akretion, Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/contract',
-    'license': 'AGPL-3',
-    'depends': [
-        'base_contract',
-        'account',
+    "name": "Agreement Account",
+    "summary": "Agreement on invoices",
+    "version": "13.0.1.0.0",
+    "category": "Contract",
+    "author": "Akretion, Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/contract",
+    "license": "AGPL-3",
+    "depends": ["base_contract", "account",],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/agreement.xml",
+        "views/account_move.xml",
     ],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/agreement.xml',
-        'views/account_move.xml',
-        ],
-    'development_status': 'Beta',
-    'maintainers': [
-        'alexis-via',
-        'bealdav',
-    ],
-    'installable': True,
+    "development_status": "Beta",
+    "maintainers": ["alexis-via", "bealdav",],
+    "installable": True,
 }

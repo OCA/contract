@@ -7,21 +7,26 @@ from odoo import fields, models
 
 
 class Agreement(models.Model):
-    _inherit = 'agreement'
+    _inherit = "agreement"
 
     sale_ids = fields.One2many(
-        'sale.order', 'agreement_id', string='Sale Orders', readonly=True)
+        "sale.order", "agreement_id", string="Sale Orders", readonly=True
+    )
     sale_count = fields.Integer(
-        compute='_compute_sale_count', string='# of Sale Orders')
+        compute="_compute_sale_count", string="# of Sale Orders"
+    )
 
     def _compute_sale_count(self):
-        rg_res = self.env['sale.order'].read_group(
+        rg_res = self.env["sale.order"].read_group(
             [
-                ('agreement_id', 'in', self.ids),
-                ('state', 'not in', ('draft', 'sent', 'cancel')),
+                ("agreement_id", "in", self.ids),
+                ("state", "not in", ("draft", "sent", "cancel")),
             ],
-            ['agreement_id'], ['agreement_id'])
-        mapped_data = dict(
-            [(x['agreement_id'][0], x['agreement_id_count']) for x in rg_res])
+            ["agreement_id"],
+            ["agreement_id"],
+        )
+        mapped_data = {
+            x["agreement_id"][0]: x["agreement_id_count"] for x in rg_res
+        }
         for agreement in self:
             agreement.sale_count = mapped_data.get(agreement.id, 0)
