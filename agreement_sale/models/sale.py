@@ -30,6 +30,6 @@ class SaleOrder(models.Model):
     )
 
     def _prepare_invoice(self):
-        vals = super(SaleOrder, self)._prepare_invoice()
+        vals = super()._prepare_invoice()
         vals["agreement_id"] = self.agreement_id.id or False
         return vals
