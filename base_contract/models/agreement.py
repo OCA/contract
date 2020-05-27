@@ -2,12 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import fields, models
+from odoo import _, api, fields, models
 
 
 class Agreement(models.Model):
     _name = "agreement"
     _description = "Agreement"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     code = fields.Char(required=True, copy=False)
     name = fields.Char(required=True)
@@ -15,12 +16,11 @@ class Agreement(models.Model):
         "res.partner",
         string="Partner",
         ondelete="restrict",
+        tracking=True,
         domain=[("parent_id", "=", False)],
     )
     company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        default=lambda self: self.env["res.company"]._company_default_get(),
+        "res.company", string="Company", default=lambda self: self.env.company
     )
     is_template = fields.Boolean(
         string="Is a Template?",
@@ -32,10 +32,22 @@ class Agreement(models.Model):
     agreement_type_id = fields.Many2one(
         "agreement.type", string="Agreement Type", help="Select the type of agreement"
     )
+    domain = fields.Selection(
+        "_domain_selection", string="Domain", default="sale", tracking=True
+    )
     active = fields.Boolean(default=True)
     signature_date = fields.Date()
     start_date = fields.Date()
     end_date = fields.Date()
+
+    @api.model
+    def _domain_selection(self):
+        return [("sale", _("Sale")), ("purchase", _("Purchase"))]
+
+    @api.onchange("agreement_type_id")
+    def agreement_type_change(self):
+        if self.agreement_type_id and self.agreement_type_id.domain:
+            self.domain = self.agreement_type_id.domain
 
     def name_get(self):
         res = []
