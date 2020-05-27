@@ -12,7 +12,7 @@ class AgreementRebateSettlement(models.Model):
     _description = 'Agreement Rebate Settlement'
     _order = 'date DESC'
 
-    name = fields.Char()
+    name = fields.Char(required=True, default='/')
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company',
@@ -42,7 +42,7 @@ class AgreementRebateSettlement(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', False):
+            if vals.get("name", "/") != "/":
                 continue
             vals['name'] = self.env['ir.sequence'].next_by_code(
                 'agreement.rebate.settlement')
