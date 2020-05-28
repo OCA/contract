@@ -1,7 +1,7 @@
 # Copyright 2020 Tecnativa - Carlos Dauden
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from odoo import models, fields
+from odoo import api, models, fields
 
 
 class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
@@ -10,7 +10,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
     domain = fields.Selection(
-        '_domain_selection', string='Domain', default='sale')
+        '_domain_selection', string='Domain', default='rebate')
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Journal',

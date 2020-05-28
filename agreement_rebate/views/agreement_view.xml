@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="agreement.agreement_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page name="rebate" string="Rebate">
+                <page name="rebate" string="Rebate" attrs="{'invisible': [('domain', '!=', 'rebate')]}">
                     <group>
                         <group>
                             <field name="rebate_type"/>

@@ -1,7 +1,7 @@
 # Copyright 2020 Tecnativa - Carlos Dauden
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from odoo import api, models, fields
+from odoo import _, api, models, fields
 
 
 class Agreement(models.Model):
@@ -34,6 +34,12 @@ class Agreement(models.Model):
     rebate_discount = fields.Float(
         string='Rebate discount',
     )
+
+    @api.model
+    def _domain_selection(self):
+        domain = super()._domain_selection()
+        domain.append(('rebate', _('Rebate')))
+        return domain
 
 
 class AgreementRebateLine(models.Model):

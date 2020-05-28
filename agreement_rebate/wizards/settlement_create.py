@@ -14,7 +14,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To', required=True)
     domain = fields.Selection(
-        '_domain_selection', string='Domain', default='sale')
+        '_domain_selection', string='Domain', default='rebate')
     journal_ids = fields.Many2many(
         comodel_name='account.journal',
         string='Journals',
