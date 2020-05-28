@@ -2,7 +2,7 @@
 # Copyright 2020 Tecnativa - Sergio Teruel
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from collections import defaultdict
-from odoo import models, fields
+from odoo import api, models, fields
 from odoo.tools import safe_eval
 from odoo.osv import expression
 
@@ -13,13 +13,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date = fields.Date(default=fields.Date.today())
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To', required=True)
-    journal_rebate_type = fields.Selection(
-        selection=[
-            ('sale', 'Rebate Sales'),
-        ],
-        string='Journal type',
-        default='sale',
-    )
+    domain = fields.Selection(
+        '_domain_selection', string='Domain', default='sale')
     journal_ids = fields.Many2many(
         comodel_name='account.journal',
         string='Journals',
@@ -32,6 +27,10 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         comodel_name='agreement',
         string='Agreements',
     )
+
+    @api.model
+    def _domain_selection(self):
+        return self.env['agreement']._domain_selection()
 
     def _prepare_agreement_domain(self):
         domain = [
@@ -61,8 +60,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('agreement_type_id.journal_rebate_type', '=',
-                 self.journal_rebate_type),
+                ('agreement_type_id.domain', '=',
+                 self.domain),
             ])
         settlements = self._get_existing_settlement(settlement_domain)
         if settlements:
@@ -84,7 +83,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('invoice_id.journal_id.type', '=', self.journal_rebate_type),
+                ('invoice_id.journal_id.type', '=', self.domain),
             ])
         if self.date_from:
             domain.extend([

@@ -9,13 +9,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
-    journal_rebate_type = fields.Selection(
-        selection=[
-            ('sale', 'Rebate Sales'),
-        ],
-        string='Journal type',
-        default='sale',
-    )
+    domain = fields.Selection(
+        '_domain_selection', string='Domain', default='sale')
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Journal',
@@ -59,6 +54,10 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         default='out_invoice',
     )
 
+    @api.model
+    def _domain_selection(self):
+        return self.env['agreement']._domain_selection()
+
     def _prepare_settlement_domain(self):
         domain = [
             ('line_ids.invoice_line_id', '=', False),
@@ -84,8 +83,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
             ])
         else:
             domain.extend([
-                ('line_ids.agreement_id.agreement_type_id.journal_rebate_type',
-                 '=', self.journal_rebate_type),
+                ('line_ids.agreement_id.agreement_type_id.domain',
+                 '=', self.domain),
             ])
         return domain
 

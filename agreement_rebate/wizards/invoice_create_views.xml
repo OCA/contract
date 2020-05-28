@@ -31,20 +31,20 @@
                         <field name="invoice_group"/>
                     </group>
                 </group>
-                <field name="journal_rebate_type" invisible="1"/>
+                <field name="domain" invisible="1"/>
                 <group string="Agreement types">
                     <field name="agreement_type_ids"
-                           domain="[('journal_rebate_type', '=', journal_rebate_type)]"
+                           domain="[('domain', '=', domain)]"
                            options="{'no_create': True}" widget="many2many_tags" nolabel="1"/>
                 </group>
                 <group string="Agreements">
                     <field name="agreement_ids"
-                           domain="[('agreement_type_id.journal_rebate_type', '=', journal_rebate_type)]"
+                           domain="[('agreement_type_id.domain', '=', domain)]"
                            options="{'no_create': True}" widget="many2many_tags" nolabel="1"/>
                 </group>
                 <group string="Settlements">
                     <field name="settlements_ids"
-                           domain="[('line_ids.agreement_id.agreement_type_id.journal_rebate_type', '=', journal_rebate_type)]"
+                           domain="[('line_ids.agreement_id.agreement_type_id.domain', '=', domain)]"
                            options="{'no_create': True}" widget="many2many_tags" nolabel="1"/>
                 </group>
                 <footer>

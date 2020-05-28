@@ -93,7 +93,7 @@ class TestAgreementRebate(TransactionCase):
         self.invoice_partner_2 = self.create_invoice(self.partner_2)
         self.agreement_type = self.AgreementType.create({
             'name': 'Rebate',
-            'journal_rebate_type': 'sale',
+            'domain': 'sale',
         })
         # self.create_agreements_rebate(self.partner_1)
         # self.create_agreements_rebate(self.partner_2)
