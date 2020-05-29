@@ -8,12 +8,18 @@ class SaleOrder(models.Model):
 
     @api.onchange('partner_id', 'contract_id')
     def _onchange_fsm_location_domain(self):
-        # Locations of the customer or the company (pickup at warehouse)
-        domain = [
-            '|',
-            ('owner_id', 'child_of', self.partner_id.id),
-            ('owner_id', 'child_of', self.company_id.partner_id.id),
-        ]
         if self.contract_id:
-            domain = [('contract_ids', 'in', self.contract_id.id)]
+            # Locations of the contract or the company (pickup at warehouse)
+            domain = [
+                '|',
+                ('contract_ids', 'in', self.contract_id.id),
+                ('owner_id', 'child_of', self.company_id.partner_id.id),
+            ]
+        else:
+            # Locations of the customer or the company (pickup at warehouse)
+            domain = [
+                '|',
+                ('owner_id', 'child_of', self.partner_id.id),
+                ('owner_id', 'child_of', self.company_id.partner_id.id),
+            ]
         return {'domain': {'fsm_location_id': domain}}
