@@ -20,6 +20,9 @@ class ContractContract(models.Model):
         ('sale_order', 'Sale Order'),
         ('contract', 'Contract')],
         default='sale_order', string='Create one invoice per')
+    group_inv_line_by_product = fields.Boolean(
+        string="Group Invoice Lines by Product"
+    )
 
     def get_sale_order_domain(self):
         domain = [
