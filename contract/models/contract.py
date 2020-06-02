@@ -33,7 +33,8 @@ class ContractContract(models.Model):
         ondelete='restrict',
     )
     currency_id = fields.Many2one(
-        related="company_id.currency_id",
+        compute="_compute_currency_id",
+        comodel_name="res.currency",
         string="Currency",
         readonly=True,
     )
@@ -146,6 +147,24 @@ class ContractContract(models.Model):
             [('old_contract_id', '=', self.id)]
         )
         return invoices
+
+    @api.depends("pricelist_id", "partner_id", "journal_id", "company_id")
+    def _compute_currency_id(self):
+        for rec in self:
+            currency = self.env['res.currency']
+            if any(rec.contract_line_ids.mapped('automatic_price')):
+                # Use pricelist currency
+                currency = (
+                    rec.pricelist_id.currency_id or
+                    rec.partner_id.with_context(
+                        force_company=rec.company_id.id,
+                    ).property_product_pricelist.currency_id
+                )
+            rec.currency_id = (
+                currency.id or
+                rec.journal_id.currency_id.id or
+                rec.company_id.currency_id.id
+            )
 
     @api.multi
     def _compute_invoice_count(self):
@@ -299,11 +318,6 @@ class ContractContract(models.Model):
                 _("Please define a %s journal for the company '%s'.")
                 % (self.contract_type, self.company_id.name or '')
             )
-        currency = (
-            self.pricelist_id.currency_id
-            or self.partner_id.property_product_pricelist.currency_id
-            or self.company_id.currency_id
-        )
         invoice_type = 'out_invoice'
         if self.contract_type == 'purchase':
             invoice_type = 'in_invoice'
@@ -318,7 +332,7 @@ class ContractContract(models.Model):
         invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
         invoice_vals.update({
             'name': self.code,
-            'currency_id': currency.id,
+            'currency_id': self.currency_id.id,
             'date_invoice': date_invoice,
             'journal_id': journal.id,
             'origin': self.name,
