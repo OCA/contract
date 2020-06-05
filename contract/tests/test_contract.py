@@ -2512,3 +2512,39 @@ class TestContract(TestContractBase):
                 'terminate_comment',
                 to_date('2018-02-13'),
             )
+
+    def test_currency(self):
+        currency_eur = self.env.ref("base.EUR")
+        currency_cad = self.env.ref("base.CAD")
+        # Get currency from company
+        self.contract2.journal_id = False
+        self.assertEqual(
+            self.contract2.currency_id, self.contract2.company_id.currency_id)
+        # Get currency from journal
+        journal = self.env["account.journal"].create({
+            "name": "Test journal CAD",
+            "code": "TCAD",
+            "type": "sale",
+            "currency_id": currency_cad.id,
+        })
+        self.contract2.journal_id = journal.id
+        self.assertEqual(self.contract2.currency_id, currency_cad)
+        # Get currency from contract pricelist
+        pricelist = self.env['product.pricelist'].create({
+            "name": "Test pricelist",
+            "currency_id": currency_eur.id,
+        })
+        self.contract2.pricelist_id = pricelist.id
+        self.contract2.contract_line_ids.automatic_price = True
+        self.assertEqual(self.contract2.currency_id, currency_eur)
+        # Get currency from partner pricelist
+        self.contract2.pricelist_id = False
+        self.contract2.partner_id.property_product_pricelist = pricelist.id
+        pricelist.currency_id = currency_cad.id
+        self.assertEqual(self.contract2.currency_id, currency_cad)
+        # Assign manual currency
+        self.contract2.manual_currency_id = currency_eur.id
+        self.assertEqual(self.contract2.currency_id, currency_eur)
+        # Assign same currency as computed one
+        self.contract2.currency_id = currency_cad.id
+        self.assertFalse(self.contract2.manual_currency_id)
