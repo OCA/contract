@@ -34,8 +34,12 @@ class ContractContract(models.Model):
     )
     currency_id = fields.Many2one(
         compute="_compute_currency_id",
+        inverse="_inverse_currency_id",
         comodel_name="res.currency",
         string="Currency",
+    )
+    manual_currency_id = fields.Many2one(
+        comodel_name="res.currency",
         readonly=True,
     )
     contract_template_id = fields.Many2one(
@@ -149,23 +153,46 @@ class ContractContract(models.Model):
         )
         return invoices
 
-    @api.depends("pricelist_id", "partner_id", "journal_id", "company_id")
+    def _get_computed_currency(self):
+        """Helper method for returning the theoretical computed currency."""
+        self.ensure_one()
+        currency = self.env['res.currency']
+        if any(self.contract_line_ids.mapped('automatic_price')):
+            # Use pricelist currency
+            currency = (
+                self.pricelist_id.currency_id or
+                self.partner_id.with_context(
+                    force_company=self.company_id.id,
+                ).property_product_pricelist.currency_id
+            )
+        return (
+            currency or self.journal_id.currency_id or
+            self.company_id.currency_id
+        )
+
+    @api.depends(
+        "manual_currency_id",
+        "pricelist_id",
+        "partner_id",
+        "journal_id",
+        "company_id",
+    )
     def _compute_currency_id(self):
         for rec in self:
-            currency = self.env['res.currency']
-            if any(rec.contract_line_ids.mapped('automatic_price')):
-                # Use pricelist currency
-                currency = (
-                    rec.pricelist_id.currency_id or
-                    rec.partner_id.with_context(
-                        force_company=rec.company_id.id,
-                    ).property_product_pricelist.currency_id
-                )
-            rec.currency_id = (
-                currency.id or
-                rec.journal_id.currency_id.id or
-                rec.company_id.currency_id.id
-            )
+            if rec.manual_currency_id:
+                rec.currency_id = rec.manual_currency_id
+            else:
+                rec.currency_id = rec._get_computed_currency()
+
+    def _inverse_currency_id(self):
+        """If the currency is different from the computed one, then save it
+        in the manual field.
+        """
+        for rec in self:
+            if rec._get_computed_currency() != rec.currency_id:
+                rec.manual_currency_id = rec.currency_id
+            else:
+                rec.manual_currency_id = False
 
     @api.multi
     def _compute_invoice_count(self):
