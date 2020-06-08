@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="agreement.agreement_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page name="rebate" string="Rebate" attrs="{'invisible': [('domain', '!=', 'rebate')]}">
+                <page name="rebate" string="Rebate" attrs="{'invisible': [('is_rebate', '=', False)]}">
+                    <field name="is_rebate" invisible="1"/>
                     <group>
                         <group>
                             <field name="rebate_type"/>
@@ -29,6 +30,16 @@
                     </group>
                 </page>
             </notebook>
+        </field>
+    </record>
+
+    <record id="agreement_search" model="ir.ui.view">
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_search"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter name="rebate" string="Rebate" domain="[('is_rebate', '=', True)]"/>
+            </filter>
         </field>
     </record>
 

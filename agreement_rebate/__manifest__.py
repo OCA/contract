@@ -20,9 +20,12 @@
         'data/agreement_rebate_data.xml',
         'security/agreement_rebate_security.xml',
         'security/ir.model.access.csv',
+        'views/agreement_condition_view.xml',
         'views/agreement_view.xml',
         'views/agreement_rebate_settlement_view.xml',
+        'views/agreement_type.xml',
         'wizards/invoice_create_views.xml',
         'wizards/settlement_create_views.xml',
+        'views/agreement_menu_view.xml',
     ],
 }

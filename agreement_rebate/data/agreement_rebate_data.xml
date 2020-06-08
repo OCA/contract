@@ -8,9 +8,16 @@
         <field name="prefix">ARS</field>
     </record>
 
-    <record id="agreement_type_mef" model="agreement.type">
-        <field name="name">Rebate agreements</field>
-        <field name="domain">rebate</field>
+    <record id="agreement_type_rebate_sale" model="agreement.type">
+        <field name="name">Rebate agreements for sales</field>
+        <field name="is_rebate">True</field>
+        <field name="domain">sale</field>
+    </record>
+
+    <record id="agreement_type_rebate_purchase" model="agreement.type">
+        <field name="name">Rebate agreements for purchases</field>
+        <field name="is_rebate">True</field>
+        <field name="domain">purchase</field>
     </record>
 
 </odoo>

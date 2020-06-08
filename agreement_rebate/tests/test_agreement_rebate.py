@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.tests.common import TransactionCase, tagged
+from odoo import fields
 
 
 @tagged('-at_install', 'post_install')
@@ -23,6 +24,7 @@ class TestAgreementRebate(TransactionCase):
         self.ProductAttributeValue = self.env['product.attribute.value']
         self.ProductTmplAttributeValue = self.env[
             'product.template.attribute.value']
+        self.AgreementSettlement = self.env['agreement.rebate.settlement']
         self.AgreementSettlementCreateWiz = self.env[
             'agreement.settlement.create.wiz']
         self.rebate_type = [
@@ -94,6 +96,7 @@ class TestAgreementRebate(TransactionCase):
         self.agreement_type = self.AgreementType.create({
             'name': 'Rebate',
             'domain': 'sale',
+            'is_rebate': True,
         })
         # self.create_agreements_rebate(self.partner_1)
         # self.create_agreements_rebate(self.partner_2)
@@ -105,6 +108,7 @@ class TestAgreementRebate(TransactionCase):
             'journal_id': self.AccountJournal.search(
                 [('type', '=', 'sale')])[0].id,
             'partner_id': partner.id,
+            'date_invoice': '2020-06-01',
         })
         products = (self.product_template.product_variant_ids +
                     self.product_1 + self.product_2)
@@ -122,7 +126,6 @@ class TestAgreementRebate(TransactionCase):
                 'uom_id': product.uom_id.id,
             })
             inv_line._onchange_product_id()
-
             # Assign distinct prices for product with variants
             if product == self.product_template.product_variant_ids[0]:
                 inv_line.price_unit = 300.00
@@ -135,6 +138,7 @@ class TestAgreementRebate(TransactionCase):
     # Create Agreements rebates for customers for all available types
     def create_agreements_rebate(self, rebate_type, partner):
         agreement = self.Agreement.create({
+            'domain': 'sale',
             'rebate_type': rebate_type,
             'name': 'A discount {} for all lines for {}'.format(
                 rebate_type, partner.name),
@@ -186,26 +190,21 @@ class TestAgreementRebate(TransactionCase):
                         }),
                     ],
             })
-        # agreement_line = agreement_global.copy({
-        #     'rebate_type': 'line',
-        #     'code': 'R-L-{}'.format(partner.ref),
-        #     'name': 'A discount for every line for {}'.format(partner.name),
-        # })
-        # agreement_section_total = agreement_global.copy({
-        #     'rebate_type': 'section_total',
-        #     'code': 'R-S-T-{}'.format(partner.ref),
-        #     'name': 'Compute total and apply discount '
-        #             'rule match for {}'.format(partner.name),
-        # })
-        # agreement_section_prorated = agreement_global.copy({
-        #     'rebate_type': 'section_prorated',
-        #     'code': 'R-S-P-{}'.format(partner.ref),
-        #     'name': 'Compute multi-dicounts by sections amount '
-        #             'for {}'.format(partner.name),
-        # })
         return agreement
 
-    def test_create_settlement_wo_filters(self):
+    def get_settlements_from_action(self, action):
+        if action.get('res_id', False):
+            return self.AgreementSettlement.browse(action['res_id'])
+        else:
+            return self.AgreementSettlement.search(action['domain'])
+
+    def create_settlement_wizard(self):
+        settlement_wiz = self.AgreementSettlementCreateWiz.create({
+            'date_to': '{}-12-31'.format(fields.Date.today().year),
+        })
+        return settlement_wiz
+
+    def test_create_settlement_wo_filters_global(self):
         # Invoice Lines:
         # Product template variants: 300, 500
         # Product 1: 1000
@@ -216,64 +215,93 @@ class TestAgreementRebate(TransactionCase):
         agreement_global = self.create_agreements_rebate(
             'global', self.partner_1)
         agreement_global.rebate_line_ids = False
-        settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
-        settlements = settlement_wiz.action_create_settlement()
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
         self.assertEqual(settlements.amount_rebate, 380)
 
+    def test_create_settlement_wo_filters_line(self):
         # Line rebate without filters
         agreement = self.create_agreements_rebate(
             'line', self.partner_1)
         agreement.rebate_line_ids = False
-        settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
-        settlements = settlement_wiz.action_create_settlement()
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
         self.assertEqual(len(settlements), 0)
 
+    def test_create_settlement_wo_filters_section_total(self):
         # section_total rebate without filters
         agreement = self.create_agreements_rebate(
             'section_total', self.partner_1)
         agreement.rebate_line_ids = False
-        settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
-        settlements = settlement_wiz.action_create_settlement()
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
         self.assertEqual(settlements.amount_rebate, 1140)
 
+    def test_create_settlement_wo_filters_section_prorated(self):
         # section_prorated rebate without filters
         agreement = self.create_agreements_rebate(
             'section_prorated', self.partner_1)
         agreement.rebate_line_ids = False
-        settlement_wiz = self.env['agreement.settlement.create.wiz'].create({})
-        settlements = settlement_wiz.action_create_settlement()
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
         self.assertEqual(len(settlements), 1)
         self.assertEqual(settlements.amount_invoiced, 3800)
         self.assertAlmostEqual(settlements.amount_rebate, 1120.00, 2)
 
-    def test_create_settlement_products_filters(self):
+    def _create_agreement_product_filter(self, agreement_type):
+        agreement = self.create_agreements_rebate(
+            agreement_type, self.partner_1)
+        agreement.rebate_line_ids = [(5, 0), (0, 0, {
+            'rebate_target': 'product',
+            'rebate_product_ids': [(6, 0, self.product_1.ids)],
+            'rebate_discount': 20,
+        })]
+
+    def test_create_settlement_products_filters_global(self):
         # Invoice Lines:
         # Product template variants: 300, 500
         # Product 1: 1000
         # Product 2: 2000
         # Total by invoice: 3800 amount invoiced
+        self._create_agreement_product_filter('global')
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
+        self.assertEqual(len(settlements), 1)
+        self.assertEqual(settlements.amount_invoiced, 1000)
+        self.assertEqual(settlements.amount_rebate, 100)
 
-        for rebate_type in self.rebate_type:
-            agreement = self.create_agreements_rebate(
-                rebate_type, self.partner_1)
-            agreement.rebate_line_ids = [(5, 0), (0, 0, {
-                'rebate_target': 'product',
-                'rebate_product_ids': [(6, 0, self.product_1.ids)],
-                'rebate_discount': 20,
-            })]
-            settlement_wiz = self.AgreementSettlementCreateWiz.create({})
-            settlements = settlement_wiz.action_create_settlement()
-            self.assertEqual(len(settlements), 1)
-            self.assertEqual(settlements.amount_invoiced, 1000)
-            if rebate_type == 'global':
-                self.assertEqual(settlements.amount_rebate, 100)
-            if rebate_type == 'line':
-                self.assertEqual(settlements.amount_rebate, 200)
-            if rebate_type == 'section_total':
-                self.assertEqual(settlements.amount_rebate, 300)
-            if rebate_type == 'section_prorated':
-                self.assertAlmostEqual(settlements.amount_rebate, 280, 2)
+    def test_create_settlement_products_filters_line(self):
+        self._create_agreement_product_filter('line')
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
+        self.assertEqual(len(settlements), 1)
+        self.assertEqual(settlements.amount_invoiced, 1000)
+        self.assertEqual(settlements.amount_rebate, 200)
+
+    def test_create_settlement_products_filters_section_total(self):
+        self._create_agreement_product_filter('section_total')
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
+        self.assertEqual(len(settlements), 1)
+        self.assertEqual(settlements.amount_invoiced, 1000)
+        self.assertEqual(settlements.amount_rebate, 300)
+
+    def test_create_settlement_products_filters_section_prorated(self):
+        self._create_agreement_product_filter('section_prorated')
+        settlement_wiz = self.create_settlement_wizard()
+        settlements = self.get_settlements_from_action(
+            settlement_wiz.action_create_settlement())
+        self.assertEqual(len(settlements), 1)
+        self.assertEqual(settlements.amount_invoiced, 1000)
+        self.assertAlmostEqual(settlements.amount_rebate, 280, 2)

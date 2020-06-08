@@ -14,7 +14,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To', required=True)
     domain = fields.Selection(
-        '_domain_selection', string='Domain', default='rebate')
+        '_domain_selection', string='Domain', default='sale')
     journal_ids = fields.Many2many(
         comodel_name='account.journal',
         string='Journals',
@@ -35,6 +35,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     def _prepare_agreement_domain(self):
         domain = [
             ('rebate_type', '!=', False),
+            ('agreement_type_id.is_rebate', '=', True),
         ]
         settlement_domain = []
         if self.date_from:
@@ -112,14 +113,12 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 'price_total', 'price_tax']
 
     def _get_amount_field(self):
-        return 'price_total'
+        return 'price_subtotal_signed'
 
     def _prepare_settlement_line(
             self, domain, groups, agreement, line=False, section=False):
         amount = groups[0][self._get_amount_field()]
         vals = {
-            'date_from': self.date_from,
-            'date_to': self.date_to,
             'agreement_id': agreement.id,
             'partner_id': agreement.partner_id.id,
         }

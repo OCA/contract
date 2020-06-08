@@ -34,13 +34,10 @@ class Agreement(models.Model):
     rebate_discount = fields.Float(
         string='Rebate discount',
     )
-
-    @api.model
-    def _domain_selection(self):
-        domain = super()._domain_selection()
-        domain.append(('rebate', _('Rebate')))
-        return domain
-
+    is_rebate = fields.Boolean(
+        related='agreement_type_id.is_rebate',
+        string="Is rebate agreement type",
+    )
 
 class AgreementRebateLine(models.Model):
     _name = 'agreement.rebate.line'
@@ -102,7 +99,7 @@ class AgreementRebateLine(models.Model):
                      line.rebate_category_ids.ids)
                 ]
             elif line.rebate_target == 'condition':
-                rebate_domain = line.rebate_condition_id.rebate_domain
+                rebate_domain = line.rebate_condition_id.rebate_domain or []
             line.rebate_domain = str(rebate_domain)
 
 
