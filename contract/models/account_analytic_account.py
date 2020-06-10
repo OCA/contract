@@ -258,15 +258,13 @@ class AccountAnalyticAccount(models.Model):
     def _create_invoice(self):
         self.ensure_one()
         # Re-read contract with correct company
-        _self = self.with_context(self.get_invoice_context())
-        invoice_vals = _self._prepare_invoice()
-        invoice = _self.env['account.invoice'].create(invoice_vals)
+        invoice_vals = self._prepare_invoice()
+        invoice = self.env['account.invoice'].create(invoice_vals)
         # Lines are read from an env where expensive values are precomputed
         for line in self.recurring_invoice_line_ids:
-            invoice_line_vals = _self._prepare_invoice_line(line, invoice.id)
-            _self.env['account.invoice.line'].create(invoice_line_vals)
-        # Update next invoice date for current contract
-        _self.recurring_next_date = _self.env.context['next_date']
+            invoice_line_vals = self._prepare_invoice_line(line, invoice.id)
+            self.env['account.invoice.line'].create(invoice_line_vals)
+            invoice._onchange_invoice_line_ids()
         return invoice
 
     @api.multi
@@ -330,15 +328,14 @@ class AccountAnalyticAccount(models.Model):
         recurring_lines = _self.mapped("recurring_invoice_line_ids")
         recurring_lines._fields["price_unit"].determine_value(recurring_lines)
         # Create invoices
-        with _self.env.norecompute():
-            for contract in _self:
-                if limit and len(invoices) >= limit:
-                    break
-                if not contract.check_dates_valid():
-                    continue
-                invoices |= contract._create_invoice()
-            invoices.compute_taxes()
-        _self.recompute()
+        for contract in _self:
+            if limit and len(invoices) >= limit:
+                break
+            if not contract.check_dates_valid():
+                continue
+            context = contract.get_invoice_context()
+            invoices |= contract.with_context(context)._create_invoice()
+            contract.recurring_next_date = context['next_date']
         return invoices
 
     @api.model

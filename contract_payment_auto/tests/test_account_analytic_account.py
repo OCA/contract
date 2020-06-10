@@ -198,10 +198,11 @@ class TestAccountAnalyticAccount(common.HttpCase):
                 [('contract_id', '=', self.contract.id)]).ensure_one()
             Transactions = self.contract.env['payment.transaction']
             Transactions.create.assert_called_once()
+            tx_vals = Transactions.create.call_args[0][0]
             if expected_token is not None:
-                tx_vals = Transactions.create.call_args[0][0]
                 self.assertEqual(tx_vals.get('payment_token_id'),
                                  expected_token.id)
+            self.assertEqual(tx_vals['amount'], invoice.amount_total)
 
     def test_pay_invoice_success(self):
         """ It should return True on success. """
