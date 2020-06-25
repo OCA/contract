@@ -1,0 +1,25 @@
+<!-- Copyright 2019 - TODAY, Open Source Integrators
+     Copyright 2020 - TODAY, Marcel Savegnago - Escodoo
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="agreement_form_view">
+        <field name="name">agreement.form (in agreement_helpdesk_mgmt)</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button name="action_view_ticket"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o">
+                    <field name="ticket_count"
+                           widget="statinfo"
+                           string="Tickets"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
