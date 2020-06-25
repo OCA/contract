@@ -2361,6 +2361,31 @@ class TestContract(TestContractBase):
         ).fields_view_get(view_type='form')
         self.assertEqual(view['view_id'], purchase_form_view.id)
 
+    def test_multicompany_partner_edited(self):
+        """Editing a partner with contracts in several companies works."""
+        company2 = self.env['res.company'].create({
+            "name": "Company 2",
+        })
+        unprivileged_user = self.env["res.users"].create({
+            "name": "unprivileged test user",
+            "login": "test",
+            "company_id": company2.id,
+            "company_ids": [(4, company2.id, False)],
+        })
+        parent_partner = self.env["res.partner"].create({
+            "name": "parent partner",
+            "is_company": True,
+        })
+        # Assume contract 2 is for company 2
+        self.contract2.company_id = company2
+        # Update the partner attached to both contracts
+        self.partner.sudo(unprivileged_user).with_context(
+            company_id=company2.id, force_company=company2.id
+        ).write({
+            "is_company": False,
+            "parent_id": parent_partner.id,
+        })
+
     def test_sale_fields_view_get(self):
         sale_form_view = self.env.ref(
             'contract.contract_line_customer_form_view'
