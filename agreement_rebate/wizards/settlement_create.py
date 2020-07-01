@@ -118,6 +118,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     def _prepare_settlement_line(
             self, domain, groups, agreement, line=False, section=False):
         amount = groups[0][self._get_amount_field()]
+        amount_section = 0.0
         vals = {
             'agreement_id': agreement.id,
             'partner_id': agreement.partner_id.id,
@@ -156,7 +157,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             })
         vals.update({
             'target_domain': domain,
-            'amount_invoiced': agreement.company_id.currency_id.round(amount),
+            'amount_invoiced': agreement.company_id.currency_id.round(
+                amount_section or amount),
             'amount_rebate': agreement.company_id.currency_id.round(rebate),
         })
         return vals
@@ -226,8 +228,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                     settlement_dic[key]['amount_rebate'] +=\
                         vals['amount_rebate']
                     settlement_dic[key]['lines'].append((0, 0, vals))
-                settlement_dic[key]['amount_invoiced'] +=\
-                    vals['amount_invoiced']
+                settlement_dic[key]['amount_invoiced'] += amount
             else:
                 domain = self._target_line_domain(agreement_domain, agreement)
                 groups = target_model.read_group(

@@ -6,7 +6,7 @@
         <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
             <search string="Search agreement settlements">
-                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('agreement_id.code', 'ilike', self)]"
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('line_ids.agreement_id.code', 'ilike', self)]"
                        string="Name or agreement code"/>
                 <field name="partner_id"/>
                 <separator/>

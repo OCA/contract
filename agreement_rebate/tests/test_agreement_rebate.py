@@ -179,12 +179,12 @@ class TestAgreementRebate(TransactionCase):
                             'rebate_discount': 10,
                         }),
                         (0, 0, {
-                            'amount_from': 100.01,
+                            'amount_from': 100.00,
                             'amount_to': 300.00,
                             'rebate_discount': 20,
                         }),
                         (0, 0, {
-                            'amount_from': 300.01,
+                            'amount_from': 300.00,
                             'amount_to': 6000.00,
                             'rebate_discount': 30,
                         }),
