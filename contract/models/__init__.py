@@ -10,8 +10,8 @@ from . import account_move
 from . import res_partner
 from . import contract_tag
 from . import contract_terminate_reason
-# from . import res_company
-# from . import res_config_settings
+from . import res_company
+from . import res_config_settings
 
 
  

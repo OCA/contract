@@ -9,7 +9,7 @@
 
 {
     'name': 'Recurring - Contracts Management',
-    'version': '13.0.5.0.1', #from 12.0.5.0.0
+    'version': '13.0.5.0.2', #from 12.0.5.0.0
     'category': 'Contract Management',
     'license': 'AGPL-3',
     'author': "OpenERP SA, "
@@ -37,7 +37,7 @@
         'views/account_move.xml',
         'views/contract_tag.xml',
         'views/contract_terminate_reason.xml',
-#        'views/res_config_settings.xml',
+        'views/res_config_settings.xml',
     ],
     'installable': True,
 }
