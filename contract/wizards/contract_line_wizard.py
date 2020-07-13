@@ -6,12 +6,12 @@ from odoo import api, fields, models
 
 class ContractLineWizard(models.TransientModel):
 
-    _name = 'contract.line.wizard'
-    _description = 'Contract Line Wizard'
+    _name = "contract.line.wizard"
+    _description = "Contract Line Wizard"
 
-    date_start = fields.Date(string='Date Start')
-    date_end = fields.Date(string='Date End')
-    recurring_next_date = fields.Date(string='Next Invoice Date')
+    date_start = fields.Date(string="Date Start")
+    date_end = fields.Date(string="Date End")
+    recurring_next_date = fields.Date(string="Next Invoice Date")
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     manual_renew_needed = fields.Boolean(
         string="Manual renew needed",

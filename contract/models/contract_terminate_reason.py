@@ -6,8 +6,8 @@ from odoo import fields, models
 
 class ContractTerminateReason(models.Model):
 
-    _name = 'contract.terminate.reason'
-    _description = 'Contract Termination Reason'
+    _name = "contract.terminate.reason"
+    _description = "Contract Termination Reason"
 
     name = fields.Char(required=True)
     terminate_comment_required = fields.Boolean(

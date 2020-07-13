@@ -1,36 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2017 Carlos Dauden <carlos.dauden@tecnativa.com>
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record id="view_partner_form" model="ir.ui.view">
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="model">res.partner</field>
-        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]" />
         <field type="xml" name="arch">
-        <xpath expr="//div[@name='button_box']" position="inside">
-            <button name="act_show_contract" type="object" class="oe_stat_button"
-                    icon="fa-book" context="{'default_contract_type': 'sale', 'contract_type': 'sale'}"
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="act_show_contract"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    context="{'default_contract_type': 'sale', 'contract_type': 'sale'}"
                     attrs="{'invisible': [('customer','=',False)]}"
-                    help="Show the sale contracts for this partner">
-                <field name="sale_contract_count" widget="statinfo" string="Sale Contracts"/>
-            </button>
-            <button name="act_show_contract" type="object" class="oe_stat_button"
-                    icon="fa-book" context="{'default_contract_type': 'purchase', 'contract_type': 'purchase'}"
+                    help="Show the sale contracts for this partner"
+                >
+                    <field
+                        name="sale_contract_count"
+                        widget="statinfo"
+                        string="Sale Contracts"
+                    />
+                </button>
+                <button
+                    name="act_show_contract"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    context="{'default_contract_type': 'purchase', 'contract_type': 'purchase'}"
                     attrs="{'invisible': [('supplier','=',False)]}"
-                    help="Show the purchase contracts for this partner">
-                <field name="purchase_contract_count" widget="statinfo" string="Purchase Contracts"/>
-            </button>
-        </xpath>
+                    help="Show the purchase contracts for this partner"
+                >
+                    <field
+                        name="purchase_contract_count"
+                        widget="statinfo"
+                        string="Purchase Contracts"
+                    />
+                </button>
+            </xpath>
         </field>
     </record>
-
     <record id="view_res_partner_filter" model="ir.ui.view">
         <field name="inherit_id" ref="base.view_res_partner_filter" />
         <field name="model">res.partner</field>
         <field type="xml" name="arch">
             <filter name="inactive" position="after">
-                <separator/>
+                <separator />
                 <filter
                     name="filter_running_contract"
                     string="With running contracts"
@@ -39,5 +55,4 @@
             </filter>
         </field>
     </record>
-
 </odoo>
