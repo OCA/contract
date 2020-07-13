@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class ContractContractTerminate(models.TransientModel):
 
-    _name = 'contract.contract.terminate'
+    _name = "contract.contract.terminate"
     _description = "Terminate Contract Wizard"
 
     contract_id = fields.Many2one(
