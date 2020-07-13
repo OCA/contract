@@ -13,7 +13,9 @@ class IrUiView(models.Model):
         # TODO Delete this method in v13; it's upstream there
         result = super()._prepare_qcontext()
         if self.env.context.get("allowed_company_ids"):
-            result["res_company"] = self.env["res.company"].browse(
-                self.env.context["allowed_company_ids"][0]
-            ).sudo()
+            result["res_company"] = (
+                self.env["res.company"]
+                .browse(self.env.context["allowed_company_ids"][0])
+                .sudo()
+            )
         return result
