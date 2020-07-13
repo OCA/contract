@@ -10,15 +10,15 @@ from odoo import fields, models
 
 
 class ContractTemplateLine(models.Model):
-    _name = 'contract.template.line'
-    _inherit = 'contract.abstract.contract.line'
+    _name = "contract.template.line"
+    _inherit = "contract.abstract.contract.line"
     _description = "Contract Template Line"
     _order = "sequence,id"
 
     contract_id = fields.Many2one(
-        string='Contract',
-        comodel_name='contract.template',
+        string="Contract",
+        comodel_name="contract.template",
         required=True,
-        ondelete='cascade',
-        oldname='analytic_account_id',
+        ondelete="cascade",
+        oldname="analytic_account_id",
     )
