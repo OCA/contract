@@ -4,6 +4,7 @@
 import logging
 
 from openupgradelib import openupgrade
+
 from odoo.tools import parse_version
 
 _logger = logging.getLogger(__name__)
@@ -11,22 +12,20 @@ _logger = logging.getLogger(__name__)
 
 def _update_no_update_ir_cron(env):
     # Update ir.cron
-    env.ref('contract.contract_cron_for_invoice').model_id = env.ref(
-        'contract.model_contract_contract'
+    env.ref("contract.contract_cron_for_invoice").model_id = env.ref(
+        "contract.model_contract_contract"
     )
-    env.ref('contract.contract_line_cron_for_renew').model_id = env.ref(
-        'contract.model_contract_line'
+    env.ref("contract.contract_line_cron_for_renew").model_id = env.ref(
+        "contract.model_contract_line"
     )
-    env.ref('contract.email_contract_template').model_id = env.ref(
-        'contract.model_contract_contract'
+    env.ref("contract.email_contract_template").model_id = env.ref(
+        "contract.model_contract_contract"
     )
 
 
 def _init_last_date_invoiced_on_contract_lines(env):
     _logger.info("init last_date_invoiced field for contract lines")
-    contract_lines = env["contract.line"].search(
-        [("recurring_next_date", "!=", False)]
-    )
+    contract_lines = env["contract.line"].search([("recurring_next_date", "!=", False)])
     contract_lines._init_last_date_invoiced()
 
 
@@ -43,7 +42,8 @@ def assign_salesman(env):
     will have admin as responsible.
     """
     openupgrade.logged_query(
-        env.cr, """
+        env.cr,
+        """
         UPDATE contract_contract cc
         SET user_id = rp.user_id
         FROM res_partner rp
@@ -54,7 +54,7 @@ def assign_salesman(env):
 @openupgrade.migrate()
 def migrate(env, version):
     _update_no_update_ir_cron(env)
-    if parse_version(version) < parse_version('12.0.2.0.0'):
+    if parse_version(version) < parse_version("12.0.2.0.0"):
         # We check the version here as this post-migration script was in
         # 12.0.2.0.0 and already done for those who used the module when
         # it was a PR
