@@ -5,8 +5,8 @@ from odoo import fields, models
 
 
 class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
+    _inherit = "account.invoice.line"
 
     contract_line_id = fields.Many2one(
-        'contract.line', string='Contract Line', index=True
+        "contract.line", string="Contract Line", index=True
     )
