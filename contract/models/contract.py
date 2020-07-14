@@ -20,6 +20,7 @@ class ContractContract(models.Model):
         "mail.thread",
         "mail.activity.mixin",
         "contract.abstract.contract",
+        "contract.recurrency.mixin",
     ]
 
     active = fields.Boolean(default=True,)
@@ -43,6 +44,16 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         copy=True,
     )
+    # Trick for being able to have 2 different views for the same o2m
+    # We need this as one2many widget doesn't allow to define in the view
+    # the same field 2 times with different views. 2 views are needed because
+    # one of them must be editable inline and the other not, which can't be
+    # parametrized through attrs.
+    contract_line_fixed_ids = fields.One2many(
+        string="Contract lines (fixed)",
+        comodel_name="contract.line",
+        inverse_name="contract_id",
+    )
 
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -53,12 +64,7 @@ class ContractContract(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute="_compute_create_invoice_visibility"
     )
-    recurring_next_date = fields.Date(
-        compute="_compute_recurring_next_date",
-        string="Date of Next Invoice",
-        store=True,
-    )
-    date_end = fields.Date(compute="_compute_date_end", string="Date End", store=True)
+    date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     payment_term_id = fields.Many2one(
         comodel_name="account.payment.term", string="Payment Terms", index=True
     )
@@ -122,6 +128,8 @@ class ContractContract(models.Model):
             .search([("contract_line_id", "in", self.contract_line_ids.ids,)])
             .mapped("move_id")
         )
+        # we are forced to always search for this for not losing possible <=v11
+        # generated invoices
         invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
         return invoices
 
@@ -198,10 +206,15 @@ class ContractContract(models.Model):
                     and (not l.display_type or l.is_recurring_note)
                 )
             ).mapped("recurring_next_date")
-            if recurring_next_date:
-                contract.recurring_next_date = min(recurring_next_date)
+            # we give priority to computation from date_start if modified
+            if (
+                contract._origin
+                and contract._origin.date_start != contract.date_start
+                or not recurring_next_date
+            ):
+                super(ContractContract, contract)._compute_recurring_next_date()
             else:
-                contract.recurring_next_date = False
+                contract.recurring_next_date = min(recurring_next_date)
 
     @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):
@@ -276,7 +289,6 @@ class ContractContract(models.Model):
             vals["date_start"] = fields.Date.context_today(contract_line)
             vals["recurring_next_date"] = fields.Date.context_today(contract_line)
             new_lines += contract_line_model.new(vals)
-        new_lines._onchange_date_start()
         new_lines._onchange_is_auto_renew()
         return new_lines
 
