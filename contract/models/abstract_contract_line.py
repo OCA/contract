@@ -10,8 +10,6 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
-from odoo.addons import decimal_precision as dp
-
 
 class ContractAbstractContractLine(models.AbstractModel):
     _name = "contract.abstract.contract.line"
@@ -35,13 +33,11 @@ class ContractAbstractContractLine(models.AbstractModel):
         inverse="_inverse_price_unit",
     )
     price_subtotal = fields.Float(
-        compute="_compute_price_subtotal",
-        digits=dp.get_precision("Account"),
-        string="Sub Total",
+        compute="_compute_price_subtotal", digits="Account", string="Sub Total",
     )
     discount = fields.Float(
         string="Discount (%)",
-        digits=dp.get_precision("Discount"),
+        digits="Discount",
         help="Discount that is applied in generated invoices."
         " It should be less or equal to 100",
     )
@@ -123,7 +119,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         ondelete="cascade",
     )
     display_type = fields.Selection(
-        selection=[("line_section", "Section"), ("line_note", "Note"),],
+        selection=[("line_section", "Section"), ("line_note", "Note")],
         default=False,
         help="Technical field for UX purpose.",
     )
@@ -140,6 +136,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         "- Custom: Depending on the recurrence to be define.",
     )
     is_recurring_note = fields.Boolean(compute="_compute_is_recurring_note")
+    company_id = fields.Many2one(related="contract_id.company_id", store=True)
 
     @api.model
     def _get_default_recurring_invoicing_offset(
@@ -153,7 +150,8 @@ class ContractAbstractContractLine(models.AbstractModel):
         else:
             return 1
 
-    def is_recurring_note(self):
+    @api.depends("display_type", "note_invoicing_mode")
+    def _compute_is_recurring_note(self):
         for record in self:
             record.is_recurring_note = (
                 record.display_type == "line_note"
@@ -163,7 +161,8 @@ class ContractAbstractContractLine(models.AbstractModel):
     @api.depends("recurring_invoicing_type", "recurring_rule_type")
     def _compute_recurring_invoicing_offset(self):
         for rec in self:
-            rec.recurring_invoicing_offset = self._get_default_recurring_invoicing_offset(
+            method = self._get_default_recurring_invoicing_offset
+            rec.recurring_invoicing_offset = method(
                 rec.recurring_invoicing_type, rec.recurring_rule_type
             )
 
@@ -206,7 +205,6 @@ class ContractAbstractContractLine(models.AbstractModel):
         for line in self.filtered(lambda x: not x.automatic_price):
             line.specific_price = line.price_unit
 
-    @api.multi
     @api.depends("quantity", "price_unit", "discount")
     def _compute_price_subtotal(self):
         for line in self:
@@ -219,14 +217,12 @@ class ContractAbstractContractLine(models.AbstractModel):
             else:
                 line.price_subtotal = subtotal
 
-    @api.multi
     @api.constrains("discount")
     def _check_discount(self):
         for line in self:
             if line.discount > 100:
                 raise ValidationError(_("Discount should be less or equal to 100"))
 
-    @api.multi
     @api.onchange("product_id")
     def _onchange_product_id(self):
         if not self.product_id:
