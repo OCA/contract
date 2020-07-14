@@ -20,5 +20,4 @@ class ContractTemplateLine(models.Model):
         comodel_name="contract.template",
         required=True,
         ondelete="cascade",
-        oldname="analytic_account_id",
     )
