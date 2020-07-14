@@ -19,7 +19,7 @@ odoo.define("contract.section_and_note_backend", function(require) {
             var result = this._super.apply(this, arguments);
             if (this.view.arch.tag === "tree") {
                 result.include({
-                    _renderBodyCell: function(record, node, index, options) {
+                    _renderBodyCell: function(record) {
                         var $cell = this._super.apply(this, arguments);
 
                         var isSection = record.data.display_type === "line_section";

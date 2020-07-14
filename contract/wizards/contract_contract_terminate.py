@@ -1,7 +1,7 @@
 # Copyright 2020 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ContractContractTerminate(models.TransientModel):
@@ -27,7 +27,6 @@ class ContractContractTerminate(models.TransientModel):
         related="terminate_reason_id.terminate_comment_required"
     )
 
-    @api.multi
     def terminate_contract(self):
         for wizard in self:
             wizard.contract_id._terminate_contract(
