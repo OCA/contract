@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <record id="rule_contract_contract_multi_company" model="ir.rule">
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+    </record>
+    <record id="rule_contract_line_multi_company" model="ir.rule">
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+    </record>
+    <record id="rule_contract_template_multi_company" model="ir.rule">
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+    </record>
+    <record id="rule_contract_template_line_multi_company" model="ir.rule">
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+    </record>
+    <record id="contract_tag_multi_company_rule" model="ir.rule">
+        <field
+            name="domain_force"
+        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+    </record>
+</odoo>

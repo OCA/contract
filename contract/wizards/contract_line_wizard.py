@@ -1,7 +1,7 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ContractLineWizard(models.TransientModel):
@@ -28,7 +28,6 @@ class ContractLineWizard(models.TransientModel):
         ondelete="cascade",
     )
 
-    @api.multi
     def stop(self):
         for wizard in self:
             wizard.contract_line_id.stop(
@@ -36,7 +35,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def plan_successor(self):
         for wizard in self:
             wizard.contract_line_id.plan_successor(
@@ -44,7 +42,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def stop_plan_successor(self):
         for wizard in self:
             wizard.contract_line_id.stop_plan_successor(
@@ -52,7 +49,6 @@ class ContractLineWizard(models.TransientModel):
             )
         return True
 
-    @api.multi
     def uncancel(self):
         for wizard in self:
             wizard.contract_line_id.uncancel(wizard.recurring_next_date)
