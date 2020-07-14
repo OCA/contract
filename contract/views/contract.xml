@@ -68,19 +68,14 @@
                     />
                 </header>
                 <sheet string="Contract">
+                    <field name="active" invisible="1" />
+                    <widget
+                        name="web_ribbon"
+                        text="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_button_box" name="button_box">
-                        <button
-                            class="oe_stat_button"
-                            type="object"
-                            name="toggle_active"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options="{&quot;terminology&quot;: &quot;archive&quot;}"
-                            />
-                        </button>
                         <button
                             name="action_show_invoices"
                             type="object"
@@ -348,10 +343,9 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Customer</attribute>
-                <attribute name="domain">[('customer', '=', True)]</attribute>
                 <attribute
                     name="context"
-                >{'default_customer': True, 'default_supplier': False}</attribute>
+                >{'default_customer_rank': 1, 'default_supplier_rank': 0, 'res_partner_search_mode': 'customer', 'show_vat': True}</attribute>
             </field>
             <field name="journal_id" position="attributes">
                 <attribute
@@ -370,10 +364,9 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Supplier</attribute>
-                <attribute name="domain">[('supplier', '=', True)]</attribute>
                 <attribute
                     name="context"
-                >{'default_customer': False, 'default_supplier': True}</attribute>
+                >{'default_customer_rank': False, 'default_supplier_rank': 1, 'res_partner_search_mode': 'supplier', 'show_vat': True}</attribute>
             </field>
             <field name="journal_id" position="attributes">
                 <attribute
@@ -460,7 +453,6 @@
     <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">
@@ -497,7 +489,6 @@
     <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">
