@@ -5,17 +5,15 @@
 # Copyright 2017 Tecnativa - Vicent Cubells
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2018-2019 ACSONE SA/NV
+# Copyright 2020 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     "name": "Recurring - Contracts Management",
-    "version": "12.0.7.2.2",
+    "version": "13.0.1.0.0",
     "category": "Contract Management",
     "license": "AGPL-3",
-    "author": "OpenERP SA, "
-    "Tecnativa, "
-    "LasLabs, "
-    "Odoo Community Association (OCA)",
+    "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/oca/contract",
     "depends": ["base", "account", "product"],
     "external_dependencies": {"python": ["dateutil"]},

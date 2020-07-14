@@ -36,7 +36,6 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         )
         self.contract_to_invoice_count = len(self.contract_to_invoice_ids)
 
-    @api.multi
     def action_show_contract_to_invoice(self):
         self.ensure_one()
         return {
@@ -48,16 +47,15 @@ class ContractManuallyCreateInvoice(models.TransientModel):
             "context": self.env.context,
         }
 
-    @api.multi
     def create_invoice(self):
         self.ensure_one()
-        invoices = self.env["account.invoice"]
+        invoices = self.env["account.move"]
         for contract in self.contract_to_invoice_ids:
             invoices |= contract.recurring_create_invoice()
         return {
             "type": "ir.actions.act_window",
             "name": _("Invoices"),
-            "res_model": "account.invoice",
+            "res_model": "account.move",
             "domain": [("id", "in", invoices.ids)],
             "view_mode": "tree,form",
             "context": self.env.context,
