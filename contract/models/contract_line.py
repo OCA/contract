@@ -1,5 +1,6 @@
 # Copyright 2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV.
+# Copyright 2020 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import timedelta
@@ -118,7 +119,6 @@ class ContractLine(models.Model):
         default=True,
     )
 
-    @api.multi
     @api.depends(
         "date_end", "termination_notice_rule_type", "termination_notice_interval",
     )
@@ -128,14 +128,15 @@ class ContractLine(models.Model):
                 rec.termination_notice_date = rec.date_end - self.get_relative_delta(
                     rec.termination_notice_rule_type, rec.termination_notice_interval,
                 )
+            else:
+                rec.termination_notice_date = False
 
-    @api.multi
     @api.depends("is_canceled", "date_start", "date_end", "is_auto_renew")
     def _compute_state(self):
         today = fields.Date.context_today(self)
         for rec in self:
+            rec.state = False
             if rec.display_type:
-                rec.state = False
                 continue
             if rec.is_canceled:
                 rec.state = "canceled"
@@ -192,8 +193,8 @@ class ContractLine(models.Model):
                 ("date_end", ">=", today),
                 ("date_end", "=", False),
                 "|",
-                "&",
                 ("is_auto_renew", "=", True),
+                "&",
                 ("is_auto_renew", "=", False),
                 ("termination_notice_date", ">", today),
             ]
@@ -290,16 +291,16 @@ class ContractLine(models.Model):
     )
     def _compute_allowed(self):
         for rec in self:
+            rec.update(
+                {
+                    "is_plan_successor_allowed": False,
+                    "is_stop_plan_successor_allowed": False,
+                    "is_stop_allowed": False,
+                    "is_cancel_allowed": False,
+                    "is_un_cancel_allowed": False,
+                }
+            )
             if rec.contract_id.is_terminated:
-                rec.update(
-                    {
-                        "is_plan_successor_allowed": False,
-                        "is_stop_plan_successor_allowed": False,
-                        "is_stop_allowed": False,
-                        "is_cancel_allowed": False,
-                        "is_un_cancel_allowed": False,
-                    }
-                )
                 continue
             if rec.date_start:
                 allowed = get_allowed(
@@ -315,7 +316,9 @@ class ContractLine(models.Model):
                     rec.update(
                         {
                             "is_plan_successor_allowed": allowed.plan_successor,
-                            "is_stop_plan_successor_allowed": allowed.stop_plan_successor,
+                            "is_stop_plan_successor_allowed": (
+                                allowed.stop_plan_successor
+                            ),
                             "is_stop_allowed": allowed.stop,
                             "is_cancel_allowed": allowed.cancel,
                             "is_un_cancel_allowed": allowed.uncancel,
@@ -618,7 +621,13 @@ class ContractLine(models.Model):
                         % line.name
                     )
 
-    @api.depends("recurring_next_date", "date_start", "date_end")
+    @api.depends(
+        "display_type",
+        "is_recurring_note",
+        "recurring_next_date",
+        "date_start",
+        "date_end",
+    )
     def _compute_create_invoice_visibility(self):
         # TODO: depending on the lines, and their order, some sections
         # have no meaning in certain invoices
@@ -633,51 +642,31 @@ class ContractLine(models.Model):
             else:
                 rec.create_invoice_visibility = False
 
-    @api.multi
-    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
+    def _prepare_invoice_line(self, move_form):
         self.ensure_one()
         dates = self._get_period_to_invoice(
             self.last_date_invoiced, self.recurring_next_date
         )
-        invoice_line_vals = {
-            "display_type": self.display_type,
-            "product_id": self.product_id.id,
-            "quantity": self._get_quantity_to_invoice(*dates),
-            "uom_id": self.uom_id.id,
-            "discount": self.discount,
-            "contract_line_id": self.id,
-        }
-        if invoice_id:
-            invoice_line_vals["invoice_id"] = invoice_id.id
-        invoice_line = (
-            self.env["account.invoice.line"]
-            .with_context(force_company=self.contract_id.company_id.id,)
-            .new(invoice_line_vals)
-        )
-        if invoice_values and not invoice_id:
-            invoice = (
-                self.env["account.invoice"]
-                .with_context(force_company=self.contract_id.company_id.id,)
-                .new(invoice_values)
-            )
-            invoice_line.invoice_id = invoice
-        # Get other invoice line values from product onchange
-        invoice_line._onchange_product_id()
-        invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
-        # Insert markers
+        line_form = move_form.invoice_line_ids.new()
+        line_form.display_type = self.display_type
+        line_form.product_id = self.product_id
+        invoice_line_vals = line_form._values_to_save(all_fields=True)
         name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
+                "quantity": self._get_quantity_to_invoice(*dates),
+                "product_uom_id": self.uom_id.id,
+                "discount": self.discount,
+                "contract_line_id": self.id,
                 "sequence": self.sequence,
                 "name": name,
-                "account_analytic_id": self.analytic_account_id.id,
+                "analytic_account_id": self.analytic_account_id.id,
                 "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
                 "price_unit": self.price_unit,
             }
         )
         return invoice_line_vals
 
-    @api.multi
     def _get_period_to_invoice(
         self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
     ):
@@ -702,7 +691,6 @@ class ContractLine(models.Model):
         )
         return first_date_invoiced, last_date_invoiced, recurring_next_date
 
-    @api.multi
     def _insert_markers(self, first_date_invoiced, last_date_invoiced):
         self.ensure_one()
         lang_obj = self.env["res.lang"]
@@ -713,7 +701,6 @@ class ContractLine(models.Model):
         name = name.replace("#END#", last_date_invoiced.strftime(date_format))
         return name
 
-    @api.multi
     def _update_recurring_next_date(self):
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
@@ -732,7 +719,6 @@ class ContractLine(models.Model):
                 }
             )
 
-    @api.multi
     def _init_last_date_invoiced(self):
         """Used to init last_date_invoiced for migration purpose"""
         for rec in self:
@@ -778,7 +764,6 @@ class ContractLine(models.Model):
         else:
             return relativedelta(years=interval)
 
-    @api.multi
     def _delay(self, delay_delta):
         """
         Delay a contract line
@@ -811,7 +796,6 @@ class ContractLine(models.Model):
                 }
             )
 
-    @api.multi
     def _prepare_value_for_stop(self, date_end, manual_renew_needed):
         self.ensure_one()
         return {
@@ -828,7 +812,6 @@ class ContractLine(models.Model):
             ),
         }
 
-    @api.multi
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
         Put date_end on contract line
@@ -868,7 +851,6 @@ class ContractLine(models.Model):
                     )
         return True
 
-    @api.multi
     def _prepare_value_for_plan_successor(
         self, date_start, date_end, is_auto_renew, recurring_next_date=False
     ):
@@ -893,7 +875,6 @@ class ContractLine(models.Model):
         values["predecessor_contract_line_id"] = self.id
         return values
 
-    @api.multi
     def plan_successor(
         self,
         date_start,
@@ -939,7 +920,6 @@ class ContractLine(models.Model):
                 rec.contract_id.message_post(body=msg)
         return contract_line
 
-    @api.multi
     def stop_plan_successor(self, date_start, date_end, is_auto_renew):
         """
         Stop a contract line for a defined period and start it later
@@ -1035,7 +1015,6 @@ class ContractLine(models.Model):
             rec.contract_id.message_post(body=msg)
         return contract_line
 
-    @api.multi
     def cancel(self):
         if not all(self.mapped("is_cancel_allowed")):
             raise ValidationError(_("Cancel not allowed for this line"))
@@ -1053,7 +1032,6 @@ class ContractLine(models.Model):
         )
         return self.write({"is_canceled": True, "is_auto_renew": False})
 
-    @api.multi
     def uncancel(self, recurring_next_date):
         if not all(self.mapped("is_un_cancel_allowed")):
             raise ValidationError(_("Un-cancel not allowed for this line"))
@@ -1075,7 +1053,6 @@ class ContractLine(models.Model):
             rec.recurring_next_date = recurring_next_date
         return True
 
-    @api.multi
     def action_uncancel(self):
         self.ensure_one()
         context = {
@@ -1088,14 +1065,12 @@ class ContractLine(models.Model):
             "type": "ir.actions.act_window",
             "name": "Un-Cancel Contract Line",
             "res_model": "contract.line.wizard",
-            "view_type": "form",
             "view_mode": "form",
             "views": [(view_id, "form")],
             "target": "new",
             "context": context,
         }
 
-    @api.multi
     def action_plan_successor(self):
         self.ensure_one()
         context = {
@@ -1110,14 +1085,12 @@ class ContractLine(models.Model):
             "type": "ir.actions.act_window",
             "name": "Plan contract line successor",
             "res_model": "contract.line.wizard",
-            "view_type": "form",
             "view_mode": "form",
             "views": [(view_id, "form")],
             "target": "new",
             "context": context,
         }
 
-    @api.multi
     def action_stop(self):
         self.ensure_one()
         context = {
@@ -1130,14 +1103,12 @@ class ContractLine(models.Model):
             "type": "ir.actions.act_window",
             "name": "Terminate contract line",
             "res_model": "contract.line.wizard",
-            "view_type": "form",
             "view_mode": "form",
             "views": [(view_id, "form")],
             "target": "new",
             "context": context,
         }
 
-    @api.multi
     def action_stop_plan_successor(self):
         self.ensure_one()
         context = {
@@ -1152,14 +1123,12 @@ class ContractLine(models.Model):
             "type": "ir.actions.act_window",
             "name": "Suspend contract line",
             "res_model": "contract.line.wizard",
-            "view_type": "form",
             "view_mode": "form",
             "views": [(view_id, "form")],
             "target": "new",
             "context": context,
         }
 
-    @api.multi
     def _get_renewal_new_date_end(self):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
@@ -1168,7 +1137,6 @@ class ContractLine(models.Model):
         )
         return date_end
 
-    @api.multi
     def _renew_create_line(self, date_end):
         self.ensure_one()
         date_start = self.date_end + relativedelta(days=1)
@@ -1180,13 +1148,11 @@ class ContractLine(models.Model):
         new_line._onchange_date_start()
         return new_line
 
-    @api.multi
     def _renew_extend_line(self, date_end):
         self.ensure_one()
         self.date_end = date_end
         return self
 
-    @api.multi
     def renew(self):
         res = self.env["contract.line"]
         for rec in self:
@@ -1240,7 +1206,6 @@ class ContractLine(models.Model):
                 view_id = self.env.ref("contract.contract_line_customer_form_view").id
         return super().fields_view_get(view_id, view_type, toolbar, submenu)
 
-    @api.multi
     def unlink(self):
         """stop unlink uncnacled lines"""
         for record in self:
@@ -1248,7 +1213,6 @@ class ContractLine(models.Model):
                 raise ValidationError(_("Contract line must be canceled before delete"))
         return super().unlink()
 
-    @api.multi
     def _get_quantity_to_invoice(
         self, period_first_date, period_last_date, invoice_date
     ):
