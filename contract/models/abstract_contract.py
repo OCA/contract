@@ -10,6 +10,7 @@ from odoo import api, fields, models
 
 
 class ContractAbstractContract(models.AbstractModel):
+    _inherit = "contract.recurrency.basic.mixin"
     _name = "contract.abstract.contract"
     _description = "Abstract Recurring Contract"
 
@@ -27,12 +28,13 @@ class ContractAbstractContract(models.AbstractModel):
         default="sale",
         index=True,
     )
-
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         string="Journal",
-        default=lambda s: s._default_journal(),
         domain="[('type', '=', contract_type)," "('company_id', '=', company_id)]",
+        compute="_compute_journal_id",
+        store=True,
+        readonly=False,
         index=True,
     )
     company_id = fields.Many2one(
@@ -41,6 +43,11 @@ class ContractAbstractContract(models.AbstractModel):
         required=True,
         default=lambda self: self.env.company.id,
     )
+    line_recurrence = fields.Boolean(
+        string="Recurrence at line level?",
+        help="Mark this check if you want to control recurrrence at line level instead"
+        " of all together for the whole contract.",
+    )
 
     @api.onchange("contract_type")
     def _onchange_contract_type(self):
@@ -48,19 +55,15 @@ class ContractAbstractContract(models.AbstractModel):
             self.contract_line_ids.filtered("automatic_price").update(
                 {"automatic_price": False}
             )
-        self.journal_id = self.env["account.journal"].search(
-            [
-                ("type", "=", self.contract_type),
-                ("company_id", "=", self.company_id.id),
-            ],
-            limit=1,
-        )
 
-    @api.model
-    def _default_journal(self):
-        company_id = self.env.context.get("company_id", self.env.user.company_id.id)
-        domain = [
-            ("type", "=", self.contract_type),
-            ("company_id", "=", company_id),
-        ]
-        return self.env["account.journal"].search(domain, limit=1)
+    @api.depends("contract_type", "company_id")
+    def _compute_journal_id(self):
+        AccountJournal = self.env["account.journal"]
+        for contract in self:
+            domain = [
+                ("type", "=", contract.contract_type),
+                ("company_id", "=", contract.company_id.id),
+            ]
+            journal = AccountJournal.search(domain, limit=1)
+            if journal:
+                contract.journal_id = journal.id

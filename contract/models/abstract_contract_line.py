@@ -12,6 +12,7 @@ from odoo.tools.translate import _
 
 
 class ContractAbstractContractLine(models.AbstractModel):
+    _inherit = "contract.recurrency.basic.mixin"
     _name = "contract.abstract.contract.line"
     _description = "Abstract Recurring Contract Line"
 
@@ -47,46 +48,29 @@ class ContractAbstractContractLine(models.AbstractModel):
         help="Sequence of the contract line when displaying contracts",
     )
     recurring_rule_type = fields.Selection(
-        [
-            ("daily", "Day(s)"),
-            ("weekly", "Week(s)"),
-            ("monthly", "Month(s)"),
-            ("monthlylastday", "Month(s) last day"),
-            ("quarterly", "Quarter(s)"),
-            ("semesterly", "Semester(s)"),
-            ("yearly", "Year(s)"),
-        ],
-        default="monthly",
-        string="Recurrence",
-        help="Specify Interval for automatic invoice generation.",
+        compute="_compute_recurring_rule_type",
+        store=True,
+        readonly=False,
         required=True,
+        copy=True,
     )
     recurring_invoicing_type = fields.Selection(
-        [("pre-paid", "Pre-paid"), ("post-paid", "Post-paid")],
-        default="pre-paid",
-        string="Invoicing type",
-        help=(
-            "Specify if the invoice must be generated at the beginning "
-            "(pre-paid) or end (post-paid) of the period."
-        ),
+        compute="_compute_recurring_invoicing_type",
+        store=True,
+        readonly=False,
         required=True,
-    )
-    recurring_invoicing_offset = fields.Integer(
-        compute="_compute_recurring_invoicing_offset",
-        string="Invoicing offset",
-        help=(
-            "Number of days to offset the invoice from the period end "
-            "date (in post-paid mode) or start date (in pre-paid mode)."
-        ),
+        copy=True,
     )
     recurring_interval = fields.Integer(
-        default=1,
-        string="Invoice Every",
-        help="Invoice every (Days/Week/Month/Year)",
+        compute="_compute_recurring_interval",
+        store=True,
+        readonly=False,
         required=True,
+        copy=True,
     )
-    date_start = fields.Date(string="Date Start")
-    recurring_next_date = fields.Date(string="Date of Next Invoice")
+    date_start = fields.Date(
+        compute="_compute_date_start", store=True, readonly=False, copy=True,
+    )
     last_date_invoiced = fields.Date(string="Last Date Invoiced")
     is_canceled = fields.Boolean(string="Canceled", default=False)
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
@@ -138,17 +122,38 @@ class ContractAbstractContractLine(models.AbstractModel):
     is_recurring_note = fields.Boolean(compute="_compute_is_recurring_note")
     company_id = fields.Many2one(related="contract_id.company_id", store=True)
 
-    @api.model
-    def _get_default_recurring_invoicing_offset(
-        self, recurring_invoicing_type, recurring_rule_type
-    ):
-        if (
-            recurring_invoicing_type == "pre-paid"
-            or recurring_rule_type == "monthlylastday"
-        ):
-            return 0
-        else:
-            return 1
+    def _set_recurrence_field(self, field):
+        """Helper method for computed methods that gets the equivalent field
+        in the header.
+
+        We need to re-assign the original value for avoiding a missing error.
+        """
+        for record in self:
+            if record.contract_id.line_recurrence:
+                record[field] = record[field]
+            else:
+                record[field] = record.contract_id[field]
+
+    @api.depends("contract_id.recurring_rule_type", "contract_id.line_recurrence")
+    def _compute_recurring_rule_type(self):
+        self._set_recurrence_field("recurring_rule_type")
+
+    @api.depends("contract_id.recurring_invoicing_type", "contract_id.line_recurrence")
+    def _compute_recurring_invoicing_type(self):
+        self._set_recurrence_field("recurring_invoicing_type")
+
+    @api.depends("contract_id.recurring_interval", "contract_id.line_recurrence")
+    def _compute_recurring_interval(self):
+        self._set_recurrence_field("recurring_interval")
+
+    @api.depends("contract_id.date_start", "contract_id.line_recurrence")
+    def _compute_date_start(self):
+        self._set_recurrence_field("date_start")
+
+    @api.depends("contract_id.recurring_next_date", "contract_id.line_recurrence")
+    def _compute_recurring_next_date(self):
+        super()._compute_recurring_next_date()
+        self._set_recurrence_field("recurring_next_date")
 
     @api.depends("display_type", "note_invoicing_mode")
     def _compute_is_recurring_note(self):
@@ -156,14 +161,6 @@ class ContractAbstractContractLine(models.AbstractModel):
             record.is_recurring_note = (
                 record.display_type == "line_note"
                 and record.note_invoicing_mode == "custom"
-            )
-
-    @api.depends("recurring_invoicing_type", "recurring_rule_type")
-    def _compute_recurring_invoicing_offset(self):
-        for rec in self:
-            method = self._get_default_recurring_invoicing_offset
-            rec.recurring_invoicing_offset = method(
-                rec.recurring_invoicing_type, rec.recurring_rule_type
             )
 
     @api.depends(

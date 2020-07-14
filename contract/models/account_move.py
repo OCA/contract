@@ -6,7 +6,7 @@
 from odoo import fields, models
 
 
-class AccountInvoice(models.Model):
+class AccountMove(models.Model):
     _inherit = "account.move"
 
     # We keep this field for migration purpose
