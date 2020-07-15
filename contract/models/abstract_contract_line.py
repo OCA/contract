@@ -161,7 +161,8 @@ class ContractAbstractContractLine(models.AbstractModel):
         else:
             return 1
 
-    def is_recurring_note(self):
+    @api.depends("display_type", "note_invoicing_mode")
+    def _compute_is_recurring_note(self):
         for record in self:
             record.is_recurring_note = (
                 record.display_type == 'line_note'
