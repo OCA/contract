@@ -806,7 +806,6 @@ class TestContract(TestContractBase):
                     'recurring_invoicing_type': recurring_invoicing_type,
                     'recurring_rule_type': recurring_rule_type,
                     'recurring_interval': recurring_interval,
-                    'max_date_end': max_date_end,
                 }
             )
 
