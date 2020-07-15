@@ -17,7 +17,7 @@ class ResPartner(models.Model):
     )
     contract_ids = fields.One2many(
         comodel_name='contract.contract',
-        inverse='partner_id',
+        inverse_name='partner_id',
         string="Contracts",
     )
 
