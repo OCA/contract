@@ -191,11 +191,14 @@ class TestAccountAnalyticAccount(common.HttpCase):
 
     def assert_successful_pay_invoice(self, expected_token=None):
         with self._mock_transaction(s2s_side_effect=True):
-            invoice = self._create_invoice(True)
-            res = self.contract._pay_invoice(invoice)
-            self.assertTrue(res)
+            # Avoid sending the email for better performance
+            self.contract.invoice_mail_template_id = False
+            self.contract.recurring_create_invoice()
+            invoice = self.env['account.invoice'].search(
+                [('contract_id', '=', self.contract.id)]).ensure_one()
+            Transactions = self.contract.env['payment.transaction']
+            Transactions.create.assert_called_once()
             if expected_token is not None:
-                Transactions = self.contract.env['payment.transaction']
                 tx_vals = Transactions.create.call_args[0][0]
                 self.assertEqual(tx_vals.get('payment_token_id'),
                                  expected_token.id)
