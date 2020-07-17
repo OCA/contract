@@ -9,7 +9,7 @@
     "license": "AGPL-3",
     "author": "LasLabs, "
               "Odoo Community Association (OCA)",
-    "website": "https://laslabs.com",
+    "website": "https://github.com/OCA/contract",
     "depends": [
         "contract",
         "payment",
