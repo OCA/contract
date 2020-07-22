@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Weblate 3.8\n"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:59
+#: code:addons/agreement/models/agreement.py:74
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -36,14 +36,12 @@ msgstr "有效"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_ids
 #, fuzzy
-#| msgid "Active"
 msgid "Activities"
 msgstr "有效"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_state
 #, fuzzy
-#| msgid "Active"
 msgid "Activity State"
 msgstr "有效"
 
@@ -52,6 +50,12 @@ msgstr "有效"
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_form
 msgid "Agreement"
 msgstr "协议"
+
+#. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_form
+#, fuzzy
+msgid "Agreement Name"
+msgstr "协议类型"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__agreement_type_id
@@ -63,7 +67,6 @@ msgstr "协议类型"
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_type_action
 #: model:ir.model,name:agreement.model_agreement_type
-#: model:ir.ui.menu,name:agreement.agreement_type_menu
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Agreement Types"
 msgstr "协议类型"
@@ -114,6 +117,14 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__domain
+#: model:ir.model.fields,field_description:agreement.field_agreement_type__domain
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
+msgid "Domain"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__end_date
@@ -277,6 +288,14 @@ msgid "Planned"
 msgstr ""
 
 #. module: agreement
+#: code:addons/agreement/models/agreement.py:45
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
+#, python-format
+msgid "Purchase"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__code
 msgid "Reference"
 msgstr "参考"
@@ -284,6 +303,14 @@ msgstr "参考"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
 msgid "Responsible User"
+msgstr ""
+
+#. module: agreement
+#: code:addons/agreement/models/agreement.py:44
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
+#, python-format
+msgid "Sale"
 msgstr ""
 
 #. module: agreement
