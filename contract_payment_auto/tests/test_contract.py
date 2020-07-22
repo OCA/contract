@@ -7,10 +7,7 @@ from contextlib import contextmanager
 from datetime import date
 
 from odoo import fields
-from odoo.tools import mute_logger
 from odoo.tests import common
-
-from ..models import contract
 
 
 @common.at_install(False)
@@ -73,7 +70,6 @@ class TestContract(common.HttpCase):
             'recurring_next_date': date.today(),
         })
 
-
     def _validate_invoice(self, invoice):
         self.assertEqual(len(invoice), 1)
         self.assertEqual(invoice._name, 'account.invoice')
@@ -116,7 +112,6 @@ class TestContract(common.HttpCase):
         finally:
             Transactions._revert_method('create')
             Transactions._revert_method('s2s_do_transaction')
-
 
     def test_onchange_partner_id_payment_token(self):
         """ It should clear the payment token. """
@@ -205,29 +200,29 @@ class TestContract(common.HttpCase):
                 self.assertEqual(tx_vals.get('payment_token_id'),
                                  expected_token.id)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_success(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_success(self):
     #    """ It should return True on success. """
     #    self.assert_successful_pay_invoice()
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_with_contract_token(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_with_contract_token(self):
     #    """ When contract and partner have a token, contract's is used. """
     #    self.partner.payment_token_id = self.other_payment_token
     #    self.contract.payment_token_id = self.payment_token
     #    self.assert_successful_pay_invoice(expected_token=self.payment_token)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_with_partner_token_success(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_with_partner_token_success(self):
     #    """ When contract has no related token, it should use partner's. """
     #    self.contract.payment_token_id = False
     #    self.partner.payment_token_id = self.other_payment_token
     #    self.assert_successful_pay_invoice(
     #        expected_token=self.other_payment_token)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #@mute_logger(contract.__name__)
-    #def test_pay_invoice_exception(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # @mute_logger(contract.__name__)
+    # def test_pay_invoice_exception(self):
     #    """ It should catch exceptions. """
     #    with self._mock_transaction(s2s_side_effect=Exception):
     #        invoice = self._create_invoice(True)
@@ -242,9 +237,9 @@ class TestContract(common.HttpCase):
             res = self.contract._pay_invoice(invoice)
             self.assertIs(res, None)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #@mute_logger(contract.__name__)
-    #def test_pay_invoice_increments_retries(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # @mute_logger(contract.__name__)
+    # def test_pay_invoice_increments_retries(self):
     #    """ It should increment invoice retries on failure. """
     #    with self._mock_transaction(s2s_side_effect=False):
     #        invoice = self._create_invoice(True)
@@ -252,8 +247,8 @@ class TestContract(common.HttpCase):
     #        self.contract._pay_invoice(invoice)
     #        self.assertTrue(invoice.auto_pay_attempts)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_updates_fail_date(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_updates_fail_date(self):
     #    """ It should update the invoice auto pay fail date on failure. """
     #    with self._mock_transaction(s2s_side_effect=False):
     #        invoice = self._create_invoice(True)
@@ -261,8 +256,8 @@ class TestContract(common.HttpCase):
     #        self.contract._pay_invoice(invoice)
     #        self.assertTrue(invoice.auto_pay_failed)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_too_many_attempts(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_too_many_attempts(self):
     #    """ It should clear autopay after too many attempts. """
     #    with self._mock_transaction(s2s_side_effect=False):
     #        invoice = self._create_invoice(True)
@@ -271,8 +266,8 @@ class TestContract(common.HttpCase):
     #        self.assertFalse(self.contract.is_auto_pay)
     #        self.assertFalse(self.contract.payment_token_id)
 
-    #"The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    #def test_pay_invoice_too_many_attempts_partner_token(self):
+    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
+    # def test_pay_invoice_too_many_attempts_partner_token(self):
     #    """ It should clear the partner token when attempts were on it. """
     #    self.partner.payment_token_id = self.contract.payment_token_id
     #    with self._mock_transaction(s2s_side_effect=False):
@@ -309,8 +304,9 @@ class TestContract(common.HttpCase):
         self.contract._send_invoice_message(invoice)
         self.assertTrue(invoice.sent)
 
-    #One of the records you are trying to modify has already been deleted (Document type: Outgoing Mails)
-    #def test_send_invoice_message_returns_mail(self):
+    # One of the records you are trying to modify has already been deleted
+    # (Document type: Outgoing Mails)
+    # def test_send_invoice_message_returns_mail(self):
     #    """ It should create and return the message. """
     #    invoice = self._create_invoice(True)
     #    res = self.contract._send_invoice_message(invoice)
