@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo12-addon-agreement',
+        'odoo12-addon-agreement_account',
         'odoo12-addon-agreement_legal',
         'odoo12-addon-agreement_legal_sale',
         'odoo12-addon-agreement_legal_sale_fieldservice',
