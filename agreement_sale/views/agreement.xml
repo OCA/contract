@@ -2,9 +2,32 @@
 
 <odoo>
 
-    <menuitem id="agreement.agreement_menu" action="agreement.agreement_action"
-              parent="sale.menu_sale_config" sequence="100"/>
-    <menuitem id="agreement.agreement_type_menu" action="agreement.agreement_type_action"
-              parent="sale.menu_sale_config" sequence="101" groups="agreement.group_use_agreement_type"/>
+    <record id="agreement.agreement_menu_root" model="ir.ui.menu">
+        <field name="parent_id" ref="sale.menu_sale_config"/>
+        <field name="sequence">150</field>
+    </record>
+
+    <menuitem id="sale_agreement_menu" action="agreement.agreement_action"
+              parent="agreement.agreement_menu_root" sequence="10"/>
+    <menuitem id="sale_agreement_type_menu" action="agreement.agreement_type_action"
+              parent="agreement.agreement_menu_root" sequence="20"
+              groups="agreement.group_use_agreement_type"/>
+
+    <record id="agreement_form" model="ir.ui.view">
+        <field name="name">sale.button.agreement.form</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="action"
+                        name="%(sale.action_orders)d"
+                        context="{'search_default_agreement_id': active_id, 'default_agreement_id': active_id, 'default_partner_id': partner_id}"
+                        attrs="{'invisible': [('domain', '!=', 'sale')]}"
+                        icon="fa-usd">
+                        <field string="Sale Orders" name="sale_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
 
 </odoo>
