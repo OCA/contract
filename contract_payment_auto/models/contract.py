@@ -53,9 +53,9 @@ class Contract(models.Model):
                 contract._do_auto_pay(invoice)
 
     @api.multi
-    def _recurring_create_invoice(self):
+    def _recurring_create_invoice(self, date_ref=False):
         """ If automatic payment is enabled, perform auto pay actions. """
-        invoice = super(Contract, self)._recurring_create_invoice()
+        invoice = super(Contract, self)._recurring_create_invoice(date_ref)
         if not self.is_auto_pay:
             return invoice
         self._do_auto_pay(invoice)
