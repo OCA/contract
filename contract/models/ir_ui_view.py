@@ -16,3 +16,4 @@ class IrUiView(models.Model):
             result["res_company"] = self.env["res.company"].browse(
                 self.env.context["allowed_company_ids"][0]
             ).sudo()
+        return result
