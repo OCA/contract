@@ -113,6 +113,7 @@ class TestAgreementRebate(TransactionCase):
         products = (self.product_template.product_variant_ids +
                     self.product_1 + self.product_2)
         self.create_invoice_line(invoice, products)
+        invoice.action_invoice_open()
         return invoice
 
     def create_invoice_line(self, invoice, products):

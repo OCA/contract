@@ -77,7 +77,9 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         return self.env['account.invoice.line']
 
     def _prepare_target_domain(self):
-        domain = []
+        domain = [
+            ('invoice_id.state', 'not in', ['draft', 'cancel']),
+        ]
         if self.journal_ids:
             domain.extend([
                 ('invoice_id.journal_id', 'in', self.journal_ids.ids),
@@ -99,14 +101,23 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         return domain
 
     def _target_line_domain(self, agreement_domain, agreement, line=False):
+        domain = agreement_domain.copy()
+        if agreement.start_date:
+            domain.append(
+                ('invoice_id.date_invoice', '>=',
+                 fields.Date.to_string(agreement.start_date)))
+        if agreement.end_date:
+            domain.append(
+                ('invoice_id.date_invoice', '<=',
+                 fields.Date.to_string(agreement.end_date)))
         if line:
-            return agreement_domain + safe_eval(line.rebate_domain)
-        if agreement.rebate_line_ids:
-            domain = expression.OR(
-                [safe_eval(l.rebate_domain) for l in agreement.rebate_line_ids]
-            )
-            return expression.AND([agreement_domain, domain])
-        return agreement_domain
+            domain += safe_eval(line.rebate_domain)
+        elif agreement.rebate_line_ids:
+            domain = expression.AND(
+                [domain,
+                 expression.OR([safe_eval(
+                     x.rebate_domain) for x in agreement.rebate_line_ids])])
+        return domain
 
     def get_agregate_fields(self):
         return ['price_unit', 'price_subtotal', 'price_subtotal_signed',
@@ -188,6 +199,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             'lines': [],
         })
         agreements = Agreement.search(self._prepare_agreement_domain())
+        print(agreements)
         for agreement in agreements:
             key = self.get_settlement_key(agreement)
             if key not in settlement_dic:
