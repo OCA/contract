@@ -17,6 +17,28 @@ class ContractLine(models.Model):
         copy=False,
     )
     display_name = fields.Char(compute='_compute_display_name_2')
+    
+    
+    @api.onchange(
+        'date_start',
+        'date_end',
+        'recurring_invoicing_type',
+        'recurring_rule_type',
+        'recurring_interval',
+    )
+    def _onchange_date_start(self):
+        for rec in self.filtered('date_start'):
+            min_date_start = self.env.context.get('min_date_start', False)
+            if min_date_start:
+                rec.date_start = min_date_start
+            rec.recurring_next_date = self.get_next_invoice_date(
+                rec.next_period_date_start,
+                rec.recurring_invoicing_type,
+                rec.recurring_invoicing_offset,
+                rec.recurring_rule_type,
+                rec.recurring_interval,
+                max_date_end=rec.date_end,
+            )
 
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):

@@ -108,7 +108,9 @@ class SaleOrder(models.Model):
                     rec._prepare_contract_value(contract_template)
                 )
                 contracts |= contract
-                contract._onchange_contract_template_id()
+                min_date_start = min(order_lines.mapped('date_start'))
+                contract.with_context(
+                    min_date_start=min_date_start)._onchange_contract_template_id()
                 contract._onchange_contract_type()
                 order_lines.create_contract_line(contract)
                 order_lines.write({'contract_id': contract.id})
