@@ -22,6 +22,7 @@
     'data': [
         'views/contract_contract_view.xml',
         'views/sale_view.xml',
+        'views/contract_template.xml',
         'data/contract_cron.xml',
     ],
     'installable': True,

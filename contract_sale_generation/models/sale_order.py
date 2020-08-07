@@ -22,7 +22,13 @@ class SaleOrder(models.Model):
                     rec.need_contract_creation = False
                 else:
                     super(SaleOrder, rec)._compute_need_contract_creation()
-                
+              
+              
+    @api.multi
+    def _prepare_contract_value(self, contract_template):
+        res = super(SaleOrder, self)._prepare_contract_value(contract_template)
+        res.update({'type': contract_template.type or 'invoice'})
+        return res
     
     @api.multi
     def action_create_contract(self):
