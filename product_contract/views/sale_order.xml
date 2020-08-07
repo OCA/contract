@@ -66,7 +66,7 @@
                            attrs="{'required': [('is_contract', '=', True)]}"/>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="date_end" attrs="{'required': [('is_contract', '=', True)]}"/>
+                    <field name="date_end" attrs="{'required': [('is_contract', '=', True),('is_auto_renew', '=', True)]}"/>
                 </group>
                 <group
                     attrs="{'invisible': [('is_contract', '=', False)]}">
