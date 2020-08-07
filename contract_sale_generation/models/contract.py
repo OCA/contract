@@ -122,8 +122,9 @@ class ContractContract(models.Model):
 
     @api.multi
     def _recurring_create_invoice(self, date_ref=False):
-        if not self.type == 'sale':
-            return super(ContractContract, self)._recurring_create_invoice(date_ref=date_ref)
+        contracts = self.filtered(lambda c: c.type != 'sale')
+        if contracts :
+            return super(ContractContract, contracts)._recurring_create_invoice(date_ref=date_ref)
         else:
             return self.env['account.invoice']
         
