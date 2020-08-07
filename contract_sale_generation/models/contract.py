@@ -19,8 +19,8 @@ class ContractContract(models.Model):
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     sale_count = fields.Integer(compute="_compute_sale_count")
     invoice_group_method_id = fields.Many2one(comodel_name="sale.invoice.group.method")
-    agreement_id = fields.Many2one(comodel_name="agreement")
-    analytic_account_id = fields.Many2one(comodel_name="account.analytic.account")
+#     agreement_id = fields.Many2one(comodel_name="agreement")
+#     analytic_account_id = fields.Many2one(comodel_name="account.analytic.account")
     
 
     @api.multi
@@ -48,6 +48,7 @@ class ContractContract(models.Model):
 
     @api.multi
     def _get_related_sale_orders(self):
+        """ Only sale order generated from this contract """
         self.ensure_one()
         return self.env['sale.order'].search(
                 [('contract_id', '=', self.id)])
@@ -104,8 +105,10 @@ class ContractContract(models.Model):
             'company_id': self.company_id.id,
             'user_id': self.user_id.id,
             'contract_id': self.id,
+            'require_signature': False,
+            'require_payment': False,
         })
-        # Get other invoice values from partner onchange
+        # Get other sale values from partner onchange
         sale.onchange_partner_id()
         sale.partner_invoice_id = self.invoice_partner_id
         sale.payment_term_id = self.payment_term_id
@@ -114,8 +117,8 @@ class ContractContract(models.Model):
         sale.pricelist_id = self.pricelist_id
         sale.invoice_group_method_id = self.invoice_group_method_id
         sale.mandate_id = self.mandate_id
-        sale.analytic_account_id = self.analytic_account_id
-        sale.agreement_id = self.agreement_id
+        sale.analytic_account_id = self.group_id
+#         sale.agreement_id = self.agreement_id
         
         return sale._convert_to_write(sale._cache)
 
@@ -154,7 +157,7 @@ class ContractContract(models.Model):
 
     @api.multi
     def recurring_create_sale(self, ):
-        self.contract._recurring_create_sales()
+        self._recurring_create_sales()
         return True
 
 

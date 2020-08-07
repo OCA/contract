@@ -38,11 +38,12 @@
                     <group>
                         <field name="invoice_group_method_id"
                             attrs="{'invisible':[('type','!=', 'sale')]}" />
-                        <field name="analytic_account_id"
+<!--                         <field name="analytic_account_id"
                             attrs="{'invisible':[('type','!=', 'sale')]}" />
-                        <field name="agreement_id"
+ -->
+ <!--                         <field name="agreement_id"
                             attrs="{'invisible':[('type','!=', 'sale')]}" />
-                        
+  -->                       
                     </group>
                 </group>
             </xpath>
@@ -52,7 +53,7 @@
                     icon="fa-usd"
                     attrs="{'invisible':[('type','!=', 'sale')]}"
                     class="oe_stat_button">
-                    <field string="Sales" name="sale_count"
+                    <field string="Recurring Sales" name="sale_count"
                         widget="statinfo" />
                 </button>
             </xpath>

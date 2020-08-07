@@ -11,10 +11,14 @@
     'author': "PESOL, Okia, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/oca/contract',
-    'depends': ['contract', 'sale',
+    'depends': ['contract', 
+                'sale',
+                'sale_timesheet',
                 'sale_invoice_group_method',
-                'agreement_sale',
-                'contract_sale_mandate'],
+                'contract_sale_mandate',
+                'product_contract',
+#                 'agreement_sale',
+                ],
     'data': [
         'views/contract_contract_view.xml',
         'views/sale_view.xml',
