@@ -23,7 +23,8 @@ class ContractLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
-            'contract_line_id': self.id,
+#             'contract_line_id': self.id,
+            'created_from_contract_line_id': self.id,
         }
         if order_id:
             line_vals.update({'order_id': order_id.id})

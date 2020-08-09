@@ -162,7 +162,7 @@ class ContractContract(models.Model):
 
 
     @api.model
-    def cron_recurring_create_sale(self):
+    def cron_recurring_create_sale(self, date_ref=None):
         domain = self._get_contracts_to_invoice_domain()
         contracts_to_invoice = self.search(domain)
         date_ref = fields.Date.context_today(contracts_to_invoice)
