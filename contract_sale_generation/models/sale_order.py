@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields, models, api, _
-from odoo.doc._extensions.pyjsparser.parser import false
 
 
 class SaleOrder(models.Model):
