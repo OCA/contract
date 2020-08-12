@@ -19,9 +19,6 @@ class ContractContract(models.Model):
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     sale_count = fields.Integer(compute="_compute_sale_count")
     invoice_group_method_id = fields.Many2one(comodel_name="sale.invoice.group.method")
-#     agreement_id = fields.Many2one(comodel_name="agreement")
-#     analytic_account_id = fields.Many2one(comodel_name="account.analytic.account")
-    
 
     @api.multi
     def action_show_sales(self):
@@ -164,6 +161,8 @@ class ContractContract(models.Model):
     @api.model
     def cron_recurring_create_sale(self, date_ref=None):
         domain = self._get_contracts_to_invoice_domain()
+        domain.append(('type', '=', 'sale'))
         contracts_to_invoice = self.search(domain)
+        _logger.debug("Found countracts %s for recurring creation" % contracts_to_invoice)
         date_ref = fields.Date.context_today(contracts_to_invoice)
         contracts_to_invoice._recurring_create_sales(date_ref)
