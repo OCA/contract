@@ -285,16 +285,21 @@ class ContractContract(models.Model):
                 if self.contract_template_id[field_name]:
                     self[field_name] = self.contract_template_id[field_name]
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
-        self.pricelist_id = self.partner_id.property_product_pricelist.id
-        self.fiscal_position_id = self.partner_id.property_account_position_id
+        partner = (
+            self.partner_id
+            if not self.company_id
+            else self.partner_id.with_context(force_company=self.company_id.id)
+        )
+        self.pricelist_id = partner.property_product_pricelist.id
+        self.fiscal_position_id = partner.env[
+            'account.fiscal.position'
+        ].get_fiscal_position(partner.id)
         if self.contract_type == 'purchase':
-            self.payment_term_id = \
-                self.partner_id.property_supplier_payment_term_id
+            self.payment_term_id = partner.property_supplier_payment_term_id
         else:
-            self.payment_term_id = \
-                self.partner_id.property_payment_term_id
+            self.payment_term_id = partner.property_payment_term_id
         self.invoice_partner_id = self.partner_id.address_get(['invoice'])[
             'invoice'
         ]
