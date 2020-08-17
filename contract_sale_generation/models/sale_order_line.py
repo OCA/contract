@@ -45,8 +45,6 @@ class SaleOrderLine(models.Model):
         """
         sale line linked to contracts must not be invoiced from sale order
         """
-#         res = super()._get_to_invoice_qty() #problem here, this part is setting a bad value on invoice quantity
-        #maybe try to adress more precisely the super method
         for line in self:
             if line.order_id.state in ['sale', 'done']:
                 if line.product_id.invoice_policy == 'order':

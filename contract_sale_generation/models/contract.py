@@ -97,6 +97,7 @@ class ContractContract(models.Model):
         sale = self.env['sale.order'].new({
             'partner_id': self.partner_id,
             'date_order': '%s 00:00:00' % date_ref,
+            'expected_date': '%s 00:00:00' % date_ref,
             'origin': self.name,
             'client_order_ref': self.client_order_ref or '',
             'company_id': self.company_id.id,
