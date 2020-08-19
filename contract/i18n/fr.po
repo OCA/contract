@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-30 11:59+0000\n"
-"PO-Revision-Date: 2020-08-18 16:59+0000\n"
+"PO-Revision-Date: 2020-08-19 09:59+0000\n"
 "Last-Translator: Grégory Moka Tourisme <gregory@mokatourisme.fr>\n"
 "Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
 "Language: fr\n"
@@ -160,21 +160,18 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible' : [('contract_to_invoice_count', '&gt ;', "
-"1)]}\">\n"
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
 "                                contrat à facturer\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible' : "
-"[('contract_to_invoice_count', '&lt ;', 1)]}\">\n"
+"                            <span attrs=\"{'invisible': [("
+"'contract_to_invoice_count', '&lt;', 1)]}\">\n"
 "                                contrats à facturer\n"
 "                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
-#| msgid "<strong>Total</strong>"
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong>Total</strong>"
+msgstr "<strong class=\"mr16\">Sous-total</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -210,7 +207,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "<strong>#START#</strong>: Start date of the invoiced period"
-msgstr "<strong>#START#</strong>: Date de début de la période de facturation"
+msgstr "<strong>#START#</strong> : Date de début de la période de facturation"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -229,10 +226,8 @@ msgstr "<strong>Description</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
-#| msgid "<strong>Total</strong>"
 msgid "<strong>Notes: </strong>"
-msgstr "<strong>Total</strong>"
+msgstr "<strong>Notes : </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -325,19 +320,19 @@ msgstr "État de l'activité"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a line"
-msgstr ""
+msgstr "Ajouter une ligne"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a note"
-msgstr ""
+msgstr "Ajouter une note"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a section"
-msgstr ""
+msgstr "Ajouter une section"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:355
@@ -374,7 +369,7 @@ msgstr "Êtes-vous certain de vouloir réactiver ce contrat ?"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 msgid "Are you sure you want to terminate this contract?"
-msgstr "Êtes-vous certani de vouloir résilier ce contrat ?"
+msgstr "Êtes-vous certain de vouloir résilier ce contrat ?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -546,10 +541,8 @@ msgstr "Étiquette du contrat"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.contract_tag_act_window
-#, fuzzy
-#| msgid "Contract Tag"
 msgid "Contract Tags"
-msgstr "Étiquette du contrat"
+msgstr "Étiquettes du contrat"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_template
@@ -804,10 +797,8 @@ msgstr "Devise"
 #: selection:contract.abstract.contract.line,note_invoicing_mode:0
 #: selection:contract.line,note_invoicing_mode:0
 #: selection:contract.template.line,note_invoicing_mode:0
-#, fuzzy
-#| msgid "Customer"
 msgid "Custom"
-msgstr "Client"
+msgstr "Personnalisé"
 
 #. module: contract
 #: selection:contract.abstract.contract,contract_type:0
@@ -871,6 +862,10 @@ msgid ""
 "- With next line: If the next line can be invoiced.\n"
 "- Custom: Depending on the recurrence to be define."
 msgstr ""
+"Définit quand la note est facturée :\n"
+"- Avec ligne précédente : si la ligne précédente peut être facturée.\n"
+"- Avec ligne suivante : si la ligne suivante peut être facturée.\n"
+"- Personnalisé : en fonction de la récurrence à définir."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__name
@@ -968,7 +963,7 @@ msgstr "Groupe"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Group By..."
-msgstr "Grouper par..."
+msgstr "Regrouper par..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__id
