@@ -16,7 +16,7 @@
         'product_contract',
     ],
     'data': [
-    ],
-    'demo': [
+        'views/res_config_settings.xml',
+        'views/sale_order.xml'
     ],
 }
