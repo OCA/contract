@@ -9,4 +9,5 @@ class Agreement(models.Model):
 
     serviceprofile_ids = fields.One2many('agreement.serviceprofile',
                                          'agreement_id',
-                                         string="Service Profiles")
+                                         string="Service Profiles",
+                                         copy=True)
