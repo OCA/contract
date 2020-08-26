@@ -58,8 +58,8 @@ class ContractLine(models.Model):
         if not self.date_end or self.is_auto_renew:
             return period_date_end < contract_forecast_end_date
         return (
-            period_date_end < self.date_end
-            and period_date_end < contract_forecast_end_date
+            period_date_end <= self.date_end
+            and period_date_end <= contract_forecast_end_date
         )
 
     @api.multi
@@ -69,11 +69,9 @@ class ContractLine(models.Model):
         for rec in self:
             rec.forecast_period_ids.unlink()
             if rec.recurring_next_date:
-                period_date_end = (
-                    rec.last_date_invoiced
-                    if rec.last_date_invoiced
-                    else rec.date_start - relativedelta(days=1)
-                )
+                period_date_start = rec.next_period_date_start
+                period_date_end = rec.next_period_date_end
+                recurring_next_date = rec.recurring_next_date
                 max_date_end = rec.date_end if not rec.is_auto_renew else False
                 while (
                     period_date_end
@@ -81,6 +79,13 @@ class ContractLine(models.Model):
                         period_date_end
                     )
                 ):
+                    if period_date_end and recurring_next_date:
+                        new_vals = rec._prepare_contract_line_forecast_period(
+                            period_date_start,
+                            period_date_end,
+                            recurring_next_date,
+                        )
+                        values.append(new_vals)
                     period_date_start = period_date_end + relativedelta(days=1)
                     period_date_end = self.get_next_period_date_end(
                         period_date_start,
@@ -96,14 +101,6 @@ class ContractLine(models.Model):
                         rec.recurring_interval,
                         max_date_end=max_date_end,
                     )
-                    if period_date_end and recurring_next_date:
-                        values.append(
-                            rec._prepare_contract_line_forecast_period(
-                                period_date_start,
-                                period_date_end,
-                                recurring_next_date,
-                            )
-                        )
 
         return self.env["contract.line.forecast.period"].create(values)
 
