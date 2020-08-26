@@ -143,7 +143,7 @@ class TestContractLineForecastPeriod(TestContractBase):
         self.assertEqual(len(self.acct_line.forecast_period_ids), 4)
         self.acct_line.write({'is_auto_renew': True})
         self.assertTrue(self.acct_line.forecast_period_ids)
-        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 12)
 
     @mute_logger("odoo.addons.queue_job.models.base")
     def test_forecast_period_on_contract_line_update_8(self):
@@ -286,7 +286,7 @@ class TestContractLineForecastPeriod(TestContractBase):
 
         self.acct_line.write({'is_auto_renew': True})
         self.assertTrue(self.acct_line.forecast_period_ids)
-        self.assertEqual(len(self.acct_line.forecast_period_ids), 37)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 36)
 
     @mute_logger("odoo.addons.queue_job.models.base")
     def test_forecast_period_for_undefined_date_end_contract(self):
@@ -309,4 +309,4 @@ class TestContractLineForecastPeriod(TestContractBase):
 
         self.acct_line.write({'date_end': False})
         self.assertTrue(self.acct_line.forecast_period_ids)
-        self.assertEqual(len(self.acct_line.forecast_period_ids), 37)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 36)
