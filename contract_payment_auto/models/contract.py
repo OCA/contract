@@ -137,7 +137,7 @@ class Contract(models.Model):
 
     @api.multi
     def _get_tx_vals(self, invoice, token):
-        """ Return values for create of payment.transaction for invoice."""
+        """ Return values for creation of a payment.transaction for invoice. """
         amount_due = invoice.residual
         partner = token.partner_id
         reference = self.env['payment.transaction']._compute_reference()
