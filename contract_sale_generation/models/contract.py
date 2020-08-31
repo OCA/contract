@@ -3,7 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields, models, api, _
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ContractContract(models.Model):
     _inherit = 'contract.contract'
