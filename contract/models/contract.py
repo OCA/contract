@@ -465,7 +465,9 @@ class ContractContract(models.Model):
 
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
-        return self.env["account.move"].create(invoices_values)
+        moves = self.env["account.move"].create(invoices_values)
+        self._compute_recurring_next_date()
+        return moves
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
