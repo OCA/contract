@@ -21,4 +21,23 @@
         </field>
     </record>
 
+    <!-- Product Template Form View -->
+    <record id="product_product_form_view" model="ir.ui.view">
+        <field name="name">product.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page id="agreement" string="Service">
+                    <group>
+                        <group id="agreement_left">
+                            <field name="is_serviceprofile"/>
+                        </group>
+                        <group id="agreement_right"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
