@@ -32,16 +32,16 @@ class SaleOrder(models.Model):
                     self.env['agreement.line'].\
                         create(self._get_agreement_line_vals(line))
                     # Create SP's based on product_id config
-                    if line.product_id.is_serviceprofile:
+                    if line.product_id.is_serviceprofile or \
+                            line.product_id.product_tmpl_id.is_serviceprofile:
                         self.create_sp_qty(line, order)
         return res
 
     def create_sp_qty(self, line, order):
         """ Create line.product_uom_qty SP's """
-        if line.product_id.product_tmpl_id.is_serviceprofile:
-            for i in range(1, int(line.product_uom_qty)+1):
-                self.env['agreement.serviceprofile'].\
-                    create(self._get_sp_vals(line, order, i))
+        for i in range(1, int(line.product_uom_qty) + 1):
+            self.env['agreement.serviceprofile'].\
+                create(self._get_sp_vals(line, order, i))
 
     def _get_agreement_line_vals(self, line):
         return {
@@ -54,11 +54,20 @@ class SaleOrder(models.Model):
         }
 
     def _get_sp_vals(self, line, order, i):
-        return {
-            'name': line.name + ' ' + str(i),
-            'product_id': line.product_id.product_tmpl_id.id,
-            'agreement_id': order.agreement_id.id,
-        }
+        if line.product_id.is_serviceprofile:
+            return {
+                'name': line.name + ' ' + str(i),
+                'product_variant_id': line.product_id.id,
+                'agreement_id': order.agreement_id.id,
+                'use_product_variant': True
+            }
+        else:
+            return {
+                'name': line.name + ' ' + str(i),
+                'product_id': line.product_id.product_tmpl_id.id,
+                'agreement_id': order.agreement_id.id,
+                'use_product_variant': False
+            }
 
     def action_confirm(self):
         # If sale_timesheet is installed, the _action_confirm()
