@@ -1,0 +1,41 @@
+<odoo>
+
+    <record id="contract_contract_form_view_recurring_sale_form" model="ir.ui.view">
+        <field name="name">contract.contract.form.recurring.sale.form</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='recurring_invoices']" position="after">
+                <group name="recurring_sale_or_invoicing" string="Recurring Sales/Invoicing" col="4">
+                    <field name="type"/>
+                    <field name="sale_autoconfirm"  attrs="{'invisible':[('type','!=', 'sale')]}" />
+                </group>
+            </xpath>
+             <xpath expr="//button[@name='recurring_create_invoice']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('create_invoice_visibility', '=', False),('type','!=','invoice')]}</attribute>
+            </xpath> 
+            <xpath expr="//button[@name='recurring_create_invoice']" position="before">
+                <button name="recurring_create_sale"
+                            type="object"
+                            attrs="{'invisible': [('type','!=','sale')]}"
+                            string="CREATE SALES"
+                            class="oe_link"
+                            groups="base.group_no_one"
+                            />
+            </xpath>
+              <xpath expr="//button[@name='action_show_invoices']" position="attributes">
+                <attribute name="attrs">{'invisible': [('type','!=','invoice')]}</attribute>
+            </xpath>  
+             <xpath expr="//button[@name='action_show_invoices']" position="after">
+                <button name="action_show_sales"
+                        type="object" icon="fa-list"
+                        class="oe_stat_button" attrs="{'invisible': [('type','!=','sale')]}">
+                    <field string="Sales Order"
+                           name="sale_count"
+                           widget="statinfo"/>
+                </button>
+            </xpath> 
+        </field>
+    </record>
+
+</odoo>
