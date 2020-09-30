@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding='UTF-8'?>
 <odoo>
 
-    <record model="ir.cron" id="account_analytic_cron_for_sale">
+	<record id="contract_cron_for_sale" model="ir.cron">
         <field name="name">Generate Recurring sales from Contracts</field>
+        <field name="model_id" ref="model_contract_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_recurring_create_sale()</field>
+        <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
-        <field name="model" eval="'account.analytic.account'"/>
-        <field name="function" eval="'cron_recurring_create_sale'"/>
-        <field name="args" eval="'()'"/>
+        <field eval="False" name="doall" />
     </record>
 
 </odoo>
