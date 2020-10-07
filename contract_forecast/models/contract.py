@@ -37,6 +37,7 @@ class ContractContract(models.Model):
                 ]
         ):
             for rec in self:
-                for contract_line in rec.contract_line_ids:
-                    contract_line.with_delay()._generate_forecast_periods()
+                if rec.company_id.enable_contract_forecast:
+                    for contract_line in rec.contract_line_ids:
+                        contract_line.with_delay()._generate_forecast_periods()
         return res

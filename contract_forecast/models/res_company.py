@@ -14,3 +14,6 @@ class ResCompany(models.Model):
     contract_forecast_rule_type = fields.Selection(
         [("monthly", "Month(s)"), ("yearly", "Year(s)")], default="monthly"
     )
+    enable_contract_forecast = fields.Boolean(
+        string="Enable contract forecast", default=True
+    )
