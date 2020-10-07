@@ -12,6 +12,7 @@
     "depends": ["base", "contract", "queue_job"],
     "data": [
         "security/contract_line_forecast_period.xml",
+        "views/res_config_settings.xml",
         "views/contract_line_forecast_period.xml",
         "views/contract.xml",
     ],
