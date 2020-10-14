@@ -128,7 +128,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
 
     def _prepare_settlement_line(
             self, domain, groups, agreement, line=False, section=False):
-        amount = groups[0][self._get_amount_field()]
+        amount = (groups[0][self._get_amount_field()] +
+                  agreement.additional_consumption)
         amount_section = 0.0
         vals = {
             'agreement_id': agreement.id,

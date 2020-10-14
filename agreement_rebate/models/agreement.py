@@ -38,6 +38,11 @@ class Agreement(models.Model):
         related='agreement_type_id.is_rebate',
         string="Is rebate agreement type",
     )
+    additional_consumption = fields.Float(
+        string="Additional consumption",
+        default=0.0,
+    )
+
 
 class AgreementRebateLine(models.Model):
     _name = 'agreement.rebate.line'
