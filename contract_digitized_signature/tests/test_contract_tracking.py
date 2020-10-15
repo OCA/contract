@@ -12,7 +12,7 @@ class TestContractSignatureTracking(common.SavepointCase):
         cls.image = 'R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
     def test_contract_signature_tracking(self):
-        self.contract = self.env['account.analytic.account'].create({
+        self.contract = self.env['contract.contract'].create({
             'name': 'Test Contract',
             'customer_signature': self.image,
         })
