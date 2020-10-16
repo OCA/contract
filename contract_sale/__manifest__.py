@@ -3,11 +3,12 @@
 
 {
     "name": "Contract from Sale",
-    "version": "12.0.3.0.0",
+    "version": "13.0.1.0.0",
     "category": "Sales",
     "author": "Tecnativa, " "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["sale", "contract"],
+    "development_status": "Production/Stable",
     "data": [
         "security/ir.model.access.csv",
         "security/contract_security.xml",
