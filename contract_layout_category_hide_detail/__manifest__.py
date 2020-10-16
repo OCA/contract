@@ -7,15 +7,8 @@
     "version": "12.0.1.0.0",
     "category": "Contract Management",
     "website": "https://github.com/OCA/contract",
-    "author": "Tecnativa, "
-              "Odoo Community Association (OCA)",
+    "author": "Tecnativa, " "Odoo Community Association (OCA)",
     "license": "AGPL-3",
-    "depends": [
-        "contract",
-        "sale_layout_category_hide_detail",
-    ],
-    "data": [
-        "views/abstract_contract_line.xml",
-        "views/contract.xml",
-    ],
+    "depends": ["contract", "sale_layout_category_hide_detail"],
+    "data": ["views/abstract_contract_line.xml", "views/contract.xml"],
 }

@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <record id="contract_contract_form_view" model="ir.ui.view">
         <field name="name">contract.contract.form.hide.details</field>
         <field name="model">contract.contract</field>
-        <field name="inherit_id" ref="contract.contract_contract_form_view"/>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='contract_line_ids']/tree" position="inside">
-                <field name="show_details"
-                       widget="boolean_fa_icon"
-                       options="{
+                <field
+                    name="show_details"
+                    widget="boolean_fa_icon"
+                    options="{
                            'show_in_line_section': true,
                            'fa_icons': {
                                'icon_true': 'fa-eye',
@@ -20,10 +20,12 @@
                                'hover_false': 'Switch to: details shown',
                            },
                        }"
-                       attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
-                <field name="show_subtotal"
-                       widget="boolean_fa_icon"
-                       options="{
+                    attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
+                />
+                <field
+                    name="show_subtotal"
+                    widget="boolean_fa_icon"
+                    options="{
                            'show_in_line_section': true,
                            'fa_icons': {
                                'icon_true': 'fa-plus-circle',
@@ -34,9 +36,9 @@
                                'hover_false': 'Switch to: subtotal shown',
                            },
                        }"
-                       attrs="{'invisible': ['|', ('display_type', '!=', 'line_section'), ('show_details', '!=', True)]}"/>
+                    attrs="{'invisible': ['|', ('display_type', '!=', 'line_section'), ('show_details', '!=', True)]}"
+                />
             </xpath>
         </field>
     </record>
-
 </odoo>

@@ -6,7 +6,7 @@ from odoo import api, models
 
 
 class ContractLine(models.Model):
-    _inherit = 'contract.line'
+    _inherit = "contract.line"
 
     @api.multi
     def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
@@ -16,7 +16,6 @@ class ContractLine(models.Model):
         # 'vals' will be equal to {}
         if vals:
             vals.update(
-                show_details=self.show_details,
-                show_subtotal=self.show_subtotal,
+                show_details=self.show_details, show_subtotal=self.show_subtotal,
             )
         return vals
