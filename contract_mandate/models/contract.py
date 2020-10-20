@@ -2,7 +2,7 @@
 # Copyright 2017 Carlos Dauden - Tecnativa <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class AccountAnalyticAccount(models.Model):
@@ -13,7 +13,8 @@ class AccountAnalyticAccount(models.Model):
         ondelete='restrict',
         string='Direct Debit Mandate',
         help="If mandate required in payment method and not set mandate, "
-             "invoice takes the first valid mandate"
+             "invoice takes the first valid mandate",
+        index=True,
     )
     mandate_required = fields.Boolean(
         related='payment_mode_id.payment_method_id.mandate_required',
@@ -33,6 +34,7 @@ class AccountAnalyticAccount(models.Model):
             mandate = self.env['account.banking.mandate'].search([
                 ('partner_id', '=', self.partner_id.commercial_partner_id.id),
                 ('state', '=', 'valid'),
+                ('company_id', '=', self.company_id.id),
             ], limit=1)
             invoice_vals['mandate_id'] = mandate.id
         return invoice_vals

@@ -70,6 +70,8 @@ class TestAccountAnalyticAccount(common.HttpCase):
             'price_unit': 100,
             'discount': 50,
         })
+        # Remove report to avoid freeze when use wkhtmltopdf and SavepointCase
+        self.env['mail.template'].search([], limit=1).write({'report_template': False})
 
     def _validate_invoice(self, invoice):
         self.assertEqual(len(invoice), 1)

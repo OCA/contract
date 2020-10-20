@@ -25,6 +25,7 @@ addon | version | summary
 [agreement_sale](agreement_sale/) | 10.0.1.0.1 | Link an agreement to a sale order and copy to invoice
 [contract](contract/) | 10.0.4.3.1 | Contracts Management - Recurring
 [contract_digitized_signature](contract_digitized_signature/) | 10.0.1.0.0 | Contract Digitized Signature
+[contract_mandate](contract_mandate/) | 10.0.1.0.1 | Mandate in contracts and their invoices
 [contract_payment_auto](contract_payment_auto/) | 10.0.1.0.1 | Adds automatic payments to contracts.
 [contract_payment_mode](contract_payment_mode/) | 10.0.1.0.1 | Payment mode in contracts and their invoices
 [contract_recurring_analytic_distribution](contract_recurring_analytic_distribution/) | 10.0.1.0.0 | Analytic plans on contracts recurring invoices
