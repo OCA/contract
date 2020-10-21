@@ -12,10 +12,10 @@ from ..hooks import post_init_hook
 @odoo.tests.at_install(False)
 class TestContractPaymentInit(odoo.tests.HttpCase):
     def setUp(self):
-        super(TestContractPaymentInit, self).setUp()
+        super().setUp()
 
         self.payment_method = self.env["account.payment.method"].create(
-            {"name": "Test Payment Method", "code": "Test", "payment_type": "inbound",}
+            {"name": "Test Payment Method", "code": "Test", "payment_type": "inbound"}
         )
         self.payment_mode = self.env["account.payment.mode"].create(
             {
@@ -41,7 +41,7 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
             }
         )
         self.contract = self.env["contract.contract"].create(
-            {"name": "Maintenance of Servers", "partner_id": self.partner.id,}
+            {"name": "Maintenance of Servers", "partner_id": self.partner.id}
         )
         company = self.env.ref("base.main_company")
         self.journal = self.env["account.journal"].create(
@@ -78,6 +78,11 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
         )
         self.contract.write(
             {
+                "line_recurrence": True,
+                "contract_type": "sale",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "date_start": "2018-01-15",
                 "contract_line_ids": [
                     (
                         0,
@@ -88,14 +93,9 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
                             "quantity": 2.0,
                             "uom_id": self.product.uom_id.id,
                             "price_unit": 200.0,
-                            "recurring_rule_type": "monthly",
-                            "recurring_interval": 1,
-                            "date_start": "2018-01-01",
-                            "recurring_next_date": "2018-01-15",
-                            "is_auto_renew": False,
                         },
                     )
-                ]
+                ],
             }
         )
         self.contract.recurring_create_invoice()
