@@ -4,13 +4,13 @@
 {
     "name": "Contract Mandate",
     "summary": "Mandate in contracts and their invoices",
-    "version": "12.0.1.0.2",
+    "version": "13.0.1.0.0",
     "author": "Odoo Community Association (OCA), " "Tecnativa",
     "website": "https://github.com/OCA/contract",
-    "depends": ["contract_payment_mode", "account_banking_mandate",],
+    "depends": ["contract_payment_mode", "account_banking_mandate"],
     "category": "Sales Management",
     "license": "AGPL-3",
-    "data": ["views/contract_view.xml",],
+    "data": ["views/contract_view.xml"],
     "installable": True,
     "auto_install": True,
 }
