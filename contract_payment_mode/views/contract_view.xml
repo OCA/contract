@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <!--FORM view-->
     <record id="contract_contract_form_view" model="ir.ui.view">
-        <field name="name">contract.contract form view (in contract_payment_mode)</field>
+        <field
+            name="name"
+        >contract.contract form view (in contract_payment_mode)</field>
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
@@ -12,10 +13,11 @@
             </field>
         </field>
     </record>
-
     <!--TREE view-->
     <record id="contract_contract_tree_view" model="ir.ui.view">
-        <field name="name">contract.contract tree view (in contract_payment_mode)</field>
+        <field
+            name="name"
+        >contract.contract tree view (in contract_payment_mode)</field>
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_tree_view" />
         <field name="arch" type="xml">
@@ -24,10 +26,11 @@
             </field>
         </field>
     </record>
-
     <!--FORM view-->
     <record id="contract_contract_search_view" model="ir.ui.view">
-        <field name="name">contract.contract search view (in contract_payment_mode)</field>
+        <field
+            name="name"
+        >contract.contract search view (in contract_payment_mode)</field>
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_search_view" />
         <field name="arch" type="xml">
@@ -36,19 +39,21 @@
             </field>
         </field>
     </record>
-    
-    
-        <!--Supplier FORM view-->
+    <!--Supplier FORM view-->
     <record id="contract_contract_supplier_form_view" model="ir.ui.view">
-        <field name="name">contract.contract supplier form view (in contract_payment_mode)</field>
+        <field
+            name="name"
+        >contract.contract supplier form view (in contract_payment_mode)</field>
         <field name="model">contract.contract</field>
-		<field name="priority">18</field>
-        <field name="inherit_id" ref="contract.contract_contract_supplier_form_view"/>
+        <field name="priority">18</field>
+        <field name="inherit_id" ref="contract.contract_contract_supplier_form_view" />
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-               <field name="payment_mode_id" domain="[('payment_type', '=', 'outbound')]"/>
+                <field
+                    name="payment_mode_id"
+                    domain="[('payment_type', '=', 'outbound')]"
+                />
             </field>
         </field>
     </record>
-
 </odoo>
