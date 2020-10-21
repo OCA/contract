@@ -7,7 +7,7 @@ from odoo.addons.contract.tests.test_contract import TestContractBase
 class TestContractMandate(TestContractBase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractMandate, cls).setUpClass()
+        super().setUpClass()
         cls.payment_method = cls.env["account.payment.method"].create(
             {
                 "name": "Test SDD",
@@ -24,14 +24,10 @@ class TestContractMandate(TestContractBase):
             }
         )
         cls.partner = cls.env["res.partner"].create(
-            {
-                "customer": True,
-                "name": "Test Customer",
-                "customer_payment_mode_id": cls.payment_mode.id,
-            }
+            {"name": "Test Customer", "customer_payment_mode_id": cls.payment_mode.id}
         )
         cls.partner_bank = cls.env["res.partner.bank"].create(
-            {"acc_number": "1234", "partner_id": cls.partner.id,}
+            {"acc_number": "1234", "partner_id": cls.partner.id}
         )
         cls.mandate = cls.env["account.banking.mandate"].create(
             {
