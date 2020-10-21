@@ -13,7 +13,7 @@ def post_init_hook(cr, registry):
     with api.Environment.manage():
         env = api.Environment(cr, SUPERUSER_ID, {})
         m_contract = env["contract.contract"]
-        contracts = m_contract.search([("payment_mode_id", "=", False),])
+        contracts = m_contract.search([("payment_mode_id", "=", False)])
         if contracts:
             _logger.info("Setting payment mode: %d contracts" % len(contracts))
         for contract in contracts:
