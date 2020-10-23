@@ -28,6 +28,7 @@ setuptools.setup(
         'odoo12-addon-contract_payment_mode',
         'odoo12-addon-contract_price_revision',
         'odoo12-addon-contract_sale',
+        'odoo12-addon-contract_sale_generation',
         'odoo12-addon-contract_sale_invoicing',
         'odoo12-addon-contract_sale_mandate',
         'odoo12-addon-contract_sale_payment_mode',
