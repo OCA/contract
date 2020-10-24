@@ -2,18 +2,16 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
+from odoo.tests.common import TransactionCase
 
 
 class TestProductTemplate(TransactionCase):
     def setUp(self):
         super(TestProductTemplate, self).setUp()
-        self.service_product = self.env.ref('product.product_product_1')
-        self.consu_product = self.env.ref('product.product_product_5')
-        self.contract = self.env['contract.template'].create(
-            {'name': 'Test'}
-        )
+        self.service_product = self.env.ref("product.product_product_1")
+        self.consu_product = self.env.ref("product.product_product_5")
+        self.contract = self.env["contract.template"].create({"name": "Test"})
 
     def test_change_is_contract(self):
         """ It should verify that the property_contract_template_id
@@ -22,8 +20,7 @@ class TestProductTemplate(TransactionCase):
         self.service_product.is_contract = True
         self.service_product.property_contract_template_id = self.contract.id
         self.service_product.is_contract = False
-        self.assertEquals(len(
-            self.service_product.property_contract_template_id), 0)
+        self.assertEquals(len(self.service_product.property_contract_template_id), 0)
 
     def test_check_contract_product_type(self):
         """
