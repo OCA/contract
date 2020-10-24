@@ -3,47 +3,48 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, _
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     is_contract = fields.Boolean(
-        string='Is a contract', related="product_id.is_contract"
+        string="Is a contract", related="product_id.is_contract"
     )
     contract_id = fields.Many2one(
-        comodel_name='contract.contract', string='Contract', copy=False
+        comodel_name="contract.contract", string="Contract", copy=False
     )
     contract_template_id = fields.Many2one(
-        comodel_name='contract.template',
-        string='Contract Template',
-        compute='_compute_contract_template_id',
+        comodel_name="contract.template",
+        string="Contract Template",
+        compute="_compute_contract_template_id",
     )
     recurring_rule_type = fields.Selection(
         [
-            ('daily', 'Day(s)'),
-            ('weekly', 'Week(s)'),
-            ('monthly', 'Month(s)'),
-            ('monthlylastday', 'Month(s) last day'),
-            ('quarterly', 'Quarter(s)'),
-            ('semesterly', 'Semester(s)'),
-            ('yearly', 'Year(s)'),
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("monthlylastday", "Month(s) last day"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
         ],
-        default='monthly',
-        string='Invoice Every',
+        default="monthly",
+        string="Invoice Every",
         copy=False,
     )
     recurring_invoicing_type = fields.Selection(
-        [('pre-paid', 'Pre-paid'), ('post-paid', 'Post-paid')],
-        default='pre-paid',
-        string='Invoicing type',
+        [("pre-paid", "Pre-paid"), ("post-paid", "Post-paid")],
+        default="pre-paid",
+        string="Invoicing type",
         help="Specify if process date is 'from' or 'to' invoicing date",
         copy=False,
     )
-    date_start = fields.Date(string='Date Start')
-    date_end = fields.Date(string='Date End')
+    date_start = fields.Date(string="Date Start")
+    date_end = fields.Date(string="Date End")
 
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
@@ -53,42 +54,38 @@ class SaleOrderLine(models.Model):
     )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     auto_renew_interval = fields.Integer(
-        default=1,
-        string='Renew Every',
-        help="Renew every (Days/Week/Month/Year)",
+        default=1, string="Renew Every", help="Renew every (Days/Week/Month/Year)",
     )
     auto_renew_rule_type = fields.Selection(
         [
-            ('daily', 'Day(s)'),
-            ('weekly', 'Week(s)'),
-            ('monthly', 'Month(s)'),
-            ('yearly', 'Year(s)'),
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("yearly", "Year(s)"),
         ],
-        default='yearly',
-        string='Renewal type',
+        default="yearly",
+        string="Renewal type",
         help="Specify Interval for automatic renewal.",
     )
 
-    @api.constrains('contract_id')
+    @api.constrains("contract_id")
     def check_contact_is_not_terminated(self):
         for rec in self:
             if (
-                rec.order_id.state not in ('sale', 'done', 'cancel')
+                rec.order_id.state not in ("sale", "done", "cancel")
                 and rec.contract_id.is_terminated
             ):
                 raise ValidationError(
                     _("You can't upsell or downsell a terminated contract")
                 )
 
-    @api.multi
-    @api.depends('product_id')
+    @api.depends("product_id")
     def _compute_contract_template_id(self):
         for rec in self:
             rec.contract_template_id = rec.product_id.with_context(
                 force_company=rec.order_id.company_id.id
             ).property_contract_template_id
 
-    @api.multi
     def _get_auto_renew_rule_type(self):
         """monthly last day don't make sense for auto_renew_rule_type"""
         self.ensure_one()
@@ -96,52 +93,43 @@ class SaleOrderLine(models.Model):
             return "monthly"
         return self.recurring_rule_type
 
-    @api.onchange('product_id')
+    @api.onchange("product_id")
     def onchange_product(self):
-        contract_line_model = self.env['contract.line']
+        contract_line_model = self.env["contract.line"]
         for rec in self:
             if rec.product_id.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
                 rec.recurring_rule_type = rec.product_id.recurring_rule_type
-                rec.recurring_invoicing_type = (
-                    rec.product_id.recurring_invoicing_type
-                )
+                rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
                 rec.date_start = rec.date_start or fields.Date.today()
 
                 rec.date_end = (
                     rec.date_start
                     + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(),
-                        int(rec.product_uom_qty),
+                        rec._get_auto_renew_rule_type(), int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
                 )
                 rec.is_auto_renew = rec.product_id.is_auto_renew
                 if rec.is_auto_renew:
-                    rec.auto_renew_interval = (
-                        rec.product_id.auto_renew_interval
-                    )
-                    rec.auto_renew_rule_type = (
-                        rec.product_id.auto_renew_rule_type
-                    )
+                    rec.auto_renew_interval = rec.product_id.auto_renew_interval
+                    rec.auto_renew_rule_type = rec.product_id.auto_renew_rule_type
 
-    @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
+    @api.onchange("date_start", "product_uom_qty", "recurring_rule_type")
     def onchange_date_start(self):
-        contract_line_model = self.env['contract.line']
-        for rec in self.filtered('product_id.is_contract'):
+        contract_line_model = self.env["contract.line"]
+        for rec in self.filtered("product_id.is_contract"):
             if not rec.date_start:
                 rec.date_end = False
             else:
                 rec.date_end = (
                     rec.date_start
                     + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(),
-                        int(rec.product_uom_qty),
+                        rec._get_auto_renew_rule_type(), int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
                 )
 
-    @api.multi
     def _prepare_contract_line_values(
         self, contract, predecessor_contract_line_id=False
     ):
@@ -152,23 +140,19 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         recurring_next_date = self.env[
-            'contract.line'
+            "contract.line"
         ]._compute_first_recurring_next_date(
             self.date_start or fields.Date.today(),
             self.recurring_invoicing_type,
             self.recurring_rule_type,
             1,
         )
-        termination_notice_interval = (
-            self.product_id.termination_notice_interval
-        )
-        termination_notice_rule_type = (
-            self.product_id.termination_notice_rule_type
-        )
+        termination_notice_interval = self.product_id.termination_notice_interval
+        termination_notice_rule_type = self.product_id.termination_notice_rule_type
         return {
-            'sequence': self.sequence,
-            'product_id': self.product_id.id,
-            'name': self.name,
+            "sequence": self.sequence,
+            "product_id": self.product_id.id,
+            "name": self.name,
             # The quantity on the generated contract line is 1, as it
             # correspond to the most common use cases:
             # - quantity on the SO line = number of periods sold and unit
@@ -181,31 +165,30 @@ class SaleOrderLine(models.Model):
             #   quantity formula, in which case the quantity on the contract
             #   line is not used
             # Other use cases are easy to implement by overriding this method.
-            'quantity': 1.0,
-            'uom_id': self.product_uom.id,
-            'price_unit': self.price_unit,
-            'discount': self.discount,
-            'date_end': self.date_end,
-            'date_start': self.date_start or fields.Date.today(),
-            'recurring_next_date': recurring_next_date,
-            'recurring_interval': 1,
-            'recurring_invoicing_type': self.recurring_invoicing_type,
-            'recurring_rule_type': self.recurring_rule_type,
-            'is_auto_renew': self.is_auto_renew,
-            'auto_renew_interval': self.auto_renew_interval,
-            'auto_renew_rule_type': self.auto_renew_rule_type,
-            'termination_notice_interval': termination_notice_interval,
-            'termination_notice_rule_type': termination_notice_rule_type,
-            'contract_id': contract.id,
-            'sale_order_line_id': self.id,
-            'predecessor_contract_line_id': predecessor_contract_line_id,
-            'analytic_account_id': self.order_id.analytic_account_id.id,
+            "quantity": 1.0,
+            "uom_id": self.product_uom.id,
+            "price_unit": self.price_unit,
+            "discount": self.discount,
+            "date_end": self.date_end,
+            "date_start": self.date_start or fields.Date.today(),
+            "recurring_next_date": recurring_next_date,
+            "recurring_interval": 1,
+            "recurring_invoicing_type": self.recurring_invoicing_type,
+            "recurring_rule_type": self.recurring_rule_type,
+            "is_auto_renew": self.is_auto_renew,
+            "auto_renew_interval": self.auto_renew_interval,
+            "auto_renew_rule_type": self.auto_renew_rule_type,
+            "termination_notice_interval": termination_notice_interval,
+            "termination_notice_rule_type": termination_notice_rule_type,
+            "contract_id": contract.id,
+            "sale_order_line_id": self.id,
+            "predecessor_contract_line_id": predecessor_contract_line_id,
+            "analytic_account_id": self.order_id.analytic_account_id.id,
         }
 
-    @api.multi
     def create_contract_line(self, contract):
-        contract_line_model = self.env['contract.line']
-        contract_line = self.env['contract.line']
+        contract_line_model = self.env["contract.line"]
+        contract_line = self.env["contract.line"]
         predecessor_contract_line = False
         for rec in self:
             if rec.contract_line_id:
@@ -221,9 +204,7 @@ class SaleOrderLine(models.Model):
                     not rec.contract_line_id.date_end
                     or rec.date_start <= rec.contract_line_id.date_end
                 ):
-                    rec.contract_line_id.stop(
-                        rec.date_start - relativedelta(days=1)
-                    )
+                    rec.contract_line_id.stop(rec.date_start - relativedelta(days=1))
                     predecessor_contract_line = rec.contract_line_id
             if predecessor_contract_line:
                 new_contract_line = contract_line_model.create(
@@ -231,9 +212,7 @@ class SaleOrderLine(models.Model):
                         contract, predecessor_contract_line.id
                     )
                 )
-                predecessor_contract_line.successor_contract_line_id = (
-                    new_contract_line
-                )
+                predecessor_contract_line.successor_contract_line_id = new_contract_line
             else:
                 new_contract_line = contract_line_model.create(
                     rec._prepare_contract_line_values(contract)
@@ -241,7 +220,7 @@ class SaleOrderLine(models.Model):
             contract_line |= new_contract_line
         return contract_line
 
-    @api.constrains('contract_id')
+    @api.constrains("contract_id")
     def _check_contract_sale_partner(self):
         for rec in self:
             if rec.contract_id:
@@ -253,14 +232,13 @@ class SaleOrderLine(models.Model):
                         )
                     )
 
-    @api.constrains('product_id', 'contract_id')
+    @api.constrains("product_id", "contract_id")
     def _check_contract_sale_contract_template(self):
         for rec in self:
             if rec.contract_id:
                 if (
                     rec.contract_id.contract_template_id
-                    and rec.contract_template_id
-                    != rec.contract_id.contract_template_id
+                    and rec.contract_template_id != rec.contract_id.contract_template_id
                 ):
                     raise ValidationError(
                         _("Contract product has different contract template")
@@ -268,27 +246,26 @@ class SaleOrderLine(models.Model):
 
     def _compute_invoice_status(self):
         res = super(SaleOrderLine, self)._compute_invoice_status()
-        for line in self.filtered('contract_id'):
-            line.invoice_status = 'no'
+        for line in self.filtered("contract_id"):
+            line.invoice_status = "no"
         return res
 
-    @api.multi
     def invoice_line_create(self, invoice_id, qty):
         return super(
             SaleOrderLine, self.filtered(lambda l: not l.contract_id)
         ).invoice_line_create(invoice_id, qty)
 
     @api.depends(
-        'qty_invoiced',
-        'qty_delivered',
-        'product_uom_qty',
-        'order_id.state',
-        'product_id.is_contract',
+        "qty_invoiced",
+        "qty_delivered",
+        "product_uom_qty",
+        "order_id.state",
+        "product_id.is_contract",
     )
     def _get_to_invoice_qty(self):
         """
         sale line linked to contracts must not be invoiced from sale order
         """
         res = super()._get_to_invoice_qty()
-        self.filtered('product_id.is_contract').update({'qty_to_invoice': 0.0})
+        self.filtered("product_id.is_contract").update({"qty_to_invoice": 0.0})
         return res
