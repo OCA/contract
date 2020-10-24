@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_manually_create_invoice_form_view">
+        <field name="model">contract.manually.create.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Contract Manually Create Invoice">
+                <group>
+                    <group>
+                        <field name="invoice_date" />
+                        <field name="contract_type" invisible="1" />
+                    </group>
+                    <group>
+                        <button
+                            name="action_show_contract_to_invoice"
+                            type="object"
+                            class="btn-link"
+                            attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                        >
+                            <field name="contract_to_invoice_count" />
+                            <span
+                                attrs="{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}"
+                            >
+                                contract to invoice
+                            </span>
+                            <span
+                                attrs="{'invisible': [('contract_to_invoice_count', '&lt;', 1)]}"
+                            >
+                                contracts to invoice
+                            </span>
+                        </button>
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="create_invoice"
+                        attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                        string="Create Invoices"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record
+        model="ir.actions.act_window"
+        id="sale_contract_manually_create_invoice_act_window"
+    >
+        <field name="name">Manually Invoice Sale Contracts</field>
+        <field name="res_model">contract.manually.create.invoice</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_contract_type': 'sale'}</field>
+        <field name="target">new</field>
+    </record>
+    <record model="ir.ui.menu" id="sale_contract_manually_create_invoice_menu">
+        <field name="name">Manually Invoice Sale Contracts</field>
+        <field name="parent_id" ref="account.menu_finance_receivables" />
+        <field
+            name="groups_id"
+            eval="[(6, 0, [ref('account.group_account_manager')])]"
+        />
+        <field name="action" ref="sale_contract_manually_create_invoice_act_window" />
+        <field name="sequence" eval="999" />
+    </record>
+    <record
+        model="ir.actions.act_window"
+        id="purchase_contract_manually_create_invoice_act_window"
+    >
+        <field name="name">Manually Invoice Purchase Contracts</field>
+        <field name="res_model">contract.manually.create.invoice</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_contract_type': 'purchase'}</field>
+        <field name="target">new</field>
+    </record>
+    <record model="ir.ui.menu" id="purchase_contract_manually_create_invoice_menu">
+        <field name="name">Manually Invoice Purchase Contracts</field>
+        <field name="parent_id" ref="account.menu_finance_payables" />
+        <field
+            name="groups_id"
+            eval="[(6, 0, [ref('account.group_account_manager')])]"
+        />
+        <field
+            name="action"
+            ref="purchase_contract_manually_create_invoice_act_window"
+        />
+        <field name="sequence" eval="999" />
+    </record>
+</odoo>
