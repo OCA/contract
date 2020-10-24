@@ -7,8 +7,8 @@ from odoo import api, fields, models
 
 
 class ContractLine(models.Model):
-    _inherit = 'contract.line'
-    _rec_name = 'display_name'
+    _inherit = "contract.line"
+    _rec_name = "display_name"
 
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -16,18 +16,14 @@ class ContractLine(models.Model):
         required=False,
         copy=False,
     )
-    display_name = fields.Char(compute='_compute_display_name_2')
+    display_name = fields.Char(compute="_compute_display_name_2")
 
-    @api.multi
-    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
-        res = super(ContractLine, self)._prepare_invoice_line(
-            invoice_id=invoice_id, invoice_values=invoice_values,
-        )
+    def _prepare_invoice_line(self, move_form):
+        res = super(ContractLine, self)._prepare_invoice_line(move_form)
         if self.sale_order_line_id and res:
-            res['sale_line_ids'] = [(6, 0, [self.sale_order_line_id.id])]
+            res["sale_line_ids"] = [(6, 0, [self.sale_order_line_id.id])]
         return res
 
-    @api.multi
     def _get_auto_renew_rule_type(self):
         """monthly last day don't make sense for auto_renew_rule_type"""
         self.ensure_one()
@@ -35,15 +31,13 @@ class ContractLine(models.Model):
             return "monthly"
         return self.recurring_rule_type
 
-    @api.onchange('product_id')
+    @api.onchange("product_id")
     def _onchange_product_id_recurring_info(self):
         for rec in self:
             rec.date_start = fields.Date.today()
             if rec.product_id.is_contract:
                 rec.recurring_rule_type = rec.product_id.recurring_rule_type
-                rec.recurring_invoicing_type = (
-                    rec.product_id.recurring_invoicing_type
-                )
+                rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
                 rec.recurring_interval = 1
                 rec.is_auto_renew = rec.product_id.is_auto_renew
                 rec.auto_renew_interval = rec.product_id.auto_renew_interval
@@ -55,7 +49,7 @@ class ContractLine(models.Model):
                     rec.product_id.termination_notice_rule_type
                 )
 
-    @api.depends('name', 'date_start')
+    @api.depends("name", "date_start")
     def _compute_display_name_2(self):
         # FIXME: _compute_display_name depends on rec_name (display_name)
         #  and this trigger a WARNING : display_name depends on itself;
