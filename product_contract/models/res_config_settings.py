@@ -6,9 +6,8 @@ from odoo import fields, models
 
 class ResConfigSettings(models.TransientModel):
 
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
     create_contract_at_sale_order_confirmation = fields.Boolean(
-        related="company_id.create_contract_at_sale_order_confirmation",
-        readonly=False
+        related="company_id.create_contract_at_sale_order_confirmation", readonly=False
     )
