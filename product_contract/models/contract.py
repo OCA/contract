@@ -7,29 +7,24 @@ from odoo.tools.translate import _
 
 
 class ContractContract(models.Model):
-    _inherit = 'contract.contract'
+    _inherit = "contract.contract"
 
     sale_order_count = fields.Integer(compute="_compute_sale_order_count")
 
-    @api.depends('contract_line_ids')
+    @api.depends("contract_line_ids")
     def _compute_sale_order_count(self):
         for rec in self:
             try:
                 order_count = len(
-                    rec.contract_line_ids.mapped(
-                        'sale_order_line_id.order_id'
-                    )
+                    rec.contract_line_ids.mapped("sale_order_line_id.order_id")
                 )
             except AccessError:
                 order_count = 0
             rec.sale_order_count = order_count
 
-    @api.multi
     def action_view_sales_orders(self):
         self.ensure_one()
-        orders = self.contract_line_ids.mapped(
-            'sale_order_line_id.order_id'
-        )
+        orders = self.contract_line_ids.mapped("sale_order_line_id.order_id")
         action = {
             "name": _("Sales Orders"),
             "view_mode": "tree,form",
@@ -39,5 +34,5 @@ class ContractContract(models.Model):
         }
         if len(orders) == 1:
             # If there is only one order, open it directly
-            action.update({'view_mode': "form", "res_id": orders.id})
+            action.update({"view_mode": "form", "res_id": orders.id})
         return action
