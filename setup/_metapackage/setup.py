@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo10-addon-agreement_sale',
         'odoo10-addon-contract',
         'odoo10-addon-contract_digitized_signature',
+        'odoo10-addon-contract_mandate',
         'odoo10-addon-contract_payment_auto',
         'odoo10-addon-contract_payment_mode',
         'odoo10-addon-contract_recurring_analytic_distribution',
