@@ -5,7 +5,7 @@
     "name": "Contract Forecast",
     "summary": """
     Contract forecast""",
-    "version": "12.0.1.0.3",
+    "version": "13.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV," "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
@@ -17,4 +17,5 @@
     ],
     "external_dependencies": {"python": ["dateutil"]},
     "post_init_hook": "post_init_hook",
+    "maintainers": ["sbejaoui"],
 }

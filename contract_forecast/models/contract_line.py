@@ -2,7 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
+
 from odoo.addons.queue_job.job import job
 
 QUEUE_CHANNEL = "root.CONTRACT_FORECAST"
@@ -19,7 +21,6 @@ class ContractLine(models.Model):
         required=False,
     )
 
-    @api.multi
     def _prepare_contract_line_forecast_period(
         self, period_date_start, period_date_end, recurring_next_date
     ):
@@ -40,7 +41,6 @@ class ContractLine(models.Model):
             ),
         }
 
-    @api.multi
     def _get_contract_forecast_end_date(self):
         self.ensure_one()
         today = fields.Date.context_today(self)
@@ -49,7 +49,6 @@ class ContractLine(models.Model):
             self.contract_id.company_id.contract_forecast_interval,
         )
 
-    @api.multi
     def _get_generate_forecast_periods_criteria(self, period_date_end):
         self.ensure_one()
         if self.is_canceled or not self.active:
@@ -62,7 +61,6 @@ class ContractLine(models.Model):
             and period_date_end < contract_forecast_end_date
         )
 
-    @api.multi
     @job(default_channel=QUEUE_CHANNEL)
     def _generate_forecast_periods(self):
         values = []
@@ -75,11 +73,8 @@ class ContractLine(models.Model):
                     else rec.date_start - relativedelta(days=1)
                 )
                 max_date_end = rec.date_end if not rec.is_auto_renew else False
-                while (
+                while period_date_end and rec._get_generate_forecast_periods_criteria(
                     period_date_end
-                    and rec._get_generate_forecast_periods_criteria(
-                        period_date_end
-                    )
                 ):
                     period_date_start = period_date_end + relativedelta(days=1)
                     period_date_end = self.get_next_period_date_end(
@@ -99,9 +94,7 @@ class ContractLine(models.Model):
                     if period_date_end and recurring_next_date:
                         values.append(
                             rec._prepare_contract_line_forecast_period(
-                                period_date_start,
-                                period_date_end,
-                                recurring_next_date,
+                                period_date_start, period_date_end, recurring_next_date,
                             )
                         )
 
@@ -134,14 +127,10 @@ class ContractLine(models.Model):
             "is_auto_renew",
         ]
 
-    @api.multi
     def write(self, values):
         res = super(ContractLine, self).write(values)
         if any(
-            [
-                field in values
-                for field in self._get_forecast_update_trigger_fields()
-            ]
+            [field in values for field in self._get_forecast_update_trigger_fields()]
         ):
             for rec in self:
                 rec.with_delay()._generate_forecast_periods()
