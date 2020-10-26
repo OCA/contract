@@ -30,6 +30,7 @@ class AccountAnalyticAccount(models.Model):
         invoice_vals = super(AccountAnalyticAccount, self)._prepare_invoice()
         if self.mandate_id:
             invoice_vals['mandate_id'] = self.mandate_id.id
+            invoice_vals['partner_bank_id'] = self.mandate_id.partner_bank_id.id
         elif self.payment_mode_id.payment_method_id.mandate_required:
             mandate = self.env['account.banking.mandate'].search([
                 ('partner_id', '=', self.partner_id.commercial_partner_id.id),
@@ -37,4 +38,5 @@ class AccountAnalyticAccount(models.Model):
                 ('company_id', '=', self.company_id.id),
             ], limit=1)
             invoice_vals['mandate_id'] = mandate.id
+            invoice_vals['partner_bank_id'] = mandate.partner_bank_id.id
         return invoice_vals
