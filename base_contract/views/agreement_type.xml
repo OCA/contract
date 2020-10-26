@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Agreement Type List View-->
+    <record model="ir.ui.view" id="agreement_type_list_view">
+        <field name="name">Agreement Type List</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <tree string="Agreement Types" default_order="name">
+                <field name="name" string="Type Name"/>
+                <field name="domain"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Type Form View -->
+    <record model="ir.ui.view" id="agreement_type_form_view">
+        <field name="name">Agreement Type Form</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <form string="Agreement Type">
+                <div class="oe_button_box" name="button_box">
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                               options='{"terminology": "archive"}'/>
+                    </button>
+                </div>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group name="main">
+                        <field name="domain" widget="radio"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="agreement_type_search" model="ir.ui.view">
+        <field name="name">agreement.type.search</field>
+        <field name="model">agreement.type</field>
+        <field name="arch" type="xml">
+            <search string="Agreement Type">
+                <field name="name"/>
+                <separator/>
+                <filter name="sale" string="Sale" domain="[('domain', '=', 'sale')]"/>
+                <filter name="purchase" string="Purchase" domain="[('domain', '=', 'purchase')]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group name="groupby">
+                    <filter name="domain_groupby" string="Domain" context="{'group_by': 'domain'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="agreement_type_action">
+        <field name="name">Agreement Types</field>
+        <field name="res_model">agreement.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

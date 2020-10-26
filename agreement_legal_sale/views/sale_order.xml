@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <!-- Agreement Form View -->
+    <record id="sale_order_agreement_form_view" model="ir.ui.view">
+        <field name="name">sale.order.agreement.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="agreement_sale.sale_order_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <field name="agreement_id" position="attributes">
+                <attribute name="readonly" eval='1'/>
+                <attribute name="attrs">{'invisible': [('agreement_id', '=', False)]}</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="agreement_template_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

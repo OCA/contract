@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="FieldDomain.content">
+        <t t-if="partialUse">
+            <div t-if="hasModel" class="o_field_domain_panel">
+                <!--<div t-if="hasModel" class="o_field_domain_panel">
+                    <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+
+                    <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                    <t t-esc="nbRecords"/> record(s)
+                    </button>
+                    <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
+
+                    <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
+                    </div>
+                    <div t-else="">Select a model to add a filter.</div>-->
+            </div>
+        </t>
+        <t t-if="!partialUse">
+            <div t-if="hasModel" class="o_field_domain_panel">
+                <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+
+                <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                    <t t-esc="nbRecords"/> record(s)
+                </button>
+                <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
+
+                <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
+            </div>
+            <div t-else="">Select a model to add a filter.</div>
+        </t>
+    </t>
+
+    <div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
+        <t t-if="widget.options.partialUse">
+            <t t-if="widget.children.length === 0">
+                <span>SMatch <strong>all records</strong></span>
+                <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+            </t>
+            <t t-else="">
+                <div class="o_domain_tree_header">
+                    <t t-if="widget.children.length === 1">Please navigate below and select field:</t>
+                    <t t-else="">
+                        <span>SSMatch records with</span>
+                        <t t-call="DomainTree.OperatorSelector"/>
+                        <span>of the following rules:</span>
+                    </t>
+                </div>
+
+                <div class="o_domain_node_children_container"/>
+            </t>
+        </t>
+        <t t-if="!widget.options.partialUse">
+            <t t-if="widget.children.length === 0">
+                <span>Match <strong>all records</strong></span>
+                <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+            </t>
+            <t t-else="">
+                <div class="o_domain_tree_header">
+                    <t t-if="widget.children.length === 1">Match records with the following rule:</t>
+                    <t t-else="">
+                        <span>Match records with</span>
+                        <t t-call="DomainTree.OperatorSelector"/>
+                        <span>of the following rules:</span>
+                    </t>
+                </div>
+
+                <div class="o_domain_node_children_container"/>
+            </t>
+
+            <label t-if="widget.debug &amp;&amp; !widget.readonly" class="o_domain_debug_container">
+                <span class="small"># Code editor</span>
+                <input type="text" class="o_domain_debug_input"/>
+            </label>
+        </t>
+    </div>
+    <t t-name="DomainNode.ControlPanel">
+        <t t-if="widget.options.partialUse">
+            <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
+            </div>
+        </t>
+        <t t-if="!widget.options.partialUse">
+            <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
+                <button class="btn o_domain_delete_node_button" title="Delete node" aria-label="Delete node"><i class="fa fa-times"/></button>
+                <button class="btn o_domain_add_node_button" title="Add node" aria-label="Add node"><i class="fa fa-plus-circle"/></button>
+                <button class="btn o_domain_add_node_button" title="Add branch" aria-label="Add branch" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+            </div>
+        </t>
+    </t>
+    <div t-name="DomainLeaf" t-attf-class="o_domain_node o_domain_leaf o_domain_selector_row #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
+        <t t-call="DomainNode.ControlPanel"/>
+
+        <div t-if="!widget.readonly" class="o_domain_leaf_edition">
+            <!-- field selector will be instantiated here -->
+            <t t-if="!widget.options.partialUse">
+                <div> <!-- used for flex stretching -->
+                    <select class="o_domain_leaf_operator_select o_input">
+                        <option t-foreach="widget.operators" t-as="key"
+                                t-att-value="key"
+                                t-att-selected="widget.displayOperator === key ? 'selected' : None">
+                            <t t-esc="key_value"/>
+                        </option>
+                    </select>
+                </div>
+                <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' d-none' : ''}">
+                    <t t-if="widget.selectionChoices !== null">
+                        <select class="o_domain_leaf_value_input o_input">
+                            <option t-foreach="widget.selectionChoices" t-as="val"
+                                    t-att-value="val[0]"
+                                    t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
+                                <t t-esc="val[1]"/>
+                            </option>
+                        </select>
+                    </t>
+                    <t t-else="">
+                        <t t-if="_.contains(['in', 'not in'], widget.operator)">
+                            <div class="o_domain_leaf_value_input">
+                                <span class="badge badge-pill" t-foreach="widget.displayValue" t-as="val">
+                                    <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
+                                </span>
+                            </div>
+                            <div class="o_domain_leaf_value_tags">
+                                <input placeholder="Add new value" type="text" class="o_input"/>
+                                <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <input class="o_domain_leaf_value_input o_input" type="text" t-att-value="widget.displayValue"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div t-else="" class="o_domain_leaf_info">
+            <!-- field selector will be instantiated here -->
+            <t t-if="_.isString(widget.value)">
+                <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+                <span class="o_domain_leaf_value text-primary">"<t t-esc="widget.value"/>"</span>
+            </t>
+            <t t-if="_.isArray(widget.value)">
+                <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+                <t t-foreach="widget.value" t-as="v">
+                    <span class="o_domain_leaf_value text-primary">"<t t-esc="v"/>"</span>
+                    <t t-if="!v_last"> or </t>
+                </t>
+            </t>
+            <t t-if="_.isNumber(widget.value)">
+                <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+                <span class="o_domain_leaf_value text-primary"><t t-esc="widget.value"></t></span>
+            </t>
+            <t t-if="_.isBoolean(widget.value)">
+                is
+                <t t-if="widget.operator === '=' &amp;&amp; widget.value === false || widget.operator === '!=' &amp;&amp; widget.value === true">not</t>
+                set
+            </t>
+        </div>
+    </div>
+    <div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
+        <div class="o_field_selector_value" tabindex="0"/>
+        <t t-if="!widget.options.partialUse">
+            <div class="o_field_selector_controls" tabindex="0">
+                <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
+            </div>
+        </t>
+        <div t-if="!widget.options.readonly" class="o_field_selector_popover d-none" tabindex="0">
+            <div class="o_field_selector_popover_header text-center">
+                <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
+                <div class="o_field_selector_title"/>
+                <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+            </div>
+            <div class="o_field_selector_popover_body">
+                <ul class="o_field_selector_page"/>
+            </div>
+            <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
+                <input type="text" class="o_input"/>
+            </div>
+        </div>
+    </div>
+</templates>
