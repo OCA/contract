@@ -22,7 +22,7 @@ class ContractLineFormula(models.Model):
             "user": self.env.user,
             "line": self.env["contract.line"],
             "contract": self.env["contract.contract"],
-            "invoice": self.env["account.invoice"],
+            "invoice": self.env["account.move"],
             "quantity": 0,
             "period_first_date": False,
             "period_last_date": False,
