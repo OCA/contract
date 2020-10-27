@@ -9,30 +9,28 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'contract.line'
+    _inherit = "contract.line"
 
     @api.multi
     def _get_quantity_to_invoice(
         self, period_first_date, period_last_date, invoice_date
     ):
-        quantity = super(
-            AccountAnalyticInvoiceLine, self
-        )._get_quantity_to_invoice(
+        quantity = super(AccountAnalyticInvoiceLine, self)._get_quantity_to_invoice(
             period_first_date, period_last_date, invoice_date
         )
         if not period_first_date or not period_last_date or not invoice_date:
             return quantity
-        if self.qty_type == 'variable':
+        if self.qty_type == "variable":
             eval_context = {
-                'env': self.env,
-                'context': self.env.context,
-                'user': self.env.user,
-                'line': self,
-                'quantity': quantity,
-                'period_first_date': period_first_date,
-                'period_last_date': period_last_date,
-                'invoice_date': invoice_date,
-                'contract': self.contract_id,
+                "env": self.env,
+                "context": self.env.context,
+                "user": self.env.user,
+                "line": self,
+                "quantity": quantity,
+                "period_first_date": period_first_date,
+                "period_last_date": period_last_date,
+                "invoice_date": invoice_date,
+                "contract": self.contract_id,
             }
             safe_eval(
                 self.qty_formula_id.code.strip(),
@@ -40,7 +38,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                 mode="exec",
                 nocopy=True,
             )  # nocopy for returning result
-            quantity = eval_context.get('result', 0)
+            quantity = eval_context.get("result", 0)
         return quantity
 
     @api.multi
@@ -49,13 +47,11 @@ class AccountAnalyticInvoiceLine(models.Model):
             invoice_id=invoice_id, invoice_values=invoice_values,
         )
         if (
-            'quantity' in vals
+            "quantity" in vals
             and self.contract_id.skip_zero_qty
             and float_is_zero(
-                vals['quantity'],
-                self.env['decimal.precision'].precision_get(
-                    'Product Unit of Measure'
-                ),
+                vals["quantity"],
+                self.env["decimal.precision"].precision_get("Product Unit of Measure"),
             )
         ):
             vals = {}
