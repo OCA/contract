@@ -3,7 +3,7 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models
+from odoo import models
 from odoo.tools import float_is_zero
 from odoo.tools.safe_eval import safe_eval
 
@@ -11,11 +11,10 @@ from odoo.tools.safe_eval import safe_eval
 class AccountAnalyticInvoiceLine(models.Model):
     _inherit = "contract.line"
 
-    @api.multi
     def _get_quantity_to_invoice(
         self, period_first_date, period_last_date, invoice_date
     ):
-        quantity = super(AccountAnalyticInvoiceLine, self)._get_quantity_to_invoice(
+        quantity = super()._get_quantity_to_invoice(
             period_first_date, period_last_date, invoice_date
         )
         if not period_first_date or not period_last_date or not invoice_date:
@@ -41,11 +40,8 @@ class AccountAnalyticInvoiceLine(models.Model):
             quantity = eval_context.get("result", 0)
         return quantity
 
-    @api.multi
-    def _prepare_invoice_line(self, invoice_id=False, invoice_values=False):
-        vals = super(AccountAnalyticInvoiceLine, self)._prepare_invoice_line(
-            invoice_id=invoice_id, invoice_values=invoice_values,
-        )
+    def _prepare_invoice_line(self, move_form):
+        vals = super()._prepare_invoice_line(move_form)
         if (
             "quantity" in vals
             and self.contract_id.skip_zero_qty
