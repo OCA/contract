@@ -10,6 +10,6 @@ class ContractContract(models.Model):
     _inherit = "contract.contract"
 
     skip_zero_qty = fields.Boolean(
-        string='Skip Zero Qty Lines',
+        string="Skip Zero Qty Lines",
         help="If checked, contract lines with 0 qty don't create invoice line",
     )
