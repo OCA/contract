@@ -441,7 +441,10 @@ class ContractContract(models.Model):
             invoice_vals["invoice_line_ids"] = []
             for line in contract_lines:
                 invoice_line_vals = line._prepare_invoice_line(move_form=move_form)
-                invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
+                if invoice_line_vals:
+                    # Allow extension modules to return an empty dictionary for
+                    # nullifying line
+                    invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
             invoices_values.append(invoice_vals)
             contract_lines._update_recurring_next_date()
         return invoices_values
