@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 Tecnativa - Pedro M. Baeza
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field
+            name="name"
+        >contract.line tree view (in contract) - Add variable qty fields</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <field name="quantity" position="before">
+                <field name="qty_type" />
+                <field
+                    name="qty_formula_id"
+                    attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
+                />
+            </field>
+            <field name="quantity" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
