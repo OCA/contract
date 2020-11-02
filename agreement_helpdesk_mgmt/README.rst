@@ -79,7 +79,6 @@ Other credits
 The development of this module has been financially supported by:
 
 * Open Source Integrators
-* `Escodoo <https://www.escodoo.com.br>`_
 
 Maintainers
 ~~~~~~~~~~~
@@ -93,6 +92,14 @@ This module is maintained by the OCA.
 OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
+
+.. |maintainer-bodedra| image:: https://github.com/bodedra.png?size=40px
+    :target: https://github.com/bodedra
+    :alt: bodedra
+
+Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
+
+|maintainer-bodedra| 
 
 This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/12.0/agreement_helpdesk_mgmt>`_ project on GitHub.
 
