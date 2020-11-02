@@ -68,6 +68,14 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
+.. |maintainer-sbejaoui| image:: https://github.com/sbejaoui.png?size=40px
+    :target: https://github.com/sbejaoui
+    :alt: sbejaoui
+
+Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
+
+|maintainer-sbejaoui| 
+
 This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/12.0/contract_queue_job>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
