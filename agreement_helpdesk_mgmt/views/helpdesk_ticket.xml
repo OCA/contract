@@ -1,0 +1,36 @@
+<!-- Copyright 2019 - TODAY, Open Source Integrators
+     Copyright 2020 - TODAY, Marcel Savegnago - Escodoo
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="helpdesk_ticket_form_view">
+        <field name="name">helpdesk.ticket.form (in agreement_helpdesk_mgmt)</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="agreement_id"
+                       domain="[('partner_id', '=', partner_id)]"
+                       widget="selection"/>
+                <field name="serviceprofile_id"
+                       domain="[('agreement_id', '=', agreement_id)]"
+                       widget="selection"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="helpdesk_ticket_search_view">
+        <field name="name">helpdesk.ticket.search (in agreement_helpdesk_mgmt)</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.helpdesk_ticket_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
