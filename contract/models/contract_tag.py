@@ -6,10 +6,12 @@ from odoo import fields, models
 
 class ContractTag(models.Model):
 
-    _name = "contract.tag"
-    _description = "Contract Tag"
+    _name = 'contract.tag'
+    _description = 'Contract Tag'
 
     name = fields.Char(requirment=True)
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company.id,
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.user.company_id,
     )

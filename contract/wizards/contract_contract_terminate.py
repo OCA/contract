@@ -1,12 +1,12 @@
 # Copyright 2020 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ContractContractTerminate(models.TransientModel):
 
-    _name = "contract.contract.terminate"
+    _name = 'contract.contract.terminate'
     _description = "Terminate Contract Wizard"
 
     contract_id = fields.Many2one(
