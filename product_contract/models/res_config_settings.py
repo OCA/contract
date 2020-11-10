@@ -12,3 +12,7 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.create_contract_at_sale_order_confirmation",
         readonly=False
     )
+
+    constrain_contract_products = fields.Boolean(
+        related="company_id.constrain_contract_products", readonly=False
+    )

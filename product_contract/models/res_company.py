@@ -12,3 +12,7 @@ class ResCompany(models.Model):
         string="Automatically Create Contracts At Sale Order Confirmation",
         default=True,
     )
+    constrain_contract_products = fields.Boolean(
+        string="Enforce that all contract products have a contract template",
+        default=False,
+    )

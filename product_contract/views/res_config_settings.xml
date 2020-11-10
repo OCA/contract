@@ -27,5 +27,23 @@
         </field>
     </record>
 
-
+    <record model="ir.ui.view" id="res_config_settings_contract_form_view">
+        <field name="name">res.config.settings.form.constraint</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="contract.res_config_settings_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='account']" position="inside">
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="constrain_contract_products" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="constrain_contract_products" />
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>

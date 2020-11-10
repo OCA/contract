@@ -32,3 +32,17 @@ class TestProductTemplate(TransactionCase):
         """
         with self.assertRaises(ValidationError):
             self.consu_product.is_contract = True
+
+    def test_check_contract_template_write(self):
+        """It should not be possible to write a contract on 'not a contract'."""
+        template_values = {"name": "Name", "is_contract": False}
+        not_a_contract = self.env["product.template"].create(template_values)
+        with self.assertRaises(ValidationError):
+            not_a_contract.property_contract_template_id = self.contract
+
+    def test_check_contract_template_create(self):
+        """It should not be possible to create a 'not a contract' with a contract."""
+        template_values = {"name": "Name", "is_contract": False}
+        template_values["property_contract_template_id"] = self.contract.id
+        with self.assertRaises(ValidationError):
+            self.env["product.template"].create(template_values)
