@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view_hide_details" model="ir.ui.view">
+        <field name="name">contract.contract.form.hide.details</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']/tree"
+                position="inside"
+            >
+                <field
+                    name="show_details"
+                    widget="boolean_fa_icon"
+                    options="{
+                           'show_in_line_section': true,
+                           'fa_icons': {
+                               'icon_true': 'fa-eye',
+                               'icon_false': 'fa-eye-slash',
+                            },
+                           'terminology': {
+                               'hover_true': 'Switch to: details hidden',
+                               'hover_false': 'Switch to: details shown',
+                           },
+                       }"
+                    attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
+                />
+                <field
+                    name="show_subtotal"
+                    widget="boolean_fa_icon"
+                    options="{
+                           'show_in_line_section': true,
+                           'fa_icons': {
+                               'icon_true': 'fa-plus-circle',
+                               'icon_false': 'fa-minus-circle',
+                           },
+                           'terminology': {
+                               'hover_true': 'Switch to: subtotal hidden',
+                               'hover_false': 'Switch to: subtotal shown',
+                           },
+                       }"
+                    attrs="{'invisible': ['|', ('display_type', '!=', 'line_section'), ('show_details', '!=', True)]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree" position="inside">
+                <field
+                    name="show_details"
+                    widget="boolean_fa_icon"
+                    options="{
+                           'show_in_line_section': true,
+                           'fa_icons': {
+                               'icon_true': 'fa-eye',
+                               'icon_false': 'fa-eye-slash',
+                            },
+                           'terminology': {
+                               'hover_true': 'Switch to: details hidden',
+                               'hover_false': 'Switch to: details shown',
+                           },
+                       }"
+                    attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
+                />
+                <field
+                    name="show_subtotal"
+                    widget="boolean_fa_icon"
+                    options="{
+                           'show_in_line_section': true,
+                           'fa_icons': {
+                               'icon_true': 'fa-plus-circle',
+                               'icon_false': 'fa-minus-circle',
+                           },
+                           'terminology': {
+                               'hover_true': 'Switch to: subtotal hidden',
+                               'hover_false': 'Switch to: subtotal shown',
+                           },
+                       }"
+                    attrs="{'invisible': ['|', ('display_type', '!=', 'line_section'), ('show_details', '!=', True)]}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
