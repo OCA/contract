@@ -17,6 +17,6 @@
         'views/account_analytic_account.xml',
         'views/account_analytic_contract.xml',
     ],
-    'development_status': 'alpha',
+    'development_status': 'Alpha',
     'installable': True,
 }
