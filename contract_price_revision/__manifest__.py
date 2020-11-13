@@ -19,6 +19,6 @@
         'wizards/contract_price_revision_views.xml',
     ],
     'installable': True,
-    'development_status': 'Stable',
+    'development_status': 'Production/Stable',
     'maintainers': ['carlosdauden'],
 }
