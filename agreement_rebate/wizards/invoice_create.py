@@ -60,7 +60,6 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     def _prepare_settlement_domain(self):
         domain = [
-            ('line_ids.invoice_line_id', '=', False),
             ('line_ids.rebate_type', '!=', False),
         ]
         if self.date_from:
@@ -92,6 +91,9 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         self.ensure_one()
         settlements = self.env['agreement.rebate.settlement'].search(
             self._prepare_settlement_domain())
+        settlements -= settlements.filtered(
+            lambda s: any(l.invoice_type == self.invoice_type
+                          for l in s.line_ids.invoice_line_ids))
         invoices = settlements.with_context(
             partner_invoice=self.invoice_partner_id,
             product=self.product_id,

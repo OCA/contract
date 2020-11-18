@@ -10,8 +10,8 @@
                        string="Name or agreement code"/>
                 <field name="partner_id"/>
                 <separator/>
-                <filter name="not_invoiced" string="Not invoiced" domain="[('line_ids.invoice_line_id', '=', False)]"/>
-                <filter name="invoiced" string="Invoiced" domain="[('line_ids.invoice_line_id', '!=', False)]"/>
+                <filter name="not_invoiced" string="Not invoiced" domain="[('line_ids.invoice_line_ids', '=', False)]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('line_ids.invoice_line_ids', '!=', False)]"/>
                 <group name="groupby">
                     <filter name="partner_groupby" string="Partner"
                         context="{'group_by': 'partner_id'}"/>
@@ -117,8 +117,8 @@
                 <separator/>
                 <field name="agreement_id" string="Agreement"/>
                 <separator/>
-                <filter name="not_invoiced" string="Not invoiced" domain="[('invoice_line_id', '=', False)]"/>
-                <filter name="invoiced" string="Invoiced" domain="[('invoice_line_id', '!=', False)]"/>
+                <filter name="not_invoiced" string="Not invoiced" domain="[('invoice_line_ids', '=', False)]"/>
+                <filter name="invoiced" string="Invoiced" domain="[('invoice_line_ids', '!=', False)]"/>
                 <separator/>
                 <filter name="date" string="Period" date="date"/>
                 <group expand="0" string="Group By">

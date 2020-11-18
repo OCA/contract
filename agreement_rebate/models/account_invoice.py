@@ -7,8 +7,10 @@ from odoo import models, fields
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    agreement_rebate_settlement_line_ids = fields.One2many(
+    agreement_rebate_settlement_line_ids = fields.Many2many(
         comodel_name='agreement.rebate.settlement.line',
-        inverse_name='invoice_line_id',
+        relation='agreement_rebate_settlement_line_account_invoice_line_rel',
+        column1='invoice_line_id',
+        column2='settlement_line_id',
         string='Settlement lines',
     )

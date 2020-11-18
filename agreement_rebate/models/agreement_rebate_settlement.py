@@ -132,6 +132,9 @@ class AgreementRebateSettlement(models.Model):
             key = settlement._get_invoice_key()
             if key not in invoice_dic:
                 invoice_dic[key] = settlement._prepare_invoice()
+            else:
+                invoice_dic[key]["origin"] = "{}, {}".format(
+                    invoice_dic[key]["origin"], settlement.name)
             for line in settlement.line_ids:
                 invoice_dic[key]['invoice_line_ids'].append(
                     (0, 0, settlement._prepare_invoice_line(
@@ -227,9 +230,12 @@ class AgreementRebateSettlementLine(models.Model):
         related='agreement_id.rebate_type',
         string='Rebate type',
     )
-    invoice_line_id = fields.Many2one(
+    invoice_line_ids = fields.Many2many(
         comodel_name='account.invoice.line',
-        string='Invoice line',
+        relation='agreement_rebate_settlement_line_account_invoice_line_rel',
+        column1='settlement_line_id',
+        column2='invoice_line_id',
+        string='Invoice lines',
     )
 
     def action_show_detail(self):
