@@ -140,6 +140,7 @@ class TestAgreementRebate(TransactionCase):
     def create_agreements_rebate(self, rebate_type, partner):
         agreement = self.Agreement.create({
             'domain': 'sale',
+            'start_date': '{}-01-01'.format(fields.Date.today().year),
             'rebate_type': rebate_type,
             'name': 'A discount {} for all lines for {}'.format(
                 rebate_type, partner.name),

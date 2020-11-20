@@ -43,6 +43,9 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 ('date_to', '>=', self.date_from),
             ])
         if self.date_to:
+            domain.extend([
+                ('start_date', '<', self.date_to)
+            ])
             settlement_domain.extend([
                 ('date_to', '<=', self.date_to),
             ])
@@ -128,7 +131,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
 
     def _prepare_settlement_line(
             self, domain, groups, agreement, line=False, section=False):
-        amount = (groups[0][self._get_amount_field()] +
+        amount = (groups[0][self._get_amount_field()] or 0.0 +
                   agreement.additional_consumption)
         amount_section = 0.0
         vals = {
@@ -200,7 +203,6 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             'lines': [],
         })
         agreements = Agreement.search(self._prepare_agreement_domain())
-        print(agreements)
         for agreement in agreements:
             key = self.get_settlement_key(agreement)
             if key not in settlement_dic:
@@ -216,7 +218,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                         agreement_domain, agreement, line=line)
                     groups = target_model.read_group(
                         domain, self.get_agregate_fields(), [])
-                    if not groups[0]['__count']:
+                    if (not groups[0]['__count'] and
+                            not agreement.additional_consumption):
                         continue
                     vals = self._prepare_settlement_line(
                         domain, groups, agreement, line=line)
@@ -229,7 +232,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 domain = self._target_line_domain(agreement_domain, agreement)
                 groups = target_model.read_group(
                     domain, self.get_agregate_fields(), [])
-                if not groups[0]['__count']:
+                if (not groups[0]['__count'] and
+                        not agreement.additional_consumption):
                     continue
                 amount = groups and groups[0][self._get_amount_field()] or 0.0
                 for section in agreement.rebate_section_ids:
@@ -246,7 +250,8 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 domain = self._target_line_domain(agreement_domain, agreement)
                 groups = target_model.read_group(
                     domain, self.get_agregate_fields(), [])
-                if not groups[0]['__count']:
+                if (not groups[0]['__count'] and
+                        not agreement.additional_consumption):
                     continue
                 vals = self._prepare_settlement_line(domain, groups, agreement)
                 settlement_dic[key]['lines'].append((0, 0, vals))
