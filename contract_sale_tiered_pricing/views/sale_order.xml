@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_view_order_form" model="ir.ui.view">
+        <field name="name">contract_sale_tiered_pricing.sale_view_order_form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='order_line']//tree//field[@name='name']"
+                position="after"
+            >
+                <field name="contract_cumulated_qty" string="History" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

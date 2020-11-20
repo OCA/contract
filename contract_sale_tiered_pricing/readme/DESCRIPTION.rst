@@ -1,0 +1,3 @@
+This module uses the partner's sale history to determine the price.
+
+TODO...
