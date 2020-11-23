@@ -36,10 +36,10 @@ class TestContractVariableQtyTimesheet(common.SavepointCase):
         }
         cls.contract_line = cls.env["contract.line"].create(contract_line_vals)
         cls.project = cls.env["project.project"].create(
-            {"name": "Test project", "analytic_account_id": cls.analytic_account.id,}
+            {"name": "Test project", "analytic_account_id": cls.analytic_account.id}
         )
         cls.task = cls.env["project.task"].create(
-            {"project_id": cls.project.id, "name": "Test task",}
+            {"project_id": cls.project.id, "name": "Test task"}
         )
 
     def _contract_invoicing(self, contract):
