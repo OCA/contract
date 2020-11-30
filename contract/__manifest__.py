@@ -28,6 +28,7 @@
         "data/contract_cron.xml",
         "data/contract_renew_cron.xml",
         "data/mail_template.xml",
+        "data/mail_message_subtype.xml",
         "data/ir_ui_menu.xml",
         "wizards/contract_line_wizard.xml",
         "wizards/contract_manually_create_invoice.xml",
