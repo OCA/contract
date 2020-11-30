@@ -466,9 +466,22 @@ class ContractContract(models.Model):
             )
         return invoice
 
+    @api.model
+    def _invoice_followers(self, invoices):
+        invoice_create_subtype = self.sudo().env.ref(
+            "contract.mail_message_subtype_invoice_created"
+        )
+        for item in self:
+            partner_ids = item.message_follower_ids.filtered(
+                lambda x: invoice_create_subtype in x.subtype_ids
+            ).mapped("partner_id")
+            if partner_ids:
+                invoices.message_subscribe(partner_ids=partner_ids.ids)
+
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
         moves = self.env["account.move"].create(invoices_values)
+        self._invoice_followers(moves)
         self._compute_recurring_next_date()
         return moves
 
