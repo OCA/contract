@@ -19,6 +19,7 @@ class ContractContract(models.Model):
         'mail.thread',
         'mail.activity.mixin',
         'contract.abstract.contract',
+        'portal.mixin'
     ]
 
     active = fields.Boolean(
@@ -614,3 +615,16 @@ class ContractContract(models.Model):
             'terminate_comment': False,
             'terminate_date': False,
         })
+
+    def _compute_access_url(self):
+        for record in self:
+            record.access_url = '/my/contracts/{}'.format(record.id)
+
+    def action_preview(self):
+        """Invoked when 'Preview' button in contract form view is clicked."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
