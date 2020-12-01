@@ -23,7 +23,7 @@ Contract Mandate
     :target: https://runbot.odoo-community.org/runbot/110/11.0
     :alt: Try me on Runbot
 
-|badge1| |badge2| |badge3| |badge4| |badge5|
+|badge1| |badge2| |badge3| |badge4| |badge5| 
 
 This module allows to set a mandate mode on contract for creating the invoices
 with this mandate.
