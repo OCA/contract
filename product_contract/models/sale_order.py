@@ -49,7 +49,8 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line')
     def _compute_is_contract(self):
-        self.is_contract = any(self.order_line.mapped('is_contract'))
+        for rec in self:
+            rec.is_contract = any(rec.order_line.mapped('is_contract'))
 
     @api.multi
     def _prepare_contract_value(self, contract_template):
