@@ -1245,6 +1245,17 @@ class ContractLine(models.Model):
     def _renew_extend_line(self, date_end):
         self.ensure_one()
         self.date_end = date_end
+        # In case line is ended the recurring_next_date=False
+        # we need to recompute it at renew
+        if not self.recurring_next_date:
+            self.recurring_next_date = self.get_next_invoice_date(
+                self.next_period_date_start,
+                self.recurring_invoicing_type,
+                self.recurring_invoicing_offset,
+                self.recurring_rule_type,
+                self.recurring_interval,
+                max_date_end=self.date_end,
+            )
         return self
 
     @api.multi
