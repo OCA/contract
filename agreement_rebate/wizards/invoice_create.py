@@ -93,7 +93,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
             self._prepare_settlement_domain())
         settlements -= settlements.filtered(
             lambda s: any(l.invoice_type == self.invoice_type
-                          for l in s.line_ids.invoice_line_ids))
+                          for l in s.line_ids.mapped('invoice_line_ids')))
         invoices = settlements.with_context(
             partner_invoice=self.invoice_partner_id,
             product=self.product_id,
