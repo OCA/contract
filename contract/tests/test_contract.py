@@ -169,6 +169,11 @@ class TestContract(TestContractBase):
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.invoice_monthly.user_id)
 
+    def test_contract_action_preview(self):
+        action = self.contract.action_preview()
+        self.assertIn("/my/contracts/", action["url"])
+        self.assertIn("access_token=", action["url"])
+
     def test_contract_recurring_next_date(self):
         recurring_next_date = to_date('2018-01-15')
         self.assertEqual(
