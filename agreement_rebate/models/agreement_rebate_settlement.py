@@ -48,98 +48,22 @@ class AgreementRebateSettlement(models.Model):
                 'agreement.rebate.settlement')
         return super(AgreementRebateSettlement, self).create(vals_list)
 
-    def _prepare_invoice(self):
-        """
-        Prepare the dict of values to create the new invoice for a sales order.
-        This method may be overridden to implement custom invoice generation
-        (making sure to call super() to establish a clean extension chain).
-        """
-        self.ensure_one()
-        company_id = self.company_id.id or self.env.user.company_id.id
-        partner = (self.env.context.get('partner_invoice', False) or
-                   self.partner_id)
-        invoice_type = self.env.context.get('invoice_type', 'out_invoice')
-        journal_id = (
-            self.env.context.get('journal_id') or
-            self.env['account.invoice'].with_context(
-                force_company=company_id
-            ).default_get(['journal_id'])['journal_id'])
-        if not journal_id:
-            raise UserError(_('Please define an accounting sales journal for'
-                              ' this company.'))
-        vinvoice = self.env['account.invoice'].new({
-            'company_id': company_id,
-            'partner_id': partner.id,
-            'type': invoice_type,
-            'journal_id': journal_id,
-        })
-        # Get partner extra fields
-        vinvoice._onchange_partner_id()
-        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
-        invoice_vals.update({
-            'name': (self.line_ids[:1].agreement_id.name or ''),
-            'origin': self.name,
-            'invoice_line_ids': [],
-            'currency_id': partner.currency_id.id,
-            # 'comment': self.note,
-            # 'user_id': self.user_id and self.user_id.id,
-            # 'team_id': self.team_id.id,
-        })
-        return invoice_vals
-
-    def _prepare_invoice_line(self, settlement_line, invoice_vals):
-        self.ensure_one()
-        company_id = self.company_id.id or self.env.user.company_id.id
-        product = self.env.context.get('product', False)
-        invoice_line_vals = {
-            'product_id': product.id,
-            'quantity': 1.0,
-            'uom_id': product.uom_id.id,
-            'agreement_rebate_settlement_line_ids': [(4, settlement_line.id)],
-        }
-        invoice_line = self.env['account.invoice.line'].with_context(
-            force_company=company_id,
-        ).new(invoice_line_vals)
-        invoice = self.env['account.invoice'].with_context(
-            force_company=company_id,
-        ).new(invoice_vals)
-        invoice_line.invoice_id = invoice
-        # Get other invoice line values from product onchange
-        invoice_line._onchange_product_id()
-        invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
-        invoice_line_vals.update({
-            'name': _('{} - Period: {} - {}'.format(
-                invoice_line_vals['name'],
-                settlement_line.settlement_id.date_from,
-                settlement_line.settlement_id.date_to)
-            ),
-            # 'account_analytic_id': self.analytic_account_id.id,
-            # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'price_unit': settlement_line.amount_rebate,
-        })
-        return invoice_line_vals
-
-    def _get_invoice_key(self):
-        invoice_group = self.env.context.get('invoice_group', 'settlement')
-        if invoice_group == 'settlement':
-            return self.id
-        if invoice_group == 'partner':
-            return self.env.context.get('partner_id', self.partner_id.id)
-
     def create_invoice(self):
         invoice_dic = {}
-        for settlement in self:
-            key = settlement._get_invoice_key()
+        for line in self.mapped("line_ids"):
+            key = line._get_invoice_key()
             if key not in invoice_dic:
-                invoice_dic[key] = settlement._prepare_invoice()
-            else:
+                invoice_dic[key] = line._prepare_invoice()
+                invoice_dic[key]["processed_settlements"] = line.settlement_id
+            elif line.settlement_id not in invoice_dic[key]["processed_settlements"]:
                 invoice_dic[key]["origin"] = "{}, {}".format(
-                    invoice_dic[key]["origin"], settlement.name)
-            for line in settlement.line_ids:
-                invoice_dic[key]['invoice_line_ids'].append(
-                    (0, 0, settlement._prepare_invoice_line(
-                        line, invoice_dic[key]))
-                )
+                    invoice_dic[key]["origin"], line.settlement_id.name)
+                invoice_dic[key]["processed_settlements"] |= line.settlement_id
+            invoice_dic[key]['invoice_line_ids'].append(
+                (0, 0, line._prepare_invoice_line(invoice_dic[key]))
+            )
+        for values in invoice_dic.values():
+            values.pop("processed_settlements", None)
         invoices = self.env['account.invoice'].create(invoice_dic.values())
         return invoices
 
@@ -237,6 +161,93 @@ class AgreementRebateSettlementLine(models.Model):
         column2='invoice_line_id',
         string='Invoice lines',
     )
+
+    def _prepare_invoice(self):
+        """
+        Prepare the dict of values to create the new invoice for a sales order.
+        This method may be overridden to implement custom invoice generation
+        (making sure to call super() to establish a clean extension chain).
+        """
+        self.ensure_one()
+        company_id = self.company_id.id or self.env.user.company_id.id
+        partner = self.env.context.get('partner_invoice', False)
+        if not partner:
+            invoice_group = self.env.context.get('invoice_group', 'settlement')
+            if invoice_group == 'settlement':
+                partner = self.settlement_id.partner_id
+            elif invoice_group == 'partner':
+                partner = self.partner_id
+            elif invoice_group == 'commercial_partner':
+                partner = self.partner_id.commercial_partner_id
+        invoice_type = self.env.context.get('invoice_type', 'out_invoice')
+        journal_id = (
+            self.env.context.get('journal_id') or
+            self.env['account.invoice'].with_context(
+                force_company=company_id
+            ).default_get(['journal_id'])['journal_id'])
+        if not journal_id:
+            raise UserError(_('Please define an accounting sales journal for'
+                              ' this company.'))
+        vinvoice = self.env['account.invoice'].new({
+            'company_id': company_id,
+            'partner_id': partner.id,
+            'type': invoice_type,
+            'journal_id': journal_id,
+        })
+        # Get partner extra fields
+        vinvoice._onchange_partner_id()
+        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
+        invoice_vals.update({
+            'name': (self.agreement_id.name or ''),
+            'origin': self.settlement_id.name,
+            'invoice_line_ids': [],
+            'currency_id': partner.currency_id.id,
+            # 'comment': self.note,
+            # 'user_id': self.user_id and self.user_id.id,
+            # 'team_id': self.team_id.id,
+        })
+        return invoice_vals
+
+    def _prepare_invoice_line(self, invoice_vals):
+        self.ensure_one()
+        company_id = self.company_id.id or self.env.user.company_id.id
+        product = self.env.context.get('product', False)
+        invoice_line_vals = {
+            'product_id': product.id,
+            'quantity': 1.0,
+            'uom_id': product.uom_id.id,
+            'agreement_rebate_settlement_line_ids': [(4, self.id)],
+        }
+        invoice_line = self.env['account.invoice.line'].with_context(
+            force_company=company_id,
+        ).new(invoice_line_vals)
+        invoice = self.env['account.invoice'].with_context(
+            force_company=company_id,
+        ).new(invoice_vals)
+        invoice_line.invoice_id = invoice
+        # Get other invoice line values from product onchange
+        invoice_line._onchange_product_id()
+        invoice_line_vals = invoice_line._convert_to_write(invoice_line._cache)
+        invoice_line_vals.update({
+            'name': _('{} - Period: {} - {}'.format(
+                invoice_line_vals['name'],
+                self.settlement_id.date_from,
+                self.settlement_id.date_to)
+            ),
+            # 'account_analytic_id': self.analytic_account_id.id,
+            # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'price_unit': self.amount_rebate,
+        })
+        return invoice_line_vals
+
+    def _get_invoice_key(self):
+        invoice_group = self.env.context.get('invoice_group', 'settlement')
+        if invoice_group == 'settlement':
+            return self.settlement_id.id
+        if invoice_group == 'partner':
+            return self.env.context.get('partner_id', self.partner_id.id)
+        if invoice_group == 'commercial_partner':
+            return self.env.context.get('partner_id', self.partner_id.commercial_partner_id.id)
 
     def action_show_detail(self):
         return {

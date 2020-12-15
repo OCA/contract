@@ -35,7 +35,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     )
     invoice_group = fields.Selection([
         ('settlement', 'Settlement'),
-        ('partner', 'Partner')
+        ('partner', 'Partner'),
+        ('commercial_partner', 'Commercial partner'),
         ],
         required=True,
         default='settlement',

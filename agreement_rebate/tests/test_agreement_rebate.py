@@ -108,7 +108,7 @@ class TestAgreementRebate(TransactionCase):
             'journal_id': self.AccountJournal.search(
                 [('type', '=', 'sale')])[0].id,
             'partner_id': partner.id,
-            'date_invoice': '2020-06-01',
+            'date_invoice': '{}-01-01'.format(fields.Date.today().year),
         })
         products = (self.product_template.product_variant_ids +
                     self.product_1 + self.product_2)
