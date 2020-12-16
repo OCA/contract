@@ -123,6 +123,49 @@ class ContractContract(models.Model):
         copy=False,
         track_visibility="onchange",
     )
+    modification_ids = fields.One2many(
+        comodel_name='contract.modification',
+        inverse_name='contract_id',
+        string='Modifications',
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._set_start_contract_modification()
+        return records
+
+    @api.model
+    def _set_start_contract_modification(self):
+        for record in self:
+            if record.contract_line_ids:
+                date_start = min(record.contract_line_ids.mapped('date_start'))
+            else:
+                date_start = record.create_date
+            record.write({
+                'modification_ids': [
+                    (0, 0, {'date': date_start, 'description': _('Contract start')})
+                ]
+            })
+
+    @api.model
+    def _modification_mail_send(self):
+        modification_ids_not_sent = self.modification_ids.filtered(
+            lambda x: not x.sent
+        )
+        if modification_ids_not_sent:
+            contract_modification_subtype = self.sudo().env.ref(
+                'contract.mail_message_subtype_contract_modification'
+            )
+            notified_partners = self.message_follower_ids.filtered(
+                lambda x: contract_modification_subtype in x.subtype_ids
+            ).mapped('partner_id')
+            if notified_partners:
+                self.message_post_with_view(
+                    'mail.email_contract_modification_template',
+                    partner_ids=notified_partners.ids,
+                )
+            modification_ids_not_sent.write({'sent': True})
 
     @api.multi
     def _inverse_partner_id(self):
