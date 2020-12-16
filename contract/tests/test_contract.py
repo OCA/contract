@@ -2302,3 +2302,8 @@ class TestContract(TestContractBase):
         # Assign same currency as computed one
         self.contract2.currency_id = currency_cad.id
         self.assertFalse(self.contract2.manual_currency_id)
+
+    def test_contract_action_preview(self):
+        action = self.contract.action_preview()
+        self.assertIn("/my/contracts/", action["url"])
+        self.assertIn("access_token=", action["url"])
