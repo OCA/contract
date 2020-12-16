@@ -21,6 +21,7 @@ class ContractContract(models.Model):
         "mail.activity.mixin",
         "contract.abstract.contract",
         "contract.recurrency.mixin",
+        "portal.mixin",
     ]
 
     active = fields.Boolean(default=True,)
@@ -112,6 +113,19 @@ class ContractContract(models.Model):
         copy=False,
         track_visibility="onchange",
     )
+
+    def _compute_access_url(self):
+        for record in self:
+            record.access_url = "/my/contracts/{}".format(record.id)
+
+    def action_preview(self):
+        """Invoked when 'Preview' button in contract form view is clicked."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "target": "self",
+            "url": self.get_portal_url(),
+        }
 
     def _inverse_partner_id(self):
         for rec in self:
