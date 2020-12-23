@@ -6,14 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-23 16:39+0000\n"
-"PO-Revision-Date: 2020-12-23 16:39+0000\n"
+"POT-Creation-Date: 2020-12-24 08:24+0000\n"
+"PO-Revision-Date: 2020-12-24 08:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: contract
+#: model:mail.template,body_html:contract.mail_template_contract_modification
+msgid "\n"
+"            <p>Hello</p>\n"
+"            <p>We have modifications on the contract that we want to notify you.</p>\n"
+"        "
+msgstr ""
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -72,6 +80,11 @@ msgstr ""
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
+msgstr ""
+
+#. module: contract
+#: model:mail.template,subject:contract.mail_template_contract_modification
+msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - Modifications"
 msgstr ""
 
 #. module: contract
@@ -411,7 +424,7 @@ msgid "Company"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:436
+#: code:addons/contract/models/contract.py:441
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -638,7 +651,7 @@ msgid "Contract lines"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:592
+#: code:addons/contract/models/contract.py:597
 #, python-format
 msgid "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">Invoice</a>"
 msgstr ""
@@ -767,6 +780,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 #, python-format
 msgid "Date"
 msgstr ""
@@ -924,11 +938,6 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Group By..."
-msgstr ""
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
-msgid "Hello"
 msgstr ""
 
 #. module: contract
@@ -1357,7 +1366,7 @@ msgid "Planned"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:394
+#: code:addons/contract/models/contract.py:399
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
 msgstr ""
@@ -1591,7 +1600,6 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
-#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 msgid "State"
 msgstr ""
 
@@ -1692,7 +1700,7 @@ msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:627
+#: code:addons/contract/models/contract.py:632
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 #, python-format
@@ -1842,11 +1850,6 @@ msgid "View"
 msgstr ""
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
-msgid "We have modifications on the contract"
-msgstr ""
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -1901,7 +1904,7 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: contract
-#: code:addons/contract/models/contract.py:641
+#: code:addons/contract/models/contract.py:646
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr ""
@@ -1950,10 +1953,5 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "on"
-msgstr ""
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
-msgid "that we want to notify you."
 msgstr ""
 

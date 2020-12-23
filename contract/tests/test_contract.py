@@ -163,7 +163,7 @@ class TestContract(TestContractBase):
                 )
             ]
         })
-        self.assertEqual(len(self.contract.message_partner_ids.ids), 2)
+        self.assertGreaterEqual(len(self.contract.message_partner_ids), 2)
         mail_messages = self.env["mail.message"].search([
             ("model", "=", "contract.contract"),
             ("res_id", "=", self.contract.id),

@@ -150,22 +150,26 @@ class ContractContract(models.Model):
 
     @api.model
     def _modification_mail_send(self):
-        modification_ids_not_sent = self.modification_ids.filtered(
-            lambda x: not x.sent
-        )
-        if modification_ids_not_sent:
-            contract_modification_subtype = self.sudo().env.ref(
-                'contract.mail_message_subtype_contract_modification'
+        for record in self:
+            modification_ids_not_sent = record.modification_ids.filtered(
+                lambda x: not x.sent
             )
-            notified_partners = self.message_follower_ids.filtered(
-                lambda x: contract_modification_subtype in x.subtype_ids
-            ).mapped('partner_id')
-            if notified_partners:
-                self.message_post_with_view(
-                    'mail.email_contract_modification_template',
-                    partner_ids=notified_partners.ids,
+            if modification_ids_not_sent:
+                contract_modification_subtype = self.env.ref(
+                    'contract.mail_message_subtype_contract_modification'
                 )
-            modification_ids_not_sent.write({'sent': True})
+                notified_partners = record.message_follower_ids.filtered(
+                    lambda x: contract_modification_subtype in x.subtype_ids
+                ).mapped('partner_id')
+                if notified_partners:
+                    record.message_post_with_template(
+                        self.env.ref(
+                            "contract.mail_template_contract_modification"
+                        ).id,
+                        partner_ids=[(4, x.id) for x in notified_partners],
+                        notif_layout="contract.template_contract_modification",
+                    )
+                modification_ids_not_sent.write({'sent': True})
 
     @api.multi
     def _inverse_partner_id(self):

@@ -28,7 +28,6 @@ class ContractModification(models.Model):
     sent = fields.Boolean(
         string='Sent',
         default=False,
-        readonly=True,
     )
 
     @api.model_create_multi
