@@ -33,15 +33,15 @@ class ContractModification(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        records.check_modification_ids_need_sent()
+        if not self.env.context.get('bypass_modification_send'):
+            records.check_modification_ids_need_sent()
         return records
 
     def write(self, vals):
         res = super().write(vals)
-        self.check_modification_ids_need_sent()
+        if not self.env.context.get('bypass_modification_send'):
+            self.check_modification_ids_need_sent()
         return res
 
     def check_modification_ids_need_sent(self):
-        records_not_sent = self.filtered(lambda x: not x.sent)
-        if records_not_sent:
-            records_not_sent.mapped('contract_id')._modification_mail_send()
+        self.mapped('contract_id')._modification_mail_send()

@@ -135,6 +135,16 @@ class ContractContract(models.Model):
         records._set_start_contract_modification()
         return records
 
+    def write(self, vals):
+        if 'modification_ids' in vals:
+            res = super(ContractContract, self.with_context(
+                bypass_modification_send=True
+            )).write(vals)
+            self._modification_mail_send()
+        else:
+            res = super(ContractContract, self).write(vals)
+        return res
+
     @api.model
     def _set_start_contract_modification(self):
         for record in self:

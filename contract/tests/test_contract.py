@@ -168,7 +168,7 @@ class TestContract(TestContractBase):
             ("model", "=", "contract.contract"),
             ("res_id", "=", self.contract.id),
         ])
-        self.assertGreaterEqual(len(mail_messages), 3)
+        self.assertGreaterEqual(len(mail_messages), 2)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
