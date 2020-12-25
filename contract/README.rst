@@ -30,6 +30,8 @@ invoicing functions. Also you can print and send by email contract report.
 
 It works for customer contract and supplier contracts.
 
+Contracts are shown in portal.
+
 **Table of contents**
 
 .. contents::
@@ -40,6 +42,8 @@ Configuration
 
 To view discount field in contract line, you need to set *Discount on lines* in
 user access rights.
+
+Contracts can be viewed on the portal (list and detail) if the user logged into the portal is a follower of the contract.
 
 Usage
 =====
@@ -69,6 +73,12 @@ Usage
 #. Contract templates can be created from the Configuration -> Contracts -> Contract Templates menu.
    They allow to define default journal, price list and lines when creating a contract.
    To use it, just select the template on the contract and fields will be filled automatically.
+
+* Contracts appear in portal to following users in every contract:
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/13.0/contract/static/src/screenshots/portal-my.png
+.. image:: https://raw.githubusercontent.com/OCA/contract/13.0/contract/static/src/screenshots/portal-list.png
+.. image:: https://raw.githubusercontent.com/OCA/contract/13.0/contract/static/src/screenshots/portal-detail.png
 
 Known issues / Roadmap
 ======================
