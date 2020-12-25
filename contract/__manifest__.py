@@ -46,6 +46,5 @@
         "views/contract_terminate_reason.xml",
         "views/contract_portal_templates.xml",
     ],
-    "demo": ["demo/assets.xml"],
     "installable": True,
 }

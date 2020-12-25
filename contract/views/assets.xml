@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 Tecnativa - Ernesto Tejeda
+     Copyright 2020 Tecnativa - Víctor Martínez
+     Copyright 2020 Tecnativa - Pedro M. Baeza
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
     <template
@@ -11,6 +13,14 @@
             <script
                 type="text/javascript"
                 src="/contract/static/src/js/section_and_note_fields_backend.js"
+            />
+        </xpath>
+    </template>
+    <template id="assets_tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script
+                type="text/javascript"
+                src="/contract/static/src/js/contract_portal_tour.js"
             />
         </xpath>
     </template>
