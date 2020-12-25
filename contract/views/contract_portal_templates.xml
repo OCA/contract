@@ -168,6 +168,29 @@
                     </div>
                 </t>
             </t>
+            <section t-if="contract.modification_ids" class="s_timeline pt24 pb48 o_colored_level" data-snippet="s_timeline">
+                <div class="container s_timeline_line">
+                    <t t-set="last_modification_date" t-value="False" />
+                    <div class="s_timeline_row d-block d-md-flex flex-row" t-foreach="contract.modification_ids" t-as="modification">
+                        <div class="s_timeline_date">
+                            <t t-if="not last_modification_date or last_modification_date!=modification.date">
+                                <t t-set="last_modification_date" t-value="modification.date" />
+                                <span class="bg-white">
+                                    <b class="o_default_snippet_text" t-esc="last_modification_date" t-options='{"widget": "date"}' />
+                                </span>
+                            </t>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_left d-flex">
+                            <div class="s_timeline_card s_card card bg-white w-100" data-snippet="s_card">
+                                <div class="card-body">
+                                    <div class="card-text o_default_snippet_text" t-field="modification.description"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_right"></div>
+                    </div>
+                </div>
+            </section>
             <!-- chatter -->
             <div id="contract_communication" class="mt-4">
                 <h2>Communication</h2>

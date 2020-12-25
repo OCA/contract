@@ -123,6 +123,63 @@ class ContractContract(models.Model):
         copy=False,
         track_visibility="onchange",
     )
+    modification_ids = fields.One2many(
+        comodel_name='contract.modification',
+        inverse_name='contract_id',
+        string='Modifications',
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._set_start_contract_modification()
+        return records
+
+    def write(self, vals):
+        if 'modification_ids' in vals:
+            res = super(ContractContract, self.with_context(
+                bypass_modification_send=True
+            )).write(vals)
+            self._modification_mail_send()
+        else:
+            res = super(ContractContract, self).write(vals)
+        return res
+
+    @api.model
+    def _set_start_contract_modification(self):
+        for record in self:
+            if record.contract_line_ids:
+                date_start = min(record.contract_line_ids.mapped('date_start'))
+            else:
+                date_start = record.create_date
+            record.write({
+                'modification_ids': [
+                    (0, 0, {'date': date_start, 'description': _('Contract start')})
+                ]
+            })
+
+    @api.model
+    def _modification_mail_send(self):
+        for record in self:
+            modification_ids_not_sent = record.modification_ids.filtered(
+                lambda x: not x.sent
+            )
+            if modification_ids_not_sent:
+                contract_modification_subtype = self.env.ref(
+                    'contract.mail_message_subtype_contract_modification'
+                )
+                notified_partners = record.message_follower_ids.filtered(
+                    lambda x: contract_modification_subtype in x.subtype_ids
+                ).mapped('partner_id')
+                if notified_partners:
+                    record.message_post_with_template(
+                        self.env.ref(
+                            "contract.mail_template_contract_modification"
+                        ).id,
+                        partner_ids=[(4, x.id) for x in notified_partners],
+                        notif_layout="contract.template_contract_modification",
+                    )
+                modification_ids_not_sent.write({'sent': True})
 
     @api.multi
     def _inverse_partner_id(self):

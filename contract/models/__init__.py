@@ -6,6 +6,7 @@ from . import contract_template
 from . import contract
 from . import contract_template_line
 from . import contract_line
+from . import contract_modification
 from . import account_invoice
 from . import account_invoice_line
 from . import res_partner
