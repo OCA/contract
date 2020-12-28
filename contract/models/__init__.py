@@ -7,6 +7,7 @@ from . import contract_template
 from . import contract
 from . import contract_template_line
 from . import contract_line
+from . import contract_modification
 from . import account_move
 from . import res_partner
 from . import contract_tag
