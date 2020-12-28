@@ -28,6 +28,7 @@ class TestContractBase(common.SavepointCase):
             {
                 "name": "partner test contract",
                 "property_product_pricelist": cls.pricelist.id,
+                "email": "demo@demo.com",
             }
         )
         cls.product_1 = cls.env.ref("product.product_product_1")
@@ -169,6 +170,29 @@ class TestContract(TestContractBase):
         vals["contract_id"] = self.template.id
         vals.update(overrides)
         return self.env["contract.template.line"].create(vals)
+
+    def test_add_modifications(self):
+        self.contract.message_subscribe(
+            partner_ids=self.contract.partner_id.ids,
+            subtype_ids=self.env.ref(
+                "contract.mail_message_subtype_contract_modification"
+            ).ids,
+        )
+        # Check initial modification auto-creation
+        self.assertEqual(len(self.contract.modification_ids), 1)
+        self.contract.write(
+            {
+                "modification_ids": [
+                    (0, 0, {"date": "2020-01-01", "description": "Modification 1"}),
+                    (0, 0, {"date": "2020-02-01", "description": "Modification 2"}),
+                ]
+            }
+        )
+        self.assertGreaterEqual(len(self.contract.message_partner_ids), 1)
+        mail_messages = self.env["mail.message"].search(
+            [("model", "=", "contract.contract"), ("res_id", "=", self.contract.id)]
+        )
+        self.assertGreaterEqual(len(mail_messages), 2)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
