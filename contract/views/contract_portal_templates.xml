@@ -94,7 +94,7 @@
                 <t t-set="card_header">
                     <h5 class="mb-0">
                         <span>
-                            Contract Order - <span t-field="contract.name" />
+                            Contract - <span t-field="contract.name" />
                         </span>
                     </h5>
                 </t>
@@ -200,10 +200,26 @@
                             <table class="table table-sm" id="sales_order_table">
                                 <thead class="bg-100">
                                     <tr>
-                                        <th class="text-left">Description</th>
-                                        <th class="text-right">Recurrence</th>
-                                        <th class="text-right">Date of next invoice</th>
-                                        <th class="text-right">Last date invoice</th>
+                                        <th
+                                            name="th_name"
+                                            class="text-left"
+                                        >Description</th>
+                                        <th
+                                            name="th_quantity"
+                                            class="text-right"
+                                        >Quantity</th>
+                                        <th
+                                            name="th_price_unit"
+                                            class="text-right"
+                                        >Price unit</th>
+                                        <th
+                                            name="th_recurring_interval"
+                                            class="text-right"
+                                        >Recurrence</th>
+                                        <th
+                                            name="th_recurring_next_date"
+                                            class="text-right"
+                                        >Date of next invoice</th>
                                     </tr>
                                 </thead>
                                 <tbody class="contract_tbody">
@@ -212,10 +228,22 @@
                                         t-as="line"
                                     >
                                         <tr>
-                                            <td id="line_name">
+                                            <td name="td_name">
                                                 <span t-field="line.name" />
                                             </td>
-                                            <td class="text-right">
+                                            <td name="td_quantity" class="text-right">
+                                                <span t-field="line.quantity" />
+                                            </td>
+                                            <td name="td_price_unit" class="text-right">
+                                                <span
+                                                    t-field="line.price_unit"
+                                                    t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
+                                                />
+                                            </td>
+                                            <td
+                                                name="td_recurring_interval"
+                                                class="text-right"
+                                            >
                                                 <span
                                                     t-field="line.recurring_interval"
                                                 />
@@ -241,14 +269,12 @@
                                                     t-if="line.recurring_rule_type=='yearly'"
                                                 >Year(s)</t>
                                             </td>
-                                            <td class="text-right">
+                                            <td
+                                                name="td_recurring_next_date"
+                                                class="text-right"
+                                            >
                                                 <span
                                                     t-field="line.recurring_next_date"
-                                                />
-                                            </td>
-                                            <td class="text-right">
-                                                <span
-                                                    t-field="line.last_date_invoiced"
                                                 />
                                             </td>
                                         </tr>
@@ -259,6 +285,52 @@
                     </div>
                 </t>
             </t>
+            <section
+                t-if="contract.modification_ids"
+                class="s_timeline pt24 pb48 o_colored_level"
+                data-snippet="s_timeline"
+            >
+                <div class="container s_timeline_line">
+                    <t t-set="last_modification_date" t-value="False" />
+                    <div
+                        class="s_timeline_row d-block d-md-flex flex-row"
+                        t-foreach="contract.modification_ids"
+                        t-as="modification"
+                    >
+                        <div class="s_timeline_date">
+                            <t
+                                t-if="not last_modification_date or last_modification_date!=modification.date"
+                            >
+                                <t
+                                    t-set="last_modification_date"
+                                    t-value="modification.date"
+                                />
+                                <span class="bg-white">
+                                    <b
+                                        class="o_default_snippet_text"
+                                        t-esc="last_modification_date"
+                                        t-options='{"widget": "date"}'
+                                    />
+                                </span>
+                            </t>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_left d-flex">
+                            <div
+                                class="s_timeline_card s_card card bg-white w-100"
+                                data-snippet="s_card"
+                            >
+                                <div class="card-body">
+                                    <div
+                                        class="card-text o_default_snippet_text"
+                                        t-field="modification.description"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_right" />
+                    </div>
+                </div>
+            </section>
             <!-- chatter -->
             <div id="contract_communication" class="mt-4">
                 <h2>Communication</h2>

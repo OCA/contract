@@ -406,6 +406,18 @@
                             </field>
                             <field name="note" />
                         </page>
+                        <page name="modications" string="Modifications">
+                            <field
+                                name="modification_ids"
+                                attrs="{'readonly': [('is_terminated','=',True)]}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="date" />
+                                    <field name="description" />
+                                    <field name="sent" />
+                                </tree>
+                            </field>
+                        </page>
                         <page name="info" string="Other Information">
                             <field name="create_invoice_visibility" invisible="1" />
                             <group>
