@@ -132,6 +132,50 @@
                                 </table>
                             </div>
                         </div>
+                        <div
+                            class="row"
+                            id="modification_info"
+                            t-if="o.modification_ids"
+                        >
+                            <div class="col-12">
+                                <p id="modification_info_p">
+                                    <strong>Modifications</strong>
+                                </p>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th name="th_date">Date</th>
+                                            <th
+                                                name="th_description"
+                                                class="text-right"
+                                            >Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t
+                                            t-foreach="o.modification_ids"
+                                            t-as="notification_id"
+                                        >
+                                            <tr>
+                                                <td name="td_date">
+                                                    <span
+                                                        t-field="notification_id.date"
+                                                    />
+                                                </td>
+                                                <td
+                                                    name="td_description"
+                                                    class="text-right"
+                                                >
+                                                    <div
+                                                        t-field="notification_id.description"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div id="total" class="row" name="total">
                             <div class="col-4 ml-auto">
                                 <table class="table table-sm">
