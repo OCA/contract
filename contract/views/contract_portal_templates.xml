@@ -138,17 +138,22 @@
                             <table class="table table-sm" id="sales_order_table">
                                 <thead class="bg-100">
                                     <tr>
-                                        <th class="text-left">Description</th>
-                                        <th class="text-right">Recurrence</th>
-                                        <th class="text-right">Date of next invoice</th>
-                                        <th class="text-right">Last date invoice</th>
+                                        <th name="th_name" class="text-left">Description</th>
+                                        <th name="th_quantity" class="text-right">Quantity</th>
+                                        <th name="th_price_unit" class="text-right">Price unit</th>
+                                        <th name="th_recurring_interval" class="text-right">Recurrence</th>
+                                        <th name="th_recurring_next_date" class="text-right">Date of next invoice</th>
                                     </tr>
                                 </thead>
                                 <tbody class="contract_tbody">
                                     <t t-foreach="contract.contract_line_ids" t-as="line">
                                         <tr>
-                                            <td id="line_name"><span t-field="line.name"/></td>
-                                            <td class="text-right">
+                                            <td name="td_name"><span t-field="line.name"/></td>
+                                            <td name="td_quantity" class="text-right"><span t-field="line.quantity"/></td>
+                                            <td name="td_price_unit" class="text-right">
+                                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": contract.currency_id}'/>
+                                            </td>
+                                            <td name="td_recurring_interval" class="text-right">
                                                 <span t-field="line.recurring_interval"/>
                                                 <t t-if="line.recurring_rule_type=='daily'">Day(s)</t>
                                                 <t t-if="line.recurring_rule_type=='weekly'">Week(s)</t>
@@ -158,8 +163,7 @@
                                                 <t t-if="line.recurring_rule_type=='semesterly'">Semester(s)</t>
                                                 <t t-if="line.recurring_rule_type=='yearly'">Year(s)</t>
                                             </td>
-                                            <td class="text-right"><span t-field="line.recurring_next_date"/></td>
-                                            <td class="text-right"><span t-field="line.last_date_invoiced"/></td>
+                                            <td name="td_recurring_next_date" class="text-right"><span t-field="line.recurring_next_date"/></td>
                                         </tr>
                                     </t>
                                 </tbody>
