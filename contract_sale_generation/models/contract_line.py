@@ -37,6 +37,7 @@ class ContractLine(models.Model):
         name = self._insert_markers(dates[0], dates[1])
         sale_line_vals.update({
             'name': name,
+            'display_type': self.display_type,
             'discount': self.discount,
             'price_unit': self.price_unit,
             'product_uom_qty': self._get_quantity_to_invoice(*dates),
