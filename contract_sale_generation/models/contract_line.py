@@ -19,6 +19,7 @@ class ContractLine(models.Model):
             'uom_id': self.uom_id.id,
             'discount': self.discount,
             'contract_line_id': self.id,
+            'display_type': self.display_type,
         }
         if order_id:
             sale_line_vals['order_id'] = order_id.id
