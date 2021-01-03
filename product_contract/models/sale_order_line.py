@@ -124,7 +124,8 @@ class SaleOrderLine(models.Model):
                         rec.product_id.auto_renew_rule_type
                     )
 
-    @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type', 'is_auto_renew')
+    @api.onchange('date_start', 'product_uom_qty', 
+                  'recurring_rule_type', 'is_auto_renew')
     def onchange_date_start(self):
         contract_line_model = self.env['contract.line']
         for rec in self.filtered('product_id.is_contract'):
