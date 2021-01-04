@@ -147,11 +147,16 @@ class ContractContract(models.Model):
 
     @api.model
     def _set_start_contract_modification(self):
+        subtype_id = self.env.ref('contract.mail_message_subtype_contract_modification')
         for record in self:
             if record.contract_line_ids:
                 date_start = min(record.contract_line_ids.mapped('date_start'))
             else:
                 date_start = record.create_date
+            record.message_subscribe(
+                partner_ids=[record.partner_id.id],
+                subtype_ids=[subtype_id.id]
+            )
             record.write({
                 'modification_ids': [
                     (0, 0, {'date': date_start, 'description': _('Contract start')})
@@ -165,20 +170,15 @@ class ContractContract(models.Model):
                 lambda x: not x.sent
             )
             if modification_ids_not_sent:
-                contract_modification_subtype = self.env.ref(
-                    'contract.mail_message_subtype_contract_modification'
+                record.message_post_with_template(
+                    self.env.ref(
+                        "contract.mail_template_contract_modification"
+                    ).id,
+                    notif_layout="contract.template_contract_modification",
+                    subtype_id=self.env.ref(
+                        'contract.mail_message_subtype_contract_modification'
+                    ).id
                 )
-                notified_partners = record.message_follower_ids.filtered(
-                    lambda x: contract_modification_subtype in x.subtype_ids
-                ).mapped('partner_id')
-                if notified_partners:
-                    record.message_post_with_template(
-                        self.env.ref(
-                            "contract.mail_template_contract_modification"
-                        ).id,
-                        partner_ids=[(4, x.id) for x in notified_partners],
-                        notif_layout="contract.template_contract_modification",
-                    )
                 modification_ids_not_sent.write({'sent': True})
 
     @api.multi
@@ -485,7 +485,9 @@ class ContractContract(models.Model):
                 lambda x: invoice_create_subtype in x.subtype_ids
             ).mapped('partner_id')
             if partner_ids:
-                invoices.message_subscribe(partner_ids=partner_ids.ids)
+                (
+                    invoices & item._get_related_invoices()
+                ).message_subscribe(partner_ids=partner_ids.ids)
 
     @api.model
     def _finalize_and_create_invoices(self, invoices_values):
