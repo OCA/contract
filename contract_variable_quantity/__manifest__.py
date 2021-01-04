@@ -18,6 +18,7 @@
         "views/contract_line_views.xml",
         "views/contract_template.xml",
         "views/contract.xml",
+        "views/contract_portal_templates.xml",
     ],
     "installable": True,
 }
