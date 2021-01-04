@@ -113,6 +113,12 @@ class ContractContract(models.Model):
         string="Modifications",
     )
 
+    def get_formview_id(self, access_uid=None):
+        if self.contract_type == "sale":
+            return self.env.ref("contract.contract_contract_customer_form_view").id
+        else:
+            return self.env.ref("contract.contract_contract_supplier_form_view").id
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
@@ -131,12 +137,16 @@ class ContractContract(models.Model):
 
     @api.model
     def _set_start_contract_modification(self):
+        subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
         for record in self:
             if record.contract_line_ids:
                 date_start = min(record.contract_line_ids.mapped("date_start"))
             else:
                 date_start = record.create_date
-            record.write(
+            record.message_subscribe(
+                partner_ids=[record.partner_id.id], subtype_ids=[subtype_id.id]
+            )
+            record.with_context(skip_modification_mail=True).write(
                 {
                     "modification_ids": [
                         (0, 0, {"date": date_start, "description": _("Contract start")})
@@ -151,16 +161,12 @@ class ContractContract(models.Model):
                 lambda x: not x.sent
             )
             if modification_ids_not_sent:
-                contract_modification_subtype = self.env.ref(
-                    "contract.mail_message_subtype_contract_modification"
-                )
-                notified_partners = record.message_follower_ids.filtered(
-                    lambda x: contract_modification_subtype in x.subtype_ids
-                ).mapped("partner_id")
-                if notified_partners:
+                if not self.env.context.get("skip_modification_mail"):
                     record.message_post_with_template(
                         self.env.ref("contract.mail_template_contract_modification").id,
-                        partner_ids=[(4, x.id) for x in notified_partners],
+                        subtype_id=self.env.ref(
+                            "contract.mail_message_subtype_contract_modification"
+                        ).id,
                         email_layout_xmlid="contract.template_contract_modification",
                     )
                 modification_ids_not_sent.write({"sent": True})
@@ -541,7 +547,9 @@ class ContractContract(models.Model):
                 lambda x: invoice_create_subtype in x.subtype_ids
             ).mapped("partner_id")
             if partner_ids:
-                invoices.message_subscribe(partner_ids=partner_ids.ids)
+                (invoices & item._get_related_invoices()).message_subscribe(
+                    partner_ids=partner_ids.ids
+                )
 
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
