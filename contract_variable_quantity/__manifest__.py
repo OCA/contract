@@ -5,7 +5,7 @@
 
 {
     "name": "Variable quantity in contract recurrent invoicing",
-    "version": "13.0.1.0.1",
+    "version": "13.0.1.1.0",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa," "Odoo Community Association (OCA)",
@@ -18,6 +18,7 @@
         "views/contract_line_views.xml",
         "views/contract_template.xml",
         "views/contract.xml",
+        "views/contract_portal_templates.xml",
     ],
     "installable": True,
 }
