@@ -99,19 +99,13 @@ class ContractContract(models.Model):
         ondelete="restrict",
         readonly=True,
         copy=False,
-        track_visibility="onchange",
+        tracking=True,
     )
     terminate_comment = fields.Text(
-        string="Termination Comment",
-        readonly=True,
-        copy=False,
-        track_visibility="onchange",
+        string="Termination Comment", readonly=True, copy=False, tracking=True,
     )
     terminate_date = fields.Date(
-        string="Termination Date",
-        readonly=True,
-        copy=False,
-        track_visibility="onchange",
+        string="Termination Date", readonly=True, copy=False, tracking=True,
     )
     modification_ids = fields.One2many(
         comodel_name="contract.modification",
