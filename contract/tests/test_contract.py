@@ -172,11 +172,10 @@ class TestContract(TestContractBase):
         return self.env["contract.template.line"].create(vals)
 
     def test_add_modifications(self):
+        partner2 = self.partner.copy()
+        subtype = self.env.ref("contract.mail_message_subtype_contract_modification")
         self.contract.message_subscribe(
-            partner_ids=self.contract.partner_id.ids,
-            subtype_ids=self.env.ref(
-                "contract.mail_message_subtype_contract_modification"
-            ).ids,
+            partner_ids=partner2.ids, subtype_ids=subtype.ids,
         )
         # Check initial modification auto-creation
         self.assertEqual(len(self.contract.modification_ids), 1)
@@ -188,11 +187,18 @@ class TestContract(TestContractBase):
                 ]
             }
         )
-        self.assertGreaterEqual(len(self.contract.message_partner_ids), 1)
-        mail_messages = self.env["mail.message"].search(
-            [("model", "=", "contract.contract"), ("res_id", "=", self.contract.id)]
+        partner_ids = self.contract.message_follower_ids.filtered(
+            lambda x: subtype in x.subtype_ids
+        ).mapped("partner_id")
+        self.assertGreaterEqual(len(partner_ids), 2)
+        total_mail_messages = self.env["mail.message"].search(
+            [
+                ("model", "=", "contract.contract"),
+                ("res_id", "=", self.contract.id),
+                ("subtype_id", "=", subtype.id),
+            ]
         )
-        self.assertGreaterEqual(len(mail_messages), 2)
+        self.assertGreaterEqual(len(total_mail_messages), 1)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
@@ -257,7 +263,7 @@ class TestContract(TestContractBase):
         self.contract._recurring_create_invoice()
         invoice_daily = self.contract._get_related_invoices()
         self.assertTrue(invoice_daily)
-        self.assertEqual(len(invoice_daily.message_partner_ids.ids), 1)
+        self.assertGreaterEqual(len(invoice_daily.message_follower_ids), 1)
 
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date("2018-03-01")
