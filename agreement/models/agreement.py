@@ -232,7 +232,7 @@ class Agreement(models.Model):
     sections_ids = fields.One2many('agreement.section', 'agreement_id',
                                    string="Sections", copy=True)
     clauses_ids = fields.One2many('agreement.clause', 'agreement_id',
-                                  string="Clauses", copy=True)
+                                  string="Clauses", copy=False)
     appendix_ids = fields.One2many('agreement.appendix', 'agreement_id',
                                    string="Appendices", copy=True)
     serviceprofile_ids = fields.One2many('agreement.serviceprofile',

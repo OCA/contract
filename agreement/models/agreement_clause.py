@@ -14,11 +14,7 @@ class AgreementClause(models.Model):
                         help="The title is displayed on the PDF."
                              "The name is not.")
     sequence = fields.Integer(string="Sequence")
-    agreement_id = fields.Many2one(
-        'agreement',
-        string="Agreement",
-        ondelete="cascade"
-    )
+    agreement_id = fields.Many2one(related="section_id.agreement_id", store=True)
     section_id = fields.Many2one(
         'agreement.section',
         string="Section",
