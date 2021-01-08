@@ -11,6 +11,7 @@
     "installable": True,
     "depends": [
         "contract",
+        "account",
         "sale_management",
     ],
     "data": [

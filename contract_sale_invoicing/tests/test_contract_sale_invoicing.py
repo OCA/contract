@@ -45,7 +45,7 @@ class TestContractSaleInvoicing(TestContractBase):
         self.contract.invoicing_sales = True
         self.sale_order.action_confirm()
         self.contract.recurring_create_invoice()
-        self.assertEqual(self.sale_order.invoice_status, "invoiced")
+        self.assertEqual(self.sale_order.invoice_status, "to invoice")
 
     def test_contract_sale_invoicing_without(self):
         self.contract.invoicing_sales = True
