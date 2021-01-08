@@ -72,6 +72,7 @@ Contributors
 
 * Levent Karakaş
 * Bejaoui Souheil <souheil.bejaoui@acsone.eu>
+* Dhara Solanki <dhara.solanki@initos.com>
 
 Maintainers
 ~~~~~~~~~~~
