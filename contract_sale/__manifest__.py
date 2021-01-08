@@ -3,9 +3,9 @@
 
 {
     "name": "Contract from Sale",
-    "version": "13.0.1.0.0",
+    "version": "14.0.1.0.0",
     "category": "Sales",
-    "author": "Tecnativa, " "Odoo Community Association (OCA)",
+    "author": "Tecnativa, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["sale", "contract"],
     "development_status": "Production/Stable",
