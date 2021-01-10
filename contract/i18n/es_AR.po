@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2020-12-22 21:43+0000\n"
+"PO-Revision-Date: 2021-01-10 23:45+0000\n"
 "Last-Translator: Ignacio Buioli <ibuioli@gmail.com>\n"
-"Language-Team: Spanish (Argentina) (https://www.transifex.com/oca/"
-"teams/23907/es_AR/)\n"
+"Language-Team: Spanish (Argentina) (https://www.transifex.com/oca/teams/"
+"23907/es_AR/)\n"
 "Language: es_AR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,11 @@ msgid ""
 "you.</p>\n"
 "        "
 msgstr ""
+"\n"
+"            <p>Hola</p>\n"
+"            <p>Tenemos modificaciones en el contrato que queremos "
+"notificarle.</p>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -98,6 +103,71 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Hola ${object.partner_id.name or ''},</p>\n"
+"    <p>Un nuevo contrato a sido creado: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Contato: <strong>${object.name}</strong><br />\n"
+"       % if object.date_start:\n"
+"       &nbsp;&nbsp;Fecha de Inicio del Contrato: ${object.date_start or ''}"
+"<br />\n"
+"       % endif\n"
+"\n"
+"       % if object.user_id:\n"
+"       % if object.user_id.email:\n"
+"       &nbsp;&nbsp;Tu Contrato: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+"       % else:\n"
+"       &nbsp;&nbsp;Tu Contrato: ${object.user_id.name}\n"
+"       % endif\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Si tiene alguna pregunta, no dude en contactarnos.</p>\n"
+"    <p>Gracias por elegir ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id."
+"name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"            ${object.company_id.partner_id.sudo().with_context("
+"show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone: ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web: <a href=\"${object.company_id.website}\">${object."
+"company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"    <p></p>\n"
+"    <a href=\"${object.get_base_url()}/my/contracts/${object."
+"id}?access_token=${object.access_token}\" target=\"_blank\" style"
+"=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: "
+"none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"</div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
@@ -110,6 +180,8 @@ msgid ""
 "${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - "
 "Modifications"
 msgstr ""
+"${object.company_id.name} Contrato (Ref ${object.name or 'n/a'}) - "
+"Modificaciones"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -147,7 +219,8 @@ msgstr ""
 "<strong>#FIN#</strong>\n"
 "                                    : Fecha final\n"
 "                                    del\n"
-"                                    período facturado"
+"                                    período \n"
+"                                    facturado"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -182,7 +255,7 @@ msgstr "<strong>Contrato: </strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>Cliente:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -192,12 +265,12 @@ msgstr "<strong>Fecha de Inicio</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
-msgstr ""
+msgstr "<strong>Fecha de cierre</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date of Next Invoice</strong>"
-msgstr ""
+msgstr "<strong>Fecha de la Siguiente Factura</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -207,7 +280,7 @@ msgstr "<strong>Descripción</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Modifications</strong>"
-msgstr ""
+msgstr "<strong>Modificaciones</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -237,7 +310,7 @@ msgstr "<strong>Artículos Recurrentes</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>Referencia</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -247,7 +320,7 @@ msgstr "<strong>Responsable: </strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Responsable:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -295,7 +368,7 @@ msgstr "Línea Abstracta de Contrato Recurrente"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Advertencia de acceso"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
@@ -470,7 +543,7 @@ msgstr "Entidad Comercial"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Communication"
-msgstr ""
+msgstr "Comunicación"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_company
@@ -522,12 +595,12 @@ msgstr "Contrato"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
-msgstr ""
+msgstr "Contrato #"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contract -"
-msgstr ""
+msgstr "Contrato -"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
@@ -564,7 +637,7 @@ msgstr "Wizard para Crear Facturas Manualmente"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_modification
 msgid "Contract Modification"
-msgstr ""
+msgstr "Modificación de Contrato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -761,13 +834,13 @@ msgstr ""
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
 msgid "Contract modifications"
-msgstr ""
+msgstr "Modificaciones del contrato"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract start"
-msgstr ""
+msgstr "Inicio del contrato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
@@ -875,7 +948,7 @@ msgstr "Contratos de Cliente"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL del Portal de Cliente"
 
 #. module: contract
 #: code:addons/contract/controllers/main.py:0
@@ -885,7 +958,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
@@ -912,7 +985,7 @@ msgstr "Fecha de Inicio"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
-msgstr ""
+msgstr "Fecha de cierre"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_next_date
@@ -929,7 +1002,7 @@ msgstr "Fecha de la Próxima Factura"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
-msgstr ""
+msgstr "Fecha de la próxima factura"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__daily
@@ -1378,7 +1451,7 @@ msgstr "Mensajes"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__modification_ids
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Modifications"
-msgstr ""
+msgstr "Modificaciones"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__monthly
@@ -1572,7 +1645,7 @@ msgstr "Por favor defina un %s diario para la compañía '%s'."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL de Acceso al Portal"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_invoicing_type__post-paid
@@ -1606,12 +1679,12 @@ msgstr "Línea de Contrato Predecesora"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Preview"
-msgstr ""
+msgstr "Previsualizar"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Price unit"
-msgstr ""
+msgstr "Precio unitario"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__pricelist_id
@@ -1767,7 +1840,7 @@ msgstr "Sección"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Token de Seguridad"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__semesterly
@@ -1790,7 +1863,7 @@ msgstr "Enviar por Correo Electrónico"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_modification__sent
 msgid "Sent"
-msgstr ""
+msgstr "Expedido"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
