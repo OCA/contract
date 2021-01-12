@@ -39,12 +39,17 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         ]
         settlement_domain = []
         if self.date_from:
+            domain.extend([
+                '|',
+                ('end_date', '=', False),
+                ('end_date', '>', self.date_from),
+            ])
             settlement_domain.extend([
                 ('date_to', '>=', self.date_from),
             ])
         if self.date_to:
             domain.extend([
-                ('start_date', '<', self.date_to)
+                ('start_date', '<', self.date_to),
             ])
             settlement_domain.extend([
                 ('date_to', '<=', self.date_to),
