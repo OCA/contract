@@ -113,6 +113,12 @@ class ContractContract(models.Model):
         string="Modifications",
     )
 
+    def get_formview_id(self, access_uid=None):
+        if self.contract_type == "sale":
+            return self.env.ref("contract.contract_contract_customer_form_view").id
+        else:
+            return self.env.ref("contract.contract_contract_supplier_form_view").id
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
