@@ -1,5 +1,6 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
 # Copyright 2018 Tecnativa - Pedro M. Baeza
+# Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from collections import namedtuple
@@ -134,15 +135,35 @@ class TestContract(TestContractBase):
         vals.update(overrides)
         return self.env['contract.template.line'].create(vals)
 
+    def _get_mail_messages_prev(self, contract, subtype):
+        return self.env["mail.message"].search([
+            ("model", "=", "contract.contract"),
+            ("res_id", "=", contract.id),
+            ("subtype_id", "=", subtype.id),
+        ]).ids
+
+    def _get_mail_messages(self, exclude_ids, contract, subtype):
+        return self.env["mail.message"].search([
+            ("model", "=", "contract.contract"),
+            ("res_id", "=", contract.id),
+            ("subtype_id", "=", subtype.id),
+            ('id', 'not in', exclude_ids)
+        ])
+
     def test_add_modifications(self):
         partner2 = self.partner.copy()
-        subtype = self.env.ref('contract.mail_message_subtype_contract_modification')
         self.contract.message_subscribe(
             partner_ids=partner2.ids,
-            subtype_ids=subtype.ids
+            subtype_ids=self.env.ref('mail.mt_comment').ids
         )
+        subtype = self.env.ref('contract.mail_message_subtype_contract_modification')
+        partner_ids = self.contract.message_follower_ids.filtered(
+            lambda x: subtype in x.subtype_ids
+        ).mapped('partner_id')
+        self.assertGreaterEqual(len(partner_ids), 1)
         # Check initial modification auto-creation
         self.assertEqual(len(self.contract.modification_ids), 1)
+        exclude_ids = self._get_mail_messages_prev(self.contract, subtype)
         self.contract.write({
             'modification_ids': [
                 (
@@ -163,16 +184,12 @@ class TestContract(TestContractBase):
                 )
             ]
         })
-        partner_ids = self.contract.message_follower_ids.filtered(
-            lambda x: subtype in x.subtype_ids
-        ).mapped('partner_id')
-        self.assertGreaterEqual(len(partner_ids), 2)
-        total_mail_messages = self.env["mail.message"].search_count([
-            ("model", "=", "contract.contract"),
-            ("res_id", "=", self.contract.id),
-            ("subtype_id", "=", subtype.id)
-        ])
-        self.assertGreaterEqual(total_mail_messages, 1)
+        mail_messages = self._get_mail_messages(exclude_ids, self.contract, subtype)
+        self.assertGreaterEqual(len(mail_messages), 1)
+        self.assertEqual(
+            mail_messages[0].notification_ids.mapped('res_partner_id').ids,
+            self.contract.partner_id.ids
+        )
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
@@ -260,7 +277,7 @@ class TestContract(TestContractBase):
         self.contract.recurring_create_invoice()
         invoice_daily = self.contract._get_related_invoices()
         self.assertTrue(invoice_daily)
-        self.assertEqual(len(invoice_daily.message_partner_ids.ids), 2)
+        self.assertTrue(self.contract.partner_id in invoice_daily.message_partner_ids)
 
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date('2018-03-01')
