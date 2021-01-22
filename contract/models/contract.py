@@ -146,7 +146,7 @@ class ContractContract(models.Model):
             record.message_subscribe(
                 partner_ids=[record.partner_id.id], subtype_ids=[subtype_id.id]
             )
-            record.write(
+            record.with_context(skip_modification_mail=True).write(
                 {
                     "modification_ids": [
                         (0, 0, {"date": date_start, "description": _("Contract start")})
@@ -161,13 +161,14 @@ class ContractContract(models.Model):
                 lambda x: not x.sent
             )
             if modification_ids_not_sent:
-                record.message_post_with_template(
-                    self.env.ref("contract.mail_template_contract_modification").id,
-                    subtype_id=self.env.ref(
-                        "contract.mail_message_subtype_contract_modification"
-                    ).id,
-                    email_layout_xmlid="contract.template_contract_modification",
-                )
+                if not self.env.context.get("skip_modification_mail"):
+                    record.message_post_with_template(
+                        self.env.ref("contract.mail_template_contract_modification").id,
+                        subtype_id=self.env.ref(
+                            "contract.mail_message_subtype_contract_modification"
+                        ).id,
+                        email_layout_xmlid="contract.template_contract_modification",
+                    )
                 modification_ids_not_sent.write({"sent": True})
 
     def _compute_access_url(self):
