@@ -260,7 +260,7 @@ class TestContract(TestContractBase):
         self.contract.recurring_create_invoice()
         invoice_daily = self.contract._get_related_invoices()
         self.assertTrue(invoice_daily)
-        self.assertEqual(len(invoice_daily.message_partner_ids.ids), 1)
+        self.assertEqual(len(invoice_daily.message_partner_ids.ids), 2)
 
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date('2018-03-01')
