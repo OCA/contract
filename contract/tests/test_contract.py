@@ -140,6 +140,15 @@ class TestContractBase(common.SavepointCase):
                         0,
                         {
                             "product_id": False,
+                            "name": "Header for Services",
+                            "display_type": "line_section",
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": False,
                             "name": "Services from #START# to #END#",
                             "quantity": 1,
                             "price_unit": 100,
