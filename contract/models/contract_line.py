@@ -543,6 +543,9 @@ class ContractLine(models.Model):
         name = self._insert_markers(dates[0], dates[1])
         invoice_line_vals.update(
             {
+                "account_id": invoice_line_vals["account_id"]
+                if "account_id" in invoice_line_vals and not self.display_type
+                else False,
                 "quantity": self._get_quantity_to_invoice(*dates),
                 "product_uom_id": self.uom_id.id,
                 "discount": self.discount,
@@ -1060,4 +1063,4 @@ class ContractLine(models.Model):
         self, period_first_date, period_last_date, invoice_date
     ):
         self.ensure_one()
-        return self.quantity
+        return self.quantity if not self.display_type else 0.0
