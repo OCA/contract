@@ -539,7 +539,7 @@ class ContractContract(models.Model):
 
     @api.model
     def _invoice_followers(self, invoices):
-        invoice_create_subtype = self.sudo().env.ref(
+        invoice_create_subtype = self.env.ref(
             "contract.mail_message_subtype_invoice_created"
         )
         for item in self:
