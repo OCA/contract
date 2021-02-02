@@ -263,16 +263,19 @@ class TestContract(TestContractBase):
         self.acct_line.recurring_next_date = "2018-02-23"
         self.acct_line.recurring_rule_type = "daily"
         self.contract.pricelist_id = False
+        subtype_ids = self.contract.message_follower_ids.filtered(
+            lambda x: self.contract.partner_id.id == x.partner_id.id
+        ).subtype_ids.ids
+        subtype_ids.append(
+            self.env.ref("contract.mail_message_subtype_invoice_created").id
+        )
         self.contract.message_subscribe(
-            partner_ids=self.contract.partner_id.ids,
-            subtype_ids=self.env.ref(
-                "contract.mail_message_subtype_invoice_created"
-            ).ids,
+            partner_ids=self.contract.partner_id.ids, subtype_ids=subtype_ids
         )
         self.contract._recurring_create_invoice()
         invoice_daily = self.contract._get_related_invoices()
         self.assertTrue(invoice_daily)
-        self.assertGreaterEqual(len(invoice_daily.message_follower_ids), 1)
+        self.assertTrue(self.contract.partner_id in invoice_daily.message_partner_ids)
 
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date("2018-03-01")
