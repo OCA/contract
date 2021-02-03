@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Agreement Stage List View-->
-    <record model="ir.ui.view" id="partner_agreement_stage_list_view">
+    <record id="partner_agreement_stage_list_view" model="ir.ui.view">
         <field name="name">Agreement Stage List</field>
         <field name="model">agreement.stage</field>
         <field name="arch" type="xml">
@@ -15,12 +15,18 @@
     </record>
 
     <!-- Agreement Stage Form View -->
-    <record model="ir.ui.view" id="partner_agreement_stage_form_view">
+    <record id="partner_agreement_stage_form_view" model="ir.ui.view">
         <field name="name">Agreement Stage Form</field>
         <field name="model">agreement.stage</field>
         <field name="arch" type="xml">
             <form string="Agreements Stage Form">
                 <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Stage Name" />
                         <h1><field name="name" string="Stage Name" /></h1>
@@ -29,6 +35,7 @@
                         <field name="sequence" />
                         <field name="stage_type" />
                         <field name="fold" />
+                        <field name="active" invisible="1" />
                     </group>
                 </sheet>
             </form>
@@ -36,7 +43,7 @@
     </record>
 
     <!-- Actions opening views on models -->
-    <record model="ir.actions.act_window" id="partner_agreement_action_stage">
+    <record id="partner_agreement_action_stage" model="ir.actions.act_window">
         <field name="name">Agreement Stage</field>
         <field name="res_model">agreement.stage</field>
         <field name="view_mode">tree,form</field>

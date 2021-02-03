@@ -22,3 +22,7 @@ class AgreementStage(models.Model):
     stage_type = fields.Selection(
         [("agreement", "Agreement")], string="Type", required=True
     )
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+    )

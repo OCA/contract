@@ -24,7 +24,7 @@ class Agreement(models.Model):
     )
     description = fields.Text(
         string="Description",
-        track_visibility="onchange",
+        tracking=True,
         help="Description of the agreement",
     )
     dynamic_description = fields.Text(
@@ -34,11 +34,11 @@ class Agreement(models.Model):
     )
     start_date = fields.Date(
         string="Start Date",
-        track_visibility="onchange",
+        tracking=True,
         help="When the agreement starts.",
     )
     end_date = fields.Date(
-        string="End Date", track_visibility="onchange", help="When the agreement ends."
+        string="End Date", tracking=True, help="When the agreement ends."
     )
     color = fields.Integer(string="Color")
     active = fields.Boolean(
@@ -49,33 +49,33 @@ class Agreement(models.Model):
     )
     company_signed_date = fields.Date(
         string="Signed on",
-        track_visibility="onchange",
+        tracking=True,
         help="Date the contract was signed by Company.",
     )
     partner_signed_date = fields.Date(
         string="Signed on (Partner)",
-        track_visibility="onchange",
+        tracking=True,
         help="Date the contract was signed by the Partner.",
     )
     term = fields.Integer(
         string="Term (Months)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of months this agreement/contract is in effect with the "
         "partner.",
     )
     expiration_notice = fields.Integer(
         string="Exp. Notice (Days)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of Days before expiration to be notified.",
     )
     change_notice = fields.Integer(
         string="Change Notice (Days)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of Days to be notified before changes.",
     )
     special_terms = fields.Text(
         string="Special Terms",
-        track_visibility="onchange",
+        tracking=True,
         help="Any terms that you have agreed to and want to track on the "
         "agreement/contract.",
     )
@@ -88,34 +88,24 @@ class Agreement(models.Model):
         string="Reference",
         required=True,
         default=lambda self: _("New"),
-        track_visibility="onchange",
+        tracking=True,
         copy=False,
         help="ID used for internal contract tracking.",
     )
-    increase_type_id = fields.Many2one(
-        "agreement.increasetype",
-        string="Increase Type",
-        track_visibility="onchange",
-        help="The amount that certain rates may increase.",
-    )
     termination_requested = fields.Date(
         string="Termination Requested Date",
-        track_visibility="onchange",
+        tracking=True,
         help="Date that a request for termination was received.",
     )
     termination_date = fields.Date(
         string="Termination Date",
-        track_visibility="onchange",
+        tracking=True,
         help="Date that the contract was terminated.",
     )
-    reviewed_date = fields.Date(string="Reviewed Date", track_visibility="onchange")
-    reviewed_user_id = fields.Many2one(
-        "res.users", string="Reviewed By", track_visibility="onchange"
-    )
-    approved_date = fields.Date(string="Approved Date", track_visibility="onchange")
-    approved_user_id = fields.Many2one(
-        "res.users", string="Approved By", track_visibility="onchange"
-    )
+    reviewed_date = fields.Date(string="Reviewed Date", tracking=True)
+    reviewed_user_id = fields.Many2one("res.users", string="Reviewed By", tracking=True)
+    approved_date = fields.Date(string="Approved Date", tracking=True)
+    approved_user_id = fields.Many2one("res.users", string="Approved By", tracking=True)
     currency_id = fields.Many2one("res.currency", string="Currency")
     partner_id = fields.Many2one(
         "res.partner",
@@ -182,7 +172,7 @@ class Agreement(models.Model):
 
     parties = fields.Html(
         string="Parties",
-        track_visibility="onchange",
+        tracking=True,
         default=_get_default_parties,
         help="Parties of the agreement",
     )
@@ -192,12 +182,12 @@ class Agreement(models.Model):
         help="Compute dynamic parties",
     )
     agreement_type_id = fields.Many2one(
-        track_visibility="onchange",
+        tracking=True,
     )
     agreement_subtype_id = fields.Many2one(
         "agreement.subtype",
         string="Agreement Sub-type",
-        track_visibility="onchange",
+        tracking=True,
         help="Select the sub-type of this agreement. Sub-Types are related to "
         "agreement types.",
     )
@@ -205,20 +195,20 @@ class Agreement(models.Model):
     assigned_user_id = fields.Many2one(
         "res.users",
         string="Assigned To",
-        track_visibility="onchange",
+        tracking=True,
         help="Select the user who manages this agreement.",
     )
     company_signed_user_id = fields.Many2one(
         "res.users",
         string="Signed By",
-        track_visibility="onchange",
+        tracking=True,
         help="The user at our company who authorized/signed the agreement or "
         "contract.",
     )
     partner_signed_user_id = fields.Many2one(
         "res.partner",
         string="Signed By (Partner)",
-        track_visibility="onchange",
+        tracking=True,
         help="Contact on the account that signed the agreement/contract.",
     )
     parent_agreement_id = fields.Many2one(
@@ -227,12 +217,6 @@ class Agreement(models.Model):
         help="Link this agreement to a parent agreement. For example if this "
         "agreement is an amendment to another agreement. This list will "
         "only show other agreements related to the same account.",
-    )
-    renewal_type_id = fields.Many2one(
-        "agreement.renewaltype",
-        string="Renewal Type",
-        track_visibility="onchange",
-        help="Describes what happens after the contract expires.",
     )
     recital_ids = fields.One2many(
         "agreement.recital", "agreement_id", string="Recitals", copy=True
@@ -250,6 +234,7 @@ class Agreement(models.Model):
         string="Previous Versions",
         copy=False,
         domain=[("active", "=", False)],
+        context={"active_test": False},
     )
     child_agreements_ids = fields.One2many(
         "agreement",
@@ -264,7 +249,7 @@ class Agreement(models.Model):
     state = fields.Selection(
         [("draft", "Draft"), ("active", "Active"), ("inactive", "Inactive")],
         default="draft",
-        track_visibility="always",
+        tracking=True,
     )
     notification_address_id = fields.Many2one(
         "res.partner",
@@ -273,7 +258,7 @@ class Agreement(models.Model):
         "customer address.(Address Type = Other)",
     )
     signed_contract_filename = fields.Char(string="Filename")
-    signed_contract = fields.Binary(string="Signed Document", track_visibility="always")
+    signed_contract = fields.Binary(string="Signed Document", tracking=True)
 
     # Dynamic field editor
     field_domain = fields.Char(
@@ -300,35 +285,32 @@ class Agreement(models.Model):
                     field_domain, self.default_value or "''"
                 )
 
-    # compute the dynamic content for mako expression
-    @api.multi
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_description(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             description = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.description, "agreement", agreement.id
-            )
+                agreement.description, "agreement", agreement.ids
+            )[agreement.id]
             agreement.dynamic_description = description
 
-    @api.multi
     def _compute_dynamic_parties(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             parties = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.parties, "agreement", agreement.id
-            )
+                agreement.parties, "agreement", agreement.ids
+            )[agreement.id]
             agreement.dynamic_parties = parties
 
-    @api.multi
     def _compute_dynamic_special_terms(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             special_terms = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.special_terms, "agreement", agreement.id
-            )
+                agreement.special_terms, "agreement", agreement.ids
+            )[agreement.id]
             agreement.dynamic_special_terms = special_terms
 
     # Used for Kanban grouped_by view
@@ -344,13 +326,23 @@ class Agreement(models.Model):
         string="Stage",
         group_expand="_read_group_stage_ids",
         help="Select the current stage of the agreement.",
-        track_visibility="onchange",
+        default=lambda self: self._get_default_stage_id(),
+        tracking=True,
         index=True,
     )
 
+    @api.model
+    def _get_default_stage_id(self):
+        try:
+            stage_id = self.env.ref("agreement_legal.agreement_stage_new").id
+        except ValueError:
+            stage_id = False
+        return stage_id
+
     # Create New Version Button
-    @api.multi
-    def create_new_version(self, vals):
+    def create_new_version(self, vals=None):
+        if not vals:
+            vals = {}
         for rec in self:
             if not rec.state == "draft":
                 # Make sure status is draft
@@ -361,7 +353,8 @@ class Agreement(models.Model):
                 "parent_agreement_id": rec.id,
             }
             # Make a current copy and mark it as old
-            rec.copy(default=default_vals)
+            res = rec.copy(default=default_vals)
+            res.sections_ids.mapped("clauses_ids").write({"agreement_id": res.id})
             # Increment the Version
             rec.version = rec.version + 1
         # Reset revision to 0 since it's a new version
@@ -375,7 +368,7 @@ class Agreement(models.Model):
             "version": 1,
             "revision": 0,
             "state": "draft",
-            "stage_id": self.env.ref("agreement_legal.agreement_stage_new").id,
+            "stage_id": self._get_default_stage_id(),
         }
         res = self.copy(default=default_vals)
         res.sections_ids.mapped("clauses_ids").write({"agreement_id": res.id})
@@ -392,11 +385,21 @@ class Agreement(models.Model):
         if vals.get("code", _("New")) == _("New"):
             vals["code"] = self.env["ir.sequence"].next_by_code("agreement") or _("New")
         if not vals.get("stage_id"):
-            vals["stage_id"] = self.env.ref("agreement_legal.agreement_stage_new").id
+            vals["stage_id"] = self._get_default_stage_id()
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
-    @api.multi
     def write(self, vals):
-        vals["revision"] = self.revision + 1
-        return super(Agreement, self).write(vals)
+        res = True
+        for rec in self:
+            vals["revision"] = rec.revision + 1
+            res = super(Agreement, rec).write(vals)
+        return res
+
+    @api.returns("self", lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {})
+        if default.get("code", False):
+            return super().copy(default)
+        default.setdefault("code", _("New"))
+        return super().copy(default)

@@ -13,7 +13,7 @@ class AgreementAppendix(models.Model):
     title = fields.Char(
         string="Title",
         required=True,
-        help="The title is displayed on the PDF." "The name is not.",
+        help="The title is displayed on the PDF. The name is not.",
     )
     sequence = fields.Integer(string="Sequence", default=10)
     content = fields.Html(string="Content")
@@ -55,8 +55,7 @@ class AgreementAppendix(models.Model):
                     field_domain, self.default_value or "''"
                 )
 
-    # compute the dynamic content for mako expression
-    @api.multi
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for appendix in self:
@@ -66,6 +65,6 @@ class AgreementAppendix(models.Model):
                 or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                appendix.content, "agreement.appendix", appendix.id
-            )
+                appendix.content, "agreement.appendix", appendix.ids
+            )[appendix.id]
             appendix.dynamic_content = content

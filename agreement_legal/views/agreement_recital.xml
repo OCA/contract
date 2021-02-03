@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Agreement Recital List View-->
-    <record model="ir.ui.view" id="agreement_recital_tree">
+    <record id="agreement_recital_tree" model="ir.ui.view">
         <field name="name">Agreement Recital Tree</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
@@ -17,26 +17,18 @@
     </record>
 
     <!-- Agreement Recital Form View -->
-    <record model="ir.ui.view" id="agreement_recital_form">
+    <record id="agreement_recital_form" model="ir.ui.view">
         <field name="name">Agreement Recital Form</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
             <form string="Recital">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            name="toggle_active"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options="{&quot;terminology&quot;: &quot;archive&quot;}"
-                            />
-                        </button>
-                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
                         <h1><field name="name" /></h1>
@@ -45,6 +37,7 @@
                         <group>
                             <field name="title" />
                             <field name="agreement_id" />
+                            <field name="active" invisible="1" />
                         </group>
                         <group>
                             <field name="sequence" />
@@ -79,11 +72,12 @@
     </record>
 
     <!-- Agreement Recital Search View -->
-    <record model="ir.ui.view" id="agreement_recital_search">
+    <record id="agreement_recital_search" model="ir.ui.view">
         <field name="name">Agreement Recital Search</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name" />
                 <filter
                     name="group_agreement"
                     icon="terp-partner"
@@ -94,7 +88,7 @@
     </record>
 
     <!-- Actions opening views on models -->
-    <record model="ir.actions.act_window" id="agreement_recital_action">
+    <record id="agreement_recital_action" model="ir.actions.act_window">
         <field name="name">Recitals</field>
         <field name="res_model">agreement.recital</field>
         <field name="view_mode">tree,form</field>

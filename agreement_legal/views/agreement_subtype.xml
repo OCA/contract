@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Agreement Sub Type List View-->
-    <record model="ir.ui.view" id="partner_agreement_subtype_list_view">
+    <record id="partner_agreement_subtype_list_view" model="ir.ui.view">
         <field name="name">Agreement Subtype List</field>
         <field name="model">agreement.subtype</field>
         <field name="arch" type="xml">
@@ -14,7 +14,7 @@
     </record>
 
     <!-- Agreement Sub Type Form View -->
-    <record model="ir.ui.view" id="partner_agreement_subtype_form_view">
+    <record id="partner_agreement_subtype_form_view" model="ir.ui.view">
         <field name="name">Agreement Sub Type Form</field>
         <field name="model">agreement.subtype</field>
         <field name="arch" type="xml">
@@ -26,8 +26,8 @@
                     </div>
                     <group>
                         <group>
-                        <field name="agreement_type_id" />
-                            </group>
+                            <field name="agreement_type_id" />
+                        </group>
                         <group />
                     </group>
                 </sheet>
@@ -36,7 +36,7 @@
     </record>
 
     <!-- Actions opening views on models -->
-    <record model="ir.actions.act_window" id="partner_agreement_action_subtype">
+    <record id="partner_agreement_action_subtype" model="ir.actions.act_window">
         <field name="name">Agreement Sub-Types</field>
         <field name="res_model">agreement.subtype</field>
         <field name="view_mode">tree,form</field>

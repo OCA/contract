@@ -15,7 +15,7 @@
     </template>
 
     <!-- Agreement List View-->
-    <record model="ir.ui.view" id="partner_agreement_list_view">
+    <record id="partner_agreement_list_view" model="ir.ui.view">
         <field name="name">Agreement List</field>
         <field name="model">agreement</field>
         <field name="arch" type="xml">
@@ -32,7 +32,7 @@
     </record>
 
     <!-- Agreement Form View -->
-    <record model="ir.ui.view" id="partner_agreement_form_view">
+    <record id="partner_agreement_form_view" model="ir.ui.view">
         <field name="name">Agreement Form</field>
         <field name="model">agreement</field>
         <field name="priority" eval="1" />
@@ -56,12 +56,17 @@
                     <field
                         name="stage_id"
                         widget="statusbar"
-                        clickable="True"
-                        options="{'fold_field': 'fold'}"
+                        options="{'clickable': '1', 'fold_field': 'fold'}"
                         domain="[('stage_type', '=', 'agreement')]"
                     />
                 </header>
                 <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_button_box" name="button_box">
                     </div>
                     <div class="oe_title">
@@ -143,9 +148,8 @@
                             <div class="o_address_format">
                                 <field
                                     name="partner_id"
-                                    domain="['|',('customer', '=', True),('supplier', '=', True)]"
                                     context="{'show_address': 1}"
-                                    options="{&quot;always_reload&quot;: True}"
+                                    options="{'always_reload': True}"
                                 />
                             </div>
                         </group>
@@ -155,7 +159,7 @@
                                     name="company_id"
                                     readonly="1"
                                     context="{'show_address': 1}"
-                                    options="{&quot;always_reload&quot;: True}"
+                                    options="{'always_reload': True}"
                                 />
                             </div>
                             <field name="company_partner_id" invisible="1" />
@@ -418,6 +422,7 @@
                                             <span
                                                 class="fa fa-ellipsis-v"
                                                 aria-hidden="true"
+                                                title=" "
                                             />
                                         </a>
                                         <ul
@@ -471,7 +476,7 @@
     </record>
 
     <!-- Agreement Search View -->
-    <record model="ir.ui.view" id="partner_agreement_search_view">
+    <record id="partner_agreement_search_view" model="ir.ui.view">
         <field name="name">Agreement Search</field>
         <field name="model">agreement</field>
         <field name="arch" type="xml">
@@ -535,31 +540,29 @@
     <record id="action_agreement_report_order" model="ir.actions.act_window">
         <field name="name">Agreements</field>
         <field name="res_model">agreement</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
     </record>
 
     <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="agreement_dashboard_agreement">
+    <record id="agreement_dashboard_agreement" model="ir.actions.act_window">
         <field name="name">Agreements</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', False)]</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="agreement_operations_agreement">
+    <record id="agreement_operations_agreement" model="ir.actions.act_window">
         <field name="name">Agreements</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', False)]</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="partner_agreement_agreement_templates">
+    <record id="partner_agreement_agreement_templates" model="ir.actions.act_window">
         <field name="name">Templates</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', True)]</field>
-        <!-- <field name="context">[('is_template', '=', True)]</field> -->
         <field name="view_mode">tree,kanban,form</field>
     </record>
 

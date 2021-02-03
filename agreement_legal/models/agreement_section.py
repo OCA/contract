@@ -56,8 +56,7 @@ class AgreementSection(models.Model):
                     field_domain, self.default_value or "''"
                 )
 
-    # compute the dynamic content for mako expression
-    @api.multi
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for section in self:
@@ -65,6 +64,6 @@ class AgreementSection(models.Model):
                 section.agreement_id and section.agreement_id.partner_id.lang or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                section.content, "agreement.section", section.id
-            )
+                section.content, "agreement.section", section.ids
+            )[section.id]
             section.dynamic_content = content

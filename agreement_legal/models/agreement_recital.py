@@ -11,7 +11,7 @@ class AgreementRecital(models.Model):
 
     name = fields.Char(string="Name", required=True)
     title = fields.Char(
-        string="Title", help="The title is displayed on the PDF." "The name is not."
+        string="Title", help="The title is displayed on the PDF. The name is not."
     )
     sequence = fields.Integer(string="Sequence", default=10)
     content = fields.Html(string="Content")
@@ -53,8 +53,7 @@ class AgreementRecital(models.Model):
                     field_domain, self.default_value or "''"
                 )
 
-    # compute the dynamic content for mako expression
-    @api.multi
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for recital in self:
@@ -62,6 +61,6 @@ class AgreementRecital(models.Model):
                 recital.agreement_id and recital.agreement_id.partner_id.lang or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                recital.content, "agreement.recital", recital.id
-            )
+                recital.content, "agreement.recital", recital.ids
+            )[recital.id]
             recital.dynamic_content = content

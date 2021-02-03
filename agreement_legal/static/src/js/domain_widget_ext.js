@@ -6,7 +6,6 @@ odoo.define("agreement_legal.domain_widget_ext", function (require) {
     var session = require("web.session");
     var core = require("web.core");
     var qweb = core.qweb;
-    var _t = core._t;
 
     basic_fields.FieldDomain.include({
         /**
@@ -39,8 +38,10 @@ odoo.define("agreement_legal.domain_widget_ext", function (require) {
 
             // Create the domain selector or change the value of the current
             // one...
-            var def;
-            if (!this.domainSelector) {
+            var def = null;
+            if (this.domainSelector) {
+                def = this.domainSelector.setDomain(value);
+            } else {
                 this.domainSelector = new DomainSelector(
                     this,
                     this._domainModel,
@@ -53,8 +54,6 @@ odoo.define("agreement_legal.domain_widget_ext", function (require) {
                     }
                 );
                 def = this.domainSelector.prependTo(this.$el);
-            } else {
-                def = this.domainSelector.setDomain(value);
             }
             // ... then replace the other content (matched records, etc)
             return def.then(this._replaceContent.bind(this));
