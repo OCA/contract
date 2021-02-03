@@ -1,10 +1,10 @@
-odoo.define('agreement_legal.domain_widget_ext', function (require) {
-    'use strict';
+odoo.define("agreement_legal.domain_widget_ext", function (require) {
+    "use strict";
 
-    var basic_fields = require('web.basic_fields');
-    var DomainSelector = require('web.DomainSelector');
-    var session = require('web.session');
-    var core = require('web.core');
+    var basic_fields = require("web.basic_fields");
+    var DomainSelector = require("web.DomainSelector");
+    var session = require("web.session");
+    var core = require("web.core");
     var qweb = core.qweb;
     var _t = core._t;
 
@@ -12,15 +12,15 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
         /**
          * Init
          */
-        init : function () {
+        init: function () {
             this._super.apply(this, arguments);
             // Add Additional options
             this.partialUse = this.nodeOptions.partial_use || false;
         },
 
-        //----------------------------------------------------------------------
+        // ----------------------------------------------------------------------
         // Private
-        //----------------------------------------------------------------------
+        // ----------------------------------------------------------------------
 
         /**
          * @private
@@ -42,12 +42,16 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
             var def;
             if (!this.domainSelector) {
                 this.domainSelector = new DomainSelector(
-                    this, this._domainModel, value, {
+                    this,
+                    this._domainModel,
+                    value,
+                    {
                         readonly: this.mode === "readonly" || this.inDialog,
                         filters: this.fsFilters,
                         debugMode: session.debug,
                         partialUse: this.partialUse || false,
-                    });
+                    }
+                );
                 def = this.domainSelector.prependTo(this.$el);
             } else {
                 def = this.domainSelector.setDomain(value);
@@ -67,13 +71,15 @@ odoo.define('agreement_legal.domain_widget_ext', function (require) {
             if (this._$content) {
                 this._$content.remove();
             }
-            this._$content = $(qweb.render("FieldDomain.content", {
-                hasModel: !!this._domainModel,
-                isValid: !!this._isValidForModel,
-                nbRecords: this.record.specialData[this.name].nbRecords || 0,
-                inDialogEdit: this.inDialog && this.mode === "edit",
-                partialUse: this.partialUse || false,
-            }));
+            this._$content = $(
+                qweb.render("FieldDomain.content", {
+                    hasModel: Boolean(this._domainModel),
+                    isValid: Boolean(this._isValidForModel),
+                    nbRecords: this.record.specialData[this.name].nbRecords || 0,
+                    inDialogEdit: this.inDialog && this.mode === "edit",
+                    partialUse: this.partialUse || false,
+                })
+            );
             this._$content.appendTo(this.$el);
         },
     });

@@ -17,11 +17,8 @@ class AgreementIncreaseType(models.Model):
         "the contract.",
     )
     description = fields.Text(
-        string="Description",
-        required=True,
-        help="Description of the renewal type."
+        string="Description", required=True, help="Description of the renewal type."
     )
     increase_percent = fields.Integer(
-        string="Increase Percentage",
-        help="Percentage that the amount will increase."
+        string="Increase Percentage", help="Percentage that the amount will increase."
     )

@@ -19,8 +19,7 @@ class ResConfigSettings(models.TransientModel):
     module_agreement_repair = fields.Boolean(
         string="Link your repair orders to an agreement."
     )
-    module_agreement_rma = fields.Boolean(
-        string="Link your RMAs to an agreement.")
+    module_agreement_rma = fields.Boolean(string="Link your RMAs to an agreement.")
     module_agreement_sale = fields.Boolean(
         string="Create an agreement when the sale order is confirmed."
     )

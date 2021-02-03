@@ -6,5 +6,7 @@ def migrate(env, version):
     if not version:
         return
 
-    env.execute("UPDATE agreement_stage SET stage_type = 'agreement' "
-                "WHERE stage_type IS NULL;")
+    env.execute(
+        "UPDATE agreement_stage SET stage_type = 'agreement' "
+        "WHERE stage_type IS NULL;"
+    )
