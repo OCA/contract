@@ -9,6 +9,7 @@ from odoo.osv import expression
 
 class AgreementSettlementCreateWiz(models.TransientModel):
     _name = 'agreement.settlement.create.wiz'
+    _description = 'Agreement settlement create wizard'
 
     date = fields.Date(default=fields.Date.today())
     date_from = fields.Date(string='From')
@@ -26,6 +27,12 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     agreement_ids = fields.Many2many(
         comodel_name='agreement',
         string='Agreements',
+    )
+    discard_settled_agreement = fields.Boolean(
+        string="Discard settled agreements",
+        default="True",
+        help="If checked, the agreements with settlements in selected period "
+             "will be discard"
     )
 
     @api.model
@@ -72,10 +79,12 @@ class AgreementSettlementCreateWiz(models.TransientModel):
                 ('agreement_type_id.domain', '=',
                  self.domain),
             ])
-        settlements = self._get_existing_settlement(settlement_domain)
-        if settlements:
-            domain.extend([('id', 'not in',
-                            settlements.mapped('line_ids.agreement_id').ids)])
+        if self.discard_settled_agreement:
+            settlements = self._get_existing_settlement(settlement_domain)
+            if settlements:
+                domain.extend([
+                    ('id', 'not in',
+                     settlements.mapped('line_ids.agreement_id').ids)])
         return domain
 
     def _get_existing_settlement(self, domain):

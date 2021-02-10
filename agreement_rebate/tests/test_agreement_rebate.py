@@ -175,22 +175,22 @@ class TestAgreementRebate(TransactionCase):
                 }),
             ],
             'rebate_section_ids': [
-                        (0, 0, {
-                            'amount_from': 0.00,
-                            'amount_to': 100.00,
-                            'rebate_discount': 10,
-                        }),
-                        (0, 0, {
-                            'amount_from': 100.00,
-                            'amount_to': 300.00,
-                            'rebate_discount': 20,
-                        }),
-                        (0, 0, {
-                            'amount_from': 300.00,
-                            'amount_to': 6000.00,
-                            'rebate_discount': 30,
-                        }),
-                    ],
+                (0, 0, {
+                    'amount_from': 0.00,
+                    'amount_to': 100.00,
+                    'rebate_discount': 10,
+                }),
+                (0, 0, {
+                    'amount_from': 100.00,
+                    'amount_to': 300.00,
+                    'rebate_discount': 20,
+                }),
+                (0, 0, {
+                    'amount_from': 300.00,
+                    'amount_to': 6000.00,
+                    'rebate_discount': 30,
+                }),
+            ],
             })
         return agreement
 

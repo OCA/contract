@@ -6,6 +6,7 @@ from odoo import api, models, fields
 
 class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     _name = 'agreement.invoice.create.wiz'
+    _description = 'Agreement invoice create wizard'
 
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
@@ -93,8 +94,8 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
         settlements = self.env['agreement.rebate.settlement'].search(
             self._prepare_settlement_domain())
         settlements -= settlements.filtered(
-            lambda s: any(l.invoice_type == self.invoice_type
-                          for l in s.line_ids.mapped('invoice_line_ids')))
+            lambda s: any(ail.invoice_type == self.invoice_type
+                          for ail in s.line_ids.mapped('invoice_line_ids')))
         invoices = settlements.with_context(
             partner_invoice=self.invoice_partner_id,
             product=self.product_id,

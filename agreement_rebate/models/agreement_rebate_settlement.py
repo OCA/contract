@@ -55,7 +55,8 @@ class AgreementRebateSettlement(models.Model):
             if key not in invoice_dic:
                 invoice_dic[key] = line._prepare_invoice()
                 invoice_dic[key]["processed_settlements"] = line.settlement_id
-            elif line.settlement_id not in invoice_dic[key]["processed_settlements"]:
+            elif line.settlement_id not in\
+                    invoice_dic[key]["processed_settlements"]:
                 invoice_dic[key]["origin"] = "{}, {}".format(
                     invoice_dic[key]["origin"], line.settlement_id.name)
                 invoice_dic[key]["processed_settlements"] |= line.settlement_id
@@ -247,7 +248,8 @@ class AgreementRebateSettlementLine(models.Model):
         if invoice_group == 'partner':
             return self.env.context.get('partner_id', self.partner_id.id)
         if invoice_group == 'commercial_partner':
-            return self.env.context.get('partner_id', self.partner_id.commercial_partner_id.id)
+            return self.env.context.get(
+                'partner_id', self.partner_id.commercial_partner_id.id)
 
     def action_show_detail(self):
         return {
