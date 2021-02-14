@@ -423,6 +423,21 @@ class ContractLine(models.Model):
                     rec.date_start, rec.auto_renew_rule_type, rec.auto_renew_interval,
                 )
 
+    @api.onchange(
+        "date_start",
+        "recurring_invoicing_type",
+        "recurring_rule_type",
+        "recurring_interval",
+    )
+    def _onchange_date_start(self):
+        for rec in self.filtered("date_start"):
+            rec.recurring_next_date = self._compute_first_recurring_next_date(
+                rec.date_start,
+                rec.recurring_invoicing_type,
+                rec.recurring_rule_type,
+                rec.recurring_interval,
+            )
+
     @api.constrains("is_canceled", "is_auto_renew")
     def _check_auto_renew_canceled_lines(self):
         for rec in self:

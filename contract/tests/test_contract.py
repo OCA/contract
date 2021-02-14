@@ -552,6 +552,14 @@ class TestContract(TestContractBase):
         res = line._onchange_product_id()
         self.assertFalse(res["domain"]["uom_id"])
 
+    def test_contract_onchange_date_start(self):
+        """Recurring next date should be filled in"""
+        line = self.env["contract.line"].new({"date_start": "2021-01-01"})
+        line._onchange_date_start()
+        self.assertEquals(
+            fields.Date.from_string("2021-01-01"), line.recurring_next_date,
+        )
+
     def test_contract_onchange_product_id_domain(self):
         """It should return UoM category domain."""
         line = self._add_template_line()
