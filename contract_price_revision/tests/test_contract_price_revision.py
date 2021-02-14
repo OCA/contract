@@ -1,5 +1,6 @@
 # Copyright 2019 Tecnativa - Vicent Cubells
 # Copyright 2019 Tecnativa - Carlos Dauden
+# Copyright 2020 ACSONE SA/NV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo.addons.contract.tests.test_contract import TestContractBase
@@ -7,8 +8,10 @@ from odoo.addons.contract.tests.test_contract import TestContractBase
 
 class TestContractPriceRevision(TestContractBase):
     def execute_wizard(self):
+        # TODO: Limitation here, start date should be on the
+        # beginning of next period (should not have a gap)
         wizard = self.env["contract.price.revision.wizard"].create(
-            {"date_start": "2018-02-15", "variation_percent": 100.0,}
+            {"date_start": "2018-02-01", "variation_percent": 100.0}
         )
         wizard.with_context({"active_ids": [self.contract.id]}).action_apply()
 
@@ -27,7 +30,7 @@ class TestContractPriceRevision(TestContractBase):
         self.acct_line.copy({"automatic_price": True})
         self.execute_wizard()
         invoice = self.contract.recurring_create_invoice()
-        invoices = self.env["account.invoice"].search(
+        invoices = self.env["account.move"].search(
             [
                 (
                     "invoice_line_ids.contract_line_id",
