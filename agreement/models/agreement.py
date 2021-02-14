@@ -20,9 +20,7 @@ class Agreement(models.Model):
         track_visibility="onchange",
     )
     company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        default=lambda self: self.env["res.company"]._company_default_get(),
+        "res.company", string="Company", default=lambda self: self.env.company,
     )
     is_template = fields.Boolean(
         string="Is a Template?",
@@ -74,7 +72,6 @@ class Agreement(models.Model):
         )
     ]
 
-    @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
         """Always assign a value for code because is required"""
         default = dict(default or {})
