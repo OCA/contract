@@ -13,8 +13,7 @@ def migrate(env, version):
     """
     Update values from old previous_revision_id to predecessor_contract_line_id
     """
-    if not openupgrade.column_exists(
-            env.cr, 'contract_line', 'previous_revision_id'):
+    if not openupgrade.column_exists(env.cr, "contract_line", "previous_revision_id"):
         return
 
     _logger.info("previous_revision_id to predecessor_contract_line_id")
