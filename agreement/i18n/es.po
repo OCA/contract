@@ -6,26 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2020-06-17 11:28+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
+"POT-Creation-Date: 2021-02-14 16:28+0000\n"
+"PO-Revision-Date: 2021-02-14 17:34+0100\n"
+"Last-Translator: Sergio Teruel <sergio.teruel@tecnativa.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10\n"
+"X-Generator: Poedit 2.3\n"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:74
+#: code:addons/agreement/models/agreement.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copia)"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Acción necesaria"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__active
@@ -37,6 +38,11 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_ids
 msgid "Activities"
 msgstr "Actividades"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Info de Excepción"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_state
@@ -51,9 +57,8 @@ msgstr "Acuerdo"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_form
-#, fuzzy
 msgid "Agreement Name"
-msgstr "Tipo de Acuerdo"
+msgstr "Nombre de acuerdo"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__agreement_type_id
@@ -78,7 +83,9 @@ msgid "Agreements"
 msgstr "Acuerdos"
 
 #. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_form
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_form_view
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Archived"
 msgstr "Archivado"
@@ -87,6 +94,11 @@ msgstr "Archivado"
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
 msgid "Attachment Count"
 msgstr "Nº de archivos adjuntos"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__code
+msgid "Code"
+msgstr "Código"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__company_id
@@ -122,7 +134,7 @@ msgstr "Nombre para Mostrar"
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Domain"
-msgstr ""
+msgstr "Dominio"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__end_date
@@ -132,17 +144,17 @@ msgstr "Fecha Final"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores (Canales)"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Empresas)"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
@@ -151,35 +163,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__code
-msgid "ID used for internal contract tracking."
-msgstr "Identificación utilizada para el seguimiento interno del contrato."
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_icon
+msgid "Icon"
+msgstr "Icono"
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icono para indicar una excepción de actividad."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_needaction
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__active
-msgid ""
-"If unchecked, it will allow you to hide the agreement without removing it."
-msgstr "Si no está marcada, le permitirá ocultar el acuerdo sin eliminarlo."
+msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Es seguidor"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__is_template
@@ -207,19 +214,20 @@ msgstr "Ultima actualización en"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Adjuntos principales"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error de Envío de Mensaje"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr "Nombre"
@@ -232,47 +240,42 @@ msgstr "Nombre o numero"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Siguiente plazo de actividad"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Resumen de la siguiente actividad"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Siguiente tipo de actividad"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de acciones"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "Errores"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Número de mensajes que requieren una acción"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Número de mensajes con error de envío"
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
-
-#. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Overdue"
-msgstr ""
+msgstr "Número de mensajes no leidos"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__partner_id
@@ -281,35 +284,25 @@ msgid "Partner"
 msgstr "Cliente"
 
 #. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: agreement
-#: code:addons/agreement/models/agreement.py:45
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
 msgid "Purchase"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__code
-msgid "Reference"
-msgstr "Referencia"
+msgstr "Compra"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuario responsable"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:44
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
 msgid "Sale"
-msgstr ""
+msgstr "Venta"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
@@ -349,41 +342,35 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Estado basado en actividades\n"
+"Vencida: la fecha tope ya ha pasado\n"
+"Hoy: La fecha tope es hoy\n"
+"Planificada: futuras actividades."
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__partner_id
-msgid "The customer or vendor this agreement is related to."
-msgstr "El cliente o proveedor con el que está relacionado este acuerdo."
-
-#. module: agreement
-#: sql_constraint:agreement:0
+#: model:ir.model.constraint,message:agreement.constraint_agreement_code_partner_company_unique
 msgid "This agreement code already exists for this partner!"
 msgstr "¡Este código de acuerdo ya existe para este socio!"
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__name
-msgid "Title"
-msgstr "Título"
-
-#. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Today"
-msgstr ""
-
-#. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Type Name"
-msgstr "Escribe un nombre"
+msgstr "Tipo de acuerdo"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de excepción de actividad del registro."
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mensajes sin leer"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contador de mensajes no leidos"
 
 #. module: agreement
 #: model:res.groups,name:agreement.group_use_agreement_template
@@ -394,13 +381,3 @@ msgstr "Usar plantilla de acuerdo"
 #: model:res.groups,name:agreement.group_use_agreement_type
 msgid "Use agreement type"
 msgstr "Usar tipo de acuerdo"
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__end_date
-msgid "When the agreement ends."
-msgstr "Cuando termina el acuerdo."
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__start_date
-msgid "When the agreement starts."
-msgstr "Cuando comienza el acuerdo."
