@@ -1,12 +1,12 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement
+# 	* agreement
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:74
+#: code:addons/agreement/models/agreement.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -33,6 +33,11 @@ msgstr ""
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_ids
 msgid "Activities"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_decoration
+msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: agreement
@@ -74,7 +79,9 @@ msgid "Agreements"
 msgstr ""
 
 #. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_form
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_form_view
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Archived"
 msgstr ""
@@ -82,6 +89,11 @@ msgstr ""
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__code
+msgid "Code"
 msgstr ""
 
 #. module: agreement
@@ -147,28 +159,25 @@ msgid "ID"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__code
-msgid "ID used for internal contract tracking."
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_icon
+msgid "Icon"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_needaction
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_error
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__active
-msgid "If unchecked, it will allow you to hide the agreement without removing it."
 msgstr ""
 
 #. module: agreement
@@ -215,6 +224,7 @@ msgid "Messages"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr ""
@@ -246,7 +256,7 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: agreement
@@ -265,32 +275,17 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Overdue"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__partner_id
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 msgid "Partner"
 msgstr ""
 
 #. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: agreement
-#: code:addons/agreement/models/agreement.py:45
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
 msgid "Purchase"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__code
-msgid "Reference"
 msgstr ""
 
 #. module: agreement
@@ -299,7 +294,12 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:44
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: agreement
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
@@ -318,7 +318,9 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__is_template
-msgid "Set if the agreement is a template. Template agreements don't require a partner."
+msgid ""
+"Set if the agreement is a template. Template agreements don't require a "
+"partner."
 msgstr ""
 
 #. module: agreement
@@ -334,35 +336,26 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__activity_state
-msgid "Status based on activities\n"
+msgid ""
+"Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__partner_id
-msgid "The customer or vendor this agreement is related to."
-msgstr ""
-
-#. module: agreement
-#: sql_constraint:agreement:0
+#: model:ir.model.constraint,message:agreement.constraint_agreement_code_partner_company_unique
 msgid "This agreement code already exists for this partner!"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__name
-msgid "Title"
-msgstr ""
-
-#. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Today"
 msgstr ""
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Type Name"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: agreement
@@ -386,12 +379,11 @@ msgid "Use agreement type"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__end_date
-msgid "When the agreement ends."
+#: model:ir.model.fields,field_description:agreement.field_agreement__website_message_ids
+msgid "Website Messages"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__start_date
-msgid "When the agreement starts."
+#: model:ir.model.fields,help:agreement.field_agreement__website_message_ids
+msgid "Website communication history"
 msgstr ""
-
