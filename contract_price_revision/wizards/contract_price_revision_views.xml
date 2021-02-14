@@ -31,14 +31,12 @@
             </form>
         </field>
     </record>
-    <act_window
-        id="contract_line_duplicate_wizard_action"
-        name="Create revision of contract lines"
-        src_model="contract.contract"
-        res_model="contract.price.revision.wizard"
-        view_type="form"
-        view_mode="form"
-        key2="client_action_multi"
-        target="new"
-    />
+    <record id="contract_line_duplicate_wizard_action" model="ir.actions.act_window">
+        <field name="name">Create revision of contract lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">contract.price.revision.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="contract.model_contract_contract" />
+    </record>
 </odoo>
