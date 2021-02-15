@@ -16,7 +16,19 @@
                     <group>
                         <field name="date_start" />
                         <field name="date_end" />
+                        <field name="variation_type" />
+                    </group>
+                    <group
+                        name="percentage"
+                        attrs="{'invisible': [('variation_type', '!=', 'percentage')]}"
+                    >
                         <field name="variation_percent" />
+                    </group>
+                    <group
+                        name="fixed"
+                        attrs="{'invisible': [('variation_type', '!=', 'fixed')]}"
+                    >
+                        <field name="fixed_price" />
                     </group>
                 </group>
                 <footer>
