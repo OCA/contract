@@ -50,14 +50,11 @@ class ResPartner(models.Model):
         contract_type = self._context.get("contract_type")
 
         res = self._get_act_window_contract_xml(contract_type)
-        res.update(
-            context=dict(
-                self.env.context,
-                search_default_partner_id=self.id,
-                default_partner_id=self.id,
-                default_pricelist_id=self.property_product_pricelist.id,
-            ),
-        )
+        action_context = {k: v for k, v in self.env.context.items() if k != "group_by"}
+        action_context["search_default_partner_id"] = self.id
+        action_context["default_partner_id"] = self.id
+        action_context["default_pricelist_id"] = self.property_product_pricelist.id
+        res["context"] = action_context
         return res
 
     def _get_act_window_contract_xml(self, contract_type):
