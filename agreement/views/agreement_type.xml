@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- Agreement Type List View-->
-    <record model="ir.ui.view" id="agreement_type_list_view">
+    <record id="agreement_type_list_view" model="ir.ui.view">
         <field name="name">Agreement Type List</field>
         <field name="model">agreement.type</field>
         <field name="arch" type="xml">
@@ -12,7 +12,7 @@
         </field>
     </record>
     <!-- Agreement Type Form View -->
-    <record model="ir.ui.view" id="agreement_type_form_view">
+    <record id="agreement_type_form_view" model="ir.ui.view">
         <field name="name">Agreement Type Form</field>
         <field name="model">agreement.type</field>
         <field name="arch" type="xml">
@@ -28,9 +28,7 @@
                     <field name="active" invisible="1" />
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
-                        <h1>
-                            <field name="name" />
-                        </h1>
+                        <h1><field name="name" /></h1>
                     </div>
                     <group name="main">
                         <field name="domain" widget="radio" />
@@ -69,7 +67,7 @@
         </field>
     </record>
     <!-- Actions opening views on models -->
-    <record model="ir.actions.act_window" id="agreement_type_action">
+    <record id="agreement_type_action" model="ir.actions.act_window">
         <field name="name">Agreement Types</field>
         <field name="res_model">agreement.type</field>
         <field name="view_mode">tree,form</field>

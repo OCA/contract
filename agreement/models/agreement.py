@@ -10,14 +10,14 @@ class Agreement(models.Model):
     _description = "Agreement"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    code = fields.Char(required=True, track_visibility="onchange")
-    name = fields.Char(required=True, track_visibility="onchange")
+    code = fields.Char(required=True, tracking=True)
+    name = fields.Char(required=True, tracking=True)
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
         ondelete="restrict",
         domain=[("parent_id", "=", False)],
-        track_visibility="onchange",
+        tracking=True,
     )
     company_id = fields.Many2one(
         "res.company",
@@ -40,12 +40,12 @@ class Agreement(models.Model):
         "_domain_selection",
         string="Domain",
         default="sale",
-        track_visibility="onchange",
+        tracking=True,
     )
     active = fields.Boolean(default=True)
-    signature_date = fields.Date(track_visibility="onchange")
-    start_date = fields.Date(track_visibility="onchange")
-    end_date = fields.Date(track_visibility="onchange")
+    signature_date = fields.Date(tracking=True)
+    start_date = fields.Date(tracking=True)
+    end_date = fields.Date(tracking=True)
 
     @api.model
     def _domain_selection(self):
