@@ -17,10 +17,14 @@ class ResPartner(models.Model):
         comodel_name="contract.contract", inverse_name="partner_id", string="Contracts",
     )
 
+    def _get_partner_contract_domain(self):
+        self.ensure_one()
+        return [("partner_id", "child_of", self.ids)]
+
     def _compute_contract_count(self):
         contract_model = self.env["contract.contract"]
         fetch_data = contract_model.read_group(
-            [("partner_id", "child_of", self.ids)],
+            self._get_partner_contract_domain(),
             ["partner_id", "contract_type"],
             ["partner_id", "contract_type"],
             lazy=False,
@@ -51,7 +55,7 @@ class ResPartner(models.Model):
 
         res = self._get_act_window_contract_xml(contract_type)
         action_context = {k: v for k, v in self.env.context.items() if k != "group_by"}
-        action_context["search_default_partner_id"] = self.id
+        action_context["domain"] = self._get_partner_contract_domain()
         action_context["default_partner_id"] = self.id
         action_context["default_pricelist_id"] = self.property_product_pricelist.id
         res["context"] = action_context
