@@ -4,7 +4,7 @@
 {
     "name": "Agreement",
     "summary": "Adds an agreement object",
-    "version": "13.0.1.0.0",
+    "version": "14.0.1.0.0",
     "category": "Contract",
     "author": "Akretion, "
     "Yves Goldberg (Ygol Internetwork), "
@@ -20,6 +20,9 @@
     ],
     "demo": ["demo/demo.xml"],
     "development_status": "Beta",
-    "maintainers": ["ygol", "alexis-via"],
+    "maintainers": [
+        "ygol",
+        "alexis-via",
+    ],
     "installable": True,
 }
