@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  © 2017 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="agreement_form" model="ir.ui.view">
+        <field name="name">agreement.form</field>
+        <field name="model">agreement</field>
+        <field name="arch" type="xml">
+            <form string="Agreement">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <field name="active" invisible="1" />
+                    <div class="oe_title">
+                        <label
+                            for="name"
+                            class="oe_edit_only"
+                            string="Agreement Name"
+                        />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group name="left">
+                            <field name="code" />
+                            <field
+                                name="partner_id"
+                                attrs="{'required': [('is_template', '=', False)]}"
+                            />
+                            <field
+                                name="agreement_type_id"
+                                groups="agreement.group_use_agreement_type"
+                            />
+                            <field name="domain" widget="radio" />
+                            <field
+                                name="is_template"
+                                groups="agreement.group_use_agreement_template"
+                            />
+                        </group>
+                        <group name="right">
+                            <field name="signature_date" />
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                            name="config"
+                            string="Configuration"
+                            attrs="{'invisible': True}"
+                        />
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="agreement_tree" model="ir.ui.view">
+        <field name="name">agreement.tree</field>
+        <field name="model">agreement</field>
+        <field name="arch" type="xml">
+            <tree string="Agreements">
+                <field name="partner_id" />
+                <field name="code" />
+                <field name="name" />
+                <field name="signature_date" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="domain" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+    <record id="agreement_search" model="ir.ui.view">
+        <field name="name">agreement.search</field>
+        <field name="model">agreement</field>
+        <field name="arch" type="xml">
+            <search string="Search Agreements">
+                <field
+                    name="name"
+                    filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"
+                    string="Name or Number"
+                />
+                <field name="partner_id" />
+                <separator />
+                <filter name="sale" string="Sale" domain="[('domain', '=', 'sale')]" />
+                <filter
+                    name="purchase"
+                    string="Purchase"
+                    domain="[('domain', '=', 'purchase')]"
+                />
+                <separator />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group name="groupby">
+                    <filter
+                        name="partner_groupby"
+                        string="Partner"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        name="signature_date_groupby"
+                        string="Signature Date"
+                        context="{'group_by': 'signature_date'}"
+                    />
+                    <filter
+                        name="domain_groupby"
+                        string="Domain"
+                        context="{'group_by': 'domain'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="agreement_action" model="ir.actions.act_window">
+        <field name="name">Agreements</field>
+        <field name="res_model">agreement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Top menu item -->
+    <menuitem
+        id="agreement_menu_root"
+        name="Agreements"
+        web_icon="agreement,static/description/icon.png"
+        sequence="10"
+    />
+    <menuitem
+        id="agreement_menu"
+        name="Agreements"
+        parent="agreement_menu_root"
+        sequence="0"
+        action="agreement_action"
+    />
+</odoo>
