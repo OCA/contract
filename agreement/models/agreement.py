@@ -20,7 +20,9 @@ class Agreement(models.Model):
         track_visibility="onchange",
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company,
+        "res.company",
+        string="Company",
+        default=lambda self: self.env.company,
     )
     is_template = fields.Boolean(
         string="Is a Template?",
@@ -30,7 +32,9 @@ class Agreement(models.Model):
         "Template agreements don't require a partner.",
     )
     agreement_type_id = fields.Many2one(
-        "agreement.type", string="Agreement Type", help="Select the type of agreement",
+        "agreement.type",
+        string="Agreement Type",
+        help="Select the type of agreement",
     )
     domain = fields.Selection(
         "_domain_selection",
