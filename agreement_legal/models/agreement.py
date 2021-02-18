@@ -388,5 +388,8 @@ class Agreement(models.Model):
     # Increments the revision on each save action
     @api.multi
     def write(self, vals):
-        vals["revision"] = self.revision + 1
-        return super(Agreement, self).write(vals)
+        res = True
+        for rec in self:
+            vals["revision"] = rec.revision + 1
+            res = super(Agreement, rec).write(vals)
+        return res
