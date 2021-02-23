@@ -1,6 +1,8 @@
 # Copyright 2017 Carlos Dauden <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from ast import literal_eval
+
 from odoo import fields, models
 
 
@@ -55,10 +57,12 @@ class ResPartner(models.Model):
 
         res = self._get_act_window_contract_xml(contract_type)
         action_context = {k: v for k, v in self.env.context.items() if k != "group_by"}
-        action_context["domain"] = self._get_partner_contract_domain()
         action_context["default_partner_id"] = self.id
         action_context["default_pricelist_id"] = self.property_product_pricelist.id
         res["context"] = action_context
+        res["domain"] = (
+            literal_eval(res["domain"]) + self._get_partner_contract_domain()
+        )
         return res
 
     def _get_act_window_contract_xml(self, contract_type):
