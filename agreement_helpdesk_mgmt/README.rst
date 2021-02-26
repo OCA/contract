@@ -63,7 +63,6 @@ Authors
 ~~~~~~~
 
 * Open Source Integrators
-* Escodoo
 
 Contributors
 ~~~~~~~~~~~~
