@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 - TODAY, Marcel Savegnago <marcel.savegnago@escodoo.com.br>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="fleet_vehicle_form_view">
+        <field name="name">fleet.vehicle.form (in agreement_fleet)</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="agreement_id"/>
+                <field name="serviceprofile_id"
+                       domain="[('agreement_id', '=', agreement_id)]"
+                       widget="selection"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="fleet_vehicle_search_view">
+        <field name="name">fleet.vehicle.search (in agreement_fleet)</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="fleet_vehicle_tree_view">
+        <field name="name">fleet.vehicle.tree (in agreement_fleet)</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="before">
+                <field name="agreement_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

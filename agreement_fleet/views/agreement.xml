@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 - TODAY, Marcel Savegnago <marcel.savegnago@escodoo.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="agreement_form_view">
+        <field name="name">agreement.form (in agreement_fleet)</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button name="action_view_vehicle"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o">
+                    <field name="vehicle_count"
+                           widget="statinfo"
+                           string="Vehicles"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
