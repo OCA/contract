@@ -34,18 +34,12 @@
         "views/res_partner.xml",
         "views/agreement.xml",
         "views/menu.xml",
+        "wizards/create_agreement_wizard.xml",
     ],
-    "demo": [
-        "demo/demo.xml"
-    ],
-    'qweb': [
-        "static/src/xml/domain_widget_view.xml"
-    ],
+    "demo": ["demo/demo.xml"],
+    "qweb": ["static/src/xml/domain_widget_view.xml"],
     "post_init_hook": "post_init_agreement_legal",
     "application": True,
     "development_status": "Beta",
-    "maintainers": [
-        "max3903",
-        "ygol"
-    ],
+    "maintainers": ["max3903", "ygol"],
 }
