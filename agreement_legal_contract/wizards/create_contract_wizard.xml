@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="create_contract_form_view" model="ir.ui.view">
+        <field name="name">Create Contract</field>
+        <field name="model">create.contract.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="company_id" invisible="1" />
+                        <field name="contract_type" />
+                    </group>
+                    <group>
+                        <field name="journal_id" />
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <label for="recurring_interval" />
+                        <div class="o_row">
+                            <field
+                                name="recurring_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                            <field
+                                name="recurring_rule_type"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                        </div>
+                        <field name="recurring_invoicing_type" />
+                    </group>
+                    <group>
+                        <field name="date_start" readonly="1" />
+                        <field name="date_end" readonly="1" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="create_contract"
+                        string="Create Contract"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_contract_action" model="ir.actions.act_window">
+        <field name="name">Create Contract</field>
+        <field name="res_model">create.contract.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_contract_form_view" />
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="agreement.model_agreement" />
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

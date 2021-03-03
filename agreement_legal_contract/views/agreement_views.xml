@@ -1,0 +1,20 @@
+<odoo>
+    <record id="partner_agreement_form_view" model="ir.ui.view">
+        <field name="name">Agreement Form</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    name="view_contract"
+                    icon="fa-book"
+                    attrs="{'invisible': [('contract_count', '=', 0)]}"
+                >
+                    <field string="Contracts" name="contract_count" widget="statinfo" />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
