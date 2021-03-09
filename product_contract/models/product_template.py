@@ -65,7 +65,7 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         if "is_contract" in vals and vals["is_contract"] is False:
             for company in self.env["res.company"].search([]):
-                self.with_context(force_company=company.id).write(
+                self.with_company(company).write(
                     {"property_contract_template_id": False}
                 )
         super().write(vals)
