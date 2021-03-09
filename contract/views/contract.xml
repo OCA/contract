@@ -66,6 +66,7 @@
                         attrs="{'invisible': [('is_terminated','=',False)]}"
                         groups="contract.can_terminate_contract"
                     />
+                    <button type="object" string="Preview" name="action_preview" />
                 </header>
                 <sheet string="Contract">
                     <field name="active" invisible="1" />
@@ -91,14 +92,14 @@
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Contract Name" class="oe_edit_only" />
-                        <h3>
+                        <h1>
                             <field
                                 name="name"
                                 class="oe_inline"
                                 attrs="{'readonly': [('is_terminated','=',True)]}"
                                 placeholder="e.g. Contract XYZ"
                             />
-                        </h3>
+                        </h1>
                     </div>
                     <group name="main">
                         <group>
@@ -404,6 +405,18 @@
                                 </tree>
                             </field>
                             <field name="note" />
+                        </page>
+                        <page name="modications" string="Modifications">
+                            <field
+                                name="modification_ids"
+                                attrs="{'readonly': [('is_terminated','=',True)]}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="date" />
+                                    <field name="description" />
+                                    <field name="sent" />
+                                </tree>
+                            </field>
                         </page>
                         <page name="info" string="Other Information">
                             <field name="create_invoice_visibility" invisible="1" />

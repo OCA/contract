@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_template_form_view" model="ir.ui.view">
+        <field name="name">contract.template form view (in contract_sale)</field>
+        <field name="model">contract.template</field>
+        <field name="inherit_id" ref="contract.contract_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="discount" position="attributes">
+                <attribute name="groups">product.group_discount_per_so_line</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

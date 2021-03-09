@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 Tecnativa - Carlos Dauden
+     Copyright 2019 Tecnativa - Pedro M. Baeza
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record
+        id="contract_line_qty_formula_project_timesheet"
+        model="contract.line.qty.formula"
+    >
+        <field name='name'>Project Timesheets</field>
+        <field name="code">group = env['account.analytic.line'].read_group([
+    ('account_id', '=', line.analytic_account_id.id),
+    ('product_id', '=', False),
+    ('project_id', '!=', False),
+    ('date', '&gt;=', period_first_date),
+    ('date', '&lt;=', period_last_date),
+], fields=['unit_amount'], groupby=[])
+result = group and group[0]['unit_amount'] or 0.0
+    </field>
+    </record>
+    <record
+        id="contract_line_qty_formula_task_timesheet"
+        model="contract.line.qty.formula"
+    >
+        <field name='name'>Task Timesheets</field>
+        <field name="code">group = env['account.analytic.line'].read_group([
+    ('account_id', '=', line.analytic_account_id.id),
+    ('product_id', '=', False),
+    ('task_id', '!=', False),
+    ('date', '&gt;=', period_first_date),
+    ('date', '&lt;=', period_last_date),
+], fields=['unit_amount'], groupby=[])
+result = group and group[0]['unit_amount'] or 0.0
+    </field>
+    </record>
+    <record
+        id="contract_line_qty_formula_analytic_same_product"
+        model="contract.line.qty.formula"
+    >
+        <field name='name'>Analytic Same Product</field>
+        <field name="code">group = env['account.analytic.line'].read_group([
+    ('account_id', '=', line.analytic_account_id.id),
+    ('product_id', '=', line.product_id.id),
+    ('date', '&gt;=', period_first_date),
+    ('date', '&lt;=', period_last_date),
+], fields=['unit_amount'], groupby=[])
+result = group and group[0]['unit_amount'] or 0.0
+    </field>
+    </record>
+</odoo>

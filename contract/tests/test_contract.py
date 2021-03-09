@@ -28,6 +28,7 @@ class TestContractBase(common.SavepointCase):
             {
                 "name": "partner test contract",
                 "property_product_pricelist": cls.pricelist.id,
+                "email": "demo@demo.com",
             }
         )
         cls.product_1 = cls.env.ref("product.product_product_1")
@@ -139,6 +140,15 @@ class TestContractBase(common.SavepointCase):
                         0,
                         {
                             "product_id": False,
+                            "name": "Header for Services",
+                            "display_type": "line_section",
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": False,
                             "name": "Services from #START# to #END#",
                             "quantity": 1,
                             "price_unit": 100,
@@ -169,6 +179,35 @@ class TestContract(TestContractBase):
         vals["contract_id"] = self.template.id
         vals.update(overrides)
         return self.env["contract.template.line"].create(vals)
+
+    def test_add_modifications(self):
+        partner2 = self.partner.copy()
+        subtype = self.env.ref("contract.mail_message_subtype_contract_modification")
+        self.contract.message_subscribe(
+            partner_ids=partner2.ids, subtype_ids=subtype.ids,
+        )
+        # Check initial modification auto-creation
+        self.assertEqual(len(self.contract.modification_ids), 1)
+        self.contract.write(
+            {
+                "modification_ids": [
+                    (0, 0, {"date": "2020-01-01", "description": "Modification 1"}),
+                    (0, 0, {"date": "2020-02-01", "description": "Modification 2"}),
+                ]
+            }
+        )
+        partner_ids = self.contract.message_follower_ids.filtered(
+            lambda x: subtype in x.subtype_ids
+        ).mapped("partner_id")
+        self.assertGreaterEqual(len(partner_ids), 2)
+        total_mail_messages = self.env["mail.message"].search(
+            [
+                ("model", "=", "contract.contract"),
+                ("res_id", "=", self.contract.id),
+                ("subtype_id", "=", subtype.id),
+            ]
+        )
+        self.assertGreaterEqual(len(total_mail_messages), 1)
 
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
@@ -219,6 +258,24 @@ class TestContract(TestContractBase):
         self.assertTrue(invoice_daily)
         self.assertEqual(self.acct_line.recurring_next_date, recurring_next_date)
         self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+
+    def test_contract_invoice_followers(self):
+        self.acct_line.recurring_next_date = "2018-02-23"
+        self.acct_line.recurring_rule_type = "daily"
+        self.contract.pricelist_id = False
+        subtype_ids = self.contract.message_follower_ids.filtered(
+            lambda x: self.contract.partner_id.id == x.partner_id.id
+        ).subtype_ids.ids
+        subtype_ids.append(
+            self.env.ref("contract.mail_message_subtype_invoice_created").id
+        )
+        self.contract.message_subscribe(
+            partner_ids=self.contract.partner_id.ids, subtype_ids=subtype_ids
+        )
+        self.contract._recurring_create_invoice()
+        invoice_daily = self.contract._get_related_invoices()
+        self.assertTrue(invoice_daily)
+        self.assertTrue(self.contract.partner_id in invoice_daily.message_partner_ids)
 
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date("2018-03-01")
@@ -2287,3 +2344,8 @@ class TestContract(TestContractBase):
         # Assign same currency as computed one
         self.contract2.currency_id = currency_cad.id
         self.assertFalse(self.contract2.manual_currency_id)
+
+    def test_contract_action_preview(self):
+        action = self.contract.action_preview()
+        self.assertIn("/my/contracts/", action["url"])
+        self.assertIn("access_token=", action["url"])
