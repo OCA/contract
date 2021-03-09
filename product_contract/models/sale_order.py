@@ -16,15 +16,11 @@ class SaleOrder(models.Model):
     @api.constrains("state")
     def check_contact_is_not_terminated(self):
         for rec in self:
-            if (
-                rec.state
-                not in (
-                    "sale",
-                    "done",
-                    "cancel",
-                )
-                and rec.order_line.filtered("contract_id.is_terminated")
-            ):
+            if rec.state not in (
+                "sale",
+                "done",
+                "cancel",
+            ) and rec.order_line.filtered("contract_id.is_terminated"):
                 raise ValidationError(
                     _("You can't upsell or downsell a terminated contract")
                 )
@@ -81,8 +77,8 @@ class SaleOrder(models.Model):
             )
             contract_templates = self.env["contract.template"]
             for order_line in line_to_create_contract:
-                contract_template = order_line.product_id.with_context(
-                    force_company=rec.company_id.id
+                contract_template = order_line.product_id.with_company(
+                    rec.company_id
                 ).property_contract_template_id
                 if not contract_template:
                     raise ValidationError(
@@ -94,8 +90,8 @@ class SaleOrder(models.Model):
                 contract_templates |= contract_template
             for contract_template in contract_templates:
                 order_lines = line_to_create_contract.filtered(
-                    lambda r, template=contract_template: r.product_id.with_context(
-                        force_company=r.order_id.company_id.id
+                    lambda r, template=contract_template: r.product_id.with_company(
+                        r.order_id.company_id
                     ).property_contract_template_id
                     == template
                 )
@@ -112,7 +108,7 @@ class SaleOrder(models.Model):
         return contracts
 
     def action_confirm(self):
-        """ If we have a contract in the order, set it up """
+        """If we have a contract in the order, set it up"""
         self.filtered(
             lambda order: (order.company_id.create_contract_at_sale_order_confirmation)
         ).action_create_contract()
@@ -127,7 +123,7 @@ class SaleOrder(models.Model):
 
     def action_show_contracts(self):
         self.ensure_one()
-        action = self.env.ref("contract.action_customer_contract").read()[0]
+        action = self.env.ref("contract.action_customer_contract").sudo().read()[0]
         contracts = (
             self.env["contract.line"]
             .search([("sale_order_line_id", "in", self.order_line.ids)])

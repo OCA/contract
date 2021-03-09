@@ -84,8 +84,8 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id")
     def _compute_contract_template_id(self):
         for rec in self:
-            rec.contract_template_id = rec.product_id.with_context(
-                force_company=rec.order_id.company_id.id
+            rec.contract_template_id = rec.product_id.with_company(
+                rec.order_id.company_id
             ).property_contract_template_id
 
     def _get_auto_renew_rule_type(self):
@@ -95,9 +95,21 @@ class SaleOrderLine(models.Model):
             return "monthly"
         return self.recurring_rule_type
 
+    def _get_date_end(self):
+        self.ensure_one()
+        contract_line_model = self.env["contract.line"]
+        date_end = (
+            self.date_start
+            + contract_line_model.get_relative_delta(
+                self._get_auto_renew_rule_type(),
+                int(self.product_uom_qty),
+            )
+            - relativedelta(days=1)
+        )
+        return date_end
+
     @api.onchange("product_id")
     def onchange_product(self):
-        contract_line_model = self.env["contract.line"]
         for rec in self:
             if rec.product_id.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
@@ -105,14 +117,7 @@ class SaleOrderLine(models.Model):
                 rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
                 rec.date_start = rec.date_start or fields.Date.today()
 
-                rec.date_end = (
-                    rec.date_start
-                    + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(),
-                        int(rec.product_uom_qty),
-                    )
-                    - relativedelta(days=1)
-                )
+                rec.date_end = rec._get_date_end()
                 rec.is_auto_renew = rec.product_id.is_auto_renew
                 if rec.is_auto_renew:
                     rec.auto_renew_interval = rec.product_id.auto_renew_interval
@@ -120,19 +125,25 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("date_start", "product_uom_qty", "recurring_rule_type")
     def onchange_date_start(self):
-        contract_line_model = self.env["contract.line"]
         for rec in self.filtered("product_id.is_contract"):
-            if not rec.date_start:
-                rec.date_end = False
-            else:
-                rec.date_end = (
-                    rec.date_start
-                    + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(),
-                        int(rec.product_uom_qty),
-                    )
-                    - relativedelta(days=1)
-                )
+            rec.date_end = rec._get_date_end() if rec.date_start else False
+
+    def _get_contract_line_qty(self):
+        """Returns the quantity to be put on new contract lines."""
+        self.ensure_one()
+        # The quantity on the generated contract line is 1, as it
+        # correspond to the most common use cases:
+        # - quantity on the SO line = number of periods sold and unit
+        #   price the price of one period, so the
+        #   total amount of the SO corresponds to the planned value
+        #   of the contract; in this case the quantity on the contract
+        #   line must be 1
+        # - quantity on the SO line = number of hours sold,
+        #   automatic invoicing of the actual hours through a variable
+        #   quantity formula, in which case the quantity on the contract
+        #   line is not used
+        # Other use cases are easy to implement by overriding this method.
+        return 1.0
 
     def _prepare_contract_line_values(
         self, contract, predecessor_contract_line_id=False
@@ -157,19 +168,7 @@ class SaleOrderLine(models.Model):
             "sequence": self.sequence,
             "product_id": self.product_id.id,
             "name": self.name,
-            # The quantity on the generated contract line is 1, as it
-            # correspond to the most common use cases:
-            # - quantity on the SO line = number of periods sold and unit
-            #   price the price of one period, so the
-            #   total amount of the SO corresponds to the planned value
-            #   of the contract; in this case the quantity on the contract
-            #   line must be 1
-            # - quantity on the SO line = number of hours sold,
-            #   automatic invoicing of the actual hours through a variable
-            #   quantity formula, in which case the quantity on the contract
-            #   line is not used
-            # Other use cases are easy to implement by overriding this method.
-            "quantity": 1.0,
+            "quantity": self._get_contract_line_qty(),
             "uom_id": self.product_uom.id,
             "price_unit": self.price_unit,
             "discount": self.discount,
