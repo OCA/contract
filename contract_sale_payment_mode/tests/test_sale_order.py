@@ -19,3 +19,22 @@ class TestSaleOrderPaymentMode(TestSaleOrder):
             self.sale.order_line.mapped('contract_id.payment_mode_id'),
             self.payment_mode,
         )
+
+    def test_action_confirm_with_contract_payment_mode_1(self):
+        self.contract_payment_mode_id = self.payment_mode.copy()
+        self.sale.contract_payment_mode_id = self.contract_payment_mode_id
+        self.test_action_confirm()
+        self.assertEqual(
+            self.sale.order_line.mapped('contract_id.payment_mode_id'),
+            self.payment_mode,
+        )
+
+    def test_action_confirm_with_contract_payment_mode_2(self):
+        self.contract_payment_mode_id = self.payment_mode.copy()
+        self.sale.contract_payment_mode_id = self.contract_payment_mode_id
+        self.sale.company_id.specific_contract_payment_mode = True
+        self.test_action_confirm()
+        self.assertEqual(
+            self.sale.order_line.mapped('contract_id.payment_mode_id'),
+            self.contract_payment_mode_id,
+        )
