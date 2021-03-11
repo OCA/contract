@@ -275,6 +275,7 @@ class AccountAnalyticAccount(models.Model):
             if invoice_line_vals:
                 self.env['account.invoice.line'].create(invoice_line_vals)
         invoice.compute_taxes()
+        invoice._onchange_payment_term_date_invoice()
         return invoice
 
     @api.multi
