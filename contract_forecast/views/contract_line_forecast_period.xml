@@ -44,7 +44,7 @@
     </record>
 
     <record id="contract_line_forecast_period_pivot_view" model="ir.ui.view">
-        <field name="name">contract.line.forecast.period.tree (in
+        <field name="name">contract.line.forecast.period.pivot (in
             contract_forecast)
         </field>
         <field name="model">contract.line.forecast.period</field>
@@ -57,4 +57,32 @@
         </field>
     </record>
 
+    <record id="contract_line_forecast_period_graph_view" model="ir.ui.view">
+        <field name="name">contract.line.forecast.period.graph (in
+            contract_forecast)
+        </field>
+        <field name="model">contract.line.forecast.period</field>
+        <field name="arch" type="xml">
+            <graph string="Contract Forecast">
+                <field name="product_id" type="col"/>
+                <field name="date_invoice" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_contract_forecast" model="ir.actions.act_window">
+        <field name="name">Contract Forecast</field>
+        <field name="res_model">contract.line.forecast.period</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="domain">[]</field>
+        <field name="context"></field>
+    </record>
+
+    <menuitem id="menu_contract_forecast"
+              parent="account.account_reports_management_menu"
+              action="action_contract_forecast"
+              sequence="999"
+    />
 </odoo>
