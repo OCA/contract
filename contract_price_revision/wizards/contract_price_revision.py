@@ -58,19 +58,13 @@ class ContractPriceRevisionWizard(models.TransientModel):
         return self.date_start - relativedelta(days=1)
 
     def action_apply(self):
-        ContractLine = self.env["contract.line"]
         active_ids = self.env.context.get("active_ids")
         contracts = self.env["contract.contract"].browse(active_ids)
         for line in self._get_contract_lines_to_revise(contracts):
             date_end = self._get_old_line_date_end(line)
             line.stop(date_end)
-            # As copy or copy_data are trigerring constraints, don't use them
-            new_line = self.env["contract.line"].new(line._cache)
+            new_line = line.copy()
             new_line.update(self._get_new_line_value(line))
-            # TODO: We need to recompute every stored values, so here is a
-            # workaround for now
-            new_line._compute_recurring_next_date()
-            new_line = ContractLine.create(new_line._convert_to_write(new_line._cache))
             line.update({"successor_contract_line_id": new_line.id})
         action = self.env["ir.actions.act_window"].for_xml_id(
             "contract", "action_customer_contract"
