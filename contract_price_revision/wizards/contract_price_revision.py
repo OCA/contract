@@ -67,7 +67,9 @@ class ContractPriceRevisionWizard(models.TransientModel):
             # As copy or copy_data are trigerring constraints, don't use them
             new_line = self.env["contract.line"].new(line._cache)
             new_line.update(self._get_new_line_value(line))
-            new_line._onchange_date_start()
+            # TODO: We need to recompute every stored values, so here is a
+            # workaround for now
+            new_line._compute_recurring_next_date()
             new_line = ContractLine.create(new_line._convert_to_write(new_line._cache))
             line.update({"successor_contract_line_id": new_line.id})
         action = self.env["ir.actions.act_window"].for_xml_id(
