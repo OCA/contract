@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>Hei</p>\n"
-"            <p>Sopimukseemme on tullut muutoksia, josta halusimme "
-"ilmoittaa.</p>\n"
+"            <p>Sopimukseemme on tullut muutoksia, josta halusimme ilmoittaa."
+"</p>\n"
 "        "
 
 #. module: contract
@@ -141,8 +141,8 @@ msgstr ""
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context("
-"show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -153,17 +153,17 @@ msgstr ""
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Verkkosivut: <a href=\"${object.company_id.website}\""
-">${object.company_id.website}</a>\n"
+"                Verkkosivut: <a href=\"${object.company_id.website}\">"
+"${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "    <p></p>\n"
-"    <a href=\"${object.get_base_url()}/my/contracts/${object."
-"id}?access_token=${object.access_token}\" target=\"_blank\" style"
-"=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: "
-"none; color: #fff; border-radius: 5px; font-size:13px;\">Katso sopimus</a>\n"
+"    <a href=\"${object.get_base_url()}/my/contracts/${object.id}?"
+"access_token=${object.access_token}\" target=\"_blank\" style=\"background-"
+"color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">Katso sopimus</a>\n"
 "</div>\n"
 "        "
 
@@ -537,6 +537,7 @@ msgstr "Yritys"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:458
+#: code:addons/contract/models/contract.py:459
 #, python-format
 msgid "Compose Email"
 msgstr "Kirjoita sähköposti"
@@ -789,6 +790,7 @@ msgstr "Sopimusrivit"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:616
+#: code:addons/contract/models/contract.py:617
 #, python-format
 msgid ""
 "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
@@ -1532,6 +1534,7 @@ msgstr "Suunniteltu"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:416
+#: code:addons/contract/models/contract.py:417
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
 msgstr "Aseta %s-päiväkirja yritykselle '%s'."
@@ -1885,6 +1888,7 @@ msgstr "Tekninen kenttä UX tarpeisiin."
 
 #. module: contract
 #: code:addons/contract/models/contract.py:651
+#: code:addons/contract/models/contract.py:652
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 #, python-format
@@ -2093,6 +2097,7 @@ msgstr "Vuotta"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:665
+#: code:addons/contract/models/contract.py:666
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr "Sinulla ei ole oikeutta päättää sopimuksia."

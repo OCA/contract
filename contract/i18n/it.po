@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>Salve</p>\n"
-"            <p>Ci sono modifiche al contratto che desideriamo "
-"notificarti.</p>\n"
+"            <p>Ci sono modifiche al contratto che desideriamo notificarti.</"
+"p>\n"
 "        "
 
 #. module: contract
@@ -141,8 +141,8 @@ msgstr ""
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
 "16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context("
-"show_address=True, html_format=True).name_get()[0][1] | safe}\n"
+"            ${object.company_id.partner_id.sudo()."
+"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
@@ -160,10 +160,10 @@ msgstr ""
 "        <p></p>\n"
 "    </div>\n"
 "    <p></p>\n"
-"    <a href=\"${object.get_base_url()}/my/contracts/${object."
-"id}?access_token=${object.access_token}\" target=\"_blank\" style"
-"=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: "
-"none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"    <a href=\"${object.get_base_url()}/my/contracts/${object.id}?"
+"access_token=${object.access_token}\" target=\"_blank\" style=\"background-"
+"color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
 "</div>\n"
 "        "
 
@@ -541,6 +541,7 @@ msgstr "Azienda"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:458
+#: code:addons/contract/models/contract.py:459
 #, python-format
 msgid "Compose Email"
 msgstr "Comporre email"
@@ -797,6 +798,7 @@ msgstr "Righe contratto"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:616
+#: code:addons/contract/models/contract.py:617
 #, python-format
 msgid ""
 "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
@@ -1473,8 +1475,8 @@ msgid ""
 "Number of days to offset the invoice from the period end date (in post-paid "
 "mode) or start date (in pre-paid mode)."
 msgstr ""
-"Numero di giorni per compensare la fattura dalla data di fine periodo ("
-"modalità post-pagato) o dalla data di inizio (prepagato)."
+"Numero di giorni per compensare la fattura dalla data di fine periodo "
+"(modalità post-pagato) o dalla data di inizio (prepagato)."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
@@ -1547,6 +1549,7 @@ msgstr "Pianificata"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:416
+#: code:addons/contract/models/contract.py:417
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
 msgstr "Definire un registro vendite per l'azienda \"%s\"."
@@ -1900,6 +1903,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract.py:651
+#: code:addons/contract/models/contract.py:652
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 #, python-format
@@ -2106,6 +2110,7 @@ msgstr "Anno(i)"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:665
+#: code:addons/contract/models/contract.py:666
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr "Non hai il permesso di terminare i contratti."
