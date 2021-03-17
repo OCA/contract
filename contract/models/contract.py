@@ -177,14 +177,15 @@ class ContractContract(models.Model):
             )
             if modification_ids_not_sent:
                 if not self.env.context.get('skip_modification_mail'):
-                    record.message_post_with_template(
+                    record.with_context(
+                        default_subtype_id=self.env.ref(
+                            'contract.mail_message_subtype_contract_modification'
+                        ).id,
+                    ).message_post_with_template(
                         self.env.ref(
                             "contract.mail_template_contract_modification"
                         ).id,
                         notif_layout="contract.template_contract_modification",
-                        subtype_id=self.env.ref(
-                            'contract.mail_message_subtype_contract_modification'
-                        ).id
                     )
                 modification_ids_not_sent.write({'sent': True})
 
