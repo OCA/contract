@@ -1,9 +1,10 @@
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
 # Copyright 2015-2020 Tecnativa - Pedro M. Baeza
-# Copyright 2016-2018 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2016-2018 Tecnativa - Carlos Dauden
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV
+# Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -162,11 +163,12 @@ class ContractContract(models.Model):
             )
             if modification_ids_not_sent:
                 if not self.env.context.get("skip_modification_mail"):
-                    record.message_post_with_template(
-                        self.env.ref("contract.mail_template_contract_modification").id,
-                        subtype_id=self.env.ref(
+                    record.with_context(
+                        default_subtype_id=self.env.ref(
                             "contract.mail_message_subtype_contract_modification"
                         ).id,
+                    ).message_post_with_template(
+                        self.env.ref("contract.mail_template_contract_modification").id,
                         email_layout_xmlid="contract.template_contract_modification",
                     )
                 modification_ids_not_sent.write({"sent": True})
@@ -517,6 +519,8 @@ class ContractContract(models.Model):
                     # nullifying line
                     invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
             invoices_values.append(invoice_vals)
+            # Force the recomputation of journal items
+            del invoice_vals["line_ids"]
             contract_lines._update_recurring_next_date()
         return invoices_values
 
