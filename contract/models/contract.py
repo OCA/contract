@@ -519,6 +519,8 @@ class ContractContract(models.Model):
                     # nullifying line
                     invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
             invoices_values.append(invoice_vals)
+            # Force the recomputation of journal items
+            del invoice_vals["line_ids"]
             contract_lines._update_recurring_next_date()
         return invoices_values
 
