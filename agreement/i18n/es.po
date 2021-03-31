@@ -70,6 +70,7 @@ msgstr "Tipo de Acuerdo"
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_type_action
 #: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.menu,name:agreement.agreement_type_menu
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Agreement Types"
 msgstr "Tipos de Acuerdo"
@@ -180,6 +181,7 @@ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_error
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
@@ -297,6 +299,11 @@ msgid "Responsible User"
 msgstr "Usuario responsable"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: agreement
 #: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
@@ -381,3 +388,13 @@ msgstr "Usar plantilla de acuerdo"
 #: model:res.groups,name:agreement.group_use_agreement_type
 msgid "Use agreement type"
 msgstr "Usar tipo de acuerdo"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__website_message_ids
+msgid "Website communication history"
+msgstr ""
