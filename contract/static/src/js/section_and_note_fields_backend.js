@@ -8,7 +8,7 @@ and this condition is met, then an extra space appears in the rows
 corresponding to the sections and lines.
     This js was written to deal with that problem, but a solution based on
 this can be applied directly to Odoo*/
-odoo.define("contract.section_and_note_backend", function(require) {
+odoo.define("contract.section_and_note_backend", function (require) {
     "use strict";
 
     require("account.section_and_note_backend");
@@ -16,11 +16,11 @@ odoo.define("contract.section_and_note_backend", function(require) {
     var section_and_note_one2many = fieldRegistry.get("section_and_note_one2many");
 
     section_and_note_one2many.include({
-        _getRenderer: function() {
+        _getRenderer: function () {
             var result = this._super.apply(this, arguments);
             if (this.view.arch.tag === "tree") {
                 result.include({
-                    _renderBodyCell: function(record) {
+                    _renderBodyCell: function (record) {
                         var $cell = this._super.apply(this, arguments);
 
                         var isSection = record.data.display_type === "line_section";
