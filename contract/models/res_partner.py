@@ -10,13 +10,17 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     sale_contract_count = fields.Integer(
-        string="Sale Contracts", compute="_compute_contract_count",
+        string="Sale Contracts",
+        compute="_compute_contract_count",
     )
     purchase_contract_count = fields.Integer(
-        string="Purchase Contracts", compute="_compute_contract_count",
+        string="Purchase Contracts",
+        compute="_compute_contract_count",
     )
     contract_ids = fields.One2many(
-        comodel_name="contract.contract", inverse_name="partner_id", string="Contracts",
+        comodel_name="contract.contract",
+        inverse_name="partner_id",
+        string="Contracts",
     )
 
     def _get_partner_contract_domain(self):
@@ -49,8 +53,8 @@ class ResPartner(models.Model):
             )
 
     def act_show_contract(self):
-        """ This opens contract view
-            @return: the contract view
+        """This opens contract view
+        @return: the contract view
         """
         self.ensure_one()
         contract_type = self._context.get("contract_type")
