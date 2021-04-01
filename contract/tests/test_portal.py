@@ -24,7 +24,8 @@ class TestContractPortal(odoo.tests.HttpCase):
         self.authenticate("portal", "portal")
         http.root.session_store.save(self.session)
         url_contract = "/my/contracts/{}?access_token={}".format(
-            contract.id, contract.access_token,
+            contract.id,
+            contract.access_token,
         )
         self.assertEqual(self.url_open(url=url_contract).status_code, 200)
         contract.message_unsubscribe(partner_ids=user_portal.partner_id.ids)
