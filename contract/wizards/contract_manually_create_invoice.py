@@ -14,7 +14,8 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         compute="_compute_contract_to_invoice_ids"
     )
     contract_to_invoice_ids = fields.Many2many(
-        comodel_name="contract.contract", compute="_compute_contract_to_invoice_ids",
+        comodel_name="contract.contract",
+        compute="_compute_contract_to_invoice_ids",
     )
     contract_type = fields.Selection(
         selection=[("sale", "Customer"), ("purchase", "Supplier")],

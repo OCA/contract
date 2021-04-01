@@ -28,7 +28,8 @@ Criteria = namedtuple(
     ],
 )
 Allowed = namedtuple(
-    "Allowed", ["plan_successor", "stop_plan_successor", "stop", "cancel", "uncancel"],
+    "Allowed",
+    ["plan_successor", "stop_plan_successor", "stop", "cancel", "uncancel"],
 )
 
 
