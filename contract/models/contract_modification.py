@@ -19,7 +19,10 @@ class ContractModification(models.Model):
         ondelete="cascade",
         index=True,
     )
-    sent = fields.Boolean(string="Sent", default=False,)
+    sent = fields.Boolean(
+        string="Sent",
+        default=False,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
