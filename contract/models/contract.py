@@ -25,10 +25,16 @@ class ContractContract(models.Model):
         "portal.mixin",
     ]
 
-    active = fields.Boolean(default=True,)
-    code = fields.Char(string="Reference",)
+    active = fields.Boolean(
+        default=True,
+    )
+    code = fields.Char(
+        string="Reference",
+    )
     group_id = fields.Many2one(
-        string="Group", comodel_name="account.analytic.account", ondelete="restrict",
+        string="Group",
+        comodel_name="account.analytic.account",
+        ondelete="restrict",
     )
     currency_id = fields.Many2one(
         compute="_compute_currency_id",
@@ -36,7 +42,10 @@ class ContractContract(models.Model):
         comodel_name="res.currency",
         string="Currency",
     )
-    manual_currency_id = fields.Many2one(comodel_name="res.currency", readonly=True,)
+    manual_currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        readonly=True,
+    )
     contract_template_id = fields.Many2one(
         string="Contract Template", comodel_name="contract.template"
     )
@@ -77,7 +86,9 @@ class ContractContract(models.Model):
         ondelete="restrict",
     )
     invoice_partner_id = fields.Many2one(
-        string="Invoicing contact", comodel_name="res.partner", ondelete="restrict",
+        string="Invoicing contact",
+        comodel_name="res.partner",
+        ondelete="restrict",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner", inverse="_inverse_partner_id", required=True
@@ -103,10 +114,16 @@ class ContractContract(models.Model):
         tracking=True,
     )
     terminate_comment = fields.Text(
-        string="Termination Comment", readonly=True, copy=False, tracking=True,
+        string="Termination Comment",
+        readonly=True,
+        copy=False,
+        tracking=True,
     )
     terminate_date = fields.Date(
-        string="Termination Date", readonly=True, copy=False, tracking=True,
+        string="Termination Date",
+        readonly=True,
+        copy=False,
+        tracking=True,
     )
     modification_ids = fields.One2many(
         comodel_name="contract.modification",
@@ -198,7 +215,15 @@ class ContractContract(models.Model):
 
         invoices = (
             self.env["account.move.line"]
-            .search([("contract_line_id", "in", self.contract_line_ids.ids,)])
+            .search(
+                [
+                    (
+                        "contract_line_id",
+                        "in",
+                        self.contract_line_ids.ids,
+                    )
+                ]
+            )
             .mapped("move_id")
         )
         # we are forced to always search for this for not losing possible <=v11
@@ -221,7 +246,11 @@ class ContractContract(models.Model):
         return currency or self.journal_id.currency_id or self.company_id.currency_id
 
     @api.depends(
-        "manual_currency_id", "pricelist_id", "partner_id", "journal_id", "company_id",
+        "manual_currency_id",
+        "pricelist_id",
+        "partner_id",
+        "journal_id",
+        "company_id",
     )
     def _compute_currency_id(self):
         for rec in self:
@@ -268,7 +297,8 @@ class ContractContract(models.Model):
                 contract.date_end = max(date_end)
 
     @api.depends(
-        "contract_line_ids.recurring_next_date", "contract_line_ids.is_canceled",
+        "contract_line_ids.recurring_next_date",
+        "contract_line_ids.is_canceled",
     )
     def _compute_recurring_next_date(self):
         for contract in self:
