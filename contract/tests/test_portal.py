@@ -14,7 +14,7 @@ class TestContractPortal(odoo.tests.HttpCase):
         )
         user_portal = self.env.ref("base.demo_user0")
         contract.message_subscribe(partner_ids=user_portal.partner_id.ids)
-        self.phantom_js(
+        self.browser_js(
             "/",
             "odoo.__DEBUG__.services['web_tour.tour'].run('contract_portal_tour')",
             "odoo.__DEBUG__.services['web_tour.tour'].tours.contract_portal_tour.ready",
