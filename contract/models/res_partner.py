@@ -71,10 +71,10 @@ class ResPartner(models.Model):
 
     def _get_act_window_contract_xml(self, contract_type):
         if contract_type == "purchase":
-            return self.env["ir.actions.act_window"].for_xml_id(
-                "contract", "action_supplier_contract"
+            return self.env["ir.actions.act_window"]._for_xml_id(
+                "contract.action_supplier_contract"
             )
         else:
-            return self.env["ir.actions.act_window"].for_xml_id(
-                "contract", "action_customer_contract"
+            return self.env["ir.actions.act_window"]._for_xml_id(
+                "contract.action_customer_contract"
             )
