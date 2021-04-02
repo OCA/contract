@@ -239,8 +239,8 @@ class ContractContract(models.Model):
             # Use pricelist currency
             currency = (
                 self.pricelist_id.currency_id
-                or self.partner_id.with_context(
-                    force_company=self.company_id.id,
+                or self.partner_id.with_company(
+                    self.company_id
                 ).property_product_pricelist.currency_id
             )
         return currency or self.journal_id.currency_id or self.company_id.currency_id
@@ -360,7 +360,7 @@ class ContractContract(models.Model):
         partner = (
             self.partner_id
             if not self.company_id
-            else self.partner_id.with_context(force_company=self.company_id.id)
+            else self.partner_id.with_company(self.company_id)
         )
         self.pricelist_id = partner.property_product_pricelist.id
         self.fiscal_position_id = partner.env[
@@ -423,9 +423,9 @@ class ContractContract(models.Model):
         if self.contract_type == "purchase":
             invoice_type = "in_invoice"
         move_form = Form(
-            self.env["account.move"].with_context(
-                force_company=self.company_id.id, default_type=invoice_type
-            )
+            self.env["account.move"]
+            .with_company(self.company_id)
+            .with_context(default_move_type=invoice_type)
         )
         move_form.partner_id = self.invoice_partner_id
         if self.payment_term_id:
@@ -491,11 +491,11 @@ class ContractContract(models.Model):
         """
         self.ensure_one()
 
-        def can_be_invoiced(l):
+        def can_be_invoiced(contract_line):
             return (
-                not l.is_canceled
-                and l.recurring_next_date
-                and l.recurring_next_date <= date_ref
+                not contract_line.is_canceled
+                and contract_line.recurring_next_date
+                and contract_line.recurring_next_date <= date_ref
             )
 
         lines2invoice = previous = self.env["contract.line"]
