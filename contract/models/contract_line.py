@@ -382,7 +382,10 @@ class ContractLine(models.Model):
     @api.constrains("predecessor_contract_line_id", "date_start")
     def _check_overlap_predecessor(self):
         for rec in self:
-            if rec.predecessor_contract_line_id:
+            if (
+                rec.predecessor_contract_line_id
+                and rec.predecessor_contract_line_id.date_end
+            ):
                 if rec.date_start <= rec.predecessor_contract_line_id.date_end:
                     raise ValidationError(
                         _("Contract line and its predecessor overlapped")
