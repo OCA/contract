@@ -186,8 +186,8 @@ class ContractAbstractContractLine(models.AbstractModel):
             if line.automatic_price:
                 pricelist = (
                     line.contract_id.pricelist_id
-                    or line.contract_id.partner_id.with_context(
-                        force_company=line.contract_id.company_id.id,
+                    or line.contract_id.partner_id.with_company(
+                        line.contract_id.company_id
                     ).property_product_pricelist
                 )
                 product = line.product_id.with_context(
