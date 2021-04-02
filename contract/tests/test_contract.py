@@ -119,7 +119,6 @@ class TestContractBase(common.SavepointCase):
             "is_auto_renew": False,
         }
         cls.acct_line = cls.env["contract.line"].create(cls.line_vals)
-        cls.acct_line.product_id.is_auto_renew = True
         cls.contract.company_id.create_new_line_at_contract_line_renew = True
         cls.terminate_reason = cls.env["contract.terminate.reason"].create(
             {"name": "terminate_reason"}
@@ -566,7 +565,7 @@ class TestContract(TestContractBase):
         self.contract._onchange_contract_type()
         self.assertEqual(self.contract.journal_id.type, "sale")
         self.assertEqual(self.contract.journal_id.company_id, self.contract.company_id)
-        self.contract.type = "purchase"
+        self.contract.contract_type = "purchase"
         self.contract._onchange_contract_type()
         self.assertFalse(any(self.contract.contract_line_ids.mapped("automatic_price")))
 
@@ -2211,8 +2210,8 @@ class TestContract(TestContractBase):
         # Assume contract 2 is for company 2
         self.contract2.company_id = company2
         # Update the partner attached to both contracts
-        self.partner.with_user(unprivileged_user).with_context(
-            company_id=company2.id, force_company=company2.id
+        self.partner.with_user(unprivileged_user).with_company(company2).with_context(
+            company_id=company2.id
         ).write({"is_company": False, "parent_id": parent_partner.id})
 
     def test_sale_fields_view_get(self):
