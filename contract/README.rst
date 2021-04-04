@@ -73,7 +73,12 @@ Usage
 #. Contract templates can be created from the Configuration -> Contracts -> Contract Templates menu.
    They allow to define default journal, price list and lines when creating a contract.
    To use it, just select the template on the contract and fields will be filled automatically.
-#. Contracts are displayed into followers' user portal.
+
+* Contracts appear in portal to following users in every contract:
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/14.0/contract/static/src/screenshots/portal-my.png
+.. image:: https://raw.githubusercontent.com/OCA/contract/14.0/contract/static/src/screenshots/portal-list.png
+.. image:: https://raw.githubusercontent.com/OCA/contract/14.0/contract/static/src/screenshots/portal-detail.png
 
 Known issues / Roadmap
 ======================
