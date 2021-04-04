@@ -23,4 +23,9 @@
 #. Contract templates can be created from the Configuration -> Contracts -> Contract Templates menu.
    They allow to define default journal, price list and lines when creating a contract.
    To use it, just select the template on the contract and fields will be filled automatically.
-#. Contracts are displayed into followers' user portal.
+
+* Contracts appear in portal to following users in every contract:
+
+.. image:: ../static/src/screenshots/portal-my.png
+.. image:: ../static/src/screenshots/portal-list.png
+.. image:: ../static/src/screenshots/portal-detail.png
