@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Weblate 3.10\n"
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:74
+#: code:addons/agreement/models/agreement.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -40,10 +40,20 @@ msgid "Activities"
 msgstr "Ativo"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_state
 #, fuzzy
 msgid "Activity State"
 msgstr "Ativo"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
 
 #. module: agreement
 #: model:ir.model,name:agreement.model_agreement
@@ -80,7 +90,9 @@ msgid "Agreements"
 msgstr "Contratos"
 
 #. module: agreement
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_form
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
+#: model_terms:ir.ui.view,arch_db:agreement.agreement_type_form_view
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 msgid "Archived"
 msgstr "Arquivado"
@@ -88,6 +100,11 @@ msgstr "Arquivado"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__code
+msgid "Code"
 msgstr ""
 
 #. module: agreement
@@ -147,36 +164,37 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__id
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__id
 msgid "ID"
 msgstr "ID"
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__code
-msgid "ID used for internal contract tracking."
-msgstr "ID usado internamente para acompanhamento do contrato."
+#: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_icon
+msgid "Icon"
+msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_needaction
+#: model:ir.model.fields,help:agreement.field_agreement__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_error
+#: model:ir.model.fields,help:agreement.field_agreement__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__active
-msgid ""
-"If unchecked, it will allow you to hide the agreement without removing it."
-msgstr "Desmarcar, se quiser esconder o contrato mas sem o apagar."
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
@@ -222,6 +240,7 @@ msgid "Messages"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr "Nome"
@@ -253,7 +272,7 @@ msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: agreement
@@ -272,23 +291,13 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Overdue"
-msgstr ""
-
-#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__partner_id
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 msgid "Partner"
 msgstr "Parceiro"
 
 #. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Planned"
-msgstr ""
-
-#. module: agreement
-#: code:addons/agreement/models/agreement.py:45
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
@@ -296,17 +305,17 @@ msgid "Purchase"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__code
-msgid "Reference"
-msgstr "Referência"
-
-#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
 msgid "Responsible User"
 msgstr ""
 
 #. module: agreement
-#: code:addons/agreement/models/agreement.py:44
+#: model:ir.model.fields,field_description:agreement.field_agreement__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: agreement
+#: code:addons/agreement/models/agreement.py:0
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_search
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_search
 #, python-format
@@ -353,29 +362,19 @@ msgid ""
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__partner_id
-msgid "The customer or vendor this agreement is related to."
-msgstr "O cliente ou fornecedor com o qual este contrato está relacionado."
-
-#. module: agreement
-#: sql_constraint:agreement:0
+#: model:ir.model.constraint,message:agreement.constraint_agreement_code_partner_company_unique
 msgid "This agreement code already exists for this partner!"
 msgstr "Este código de contrato já existe para este parceiro!"
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__name
-msgid "Title"
-msgstr "Título"
-
-#. module: agreement
-#: selection:agreement,activity_state:0
-msgid "Today"
-msgstr ""
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Type Name"
 msgstr "Escrever Nome"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_unread
@@ -398,11 +397,33 @@ msgid "Use agreement type"
 msgstr "Usar o tipo de contrato"
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__end_date
-msgid "When the agreement ends."
-msgstr "A data em que termina o contrato."
+#: model:ir.model.fields,field_description:agreement.field_agreement__website_message_ids
+msgid "Website Messages"
+msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,help:agreement.field_agreement__start_date
-msgid "When the agreement starts."
-msgstr "A data em que se inicia o contrato."
+#: model:ir.model.fields,help:agreement.field_agreement__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#~ msgid "ID used for internal contract tracking."
+#~ msgstr "ID usado internamente para acompanhamento do contrato."
+
+#~ msgid ""
+#~ "If unchecked, it will allow you to hide the agreement without removing it."
+#~ msgstr "Desmarcar, se quiser esconder o contrato mas sem o apagar."
+
+#~ msgid "Reference"
+#~ msgstr "Referência"
+
+#~ msgid "The customer or vendor this agreement is related to."
+#~ msgstr "O cliente ou fornecedor com o qual este contrato está relacionado."
+
+#~ msgid "Title"
+#~ msgstr "Título"
+
+#~ msgid "When the agreement ends."
+#~ msgstr "A data em que termina o contrato."
+
+#~ msgid "When the agreement starts."
+#~ msgstr "A data em que se inicia o contrato."
