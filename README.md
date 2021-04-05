@@ -20,6 +20,7 @@ Available addons
 addon | version | summary
 --- | --- | ---
 [agreement](agreement/) | 14.0.1.0.0 | Adds an agreement object
+[contract](contract/) | 14.0.1.0.0 | Recurring - Contracts Management
 
 [//]: # (end addons)
 
