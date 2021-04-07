@@ -5,8 +5,8 @@ from odoo import fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     contract_line_id = fields.Many2one(
-        'contract.line', string='Contract Line', index=True
+        "contract.line", string="Contract Line", index=True
     )
