@@ -27,6 +27,7 @@ def migrate(env, version):
     openupgrade.load_data(
         env.cr, "contract", "migrations/13.0.1.0.0/noupdate_changes.xml"
     )
-
     # Don't alter line recurrence v12 behavior
-    openupgrade.logged_query(env.cr, "UPDATE contract_line SET line_recurrence = True")
+    openupgrade.logged_query(
+        env.cr, "UPDATE contract_contract SET line_recurrence = True",
+    )
