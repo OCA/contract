@@ -29,5 +29,4 @@ def migrate(env, version):
     )
 
     # Don't alter line recurrence v12 behavior
-    contracts = env["contract.contract"].search([])
-    contracts.write({"line_recurrence": True})
+    openupgrade.logged_query(env.cr, "UPDATE contract_line SET line_recurrence = True")
