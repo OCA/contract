@@ -4,12 +4,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import odoo.tests
+from odoo.tests import tagged
 
 from ..hooks import post_init_hook
 
 
-@odoo.tests.post_install(True)
-@odoo.tests.at_install(False)
+@tagged("post_install", "-at_install")
 class TestContractPaymentInit(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
