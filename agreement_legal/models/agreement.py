@@ -264,7 +264,7 @@ class Agreement(models.Model):
                     self.default_value or "''")
 
     # compute the dynamic content for mako expression
-    @api.multi
+    # @api.multi
     def _compute_dynamic_description(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -276,7 +276,7 @@ class Agreement(models.Model):
             )
             agreement.dynamic_description = description
 
-    @api.multi
+    # @api.multi
     def _compute_dynamic_parties(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -288,7 +288,7 @@ class Agreement(models.Model):
             )
             agreement.dynamic_parties = parties
 
-    @api.multi
+    # @api.multi
     def _compute_dynamic_special_terms(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -316,7 +316,7 @@ class Agreement(models.Model):
         index=True)
 
     # Create New Version Button
-    @api.multi
+    # @api.multi
     def create_new_version(self, vals):
         for rec in self:
             if not rec.state == "draft":
@@ -366,7 +366,7 @@ class Agreement(models.Model):
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
-    @api.multi
+    # @api.multi
     def write(self, vals):
         res = True
         for rec in self:
