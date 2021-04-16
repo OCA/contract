@@ -56,7 +56,7 @@ class AgreementClause(models.Model):
                     self.default_value or "''")
 
     # compute the dynamic content for mako expression
-    @api.multi
+    # @api.multi
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for clause in self:
