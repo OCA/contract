@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Remove top menu from agreement module -->
+    <!-- <delete model="ir.ui.menu" id="agreement.agreement_menu" /> -->
+
+    <!-- Top menu item -->
+    <menuitem
+            name="Agreements"
+            id="agreement.agreement_menu"
+            web_icon="agreement_legal,static/description/icon.png"
+            sequence="80"
+            action="agreement_dashboard_agreement"
+            groups="agreement_legal.group_agreement_readonly"/>
+    <!-- Dashboard -->
+    <menuitem
+            name="Dashboard"
+            id="agreement_dashboard"
+            parent="agreement.agreement_menu"
+            sequence="10"/>
+    <menuitem
+            name="Agreements"
+            id="dashboard_agreements"
+            parent="agreement_dashboard"
+            sequence="10"
+            action="agreement_dashboard_agreement"/>
+
+    <!-- Operations -->
+    <menuitem
+            name="Operations"
+            id="agreement_operations"
+            parent="agreement.agreement_menu"
+            sequence="20"/>
+    <menuitem
+            name="Agreements"
+            id="operations_agreements"
+            parent="agreement_operations"
+            sequence="10"
+            action="agreement_operations_agreement"/>
+
+    <!-- Master Data -->
+    <menuitem
+            name="Master Data"
+            id="agreement_masterdata"
+            parent="agreement.agreement_menu"
+            sequence="30"/>
+    <menuitem
+            name="Contents"
+            id="agreement_data_contents"
+            parent="agreement_masterdata"
+            sequence="10"/>
+    <menuitem
+            name="Recitals"
+            id="agreement_recitals"
+            parent="agreement_data_contents"
+            sequence="10"
+            action="agreement_recital_action"/>
+    <menuitem
+            name="Clauses"
+            id="agreement_clauses"
+            parent="agreement_data_contents"
+            sequence="20"
+            action="partner_agreement_action_clause"/>
+    <menuitem
+            name="Sections"
+            id="agreement_sections"
+            parent="agreement_data_contents"
+            sequence="30"
+            action="partner_agreement_action_section"/>
+    <menuitem
+            name="Appendices"
+            id="agreement_appendices"
+            parent="agreement_data_contents"
+            sequence="40"
+            action="agreement_appendix_action"/>
+    <menuitem
+            name="Products"
+            id="agreement_products"
+            sequence="100"
+            parent="agreement_masterdata"
+            action="product.product_template_action"/>
+
+    <!-- Reporting -->
+    <menuitem
+            name="Reporting"
+            id="agreement_reporting"
+            sequence="40"
+            parent="agreement.agreement_menu"
+            groups="agreement_legal.group_agreement_manager"/>
+
+    <menuitem
+            name="Agreements"
+            id="agreement_agreement_reporting"
+            sequence="10"
+            parent="agreement_reporting"
+            action="action_agreement_report_order"/>
+
+    <!-- Configuration -->
+    <menuitem
+            name="Configuration"
+            id="agreement_configuration"
+            sequence="50"
+            parent="agreement.agreement_menu"
+            groups="agreement_legal.group_agreement_manager"/>
+    <menuitem
+            name="Settings"
+            id="agreement_settings"
+            sequence="10"
+            parent="agreement_configuration"
+            action="agreement_legal.action_agreement_config"/>
+    <menuitem
+            name="Templates"
+            id="template"
+            parent="agreement_configuration"
+            sequence="20"
+            action="partner_agreement_agreement_templates"/>
+    <menuitem
+            name="Renewal Types"
+            id="agreement_renewaltype"
+            parent="agreement_configuration"
+            sequence="30"
+            action="partner_agreement_action_renewaltype"/>
+    <menuitem
+            name="Increase Types"
+            id="agreement_increamenttypes"
+            parent="agreement_configuration"
+            sequence="31"
+            action="partner_agreement_action_increasetype"/>
+    <menuitem
+            name="Stages"
+            id="agreement_stages"
+            parent="agreement_configuration"
+            sequence="40"
+            action="partner_agreement_action_stage"/>
+    <menuitem
+            name="Types"
+            id="agreement_types"
+            parent="agreement_configuration"
+            sequence="50"
+            action="partner_agreement_action_type"/>
+    <menuitem
+            name="Sub-Types"
+            id="agreement_subtypes"
+            parent="agreement_configuration"
+            sequence="60"
+            action="partner_agreement_action_subtype"/>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Agreement Sections List View-->
+    <record model="ir.ui.view" id="partner_agreement_section_list_view">
+        <field name="name">Agreement Section List</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <tree string="Sections" default_order='agreement_id, sequence'>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="agreement_id"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Sections Form View -->
+    <record model="ir.ui.view" id="partner_agreement_section_form_view">
+        <field name="name">Agreement Section Form</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <form string="Section">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="title"/>
+                            <field name="agreement_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content">
+                            <field name='content' nolabel="1"/>
+                            <group class="oe_edit_only">
+                                <field name="field_domain" widget="domain" nolabel="1"
+                                       options="{'model': 'agreement.section',
+                                             'partial_use': True}" />
+                                <group>
+                                    <field name="default_value"/>
+                                    <field name="copyvalue"/>
+                                </group>
+                                <p>
+                                    This section (on the left) allows you to add dynamic fields inside the content.
+                                    <ol>
+                                        <li>Select the field using the popup</li>
+                                        <li>Enter the default value if the field is empty</li>
+                                        <li>Copy and paste the placeholder expression in the content</li>
+                                    </ol>
+                                </p>
+                            </group>
+                        </page>
+                        <page string="Clauses">
+                            <field name="clauses_ids"
+                                   nolabel="1"
+                                   context="{'default_section_id': active_id, 'default_agreement_id': agreement_id}">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Agreement Section Search View -->
+    <record model="ir.ui.view" id="partner_agreement_section_search_view">
+        <field name="name">Agreement Section Search</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <search string="Agreement Section Search">
+                <filter name="group_agreement" string="Agreements" icon="terp-partner" context="{'group_by':'agreement_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="partner_agreement_action_section">
+        <field name="name">Agreement Sections</field>
+        <field name="res_model">agreement.section</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

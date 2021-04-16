@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- Agreement Appendix List View-->
+    <record model="ir.ui.view" id="agreement_appendix_tree">
+        <field name="name">Agreement Appendix Tree</field>
+        <field name="model">agreement.appendix</field>
+        <field name="arch" type="xml">
+            <tree string="Appendices" default_order='agreement_id, sequence'>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="agreement_id"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Appendix Form View -->
+    <record model="ir.ui.view" id="agreement_appendix_form">
+        <field name="name">Agreement Appendix Form</field>
+        <field name="model">agreement.appendix</field>
+        <field name="arch" type="xml">
+            <form string="Appendix">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="title"/>
+                            <field name="agreement_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <field name="content" widget="html"/>
+                    <group class="oe_edit_only">
+                        <field name="field_domain" widget="domain" nolabel="1"
+                               options="{'model': 'agreement.appendix',
+                                             'partial_use': True}" />
+                        <group>
+                            <field name="default_value"/>
+                            <field name="copyvalue"/>
+                        </group>
+                        <p>
+                            This section (on the left) allows you to add dynamic fields inside the content.
+                            <ol>
+                                <li>Select the field using the popup</li>
+                                <li>Enter the default value if the field is empty</li>
+                                <li>Copy and paste the placeholder expression in the content</li>
+                            </ol>
+                        </p>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Agreement Appendix Search View -->
+    <record model="ir.ui.view" id="agreement_appendix_search">
+        <field name="name">Agreement Appendix Search</field>
+        <field name="model">agreement.appendix</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="group_agreement" icon="terp-partner" context="{'group_by':'agreement_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record model="ir.actions.act_window" id="agreement_appendix_action">
+        <field name="name">Appendices</field>
+        <field name="res_model">agreement.appendix</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
