@@ -1,37 +1,34 @@
 # Copyright 2004-2010 OpenERP SA
 # Copyright 2014 Angel Moya <angel.moya@domatix.com>
-# Copyright 2015 Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# Copyright 2016-2018 Carlos Dauden <carlos.dauden@tecnativa.com>
+# Copyright 2015-2020 Tecnativa - Pedro M. Baeza
+# Copyright 2016-2018 Tecnativa - Carlos Dauden
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV
+# Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests import Form
 from odoo.tools.translate import _
 
 
 class ContractContract(models.Model):
-    _name = 'contract.contract'
+    _name = "contract.contract"
     _description = "Contract"
-    _order = 'code, name asc'
+    _order = "code, name asc"
     _inherit = [
-        'mail.thread',
-        'mail.activity.mixin',
-        'contract.abstract.contract',
-        'portal.mixin'
+        "mail.thread",
+        "mail.activity.mixin",
+        "contract.abstract.contract",
+        "contract.recurrency.mixin",
+        "portal.mixin",
     ]
 
-    active = fields.Boolean(
-        default=True,
-    )
-    code = fields.Char(
-        string="Reference",
-    )
+    active = fields.Boolean(default=True,)
+    code = fields.Char(string="Reference",)
     group_id = fields.Many2one(
-        string="Group",
-        comodel_name='account.analytic.account',
-        ondelete='restrict',
+        string="Group", comodel_name="account.analytic.account", ondelete="restrict",
     )
     currency_id = fields.Many2one(
         compute="_compute_currency_id",
@@ -39,94 +36,82 @@ class ContractContract(models.Model):
         comodel_name="res.currency",
         string="Currency",
     )
-    manual_currency_id = fields.Many2one(
-        comodel_name="res.currency",
-        readonly=True,
-    )
+    manual_currency_id = fields.Many2one(comodel_name="res.currency", readonly=True,)
     contract_template_id = fields.Many2one(
-        string='Contract Template', comodel_name='contract.template'
+        string="Contract Template", comodel_name="contract.template"
     )
     contract_line_ids = fields.One2many(
-        string='Contract lines',
-        comodel_name='contract.line',
-        inverse_name='contract_id',
+        string="Contract lines",
+        comodel_name="contract.line",
+        inverse_name="contract_id",
         copy=True,
+    )
+    # Trick for being able to have 2 different views for the same o2m
+    # We need this as one2many widget doesn't allow to define in the view
+    # the same field 2 times with different views. 2 views are needed because
+    # one of them must be editable inline and the other not, which can't be
+    # parametrized through attrs.
+    contract_line_fixed_ids = fields.One2many(
+        string="Contract lines (fixed)",
+        comodel_name="contract.line",
+        inverse_name="contract_id",
     )
 
     user_id = fields.Many2one(
-        comodel_name='res.users',
-        string='Responsible',
+        comodel_name="res.users",
+        string="Responsible",
         index=True,
         default=lambda self: self.env.user,
     )
     create_invoice_visibility = fields.Boolean(
-        compute='_compute_create_invoice_visibility'
+        compute="_compute_create_invoice_visibility"
     )
-    recurring_next_date = fields.Date(
-        compute='_compute_recurring_next_date',
-        string='Date of Next Invoice',
-        store=True,
-    )
-    date_end = fields.Date(
-        compute='_compute_date_end', string='Date End', store=True
-    )
+    date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     payment_term_id = fields.Many2one(
-        comodel_name='account.payment.term', string='Payment Terms', index=True
+        comodel_name="account.payment.term", string="Payment Terms", index=True
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
     fiscal_position_id = fields.Many2one(
-        comodel_name='account.fiscal.position',
-        string='Fiscal Position',
-        ondelete='restrict',
+        comodel_name="account.fiscal.position",
+        string="Fiscal Position",
+        ondelete="restrict",
     )
     invoice_partner_id = fields.Many2one(
-        string="Invoicing contact",
-        comodel_name='res.partner',
-        ondelete='restrict',
+        string="Invoicing contact", comodel_name="res.partner", ondelete="restrict",
     )
     partner_id = fields.Many2one(
-        comodel_name='res.partner',
-        inverse='_inverse_partner_id',
-        required=True
+        comodel_name="res.partner", inverse="_inverse_partner_id", required=True
     )
 
     commercial_partner_id = fields.Many2one(
-        'res.partner',
+        "res.partner",
         compute_sudo=True,
-        related='partner_id.commercial_partner_id',
+        related="partner_id.commercial_partner_id",
         store=True,
-        string='Commercial Entity',
-        index=True
+        string="Commercial Entity",
+        index=True,
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
     note = fields.Text(string="Notes")
-    is_terminated = fields.Boolean(
-        string="Terminated", readonly=True, copy=False
-    )
+    is_terminated = fields.Boolean(string="Terminated", readonly=True, copy=False)
     terminate_reason_id = fields.Many2one(
         comodel_name="contract.terminate.reason",
         string="Termination Reason",
         ondelete="restrict",
         readonly=True,
         copy=False,
-        track_visibility="onchange",
+        tracking=True,
     )
     terminate_comment = fields.Text(
-        string="Termination Comment",
-        readonly=True,
-        copy=False,
-        track_visibility="onchange",
+        string="Termination Comment", readonly=True, copy=False, tracking=True,
     )
     terminate_date = fields.Date(
-        string="Termination Date",
-        readonly=True,
-        copy=False,
-        track_visibility="onchange",
+        string="Termination Date", readonly=True, copy=False, tracking=True,
     )
     modification_ids = fields.One2many(
-        comodel_name='contract.modification',
-        inverse_name='contract_id',
-        string='Modifications',
+        comodel_name="contract.modification",
+        inverse_name="contract_id",
+        string="Modifications",
     )
 
     def get_formview_id(self, access_uid=None):
@@ -142,10 +127,10 @@ class ContractContract(models.Model):
         return records
 
     def write(self, vals):
-        if 'modification_ids' in vals:
-            res = super(ContractContract, self.with_context(
-                bypass_modification_send=True
-            )).write(vals)
+        if "modification_ids" in vals:
+            res = super(
+                ContractContract, self.with_context(bypass_modification_send=True)
+            ).write(vals)
             self._modification_mail_send()
         else:
             res = super(ContractContract, self).write(vals)
@@ -153,21 +138,22 @@ class ContractContract(models.Model):
 
     @api.model
     def _set_start_contract_modification(self):
-        subtype_id = self.env.ref('contract.mail_message_subtype_contract_modification')
+        subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
         for record in self:
             if record.contract_line_ids:
-                date_start = min(record.contract_line_ids.mapped('date_start'))
+                date_start = min(record.contract_line_ids.mapped("date_start"))
             else:
                 date_start = record.create_date
             record.message_subscribe(
-                partner_ids=[record.partner_id.id],
-                subtype_ids=[subtype_id.id]
+                partner_ids=[record.partner_id.id], subtype_ids=[subtype_id.id]
             )
-            record.with_context(skip_modification_mail=True).write({
-                'modification_ids': [
-                    (0, 0, {'date': date_start, 'description': _('Contract start')})
-                ]
-            })
+            record.with_context(skip_modification_mail=True).write(
+                {
+                    "modification_ids": [
+                        (0, 0, {"date": date_start, "description": _("Contract start")})
+                    ]
+                }
+            )
 
     @api.model
     def _modification_mail_send(self):
@@ -176,72 +162,66 @@ class ContractContract(models.Model):
                 lambda x: not x.sent
             )
             if modification_ids_not_sent:
-                if not self.env.context.get('skip_modification_mail'):
+                if not self.env.context.get("skip_modification_mail"):
                     record.with_context(
                         default_subtype_id=self.env.ref(
-                            'contract.mail_message_subtype_contract_modification'
+                            "contract.mail_message_subtype_contract_modification"
                         ).id,
                     ).message_post_with_template(
-                        self.env.ref(
-                            "contract.mail_template_contract_modification"
-                        ).id,
-                        notif_layout="contract.template_contract_modification",
+                        self.env.ref("contract.mail_template_contract_modification").id,
+                        email_layout_xmlid="contract.template_contract_modification",
                     )
-                modification_ids_not_sent.write({'sent': True})
+                modification_ids_not_sent.write({"sent": True})
 
-    @api.multi
+    def _compute_access_url(self):
+        for record in self:
+            record.access_url = "/my/contracts/{}".format(record.id)
+
+    def action_preview(self):
+        """Invoked when 'Preview' button in contract form view is clicked."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "target": "self",
+            "url": self.get_portal_url(),
+        }
+
     def _inverse_partner_id(self):
         for rec in self:
             if not rec.invoice_partner_id:
-                rec.invoice_partner_id = rec.partner_id.address_get(
-                    ['invoice']
-                )['invoice']
+                rec.invoice_partner_id = rec.partner_id.address_get(["invoice"])[
+                    "invoice"
+                ]
 
-    @api.multi
     def _get_related_invoices(self):
         self.ensure_one()
 
         invoices = (
-            self.env['account.invoice.line']
-            .search(
-                [
-                    (
-                        'contract_line_id',
-                        'in',
-                        self.contract_line_ids.ids,
-                    )
-                ]
-            )
-            .mapped('invoice_id')
+            self.env["account.move.line"]
+            .search([("contract_line_id", "in", self.contract_line_ids.ids,)])
+            .mapped("move_id")
         )
-        invoices |= self.env['account.invoice'].search(
-            [('old_contract_id', '=', self.id)]
-        )
+        # we are forced to always search for this for not losing possible <=v11
+        # generated invoices
+        invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
         return invoices
 
     def _get_computed_currency(self):
         """Helper method for returning the theoretical computed currency."""
         self.ensure_one()
-        currency = self.env['res.currency']
-        if any(self.contract_line_ids.mapped('automatic_price')):
+        currency = self.env["res.currency"]
+        if any(self.contract_line_ids.mapped("automatic_price")):
             # Use pricelist currency
             currency = (
-                self.pricelist_id.currency_id or
-                self.partner_id.with_context(
+                self.pricelist_id.currency_id
+                or self.partner_id.with_context(
                     force_company=self.company_id.id,
                 ).property_product_pricelist.currency_id
             )
-        return (
-            currency or self.journal_id.currency_id or
-            self.company_id.currency_id
-        )
+        return currency or self.journal_id.currency_id or self.company_id.currency_id
 
     @api.depends(
-        "manual_currency_id",
-        "pricelist_id",
-        "partner_id",
-        "journal_id",
-        "company_id",
+        "manual_currency_id", "pricelist_id", "partner_id", "journal_id", "company_id",
     )
     def _compute_currency_id(self):
         for rec in self:
@@ -260,69 +240,63 @@ class ContractContract(models.Model):
             else:
                 rec.manual_currency_id = False
 
-    @api.multi
     def _compute_invoice_count(self):
         for rec in self:
             rec.invoice_count = len(rec._get_related_invoices())
 
-    @api.multi
     def action_show_invoices(self):
         self.ensure_one()
-        tree_view_ref = (
-            'account.invoice_supplier_tree'
-            if self.contract_type == 'purchase'
-            else 'account.invoice_tree_with_onboarding'
-        )
-        form_view_ref = (
-            'account.invoice_supplier_form'
-            if self.contract_type == 'purchase'
-            else 'account.invoice_form'
-        )
-        tree_view = self.env.ref(tree_view_ref, raise_if_not_found=False)
-        form_view = self.env.ref(form_view_ref, raise_if_not_found=False)
+        tree_view = self.env.ref("account.view_invoice_tree", raise_if_not_found=False)
+        form_view = self.env.ref("account.view_move_form", raise_if_not_found=False)
         action = {
-            'type': 'ir.actions.act_window',
-            'name': 'Invoices',
-            'res_model': 'account.invoice',
-            'view_type': 'form',
-            'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
-            'domain': [('id', 'in', self._get_related_invoices().ids)],
+            "type": "ir.actions.act_window",
+            "name": "Invoices",
+            "res_model": "account.move",
+            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "domain": [("id", "in", self._get_related_invoices().ids)],
         }
         if tree_view and form_view:
-            action['views'] = [(tree_view.id, 'tree'), (form_view.id, 'form')]
+            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
         return action
 
-    @api.depends('contract_line_ids.date_end')
+    @api.depends("contract_line_ids.date_end")
     def _compute_date_end(self):
         for contract in self:
             contract.date_end = False
-            date_end = contract.contract_line_ids.mapped('date_end')
+            date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
     @api.depends(
-        'contract_line_ids.recurring_next_date',
-        'contract_line_ids.is_canceled',
+        "contract_line_ids.recurring_next_date", "contract_line_ids.is_canceled",
     )
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
-                lambda l: (l.recurring_next_date and not l.is_canceled
-                           and (not l.display_type or l.is_recurring_note))
-            ).mapped('recurring_next_date')
-            if recurring_next_date:
+                lambda l: (
+                    l.recurring_next_date
+                    and not l.is_canceled
+                    and (not l.display_type or l.is_recurring_note)
+                )
+            ).mapped("recurring_next_date")
+            # we give priority to computation from date_start if modified
+            if (
+                contract._origin
+                and contract._origin.date_start != contract.date_start
+                or not recurring_next_date
+            ):
+                super(ContractContract, contract)._compute_recurring_next_date()
+            else:
                 contract.recurring_next_date = min(recurring_next_date)
 
-    @api.depends('contract_line_ids.create_invoice_visibility')
+    @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):
         for contract in self:
             contract.create_invoice_visibility = any(
-                contract.contract_line_ids.mapped(
-                    'create_invoice_visibility'
-                )
+                contract.contract_line_ids.mapped("create_invoice_visibility")
             )
 
-    @api.onchange('contract_template_id')
+    @api.onchange("contract_template_id")
     def _onchange_contract_template_id(self):
         """Update the contract fields with that of the template.
 
@@ -335,7 +309,7 @@ class ContractContract(models.Model):
         if not contract_template_id:
             return
         for field_name, field in contract_template_id._fields.items():
-            if field.name == 'contract_line_ids':
+            if field.name == "contract_line_ids":
                 lines = self._convert_contract_lines(contract_template_id)
                 self.contract_line_ids += lines
             elif not any(
@@ -351,7 +325,7 @@ class ContractContract(models.Model):
                 if self.contract_template_id[field_name]:
                     self[field_name] = self.contract_template_id[field_name]
 
-    @api.onchange('partner_id', 'company_id')
+    @api.onchange("partner_id", "company_id")
     def _onchange_partner_id(self):
         partner = (
             self.partner_id
@@ -360,54 +334,52 @@ class ContractContract(models.Model):
         )
         self.pricelist_id = partner.property_product_pricelist.id
         self.fiscal_position_id = partner.env[
-            'account.fiscal.position'
+            "account.fiscal.position"
         ].get_fiscal_position(partner.id)
-        if self.contract_type == 'purchase':
+        if self.contract_type == "purchase":
             self.payment_term_id = partner.property_supplier_payment_term_id
         else:
             self.payment_term_id = partner.property_payment_term_id
-        self.invoice_partner_id = self.partner_id.address_get(['invoice'])[
-            'invoice'
-        ]
+        self.invoice_partner_id = self.partner_id.address_get(["invoice"])["invoice"]
         return {
-            'domain': {
-                'invoice_partner_id': [
-                    '|',
-                    ('id', 'parent_of', self.partner_id.id),
-                    ('id', 'child_of', self.partner_id.id),
+            "domain": {
+                "invoice_partner_id": [
+                    "|",
+                    ("id", "parent_of", self.partner_id.id),
+                    ("id", "child_of", self.partner_id.id),
                 ]
             }
         }
 
-    @api.multi
     def _convert_contract_lines(self, contract):
         self.ensure_one()
-        new_lines = self.env['contract.line']
-        contract_line_model = self.env['contract.line']
+        new_lines = self.env["contract.line"]
+        contract_line_model = self.env["contract.line"]
         for contract_line in contract.contract_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
             # Remove template link field
-            vals.pop('contract_template_id', False)
-            vals['date_start'] = fields.Date.context_today(contract_line)
-            vals['recurring_next_date'] = fields.Date.context_today(
-                contract_line
-            )
+            vals.pop("contract_template_id", False)
+            vals["date_start"] = fields.Date.context_today(contract_line)
+            vals["recurring_next_date"] = fields.Date.context_today(contract_line)
             new_lines += contract_line_model.new(vals)
-        new_lines._onchange_date_start()
         new_lines._onchange_is_auto_renew()
         return new_lines
 
-    @api.multi
     def _prepare_invoice(self, date_invoice, journal=None):
+        """Prepare in a Form the values for the generated invoice record.
+
+        :return: A tuple with the vals dictionary and the Form with the
+          preloaded values for being used in lines.
+        """
         self.ensure_one()
         if not journal:
             journal = (
                 self.journal_id
                 if self.journal_id.type == self.contract_type
-                else self.env['account.journal'].search(
+                else self.env["account.journal"].search(
                     [
-                        ('type', '=', self.contract_type),
-                        ('company_id', '=', self.company_id.id),
+                        ("type", "=", self.contract_type),
+                        ("company_id", "=", self.company_id.id),
                     ],
                     limit=1,
                 )
@@ -415,108 +387,56 @@ class ContractContract(models.Model):
         if not journal:
             raise ValidationError(
                 _("Please define a %s journal for the company '%s'.")
-                % (self.contract_type, self.company_id.name or '')
+                % (self.contract_type, self.company_id.name or "")
             )
-        invoice_type = 'out_invoice'
-        if self.contract_type == 'purchase':
-            invoice_type = 'in_invoice'
-        vinvoice = self.env['account.invoice'].with_context(
-            force_company=self.company_id.id,
-        ).new({
-            'company_id': self.company_id.id,
-            'partner_id': self.invoice_partner_id.id,
-            'type': invoice_type,
-        })
-        vinvoice._onchange_partner_id()
-        invoice_vals = vinvoice._convert_to_write(vinvoice._cache)
-        invoice_vals.update({
-            'name': self.code,
-            'currency_id': self.currency_id.id,
-            'date_invoice': date_invoice,
-            'journal_id': journal.id,
-            'origin': self.name,
-            'user_id': self.user_id.id,
-        })
+        invoice_type = "out_invoice"
+        if self.contract_type == "purchase":
+            invoice_type = "in_invoice"
+        move_form = Form(
+            self.env["account.move"].with_context(
+                force_company=self.company_id.id, default_type=invoice_type
+            )
+        )
+        move_form.partner_id = self.invoice_partner_id
         if self.payment_term_id:
-            invoice_vals['payment_term_id'] = self.payment_term_id.id
+            move_form.invoice_payment_term_id = self.payment_term_id
         if self.fiscal_position_id:
-            invoice_vals['fiscal_position_id'] = self.fiscal_position_id.id
-        return invoice_vals
+            move_form.fiscal_position_id = self.fiscal_position_id
+        invoice_vals = move_form._values_to_save(all_fields=True)
+        invoice_vals.update(
+            {
+                "ref": self.code,
+                "company_id": self.company_id.id,
+                "currency_id": self.currency_id.id,
+                "invoice_date": date_invoice,
+                "journal_id": journal.id,
+                "invoice_origin": self.name,
+                "user_id": self.user_id.id,
+            }
+        )
+        return invoice_vals, move_form
 
-    @api.multi
     def action_contract_send(self):
         self.ensure_one()
-        template = self.env.ref('contract.email_contract_template', False)
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        template = self.env.ref("contract.email_contract_template", False)
+        compose_form = self.env.ref("mail.email_compose_message_wizard_form")
         ctx = dict(
-            default_model='contract.contract',
+            default_model="contract.contract",
             default_res_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_composition_mode='comment',
+            default_composition_mode="comment",
         )
         return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': ctx,
+            "name": _("Compose Email"),
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "views": [(compose_form.id, "form")],
+            "view_id": compose_form.id,
+            "target": "new",
+            "context": ctx,
         }
-
-    @api.model
-    def _finalize_invoice_values(self, invoice_values):
-        """Provided for keeping compatibility in this version."""
-        # TODO: Must be removed in >=13.0
-        return invoice_values
-
-    @api.model
-    def _finalize_invoice_creation(self, invoices):
-        """This method is called right after the creation of the invoices.
-
-        Override it when you need to do something after the records are created
-        in the DB. If you need to modify any value, better to do it on the
-        _prepare_* methods on contract or contract line.
-        """
-        invoices.compute_taxes()
-
-    @api.model
-    def _invoice_followers(self, invoices):
-        invoice_create_subtype = self.sudo().env.ref(
-            'contract.mail_message_subtype_invoice_created'
-        )
-        for item in self:
-            partner_ids = item.message_follower_ids.filtered(
-                lambda x: invoice_create_subtype in x.subtype_ids
-            ).mapped('partner_id')
-            if partner_ids:
-                (
-                    invoices & item._get_related_invoices()
-                ).message_subscribe(partner_ids=partner_ids.ids)
-
-    @api.model
-    def _finalize_and_create_invoices(self, invoices_values):
-        """This method:
-
-         - creates the invoices
-         - finalizes the created invoices (tax computation...)
-
-        :param invoices_values: list of dictionaries (invoices values)
-        :return: created invoices (account.invoice)
-        """
-        final_invoices_values = []
-        # TODO: This call must be removed in >=13.0
-        for invoice_values in invoices_values:
-            final_invoices_values.append(
-                self._finalize_invoice_values(invoice_values)
-            )
-        invoices = self.env['account.invoice'].create(final_invoices_values)
-        self._finalize_invoice_creation(invoices)
-        self._invoice_followers(invoices)
-        return invoices
 
     @api.model
     def _get_contracts_to_invoice_domain(self, date_ref=None):
@@ -529,10 +449,9 @@ class ContractContract(models.Model):
         domain = []
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain.extend([('recurring_next_date', '<=', date_ref)])
+        domain.extend([("recurring_next_date", "<=", date_ref)])
         return domain
 
-    @api.multi
     def _get_lines_to_invoice(self, date_ref):
         """
         This method fetches and returns the lines to invoice on the contract
@@ -543,16 +462,18 @@ class ContractContract(models.Model):
         self.ensure_one()
 
         def can_be_invoiced(l):
-            return (not l.is_canceled and l.recurring_next_date
-                    and l.recurring_next_date <= date_ref)
+            return (
+                not l.is_canceled
+                and l.recurring_next_date
+                and l.recurring_next_date <= date_ref
+            )
 
-        lines2invoice = previous = self.env['contract.line']
+        lines2invoice = previous = self.env["contract.line"]
         current_section = current_note = False
         for line in self.contract_line_ids:
-            if line.display_type == 'line_section':
+            if line.display_type == "line_section":
                 current_section = line
-            elif (line.display_type == 'line_note' and
-                    not line.is_recurring_note):
+            elif line.display_type == "line_note" and not line.is_recurring_note:
                 if line.note_invoicing_mode == "with_previous_line":
                     if previous in lines2invoice:
                         lines2invoice |= line
@@ -571,7 +492,6 @@ class ContractContract(models.Model):
             previous = line
         return lines2invoice.sorted()
 
-    @api.multi
     def _prepare_recurring_invoices_values(self, date_ref=False):
         """
         This method builds the list of invoices values to create, based on
@@ -590,50 +510,64 @@ class ContractContract(models.Model):
             contract_lines = contract._get_lines_to_invoice(date_ref)
             if not contract_lines:
                 continue
-            invoice_values = contract._prepare_invoice(date_ref)
+            invoice_vals, move_form = contract._prepare_invoice(date_ref)
+            invoice_vals["invoice_line_ids"] = []
             for line in contract_lines:
-                invoice_values.setdefault('invoice_line_ids', [])
-                invoice_line_values = line._prepare_invoice_line(
-                    invoice_values=invoice_values,
-                )
-                if invoice_line_values:
-                    invoice_values['invoice_line_ids'].append(
-                        (0, 0, invoice_line_values)
-                    )
-            invoices_values.append(invoice_values)
+                invoice_line_vals = line._prepare_invoice_line(move_form=move_form)
+                if invoice_line_vals:
+                    # Allow extension modules to return an empty dictionary for
+                    # nullifying line
+                    invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
+            invoices_values.append(invoice_vals)
+            # Force the recomputation of journal items
+            del invoice_vals["line_ids"]
             contract_lines._update_recurring_next_date()
         return invoices_values
 
-    @api.multi
     def recurring_create_invoice(self):
         """
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
-        invoices = self._recurring_create_invoice()
-        if invoices:
-            for invoice in invoices:
-                self.message_post(
-                    body=_(
-                        'Contract manually invoiced: '
-                        '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
-                        '</a>'
-                    )
-                    % (invoice._name, invoice.id)
+        invoice = self._recurring_create_invoice()
+        if invoice:
+            self.message_post(
+                body=_(
+                    "Contract manually invoiced: "
+                    '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
+                    "</a>"
                 )
-        return invoices
+                % (invoice._name, invoice.id)
+            )
+        return invoice
 
-    @api.multi
+    @api.model
+    def _invoice_followers(self, invoices):
+        invoice_create_subtype = self.env.ref(
+            "contract.mail_message_subtype_invoice_created"
+        )
+        for item in self:
+            partner_ids = item.message_follower_ids.filtered(
+                lambda x: invoice_create_subtype in x.subtype_ids
+            ).mapped("partner_id")
+            if partner_ids:
+                (invoices & item._get_related_invoices()).message_subscribe(
+                    partner_ids=partner_ids.ids
+                )
+
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
-        return self._finalize_and_create_invoices(invoices_values)
+        moves = self.env["account.move"].create(invoices_values)
+        self._invoice_followers(moves)
+        self._compute_recurring_next_date()
+        return moves
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        invoices = self.env["account.invoice"]
+        invoices = self.env["account.move"]
         # Invoice by companies, so assignation emails get correct context
         companies_to_invoice = self.read_group(domain, ["company_id"], ["company_id"])
         for row in companies_to_invoice:
@@ -643,55 +577,42 @@ class ContractContract(models.Model):
             invoices |= contracts_to_invoice._recurring_create_invoice(date_ref)
         return invoices
 
-    @api.multi
     def action_terminate_contract(self):
         self.ensure_one()
         context = {"default_contract_id": self.id}
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('Terminate Contract'),
-            'res_model': 'contract.contract.terminate',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': context,
+            "type": "ir.actions.act_window",
+            "name": _("Terminate Contract"),
+            "res_model": "contract.contract.terminate",
+            "view_mode": "form",
+            "target": "new",
+            "context": context,
         }
 
-    @api.multi
     def _terminate_contract(
         self, terminate_reason_id, terminate_comment, terminate_date
     ):
         self.ensure_one()
         if not self.env.user.has_group("contract.can_terminate_contract"):
-            raise UserError(_('You are not allowed to terminate contracts.'))
-        self.contract_line_ids.filtered('is_stop_allowed').stop(terminate_date)
-        self.write({
-            'is_terminated': True,
-            'terminate_reason_id': terminate_reason_id.id,
-            'terminate_comment': terminate_comment,
-            'terminate_date': terminate_date,
-        })
+            raise UserError(_("You are not allowed to terminate contracts."))
+        self.contract_line_ids.filtered("is_stop_allowed").stop(terminate_date)
+        self.write(
+            {
+                "is_terminated": True,
+                "terminate_reason_id": terminate_reason_id.id,
+                "terminate_comment": terminate_comment,
+                "terminate_date": terminate_date,
+            }
+        )
         return True
 
-    @api.multi
     def action_cancel_contract_termination(self):
         self.ensure_one()
-        self.write({
-            'is_terminated': False,
-            'terminate_reason_id': False,
-            'terminate_comment': False,
-            'terminate_date': False,
-        })
-
-    def _compute_access_url(self):
-        for record in self:
-            record.access_url = '/my/contracts/{}'.format(record.id)
-
-    def action_preview(self):
-        """Invoked when 'Preview' button in contract form view is clicked."""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.get_portal_url(),
-        }
+        self.write(
+            {
+                "is_terminated": False,
+                "terminate_reason_id": False,
+                "terminate_comment": False,
+                "terminate_date": False,
+            }
+        )

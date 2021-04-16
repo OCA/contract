@@ -10,13 +10,13 @@ from odoo import fields, models
 
 
 class ContractTemplate(models.Model):
-    _name = 'contract.template'
-    _inherit = 'contract.abstract.contract'
+    _name = "contract.template"
+    _inherit = "contract.abstract.contract"
     _description = "Contract Template"
 
     contract_line_ids = fields.One2many(
-        comodel_name='contract.template.line',
-        inverse_name='contract_id',
+        comodel_name="contract.template.line",
+        inverse_name="contract_id",
         copy=True,
-        string='Contract template lines',
+        string="Contract template lines",
     )

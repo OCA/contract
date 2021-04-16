@@ -1,17 +1,22 @@
 <?xml version="1.0" ?>
 <odoo noupdate="1">
-
     <record id="email_contract_template" model="mail.template">
         <field name="name">Email Contract Template</field>
-        <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
-        <field name="subject">${object.company_id.name} Contract (Ref ${object.name or 'n/a'})</field>
+        <field
+            name="email_from"
+        >${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field
+            name="subject"
+        >${object.company_id.name} Contract (Ref ${object.name or 'n/a'})</field>
         <field name="partner_to">${object.partner_id.id}</field>
-        <field name="model_id" ref="model_contract_contract"/>
-        <field name="auto_delete" eval="True"/>
-        <field name="report_template" ref="contract.report_contract"/>
+        <field name="model_id" ref="model_contract_contract" />
+        <field name="auto_delete" eval="True" />
+        <field name="report_template" ref="contract.report_contract" />
         <field name="report_name">Contract</field>
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="body_html"><![CDATA[
+        <field
+            name="body_html"
+        ><![CDATA[
 <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
     <p>Hello ${object.partner_id.name or ''},</p>
     <p>A new contract has been created: </p>
@@ -62,25 +67,32 @@
 </div>
         ]]></field>
     </record>
-
     <record id="mail_template_contract_modification" model="mail.template">
         <field name="name">Contract Modification Template</field>
-        <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
-        <field name="subject">${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - Modifications</field>
-        <field name="model_id" ref="model_contract_contract"/>
+        <field
+            name="email_from"
+        >${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field
+            name="subject"
+        >${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - Modifications</field>
+        <field name="model_id" ref="model_contract_contract" />
         <field name="lang">${object.partner_id.lang}</field>
-        <field name="body_html"><![CDATA[
+        <field
+            name="body_html"
+        ><![CDATA[
             <p>Hello</p>
             <p>We have modifications on the contract that we want to notify you.</p>
         ]]></field>
     </record>
-
-    <template id="mail_notification_contract" inherit_id="mail.mail_notification_paynow" primary="True">
+    <template
+        id="mail_notification_contract"
+        inherit_id="mail.mail_notification_paynow"
+        primary="True"
+    >
         <xpath expr="//t[@t-raw='message.body']" position="after">
-            <t t-raw="0"/>
+            <t t-raw="0" />
         </xpath>
     </template>
-
     <template id="template_contract_modification" name="Contract Modification">
         <t t-call="contract.mail_notification_contract">
             <table border="1" align="center">
@@ -93,8 +105,12 @@
                 <tbody>
                     <t t-foreach="record.modification_ids" t-as="modification">
                         <tr t-if="not modification.sent">
-                            <td name="td_date"><span t-field="modification.date" /></td>
-                            <td name="td_description"><div t-field="modification.description" /></td>
+                            <td name="td_date">
+                                <span t-field="modification.date" />
+                            </td>
+                            <td name="td_description">
+                                <div t-field="modification.description" />
+                            </td>
                         </tr>
                     </t>
                 </tbody>

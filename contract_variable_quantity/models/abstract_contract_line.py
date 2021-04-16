@@ -7,15 +7,12 @@ from odoo import fields, models
 
 
 class ContractAbstractContractLine(models.AbstractModel):
-    _inherit = 'contract.abstract.contract.line'
+    _inherit = "contract.abstract.contract.line"
 
     qty_type = fields.Selection(
-        selection=[
-            ('fixed', 'Fixed quantity'),
-            ('variable', 'Variable quantity'),
-        ],
+        selection=[("fixed", "Fixed quantity"), ("variable", "Variable quantity")],
         required=True,
-        default='fixed',
+        default="fixed",
         string="Qty. type",
     )
     qty_formula_id = fields.Many2one(

@@ -4,18 +4,17 @@
 from odoo import _, http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import CustomerPortal,\
-    pager as portal_pager
+
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 
 
 class PortalContract(CustomerPortal):
-
     def _prepare_portal_layout_values(self):
         values = super()._prepare_portal_layout_values()
-        model = 'contract.contract'
-        values['contract_count'] = 0
-        if request.env[model].check_access_rights('read', raise_exception=False):
-            values['contract_count'] = request.env[model].search_count([])
+        model = "contract.contract"
+        values["contract_count"] = 0
+        if request.env[model].check_access_rights("read", raise_exception=False):
+            values["contract_count"] = request.env[model].search_count([])
         return values
 
     def _contract_get_page_view_values(self, contract, access_token, **kwargs):
@@ -24,17 +23,23 @@ class PortalContract(CustomerPortal):
             "contract": contract,
         }
         return self._get_page_view_values(
-            contract, access_token, values, 'my_contracts_history', False, **kwargs)
+            contract, access_token, values, "my_contracts_history", False, **kwargs
+        )
 
     def _get_filter_domain(self, kw):
         return []
 
-    @http.route(['/my/contracts', '/my/contracts/page/<int:page>'],
-                type='http', auth="user", website=True)
-    def portal_my_contracts(self, page=1, date_begin=None, date_end=None,
-                            sortby=None, **kw):
+    @http.route(
+        ["/my/contracts", "/my/contracts/page/<int:page>"],
+        type="http",
+        auth="user",
+        website=True,
+    )
+    def portal_my_contracts(
+        self, page=1, date_begin=None, date_end=None, sortby=None, **kw
+    ):
         values = self._prepare_portal_layout_values()
-        contract_obj = request.env['contract.contract']
+        contract_obj = request.env["contract.contract"]
         domain = self._get_filter_domain(kw)
         searchbar_sortings = {
             "date": {"label": _("Date"), "order": "recurring_next_date desc"},
@@ -43,8 +48,8 @@ class PortalContract(CustomerPortal):
         }
         # default sort by order
         if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
+            sortby = "date"
+        order = searchbar_sortings[sortby]["order"]
         # count for pager
         contract_count = contract_obj.search_count(domain)
         # pager
@@ -57,35 +62,38 @@ class PortalContract(CustomerPortal):
             },
             total=contract_count,
             page=page,
-            step=self._items_per_page
+            step=self._items_per_page,
         )
         # content according to pager and archive selected
         contracts = contract_obj.search(
-            domain,
-            order=order,
-            limit=self._items_per_page,
-            offset=pager['offset']
+            domain, order=order, limit=self._items_per_page, offset=pager["offset"]
         )
-        request.session['my_contracts_history'] = contracts.ids[:100]
-        values.update({
-            "date": date_begin,
-            "contracts": contracts,
-            "page_name": "Contracts",
-            "pager": pager,
-            "default_url": "/my/contracts",
-            "searchbar_sortings": searchbar_sortings,
-            "sortby": sortby
-        })
+        request.session["my_contracts_history"] = contracts.ids[:100]
+        values.update(
+            {
+                "date": date_begin,
+                "contracts": contracts,
+                "page_name": "Contracts",
+                "pager": pager,
+                "default_url": "/my/contracts",
+                "searchbar_sortings": searchbar_sortings,
+                "sortby": sortby,
+            }
+        )
         return request.render("contract.portal_my_contracts", values)
 
-    @http.route(['/my/contracts/<int:contract_contract_id>'],
-                type='http', auth="public", website=True)
+    @http.route(
+        ["/my/contracts/<int:contract_contract_id>"],
+        type="http",
+        auth="public",
+        website=True,
+    )
     def portal_my_contract_detail(self, contract_contract_id, access_token=None, **kw):
         try:
             contract_sudo = self._document_check_access(
-                'contract.contract', contract_contract_id, access_token
+                "contract.contract", contract_contract_id, access_token
             )
         except (AccessError, MissingError):
-            return request.redirect('/my')
+            return request.redirect("/my")
         values = self._contract_get_page_view_values(contract_sudo, access_token, **kw)
         return request.render("contract.portal_contract_page", values)

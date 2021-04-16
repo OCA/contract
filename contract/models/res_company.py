@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class ResCompany(models.Model):
 
-    _inherit = 'res.company'
+    _inherit = "res.company"
 
     create_new_line_at_contract_line_renew = fields.Boolean(
         string="Create New Line At Contract Line Renew",
