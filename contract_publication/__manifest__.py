@@ -15,7 +15,7 @@
     ],
     'data': [
         'views/product_template.xml',
-        'views/distribution_list.xml',
+        'views/publication_distribution_list.xml',
         'views/res_partner.xml',
         'views/menu.xml',
         'security/ir.model.access.csv',
