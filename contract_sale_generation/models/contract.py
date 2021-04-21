@@ -16,7 +16,6 @@ class ContractContract(models.Model):
 
     sale_count = fields.Integer(compute="_compute_sale_count")
 
-    @api.multi
     def _prepare_sale(self, date_ref):
         self.ensure_one()
         sale = self.env["sale.order"].new(
@@ -36,7 +35,6 @@ class ContractContract(models.Model):
         sale.onchange_partner_id()
         return sale._convert_to_write(sale._cache)
 
-    @api.multi
     def _get_related_sales(self):
         self.ensure_one()
         sales = (
@@ -46,12 +44,10 @@ class ContractContract(models.Model):
         )
         return sales
 
-    @api.multi
     def _compute_sale_count(self):
         for rec in self:
             rec.sale_count = len(rec._get_related_sales())
 
-    @api.multi
     def action_show_sales(self):
         self.ensure_one()
         tree_view = self.env.ref("sale.view_order_tree", raise_if_not_found=False)
@@ -68,7 +64,6 @@ class ContractContract(models.Model):
             action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
         return action
 
-    @api.multi
     def recurring_create_sale(self):
         """
         This method triggers the creation of the next sale order of the
@@ -87,7 +82,6 @@ class ContractContract(models.Model):
             )
         return sales
 
-    @api.multi
     def _prepare_recurring_sales_values(self, date_ref=False):
         """
         This method builds the list of sales values to create, based on
@@ -118,7 +112,6 @@ class ContractContract(models.Model):
             contract_lines._update_recurring_next_date()
         return sales_values
 
-    @api.multi
     def _recurring_create_sale(self, date_ref=False):
         sales_values = self._prepare_recurring_sales_values(date_ref)
         so_rec = self.env["sale.order"].create(sales_values)
@@ -148,7 +141,7 @@ class ContractContract(models.Model):
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
         domain.extend([("type", "=", "invoice")])
-        invoices = self.env["account.invoice"]
+        invoices = self.env["account.move"]
         # Invoice by companies, so assignation emails get correct context
         companies_to_invoice = self.read_group(domain, ["company_id"], ["company_id"])
         for row in companies_to_invoice:
