@@ -10,7 +10,7 @@
     "license": "AGPL-3",
     "author": "PESOL, " "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
-    "depends": ["contract", "sale"],
+    "depends": ["contract_sale"],
     "data": [
         "data/contract_cron.xml",
         "views/contract.xml",
