@@ -114,6 +114,13 @@ class SaleOrderLine(models.Model):
         return "\n".join([msg_history, msg_pl] + msg_tiers)
 
     def _get_tier_description(self, qty, cumulated_qty, qps):
+        if (
+            self.price_unit
+            and sum(q * p for q, p in qps)
+            and self.order_id.pricelist_id.discount_policy == "with_discount"
+        ):
+            ratio = self.price_unit / sum(q * p for q, p in qps) * self.product_uom_qty
+            qps = [(q, p * round(ratio, 3)) for q, p in qps]
         msg_tiers = []
         msg_tier = _("Tier#{}: {:.0f} - {:.2f} - {}")
         paid = _("PAID")

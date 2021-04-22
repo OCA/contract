@@ -106,3 +106,52 @@ class TestContractTieredPricingFlow(TestContractTieredPricing):
         self.assertTrue(" 10" in new_line.name)
         self.assertTrue(" 8" in new_line.name)
         self.assertTrue(" 5" in new_line.name)
+
+    def test_tiered_pricing_base_with_discount(self):
+        """We apply a discount on a basic tiered pricing."""
+        self.product.list_price = 10
+        self.order.pricelist_id = self.pricelist_formula_tier_based_discount
+        with Form(self.order) as so:
+            with so.order_line.new() as new_line:
+                new_line.product_id = self.product
+                new_line.product_uom_qty = 250
+        # this test would not pass with a new_line = create(...) instead!
+        # because we rely on the onchange application logic, a simple
+        # get_missing_defaults would not fill the description correctly.
+        self.assertEqual(new_line.price_subtotal, 100 * 5 + 100 * 4 + 50 * 3.5)
+        self.assertEqual(new_line.discount, 0)
+        self.assertTrue(" 5" in new_line.name)
+        self.assertTrue(" 4" in new_line.name)
+        self.assertTrue(" 3.5" in new_line.name)
+
+    def test_tiered_pricing_base_without_discount(self):
+        """Discount not included, so we should get the same price, but a different
+           description."""
+        self.product.list_price = 10
+        self.order.pricelist_id = self.pricelist_formula_tier_based_discount
+        self.order.pricelist_id.discount_policy = "without_discount"
+        group_discount = self.env.ref("sale.group_discount_per_so_line")
+        self.env.user.groups_id = [(4, group_discount.id)]
+        with Form(self.order) as so:
+            with so.order_line.new() as new_line:
+                new_line.product_id = self.product
+                new_line.product_uom_qty = 250
+        self.assertEqual(new_line.price_subtotal, 100 * 5 + 100 * 4 + 50 * 3.5)
+        self.assertEqual(new_line.discount, 50)
+        self.assertTrue(" 10" in new_line.name)
+        self.assertTrue(" 8" in new_line.name)
+        self.assertTrue(" 7" in new_line.name)
+
+    def test_tiered_pricing_base_with_discount_discount(self):
+        """We apply a discount on a discount-based tiered pricing."""
+        self.product.list_price = 10
+        self.tiered_item.tiered_pricelist_id = self.tiered_pricing_discount
+        self.order.pricelist_id = self.pricelist_formula_tier_based_discount
+        with Form(self.order) as so:
+            with so.order_line.new() as new_line:
+                new_line.product_id = self.product
+                new_line.product_uom_qty = 250
+        self.assertEqual(new_line.price_subtotal, 100 * 5 + 100 * 4 + 50 * 2.5)
+        self.assertTrue(" 5" in new_line.name)
+        self.assertTrue(" 4" in new_line.name)
+        self.assertTrue(" 2.5" in new_line.name)
