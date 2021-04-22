@@ -19,30 +19,31 @@ SELECT
 
 
 class AccountAnalyticInvoiceLine(models.Model):
-    _inherit = 'account.analytic.invoice.line'
+    _inherit = "account.analytic.invoice.line"
 
     partner_id = fields.Many2one(
-        related='analytic_account_id.partner_id',
-        store=True,
-        readonly=True)
+        related="analytic_account_id.partner_id", store=True, readonly=True
+    )
     publication = fields.Boolean(
-        string='Subscription product line',
-        related='product_id.product_tmpl_id.publication',
-        store=True)
+        string="Subscription product line",
+        related="product_id.product_tmpl_id.publication",
+        store=True,
+    )
 
     @api.multi
     def action_distribution_list(self):
         self.ensure_one()
-        action = self.env.ref(
-            'publication.action_distribution_list').read()[0]
-        action['context'] = {
-            'default_product_id': self.product_id.id,
-            'default_contract_partner_id': self.partner_id.id}
-        action['domain'] = [
-            ('contract_partner_id', '=', self.partner_id.id),
-            ('product_id', '=', self.product_id.id)]
-        action['view_mode'] = 'form'
-        action['target'] = 'current'
+        action = self.env.ref("publication.action_distribution_list").read()[0]
+        action["context"] = {
+            "default_product_id": self.product_id.id,
+            "default_contract_partner_id": self.partner_id.id,
+        }
+        action["domain"] = [
+            ("contract_partner_id", "=", self.partner_id.id),
+            ("product_id", "=", self.product_id.id),
+        ]
+        action["view_mode"] = "form"
+        action["target"] = "current"
         return action
 
     @api.model
@@ -56,19 +57,25 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        old_values = set(self.mapped(
-            lambda x: (x.product_id, x.analytic_account_id.partner_id)
-        )) if 'product_id' in vals else []
+        old_values = (
+            set(self.mapped(lambda x: (x.product_id, x.analytic_account_id.partner_id)))
+            if "product_id" in vals
+            else []
+        )
         result = super(AccountAnalyticInvoiceLine, self).write(vals)
-        needs_update = set(['product_id', 'quantity']) & set(vals.keys())
+        needs_update = set(["product_id", "quantity"]) & set(vals.keys())
         if needs_update:
             for this in self:
-                self.env["publication.distribution.list"]._update_contract_partner_copies(
+                self.env[
+                    "publication.distribution.list"
+                ]._update_contract_partner_copies(
                     this.product_id,
                     this.analytic_account_id.partner_id,
                 )
             for product, partner in old_values:
-                self.env["publication.distribution.list"]._update_contract_partner_copies(
+                self.env[
+                    "publication.distribution.list"
+                ]._update_contract_partner_copies(
                     product,
                     partner,
                 )
@@ -76,9 +83,9 @@ class AccountAnalyticInvoiceLine(models.Model):
 
     @api.multi
     def unlink(self):
-        updates = set(self.mapped(
-            lambda x: (x.product_id, x.analytic_account_id.partner_id)
-        ))
+        updates = set(
+            self.mapped(lambda x: (x.product_id, x.analytic_account_id.partner_id))
+        )
         result = super(AccountAnalyticInvoiceLine, self).unlink()
         for product, partner in updates:
             self.env["publication.distribution.list"]._update_contract_partner_copies(
@@ -98,4 +105,4 @@ class AccountAnalyticInvoiceLine(models.Model):
         line_ids = [rec[0] for rec in data]
         lines = self.browse(line_ids)
         for line in lines:
-            line.write({'publication': line.product_id.publication})
+            line.write({"publication": line.product_id.publication})

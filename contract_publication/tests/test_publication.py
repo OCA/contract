@@ -15,92 +15,117 @@ class TestPublication(common.SavepointCase):
     def setUpClass(cls):
         super(TestPublication, cls).setUpClass()
         # Create some test partners
-        partner_model = cls.env['res.partner']
-        cls.partner_jan = partner_jan = partner_model.create({
-            'name': 'Jan',
-            'city': 'Amsterdam'})
-        cls.partner_piet = partner_piet = partner_model.create({
-            'name': 'Piet',
-            'city': 'Rotterdam'})
-        cls.partner_joris = partner_model.create({
-            'name': 'Joris',
-            'city': 'Den Haag'})
-        cls.partner_corneel = partner_model.create({
-            'name': 'Corneel',
-            'city': 'Dordrecht'})
-        cls.partner_corneel_delivery = partner_model.create({
-            'name': 'Corneels store',
-            'parent_id': cls.partner_corneel.id,
-            'type': 'delivery',
-            'street': 'Wijnstraat 35',
-            'city': 'Dordrecht'})
+        partner_model = cls.env["res.partner"]
+        cls.partner_jan = partner_jan = partner_model.create(
+            {"name": "Jan", "city": "Amsterdam"}
+        )
+        cls.partner_piet = partner_piet = partner_model.create(
+            {"name": "Piet", "city": "Rotterdam"}
+        )
+        cls.partner_joris = partner_model.create({"name": "Joris", "city": "Den Haag"})
+        cls.partner_corneel = partner_model.create(
+            {"name": "Corneel", "city": "Dordrecht"}
+        )
+        cls.partner_corneel_delivery = partner_model.create(
+            {
+                "name": "Corneels store",
+                "parent_id": cls.partner_corneel.id,
+                "type": "delivery",
+                "street": "Wijnstraat 35",
+                "city": "Dordrecht",
+            }
+        )
         # Make sure a sale journal is present for tests
-        sequence_model = cls.env['ir.sequence']
-        contract_sequence = sequence_model.create({
-            'company_id': cls.env.user.company_id.id,
-            'code': 'contract',
-            'name': 'contract sequence',
-            'number_next': 1,
-            'implementation': 'standard',
-            'padding': 3,
-            'number_increment': 1})
-        journal_model = cls.env['account.journal']
-        journal_model.create({
-            'company_id': cls.env.user.company_id.id,
-            'code': 'contract',
-            'name': 'contract journal',
-            'sequence_id': contract_sequence.id,
-            'type': 'sale'})
+        sequence_model = cls.env["ir.sequence"]
+        contract_sequence = sequence_model.create(
+            {
+                "company_id": cls.env.user.company_id.id,
+                "code": "contract",
+                "name": "contract sequence",
+                "number_next": 1,
+                "implementation": "standard",
+                "padding": 3,
+                "number_increment": 1,
+            }
+        )
+        journal_model = cls.env["account.journal"]
+        journal_model.create(
+            {
+                "company_id": cls.env.user.company_id.id,
+                "code": "contract",
+                "name": "contract journal",
+                "sequence_id": contract_sequence.id,
+                "type": "sale",
+            }
+        )
         # Create products:
-        cls.uom_unit = cls.env.ref('product.product_uom_unit')
-        product_model = cls.env['product.product']
-        cls.product_book = product_book = product_model.create({
-            'name': 'Test yearbook',
-            'type': 'consu',
-            'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
-        cls.product_newsletter = product_newsletter = product_model.create({
-            'name': 'Test newsletter',
-            'type': 'consu',
-            'publication': True,
-            'distribution_type': 'print',
-            'publishing_frequency_type': 'weekly',
-            'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        cls.uom_unit = cls.env.ref("product.product_uom_unit")
+        product_model = cls.env["product.product"]
+        cls.product_book = product_book = product_model.create(
+            {
+                "name": "Test yearbook",
+                "type": "consu",
+                "uom_id": cls.uom_unit.id,
+                "uom_po_id": cls.uom_unit.id,
+            }
+        )
+        cls.product_newsletter = product_newsletter = product_model.create(
+            {
+                "name": "Test newsletter",
+                "type": "consu",
+                "publication": True,
+                "distribution_type": "print",
+                "publishing_frequency_type": "weekly",
+                "uom_id": cls.uom_unit.id,
+                "uom_po_id": cls.uom_unit.id,
+            }
+        )
         # Create contract that will be subscription from the beginning:
-        contract_model = cls.env['account.analytic.account']
-        line_model = cls.env['account.analytic.invoice.line']
-        cls.contract_jan = contract_jan = contract_model.create({
-            'name': 'Test Contract Jan',
-            'partner_id': partner_jan.id,
-            'pricelist_id': partner_jan.property_product_pricelist.id,
-            'recurring_invoices': True,
-            'date_start': '2016-02-15',
-            'recurring_next_date': '2016-02-29'})
-        cls.line_newsletter = line_model.create({
-            'analytic_account_id': contract_jan.id,
-            'product_id': product_newsletter.id,
-            'name': 'Newsletter subscription',
-            'quantity': 40,
-            'uom_id': product_newsletter.uom_id.id,
-            'price_unit': 100,
-            'discount': 50})
+        contract_model = cls.env["account.analytic.account"]
+        line_model = cls.env["account.analytic.invoice.line"]
+        cls.contract_jan = contract_jan = contract_model.create(
+            {
+                "name": "Test Contract Jan",
+                "partner_id": partner_jan.id,
+                "pricelist_id": partner_jan.property_product_pricelist.id,
+                "recurring_invoices": True,
+                "date_start": "2016-02-15",
+                "recurring_next_date": "2016-02-29",
+            }
+        )
+        cls.line_newsletter = line_model.create(
+            {
+                "analytic_account_id": contract_jan.id,
+                "product_id": product_newsletter.id,
+                "name": "Newsletter subscription",
+                "quantity": 40,
+                "uom_id": product_newsletter.uom_id.id,
+                "price_unit": 100,
+                "discount": 50,
+            }
+        )
         # Create contract for yearbook. product will be changed to publication:
-        cls.contract_piet = contract_piet = contract_model.create({
-            'name': 'Test Contract Piet',
-            'partner_id': partner_piet.id,
-            'pricelist_id': partner_piet.property_product_pricelist.id,
-            'recurring_invoices': True,
-            'date_start': '2016-02-15',
-            'recurring_next_date': '2016-02-29'})
-        cls.line_book = line_model.create({
-            'analytic_account_id': contract_piet.id,
-            'product_id': product_book.id,
-            'name': 'Newsletter subscription',
-            'quantity': 1,
-            'uom_id': product_book.uom_id.id,
-            'price_unit': 100,
-            'discount': 50})
+        cls.contract_piet = contract_piet = contract_model.create(
+            {
+                "name": "Test Contract Piet",
+                "partner_id": partner_piet.id,
+                "pricelist_id": partner_piet.property_product_pricelist.id,
+                "recurring_invoices": True,
+                "date_start": "2016-02-15",
+                "recurring_next_date": "2016-02-29",
+            }
+        )
+        cls.line_book = line_model.create(
+            {
+                "analytic_account_id": contract_piet.id,
+                "product_id": product_book.id,
+                "name": "Newsletter subscription",
+                "quantity": 1,
+                "uom_id": product_book.uom_id.id,
+                "price_unit": 100,
+                "discount": 50,
+            }
+        )
 
     def test_contract(self):
         """Test creation of contract line for publication."""
@@ -116,10 +141,13 @@ class TestPublication(common.SavepointCase):
         partner_piet = self.partner_piet
         self.assertFalse(line_book.publication)
         self.assertFalse(bool(partner_piet.subscription_ids))
-        product_book.write({
-            'publication': True,
-            'distribution_type': 'print',
-            'publishing_frequency_type': 'yearly'})
+        product_book.write(
+            {
+                "publication": True,
+                "distribution_type": "print",
+                "publishing_frequency_type": "yearly",
+            }
+        )
         self.assertTrue(line_book.publication)
         self.assertEqual(partner_piet.subscription_ids[0], line_book)
 
@@ -132,37 +160,44 @@ class TestPublication(common.SavepointCase):
         send to other partners, the number received by the contract partner
         should automatically diminish.
         """
-        distribution_model = self.env['publication.distribution.list']
+        distribution_model = self.env["publication.distribution.list"]
         product_newsletter = self.product_newsletter
         partner_jan = self.partner_jan
         partner_joris = self.partner_joris
         partner_corneel = self.partner_corneel
         partner_piet = self.partner_piet
         product_count = distribution_model.get_product_contract_count(
-            product_newsletter.id, partner_jan.id)
+            product_newsletter.id, partner_jan.id
+        )
         self.assertEqual(product_count, 40)
-        assigned_count = \
-            distribution_model.get_product_contract_assigned_count(
-                product_newsletter.id, partner_jan.id)
+        assigned_count = distribution_model.get_product_contract_assigned_count(
+            product_newsletter.id, partner_jan.id
+        )
         self.assertEqual(assigned_count, 40)  # should be autocreated
         jan_distribution = partner_jan.distribution_list_ids[0]
         self.assertEqual(jan_distribution.copies, 40)
-        subscription01 = distribution_model.create({
-            'product_id': product_newsletter.id,
-            'contract_partner_id': partner_jan.id,
-            'partner_id': partner_joris.id,
-            'copies': 10})
+        subscription01 = distribution_model.create(
+            {
+                "product_id": product_newsletter.id,
+                "contract_partner_id": partner_jan.id,
+                "partner_id": partner_joris.id,
+                "copies": 10,
+            }
+        )
         joris_distribution = partner_joris.distribution_list_ids[0]
         self.assertEqual(jan_distribution.copies, 30)
         self.assertEqual(joris_distribution.copies, 10)
         self.assertEqual(subscription01.contract_count, 40)
         self.assertEqual(subscription01.assigned_count, 40)
         self.assertEqual(subscription01.available_count, 0)
-        subscription02 = distribution_model.create({
-            'product_id': product_newsletter.id,
-            'contract_partner_id': partner_jan.id,
-            'partner_id': partner_corneel.id,
-            'copies': 10})
+        subscription02 = distribution_model.create(
+            {
+                "product_id": product_newsletter.id,
+                "contract_partner_id": partner_jan.id,
+                "partner_id": partner_corneel.id,
+                "copies": 10,
+            }
+        )
         corneel_distribution = partner_corneel.distribution_list_ids[0]
         self.assertEqual(subscription02.contract_count, 40)
         self.assertEqual(jan_distribution.copies, 20)
@@ -170,10 +205,13 @@ class TestPublication(common.SavepointCase):
         self.assertEqual(corneel_distribution.copies, 10)
         # Distribution of 30 to another partner should be impossible.
         with self.assertRaises(ValidationError):
-            distribution_model.create({
-                'product_id': product_newsletter.id,
-                'contract_partner_id': partner_jan.id,
-                'partner_id': partner_piet.id,
-                'copies': 30})
+            distribution_model.create(
+                {
+                    "product_id": product_newsletter.id,
+                    "contract_partner_id": partner_jan.id,
+                    "partner_id": partner_piet.id,
+                    "copies": 30,
+                }
+            )
         # Delivery for Corneel should be to his store.
-        self.assertIn('Wijnstraat', subscription02.contact_address)
+        self.assertIn("Wijnstraat", subscription02.contact_address)
