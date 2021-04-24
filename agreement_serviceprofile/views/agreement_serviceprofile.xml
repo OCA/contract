@@ -11,6 +11,7 @@
                 <field name="agreement_id"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
+                <field name="product_variant_id"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
@@ -47,7 +48,9 @@
                             <field name="agreement_id"/>
                         </group>
                         <group>
-                            <field name="product_id"/>
+                            <field name="product_id" context="{'default_is_serviceprofile': True, 'default_type': 'service'}" attrs="{'invisible': [('use_product_variant', '!=', False)], 'required': [('use_product_variant','=', False)]}"/>
+                            <field name="product_variant_id" context="{'default_is_serviceprofile': True, 'default_type': 'service'}" attrs="{'invisible': [('use_product_variant', '=', False)], 'required': [('use_product_variant','!=', False)]}"/>
+                            <field name="use_product_variant"/>
                         </group>
                     </group>
                     <group string="Notes">
@@ -96,6 +99,9 @@
                 <filter string="Product" name="group_product"
                         icon="terp-product"
                         context="{'group_by': 'product_id'}"/>
+                <filter string="Product Variant" name="group_product"
+                        icon="terp-product"
+                        context="{'group_by': 'product_variant_id'}"/>
             </search>
         </field>
     </record>
