@@ -4,7 +4,7 @@
 {
     'name': 'Agreement Service Profile',
     'summary': "Adds an Agreement Service Profile object",
-    'version': '12.0.1.1.2',
+    'version': '12.0.1.2.0',
     'category': 'Contract',
     'author': 'Pavlov Media, '
               'Open Source Integrators, '
