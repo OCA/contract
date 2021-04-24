@@ -21,6 +21,7 @@ addon | version | summary
 --- | --- | ---
 [agreement](agreement/) | 14.0.1.0.0 | Adds an agreement object
 [contract](contract/) | 14.0.1.0.0 | Recurring - Contracts Management
+[contract_sale](contract_sale/) | 14.0.1.0.0 | Contract from Sale
 
 [//]: # (end addons)
 
