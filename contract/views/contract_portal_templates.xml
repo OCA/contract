@@ -227,56 +227,87 @@
                                         t-foreach="contract.contract_line_ids"
                                         t-as="line"
                                     >
-                                        <tr>
-                                            <td name="td_name">
-                                                <span t-field="line.name" />
-                                            </td>
-                                            <td name="td_quantity" class="text-right">
-                                                <span t-field="line.quantity" />
-                                            </td>
-                                            <td name="td_price_unit" class="text-right">
-                                                <span
-                                                    t-field="line.price_unit"
-                                                    t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
-                                                />
-                                            </td>
-                                            <td
-                                                name="td_recurring_interval"
-                                                class="text-right"
+                                        <tr
+                                            t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''"
+                                        >
+                                            <t t-if="not line.display_type">
+                                                <td name="td_name">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                                <td
+                                                    name="td_quantity"
+                                                    class="text-right"
+                                                >
+                                                    <span t-field="line.quantity" />
+                                                </td>
+                                                <td
+                                                    name="td_price_unit"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.price_unit"
+                                                        t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
+                                                    />
+                                                </td>
+                                                <td
+                                                    name="td_recurring_interval"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.recurring_interval"
+                                                    />
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='daily'"
+                                                    >Day(s)</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='weekly'"
+                                                    >Week(s)</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='monthly'"
+                                                    >Month(s)</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='monthlylastday'"
+                                                    >Month(s) last
+                                                        day</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='quarterly'"
+                                                    >Quarter(s)</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='semesterly'"
+                                                    >Semester(s)</t>
+                                                    <t
+                                                        t-if="line.recurring_rule_type=='yearly'"
+                                                    >Year(s)</t>
+                                                </td>
+                                                <td
+                                                    name="td_recurring_next_date"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.recurring_next_date"
+                                                    />
+                                                </td>
+                                            </t>
+                                            <t
+                                                t-if="line.display_type == 'line_section'"
                                             >
-                                                <span
-                                                    t-field="line.recurring_interval"
+                                                <td colspan="99">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                                <t
+                                                    t-set="current_section"
+                                                    t-value="line"
                                                 />
                                                 <t
-                                                    t-if="line.recurring_rule_type=='daily'"
-                                                >Day(s)</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='weekly'"
-                                                >Week(s)</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='monthly'"
-                                                >Month(s)</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='monthlylastday'"
-                                                >Month(s) last day</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='quarterly'"
-                                                >Quarter(s)</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='semesterly'"
-                                                >Semester(s)</t>
-                                                <t
-                                                    t-if="line.recurring_rule_type=='yearly'"
-                                                >Year(s)</t>
-                                            </td>
-                                            <td
-                                                name="td_recurring_next_date"
-                                                class="text-right"
-                                            >
-                                                <span
-                                                    t-field="line.recurring_next_date"
+                                                    t-set="current_subtotal"
+                                                    t-value="0"
                                                 />
-                                            </td>
+                                            </t>
+                                            <t t-if="line.display_type == 'line_note'">
+                                                <td colspan="99">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                            </t>
                                         </tr>
                                     </t>
                                 </tbody>
