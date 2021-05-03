@@ -70,3 +70,12 @@ class TestAgreementSection(TransactionCase):
         section_01.sub_model_object_field_id = sub_field_01.id
         section_01.onchange_copyvalue()
         self.assertEqual(section_01.copyvalue, "${object.agreement_id.active or ''}")
+
+    # TEST 03: Test Dynamic Field
+    def test_compute_dynamic_content(self):
+        section_01 = self.test_section
+        section_01.content = "${object.name}"
+        self.assertEqual(
+            section_01.dynamic_content,
+            "<p>{" + str(section_01.id) + ": '</p><p>TestSection</p>'}"
+        )

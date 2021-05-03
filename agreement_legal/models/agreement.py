@@ -301,7 +301,7 @@ class Agreement(models.Model):
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             description = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.description, "agreement", agreement.id
+                agreement.description, "agreement", [agreement.id]
             )
             agreement.dynamic_description = description
 
@@ -310,7 +310,7 @@ class Agreement(models.Model):
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             parties = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.parties, "agreement", agreement.id
+                agreement.parties, "agreement", [agreement.id]
             )
             agreement.dynamic_parties = parties
 
@@ -319,7 +319,7 @@ class Agreement(models.Model):
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             special_terms = MailTemplates.with_context(lang=lang)._render_template(
-                agreement.special_terms, "agreement", agreement.id
+                agreement.special_terms, "agreement", [agreement.id]
             )
             agreement.dynamic_special_terms = special_terms
 

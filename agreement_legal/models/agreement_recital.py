@@ -89,6 +89,6 @@ class AgreementRecital(models.Model):
                 recital.agreement_id and recital.agreement_id.partner_id.lang or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                recital.content, "agreement.recital", recital.id
+                recital.content, "agreement.recital", [recital.id]
             )
             recital.dynamic_content = content

@@ -92,6 +92,6 @@ class AgreementClause(models.Model):
                 clause.agreement_id and clause.agreement_id.partner_id.lang or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                clause.content, "agreement.clause", clause.id
+                clause.content, "agreement.clause", [clause.id]
             )
             clause.dynamic_content = content

@@ -70,3 +70,12 @@ class TestAgreementRectical(TransactionCase):
         recital_01.sub_model_object_field_id = sub_field_01.id
         recital_01.onchange_copyvalue()
         self.assertEqual(recital_01.copyvalue, "${object.agreement_id.active or ''}")
+
+    # TEST 03: Test Dynamic Field
+    def test_compute_dynamic_content(self):
+        recital_01 = self.test_recital
+        recital_01.content = "${object.name}"
+        self.assertEqual(
+            recital_01.dynamic_content,
+            "<p>{" + str(recital_01.id) + ": '</p><p>TestRecital</p>'}"
+        )
