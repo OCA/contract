@@ -96,8 +96,10 @@ class TestAgreement(TransactionCase):
     def test_compute_dynamic_description(self):
         agreement_01 = self.test_agreement
         agreement_01.description = "${object.name}"
-        self.assertEqual(agreement_01.dynamic_description,
-                         "{" + str(agreement_01.id) + ": 'TestAgreement'}")
+        self.assertEqual(
+            agreement_01.dynamic_description,
+            "{" + str(agreement_01.id) + ": 'TestAgreement'}",
+        )
 
     # TEST 06: Test Parties Dynamic Field
     def test_compute_dynamic_parties(self):
@@ -105,12 +107,14 @@ class TestAgreement(TransactionCase):
         agreement_01.parties = "${object.name}"
         self.assertEqual(
             agreement_01.dynamic_parties,
-            "<p>{" + str(agreement_01.id) + ": '</p><p>TestAgreement</p>'}"
+            "<p>{" + str(agreement_01.id) + ": '</p><p>TestAgreement</p>'}",
         )
 
     # TEST 07: Test Special Terms Dynamic Field
     def test_compute_dynamic_special_terms(self):
         agreement_01 = self.test_agreement
         agreement_01.special_terms = "${object.name}"
-        self.assertEqual(agreement_01.dynamic_special_terms,
-                         "{" + str(agreement_01.id) + ": 'TestAgreement'}")
+        self.assertEqual(
+            agreement_01.dynamic_special_terms,
+            "{" + str(agreement_01.id) + ": 'TestAgreement'}",
+        )
