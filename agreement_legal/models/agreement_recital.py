@@ -21,9 +21,7 @@ class AgreementRecital(models.Model):
         string="Dynamic Content",
         help="compute dynamic Content",
     )
-    agreement_id = fields.Many2one(
-        "agreement", string="Agreement", ondelete="cascade"
-    )
+    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     active = fields.Boolean(
         string="Active",
         default=True,
@@ -84,16 +82,13 @@ class AgreementRecital(models.Model):
             )
 
     # compute the dynamic content for mako expression
-    @api.multi
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for recital in self:
             lang = (
-                recital.agreement_id
-                and recital.agreement_id.partner_id.lang
-                or "en_US"
+                recital.agreement_id and recital.agreement_id.partner_id.lang or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                recital.content, "agreement.recital", recital.id
+                recital.content, "agreement.recital", [recital.id]
             )
             recital.dynamic_content = content
