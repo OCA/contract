@@ -118,3 +118,14 @@ class TestAgreement(TransactionCase):
             agreement_01.dynamic_special_terms,
             "{" + str(agreement_01.id) + ": 'TestAgreement'}",
         )
+
+    # TEST 02: Check Read Stages
+    def test_read_group_stage_ids(self):
+        agreement_01 = self.test_agreement
+        self.assertEqual(
+            agreement_01._read_group_stage_ids(self.env['agreement.stage'], [], 'id'),
+            self.env['agreement.stage'].search(
+                [('stage_type', '=', 'agreement')],
+                order='id',
+            ),
+        )
