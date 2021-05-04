@@ -123,9 +123,9 @@ class TestAgreement(TransactionCase):
     def test_read_group_stage_ids(self):
         agreement_01 = self.test_agreement
         self.assertEqual(
-            agreement_01._read_group_stage_ids(self.env['agreement.stage'], [], 'id'),
-            self.env['agreement.stage'].search(
-                [('stage_type', '=', 'agreement')],
-                order='id',
+            agreement_01._read_group_stage_ids(self.env["agreement.stage"], [], "id"),
+            self.env["agreement.stage"].search(
+                [("stage_type", "=", "agreement")],
+                order="id",
             ),
         )
