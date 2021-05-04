@@ -1,12 +1,12 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* agreement_serviceprofile
+# 	* agreement_serviceprofile
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,6 @@ msgid "Add notes here..."
 msgstr ""
 
 #. module: agreement_serviceprofile
-#: selection:agreement.stage,stage_type:0
 #: model:ir.model,name:agreement_serviceprofile.model_agreement
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__agreement_id
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_search
@@ -44,6 +43,11 @@ msgstr ""
 #. module: agreement_serviceprofile
 #: model:ir.model,name:agreement_serviceprofile.model_agreement_stage
 msgid "Agreement Stages"
+msgstr ""
+
+#. module: agreement_serviceprofile
+#: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_form
+msgid "Archived"
 msgstr ""
 
 #. module: agreement_serviceprofile
@@ -68,7 +72,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement__display_name
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -88,35 +96,39 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement__id
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template__id
 msgid "ID"
 msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_product_product__is_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_product_template__is_serviceprofile
-msgid "If True, this product will create a service profile on the\n"
+msgid ""
+"If True, this product will create a service profile on the\n"
 "         agreement when the sales order is confirmed."
 msgstr ""
 
 #. module: agreement_serviceprofile
-#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_needaction
+#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_has_error
+#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__active
-msgid "If unchecked, it will allow you to hide this service profile without removing it."
+msgid ""
+"If unchecked, it will allow you to hide this service profile without "
+"removing it."
 msgstr ""
 
 #. module: agreement_serviceprofile
@@ -125,7 +137,11 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement____last_update
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -173,7 +189,7 @@ msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: agreement_serviceprofile
@@ -213,6 +229,11 @@ msgid "Product Variant"
 msgstr ""
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: agreement_serviceprofile
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.product_product_form_view
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.product_template_form_view
 msgid "Service"
@@ -229,7 +250,7 @@ msgid "Service Product Variant"
 msgstr ""
 
 #. module: agreement_serviceprofile
-#: selection:agreement.stage,stage_type:0
+#: model:ir.model.fields.selection,name:agreement_serviceprofile.selection__agreement_stage__stage_type__serviceprofile
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_form
 msgid "Service Profile"
 msgstr ""
@@ -284,4 +305,3 @@ msgstr ""
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__website_message_ids
 msgid "Website communication history"
 msgstr ""
-
