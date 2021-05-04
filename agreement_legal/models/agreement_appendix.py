@@ -13,21 +13,16 @@ class AgreementAppendix(models.Model):
     title = fields.Char(
         string="Title",
         required=True,
-        help="The title is displayed on the PDF." "The name is not.",
+        help="The title is displayed on the PDF. The name is not.",
     )
-    sequence = fields.Integer(
-        string="Sequence",
-        default=10)
+    sequence = fields.Integer(string="Sequence", default=10)
     content = fields.Html(string="Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
         string="Dynamic Content",
         help="compute dynamic Content",
     )
-    agreement_id = fields.Many2one(
-        "agreement",
-        string="Agreement",
-        ondelete="cascade")
+    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     active = fields.Boolean(
         string="Active",
         default=True,
@@ -66,27 +61,29 @@ class AgreementAppendix(models.Model):
          template field.""",
     )
 
-    @api.onchange('field_id', 'sub_model_object_field_id', 'default_value')
+    @api.onchange("field_id", "sub_model_object_field_id", "default_value")
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
         self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
-            self.copyvalue = "${object.%s or %s}" % \
-                             (self.field_id.name,
-                              self.default_value or '\'\'')
+            self.copyvalue = "${{object.{} or {}}}".format(
+                self.field_id.name,
+                self.default_value or "''",
+            )
             self.sub_model_object_field_id = False
         if self.field_id and self.field_id.relation:
-            self.sub_object_id = self.env['ir.model'].search(
-                [('model', '=', self.field_id.relation)])[0]
+            self.sub_object_id = self.env["ir.model"].search(
+                [("model", "=", self.field_id.relation)]
+            )[0]
         if self.sub_model_object_field_id:
-            self.copyvalue = "${object.%s.%s or %s}" %\
-                (self.field_id.name,
-                 self.sub_model_object_field_id.name,
-                 self.default_value or '\'\'')
+            self.copyvalue = "${{object.{}.{} or {}}}".format(
+                self.field_id.name,
+                self.sub_model_object_field_id.name,
+                self.default_value or "''",
+            )
 
     # compute the dynamic content for mako expression
-    @api.multi
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for appendix in self:
@@ -96,6 +93,6 @@ class AgreementAppendix(models.Model):
                 or "en_US"
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
-                appendix.content, "agreement.appendix", appendix.id
+                appendix.content, "agreement.appendix", [appendix.id]
             )
             appendix.dynamic_content = content
