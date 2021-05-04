@@ -7,6 +7,4 @@ from odoo import fields, models
 class Partner(models.Model):
     _inherit = "res.partner"
 
-    agreement_ids = fields.One2many(
-        comodel_name="agreement", inverse_name="partner_id", string="Agreements"
-    )
+    agreement_ids = fields.One2many("agreement", "partner_id", string="Agreements")
