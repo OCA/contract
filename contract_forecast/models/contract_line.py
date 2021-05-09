@@ -52,6 +52,8 @@ class ContractLine(models.Model):
     @api.multi
     def _get_generate_forecast_periods_criteria(self, period_date_end):
         self.ensure_one()
+        if not self.contract_id.company_id.enable_contract_forecast:
+            return False
         if self.is_canceled or not self.active:
             return False
         contract_forecast_end_date = self._get_contract_forecast_end_date()
@@ -108,7 +110,8 @@ class ContractLine(models.Model):
     def create(self, values):
         contract_lines = super(ContractLine, self).create(values)
         for contract_line in contract_lines:
-            contract_line.with_delay()._generate_forecast_periods()
+            if contract_line.contract_id.company_id.enable_contract_forecast:
+                contract_line.with_delay()._generate_forecast_periods()
         return contract_lines
 
     @api.model
@@ -141,5 +144,6 @@ class ContractLine(models.Model):
             ]
         ):
             for rec in self:
-                rec.with_delay()._generate_forecast_periods()
+                if rec.contract_id.company_id.enable_contract_forecast:
+                    rec.with_delay()._generate_forecast_periods()
         return res

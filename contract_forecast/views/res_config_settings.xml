@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_form_view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="contract.res_config_settings_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_new_line_at_contract_line_renew']/parent::div/parent::div/parent::div"
+                   position="after">
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_contract_forecast"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_contract_forecast"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container" attrs="{'invisible': [('enable_contract_forecast', '=', False)]}">
+                    <label for="contract_forecast_interval" string="Forecast Interval"
+                           class="oe_inline"/>
+                    <field name="contract_forecast_interval"
+                           class="oe_inline"/>
+                    <field name="contract_forecast_rule_type"
+                           class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
