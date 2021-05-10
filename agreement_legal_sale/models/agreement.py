@@ -5,17 +5,15 @@ from odoo import fields, models
 
 
 class Agreement(models.Model):
-    _inherit = 'agreement'
+    _inherit = "agreement"
 
-    sale_id = fields.Many2one('sale.order', string='Sales Order')
+    sale_id = fields.Many2one("sale.order", string="Sales Order")
     analytic_account_id = fields.Many2one(
-        'account.analytic.account',
-        'Analytic Account',
-        copy=False)
+        "account.analytic.account", "Analytic Account", copy=False
+    )
 
 
 class AgreementLine(models.Model):
     _inherit = "agreement.line"
 
-    sale_line_id = fields.Many2one('sale.order.line',
-                                   string='Sales Order Line')
+    sale_line_id = fields.Many2one("sale.order.line", string="Sales Order Line")
