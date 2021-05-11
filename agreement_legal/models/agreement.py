@@ -23,9 +23,7 @@ class Agreement(models.Model):
         help="The revision will increase with every save event.",
     )
     description = fields.Text(
-        string="Description",
-        track_visibility="onchange",
-        help="Description of the agreement",
+        string="Description", tracking=True, help="Description of the agreement",
     )
     dynamic_description = fields.Text(
         compute="_compute_dynamic_description",
@@ -33,12 +31,10 @@ class Agreement(models.Model):
         help="Compute dynamic description",
     )
     start_date = fields.Date(
-        string="Start Date",
-        track_visibility="onchange",
-        help="When the agreement starts.",
+        string="Start Date", tracking=True, help="When the agreement starts.",
     )
     end_date = fields.Date(
-        string="End Date", track_visibility="onchange", help="When the agreement ends."
+        string="End Date", tracking=True, help="When the agreement ends."
     )
     color = fields.Integer(string="Color")
     active = fields.Boolean(
@@ -49,33 +45,33 @@ class Agreement(models.Model):
     )
     company_signed_date = fields.Date(
         string="Signed on",
-        track_visibility="onchange",
+        tracking=True,
         help="Date the contract was signed by Company.",
     )
     partner_signed_date = fields.Date(
         string="Signed on (Partner)",
-        track_visibility="onchange",
+        tracking=True,
         help="Date the contract was signed by the Partner.",
     )
     term = fields.Integer(
         string="Term (Months)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of months this agreement/contract is in effect with the "
         "partner.",
     )
     expiration_notice = fields.Integer(
         string="Exp. Notice (Days)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of Days before expiration to be notified.",
     )
     change_notice = fields.Integer(
         string="Change Notice (Days)",
-        track_visibility="onchange",
+        tracking=True,
         help="Number of Days to be notified before changes.",
     )
     special_terms = fields.Text(
         string="Special Terms",
-        track_visibility="onchange",
+        tracking=True,
         help="Any terms that you have agreed to and want to track on the "
         "agreement/contract.",
     )
@@ -88,44 +84,44 @@ class Agreement(models.Model):
         string="Reference",
         required=True,
         default=lambda self: _("New"),
-        track_visibility="onchange",
+        tracking=True,
         copy=False,
         help="ID used for internal contract tracking.",
     )
     increase_type_id = fields.Many2one(
-        "agreement.increasetype",
+        comodel_name="agreement.increasetype",
         string="Increase Type",
-        track_visibility="onchange",
+        tracking=True,
         help="The amount that certain rates may increase.",
     )
     termination_requested = fields.Date(
         string="Termination Requested Date",
-        track_visibility="onchange",
+        tracking=True,
         help="Date that a request for termination was received.",
     )
     termination_date = fields.Date(
         string="Termination Date",
-        track_visibility="onchange",
+        tracking=True,
         help="Date that the contract was terminated.",
     )
-    reviewed_date = fields.Date(string="Reviewed Date", track_visibility="onchange")
+    reviewed_date = fields.Date(string="Reviewed Date", tracking=True)
     reviewed_user_id = fields.Many2one(
-        "res.users", string="Reviewed By", track_visibility="onchange"
+        comodel_name="res.users", string="Reviewed By", tracking=True
     )
-    approved_date = fields.Date(string="Approved Date", track_visibility="onchange")
+    approved_date = fields.Date(string="Approved Date", tracking=True)
     approved_user_id = fields.Many2one(
-        "res.users", string="Approved By", track_visibility="onchange"
+        comodel_name="res.users", string="Approved By", tracking=True
     )
-    currency_id = fields.Many2one("res.currency", string="Currency")
+    currency_id = fields.Many2one(comodel_name="res.currency", string="Currency")
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partner",
         required=False,
         copy=True,
         help="The customer or vendor this agreement is related to.",
     )
     partner_contact_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partner Contact",
         copy=True,
         help="The primary partner contact (If Applicable).",
@@ -137,7 +133,7 @@ class Agreement(models.Model):
         related="partner_contact_id.email", string="Partner Email"
     )
     company_contact_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Company Contact",
         copy=True,
         help="The primary contact in the company.",
@@ -182,7 +178,7 @@ class Agreement(models.Model):
 
     parties = fields.Html(
         string="Parties",
-        track_visibility="onchange",
+        tracking=True,
         default=_get_default_parties,
         help="Parties of the agreement",
     )
@@ -191,87 +187,103 @@ class Agreement(models.Model):
         string="Dynamic Parties",
         help="Compute dynamic parties",
     )
-    agreement_type_id = fields.Many2one(track_visibility="onchange",)
+    agreement_type_id = fields.Many2one(tracking=True)
     agreement_subtype_id = fields.Many2one(
-        "agreement.subtype",
+        comodel_name="agreement.subtype",
         string="Agreement Sub-type",
-        track_visibility="onchange",
+        tracking=True,
         help="Select the sub-type of this agreement. Sub-Types are related to "
         "agreement types.",
     )
-    product_ids = fields.Many2many("product.template", string="Products & Services")
+    product_ids = fields.Many2many(
+        comodel_name="product.template", string="Products & Services"
+    )
     assigned_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Assigned To",
-        track_visibility="onchange",
+        tracking=True,
         help="Select the user who manages this agreement.",
     )
     company_signed_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Signed By",
-        track_visibility="onchange",
+        tracking=True,
         help="The user at our company who authorized/signed the agreement or "
         "contract.",
     )
     partner_signed_user_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Signed By (Partner)",
-        track_visibility="onchange",
+        tracking=True,
         help="Contact on the account that signed the agreement/contract.",
     )
     parent_agreement_id = fields.Many2one(
-        "agreement",
+        comodel_name="agreement",
         string="Parent Agreement",
         help="Link this agreement to a parent agreement. For example if this "
         "agreement is an amendment to another agreement. This list will "
         "only show other agreements related to the same account.",
     )
     renewal_type_id = fields.Many2one(
-        "agreement.renewaltype",
+        comodel_name="agreement.renewaltype",
         string="Renewal Type",
-        track_visibility="onchange",
+        tracking=True,
         help="Describes what happens after the contract expires.",
     )
     recital_ids = fields.One2many(
-        "agreement.recital", "agreement_id", string="Recitals", copy=True
+        comodel_name="agreement.recital",
+        inverse_name="agreement_id",
+        string="Recitals",
+        copy=True,
     )
     sections_ids = fields.One2many(
-        "agreement.section", "agreement_id", string="Sections", copy=True
+        comodel_name="agreement.section",
+        inverse_name="agreement_id",
+        string="Sections",
+        copy=True,
     )
-    clauses_ids = fields.One2many("agreement.clause", "agreement_id", string="Clauses")
+    clauses_ids = fields.One2many(
+        comodel_name="agreement.clause", inverse_name="agreement_id", string="Clauses"
+    )
     appendix_ids = fields.One2many(
-        "agreement.appendix", "agreement_id", string="Appendices", copy=True
+        comodel_name="agreement.appendix",
+        inverse_name="agreement_id",
+        string="Appendices",
+        copy=True,
     )
     previous_version_agreements_ids = fields.One2many(
-        "agreement",
-        "parent_agreement_id",
+        comodel_name="agreement",
+        inverse_name="parent_agreement_id",
         string="Previous Versions",
         copy=False,
         domain=[("active", "=", False)],
     )
     child_agreements_ids = fields.One2many(
-        "agreement",
-        "parent_agreement_id",
+        comodel_name="agreement",
+        inverse_name="parent_agreement_id",
         string="Child Agreements",
         copy=False,
         domain=[("active", "=", True)],
     )
     line_ids = fields.One2many(
-        "agreement.line", "agreement_id", string="Products/Services", copy=False
+        comodel_name="agreement.line",
+        inverse_name="agreement_id",
+        string="Products/Services",
+        copy=False,
     )
     state = fields.Selection(
         [("draft", "Draft"), ("active", "Active"), ("inactive", "Inactive")],
         default="draft",
-        track_visibility="always",
+        tracking=True,
     )
     notification_address_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Notification Address",
         help="The address to send notificaitons to, if different from "
         "customer address.(Address Type = Other)",
     )
     signed_contract_filename = fields.Char(string="Filename")
-    signed_contract = fields.Binary(string="Signed Document", track_visibility="always")
+    signed_contract = fields.Binary(string="Signed Document", tracking=True)
 
     # Dynamic field editor
     field_domain = fields.Char(
@@ -299,7 +311,6 @@ class Agreement(models.Model):
                 )
 
     # compute the dynamic content for mako expression
-    @api.multi
     def _compute_dynamic_description(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -309,7 +320,6 @@ class Agreement(models.Model):
             )
             agreement.dynamic_description = description
 
-    @api.multi
     def _compute_dynamic_parties(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -319,7 +329,6 @@ class Agreement(models.Model):
             )
             agreement.dynamic_parties = parties
 
-    @api.multi
     def _compute_dynamic_special_terms(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
@@ -338,16 +347,15 @@ class Agreement(models.Model):
         return stage_ids
 
     stage_id = fields.Many2one(
-        "agreement.stage",
+        comodel_name="agreement.stage",
         string="Stage",
         group_expand="_read_group_stage_ids",
         help="Select the current stage of the agreement.",
-        track_visibility="onchange",
+        tracking=True,
         index=True,
     )
 
     # Create New Version Button
-    @api.multi
     def create_new_version(self, vals):
         for rec in self:
             if not rec.state == "draft":
@@ -394,7 +402,6 @@ class Agreement(models.Model):
         return super(Agreement, self).create(vals)
 
     # Increments the revision on each save action
-    @api.multi
     def write(self, vals):
         res = True
         for rec in self:

@@ -9,5 +9,7 @@ class AgreementType(models.Model):
     _description = "Agreement Types"
 
     agreement_subtypes_ids = fields.One2many(
-        "agreement.subtype", "agreement_type_id", string="Subtypes"
+        comodel_name="agreement.subtype",
+        inverse_name="agreement_type_id",
+        string="Subtypes",
     )

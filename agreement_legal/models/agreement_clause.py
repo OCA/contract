@@ -14,9 +14,11 @@ class AgreementClause(models.Model):
         string="Title", help="The title is displayed on the PDF." "The name is not."
     )
     sequence = fields.Integer(string="Sequence")
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        comodel_name="agreement", string="Agreement", ondelete="cascade"
+    )
     section_id = fields.Many2one(
-        "agreement.section", string="Section", ondelete="cascade"
+        comodel_name="agreement.section", string="Section", ondelete="cascade"
     )
     content = fields.Html(string="Clause Content")
     dynamic_content = fields.Html(
@@ -57,7 +59,6 @@ class AgreementClause(models.Model):
                 )
 
     # compute the dynamic content for mako expression
-    @api.multi
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for clause in self:

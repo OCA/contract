@@ -22,7 +22,9 @@ class AgreementAppendix(models.Model):
         string="Dynamic Content",
         help="compute dynamic Content",
     )
-    agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    agreement_id = fields.Many2one(
+        comodel_name="agreement", string="Agreement", ondelete="cascade"
+    )
     active = fields.Boolean(
         string="Active",
         default=True,
@@ -56,7 +58,6 @@ class AgreementAppendix(models.Model):
                 )
 
     # compute the dynamic content for mako expression
-    @api.multi
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for appendix in self:

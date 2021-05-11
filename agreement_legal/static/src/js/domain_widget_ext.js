@@ -1,12 +1,11 @@
 odoo.define("agreement_legal.domain_widget_ext", function(require) {
     "use strict";
 
-    var basic_fields = require("web.basic_fields");
-    var DomainSelector = require("web.DomainSelector");
-    var session = require("web.session");
-    var core = require("web.core");
-    var qweb = core.qweb;
-    var _t = core._t;
+    const basic_fields = require("web.basic_fields");
+    const DomainSelector = require("web.DomainSelector");
+    const session = require("web.session");
+    const core = require("web.core");
+    const qweb = core.qweb;
 
     basic_fields.FieldDomain.include({
         /**
@@ -27,6 +26,7 @@ odoo.define("agreement_legal.domain_widget_ext", function(require) {
          * @override _render from AbstractField
          * @returns {Deferred}
          */
+        /* eslint-disable no-unused-vars */
         _render: function() {
             // If there is no model, only change the non-domain-selector content
             if (!this._domainModel) {
@@ -35,11 +35,11 @@ odoo.define("agreement_legal.domain_widget_ext", function(require) {
             }
 
             // Convert char value to array value
-            var value = this.value || "[]";
+            const value = this.value || "[]";
 
             // Create the domain selector or change the value of the current
             // one...
-            var def;
+            /* eslint-disable no-negated-condition */
             if (!this.domainSelector) {
                 this.domainSelector = new DomainSelector(
                     this,
@@ -52,11 +52,12 @@ odoo.define("agreement_legal.domain_widget_ext", function(require) {
                         partialUse: this.partialUse || false,
                     }
                 );
-                def = this.domainSelector.prependTo(this.$el);
+                const def = this.domainSelector.prependTo(this.$el);
             } else {
-                def = this.domainSelector.setDomain(value);
+                const def = this.domainSelector.setDomain(value);
             }
             // ... then replace the other content (matched records, etc)
+            // eslint-disable-next-line no-undef
             return def.then(this._replaceContent.bind(this));
         },
         /**

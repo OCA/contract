@@ -4,3 +4,7 @@
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
 * Sandip Mangukiya <smangukiya@opensourceintegrators.com>
 * Yves Goldberg <yves@ygol.com>
+
+* `Tecnativa <https://www.tecnativa.com>`_:
+
+    * Víctor Martínez
