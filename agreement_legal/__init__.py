@@ -7,6 +7,8 @@ from . import models
 
 def post_init_agreement_legal(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, dict())
-    cr.execute('UPDATE agreement SET stage_id = %s WHERE stage_id IS NULL;',
-               (env.ref('agreement_legal.agreement_stage_new').id,))
+    cr.execute(
+        "UPDATE agreement SET stage_id = %s WHERE stage_id IS NULL;",
+        (env.ref("agreement_legal.agreement_stage_new").id,),
+    )
     return True
