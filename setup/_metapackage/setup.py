@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo13-addon-agreement',
+        'odoo13-addon-agreement_legal',
         'odoo13-addon-agreement_sale',
         'odoo13-addon-contract',
         'odoo13-addon-contract_layout_category_hide_detail',
