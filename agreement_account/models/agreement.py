@@ -7,30 +7,33 @@ from odoo import fields, models
 
 
 class Agreement(models.Model):
-    _inherit = 'agreement'
+    _inherit = "agreement"
 
     invoice_ids = fields.One2many(
-        'account.invoice', 'agreement_id', string='Invoices', readonly=True)
+        "account.move", "agreement_id", string="Invoices", readonly=True
+    )
     out_invoice_count = fields.Integer(
-        compute='_compute_invoice_count', string='# of Customer Invoices')
+        compute="_compute_invoice_count", string="# of Customer Invoices"
+    )
     in_invoice_count = fields.Integer(
-        compute='_compute_invoice_count', string='# of Vendor Bills')
+        compute="_compute_invoice_count", string="# of Vendor Bills"
+    )
 
     def _compute_invoice_count(self):
-        base_domain = [
-            ('agreement_id', 'in', self.ids),
-            ('state', 'not in', ('draft', 'cancel'))]
-        aio = self.env['account.invoice']
+        base_domain = [("agreement_id", "in", self.ids)]
+        aio = self.env["account.move"]
         out_rg_res = aio.read_group(
-            base_domain + [('type', 'in', ('out_invoice', 'out_refund'))],
-            ['agreement_id'], ['agreement_id'])
-        out_data = dict(
-            [(x['agreement_id'][0], x['agreement_id_count']) for x in out_rg_res])
+            base_domain + [("move_type", "in", ("out_invoice", "out_refund"))],
+            ["agreement_id"],
+            ["agreement_id"],
+        )
+        out_data = {x["agreement_id"][0]: x["agreement_id_count"] for x in out_rg_res}
         in_rg_res = aio.read_group(
-            base_domain + [('type', 'in', ('in_invoice', 'in_refund'))],
-            ['agreement_id'], ['agreement_id'])
-        in_data = dict(
-            [(x['agreement_id'][0], x['agreement_id_count']) for x in in_rg_res])
+            base_domain + [("move_type", "in", ("in_invoice", "in_refund"))],
+            ["agreement_id"],
+            ["agreement_id"],
+        )
+        in_data = {x["agreement_id"][0]: x["agreement_id_count"] for x in in_rg_res}
         for agreement in self:
             agreement.out_invoice_count = out_data.get(agreement.id, 0)
             agreement.in_invoice_count = in_data.get(agreement.id, 0)
