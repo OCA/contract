@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract.form.contract.sale</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[last()]" position="after">
+                <button
+                    name="action_draft"
+                    type="object"
+                    string="Set to Draft"
+                    states="cancel"
+                />
+                <button
+                    name="action_confirm"
+                    type="object"
+                    string="Confirm"
+                    states="draft"
+                />
+                <button
+                    name="action_cancel"
+                    type="object"
+                    string="Cancel"
+                    states="confirm"
+                />
+                <field
+                    name="state"
+                    widget="statusbar"
+                    statusbar_visible="draft,confirm"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
