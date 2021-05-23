@@ -12,3 +12,16 @@ class ResCompany(models.Model):
         string="Automatically Create Contracts At Sale Order Confirmation",
         default=True,
     )
+
+    standard_quantity_for_creation_contract_by_sale_order = fields.Selection(
+        string="Standard Quantity For Contract Creation By Sales Order",
+        selection=[
+            ('one', 'Create contracts with quantity equal to 1'),
+            ('sale_order_line', 'Create contracts with quantity from the sales '
+                                'order line.'),
+        ],
+        help='One: Create contracts with quantity equal to 1\n'
+             'Sale Order Line: Create contracts with quantity from the sales '
+             'order line.',
+        default="one",
+    )

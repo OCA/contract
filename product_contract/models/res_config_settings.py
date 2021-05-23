@@ -12,3 +12,8 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.create_contract_at_sale_order_confirmation",
         readonly=False
     )
+
+    standard_quantity_for_creation_contract_by_sale_order = fields.Selection(
+        related="company_id.standard_quantity_for_creation_contract_by_sale_order",
+        readonly=False
+    )

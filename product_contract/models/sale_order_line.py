@@ -148,8 +148,17 @@ class SaleOrderLine(models.Model):
         #   automatic invoicing of the actual hours through a variable
         #   quantity formula, in which case the quantity on the contract
         #   line is not used
+        # However, there are other cases in which the quantity must be equal
+        # to the quantity of the product in the sales order line:
+        # - quantity on the SO line = Number of contracted users.
         # Other use cases are easy to implement by overriding this method.
-        return 1.0
+        company_id = self.order_id.company_id
+        qty_standard = company_id.standard_quantity_for_creation_contract_by_sale_order
+        if qty_standard == 'sale_order_line':
+            quantity = self.product_uom_qty
+        else:
+            quantity = 1.0
+        return quantity
 
     @api.multi
     def _prepare_contract_line_values(

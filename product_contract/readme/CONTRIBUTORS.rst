@@ -4,3 +4,7 @@
 
   * Ernesto Tejeda
   * Pedro M. Baeza
+* `Escodoo <https://www.escodoo.com.br>`__:
+
+  * Marcel Savegnago <marcel.savegnago@escodoo.com.br>
+
