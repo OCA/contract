@@ -91,6 +91,16 @@
     >
         <xpath expr="//t[@t-raw='message.body']" position="after">
             <t t-raw="0" />
+            <t t-if="record._name == 'contract.contract'">
+                <t
+                    t-set="share_url"
+                    t-value="record._get_share_url(redirect=True, signup_partner=True, share_token=True)"
+                />
+                <t
+                    t-set="access_url"
+                    t-value="is_online and share_url and base_url + share_url or ''"
+                />
+            </t>
         </xpath>
     </template>
     <template id="template_contract_modification" name="Contract Modification">
