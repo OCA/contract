@@ -118,7 +118,7 @@ msgid ""
 "                                contract to invoice\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible': "
-"[('contract_to_invoice_count', '&lt;', 1)]}\">\n"
+"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
@@ -300,6 +300,11 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
 msgid "Activity State"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_icon
+msgid "Activity Type Icon"
 msgstr ""
 
 #. module: contract
@@ -492,9 +497,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__contract_id
+#: model:mail.template,report_name:contract.email_contract_template
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
-#: model:mail.template,report_name:contract.email_contract_template
 msgid "Contract"
 msgstr ""
 
@@ -917,7 +922,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__daily
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__daily
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__daily
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Day(s)"
 msgstr ""
 
@@ -967,6 +971,8 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move__display_name
+#: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
@@ -981,6 +987,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__display_name
+#: model:ir.model.fields,field_description:contract.field_res_company__display_name
+#: model:ir.model.fields,field_description:contract.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:contract.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -1017,6 +1026,11 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
 #: model:ir.cron,name:contract.contract_cron_for_invoice
@@ -1034,6 +1048,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move__id
+#: model:ir.model.fields,field_description:contract.field_account_move_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__id
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
@@ -1048,6 +1064,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__id
+#: model:ir.model.fields,field_description:contract.field_res_company__id
+#: model:ir.model.fields,field_description:contract.field_res_config_settings__id
+#: model:ir.model.fields,field_description:contract.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1215,7 +1234,7 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_move
-msgid "Journal Entries"
+msgid "Journal Entry"
 msgstr ""
 
 #. module: contract
@@ -1234,6 +1253,8 @@ msgid "Last Date Invoiced"
 msgstr "Последний раз обновлено"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move____last_update
+#: model:ir.model.fields,field_description:contract.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_contract____last_update
@@ -1248,6 +1269,9 @@ msgstr "Последний раз обновлено"
 #: model:ir.model.fields,field_description:contract.field_contract_template____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason____last_update
+#: model:ir.model.fields,field_description:contract.field_res_company____last_update
+#: model:ir.model.fields,field_description:contract.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:contract.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1355,7 +1379,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__monthly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__monthly
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Month(s)"
 msgstr ""
 
@@ -1368,7 +1391,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__monthlylastday
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthlylastday
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthlylastday
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Month(s) last day"
 msgstr ""
 
@@ -1484,7 +1506,9 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
+#: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
 #, fuzzy
 msgid "Old Contract"
 msgstr "Договоры"
@@ -1614,7 +1638,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__quarterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__quarterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__quarterly
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Quarter(s)"
 msgstr ""
 
@@ -1743,7 +1766,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__semesterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__semesterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__semesterly
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Semester(s)"
 msgstr ""
 
@@ -2098,7 +2120,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__weekly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__weekly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__weekly
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Week(s)"
 msgstr ""
 
@@ -2133,7 +2154,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__yearly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__yearly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__yearly
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Year(s)"
 msgstr ""
 
