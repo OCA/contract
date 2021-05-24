@@ -256,28 +256,9 @@
                                                     <span
                                                         t-field="line.recurring_interval"
                                                     />
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='daily'"
-                                                    >Day(s)</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='weekly'"
-                                                    >Week(s)</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='monthly'"
-                                                    >Month(s)</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='monthlylastday'"
-                                                    >Month(s) last
-                                                        day</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='quarterly'"
-                                                    >Quarter(s)</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='semesterly'"
-                                                    >Semester(s)</t>
-                                                    <t
-                                                        t-if="line.recurring_rule_type=='yearly'"
-                                                    >Year(s)</t>
+                                                    <span
+                                                        t-field="line.recurring_rule_type"
+                                                    />
                                                 </td>
                                                 <td
                                                     name="td_recurring_next_date"
