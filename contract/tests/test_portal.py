@@ -14,7 +14,7 @@ class TestContractPortal(odoo.tests.HttpCase):
         )
         user_portal = self.env.ref("base.demo_user0")
         contract.message_subscribe(partner_ids=user_portal.partner_id.ids)
-        self.phantom_js(
+        self.browser_js(
             "/",
             "odoo.__DEBUG__.services['web_tour.tour'].run('contract_portal_tour')",
             "odoo.__DEBUG__.services['web_tour.tour'].tours.contract_portal_tour.ready",
@@ -24,7 +24,8 @@ class TestContractPortal(odoo.tests.HttpCase):
         self.authenticate("portal", "portal")
         http.root.session_store.save(self.session)
         url_contract = "/my/contracts/{}?access_token={}".format(
-            contract.id, contract.access_token,
+            contract.id,
+            contract.access_token,
         )
         self.assertEqual(self.url_open(url=url_contract).status_code, 200)
         contract.message_unsubscribe(partner_ids=user_portal.partner_id.ids)
