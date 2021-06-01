@@ -16,7 +16,7 @@ class ContractLine(models.Model):
         sale_line_vals = {
             'product_id': self.product_id.id,
             'product_uom_qty': self._get_quantity_to_invoice(*dates),
-            'timesheet_encode_uom_id': self.timesheet_encode_uom_id.id,
+            'uom_id': self.uom_id.id,
             'discount': self.discount,
             'contract_line_id': self.id,
             'display_type': self.display_type,
