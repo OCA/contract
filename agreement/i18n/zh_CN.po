@@ -77,6 +77,7 @@ msgstr "协议类型"
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_type_action
 #: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.menu,name:agreement.agreement_type_menu
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Agreement Types"
 msgstr "协议类型"
@@ -100,11 +101,6 @@ msgstr "已归档"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__code
-msgid "Code"
 msgstr ""
 
 #. module: agreement
@@ -175,6 +171,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__code
+msgid "ID used for internal contract tracking."
+msgstr "用于内部合同跟踪的ID。"
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_icon
 msgid "Icon"
 msgstr ""
@@ -195,6 +196,12 @@ msgstr ""
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__active
+msgid ""
+"If unchecked, it will allow you to hide the agreement without removing it."
+msgstr "如果不选中，它将允许您隐藏协议而不删除它。"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
@@ -245,7 +252,6 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr "名称"
@@ -310,6 +316,11 @@ msgid "Purchase"
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__code
+msgid "Reference"
+msgstr "参考"
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
 msgid "Responsible User"
 msgstr ""
@@ -365,9 +376,19 @@ msgid ""
 msgstr ""
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__partner_id
+msgid "The customer or vendor this agreement is related to."
+msgstr "与本协议相关的客户或供应商。"
+
+#. module: agreement
 #: model:ir.model.constraint,message:agreement.constraint_agreement_code_partner_company_unique
 msgid "This agreement code already exists for this partner!"
 msgstr "此合作伙伴的协议代码已存在！"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__name
+msgid "Title"
+msgstr "标题"
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
@@ -409,24 +430,12 @@ msgstr ""
 msgid "Website communication history"
 msgstr ""
 
-#~ msgid "ID used for internal contract tracking."
-#~ msgstr "用于内部合同跟踪的ID。"
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__end_date
+msgid "When the agreement ends."
+msgstr "协议结束时。"
 
-#~ msgid ""
-#~ "If unchecked, it will allow you to hide the agreement without removing it."
-#~ msgstr "如果不选中，它将允许您隐藏协议而不删除它。"
-
-#~ msgid "Reference"
-#~ msgstr "参考"
-
-#~ msgid "The customer or vendor this agreement is related to."
-#~ msgstr "与本协议相关的客户或供应商。"
-
-#~ msgid "Title"
-#~ msgstr "标题"
-
-#~ msgid "When the agreement ends."
-#~ msgstr "协议结束时。"
-
-#~ msgid "When the agreement starts."
-#~ msgstr "协议开始时。"
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__start_date
+msgid "When the agreement starts."
+msgstr "协议开始时。"

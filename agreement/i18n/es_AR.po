@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-30 19:48+0000\n"
+"PO-Revision-Date: 2021-06-14 04:48+0000\n"
 "Last-Translator: Ignacio Buioli <ibuioli@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es_AR\n"
@@ -74,6 +74,7 @@ msgstr "Tipo de Acuerdo"
 #. module: agreement
 #: model:ir.actions.act_window,name:agreement.agreement_type_action
 #: model:ir.model,name:agreement.model_agreement_type
+#: model:ir.ui.menu,name:agreement.agreement_type_menu
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
 msgid "Agreement Types"
 msgstr "Tipos de Acuerdo"
@@ -98,11 +99,6 @@ msgstr "Archivado"
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_attachment_count
 msgid "Attachment Count"
 msgstr "Cuenta de Adjunto"
-
-#. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__code
-msgid "Code"
-msgstr "Código"
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__company_id
@@ -172,6 +168,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__code
+msgid "ID used for internal contract tracking."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_exception_icon
 msgid "Icon"
 msgstr "ícono"
@@ -192,6 +193,12 @@ msgstr "Si está marcada, los nuevos mensajes requieren su atención."
 #: model:ir.model.fields,help:agreement.field_agreement__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__active
+msgid ""
+"If unchecked, it will allow you to hide the agreement without removing it."
+msgstr ""
 
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__message_is_follower
@@ -239,10 +246,9 @@ msgstr "Mensajes"
 #. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Plazo para Mi Actividad"
 
 #. module: agreement
-#: model:ir.model.fields,field_description:agreement.field_agreement__name
 #: model:ir.model.fields,field_description:agreement.field_agreement_type__name
 msgid "Name"
 msgstr "Nombre"
@@ -307,6 +313,11 @@ msgid "Purchase"
 msgstr "Compra"
 
 #. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__code
+msgid "Reference"
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.fields,field_description:agreement.field_agreement__activity_user_id
 msgid "Responsible User"
 msgstr "Usuario Responsable"
@@ -368,9 +379,19 @@ msgstr ""
 "Planificado: Actividades futuras."
 
 #. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__partner_id
+msgid "The customer or vendor this agreement is related to."
+msgstr ""
+
+#. module: agreement
 #: model:ir.model.constraint,message:agreement.constraint_agreement_code_partner_company_unique
 msgid "This agreement code already exists for this partner!"
 msgstr "¡Este código de acuerdo ya existe para este socio!"
+
+#. module: agreement
+#: model:ir.model.fields,field_description:agreement.field_agreement__name
+msgid "Title"
+msgstr ""
 
 #. module: agreement
 #: model_terms:ir.ui.view,arch_db:agreement.agreement_type_list_view
@@ -411,3 +432,16 @@ msgstr "Mensajes del Sitio Web"
 #: model:ir.model.fields,help:agreement.field_agreement__website_message_ids
 msgid "Website communication history"
 msgstr "Historial de comunicación del sitio web"
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__end_date
+msgid "When the agreement ends."
+msgstr ""
+
+#. module: agreement
+#: model:ir.model.fields,help:agreement.field_agreement__start_date
+msgid "When the agreement starts."
+msgstr ""
+
+#~ msgid "Code"
+#~ msgstr "Código"
