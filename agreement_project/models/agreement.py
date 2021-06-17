@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class Agreement(models.Model):
@@ -9,7 +9,6 @@ class Agreement(models.Model):
 
     task_count = fields.Integer("# Tasks", compute="_compute_task_count")
 
-    @api.multi
     def _compute_task_count(self):
         for ag in self:
             count = self.env["project.task"].search_count(
