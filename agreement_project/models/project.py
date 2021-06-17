@@ -7,13 +7,12 @@ from odoo import fields, models
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    agreement_id = fields.Many2one('agreement', 'Agreement')
+    agreement_id = fields.Many2one("agreement", "Agreement")
 
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    agreement_id = fields.Many2one('agreement',
-                                   related="project_id.agreement_id",
-                                   string='Agreement',
-                                   store=True)
+    agreement_id = fields.Many2one(
+        "agreement", related="project_id.agreement_id", string="Agreement", store=True
+    )
