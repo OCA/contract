@@ -66,6 +66,8 @@ class SaleOrder(models.Model):
             'payment_term_id': self.payment_term_id.id,
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_partner_id': self.partner_invoice_id.id,
+            'pricelist_id': self.pricelist_id.id,
+            'currency_id': self.currency_id.id,
         }
 
     @api.multi
