@@ -1,7 +1,5 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2021 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from . import (
-    stock,
-    agreement,
-)
+from . import stock
+from . import agreement
