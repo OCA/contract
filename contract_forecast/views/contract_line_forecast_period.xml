@@ -14,6 +14,12 @@
             <search>
                 <field name="contract_id" string="Contract"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Customer"
+                        domain="[('contract_type', '=', 'sale')]"
+                        name="customer"/>
+                <filter string="Supplier"
+                        domain="[('contract_type', '=', 'purchase')]"
+                        name="customer"/>
                 <group expand="0" string="Group By">
                     <filter string="Date Start" name="groupby_date_start"
                             context="{'group_by':'date_start'}"/>
@@ -21,6 +27,8 @@
                             context="{'group_by':'date_end'}"/>
                     <filter string="Date Invoice" name="groupby_date_invoice"
                             context="{'group_by':'date_invoice:day'}"/>
+                    <filter string="Type" name="groupby_type"
+                            context="{'group_by':'contract_type'}"/>
                 </group>
             </search>
         </field>
@@ -38,6 +46,9 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="date_invoice"/>
+                <field name="price_subtotal_signed"/>
+                <field name="price_subtotal_company_signed" groups="base.group_multi_currency"/>
+                <field name="currency_rate" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -50,9 +61,9 @@
         <field name="model">contract.line.forecast.period</field>
         <field name="arch" type="xml">
             <pivot string="Contract Forecast">
-                <field name="product_id" type="col"/>
+                <field name="contract_type" type="col"/>
                 <field name="date_invoice" type="row"/>
-                <field name="price_subtotal" type="measure"/>
+                <field name="price_subtotal_company_signed" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -63,10 +74,10 @@
         </field>
         <field name="model">contract.line.forecast.period</field>
         <field name="arch" type="xml">
-            <graph string="Contract Forecast">
-                <field name="product_id" type="col"/>
+            <graph string="Contract Forecast" type="bar" stacked="1">
                 <field name="date_invoice" type="row"/>
-                <field name="price_subtotal" type="measure"/>
+                <field name="contract_type" type="col"/>
+                <field name="price_subtotal_company_signed" type="measure"/>
             </graph>
         </field>
     </record>
