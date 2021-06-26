@@ -147,3 +147,15 @@ class ContractLine(models.Model):
                 if rec.contract_id.company_id.enable_contract_forecast:
                     rec.with_delay()._generate_forecast_periods()
         return res
+
+    @api.model
+    def cron_generate_all_forecast_periods(self):
+        offset = 0
+        while True:
+            contract_lines = self.search(
+                [('is_canceled', '=', False)], limit=100, offset=offset
+            )
+            contract_lines.with_delay()._generate_forecast_periods()
+            if len(contract_lines) < 100:
+                break
+            offset += 100

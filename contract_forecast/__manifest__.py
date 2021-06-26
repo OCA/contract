@@ -15,6 +15,7 @@
         "views/res_config_settings.xml",
         "views/contract_line_forecast_period.xml",
         "views/contract.xml",
+        "data/contract_forecast_cron.xml"
     ],
     "external_dependencies": {"python": ["dateutil"]},
     "post_init_hook": "post_init_hook",
