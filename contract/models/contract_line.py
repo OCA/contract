@@ -606,8 +606,10 @@ class ContractLine(models.Model):
         lang = lang_obj.search([("code", "=", self.contract_id.partner_id.lang)])
         date_format = lang.date_format or "%m/%d/%Y"
         name = self.name
-        name = name.replace("#START#", first_date_invoiced.strftime(date_format))
-        name = name.replace("#END#", last_date_invoiced.strftime(date_format))
+        if first_date_invoiced:
+            name = name.replace("#START#", first_date_invoiced.strftime(date_format))
+        if last_date_invoiced:
+            name = name.replace("#END#", last_date_invoiced.strftime(date_format))
         return name
 
     def _update_recurring_next_date(self):
