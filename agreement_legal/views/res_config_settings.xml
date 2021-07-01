@@ -1,0 +1,195 @@
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.agreement</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="40" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div
+                    class="app_settings_block"
+                    data-string="Agreements"
+                    string="Agreements"
+                    data-key="agreement_legal"
+                    groups="agreement_legal.group_agreement_manager"
+                >
+                    <h2>Operations</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_uom" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_uom" />
+                                <div class="text-muted">
+                                    Sell and purchase products in different units of measure
+                                </div>
+                                <div class="content-group">
+                                    <div
+                                        class="mt16"
+                                        attrs="{'invisible': [('group_uom', '=', False)]}"
+                                    >
+                                        <button
+                                            name="%(uom.product_uom_form_action)d"
+                                            icon="fa-arrow-right"
+                                            type="action"
+                                            string="Units Of Measure"
+                                            class="btn-link"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Advanced Features</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_sale" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_agreement_sale" string="Sales" />
+                                <div class="text-muted">
+                                    Create an agreement when the sales order is confirmed
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-xs-12 col-md-6 o_setting_box"
+                            attrs="{'invisible': [('module_agreement_sale', '!=', True)]}"
+                        >
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_sale_subscription" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_sale_subscription"
+                                    string="Sale Subscriptions"
+                                />
+                                <div class="text-muted">
+                                    Link your subscriptions to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_fieldservice_agreement" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_fieldservice_agreement"
+                                    string="Field Service"
+                                />
+                                <div class="text-muted">
+                                    Link your Field Service orders and equipments to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_stock" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_stock"
+                                    string="Inventory"
+                                />
+                                <div class="text-muted">
+                                    Link your transfers to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_rma" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_agreement_rma" string="Returns" />
+                                <div class="text-muted">
+                                    Link your returns to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_maintenance" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_maintenance"
+                                    string="Maintenance"
+                                />
+                                <div class="text-muted">
+                                    Manage maintenance agreements and contracts
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_mrp" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_mrp"
+                                    string="Manufacturing"
+                                />
+                                <div class="text-muted">
+                                    Link your manufacturing orders to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_repair" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_agreement_repair" string="Repair" />
+                                <div class="text-muted">
+                                    Link your repair orders to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_project" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_project"
+                                    string="Project"
+                                />
+                                <div class="text-muted">
+                                    Link your projects and tasks to an agreement
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_agreement_helpdesk" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    for="module_agreement_helpdesk"
+                                    string="Helpdesk"
+                                />
+                                <div class="text-muted">
+                                    Link your Helpdesk tickets to an agreement
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_agreement_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'agreement'}</field>
+    </record>
+
+</odoo>
