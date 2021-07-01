@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo14-addon-agreement',
+        'odoo14-addon-agreement_legal',
         'odoo14-addon-contract',
         'odoo14-addon-contract_sale',
     ],
