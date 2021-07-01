@@ -1,0 +1,59 @@
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.agreement</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="11" />
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="inside">
+                <h2>Agreements</h2>
+                <div class="row mt16 o_settings_container">
+                    <div
+                        id="sales_settings_agreement_type_group"
+                        class="col-12 col-lg-6 o_setting_box"
+                    >
+                        <div class="o_setting_left_pane">
+                            <field name="group_use_agreement_type" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="group_use_agreement_type" />
+                            <div class="text-muted">
+                                Manage agreements by types
+                            </div>
+                            <div
+                                class="content-group"
+                                attrs="{'invisible': [('group_use_agreement_type','=',False)]}"
+                            >
+                                <div class="mt16">
+                                    <button
+                                        name="%(agreement.agreement_type_action)d"
+                                        icon="fa-arrow-right"
+                                        type="action"
+                                        string="Agreement types"
+                                        class="btn-link"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-12 col-md-6 o_setting_box"
+                        id="sales_settings_agreement_template_group"
+                    >
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_use_agreement_template" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_use_agreement_template" />
+                                <div class="text-muted">
+                                    Have a special kind of agreements which act as templates
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
