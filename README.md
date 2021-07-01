@@ -20,6 +20,7 @@ Available addons
 addon | version | summary
 --- | --- | ---
 [agreement](agreement/) | 14.0.1.0.0 | Adds an agreement object
+[agreement_legal](agreement_legal/) | 14.0.1.0.0 | Manage Agreements, LOI and Contracts
 [contract](contract/) | 14.0.1.2.0 | Recurring - Contracts Management
 [contract_sale](contract_sale/) | 14.0.1.0.0 | Contract from Sale
 
