@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="contract_contract_signature_form_view" model="ir.ui.view">
+        <field name="name">contract.contract form view.signature</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="user_id"/>
+                <field name="signature_name"/>
+            </field>
+            <xpath expr="//group[@name='group_legend']" position="after">
+                <div class="oe_clear"/>
+                <label for="customer_signature" class="oe_edit_only"/>
+                <field name="customer_signature" widget="signature"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
