@@ -1,0 +1,35 @@
+<odoo noupdate="1">
+    <!-- Test Exceptions Scheduler-->
+    <record model="ir.cron" forcecreate="True" id="ir_cron_test_agreement_except">
+        <field name="name">Agreement: Test Draft Agreements Exception</field>
+        <field name="model_id" ref="agreement.model_agreement" />
+        <field name="state">code</field>
+        <field name="code">model.detect_draft_exceptions()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">20</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="agreement_excep_no_email" model="exception.rule">
+        <field name="name">No email on vendor</field>
+        <field name="description">No Email for Vendor</field>
+        <field name="sequence">50</field>
+        <field name="model">agreement</field>
+        <field name="code">if not self.partner_id.email:
+            failed=True</field>
+        <field name="active" eval="False" />
+    </record>
+
+    <record id="agreement_excep_qty_check" model="exception.rule">
+        <field name="name">Quantity not positive</field>
+        <field name="description">Product line quantity must be positive</field>
+        <field name="sequence">50</field>
+        <field name="model">agreement.line</field>
+        <field name="code">if self.qty &lt; 0:
+            failed=True</field>
+        <field name="active" eval="False" />
+    </record>
+</odoo>

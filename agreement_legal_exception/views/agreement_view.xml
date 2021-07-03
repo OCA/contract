@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="action_agreement_test_tree" model="ir.actions.act_window">
+        <field name="name">Agreement Exception Rules</field>
+        <field name="res_model">exception.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="base_exception.view_exception_rule_tree" />
+        <field name="domain">[('model', 'in', ['agreement', 'agreement.line'])]</field>
+        <field
+            name="context"
+        >{'active_test': False, 'default_model' : 'agreement'}</field>
+    </record>
+    <menuitem
+        action="action_agreement_test_tree"
+        id="menu_agreement_test"
+        parent="agreement_legal.agreement_configuration"
+        groups="base_exception.group_exception_rule_manager"
+        sequence="100"
+    />
+    <record id="partner_agreement_form_view" model="ir.ui.view">
+        <field name="name">partner.agreement.form.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    attrs="{'invisible': [('exceptions_summary','=',False)]}"
+                >
+                    <p>
+                        <strong
+                        >There are exceptions blocking the confirmation of this Agreement:</strong>
+                    </p>
+                    <field name="exceptions_summary" />
+                    <button
+                        name="action_ignore_exceptions"
+                        type="object"
+                        class="btn-danger"
+                        string="Ignore Exceptions"
+                        help="Click here to be able to confirm this Agreement regardless of the exceptions."
+                        groups="base_exception.group_exception_rule_manager"
+                    />
+                </div>
+            </sheet>
+            <xpath expr="//field[@name='agreement_type_id']/.." position="inside">
+                <field name="ignore_exception" />
+            </xpath>
+        </field>
+    </record>
+    <record id="partner_agreement_list_view" model="ir.ui.view">
+        <field name="name">partner.agreement.list.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_list_view" />
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="main_exception_id" />
+            </field>
+        </field>
+    </record>
+    <record id="partner_agreement_search_view" model="ir.ui.view">
+        <field name="name">partner.agreement.search.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_search_view" />
+        <field name="arch" type="xml">
+            <filter name="group_status" position="after">
+                <separator orientation="vertical" />
+                <filter
+                    icon="terp-emblem-important"
+                    name="tofix"
+                    string="Blocked in draft"
+                    domain="[('main_exception_id','!=',False)]"
+                />
+            </filter>
+        </field>
+    </record>
+
+</odoo>
