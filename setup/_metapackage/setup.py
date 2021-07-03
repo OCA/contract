@@ -22,6 +22,7 @@ setuptools.setup(
         'odoo12-addon-agreement_serviceprofile',
         'odoo12-addon-agreement_stock',
         'odoo12-addon-contract',
+        'odoo12-addon-contract_digitized_signature',
         'odoo12-addon-contract_forecast',
         'odoo12-addon-contract_invoice_auto_validate',
         'odoo12-addon-contract_invoice_start_end_dates',
