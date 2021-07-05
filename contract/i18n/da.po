@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2021-07-02 11:48+0000\n"
+"PO-Revision-Date: 2021-07-05 07:25+0000\n"
 "Last-Translator: Hans Henrik Gabelgaard <hhg@gabelgaard.org>\n"
 "Language-Team: Danish (https://www.transifex.com/oca/teams/23907/da/)\n"
 "Language: da\n"
@@ -250,7 +250,7 @@ msgstr "<strong>Ansvarlig: </strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Ansvarlige:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -285,17 +285,17 @@ msgstr "En kontraktlinje med efterfølger skal have en slutdato"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract
 msgid "Abstract Recurring Contract"
-msgstr ""
+msgstr "Abstrakt gentagen kontrakt"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Abstrakt gentagen kontraktlinie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Adgangs advarsel"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
@@ -459,7 +459,7 @@ msgstr "Kommerciel enhed"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Communication"
-msgstr ""
+msgstr "Kommunikation"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_company
@@ -478,7 +478,7 @@ msgstr "Virksomhed"
 #: code:addons/contract/models/contract.py:459
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Skriv email"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_config_settings
@@ -508,12 +508,12 @@ msgstr "Kontrakt"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
-msgstr ""
+msgstr "Kontrakt #"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 msgid "Contract Contract Terminate"
-msgstr ""
+msgstr "Kontrakt Kontrakt Afslut"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
@@ -525,27 +525,27 @@ msgstr "Kontraktlinje"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line_wizard
 msgid "Contract Line Wizard"
-msgstr ""
+msgstr "Kontraktlinie guide"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__predecessor_contract_line_id
 msgid "Contract Line origin of this one."
-msgstr ""
+msgstr "Kontraktlinie oprindelig for denne."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Contract Manually Create Invoice"
-msgstr ""
+msgstr "Kontrakt Manuel fakturaoprettelse"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_manually_create_invoice
 msgid "Contract Manually Create Invoice Wizard"
-msgstr ""
+msgstr "Kontrakt manuel fakturaoprettelses guide"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_modification
 msgid "Contract Modification"
-msgstr ""
+msgstr "Kontrakt ændring"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -555,7 +555,7 @@ msgstr "Kontraktnavn"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contract Order -"
-msgstr ""
+msgstr "Kontrakt ordre -"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_tag
@@ -607,7 +607,7 @@ msgstr "Kontrakt til fakturering"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_count
 msgid "Contract To Invoice Count"
-msgstr ""
+msgstr "Kontrakt til faktura tæller"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__contract_type
@@ -628,7 +628,7 @@ msgstr "Kontraktlinje '%s' startdato kan ikke være senere end slutdato"
 #: code:addons/contract/models/contract_line.py:1121
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
-msgstr ""
+msgstr "Kontraktlinie Ikke-annuleret: %s<br/>- "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:381
@@ -657,6 +657,10 @@ msgid ""
 "                            - <strong>End</strong>: {old_end} -- {new_end}\n"
 "                            "
 msgstr ""
+"Kontraktlinie for <strong>{product}</strong>\n"
+"                            stoppet: <br/>\n"
+"                            - <strong>Slut</strong>: {old_end} -- {new_end}\n"
+"                            "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:972
@@ -669,6 +673,12 @@ msgid ""
 "                    - <strong>End</strong>: {new_date_end}\n"
 "                    "
 msgstr ""
+"Kontraktlinie for <strong>{product}</strong>\n"
+"                    afløser planlagt: <br/>\n"
+"                    - <strong>Start</strong>: {new_date_start}\n"
+"                    <br/>\n"
+"                    - <strong>Slut</strong>: {new_date_end}\n"
+"                    "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1268
@@ -681,6 +691,12 @@ msgid ""
 "                - <strong>End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
+"Kontraktlinie for <strong>{product}</strong>\n"
+"                fornyet: <br/>\n"
+"                - <strong>Start</strong>: {new_date_start}\n"
+"                <br/>\n"
+"                - <strong>Slut</strong>: {new_date_end}\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1080
@@ -693,6 +709,12 @@ msgid ""
 "                - <strong>Suspension End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
+"Kontraktlinie for <strong>{product}</strong>\n"
+"                suspenderet: <br/>\n"
+"                - <strong>Suspenderet fra</strong>: {new_date_start}\n"
+"                <br/>\n"
+"                - <strong>Suspenderet til</strong>: {new_date_end}\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1320
@@ -718,13 +740,13 @@ msgstr ""
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
 msgid "Contract modifications"
-msgstr ""
+msgstr "Kontrakt ændringer"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:168
 #, python-format
 msgid "Contract start"
-msgstr ""
+msgstr "Kontrakt start"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
@@ -758,7 +780,7 @@ msgstr "Kontrakter til fakturering"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
 #: model:ir.model.fields,field_description:contract.field_contract_line__create_invoice_visibility
 msgid "Create Invoice Visibility"
-msgstr ""
+msgstr "Opret faktura synlig"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -814,7 +836,7 @@ msgstr "Valuta"
 #: selection:contract.line,note_invoicing_mode:0
 #: selection:contract.template.line,note_invoicing_mode:0
 msgid "Custom"
-msgstr ""
+msgstr "Tilpasset"
 
 #. module: contract
 #: selection:contract.abstract.contract,contract_type:0
@@ -834,7 +856,7 @@ msgstr "Kundekontrakter"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Kundeportal URL"
 
 #. module: contract
 #: code:addons/contract/controllers/main.py:40
@@ -844,7 +866,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
@@ -865,7 +887,7 @@ msgstr "Startdato"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
-msgstr ""
+msgstr "Slut dato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_next_date
@@ -878,7 +900,7 @@ msgstr "Dato for næste fakturering"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
-msgstr ""
+msgstr "Næste fakturedato"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -904,6 +926,10 @@ msgid ""
 "- With next line: If the next line can be invoiced.\n"
 "- Custom: Depending on the recurrence to be define."
 msgstr ""
+"Definere hvornår Noten er faktureret:\n"
+"- Med foregående linie: Hvis den foregående linie kan faktureres.\n"
+"- Med næste linie: Hvis den næste linie kan faktureres.\n"
+"- Tilpasset: Afhænger af gentagelserne der defineres."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__name
@@ -922,13 +948,13 @@ msgstr "Beskrivelse"
 #: model:ir.model.fields,field_description:contract.field_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Rabat (%)"
 
 #. module: contract
 #: code:addons/contract/models/abstract_contract_line.py:242
 #, python-format
 msgid "Discount should be less or equal to 100"
-msgstr ""
+msgstr "Rabat skal være mindre eller lig med 100"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__discount
@@ -938,6 +964,8 @@ msgid ""
 "Discount that is applied in generated invoices. It should be less or equal "
 "to 100"
 msgstr ""
+"Rabat der anvendes på genererede fakturaer. Skal være mindre eller lig med "
+"100"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__display_name
@@ -953,19 +981,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Vist navn"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__display_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__display_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Visningstype"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Finished"
-msgstr ""
+msgstr "Afsluttet"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__fiscal_position_id
@@ -975,24 +1003,24 @@ msgstr "Bogføringsgruppe"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Følgere"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Følgere (kanaler)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Følgere (Partnere)"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
 #: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
-msgstr ""
+msgstr "Generer gentagne fakturaer fra kontrakter"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__group_id
@@ -1023,7 +1051,7 @@ msgstr "Id"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Hvis markeret ny meddelses der kræver opmærksomhed."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_res_company__create_new_line_at_contract_line_renew
@@ -1033,16 +1061,19 @@ msgid ""
 "to the original one as successor. The default behavior is to extend the end "
 "date of the contract by a new subscription period"
 msgstr ""
+"Hvis markeret , en ny linie vil blive oprettet ved kontraktlinie fornyelse "
+"og tilknyttet den originale som efterfølger. Standard funktionalitet er at "
+"forlænge slut datoen med en ny kontingent periode"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis markeret er der nye meddelseser der kræver din opmærksomhed."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Hvis markeret, nogle meddelser fik leveringsfejl."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__automatic_price
@@ -1053,6 +1084,8 @@ msgid ""
 "pricelist to the product. If not, you will be able to introduce a manual "
 "price"
 msgstr ""
+"Hvis markeret vil prisen blive hentet automatisk ud fra prislisten for "
+"produktet. Hvis ikke kan der angives en manuel pris"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__successor_contract_line_id
@@ -1060,16 +1093,18 @@ msgid ""
 "In case of restart after suspension, this field contain the new contract "
 "line created."
 msgstr ""
+"I tilfælde af genstart efter suspension, dette felt indeholder den nye "
+"kontraktlinie oprettet."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "In progress"
-msgstr ""
+msgstr "Igangværende"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "In-progress"
-msgstr ""
+msgstr "Igangværende"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_invoice
@@ -1101,7 +1136,7 @@ msgstr "Fakturalinie"
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_invoice_created
 msgid "Invoice created"
-msgstr ""
+msgstr "Faktura oprettet"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_interval
@@ -1159,7 +1194,7 @@ msgstr "Er suspendering uden slutdato"
 #: model:ir.model.fields,field_description:contract.field_contract_template__journal_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__last_date_invoiced
@@ -1221,7 +1256,7 @@ msgstr "Vejledning (for markeringer i fakturalinie beskrivelsen)"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Primært vedhæftning"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
@@ -1232,7 +1267,7 @@ msgstr "Manuel valuta"
 #: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
 msgid "Manual renew needed"
-msgstr ""
+msgstr "Manuel fornyelse påkrævet"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
@@ -1249,7 +1284,7 @@ msgstr "Fakturér salgskontrakter manuelt"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Leveringsfejl på meddelse"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_ids
@@ -1260,7 +1295,7 @@ msgstr "Beskeder"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__modification_ids
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Modifications"
-msgstr ""
+msgstr "Ændringer"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -1299,17 +1334,17 @@ msgstr "Navn"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Næste aktivitetsdeadline"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Næste aktivitets sammendrag"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Næste aktivitetstype"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1344,7 +1379,7 @@ msgstr "Note"
 #: model:ir.model.fields,field_description:contract.field_contract_line__note_invoicing_mode
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__note_invoicing_mode
 msgid "Note Invoicing Mode"
-msgstr ""
+msgstr "Note fakturerings tilstand"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__note
@@ -1354,7 +1389,7 @@ msgstr "Noter"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Antal aktioner"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
@@ -1364,26 +1399,28 @@ msgid ""
 "Number of days to offset the invoice from the period end date (in post-paid "
 "mode) or start date (in pre-paid mode)."
 msgstr ""
+"Antal dage til modregning af fakturaen fra periodens slutdato (i efterbetalt "
+"tilstand) eller startdato (i forudbetalt tilstand)."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Antal fejl"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Antal beskeder der kræver handling"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antal beskeder med leveringsfejl"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Antal ulæste beskeder"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_invoice__old_contract_id
@@ -1405,7 +1442,7 @@ msgstr "Forfalden"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__payment_term_id
@@ -1416,18 +1453,18 @@ msgstr "Betalingsbetingelser"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Plan Start"
-msgstr ""
+msgstr "Planlagt start"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_plan_successor_allowed
 msgid "Plan successor allowed?"
-msgstr ""
+msgstr "Planlagt efterfølger tilladt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:955
 #, python-format
 msgid "Plan successor not allowed for this line"
-msgstr ""
+msgstr "Planlagt efterfølger ikke tilladt for denne linie"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -1438,12 +1475,12 @@ msgstr "Planlagt"
 #: code:addons/contract/models/contract.py:417
 #, python-format
 msgid "Please define a %s journal for the company '%s'."
-msgstr ""
+msgstr "Definer venligst %s journal for virksomheden '%s'."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Kundeportal URL"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_invoicing_type:0
@@ -1462,17 +1499,17 @@ msgstr "Forudbetalt"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__predecessor_contract_line_id
 msgid "Predecessor Contract Line"
-msgstr ""
+msgstr "Forgænger kontractlinie"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Preview"
-msgstr ""
+msgstr "Forhåndsvisning"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Price unit"
-msgstr ""
+msgstr "Pris enhed"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__pricelist_id
@@ -1533,7 +1570,7 @@ msgstr "Gentagende fakturaer"
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "Reference"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1605,7 +1642,7 @@ msgstr "Sektion"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Security Token"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,recurring_rule_type:0
@@ -1623,7 +1660,7 @@ msgstr "Send via mail"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_modification__sent
 msgid "Sent"
-msgstr ""
+msgstr "Sendt"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
@@ -1637,17 +1674,17 @@ msgstr "Rækkefølge"
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Sequence of the contract line when displaying contracts"
-msgstr ""
+msgstr "Rækkefølge af kontraktlinier ved visning af kontrakter"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the purchase contracts for this partner"
-msgstr ""
+msgstr "Vis indkøbskontrakter for denne partner"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the sale contracts for this partner"
-msgstr ""
+msgstr "Vis salgskontrakter for denne partner"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__specific_price
@@ -1678,6 +1715,8 @@ msgid ""
 "Specify if the invoice must be generated at the beginning (pre-paid) or end "
 "(post-paid) of the period."
 msgstr ""
+"Angiv, om fakturaen skal genereres i begyndelsen (forudbetalt) eller "
+"slutningen (efterbetalt) af perioden."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
@@ -1692,12 +1731,17 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status baseret på aktiviteter\n"
+"Forsinket: Forfaldsdato er allerede passeret\n"
+"I dag: Aktivitetsdato er i dag\n"
+"Planlagt: Fremtidige aktiviteter."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#, fuzzy
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
@@ -1708,41 +1752,41 @@ msgstr "Stop dato"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop Plan Successor"
-msgstr ""
+msgstr "Stop planlagt efterfølger"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_allowed
 msgid "Stop allowed?"
-msgstr ""
+msgstr "Stop tilladt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:875
 #, python-format
 msgid "Stop not allowed for this line"
-msgstr ""
+msgstr "Stop ikke tilladt for denne linie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_plan_successor_allowed
 msgid "Stop/Plan successor allowed?"
-msgstr ""
+msgstr "Stop/Planlæg efterfølger tilladt?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1016
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
-msgstr ""
+msgstr "Stop/Planlæg efterfølger ikke tilladt for denne linie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
 msgid "Sub Total"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__successor_contract_line_id
 msgid "Successor Contract Line"
-msgstr ""
+msgstr "Efterfølgende kontraktlinie"
 
 #. module: contract
 #: selection:contract.abstract.contract,contract_type:0
@@ -1751,7 +1795,7 @@ msgstr ""
 #: selection:contract.template,contract_type:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_supplier_form_view
 msgid "Supplier"
-msgstr ""
+msgstr "Leverandør"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
@@ -1762,24 +1806,25 @@ msgstr "Leverandørkontrakter"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension End Date"
-msgstr ""
+msgstr "Suspendering slut dato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
 msgid "Suspension Start Date"
-msgstr ""
+msgstr "Suspendering start dato"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
+#, fuzzy
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Technical field for UX purpose."
 
 #. module: contract
 #: code:addons/contract/models/contract.py:652
@@ -1787,12 +1832,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 #, python-format
 msgid "Terminate Contract"
-msgstr ""
+msgstr "Afslut kontrakt"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_contract_terminate
 msgid "Terminate Contract Wizard"
-msgstr ""
+msgstr "Afslut kontrakt guide"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__is_terminated
@@ -1816,30 +1861,30 @@ msgstr "Afslutningsdato"
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_interval
 msgid "Termination Notice Before"
-msgstr ""
+msgstr "Opsigelsesmeddelelse før"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
 msgid "Termination Notice type"
-msgstr ""
+msgstr "Opsigelsesmeddelelse type"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__terminate_reason_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_reason_id
 msgid "Termination Reason"
-msgstr ""
+msgstr "Opsigelsesårsag"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
 msgid "Termination notice date"
-msgstr ""
+msgstr "Opsigelsesmeddelelse dato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "This contract was terminated for the reason"
-msgstr ""
+msgstr "Denne kontrakt blev opsagt af grunden"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
@@ -1848,11 +1893,14 @@ msgid ""
 "This flag is used to make a difference between a definitive stopand "
 "temporary one for which a user is not able to plan asuccessor in advance"
 msgstr ""
+"Dette flag bruges til at gøre en forskel mellem et definitivt stop og et "
+"midlertidigt, hvor en bruger ikke er i stand til at planlægge en efterfølger "
+"på forhånd"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "To renew"
-msgstr ""
+msgstr "Til fornyelse"
 
 #. module: contract
 #: selection:contract.contract,activity_state:0
@@ -1862,19 +1910,19 @@ msgstr "Idag"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_un_cancel_allowed
 msgid "Un-Cancel allowed?"
-msgstr ""
+msgstr "Fjern annullering tilladt?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Un-cancel"
-msgstr ""
+msgstr "Fjern annullering"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1113
 #, python-format
 msgid "Un-cancel not allowed for this line"
-msgstr ""
+msgstr "Fjern annullering ikke tilladt for denne linie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_unit
@@ -1893,27 +1941,27 @@ msgstr "Enhed"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ulæste beskeder"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Ulæste beskder tæller"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming"
-msgstr ""
+msgstr "Kommende"
 
 #. module: contract
 #: selection:contract.line,state:0
 msgid "Upcoming Close"
-msgstr ""
+msgstr "Kommede lukning"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Update Termination Details"
-msgstr ""
+msgstr "Opdater opsigelsesdetaljer"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -1955,26 +2003,26 @@ msgstr ""
 #: selection:contract.template.line,termination_notice_rule_type:0
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Week(s)"
-msgstr ""
+msgstr "Uge(r)"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,note_invoicing_mode:0
 #: selection:contract.line,note_invoicing_mode:0
 #: selection:contract.template.line,note_invoicing_mode:0
 msgid "With next line"
-msgstr ""
+msgstr "Med næste linie"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,note_invoicing_mode:0
 #: selection:contract.line,note_invoicing_mode:0
 #: selection:contract.template.line,note_invoicing_mode:0
 msgid "With previous line"
-msgstr ""
+msgstr "Med forrige linie"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
 msgid "With running contracts"
-msgstr ""
+msgstr "Med løbende kontrakt"
 
 #. module: contract
 #: selection:contract.abstract.contract.line,auto_renew_rule_type:0
@@ -1991,13 +2039,13 @@ msgstr "År"
 #: code:addons/contract/models/contract.py:666
 #, python-format
 msgid "You are not allowed to terminate contracts."
-msgstr ""
+msgstr "Du har ikke tilladelse til at opsige kontrakter."
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:825
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
-msgstr ""
+msgstr "Du kan ikke udsætte en faktureret kontraktlinje mindst én gang."
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:583
@@ -2014,6 +2062,8 @@ msgid ""
 "You can't have the end date before the date of last invoice for the contract "
 "line '%s'"
 msgstr ""
+"Du kan ikke have slutdatoen før datoen for sidste faktura for kontraktlinjen "
+"'%s'"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:616
@@ -2022,6 +2072,8 @@ msgid ""
 "You can't have the next invoice date before the date of last invoice for the "
 "contract line '%s'"
 msgstr ""
+"Du kan ikke have den næste fakturadato før datoen for den sidste faktura for "
+"kontraktlinjen '%s'"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:597
@@ -2030,12 +2082,14 @@ msgid ""
 "You can't have the start date after the date of last invoice for the "
 "contract line '%s'"
 msgstr ""
+"Du kan ikke have startdatoen efter datoen for sidste faktura for "
+"kontraktlinjen '%s'"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:632
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
-msgstr ""
+msgstr "Du skal angive en dato for næste faktura for kontraktlinjen '%s'"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -2045,4 +2099,4 @@ msgstr "f.eks. Kontrakt XYZ"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "on"
-msgstr ""
+msgstr "på"
