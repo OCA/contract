@@ -1,0 +1,159 @@
+<odoo>
+
+    <!-- Agreement Service Profile List View-->
+    <record id="agreement_serviceprofile_tree" model="ir.ui.view">
+        <field name="name">Agreement Service Profile Tree</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <tree string="Service Profiles" default_order='agreement_id'>
+                <field name="name" />
+                <field name="agreement_id" />
+                <field name="partner_id" />
+                <field name="product_id" />
+                <field name="product_variant_id" />
+                <field name="active" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Agreement Service Profile Form View -->
+    <record id="agreement_serviceprofile_form" model="ir.ui.view">
+        <field name="name">Agreement Service Profile Form</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <form string="Service Profile">
+                <header>
+                    <field
+                        name="stage_id"
+                        widget="statusbar"
+                        clickable="True"
+                        options="{'fold_field': 'fold'}"
+                        domain="[('stage_type', '=', 'serviceprofile')]"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <field name="active" invisible="1" />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="agreement_id" />
+                        </group>
+                        <group>
+                            <field
+                                name="product_id"
+                                context="{'default_is_serviceprofile': True, 'default_type': 'service'}"
+                                attrs="{'invisible': [('use_product_variant', '!=', False)], 'required': [('use_product_variant','=', False)]}"
+                            />
+                            <field
+                                name="product_variant_id"
+                                context="{'default_is_serviceprofile': True, 'default_type': 'service'}"
+                                attrs="{'invisible': [('use_product_variant', '=', False)], 'required': [('use_product_variant','!=', False)]}"
+                            />
+                            <field name="use_product_variant" />
+                        </group>
+                    </group>
+                    <group string="Notes">
+                            <field name="notes" nolabel="1" widget="html" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Agreement Service Profile Kanban View -->
+    <record id="agreement_serviceprofile_kanban" model="ir.ui.view">
+        <field name="name">Agreement Service Profile Kanban</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_content">
+                            <div>
+                                <strong class="o_kanban_record_title">
+                                    <field name="name" />
+                                </strong>
+                            </div>
+                            <div class="oe_clear" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Agreement Service Profile Search View -->
+    <record id="agreement_serviceprofile_search" model="ir.ui.view">
+        <field name="name">Agreement Service Profile Search</field>
+        <field name="model">agreement.serviceprofile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <filter
+                    string="Agreement"
+                    name="group_agreement"
+                    icon="terp-partner"
+                    context="{'group_by': 'agreement_id'}"
+                />
+                <filter
+                    string="Product"
+                    name="group_product"
+                    icon="terp-product"
+                    context="{'group_by': 'product_id'}"
+                />
+                <filter
+                    string="Product Variant"
+                    name="group_product"
+                    icon="terp-product"
+                    context="{'group_by': 'product_variant_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions opening views on models -->
+    <record id="agreement_serviceprofile_action" model="ir.actions.act_window">
+        <field name="name">Service Profiles</field>
+        <field name="res_model">agreement.serviceprofile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="agreement_serviceprofile_dashboard" model="ir.actions.act_window">
+        <field name="name">Service Profiles</field>
+        <field name="res_model">agreement.serviceprofile</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem
+        name="Service Profiles"
+        id="agreement_serviceprofiles"
+        parent="agreement_legal.agreement_masterdata"
+        sequence="50"
+        action="agreement_serviceprofile_action"
+    />
+
+    <menuitem
+        name="Service Profiles"
+        id="dashboard_serviceprofiles"
+        parent="agreement_legal.agreement_dashboard"
+        sequence="20"
+        action="agreement_serviceprofile_dashboard"
+    />
+
+</odoo>
