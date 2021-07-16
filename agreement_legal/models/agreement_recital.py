@@ -12,7 +12,7 @@ class AgreementRecital(models.Model):
     name = fields.Char(string="Name", required=True)
     title = fields.Char(
         string="Title",
-        help="The title is displayed on the PDF." "The name is not.",
+        help="The title is displayed on the PDF. The name is not.",
     )
     sequence = fields.Integer(string="Sequence", default=10)
     content = fields.Html(string="Content")
@@ -64,7 +64,6 @@ class AgreementRecital(models.Model):
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
-        self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
                 self.field_id.name, self.default_value or "''"
@@ -81,7 +80,7 @@ class AgreementRecital(models.Model):
                 self.default_value or "''",
             )
 
-    # compute the dynamic content for mako expression
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for recital in self:
@@ -90,5 +89,5 @@ class AgreementRecital(models.Model):
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
                 recital.content, "agreement.recital", [recital.id]
-            )
+            )[recital.id]
             recital.dynamic_content = content

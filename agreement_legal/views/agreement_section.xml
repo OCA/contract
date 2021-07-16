@@ -5,7 +5,7 @@
         <field name="name">Agreement Section List</field>
         <field name="model">agreement.section</field>
         <field name="arch" type="xml">
-            <tree string="Sections" default_order='agreement_id, sequence'>
+            <tree string="Sections" default_order="agreement_id, sequence">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="title" />
@@ -120,6 +120,37 @@
         <field name="name">Agreement Sections</field>
         <field name="res_model">agreement.section</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Agreement Sections List View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="partner_agreement_section_list_view2">
+        <field name="name">Agreement Section List2</field>
+        <field name="model">agreement.section</field>
+        <field name="inherit_id" ref="partner_agreement_section_list_view" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="default_order">sequence</attribute>
+            </tree>
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Agreement Sections Form View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="partner_agreement_section_form_view2">
+        <field name="name">Agreement Section Form2</field>
+        <field name="model">agreement.section</field>
+        <field name="inherit_id" ref="partner_agreement_section_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
     </record>
 
 </odoo>

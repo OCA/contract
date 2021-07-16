@@ -6,3 +6,4 @@ from . import test_agreement_clause
 from . import test_agreement_line
 from . import test_agreement_recital
 from . import test_agreement_section
+from . import test_create_agreement_wizard

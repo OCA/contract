@@ -1,6 +1,11 @@
 # Copyright (C) 2018 - TODAY, Pavlov Media
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import ast
+import json as simplejson
+
+from lxml import etree
+
 from odoo import _, api, fields, models
 
 
@@ -52,12 +57,6 @@ class Agreement(models.Model):
         tracking=True,
         help="Date the contract was signed by the Partner.",
     )
-    term = fields.Integer(
-        string="Term (Months)",
-        tracking=True,
-        help="Number of months this agreement/contract is in effect with the "
-        "partner.",
-    )
     expiration_notice = fields.Integer(
         string="Exp. Notice (Days)",
         tracking=True,
@@ -87,12 +86,6 @@ class Agreement(models.Model):
         copy=False,
         help="ID used for internal contract tracking.",
     )
-    increase_type_id = fields.Many2one(
-        "agreement.increasetype",
-        string="Increase Type",
-        tracking=True,
-        help="The amount that certain rates may increase.",
-    )
     termination_requested = fields.Date(
         string="Termination Requested Date",
         tracking=True,
@@ -107,7 +100,6 @@ class Agreement(models.Model):
     reviewed_user_id = fields.Many2one("res.users", string="Reviewed By", tracking=True)
     approved_date = fields.Date(string="Approved Date", tracking=True)
     approved_user_id = fields.Many2one("res.users", string="Approved By", tracking=True)
-    currency_id = fields.Many2one("res.currency", string="Currency")
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -192,7 +184,6 @@ class Agreement(models.Model):
         help="Select the sub-type of this agreement. Sub-Types are related to "
         "agreement types.",
     )
-    product_ids = fields.Many2many("product.template", string="Products & Services")
     assigned_user_id = fields.Many2one(
         "res.users",
         string="Assigned To",
@@ -219,12 +210,6 @@ class Agreement(models.Model):
         "agreement is an amendment to another agreement. This list will "
         "only show other agreements related to the same account.",
     )
-    renewal_type_id = fields.Many2one(
-        "agreement.renewaltype",
-        string="Renewal Type",
-        tracking=True,
-        help="Describes what happens after the contract expires.",
-    )
     recital_ids = fields.One2many(
         "agreement.recital", "agreement_id", string="Recitals", copy=True
     )
@@ -241,6 +226,7 @@ class Agreement(models.Model):
         string="Previous Versions",
         copy=False,
         domain=[("active", "=", False)],
+        context={"active_test": False},
     )
     child_agreements_ids = fields.One2many(
         "agreement",
@@ -294,19 +280,37 @@ class Agreement(models.Model):
         help="""Final placeholder expression, to be copy-pasted in the desired
          template field.""",
     )
+    created_by = fields.Many2one(
+        "res.users",
+        string="Created By",
+        copy=False,
+        default=lambda self: self.env.user,
+        help="User which create the agreement.",
+    )
+    date_created = fields.Datetime(
+        string="Created On",
+        copy=False,
+        default=lambda self: fields.Datetime.now(),
+        help="Date which create the agreement.",
+    )
+    template_id = fields.Many2one(
+        "agreement",
+        string="Template",
+        domain=[("is_template", "=", True)],
+    )
+    readonly = fields.Boolean(
+        related="stage_id.readonly",
+    )
 
-    # compute the dynamic content for mako expression
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_description(self):
         MailTemplates = self.env["mail.template"]
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
             description = MailTemplates.with_context(lang=lang)._render_template(
                 agreement.description, "agreement", [agreement.id]
-            )
-            des = ""
-            for i in description:
-                des += description[i]
-            agreement.dynamic_description = des
+            )[agreement.id]
+            agreement.dynamic_description = description
 
     def _compute_dynamic_parties(self):
         MailTemplates = self.env["mail.template"]
@@ -314,7 +318,7 @@ class Agreement(models.Model):
             lang = agreement.partner_id.lang or "en_US"
             parties = MailTemplates.with_context(lang=lang)._render_template(
                 agreement.parties, "agreement", [agreement.id]
-            )
+            )[agreement.id]
             agreement.dynamic_parties = parties
 
     def _compute_dynamic_special_terms(self):
@@ -323,14 +327,13 @@ class Agreement(models.Model):
             lang = agreement.partner_id.lang or "en_US"
             special_terms = MailTemplates.with_context(lang=lang)._render_template(
                 agreement.special_terms, "agreement", [agreement.id]
-            )
+            )[agreement.id]
             agreement.dynamic_special_terms = special_terms
 
     @api.onchange("field_id", "sub_model_object_field_id", "default_value")
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
-        self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
                 self.field_id.name, self.default_value or "''"
@@ -360,9 +363,34 @@ class Agreement(models.Model):
         string="Stage",
         group_expand="_read_group_stage_ids",
         help="Select the current stage of the agreement.",
+        default=lambda self: self._get_default_stage_id(),
         tracking=True,
         index=True,
+        copy=False,
     )
+
+    @api.model
+    def _get_default_stage_id(self):
+        try:
+            stage_id = self.env.ref("agreement_legal.agreement_stage_new").id
+        except ValueError:
+            stage_id = False
+        return stage_id
+
+    def _get_old_version_default_vals(self):
+        self.ensure_one()
+        default_vals = {
+            "name": "{} - OLD VERSION".format(self.name),
+            "active": False,
+            "parent_agreement_id": self.id,
+            "version": self.version,
+            "revision": self.revision,
+            "created_by": self.created_by.id,
+            "date_created": self.date_created,
+            "code": "{}-V{}".format(self.code, str(self.version)),
+            "stage_id": self.stage_id.id,
+        }
+        return default_vals
 
     # Create New Version Button
     def create_new_version(self):
@@ -370,19 +398,20 @@ class Agreement(models.Model):
             if not rec.state == "draft":
                 # Make sure status is draft
                 rec.state = "draft"
-            default_vals = {
-                "name": "{} - OLD VERSION".format(rec.name),
-                "active": False,
-                "parent_agreement_id": rec.id,
-                "version": rec.version,
-                "code": rec.code + "-V" + str(rec.version),
-            }
             # Make a current copy and mark it as old
-            rec.copy(default=default_vals)
-            # Increment the Version
-            rec.version = rec.version + 1
+            rec.copy(default=rec._get_old_version_default_vals())
+            # Update version, created by and created on
+            rec.update(
+                {
+                    "version": rec.version + 1,
+                    "created_by": self.env.user.id,
+                    "date_created": fields.Datetime.now(),
+                }
+            )
+            # Reset revision to 0 since it's a new version
+            rec.revision = 0
 
-    def create_new_agreement(self):
+    def _get_new_agreement_default_vals(self):
         self.ensure_one()
         default_vals = {
             "name": "New",
@@ -390,10 +419,13 @@ class Agreement(models.Model):
             "version": 1,
             "revision": 0,
             "state": "draft",
-            "stage_id": self.env.ref("agreement_legal.agreement_stage_new").id,
+            "is_template": False,
         }
-        res = self.copy(default=default_vals)
-        res.sections_ids.mapped("clauses_ids").write({"agreement_id": res.id})
+        return default_vals
+
+    def create_new_agreement(self):
+        self.ensure_one()
+        res = self.copy(default=self._get_new_agreement_default_vals())
         return {
             "res_model": "agreement",
             "type": "ir.actions.act_window",
@@ -407,10 +439,72 @@ class Agreement(models.Model):
         if vals.get("code", _("New")) == _("New"):
             vals["code"] = self.env["ir.sequence"].next_by_code("agreement") or _("New")
         if not vals.get("stage_id"):
-            vals["stage_id"] = self.env.ref("agreement_legal.agreement_stage_new").id
+            vals["stage_id"] = self._get_default_stage_id()
         return super().create(vals)
 
     # Increments the revision on each save action
     def write(self, vals):
-        vals["revision"] = self.revision + 1
-        return super().write(vals)
+        res = True
+        for rec in self:
+            has_revision = False
+            if "revision" not in vals:
+                vals["revision"] = rec.revision + 1
+                has_revision = True
+            res = super(Agreement, rec).write(vals)
+            if has_revision:
+                vals.pop("revision")
+        return res
+
+    def copy(self, default=None):
+        """Assign a value for code is New"""
+        default = dict(default or {})
+        if not default.get("code", False):
+            default.setdefault("code", _("New"))
+        res = super().copy(default)
+        res.sections_ids.mapped("clauses_ids").write({"agreement_id": res.id})
+        return res
+
+    def _exclude_readonly_field(self):
+        return ["stage_id"]
+
+    @api.model
+    def fields_view_get(
+        self, view_id=None, view_type=False, toolbar=False, submenu=False
+    ):
+        res = super().fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
+        )
+        # Readonly fields
+        doc = etree.XML(res["arch"])
+        if view_type == "form":
+            for node in doc.xpath("//field"):
+                if node.attrib.get("name") in self._exclude_readonly_field():
+                    continue
+                attrs = ast.literal_eval(node.attrib.get("attrs", "{}"))
+                if attrs:
+                    if attrs.get("readonly"):
+                        attrs["readonly"] = ["|", ("readonly", "=", True)] + attrs[
+                            "readonly"
+                        ]
+                    else:
+                        attrs["readonly"] = [("readonly", "=", True)]
+                else:
+                    attrs["readonly"] = [("readonly", "=", True)]
+                node.set("attrs", simplejson.dumps(attrs))
+                modifiers = ast.literal_eval(
+                    node.attrib.get("modifiers", "{}")
+                    .replace("true", "True")
+                    .replace("false", "False")
+                )
+                readonly = modifiers.get("readonly")
+                invisible = modifiers.get("invisible")
+                required = modifiers.get("required")
+                if isinstance(readonly, bool) and readonly:
+                    attrs["readonly"] = readonly
+                if isinstance(invisible, bool) and invisible:
+                    attrs["invisible"] = invisible
+                if isinstance(required, bool) and required:
+                    attrs["required"] = required
+                node.set("modifiers", simplejson.dumps(attrs))
+            res["arch"] = etree.tostring(doc)
+        return res

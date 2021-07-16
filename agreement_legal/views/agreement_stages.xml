@@ -5,10 +5,11 @@
         <field name="name">Agreement Stage List</field>
         <field name="model">agreement.stage</field>
         <field name="arch" type="xml">
-            <tree default_order='sequence, name'>
+            <tree default_order="sequence, name">
                 <field name="sequence" widget="handle" />
-                <field name="name" string="Stage Name" />
+                <field name="name" />
                 <field name="stage_type" />
+                <field name="active" widget="boolean_toggle" />
             </tree>
         </field>
     </record>
@@ -20,17 +21,49 @@
         <field name="arch" type="xml">
             <form string="Agreements Stage Form">
                 <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Stage Name" />
-                        <h1><field name="name" string="Stage Name" /></h1>
+                        <label for="name" class="oe_edit_only" />
+                        <h1><field name="name" /></h1>
                     </div>
                     <group>
                         <field name="sequence" />
                         <field name="stage_type" />
                         <field name="fold" />
+                        <field name="readonly" />
+                        <field name="active" invisible="1" />
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!-- Agreement Stage Search View -->
+    <record model="ir.ui.view" id="partner_agreement_stage_search_view">
+        <field name="name">Agreement Stage Search</field>
+        <field name="model">agreement.stage</field>
+        <field name="arch" type="xml">
+            <search string="Agreements Stage Search">
+                <field name="name" />
+                <separator />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group name="groupby">
+                    <filter
+                        name="type_groupby"
+                        string="Type"
+                        context="{'group_by': 'stage_type'}"
+                    />
+                </group>
+            </search>
         </field>
     </record>
 

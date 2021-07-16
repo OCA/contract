@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-# Main Agreement Section Records Model
+# Main Stage on the Agreement
 class AgreementStage(models.Model):
     _name = "agreement.stage"
     _description = "Agreement Stages"
@@ -12,7 +12,6 @@ class AgreementStage(models.Model):
 
     # General
     name = fields.Char(string="Stage Name", required=True)
-    description = fields.Text(string="Description", required=False)
     sequence = fields.Integer(string="Sequence", default="1", required=False)
     fold = fields.Boolean(
         string="Is Folded",
@@ -21,4 +20,10 @@ class AgreementStage(models.Model):
     )
     stage_type = fields.Selection(
         [("agreement", "Agreement")], string="Type", required=True
+    )
+    active = fields.Boolean(string="Active", default=True)
+    readonly = fields.Boolean(
+        string="Readonly",
+        default=False,
+        help="The agreement can not edit if set Readonly = True.",
     )

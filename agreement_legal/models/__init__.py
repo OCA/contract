@@ -12,7 +12,4 @@ from . import (
     agreement_type,
     agreement_subtype,
     res_partner,
-    product_template,
-    agreement_renewaltype,
-    agreement_increasetype,
 )

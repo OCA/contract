@@ -5,7 +5,7 @@
         <field name="name">Agreement Clause List</field>
         <field name="model">agreement.clause</field>
         <field name="arch" type="xml">
-            <tree string="Clauses" default_order='agreement_id, sequence'>
+            <tree string="Clauses" default_order="agreement_id, sequence">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="title" />
@@ -111,6 +111,45 @@
         <field name="name">Clauses</field>
         <field name="res_model">agreement.clause</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Agreement Clause List View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="partner_agreement_clause_list_view2">
+        <field name="name">Agreement Clause List2</field>
+        <field name="model">agreement.clause</field>
+        <field name="inherit_id" ref="partner_agreement_clause_list_view" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="default_order">sequence</attribute>
+            </tree>
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Agreement Clause Form View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="partner_agreement_clause_form_view2">
+        <field name="name">Agreement Clause Form2</field>
+        <field name="model">agreement.clause</field>
+        <field name="inherit_id" ref="partner_agreement_clause_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="agreement_id" position="after">
+                <field name="temp_agreement_id" invisible="1" />
+            </field>
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="section_id" position="attributes">
+                <attribute
+                    name="domain"
+                >[('agreement_id', '=', temp_agreement_id)]</attribute>
+            </field>
+        </field>
     </record>
 
 </odoo>
