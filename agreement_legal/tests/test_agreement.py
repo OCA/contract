@@ -2,6 +2,8 @@
 
 from datetime import timedelta
 
+from lxml import etree
+
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
@@ -87,8 +89,7 @@ class TestAgreement(TransactionCase):
         agreement_01 = self.test_agreement
         agreement_01.parties = "${object.name}"
         self.assertEqual(
-            agreement_01.dynamic_parties,
-            "<p>{" + str(agreement_01.id) + ": '</p><p>TestAgreement</p>'}",
+            agreement_01.dynamic_parties, "<p>TestAgreement</p>",
         )
 
     # TEST 07: Test Special Terms Dynamic Field
@@ -96,8 +97,7 @@ class TestAgreement(TransactionCase):
         agreement_01 = self.test_agreement
         agreement_01.special_terms = "${object.name}"
         self.assertEqual(
-            agreement_01.dynamic_special_terms,
-            "{" + str(agreement_01.id) + ": 'TestAgreement'}",
+            agreement_01.dynamic_special_terms, "TestAgreement",
         )
 
     # TEST 02: Check Read Stages
@@ -108,6 +108,18 @@ class TestAgreement(TransactionCase):
             self.env["agreement.stage"].search(
                 [("stage_type", "=", "agreement")], order="id",
             ),
+        )
+
+    # Test fields_view_get
+    def test_agreement_fields_view_get(self):
+        res = self.env["agreement"].fields_view_get(
+            view_id=self.ref("agreement_legal.partner_agreement_form_view"),
+            view_type="form",
+        )
+        doc = etree.XML(res["arch"])
+        field = doc.xpath("//field[@name='partner_contact_id']")
+        self.assertEqual(
+            field[0].get("modifiers", ""), '{"readonly": [["readonly", "=", true]]}'
         )
 
     def test_action_create_new_version(self):

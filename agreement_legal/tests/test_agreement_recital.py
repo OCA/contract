@@ -64,6 +64,5 @@ class TestAgreementRectical(TransactionCase):
         recital_01 = self.test_recital
         recital_01.content = "${object.name}"
         self.assertEqual(
-            recital_01.dynamic_content,
-            "<p>{" + str(recital_01.id) + ": '</p><p>TestRecital</p>'}",
+            recital_01.dynamic_content, "<p>TestRecital</p>",
         )

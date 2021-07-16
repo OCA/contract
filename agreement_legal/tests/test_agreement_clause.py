@@ -64,6 +64,5 @@ class TestAgreementClauses(TransactionCase):
         clause_01 = self.test_clause
         clause_01.content = "${object.name}"
         self.assertEqual(
-            clause_01.dynamic_content,
-            "<p>{" + str(clause_01.id) + ": '</p><p>TestClause</p>'}",
+            clause_01.dynamic_content, "<p>TestClause</p>",
         )

@@ -64,6 +64,5 @@ class TestAgreementSection(TransactionCase):
         section_01 = self.test_section
         section_01.content = "${object.name}"
         self.assertEqual(
-            section_01.dynamic_content,
-            "<p>{" + str(section_01.id) + ": '</p><p>TestSection</p>'}",
+            section_01.dynamic_content, "<p>TestSection</p>",
         )

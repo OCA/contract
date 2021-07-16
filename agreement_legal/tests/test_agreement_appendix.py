@@ -64,6 +64,5 @@ class TestAgreementAppendices(TransactionCase):
         appendix_01 = self.test_appendices
         appendix_01.content = "${object.name}"
         self.assertEqual(
-            appendix_01.dynamic_content,
-            "<p>{" + str(appendix_01.id) + ": '</p><p>TestAppendices</p>'}",
+            appendix_01.dynamic_content, "<p>TestAppendices</p>",
         )
