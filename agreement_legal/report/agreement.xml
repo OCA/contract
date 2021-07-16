@@ -3,17 +3,21 @@
     <record id="partner_agreement_contract_document" model="ir.actions.report">
         <field name="name">Agreement</field>
         <field name="model">agreement</field>
+        <field name="binding_model_id" ref="model_agreement" />
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">agreement_legal.report_agreement_document</field>
         <field name="report_file">agreement_legal.report_agreement_document</field>
+        <field name="binding_view_types">list,form</field>
     </record>
 
     <record id="partner_agreement_contract_document_preview" model="ir.actions.report">
         <field name="name">Agreement Preview</field>
         <field name="model">agreement</field>
+        <field name="binding_model_id" ref="model_agreement" />
         <field name="report_type">qweb-html</field>
         <field name="report_name">agreement_legal.report_agreement_document</field>
         <field name="report_file">agreement_legal.report_agreement_document</field>
+        <field name="binding_view_types">list,form</field>
     </record>
 
     <template id="report_agreement_document">

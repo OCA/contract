@@ -5,7 +5,7 @@
         <field name="name">Agreement Recital Tree</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <tree string="Recitals" default_order='agreement_id, sequence'>
+            <tree string="Recitals" default_order="agreement_id, sequence">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="title" />
@@ -101,6 +101,37 @@
         <field name="name">Recitals</field>
         <field name="res_model">agreement.recital</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Agreement Recital List View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="agreement_recital_tree2">
+        <field name="name">Agreement Recital Tree2</field>
+        <field name="model">agreement.recital</field>
+        <field name="inherit_id" ref="agreement_recital_tree" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="default_order">sequence</attribute>
+            </tree>
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Agreement Recital Form View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="agreement_recital_form2">
+        <field name="name">Agreement Recital Form2</field>
+        <field name="model">agreement.recital</field>
+        <field name="inherit_id" ref="agreement_recital_form" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
     </record>
 
 </odoo>
