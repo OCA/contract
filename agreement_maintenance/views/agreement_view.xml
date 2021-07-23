@@ -3,8 +3,10 @@
      # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
 
-    <record model="ir.actions.act_window"
-            id="action_maintenance_request_agreement_specific">
+    <record
+        model="ir.actions.act_window"
+        id="action_maintenance_request_agreement_specific"
+    >
         <field name="name">Maintenance Requests</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">maintenance.request</field>
@@ -21,16 +23,18 @@
     <record id="partner_agreement_form_view" model="ir.ui.view">
         <field name="name">agreement.form.maintenance.request</field>
         <field name="model">agreement</field>
-        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view"/>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(action_maintenance_request_agreement_specific)d"
-                        type="action"
-                        class="oe_stat_button" icon="fa-wrench">
+                <button
+                    name="%(action_maintenance_request_agreement_specific)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-wrench"
+                >
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="mr_count" widget="statinfo"
-                                   nolabel="1"/>
+                            <field name="mr_count" widget="statinfo" nolabel="1" />
                         </span>
                         <span class="o_stat_text">Maintenance Requests</span>
                     </div>

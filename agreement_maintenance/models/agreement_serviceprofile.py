@@ -7,5 +7,4 @@ from odoo import fields, models
 class AgreementServiceProfile(models.Model):
     _inherit = "agreement.serviceprofile"
 
-    equipment_id = fields.Many2one('maintenance.equipment',
-                                   string='Equipment')
+    equipment_id = fields.Many2one("maintenance.equipment", string="Equipment")
