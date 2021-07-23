@@ -591,11 +591,81 @@
             </search>
         </field>
     </record>
+    <record id="view_contract_contract_calendar" model="ir.ui.view">
+        <field name="name">contract.contract.calendar</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <calendar string="Contracts" date_start="date_start" color="is_terminated">
+                <field name="name" />
+                <field name="partner_id" />
+            </calendar>
+        </field>
+    </record>
+    <record id="view_contract_contract_graph" model="ir.ui.view">
+        <field name="name">contract.contract.graph</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <graph string="Contracts">
+                <field name="date_start" />
+            </graph>
+        </field>
+    </record>
+    <record id="view_contract_contract_pivot" model="ir.ui.view">
+        <field name="name">contract.contract.pivot</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <pivot string="Contracts">
+                <field name="date_start" type="row" />
+            </pivot>
+        </field>
+    </record>
+    <record id="view_contract_contract_kanban" model="ir.ui.view">
+        <field name="name">contract.contract.kanban</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="date_end" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title">
+                                        <span>
+                                            <t t-esc="record.partner_id.value" />
+                                        </span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left text-muted">
+                                    <span>
+                                        <t t-esc="record.name.value" />
+                                        <t t-esc="record.date_end.value" />
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <div class="float-right">
+                                        <field
+                                            name="activity_ids"
+                                            widget="kanban_activity"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <!--ACTION customer contracts-->
     <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">
             {'is_contract':1,
@@ -631,7 +701,7 @@
     <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">
             {'is_contract':1,
