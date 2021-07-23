@@ -7,6 +7,5 @@ from odoo import fields, models
 class Repair(models.Model):
     _inherit = "repair.order"
 
-    agreement_id = fields.Many2one('agreement', 'Agreement')
-    serviceprofile_id = fields.Many2one('agreement.serviceprofile',
-                                        'Service Profile')
+    agreement_id = fields.Many2one("agreement", "Agreement")
+    serviceprofile_id = fields.Many2one("agreement.serviceprofile", "Service Profile")
