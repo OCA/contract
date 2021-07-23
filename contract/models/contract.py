@@ -70,6 +70,9 @@ class ContractContract(models.Model):
     date_end = fields.Date(
         compute='_compute_date_end', string='Date End', store=True
     )
+    date_start = fields.Date(
+        compute='_compute_date_end', string='Date Start', store=True
+    )
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term', string='Payment Terms', index=True
     )
@@ -299,6 +302,10 @@ class ContractContract(models.Model):
             date_end = contract.contract_line_ids.mapped('date_end')
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
+            date_start = False
+            if contract.contract_line_ids:
+                date_start = min(contract.contract_line_ids.mapped('date_start'))
+            contract.date_start = date_start
 
     @api.depends(
         'contract_line_ids.recurring_next_date',
