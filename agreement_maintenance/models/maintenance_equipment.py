@@ -5,8 +5,9 @@ from odoo import fields, models
 
 
 class MaintenanceEquipment(models.Model):
-    _inherit = 'maintenance.equipment'
+    _inherit = "maintenance.equipment"
 
-    agreement_id = fields.Many2one('agreement', string='Agreement')
+    agreement_id = fields.Many2one("agreement", string="Agreement")
     serviceprofile_ids = fields.One2many(
-        'agreement.serviceprofile', 'equipment_id', string='Service Profiles')
+        "agreement.serviceprofile", "equipment_id", string="Service Profiles"
+    )
