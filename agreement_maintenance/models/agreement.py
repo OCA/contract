@@ -1,7 +1,7 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2021 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class Agreement(models.Model):
@@ -9,7 +9,6 @@ class Agreement(models.Model):
 
     mr_count = fields.Integer("# Maintenance Requests", compute="_compute_mr_count")
 
-    @api.multi
     def _compute_mr_count(self):
         for ag_rec in self:
             ag_rec.mr_count = self.env["maintenance.request"].search_count(
