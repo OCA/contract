@@ -14,6 +14,7 @@ setuptools.setup(
         'odoo14-addon-agreement_serviceprofile',
         'odoo14-addon-agreement_stock',
         'odoo14-addon-contract',
+        'odoo14-addon-contract_mandate',
         'odoo14-addon-contract_payment_mode',
         'odoo14-addon-contract_sale',
     ],
