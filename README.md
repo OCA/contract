@@ -25,6 +25,7 @@ addon | version | summary
 [agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.0.0 | Adds an Agreement Service Profile object
 [agreement_stock](agreement_stock/) | 14.0.1.0.0 | Link picking to an agreement
 [contract](contract/) | 14.0.1.2.1 | Recurring - Contracts Management
+[contract_mandate](contract_mandate/) | 14.0.1.0.0 | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 14.0.1.0.0 | Contract from Sale
 
