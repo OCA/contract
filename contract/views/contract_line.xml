@@ -173,4 +173,15 @@
         </field>
     </record>
 
+    <!--Show contract lines for contracts-->
+    <act_window
+        name="Contract lines"
+        id="action_contract_contract_lines"
+        view_mode="tree,form,pivot"
+        res_model="contract.line"
+        src_model="contract.contract"
+        domain="[('contract_id', 'in', active_ids)]"
+        multi="True"
+    />
+
 </odoo>
