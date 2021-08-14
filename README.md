@@ -17,17 +17,17 @@ TODO: add repo description.
 
 Available addons
 ----------------
-addon | version | summary
---- | --- | ---
-[agreement](agreement/) | 14.0.1.0.0 | Adds an agreement object
-[agreement_legal](agreement_legal/) | 14.0.1.0.1 | Manage Agreements, LOI and Contracts
-[agreement_sale](agreement_sale/) | 14.0.1.0.0 | Agreement on sales
-[agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.0.0 | Adds an Agreement Service Profile object
-[agreement_stock](agreement_stock/) | 14.0.1.0.0 | Link picking to an agreement
-[contract](contract/) | 14.0.1.2.1 | Recurring - Contracts Management
-[contract_mandate](contract_mandate/) | 14.0.1.0.0 | Mandate in contracts and their invoices
-[contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 | Payment mode in contracts and their invoices
-[contract_sale](contract_sale/) | 14.0.1.0.0 | Contract from Sale
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[agreement](agreement/) | 14.0.1.0.0 | [![ygol](https://github.com/ygol.png?size=30px)](https://github.com/ygol) [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) | Adds an agreement object
+[agreement_legal](agreement_legal/) | 14.0.1.0.1 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) [![ygol](https://github.com/ygol.png?size=30px)](https://github.com/ygol) | Manage Agreements, LOI and Contracts
+[agreement_sale](agreement_sale/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
+[agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
+[agreement_stock](agreement_stock/) | 14.0.1.0.0 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
+[contract](contract/) | 14.0.1.2.1 |  | Recurring - Contracts Management
+[contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
+[contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
+[contract_sale](contract_sale/) | 14.0.1.0.0 |  | Contract from Sale
 
 [//]: # (end addons)
 
