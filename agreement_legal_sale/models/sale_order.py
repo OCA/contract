@@ -69,7 +69,6 @@ class SaleOrder(models.Model):
         # we create the Agreement.
         # To work around that, we check if that is the case,
         # and make sure the SO Analytic Account is copied to the Agreement.
-        res = super(SaleOrder, self).action_confirm()
         for order in self:
             agreement = order.agreement_id
             if (
@@ -78,4 +77,4 @@ class SaleOrder(models.Model):
                 and not agreement.analytic_account_id
             ):
                 agreement.analytic_account_id = order.analytic_account_id
-        return res
+        return super(SaleOrder, self).action_confirm()

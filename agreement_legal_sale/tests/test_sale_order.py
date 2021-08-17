@@ -84,6 +84,26 @@ class TestSaleOrder(TransactionCase):
                 ],
             }
         )
+        self.test_agreement = self.env["agreement"].create(
+            {
+                "name": "TestAgreement A",
+                "description": "Test Agreement A",
+                "special_terms": "TestAgreement A",
+                "start_date": fields.Date.today(),
+                "end_date": fields.Date.today() + timedelta(days=365),
+            }
+        )
+        self.test_sale_order_account_analytic_account = self.env["sale.order"].create(
+            {
+                "partner_id": self.test_customer.id,
+                "agreement_template_id": self.test_agreement_template_no_analytic_account_id.id,
+                "date_order": fields.Date.today(),
+                "agreement_id": self.test_agreement.id,
+                "order_line": [
+                    (0, 0, {"product_id": self.test_product.id, "product_uom_qty": 1.0})
+                ],
+            }
+        )
 
     # TEST 01: Test _action_confirm method
     def test_action_confirm(self):
@@ -105,3 +125,8 @@ class TestSaleOrder(TransactionCase):
             agreement.sale_id.id,
             is_serviceprofile_so.id,
         )
+        # Test 03: Test action_confirm method
+        self.test_sale_order_account_analytic_account.write(
+            {"analytic_account_id": self.test_account_analytic_account.id}
+        )
+        self.test_sale_order_account_analytic_account.action_confirm()
