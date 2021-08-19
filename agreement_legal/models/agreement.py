@@ -356,12 +356,13 @@ class Agreement(models.Model):
     )
 
     # Create New Version Button
-    def create_new_version(self, vals):
+    def create_new_version(self):
         for rec in self:
             if not rec.state == "draft":
                 # Make sure status is draft
                 rec.state = "draft"
             default_vals = {
+                "code": "{} - (v{})".format(rec.code, rec.version),
                 "name": "{} - OLD VERSION".format(rec.name),
                 "active": False,
                 "parent_agreement_id": rec.id,
@@ -371,8 +372,7 @@ class Agreement(models.Model):
             # Increment the Version
             rec.version = rec.version + 1
         # Reset revision to 0 since it's a new version
-        vals["revision"] = 0
-        return super(Agreement, self).write(vals)
+        self.write(dict(revision=0))
 
     def create_new_agreement(self):
         default_vals = {
