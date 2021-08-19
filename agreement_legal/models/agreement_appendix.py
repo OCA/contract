@@ -65,7 +65,6 @@ class AgreementAppendix(models.Model):
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
-        self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
                 self.field_id.name,
@@ -83,7 +82,7 @@ class AgreementAppendix(models.Model):
                 self.default_value or "''",
             )
 
-    # compute the dynamic content for mako expression
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for appendix in self:
@@ -94,5 +93,5 @@ class AgreementAppendix(models.Model):
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
                 appendix.content, "agreement.appendix", [appendix.id]
-            )
+            )[appendix.id]
             appendix.dynamic_content = content

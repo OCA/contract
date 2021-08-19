@@ -15,6 +15,9 @@ class AgreementClause(models.Model):
     )
     sequence = fields.Integer(string="Sequence")
     agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
+    temp_agreement_id = fields.Many2one(
+        "agreement", string="Temp Agreement", help="This field help to filter section."
+    )
     section_id = fields.Many2one(
         "agreement.section", string="Section", ondelete="cascade"
     )
@@ -66,7 +69,6 @@ class AgreementClause(models.Model):
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
-        self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
                 self.field_id.name,
@@ -84,7 +86,7 @@ class AgreementClause(models.Model):
                 self.default_value or "''",
             )
 
-    # compute the dynamic content for mako expression
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for clause in self:
@@ -93,5 +95,5 @@ class AgreementClause(models.Model):
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
                 clause.content, "agreement.clause", [clause.id]
-            )
+            )[clause.id]
             clause.dynamic_content = content
