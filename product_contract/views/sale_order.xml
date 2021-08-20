@@ -84,6 +84,18 @@
                                attrs="{'required':[('is_auto_renew', '=', True)]}"/>
                     </div>
                 </group>
+                <group
+                    attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                    <label for="termination_notice_interval"/>
+                    <div>
+                        <field name="termination_notice_interval"
+                               class="oe_inline" nolabel="1"
+                               attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                        <field name="termination_notice_rule_type"
+                               class="oe_inline" nolabel="1"
+                               attrs="{'required':[('is_auto_renew', '=', True)]}"/>
+                    </div>
+                </group>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']"
                    position="after">

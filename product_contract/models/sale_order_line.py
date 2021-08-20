@@ -68,6 +68,14 @@ class SaleOrderLine(models.Model):
         string='Renewal type',
         help="Specify Interval for automatic renewal.",
     )
+    termination_notice_interval = fields.Integer(
+        default=1, string='Termination Notice Before'
+    )
+    termination_notice_rule_type = fields.Selection(
+        [('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)')],
+        default='monthly',
+        string='Termination Notice type',
+    )
 
     @api.constrains('contract_id')
     def check_contact_is_not_terminated(self):
@@ -128,6 +136,12 @@ class SaleOrderLine(models.Model):
                     rec.auto_renew_rule_type = (
                         rec.product_id.auto_renew_rule_type
                     )
+                    rec.termination_notice_interval = (
+                        rec.product_id.termination_notice_interval
+                    )
+                    rec.termination_notice_rule_type = (
+                        rec.product_id.termination_notice_rule_type
+                    )
 
     @api.onchange('date_start', 'product_uom_qty', 'recurring_rule_type')
     def onchange_date_start(self):
@@ -169,12 +183,6 @@ class SaleOrderLine(models.Model):
             self.recurring_rule_type,
             1,
         )
-        termination_notice_interval = (
-            self.product_id.termination_notice_interval
-        )
-        termination_notice_rule_type = (
-            self.product_id.termination_notice_rule_type
-        )
         return {
             'sequence': self.sequence,
             'product_id': self.product_id.id,
@@ -192,8 +200,8 @@ class SaleOrderLine(models.Model):
             'is_auto_renew': self.is_auto_renew,
             'auto_renew_interval': self.auto_renew_interval,
             'auto_renew_rule_type': self.auto_renew_rule_type,
-            'termination_notice_interval': termination_notice_interval,
-            'termination_notice_rule_type': termination_notice_rule_type,
+            'termination_notice_interval': self.termination_notice_interval,
+            'termination_notice_rule_type': self.termination_notice_rule_type,
             'contract_id': contract.id,
             'sale_order_line_id': self.id,
             'predecessor_contract_line_id': predecessor_contract_line_id,
