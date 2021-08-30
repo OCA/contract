@@ -24,7 +24,6 @@ class ResPartner(models.Model):
     )
 
     def _get_partner_contract_domain(self):
-        self.ensure_one()
         return [("partner_id", "child_of", self.ids)]
 
     def _compute_contract_count(self):
