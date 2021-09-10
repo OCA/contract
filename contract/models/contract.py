@@ -441,7 +441,7 @@ class ContractContract(models.Model):
                 "invoice_date": date_invoice,
                 "journal_id": journal.id,
                 "invoice_origin": self.name,
-                "user_id": self.user_id.id,
+                "invoice_user_id": self.user_id.id,
             }
         )
         return invoice_vals, move_form
