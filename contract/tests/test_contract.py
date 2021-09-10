@@ -299,6 +299,18 @@ class TestContract(TestContractBase):
         self.assertTrue(invoice_daily)
         self.assertTrue(self.contract.partner_id in invoice_daily.message_partner_ids)
 
+    def test_contract_invoice_salesperson(self):
+        self.acct_line.recurring_next_date = "2018-02-23"
+        self.acct_line.recurring_rule_type = "daily"
+        new_salesperson = self.env["res.users"].create(
+            {"name": "Some Salesperson", "login": "salesperson_test"}
+        )
+        self.contract.user_id = new_salesperson
+        self.contract._recurring_create_invoice()
+        invoice_daily = self.contract._get_related_invoices()
+        self.assertTrue(invoice_daily)
+        self.assertEquals(self.contract.user_id, invoice_daily.user_id)
+
     def test_contract_weekly_post_paid(self):
         recurring_next_date = to_date("2018-03-01")
         last_date_invoiced = to_date("2018-02-21")
