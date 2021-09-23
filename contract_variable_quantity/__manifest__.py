@@ -9,7 +9,7 @@
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa," "Odoo Community Association (OCA)",
-    "website": "https://www.tecnativa.com",
+    "website": "https://github.com/OCA/contract",
     "depends": ["contract"],
     "data": [
         "security/ir.model.access.csv",
