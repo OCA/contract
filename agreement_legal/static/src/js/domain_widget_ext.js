@@ -39,8 +39,10 @@ odoo.define("agreement_legal.domain_widget_ext", function(require) {
 
             // Create the domain selector or change the value of the current
             // one...
-            /* eslint-disable no-negated-condition */
-            if (!this.domainSelector) {
+            var def = null;
+            if (this.domainSelector) {
+                def = this.domainSelector.setDomain(value);
+            } else {
                 this.domainSelector = new DomainSelector(
                     this,
                     this._domainModel,
@@ -52,12 +54,9 @@ odoo.define("agreement_legal.domain_widget_ext", function(require) {
                         partialUse: this.partialUse || false,
                     }
                 );
-                const def = this.domainSelector.prependTo(this.$el);
-            } else {
-                const def = this.domainSelector.setDomain(value);
+                def = this.domainSelector.prependTo(this.$el);
             }
             // ... then replace the other content (matched records, etc)
-            // eslint-disable-next-line no-undef
             return def.then(this._replaceContent.bind(this));
         },
         /**
