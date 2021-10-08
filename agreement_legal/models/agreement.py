@@ -256,7 +256,7 @@ class Agreement(models.Model):
         inverse_name="parent_agreement_id",
         string="Previous Versions",
         copy=False,
-        domain=[("active", "=", False)],
+        context={"active_test": False},
     )
     child_agreements_ids = fields.One2many(
         comodel_name="agreement",
@@ -356,7 +356,7 @@ class Agreement(models.Model):
     )
 
     # Create New Version Button
-    def create_new_version(self, vals):
+    def create_new_version(self):
         for rec in self:
             if not rec.state == "draft":
                 # Make sure status is draft
@@ -368,11 +368,7 @@ class Agreement(models.Model):
             }
             # Make a current copy and mark it as old
             rec.copy(default=default_vals)
-            # Increment the Version
-            rec.version = rec.version + 1
-        # Reset revision to 0 since it's a new version
-        vals["revision"] = 0
-        return super(Agreement, self).write(vals)
+        return super().write({"revision": 0})
 
     def create_new_agreement(self):
         default_vals = {
