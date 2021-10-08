@@ -225,7 +225,6 @@ class Agreement(models.Model):
         "parent_agreement_id",
         string="Previous Versions",
         copy=False,
-        domain=[("active", "=", False)],
         context={"active_test": False},
     )
     child_agreements_ids = fields.One2many(
@@ -408,8 +407,7 @@ class Agreement(models.Model):
                     "date_created": fields.Datetime.now(),
                 }
             )
-            # Reset revision to 0 since it's a new version
-            rec.revision = 0
+        return super().write({"revision": 0})
 
     def _get_new_agreement_default_vals(self):
         self.ensure_one()
