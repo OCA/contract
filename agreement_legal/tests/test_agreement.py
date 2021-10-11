@@ -143,3 +143,8 @@ class TestAgreement(TransactionCase):
         self.assertEqual(
             field[0].get("modifiers", ""), '{"readonly": [["readonly", "=", true]]}'
         )
+
+    def test_action_create_new_version(self):
+        self.test_agreement.create_new_version()
+        self.assertEqual(self.test_agreement.state, "draft")
+        self.assertEqual(len(self.test_agreement.previous_version_agreements_ids), 1)
