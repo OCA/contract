@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="create_agreement_from_template_form_view" model="ir.ui.view">
+        <field name="name">Create Agreement From Template</field>
+        <field name="model">create.agreement.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="template_id" />
+                    </group>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="create_agreement"
+                        string="Create Agreement"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="create_agreement_from_template_action" model="ir.actions.act_window">
+        <field name="name">Create From Template</field>
+        <field name="res_model">create.agreement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

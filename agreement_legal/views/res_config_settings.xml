@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.agreement</field>
@@ -49,7 +49,7 @@
                                 <field name="module_agreement_sale" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Sales" />
+                                <label for="module_agreement_sale" string="Sales" />
                                 <div class="text-muted">
                                     Create an agreement when the sales order is confirmed
                                 </div>
@@ -63,7 +63,10 @@
                                 <field name="module_agreement_sale_subscription" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Sale Subscriptions" />
+                                <label
+                                    for="module_agreement_sale_subscription"
+                                    string="Sale Subscriptions"
+                                />
                                 <div class="text-muted">
                                     Link your subscriptions to an agreement
                                 </div>
@@ -74,7 +77,10 @@
                                 <field name="module_fieldservice_agreement" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Field Service" />
+                                <label
+                                    for="module_fieldservice_agreement"
+                                    string="Field Service"
+                                />
                                 <div class="text-muted">
                                     Link your Field Service orders and equipments to an agreement
                                 </div>
@@ -85,7 +91,10 @@
                                 <field name="module_agreement_stock" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Inventory" />
+                                <label
+                                    for="module_agreement_stock"
+                                    string="Inventory"
+                                />
                                 <div class="text-muted">
                                     Link your transfers to an agreement
                                 </div>
@@ -96,7 +105,7 @@
                                 <field name="module_agreement_rma" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Returns" />
+                                <label for="module_agreement_rma" string="Returns" />
                                 <div class="text-muted">
                                     Link your returns to an agreement
                                 </div>
@@ -107,7 +116,10 @@
                                 <field name="module_agreement_maintenance" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Maintenance" />
+                                <label
+                                    for="module_agreement_maintenance"
+                                    string="Maintenance"
+                                />
                                 <div class="text-muted">
                                     Manage maintenance agreements and contracts
                                 </div>
@@ -118,7 +130,10 @@
                                 <field name="module_agreement_mrp" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Manufacturing" />
+                                <label
+                                    for="module_agreement_mrp"
+                                    string="Manufacturing"
+                                />
                                 <div class="text-muted">
                                     Link your manufacturing orders to an agreement
                                 </div>
@@ -129,7 +144,7 @@
                                 <field name="module_agreement_repair" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Repair" />
+                                <label for="module_agreement_repair" string="Repair" />
                                 <div class="text-muted">
                                     Link your repair orders to an agreement
                                 </div>
@@ -140,7 +155,10 @@
                                 <field name="module_agreement_project" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Project" />
+                                <label
+                                    for="module_agreement_project"
+                                    string="Project"
+                                />
                                 <div class="text-muted">
                                     Link your projects and tasks to an agreement
                                 </div>
@@ -151,7 +169,10 @@
                                 <field name="module_agreement_helpdesk" />
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="" string="Helpdesk" />
+                                <label
+                                    for="module_agreement_helpdesk"
+                                    string="Helpdesk"
+                                />
                                 <div class="text-muted">
                                     Link your Helpdesk tickets to an agreement
                                 </div>
@@ -162,12 +183,11 @@
             </xpath>
         </field>
     </record>
-    <act_window
-        id="action_agreement_config"
-        name="Settings"
-        res_model="res.config.settings"
-        view_mode="form"
-        target="inline"
-        context="{'module': 'agreement'}"
-    />
+    <record id="action_agreement_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'agreement'}</field>
+    </record>
 </odoo>

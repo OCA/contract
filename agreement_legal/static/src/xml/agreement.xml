@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button
+                type="button"
+                t-if="widget and widget.modelName and widget.modelName == 'agreement'"
+                class="create_agreement_from_template btn btn-primary"
+            >Create From Template
+            </button>
+        </t>
+    </t>
+    <t t-extend="KanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <button
+                type="button"
+                t-if="widget and widget.modelName and widget.modelName == 'agreement'"
+                class="create_agreement_from_template btn btn-primary"
+            >Create From Template
+            </button>
+        </t>
+    </t>
+</templates>

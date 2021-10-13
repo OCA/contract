@@ -1,29 +1,19 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template
-        id="assets_backend"
-        name="agreement_legal assets"
-        inherit_id="web.assets_backend"
-    >
-        <xpath expr="." position="inside">
-            <script
-                type="text/javascript"
-                src="/agreement_legal/static/src/js/domain_widget_ext.js"
-            />
-        </xpath>
-    </template>
     <!-- Agreement List View-->
     <record model="ir.ui.view" id="partner_agreement_list_view">
         <field name="name">Agreement List</field>
         <field name="model">agreement</field>
         <field name="arch" type="xml">
-            <tree string="Agreements" default_order='name'>
+            <tree string="Agreements" default_order="code desc, name">
+                <field name="code" />
                 <field name="name" />
                 <field name="partner_id" />
                 <field name="company_id" />
                 <field name="parent_agreement_id" />
                 <field name="agreement_type_id" />
                 <field name="agreement_subtype_id" />
+                <field name="stage_id" />
                 <field name="active" invisible="1" />
             </tree>
         </field>
@@ -54,13 +44,18 @@
                         name="stage_id"
                         widget="statusbar"
                         clickable="True"
-                        options="{'fold_field': 'fold'}"
+                        options="{'clickable': 1, 'fold_field': 'fold'}"
                         domain="[('stage_type', '=', 'agreement')]"
                     />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                    </div>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget
+                        name="web_ribbon"
+                        title="Template"
+                        bg_color="bg-info"
+                        attrs="{'invisible': [('is_template', '=', False)]}"
+                    />
                     <div class="oe_title">
                         <label
                             for="name"
@@ -78,7 +73,11 @@
                                 name="parent_agreement_id"
                                 domain="[('partner_id', '=', partner_id)]"
                             />
-                            <field name="is_template" />
+                            <field name="is_template" invisible="1" />
+                            <field
+                                name="template_id"
+                                attrs="{'invisible': [('is_template', '=', True)]}"
+                            />
                         </group>
                         <group>
                             <field
@@ -97,27 +96,37 @@
                             />
                             <field name="active" invisible="1" />
                             <field name="state" invisible="1" />
+                            <field name="readonly" invisible="1" />
                         </group>
                     </group>
                     <group string="Description">
                         <field name="description" required="True" nolabel="1" />
                     </group>
                     <group class="oe_edit_only">
-                        <field
-                            name="field_domain"
-                            widget="domain"
-                            nolabel="1"
-                            options="{'model': 'agreement',
-                                             'partial_use': True}"
-                        />
                         <group>
+                            <field
+                                name="field_id"
+                                domain="[('model_id', '=', active_model),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                            />
+                            <field name="sub_object_id" readonly="1" />
+                            <field
+                                name="sub_model_object_field_id"
+                                domain="[('model_id', '=', sub_object_id),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                                attrs="{'readonly':[('sub_object_id', '=', False)],
+                                           'required':[('sub_object_id', '!=', False)]}"
+                            />
                             <field name="default_value" />
                             <field name="copyvalue" />
                         </group>
                         <p>
                             This section (on the left) allows you to add dynamic fields inside the description and special terms.
                             <ol>
-                                <li>Select the agreement field using the popup</li>
+                                <li>Select the agreement field</li>
+                                <li>Select the sub-field</li>
                                 <li>Enter the default value if the field is empty</li>
                                 <li
                                 >Copy and paste the placeholder expression in the description or the special terms</li>
@@ -141,7 +150,7 @@
                                 <field
                                     name="partner_id"
                                     context="{'show_address': 1}"
-                                    options="{&quot;always_reload&quot;: True}"
+                                    options="{'always_reload': True}"
                                 />
                             </div>
                         </group>
@@ -151,7 +160,7 @@
                                     name="company_id"
                                     readonly="1"
                                     context="{'show_address': 1}"
-                                    options="{&quot;always_reload&quot;: True}"
+                                    options="{'always_reload': True}"
                                 />
                             </div>
                             <field name="company_partner_id" invisible="1" />
@@ -205,6 +214,10 @@
                     <group name="term_information">
                         <group name="termdates_left" string="Term Dates">
                             <field
+                                name="signature_date"
+                                attrs="{'invisible': [('is_template', '=', True)]}"
+                            />
+                            <field
                                 name="start_date"
                                 attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"
                             />
@@ -244,30 +257,26 @@
                             <separator string="Recitals" />
                             <field
                                 name="recital_ids"
-                                default_order="sequence"
                                 nolabel="1"
-                                context="{'default_agreement': active_id}"
+                                context="{'tree_view_ref': 'agreement_legal.agreement_recital_tree2', 'form_view_ref': 'agreement_legal.agreement_recital_form2'}"
                             />
                             <separator string="Sections" />
                             <field
                                 name="sections_ids"
-                                default_order='sequence'
                                 nolabel="1"
-                                context="{'default_agreement': active_id}"
+                                context="{'tree_view_ref': 'agreement_legal.partner_agreement_section_list_view2', 'form_view_ref': 'agreement_legal.partner_agreement_section_form_view2'}"
                             />
                             <separator string="Clauses" />
                             <field
                                 name="clauses_ids"
-                                default_order='clause_id, sequence'
                                 nolabel="1"
-                                context="{'default_agreement': active_id}"
+                                context="{'tree_view_ref': 'agreement_legal.partner_agreement_clause_list_view2', 'form_view_ref': 'agreement_legal.partner_agreement_clause_form_view2', 'default_temp_agreement_id': active_id}"
                             />
                             <separator string="Appendices" />
                             <field
                                 name="appendix_ids"
-                                default_order='sequence'
                                 nolabel="1"
-                                context="{'default_agreement': active_id}"
+                                context="{'tree_view_ref': 'agreement_legal.agreement_appendix_tree2', 'form_view_ref': 'agreement_legal.agreement_appendix_form2'}"
                             />
                         </page>
                         <page name="signature" string="Signatures">
@@ -305,7 +314,7 @@
                         </page>
                         <page name="child_agreements" string="Child Agreements">
                             <field name="child_agreements_ids">
-                                <tree default_order='version desc'>
+                                <tree default_order="version desc">
                                     <field name="name" />
                                     <field name="version" />
                                     <field name="revision" />
@@ -316,8 +325,9 @@
                             <field
                                 name="previous_version_agreements_ids"
                                 string="Previouse Versions"
+                                readonly="1"
                             >
-                                <tree default_order='version desc'>
+                                <tree default_order="version desc">
                                     <field name="name" />
                                     <field name="version" />
                                     <field name="revision" />
@@ -348,14 +358,14 @@
                                 />.</p>
                         </div>
                     </group>
-                    <footer>
+                    <p name="footer">
                         Version: <field name="version" readonly="True" />.<field
                             name="revision"
                             readonly="True"
                         />
-                        |  Created By: <field name="create_uid" readonly="True" />
-                        |  Created On: <field name="create_date" readonly="True" />
-                    </footer>
+                        |  Created By: <field name="created_by" readonly="True" />
+                        |  Created On: <field name="date_created" readonly="True" />
+                    </p>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" />
@@ -388,10 +398,7 @@
                                         <div
                                             class="o_kanban_record_subtitle text-muted"
                                         >
-                                            <field
-                                                name="partner_id"
-                                                invisible="context.get('default_partner_id', False)"
-                                            />
+                                            <field name="partner_id" />
                                             <t
                                                 t-if="record.end_date.raw_value and record.end_date.raw_value lt (new Date())"
                                                 t-set="red"
@@ -416,6 +423,7 @@
                                             <span
                                                 class="fa fa-ellipsis-v"
                                                 aria-hidden="true"
+                                                title="Icon"
                                             />
                                         </a>
                                         <ul
@@ -473,6 +481,7 @@
         <field name="model">agreement</field>
         <field name="arch" type="xml">
             <search string="Agreement Search">
+                <field name="code" />
                 <field name="name" />
                 <field name="partner_id" />
                 <field name="agreement_type_id" />
@@ -499,10 +508,22 @@
                     context="{'group_by':'partner_id'}"
                 />
                 <filter
+                    name="group_agreement_type_id"
+                    string="Agreement Type"
+                    icon="terp-partner"
+                    context="{'group_by':'agreement_type_id'}"
+                />
+                <filter
+                    name="group_agreement_subtype_id"
+                    string="Agreement Sub-type"
+                    icon="terp-partner"
+                    context="{'group_by':'agreement_subtype_id'}"
+                />
+                <filter
                     name="group_status"
                     string="Status"
                     icon="terp-partner"
-                    context="{'group_by':'state'}"
+                    context="{'group_by':'stage_id'}"
                 />
             </search>
         </field>
@@ -536,19 +557,21 @@
         <field name="name">Agreements</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', False)]</field>
+        <field name="context">{'default_is_template': False}</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
     <record model="ir.actions.act_window" id="agreement_operations_agreement">
         <field name="name">Agreements</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', False)]</field>
+        <field name="context">{'default_is_template': False}</field>
         <field name="view_mode">tree,form</field>
     </record>
     <record model="ir.actions.act_window" id="partner_agreement_agreement_templates">
         <field name="name">Templates</field>
         <field name="res_model">agreement</field>
         <field name="domain">[('is_template', '=', True)]</field>
-        <!-- <field name="context">[('is_template', '=', True)]</field> -->
+        <field name="context">{'default_is_template': True}</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
 </odoo>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!-- Agreement Recital List View-->
     <record model="ir.ui.view" id="agreement_recital_tree">
         <field name="name">Agreement Recital Tree</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <tree string="Recitals" default_order='agreement_id, sequence'>
+            <tree string="Recitals" default_order="agreement_id, sequence">
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="title" />
@@ -21,20 +21,14 @@
         <field name="arch" type="xml">
             <form string="Recital">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            name="toggle_active"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options="{&quot;terminology&quot;: &quot;archive&quot;}"
-                            />
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <field name="active" invisible="1" />
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" />
                         <h1>
@@ -52,21 +46,30 @@
                     </group>
                     <field name="content" widget="html" />
                     <group class="oe_edit_only">
-                        <field
-                            name="field_domain"
-                            widget="domain"
-                            nolabel="1"
-                            options="{'model': 'agreement.recital',
-                                             'partial_use': True}"
-                        />
                         <group>
+                            <field
+                                name="field_id"
+                                domain="[('model_id', '=', active_model),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                            />
+                            <field name="sub_object_id" readonly="1" />
+                            <field
+                                name="sub_model_object_field_id"
+                                domain="[('model_id', '=', sub_object_id),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                                attrs="{'readonly':[('sub_object_id', '=', False)],
+                                           'required':[('sub_object_id', '!=', False)]}"
+                            />
                             <field name="default_value" />
                             <field name="copyvalue" />
                         </group>
                         <p>
                             This section (on the left) allows you to add dynamic fields inside the content.
                             <ol>
-                                <li>Select the field using the popup</li>
+                                <li>Select the recital field</li>
+                                <li>Select the sub-field</li>
                                 <li>Enter the default value if the field is empty</li>
                                 <li
                                 >Copy and paste the placeholder expression in the content</li>
@@ -82,7 +85,8 @@
         <field name="name">Agreement Recital Search</field>
         <field name="model">agreement.recital</field>
         <field name="arch" type="xml">
-            <search>
+            <search string="Recitals">
+                <field name="name" />
                 <filter
                     name="group_agreement"
                     icon="terp-partner"
@@ -96,5 +100,34 @@
         <field name="name">Recitals</field>
         <field name="res_model">agreement.recital</field>
         <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Agreement Recital List View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="agreement_recital_tree2">
+        <field name="name">Agreement Recital Tree2</field>
+        <field name="model">agreement.recital</field>
+        <field name="inherit_id" ref="agreement_recital_tree" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="default_order">sequence</attribute>
+            </tree>
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+    <!-- Agreement Recital Form View 2 (Call this view from agreement)-->
+    <record model="ir.ui.view" id="agreement_recital_form2">
+        <field name="name">Agreement Recital Form2</field>
+        <field name="model">agreement.recital</field>
+        <field name="inherit_id" ref="agreement_recital_form" />
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="agreement_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
     </record>
 </odoo>

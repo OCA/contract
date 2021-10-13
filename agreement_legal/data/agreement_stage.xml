@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="agreement_stage_new" model="agreement.stage">
         <field name="name">New</field>
@@ -38,6 +38,12 @@
     <record id="agreement_stage_expired" model="agreement.stage">
         <field name="name">Expired</field>
         <field name="sequence">80</field>
+        <field name="stage_type">agreement</field>
+    </record>
+    <record id="agreement_stage_terminated" model="agreement.stage">
+        <field name="name">Terminated</field>
+        <field name="sequence">90</field>
+        <field name="fold">True</field>
         <field name="stage_type">agreement</field>
     </record>
     <record id="agreement_stage_cancelled" model="agreement.stage">
