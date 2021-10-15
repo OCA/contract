@@ -455,9 +455,12 @@
                                     <div class="oe_kanban_bottom_left">
                                         V: <field name="version" />
                                     </div>
-                                    <div class="oe_kanban_bottom_right">
+                                    <div
+                                        class="oe_kanban_bottom_right"
+                                        t-if="record.assigned_user_id.raw_value"
+                                    >
                                         <img
-                                            t-att-src="kanban_image('res.users', 'image_small', record.assigned_user_id.raw_value)"
+                                            t-att-src="kanban_image('res.users', 'image_128', record.assigned_user_id.raw_value)"
                                             t-att-title="record.assigned_user_id.value"
                                             width="36"
                                             height="36"
