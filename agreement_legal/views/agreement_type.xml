@@ -7,7 +7,6 @@
         <field name="inherit_id" ref="agreement.agreement_type_list_view" />
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="no_end_date" />
                 <field name="agreement_subtypes_ids" widget="many2many_tags" />
             </field>
         </field>
@@ -20,6 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='main']" position="inside">
                 <field name="no_end_date" />
+                <field name="review_user_id" />
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <field name="agreement_subtypes_ids" nolabel="1">
