@@ -3,6 +3,7 @@
 
 import ast
 import json as simplejson
+from datetime import timedelta
 
 from lxml import etree
 
@@ -294,6 +295,25 @@ class Agreement(models.Model):
         "agreement", string="Template", domain=[("is_template", "=", True)],
     )
     readonly = fields.Boolean(related="stage_id.readonly",)
+
+    @api.model
+    def _alert_end_date(self):
+        activities = self.search(
+            [("end_date", "<=", (fields.datetime.now() - timedelta(days=7)))]
+        )
+        for activity in activities:
+            if (
+                self.env["mail.activity"].search_count(
+                    [("res_id", "=", activity.id), ("res_model", "=", "agreement")]
+                )
+                == 0
+            ):
+                activity.activity_schedule(
+                    "agreement.mail_activity_old_date",
+                    user_id=activity.user_id.id,
+                    note=_("Your activity is going to end on")
+                    + fields.Date.to_string(activity.end_date),
+                )
 
     # compute the dynamic content for jinja expression
     def _compute_dynamic_description(self):
