@@ -8,6 +8,7 @@ class AgreementType(models.Model):
     _inherit = "agreement.type"
     _description = "Agreement Types"
 
+    no_end_date = fields.Boolean(default=False)
     agreement_subtypes_ids = fields.One2many(
         "agreement.subtype", "agreement_type_id", string="Sub-Types"
     )
