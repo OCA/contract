@@ -11,3 +11,4 @@ class AgreementType(models.Model):
     agreement_subtypes_ids = fields.One2many(
         "agreement.subtype", "agreement_type_id", string="Sub-Types"
     )
+    no_end_date = fields.Boolean(default=False)

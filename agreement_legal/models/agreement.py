@@ -96,6 +96,7 @@ class Agreement(models.Model):
         tracking=True,
         help="Date that the contract was terminated.",
     )
+    no_end_date = fields.Boolean(related="agreement_type_id.no_end_date")
     reviewed_date = fields.Date(string="Reviewed Date", tracking=True)
     reviewed_user_id = fields.Many2one("res.users", string="Reviewed By", tracking=True)
     approved_date = fields.Date(string="Approved Date", tracking=True)
