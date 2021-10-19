@@ -364,8 +364,27 @@
                             name="revision"
                             readonly="True"
                         />
-                        |  Created By: <field name="created_by" readonly="True" />
-                        |  Created On: <field name="date_created" readonly="True" />
+                        |  Created By:
+                        <field
+                            name="create_uid"
+                            readonly="True"
+                            attrs="{'invisible': [('parent_agreement_id', '!=', False)]}"
+                        />
+                        <field
+                            name="create_uid_parent"
+                            attrs="{'invisible': [('parent_agreement_id', '=', False)]}"
+                        />
+                        |  Created On:
+                        <field
+                            name="create_date"
+                            readonly="True"
+                            attrs="{'invisible': [('parent_agreement_id', '!=', False)]}"
+                        />
+                        <field
+                            name="create_date_parent"
+                            readonly="True"
+                            attrs="{'invisible': [('parent_agreement_id', '=', False)]}"
+                        />
                     </p>
                 </sheet>
                 <div class="oe_chatter">
