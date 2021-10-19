@@ -227,6 +227,10 @@
                                 name="end_date"
                                 attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"
                             />
+                            <field
+                                name="to_review_end_date"
+                                attrs="{'required': [('is_template', '=', False), ('end_date', '!=', False)], 'invisible': [('is_template', '=', True)]}"
+                            />
                             <field name="expiration_notice" />
                             <field name="change_notice" />
                             <field

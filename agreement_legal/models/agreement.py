@@ -296,14 +296,17 @@ class Agreement(models.Model):
         "agreement", string="Template", domain=[("is_template", "=", True)],
     )
     readonly = fields.Boolean(related="stage_id.readonly",)
-    to_review_end_date = fields.Date(compute="_compute_to_review_end_date", store=True)
+    to_review_end_date = fields.Date(
+        compute="_compute_to_review_end_date", store=True, readonly=False
+    )
 
     @api.depends("agreement_type_id", "agreement_type_id.review_days", "end_date")
     def _compute_to_review_end_date(self):
         for record in self:
-            record.to_review_end_date = record.end_date + timedelta(
-                days=-record.agreement_type_id.review_days
-            )
+            if record.end_date:
+                record.to_review_end_date = record.end_date + timedelta(
+                    days=-record.agreement_type_id.review_days
+                )
 
     @api.model
     def _alert_end_date(self):
