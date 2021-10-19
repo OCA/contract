@@ -11,3 +11,5 @@ class AgreementType(models.Model):
     agreement_subtypes_ids = fields.One2many(
         "agreement.subtype", "agreement_type_id", string="Sub-Types"
     )
+    review_user_id = fields.Many2one("res.users")
+    review_days = fields.Integer()
