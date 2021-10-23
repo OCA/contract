@@ -1,0 +1,38 @@
+<!-- # Copyright (C) 2018 Pavlov Media
+     # Copyright (C) 2021 Open Source Integrators
+     # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="maintenance_request_form_view_agreement" model="ir.ui.view">
+        <field name="name">maintenance.request.form.agreement</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form" />
+        <field name="arch" type="xml">
+            <field name="priority" position="before">
+                <field name="agreement_id" />
+                <field
+                    name="serviceprofile_id"
+                    domain="[('agreement_id', '=', agreement_id)]"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- Inherit maintenance request search view-->
+    <record id="view_maintenance_request_filter_agreement" model="ir.ui.view">
+        <field name="name">maintenance.request.select.agreement</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter
+                    string="Service Profile"
+                    name="serviceprofile_id"
+                    domain="[]"
+                    context="{'group_by':'serviceprofile_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
