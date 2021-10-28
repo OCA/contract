@@ -3,6 +3,7 @@
 # Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
 from collections import namedtuple
 from datetime import timedelta
 
@@ -17,7 +18,7 @@ def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractBase(common.SavepointCase):
+class TestContractBase(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -252,8 +253,6 @@ class TestContract(TestContractBase):
     def test_contract(self):
         self.assertEqual(self.contract.recurring_next_date, to_date("2018-01-15"))
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
-        res = self.acct_line._onchange_product_id()
-        self.assertIn("uom_id", res["domain"])
         self.acct_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_invoice()
@@ -489,11 +488,6 @@ class TestContract(TestContractBase):
         self.acct_line._onchange_product_id()
         self.assertEqual(self.acct_line.uom_id, self.acct_line.product_id.uom_id)
 
-    def test_onchange_product_id(self):
-        line = self.env["contract.line"].new()
-        res = line._onchange_product_id()
-        self.assertFalse(res["domain"]["uom_id"])
-
     def test_no_pricelist(self):
         self.contract.pricelist_id = False
         self.acct_line.quantity = 2
@@ -565,8 +559,15 @@ class TestContract(TestContractBase):
                 test_value = contract_line[key]
                 try:
                     test_value = test_value.id
-                except AttributeError:
-                    pass
+                except AttributeError as ae:
+                    # This try/except is for relation fields.
+                    # For normal fields, test_value would be
+                    # str, float, int ... without id
+                    logging.info(
+                        "Ignored AttributeError ('%s' is not a relation field): %s",
+                        key,
+                        ae,
+                    )
                 self.assertEqual(test_value, value)
 
     def test_send_mail_contract(self):
@@ -580,21 +581,6 @@ class TestContract(TestContractBase):
         self.contract.contract_type = "purchase"
         self.contract._onchange_contract_type()
         self.assertFalse(any(self.contract.contract_line_ids.mapped("automatic_price")))
-
-    def test_contract_onchange_product_id_domain_blank(self):
-        """It should return a blank UoM domain when no product."""
-        line = self.env["contract.template.line"].new()
-        res = line._onchange_product_id()
-        self.assertFalse(res["domain"]["uom_id"])
-
-    def test_contract_onchange_product_id_domain(self):
-        """It should return UoM category domain."""
-        line = self._add_template_line()
-        res = line._onchange_product_id()
-        self.assertEqual(
-            res["domain"]["uom_id"][0],
-            ("category_id", "=", self.product_1.uom_id.category_id.id),
-        )
 
     def test_contract_onchange_product_id_uom(self):
         """It should update the UoM for the line."""
@@ -647,14 +633,17 @@ class TestContract(TestContractBase):
         show_contract = self.partner.with_context(
             contract_type="sale"
         ).act_show_contract()
-        self.assertDictContainsSubset(
-            {
-                "name": "Customer Contracts",
-                "type": "ir.actions.act_window",
-                "res_model": "contract.contract",
-                "xml_id": "contract.action_customer_contract",
-            },
+        self.assertEqual(
             show_contract,
+            {
+                **show_contract,
+                **{
+                    "name": "Customer Contracts",
+                    "type": "ir.actions.act_window",
+                    "res_model": "contract.contract",
+                    "xml_id": "contract.action_customer_contract",
+                },
+            },
             "There was an error and the view couldn't be opened.",
         )
 
@@ -2309,7 +2298,7 @@ class TestContract(TestContractBase):
         action = self.contract.action_terminate_contract()
         wizard = (
             self.env[action["res_model"]]
-            .with_context(action["context"])
+            .with_context(**action["context"])
             .create(
                 {
                     "terminate_date": "2018-03-01",
