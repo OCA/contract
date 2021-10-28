@@ -22,9 +22,7 @@ class ContractLine(models.Model):
     ]
     _order = "sequence,id"
 
-    sequence = fields.Integer(
-        string="Sequence",
-    )
+    sequence = fields.Integer()
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
         string="Contract",
@@ -44,7 +42,6 @@ class ContractLine(models.Model):
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     termination_notice_date = fields.Date(
-        string="Termination notice date",
         compute="_compute_termination_notice_date",
         store=True,
         copy=False,
@@ -72,7 +69,6 @@ class ContractLine(models.Model):
         help="Contract Line origin of this one.",
     )
     manual_renew_needed = fields.Boolean(
-        string="Manual renew needed",
         default=False,
         help="This flag is used to make a difference between a definitive stop"
         "and temporary one for which a user is not able to plan a"
@@ -92,7 +88,6 @@ class ContractLine(models.Model):
         string="Un-Cancel allowed?", compute="_compute_allowed"
     )
     state = fields.Selection(
-        string="State",
         selection=[
             ("upcoming", "Upcoming"),
             ("in-progress", "In-progress"),
@@ -109,12 +104,11 @@ class ContractLine(models.Model):
         related="contract_id.active",
         store=True,
         readonly=True,
-        default=True,
     )
 
     @api.depends(
         "last_date_invoiced", "date_start", "date_end", "contract_id.last_date_invoiced"
-    )
+    )  # pylint: disable=missing-return
     def _compute_next_period_date_start(self):
         """Rectify next period date start if another line in the contract has been
         already invoiced previously when the recurrence is by contract.
@@ -696,15 +690,15 @@ class ContractLine(models.Model):
                     )
                     if post_message:
                         msg = _(
-                            """Contract line for <strong>{product}</strong>
+                            """Contract line for <strong>%(product)s</strong>
                             stopped: <br/>
-                            - <strong>End</strong>: {old_end} -- {new_end}
-                            """.format(
-                                product=rec.name,
-                                old_end=old_date_end,
-                                new_end=rec.date_end,
-                            )
-                        )
+                            - <strong>End</strong>: %(old_end)s -- %(new_end)s
+                            """
+                        ) % {
+                            "product": rec.name,
+                            "old_end": old_date_end,
+                            "new_end": rec.date_end,
+                        }
                         rec.contract_id.message_post(body=msg)
                 else:
                     rec.write(
@@ -770,17 +764,17 @@ class ContractLine(models.Model):
             contract_line |= new_line
             if post_message:
                 msg = _(
-                    """Contract line for <strong>{product}</strong>
+                    """Contract line for <strong>%(product)s</strong>
                     planned a successor: <br/>
-                    - <strong>Start</strong>: {new_date_start}
+                    - <strong>Start</strong>: %(new_date_start)s
                     <br/>
-                    - <strong>End</strong>: {new_date_end}
-                    """.format(
-                        product=rec.name,
-                        new_date_start=new_line.date_start,
-                        new_date_end=new_line.date_end,
-                    )
-                )
+                    - <strong>End</strong>: %(new_date_end)s
+                    """
+                ) % {
+                    "product": rec.name,
+                    "new_date_start": new_line.date_start,
+                    "new_date_end": new_line.date_end,
+                }
                 rec.contract_id.message_post(body=msg)
         return contract_line
 
@@ -873,17 +867,17 @@ class ContractLine(models.Model):
                         post_message=False,
                     )
             msg = _(
-                """Contract line for <strong>{product}</strong>
+                """Contract line for <strong>%(product)s</strong>
                 suspended: <br/>
-                - <strong>Suspension Start</strong>: {new_date_start}
+                - <strong>Suspension Start</strong>: %(new_date_start)s
                 <br/>
-                - <strong>Suspension End</strong>: {new_date_end}
-                """.format(
-                    product=rec.name,
-                    new_date_start=date_start,
-                    new_date_end=date_end,
-                )
-            )
+                - <strong>Suspension End</strong>: %(new_date_end)s
+                """
+            ) % {
+                "product": rec.name,
+                "new_date_start": date_start,
+                "new_date_end": date_end,
+            }
             rec.contract_id.message_post(body=msg)
         return contract_line
 
@@ -893,10 +887,13 @@ class ContractLine(models.Model):
         for contract in self.mapped("contract_id"):
             lines = self.filtered(lambda l, c=contract: l.contract_id == c)
             msg = _(
-                """Contract line canceled: %s"""
-                % "<br/>- ".join(
-                    ["<strong>%s</strong>" % name for name in lines.mapped("name")]
-                )
+                "Contract line canceled: %s",
+                "<br/>- ".join(
+                    [
+                        "<strong>%(product)s</strong>" % {"product": name}
+                        for name in lines.mapped("name")
+                    ]
+                ),
             )
             contract.message_post(body=msg)
         self.mapped("predecessor_contract_line_id").write(
@@ -910,10 +907,13 @@ class ContractLine(models.Model):
         for contract in self.mapped("contract_id"):
             lines = self.filtered(lambda l, c=contract: l.contract_id == c)
             msg = _(
-                """Contract line Un-canceled: %s"""
-                % "<br/>- ".join(
-                    ["<strong>%s</strong>" % name for name in lines.mapped("name")]
-                )
+                "Contract line Un-canceled: %s",
+                "<br/>- ".join(
+                    [
+                        "<strong>%(product)s</strong>" % {"product": name}
+                        for name in lines.mapped("name")
+                    ]
+                ),
             )
             contract.message_post(body=msg)
         for rec in self:
@@ -1036,17 +1036,17 @@ class ContractLine(models.Model):
                 new_line = rec._renew_extend_line(date_end)
             res |= new_line
             msg = _(
-                """Contract line for <strong>{product}</strong>
+                """Contract line for <strong>%(product)s</strong>
                 renewed: <br/>
-                - <strong>Start</strong>: {new_date_start}
+                - <strong>Start</strong>: %(new_date_start)s
                 <br/>
-                - <strong>End</strong>: {new_date_end}
-                """.format(
-                    product=rec.name,
-                    new_date_start=date_start,
-                    new_date_end=date_end,
-                )
-            )
+                - <strong>End</strong>: %(new_date_end)s
+                """
+            ) % {
+                "product": rec.name,
+                "new_date_start": date_start,
+                "new_date_end": date_end,
+            }
             rec.contract_id.message_post(body=msg)
         return res
 
