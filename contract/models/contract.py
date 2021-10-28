@@ -89,6 +89,7 @@ class ContractContract(models.Model):
         string="Invoicing contact",
         comodel_name="res.partner",
         ondelete="restrict",
+        domain="['|',('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner", inverse="_inverse_partner_id", required=True
@@ -299,7 +300,7 @@ class ContractContract(models.Model):
     @api.depends(
         "contract_line_ids.recurring_next_date",
         "contract_line_ids.is_canceled",
-    )
+    )  # pylint: disable=missing-return
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
@@ -371,15 +372,6 @@ class ContractContract(models.Model):
         else:
             self.payment_term_id = partner.property_payment_term_id
         self.invoice_partner_id = self.partner_id.address_get(["invoice"])["invoice"]
-        return {
-            "domain": {
-                "invoice_partner_id": [
-                    "|",
-                    ("id", "parent_of", self.partner_id.id),
-                    ("id", "child_of", self.partner_id.id),
-                ]
-            }
-        }
 
     def _convert_contract_lines(self, contract):
         self.ensure_one()
@@ -416,8 +408,14 @@ class ContractContract(models.Model):
             )
         if not journal:
             raise ValidationError(
-                _("Please define a %s journal for the company '%s'.")
-                % (self.contract_type, self.company_id.name or "")
+                _(
+                    "Please define a %(contract_type)s journal "
+                    "for the company '%(company)s'."
+                )
+                % {
+                    "contract_type": self.contract_type,
+                    "company": self.company_id.name or "",
+                }
             )
         invoice_type = "out_invoice"
         if self.contract_type == "purchase":
@@ -566,10 +564,16 @@ class ContractContract(models.Model):
             self.message_post(
                 body=_(
                     "Contract manually invoiced: "
-                    '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
+                    "<a"
+                    '    href="#" data-oe-model="%(model_name)s" '
+                    '    data-oe-id="%(rec_id)s"'
+                    ">Invoice"
                     "</a>"
                 )
-                % (invoice._name, invoice.id)
+                % {
+                    "model_name": invoice._name,
+                    "rec_id": invoice.id,
+                }
             )
         return invoice
 
