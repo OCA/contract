@@ -9,12 +9,11 @@ class ContractLineWizard(models.TransientModel):
     _name = "contract.line.wizard"
     _description = "Contract Line Wizard"
 
-    date_start = fields.Date(string="Date Start")
-    date_end = fields.Date(string="Date End")
+    date_start = fields.Date()
+    date_end = fields.Date()
     recurring_next_date = fields.Date(string="Next Invoice Date")
-    is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    is_auto_renew = fields.Boolean(default=False)
     manual_renew_needed = fields.Boolean(
-        string="Manual renew needed",
         default=False,
         help="This flag is used to make a difference between a definitive stop"
         "and temporary one for which a user is not able to plan a"
