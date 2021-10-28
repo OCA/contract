@@ -10,8 +10,8 @@ class ContractModification(models.Model):
     _description = "Contract Modification"
     _order = "date desc"
 
-    date = fields.Date(required=True, string="Date")
-    description = fields.Text(required=True, string="Description")
+    date = fields.Date(required=True)
+    description = fields.Text(required=True)
     contract_id = fields.Many2one(
         string="Contract",
         comodel_name="contract.contract",
@@ -19,10 +19,7 @@ class ContractModification(models.Model):
         ondelete="cascade",
         index=True,
     )
-    sent = fields.Boolean(
-        string="Sent",
-        default=False,
-    )
+    sent = fields.Boolean(default=False)
 
     @api.model_create_multi
     def create(self, vals_list):

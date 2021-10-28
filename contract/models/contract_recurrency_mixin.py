@@ -47,7 +47,7 @@ class ContractRecurrencyBasicMixin(models.AbstractModel):
         string="Invoice Every",
         help="Invoice every (Days/Week/Month/Year)",
     )
-    date_start = fields.Date(string="Date Start")
+    date_start = fields.Date()
     recurring_next_date = fields.Date(string="Date of Next Invoice")
 
     @api.depends("recurring_invoicing_type", "recurring_rule_type")
@@ -80,7 +80,7 @@ class ContractRecurrencyMixin(models.AbstractModel):
     recurring_next_date = fields.Date(
         compute="_compute_recurring_next_date", store=True, readonly=False, copy=True
     )
-    date_end = fields.Date(string="Date End", index=True)
+    date_end = fields.Date(index=True)
     next_period_date_start = fields.Date(
         string="Next Period Start",
         compute="_compute_next_period_date_start",
@@ -89,9 +89,7 @@ class ContractRecurrencyMixin(models.AbstractModel):
         string="Next Period End",
         compute="_compute_next_period_date_end",
     )
-    last_date_invoiced = fields.Date(
-        string="Last Date Invoiced", readonly=True, copy=False
-    )
+    last_date_invoiced = fields.Date(readonly=True, copy=False)
 
     @api.depends("next_period_date_start")
     def _compute_recurring_next_date(self):

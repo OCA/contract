@@ -9,7 +9,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
     _name = "contract.manually.create.invoice"
     _description = "Contract Manually Create Invoice Wizard"
 
-    invoice_date = fields.Date(string="Invoice Date", required=True)
+    invoice_date = fields.Date(required=True)
     contract_to_invoice_count = fields.Integer(
         compute="_compute_contract_to_invoice_ids"
     )
