@@ -20,14 +20,22 @@ class ContractAbstractContractLine(models.AbstractModel):
 
     name = fields.Text(string="Description", required=True)
     quantity = fields.Float(default=1.0, required=True)
-    uom_id = fields.Many2one("uom.uom", string="Unit of Measure")
+    product_uom_category_id = fields.Many2one(  # Used for domain of field uom_id
+        comodel_name="uom.category",
+        related="product_id.uom_id.category_id",
+    )
+    uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Unit of Measure",
+        domain="[('category_id', '=', product_uom_category_id)]",
+    )
     automatic_price = fields.Boolean(
         string="Auto-price?",
         help="If this is marked, the price will be obtained automatically "
         "applying the pricelist to the product. If not, you will be "
         "able to introduce a manual price",
     )
-    specific_price = fields.Float(string="Specific Price")
+    specific_price = fields.Float()
     price_unit = fields.Float(
         string="Unit Price",
         compute="_compute_price_unit",
@@ -45,7 +53,6 @@ class ContractAbstractContractLine(models.AbstractModel):
         " It should be less or equal to 100",
     )
     sequence = fields.Integer(
-        string="Sequence",
         default=10,
         help="Sequence of the contract line when displaying contracts",
     )
@@ -76,7 +83,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         readonly=False,
         copy=True,
     )
-    last_date_invoiced = fields.Date(string="Last Date Invoiced")
+    last_date_invoiced = fields.Date()
     is_canceled = fields.Boolean(string="Canceled", default=False)
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     auto_renew_interval = fields.Integer(
@@ -157,6 +164,7 @@ class ContractAbstractContractLine(models.AbstractModel):
     def _compute_date_start(self):
         self._set_recurrence_field("date_start")
 
+    # pylint: disable=missing-return
     @api.depends("contract_id.recurring_next_date", "contract_id.line_recurrence")
     def _compute_recurring_next_date(self):
         super()._compute_recurring_next_date()
@@ -232,13 +240,7 @@ class ContractAbstractContractLine(models.AbstractModel):
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
-        if not self.product_id:
-            return {"domain": {"uom_id": []}}
-
         vals = {}
-        domain = {
-            "uom_id": [("category_id", "=", self.product_id.uom_id.category_id.id)]
-        }
         if not self.uom_id or (
             self.product_id.uom_id.category_id.id != self.uom_id.category_id.id
         ):
@@ -257,4 +259,3 @@ class ContractAbstractContractLine(models.AbstractModel):
         vals["name"] = self.product_id.get_product_multiline_description_sale()
         vals["price_unit"] = product.price
         self.update(vals)
-        return {"domain": domain}
