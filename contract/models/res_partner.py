@@ -41,14 +41,10 @@ class ResPartner(models.Model):
         for partner in self:
             partner_child_ids = partner.child_ids.ids + partner.ids
             partner.sale_contract_count = sum(
-                [r[2] for r in result if r[0] in partner_child_ids and r[1] == "sale"]
+                r[2] for r in result if r[0] in partner_child_ids and r[1] == "sale"
             )
             partner.purchase_contract_count = sum(
-                [
-                    r[2]
-                    for r in result
-                    if r[0] in partner_child_ids and r[1] == "purchase"
-                ]
+                r[2] for r in result if r[0] in partner_child_ids and r[1] == "purchase"
             )
 
     def act_show_contract(self):

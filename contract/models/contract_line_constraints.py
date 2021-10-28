@@ -47,7 +47,7 @@ def _expand_none(criteria):
 
 
 def _add(matrix, criteria, allowed):
-    """ Expand None values to True/False combination """
+    """Expand None values to True/False combination"""
     for c in _expand_none(criteria):
         matrix[c] = allowed
 
