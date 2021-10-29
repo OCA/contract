@@ -1,0 +1,58 @@
+<!--  Copyright 2017-2020 Akretion France (http://www.akretion.com/)
+      @author: Alexis de Lattre <alexis.delattre@akretion.com>
+      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).-->
+<odoo>
+
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">agreement.customer.invoice.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='other_info']/group/group/field[@name='ref']"
+                position="after"
+            >
+                <field
+                    name="agreement_id"
+                    domain="[('partner_id', 'child_of', commercial_partner_id), ('domain', '=', 'sale')]"
+                    context="{'default_partner_id': commercial_partner_id, 'default_domain': 'sale'}"
+                />
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_form" model="ir.ui.view">
+        <field name="name">agreement.supplier.invoice.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page/group/group/field[@name='company_id']" position="after">
+                <field
+                    name="agreement_id"
+                    domain="[('partner_id', 'child_of', commercial_partner_id), ('domain', '=', 'purchase')]"
+                    context="{'default_partner_id': commercial_partner_id, 'default_domain': 'purchase'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">agreement.account.move.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+                <field name="agreement_id" />
+            </field>
+            <group expand="0" position="inside">
+                <filter
+                    string="Agreement"
+                    name="agreement_groupby"
+                    context="{'group_by': 'agreement_id'}"
+                />
+            </group>
+        </field>
+    </record>
+
+</odoo>
