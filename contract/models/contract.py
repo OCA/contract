@@ -607,8 +607,12 @@ class ContractContract(models.Model):
         # Invoice by companies, so assignation emails get correct context
         companies_to_invoice = self.read_group(domain, ["company_id"], ["company_id"])
         for row in companies_to_invoice:
-            contracts_to_invoice = self.search(row["__domain"]).with_context(
-                allowed_company_ids=[row["company_id"][0]]
+            contracts_to_invoice = (
+                self.search(row["__domain"])
+                .with_context(allowed_company_ids=[row["company_id"][0]])
+                .filtered(
+                    lambda a: not a.date_end or a.recurring_next_date <= a.date_end
+                )
             )
             invoices |= contracts_to_invoice._recurring_create_invoice(date_ref)
         return invoices
