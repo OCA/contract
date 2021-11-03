@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="repository_1" model="archive.repository">
+        <field name="name">Agreements</field>
+    </record>
+    <record id="repository_subseries_1" model="archive.repository.level">
+        <field name="repository_id" ref="repository_1" />
+        <field name="name">Package</field>
+        <field name="level">1</field>
+        <field name="can_assign_files" eval="True" />
+    </record>
+    <record id="repository_subseries_2" model="archive.repository.level">
+        <field name="repository_id" ref="repository_1" />
+        <field name="name">Archive box</field>
+        <field name="level">2</field>
+        <field name="can_assign_files" eval="False" />
+    </record>
+    <record id="repository_series" model="archive.repository.level">
+        <field name="repository_id" ref="repository_1" />
+        <field name="name">Series</field>
+        <field name="level">3</field>
+    </record>
+    <record id="location_1" model="archive.location">
+        <field name="description">General Archive</field>
+    </record>
+    <record id="location_2" model="archive.location">
+        <field name="description">Department Archive</field>
+    </record>
+</odoo>
