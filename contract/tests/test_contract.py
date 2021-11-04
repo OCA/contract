@@ -18,7 +18,7 @@ def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractBase(common.TransactionCase):
+class TestContractBase:
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2370,3 +2370,7 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
+
+
+class TestContractCase(TestContract, common.SavepointCase):
+    """ TESTS """
