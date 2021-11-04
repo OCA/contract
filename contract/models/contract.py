@@ -9,6 +9,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tests import Form
 from odoo.tools.translate import _
 
@@ -607,10 +608,16 @@ class ContractContract(models.Model):
         return moves
 
     @api.model
-    def cron_recurring_create_invoice(self, date_ref=None):
+    def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
+        domain = expression.AND(
+            [
+                domain,
+                [("generation_type", "=", create_type)],
+            ]
+        )
         invoice_obj = self.env["account.move"]
 
         contracts = self.search(domain)
@@ -627,6 +634,10 @@ class ContractContract(models.Model):
                 contracts_to_invoice._recurring_create_invoice(date_ref).ids
             )
         return invoice_obj.browse(invoice_ids)
+
+    @api.model
+    def cron_recurring_create_invoice(self, date_ref=None):
+        return self._cron_recurring_create(date_ref)
 
     def action_terminate_contract(self):
         self.ensure_one()
