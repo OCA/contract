@@ -6,12 +6,15 @@
 # Copyright 2018 ACSONE SA/NV
 # Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tests import Form
 from odoo.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class ContractContract(models.Model):
@@ -609,6 +612,20 @@ class ContractContract(models.Model):
 
     @api.model
     def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
+        """
+        The cron function in order to create recurrent documents
+        from contracts.
+        """
+        _recurring_create_func = f"_recurring_create_{create_type}"
+        if not hasattr(self, _recurring_create_func):
+            _logger.info(
+                _(
+                    "No function to create %s documents automatically is "
+                    "declared in contract.contract model. Passing."
+                ),
+                create_type,
+            )
+            return False
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
@@ -618,22 +635,16 @@ class ContractContract(models.Model):
                 [("generation_type", "=", create_type)],
             ]
         )
-        invoice_obj = self.env["account.move"]
-
         contracts = self.search(domain)
         companies = set(contracts.mapped("company_id"))
-        invoice_ids = []
         # Invoice by companies, so assignation emails get correct context
-        # Use ids instead of recordset for perfomances reasons
         for company in companies:
             contracts_to_invoice = contracts.filtered(
                 lambda c: c.company_id == company
                 and (not c.date_end or c.recurring_next_date <= c.date_end)
             ).with_company(company)
-            invoice_ids.extend(
-                contracts_to_invoice._recurring_create_invoice(date_ref).ids
-            )
-        return invoice_obj.browse(invoice_ids)
+            getattr(contracts_to_invoice, _recurring_create_func)(date_ref)
+        return True
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
