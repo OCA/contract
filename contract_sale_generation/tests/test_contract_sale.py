@@ -2,78 +2,83 @@
 # Copyright 2017 Pesol (<http://pesol.es>)
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form
+from odoo.tests.common import SavepointCase
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractSale(TransactionCase):
+class TestContractSale(SavepointCase):
     # Use case : Prepare some data for current test case
 
-    def setUp(self):
-        super(TestContractSale, self).setUp()
-        self.pricelist = self.env["product.pricelist"].create(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        contract_date = "2020-01-15"
+        cls.pricelist = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test",
             }
         )
-        self.partner = self.env["res.partner"].create(
+        cls.partner = cls.env["res.partner"].create(
             {
                 "name": "partner test contract",
-                "property_product_pricelist": self.pricelist.id,
+                "property_product_pricelist": cls.pricelist.id,
             }
         )
-        self.product_1 = self.env.ref("product.product_product_1")
-        self.product_1.taxes_id += self.env["account.tax"].search(
+        cls.product_1 = cls.env.ref("product.product_product_1")
+        cls.product_1.taxes_id += cls.env["account.tax"].search(
             [("type_tax_use", "=", "sale")], limit=1
         )
-        self.product_1.description_sale = "Test description sale"
-        self.line_template_vals = {
-            "product_id": self.product_1.id,
+        cls.product_1.description_sale = "Test description sale"
+        cls.line_template_vals = {
+            "product_id": cls.product_1.id,
             "name": "Test Contract Template",
             "quantity": 1,
-            "uom_id": self.product_1.uom_id.id,
+            "uom_id": cls.product_1.uom_id.id,
             "price_unit": 100,
             "discount": 50,
             "recurring_rule_type": "yearly",
             "recurring_interval": 1,
         }
-        self.template_vals = {
+        cls.template_vals = {
             "name": "Test Contract Template",
+            "contract_type": "sale",
             "contract_line_ids": [
-                (0, 0, self.line_template_vals),
+                (0, 0, cls.line_template_vals),
             ],
         }
-        self.template = self.env["contract.template"].create(self.template_vals)
+        cls.template = cls.env["contract.template"].create(cls.template_vals)
         # For being sure of the applied price
-        self.env["product.pricelist.item"].create(
+        cls.env["product.pricelist.item"].create(
             {
-                "pricelist_id": self.partner.property_product_pricelist.id,
-                "product_id": self.product_1.id,
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "product_id": cls.product_1.id,
                 "compute_price": "formula",
                 "base": "list_price",
             }
         )
-        self.contract = self.env["contract.contract"].create(
+        cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract",
-                "partner_id": self.partner.id,
-                "pricelist_id": self.partner.property_product_pricelist.id,
-                "type": "sale",
+                "partner_id": cls.partner.id,
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "generation_type": "sale",
                 "sale_autoconfirm": False,
             }
         )
-        self.line_vals = {
-            "contract_id": self.contract.id,
-            "product_id": self.product_1.id,
+        cls.line_vals = {
+            # "contract_id": cls.contract.id,
+            # "product_id": cls.product_1.id,
             "name": "Services from #START# to #END#",
             "quantity": 1,
-            "uom_id": self.product_1.uom_id.id,
+            # "uom_id": cls.product_1.uom_id.id,
             "price_unit": 100,
             "discount": 50,
             "recurring_rule_type": "monthly",
@@ -81,25 +86,36 @@ class TestContractSale(TransactionCase):
             "date_start": "2020-01-01",
             "recurring_next_date": "2020-01-15",
         }
-        self.contract.contract_template_id = self.template
-        self.contract._onchange_contract_template_id()
-        self.contract_line = self.env["contract.line"].create(self.line_vals)
-        self.contract2 = self.env["contract.contract"].create(
+        with Form(cls.contract) as contract_form, freeze_time(contract_date):
+            contract_form.contract_template_id = cls.template
+            with contract_form.contract_line_ids.new() as line_form:
+                line_form.product_id = cls.product_1
+                line_form.name = "Services from #START# to #END#"
+                line_form.quantity = 1
+                line_form.price_unit = 100.0
+                line_form.discount = 50
+                line_form.recurring_rule_type = "monthly"
+                line_form.recurring_interval = 1
+                line_form.date_start = "2020-01-15"
+                line_form.recurring_next_date = "2020-01-15"
+        cls.contract_line = cls.contract.contract_line_ids[1]
+
+        cls.contract2 = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract 2",
-                "type": "sale",
-                "partner_id": self.partner.id,
-                "pricelist_id": self.partner.property_product_pricelist.id,
+                "generation_type": "sale",
+                "partner_id": cls.partner.id,
+                "pricelist_id": cls.partner.property_product_pricelist.id,
                 "contract_type": "purchase",
                 "contract_line_ids": [
                     (
                         0,
                         0,
                         {
-                            "product_id": self.product_1.id,
+                            "product_id": cls.product_1.id,
                             "name": "Services from #START# to #END#",
                             "quantity": 1,
-                            "uom_id": self.product_1.uom_id.id,
+                            "uom_id": cls.product_1.uom_id.id,
                             "price_unit": 100,
                             "discount": 50,
                             "recurring_rule_type": "monthly",
@@ -156,6 +172,7 @@ class TestContractSale(TransactionCase):
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
         res = {
+            "contract_type": "sale",
             "contract_line_ids": [
                 (
                     0,
@@ -171,7 +188,7 @@ class TestContractSale(TransactionCase):
                         "recurring_interval": 1,
                     },
                 )
-            ]
+            ],
         }
         del self.template_vals["name"]
         self.assertDictEqual(res, self.template_vals)
@@ -195,11 +212,11 @@ class TestContractSale(TransactionCase):
         self.contract_line.date_start = "2020-01-01"
         self.contract_line.recurring_invoicing_type = "post-paid"
         self.contract_line.date_end = "2020-03-15"
-        self.contract_line._onchange_date_start()
+        self.contract_line._onchange_is_auto_renew()
         contracts = self.contract2
         for _i in range(10):
-            contracts |= self.contract.copy({"type": "sale"})
-        self.env["contract.contract"].cron_recurring_create_sale()
+            contracts |= self.contract.copy({"generation_type": "sale"})
+        self.env["contract.contract"]._cron_recurring_create(create_type="sale")
         order_lines = self.env["sale.order.line"].search(
             [("contract_line_id", "in", contracts.mapped("contract_line_ids").ids)]
         )
