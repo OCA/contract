@@ -2,16 +2,16 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ContractAbstractContract(models.AbstractModel):
     _inherit = "contract.abstract.contract"
 
-    type = fields.Selection(
-        [("invoice", "Invoice"), ("sale", "Sale")],
-        string="Type",
-        default="invoice",
-        required=True,
-    )
     sale_autoconfirm = fields.Boolean(string="Sale Autoconfirm")
+
+    @api.model
+    def _get_generation_type_selection(self):
+        res = super()._get_generation_type_selection()
+        res.append(("sale", "Sale"))
+        return res
