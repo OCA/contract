@@ -114,39 +114,13 @@ class ContractContract(models.Model):
 
     def _recurring_create_sale(self, date_ref=False):
         sales_values = self._prepare_recurring_sales_values(date_ref)
-        so_rec = self.env["sale.order"].create(sales_values)
-        for _rec in self.filtered(lambda c: c.sale_autoconfirm):
-            so_rec.action_confirm()
-        return so_rec
+        sale_orders = self.env["sale.order"].create(sales_values)
+        sale_orders_to_confirm = sale_orders.filtered(
+            lambda sale: sale.contract_auto_confirm
+        )
+        sale_orders_to_confirm.action_confirm()
+        return sale_orders
 
     @api.model
     def cron_recurring_create_sale(self, date_ref=None):
-        if not date_ref:
-            date_ref = fields.Date.context_today(self)
-        domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain.extend([("type", "=", "sale")])
-        sales = self.env["sale.order"]
-        # Sales by companies, so assignation emails get correct context
-        companies_to_sale = self.read_group(domain, ["company_id"], ["company_id"])
-        for row in companies_to_sale:
-            contracts_to_sale = self.search(row["__domain"]).with_context(
-                allowed_company_ids=[row["company_id"][0]]
-            )
-            sales |= contracts_to_sale._recurring_create_sale(date_ref)
-        return sales
-
-    @api.model
-    def cron_recurring_create_invoice(self, date_ref=None):
-        if not date_ref:
-            date_ref = fields.Date.context_today(self)
-        domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain.extend([("type", "=", "invoice")])
-        invoices = self.env["account.move"]
-        # Invoice by companies, so assignation emails get correct context
-        companies_to_invoice = self.read_group(domain, ["company_id"], ["company_id"])
-        for row in companies_to_invoice:
-            contracts_to_invoice = self.search(row["__domain"]).with_context(
-                allowed_company_ids=[row["company_id"][0]]
-            )
-            invoices |= contracts_to_invoice._recurring_create_invoice(date_ref)
-        return invoices
+        return self._cron_recurring_create(date_ref, create_type="sale")
