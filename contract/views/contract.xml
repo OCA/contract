@@ -40,7 +40,7 @@
                     <button
                         name="recurring_create_invoice"
                         type="object"
-                        attrs="{'invisible': [('create_invoice_visibility', '=', False)]}"
+                        attrs="{'invisible': ['|', ('create_invoice_visibility', '=', False),('generation_type','!=','invoice')]}"
                         string="Create invoices"
                         groups="base.group_no_one"
                     />
