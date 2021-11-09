@@ -7,8 +7,11 @@
     "version": "14.0.0.0.1",
     "category": "Contract Management",
     "license": "AGPL-3",
-    "author": "LasLabs, " "ACSONE SA/NV, " "Odoo Community Association (OCA), " "Vertel AB",
-    # "website": "https://github.com/oca/contract",
+    "author": "LasLabs, "
+    "ACSONE SA/NV, "
+    "Vertel AB"
+    "Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/contract",
     "depends": ["product", "contract_sale"],
     "data": [
         "views/res_config_settings.xml",
