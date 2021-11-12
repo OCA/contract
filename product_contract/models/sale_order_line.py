@@ -84,8 +84,8 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id")
     def _compute_contract_template_id(self):
         for rec in self:
-            rec.contract_template_id = rec.product_id.with_context(
-                force_company=rec.order_id.company_id.id
+            rec.contract_template_id = rec.product_id.with_company(
+                rec.order_id.company_id
             ).property_contract_template_id
 
     def _get_auto_renew_rule_type(self):

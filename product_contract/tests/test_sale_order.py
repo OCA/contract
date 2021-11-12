@@ -4,7 +4,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
 
@@ -116,26 +116,16 @@ class TestSaleOrder(TransactionCase):
         other_company = self.env["res.company"].create(
             {"name": "other company", "parent_id": self.sale.company_id.id}
         )
-        self.sale.company_id = other_company
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
+            self.sale.company_id = other_company
             self.sale.action_confirm()
 
     def test_change_sale_company_2(self):
         """Contract company must be the sale order company."""
         self.assertTrue(self.sale.company_id)
-        other_company = self.env["res.company"].create(
-            {"name": "other company", "parent_id": self.sale.company_id.id}
-        )
-        self.product1.with_context(
-            force_company=other_company.id
-        ).property_contract_template_id = self.contract_template1
-        self.product2.with_context(
-            force_company=other_company.id
-        ).property_contract_template_id = self.contract_template2
-        self.sale.company_id = other_company
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped("contract_id")
-        self.assertEqual(contracts.mapped("company_id"), other_company)
+        self.assertEqual(contracts.mapped("company_id"), self.sale.company_id)
 
     def test_sale_order_invoice_status(self):
         """
