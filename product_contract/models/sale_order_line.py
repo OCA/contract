@@ -54,7 +54,9 @@ class SaleOrderLine(models.Model):
     )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     auto_renew_interval = fields.Integer(
-        default=1, string="Renew Every", help="Renew every (Days/Week/Month/Year)",
+        default=1,
+        string="Renew Every",
+        help="Renew every (Days/Week/Month/Year)",
     )
     auto_renew_rule_type = fields.Selection(
         [
@@ -106,7 +108,8 @@ class SaleOrderLine(models.Model):
                 rec.date_end = (
                     rec.date_start
                     + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(), int(rec.product_uom_qty),
+                        rec._get_auto_renew_rule_type(),
+                        int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
                 )
@@ -125,7 +128,8 @@ class SaleOrderLine(models.Model):
                 rec.date_end = (
                     rec.date_start
                     + contract_line_model.get_relative_delta(
-                        rec._get_auto_renew_rule_type(), int(rec.product_uom_qty),
+                        rec._get_auto_renew_rule_type(),
+                        int(rec.product_uom_qty),
                     )
                     - relativedelta(days=1)
                 )

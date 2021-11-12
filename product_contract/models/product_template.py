@@ -46,7 +46,9 @@ class ProductTemplate(models.Model):
         string="Termination Notice type",
     )
     auto_renew_interval = fields.Integer(
-        default=1, string="Renew Every", help="Renew every (Days/Week/Month/Year)",
+        default=1,
+        string="Renew Every",
+        help="Renew every (Days/Week/Month/Year)",
     )
     auto_renew_rule_type = fields.Selection(
         [
