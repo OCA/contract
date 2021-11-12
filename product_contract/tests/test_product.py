@@ -14,9 +14,9 @@ class TestProductTemplate(TransactionCase):
         self.contract = self.env["contract.template"].create({"name": "Test"})
 
     def test_change_is_contract(self):
-        """ It should verify that the property_contract_template_id
+        """It should verify that the property_contract_template_id
         field value is removed for all the companies when
-        is_contract is set to False """
+        is_contract is set to False"""
         self.service_product.is_contract = True
         self.service_product.property_contract_template_id = self.contract.id
         self.service_product.is_contract = False
@@ -24,8 +24,8 @@ class TestProductTemplate(TransactionCase):
 
     def test_check_contract_product_type(self):
         """
-            It should raise ValidationError on change of is_contract to True
-            for consu product
+        It should raise ValidationError on change of is_contract to True
+        for consu product
         """
         with self.assertRaises(ValidationError):
             self.consu_product.is_contract = True

@@ -96,14 +96,15 @@ class TestSaleOrder(TransactionCase):
         self.assertTrue(self.sale.is_contract)
 
     def test_action_confirm(self):
-        """ It should create a contract for each contract template used in
-        order_line """
+        """It should create a contract for each contract template used in
+        order_line"""
         self.order_line1.onchange_product()
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped("contract_id")
         self.assertEqual(len(contracts), 2)
         self.assertEqual(
-            self.order_line1.contract_id.contract_template_id, self.contract_template1,
+            self.order_line1.contract_id.contract_template_id,
+            self.contract_template1,
         )
         contract_line = self.order_line1.contract_id.contract_line_ids
         self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
@@ -148,8 +149,8 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(self.order_line1.qty_to_invoice, 0)
 
     def test_action_confirm_without_contract_creation(self):
-        """ It should create a contract for each contract template used in
-        order_line """
+        """It should create a contract for each contract template used in
+        order_line"""
         self.sale.company_id.create_contract_at_sale_order_confirmation = False
         self.order_line1.onchange_product()
         self.sale.action_confirm()
@@ -159,7 +160,8 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(len(self.sale.order_line.mapped("contract_id")), 2)
         self.assertFalse(self.sale.need_contract_creation)
         self.assertEqual(
-            self.order_line1.contract_id.contract_template_id, self.contract_template1,
+            self.order_line1.contract_id.contract_template_id,
+            self.contract_template1,
         )
         contract_line = self.order_line1.contract_id.contract_line_ids
         self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
@@ -174,11 +176,12 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(self.sale.contract_count, 2)
 
     def test_onchange_product(self):
-        """ It should get recurrence invoicing info to the sale line from
-        its product """
+        """It should get recurrence invoicing info to the sale line from
+        its product"""
         self.order_line1.onchange_product()
         self.assertEqual(
-            self.order_line1.recurring_rule_type, self.product1.recurring_rule_type,
+            self.order_line1.recurring_rule_type,
+            self.product1.recurring_rule_type,
         )
         self.assertEqual(
             self.order_line1.recurring_invoicing_type,
@@ -348,7 +351,7 @@ class TestSaleOrder(TransactionCase):
         self.sale.action_draft()
 
     def test_order_lines_with_the_same_contract_template(self):
-        """ It should create one contract with two lines grouped by contract
+        """It should create one contract with two lines grouped by contract
         template"""
         self.product2.with_context(force_company=self.sale.company_id.id).write(
             {
