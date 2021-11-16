@@ -97,17 +97,24 @@ def create_contract_records(cr):
         INSERT INTO contract_contract
         SELECT * FROM account_analytic_account
         WHERE id IN (SELECT DISTINCT {} FROM contract_line)
+            OR id IN (SELECT DISTINCT contract_id FROM account_invoice)
         """).format(
             sql.Identifier(contract_field_name),
         ),
     )
     # Deactivate disabled contracts
     openupgrade.logged_query(
-        cr, """UPDATE contract_contract cc
+        cr, sql.SQL("""
+        UPDATE contract_contract cc
         SET active = False
         FROM account_analytic_account aaa
         WHERE aaa.id = cc.id
-            AND NOT aaa.recurring_invoices""",
+            AND (NOT aaa.recurring_invoices
+            OR aaa.id NOT IN (
+                SELECT DISTINCT {} FROM contract_line)
+            )""").format(
+            sql.Identifier(contract_field_name),
+        ),
     )
     # Handle id sequence
     cr.execute("CREATE SEQUENCE IF NOT EXISTS contract_contract_id_seq")
