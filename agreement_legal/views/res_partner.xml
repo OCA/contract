@@ -4,12 +4,18 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='internal_notes']" position="after">
-                <page name="agreement" string="Agreements">
-                    <group>
-                        <field name="agreement_ids" nolabel="1" />
-                    </group>
-                </page>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_open_agreement"
+                    type="object"
+                    icon="fa-file-archive-o"
+                >
+                    <field
+                        name="agreements_count"
+                        string="Agreements"
+                        widget="statinfo"
+                    />
+                </button>
             </xpath>
         </field>
     </record>
