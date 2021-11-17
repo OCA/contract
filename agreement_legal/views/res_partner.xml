@@ -8,12 +8,18 @@
             eval="[(4, ref('agreement_legal.group_agreement_user'))]"
         />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='internal_notes']" position="after">
-                <page name="agreement" string="Agreements">
-                    <group>
-                        <field name="agreement_ids" nolabel="1" />
-                    </group>
-                </page>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_open_agreement"
+                    type="object"
+                    icon="fa-file-archive-o"
+                >
+                    <field
+                        name="agreements_count"
+                        string="Agreements"
+                        widget="statinfo"
+                    />
+                </button>
             </xpath>
         </field>
     </record>
