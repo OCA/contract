@@ -225,7 +225,7 @@
                             />
                             <field
                                 name="end_date"
-                                attrs="{'required': [('is_template', '=', False)], 'invisible': [('is_template', '=', True)]}"
+                                attrs="{'required': [('is_template', '=', False), ('no_end_date', '=', False)], 'invisible': [('is_template', '=', True)]}"
                             />
                             <field name="expiration_notice" />
                             <field name="change_notice" />
@@ -235,6 +235,7 @@
                             />
                             <field name="termination_requested" />
                             <field name="termination_date" />
+                            <field name="no_end_date" invisible="1" />
                         </group>
                     </group>
                     <group string="Special Terms">
