@@ -20,6 +20,11 @@ class TestContractSale(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.analytic_account = cls.env["account.analytic.account"].create(
+            {
+                "name": "Contracts",
+            }
+        )
         contract_date = "2020-01-15"
         cls.pricelist = cls.env["product.pricelist"].create(
             {
@@ -71,6 +76,7 @@ class TestContractSale(SavepointCase):
                 "pricelist_id": cls.partner.property_product_pricelist.id,
                 "generation_type": "sale",
                 "sale_autoconfirm": False,
+                "group_id": cls.analytic_account.id,
             }
         )
         cls.line_vals = {
@@ -224,3 +230,8 @@ class TestContractSale(SavepointCase):
             len(contracts.mapped("contract_line_ids")),
             len(order_lines),
         )
+
+    def test_contract_sale_analytic(self):
+        orders = self.env["sale.order"].browse()
+        orders |= self.contract.recurring_create_sale()
+        self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
