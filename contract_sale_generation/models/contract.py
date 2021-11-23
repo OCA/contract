@@ -25,6 +25,7 @@ class ContractContract(models.Model):
                 "origin": self.name,
                 "company_id": self.company_id.id,
                 "user_id": self.partner_id.user_id.id,
+                "analytic_account_id": self.group_id.id,
             }
         )
         if self.payment_term_id:
