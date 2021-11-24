@@ -390,6 +390,18 @@ class Agreement(models.Model):
             # Reset revision to 0 since it's a new version
         return super().write({"revision": 0})
 
+    # Create Extension Button: Copy
+    def create_extend_agreement(self):
+        self.ensure_one()
+        res = self.copy()
+        return {
+            "res_model": "agreement",
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "view_type": "form",
+            "res_id": res.id,
+        }
+
     def _get_new_agreement_default_vals(self):
         self.ensure_one()
         default_vals = {
