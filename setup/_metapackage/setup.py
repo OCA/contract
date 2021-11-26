@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo14-addon-agreement',
         'odoo14-addon-agreement_account',
         'odoo14-addon-agreement_legal',
+        'odoo14-addon-agreement_legal_sale',
         'odoo14-addon-agreement_maintenance',
         'odoo14-addon-agreement_mrp',
         'odoo14-addon-agreement_project',
