@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.line form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_abstract_contract_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="state" widget="statusbar" />
+            </header>
+            <group name="recurrence_info" position="inside">
+                <group>
+                    <field name="create_invoice_visibility" invisible="1" />
+                    <field name="date_start" required="1" />
+                    <field name="next_period_date_start" />
+                    <field name="recurring_next_date" />
+                </group>
+                <group>
+                    <field
+                        name="date_end"
+                        attrs="{'required': [('is_auto_renew', '=', True)]}"
+                    />
+                    <field name="next_period_date_end" />
+                </group>
+                <group groups="base.group_no_one">
+                    <field name="last_date_invoiced" readonly="True" />
+                    <field name="termination_notice_date" readonly="True" />
+                </group>
+                <group>
+                    <field name="manual_renew_needed" />
+                </group>
+                <group>
+                    <field name="predecessor_contract_line_id" />
+                </group>
+                <group>
+                    <field name="successor_contract_line_id" />
+                </group>
+            </group>
+            <group name="recurrence_info" position="after">
+                <group
+                    name="analytic"
+                    groups="analytic.group_analytic_accounting,analytic.group_analytic_tags"
+                    attrs="{'invisible': [('display_type', '!=', False)]}"
+                >
+                    <field
+                        name="analytic_account_id"
+                        groups="analytic.group_analytic_accounting"
+                    />
+                    <field
+                        name="analytic_tag_ids"
+                        widget="many2many_tags"
+                        groups="analytic.group_analytic_tags"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+    <!--Customer FORM view-->
+    <record id="contract_line_customer_form_view" model="ir.ui.view">
+        <field name="name">contract.line customer form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+            </field>
+        </field>
+    </record>
+    <!--Supplier FORM view-->
+    <record id="contract_line_supplier_form_view" model="ir.ui.view">
+        <field name="name">contract.line supplier form view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('purchase_ok', '=', True)]</attribute>
+            </field>
+            <field name="automatic_price" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+        </field>
+    </record>
+    <!-- TODO: Delete this view in migration to v13 or further migrations -->
+    <!--TREE view-->
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="name">contract.line tree view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-muted="is_canceled"
+                decoration-info="create_invoice_visibility and not is_canceled"
+            >
+                <field name="sequence" widget="handle" />
+                <field name="product_id" />
+                <field name="name" />
+                <field
+                    name="analytic_account_id"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field
+                    name="analytic_tag_ids"
+                    widget="many2many_tags"
+                    groups="analytic.group_analytic_tags"
+                />
+                <field name="quantity" />
+                <field name="uom_id" />
+                <field name="automatic_price" />
+                <field
+                    name="price_unit"
+                    attrs="{'readonly': [('automatic_price', '=', True)]}"
+                />
+                <field name="specific_price" invisible="1" />
+                <field name="discount" groups="base.group_no_one" />
+                <field name="price_subtotal" />
+                <field name="recurring_interval" invisible="1" />
+                <field name="recurring_rule_type" invisible="1" />
+                <field name="recurring_invoicing_type" invisible="1" />
+                <field name="date_start" required="1" />
+                <field name="date_end" />
+                <field name="recurring_next_date" required="1" />
+                <field name="last_date_invoiced" groups="base.group_no_one" />
+                <field name="create_invoice_visibility" invisible="1" />
+                <field name="is_plan_successor_allowed" invisible="1" />
+                <field name="is_stop_plan_successor_allowed" invisible="1" />
+                <field name="is_stop_allowed" invisible="1" />
+                <field name="is_cancel_allowed" invisible="1" />
+                <field name="is_un_cancel_allowed" invisible="1" />
+                <field name="is_auto_renew" invisible="1" />
+                <field name="is_canceled" invisible="1" />
+                <button
+                    name="action_plan_successor"
+                    string="Plan Start"
+                    type="object"
+                    icon="fa-calendar text-success"
+                    attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"
+                />
+                <button
+                    name="action_stop_plan_successor"
+                    string="Stop Plan Successor"
+                    type="object"
+                    icon="fa-pause text-muted"
+                    attrs="{'invisible': [('is_stop_plan_successor_allowed', '=', False)]}"
+                />
+                <button
+                    name="action_stop"
+                    string="Stop"
+                    type="object"
+                    icon="fa-stop text-danger"
+                    attrs="{'invisible': [('is_stop_allowed', '=', False)]}"
+                />
+                <button
+                    name="cancel"
+                    string="Cancel"
+                    type="object"
+                    icon="fa-ban text-danger"
+                    confirm="Are you sure you want to cancel this line"
+                    attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"
+                />
+                <button
+                    name="action_uncancel"
+                    string="Un-cancel"
+                    type="object"
+                    icon="fa-ban text-success"
+                    attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"
+                />
+                <button
+                    name="renew"
+                    string="Renew"
+                    type="object"
+                    icon="fa-fast-forward text-success"
+                    groups="base.group_no_one"
+                    attrs="{'invisible': [('is_auto_renew', '=', False)]}"
+                />
+            </tree>
+        </field>
+    </record>
+    <!--Supplier TREE view-->
+    <record id="contract_line_supplier_tree_view" model="ir.ui.view">
+        <field name="name">contract.line supplier tree view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="inherit_id" ref="contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <field name="automatic_price" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

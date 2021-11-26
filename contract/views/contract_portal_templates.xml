@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 Tecnativa - Víctor Martínez
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="portal_my_home_menu_contract"
+        name="Portal layout : Contract menu entries"
+        inherit_id="portal.portal_breadcrumbs"
+        priority="35"
+    >
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li
+                t-if="page_name == 'Contracts'"
+                t-attf-class="breadcrumb-item #{'active ' if not contract else ''}"
+            >
+                <a
+                    t-if="contract"
+                    t-attf-href="/my/contracts?{{ keep_query() }}"
+                >Contracts</a>
+                <t t-else="">Contracts</t>
+            </li>
+            <li t-if="contract" class="breadcrumb-item active">
+                <t t-esc="contract.name" />
+            </li>
+        </xpath>
+    </template>
+    <template
+        id="portal_my_home_contract"
+        name="Portal My Home : Contract entries"
+        inherit_id="portal.portal_my_home"
+        priority="30"
+    >
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry" t-if="contract_count">
+                <t t-set="title">Contracts</t>
+                <t t-set="url" t-value="'/my/contracts'" />
+                <t t-set="count" t-value="contract_count" />
+            </t>
+        </xpath>
+    </template>
+    <template id="portal_my_contracts" name="My Contracts">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Contracts</t>
+            </t>
+            <t t-if="contracts" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Contract #</th>
+                        <th class='d-none d-md-table-cell'>Date</th>
+                        <th class='d-none d-md-table-cell'>Date end</th>
+                        <th class='text-right'>Reference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="contracts" t-as="contract">
+                        <tr>
+                            <td>
+                                <a
+                                    t-att-href="contract.get_portal_url()"
+                                    t-attf-class="tr_contract_link"
+                                    t-att-title="contract.name"
+                                >
+                                    <t t-esc="contract.name" />
+                                </a>
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                <span t-field="contract.recurring_next_date" />
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                <span t-field="contract.date_end" />
+                            </td>
+                            <td class='text-right'>
+                                <span t-field="contract.code" />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+    <template id="portal_contract_page" name="My Contract">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="account.group_account_invoice">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t
+                        t-set="backend_url"
+                        t-value="'/web#return_label=Website&amp;model=contract.contract&amp;id=%s&amp;view_type=form' % (contract.id)"
+                    />
+                </t>
+            </t>
+            <t t-call="portal.portal_record_layout">
+                <t t-set="card_header">
+                    <h5 class="mb-0">
+                        <span>
+                            Contract - <span t-field="contract.name" />
+                        </span>
+                    </h5>
+                </t>
+                <t t-set="card_body">
+                    <div id="general_information">
+                        <div class="row mt4">
+                            <div
+                                t-if="contract.partner_id"
+                                class="col-12 col-md-6 mb-4 mb-md-0"
+                            >
+                                <h6>
+                                    <strong>Customer:</strong>
+                                </h6>
+                                <div class="row">
+                                    <div class="col flex-grow-0 pr-3">
+                                        <img
+                                            t-if="contract.partner_id.image_128"
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            t-att-src="image_data_uri(contract.partner_id.image_128)"
+                                            alt="Contact"
+                                        />
+                                        <img
+                                            t-else=""
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            src="/web/static/src/img/user_menu_avatar.png"
+                                            alt="Contact"
+                                        />
+                                    </div>
+                                    <div class="col pl-sm-0">
+                                        <address
+                                            t-field="contract.partner_id"
+                                            t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="contract.user_id" class="col-12 col-md-6">
+                                <h6>
+                                    <strong>Responsible:</strong>
+                                </h6>
+                                <div class="row">
+                                    <div class="col flex-grow-0 pr-3">
+                                        <img
+                                            t-if="contract.user_id.image_128"
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            t-att-src="image_data_uri(contract.user_id.image_128)"
+                                            alt="Contact"
+                                        />
+                                        <img
+                                            t-else=""
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            src="/web/static/src/img/user_menu_avatar.png"
+                                            alt="Contact"
+                                        />
+                                    </div>
+                                    <div class="col pl-sm-0">
+                                        <address
+                                            t-field="contract.user_id"
+                                            t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt32" id="product_information">
+                            <div class="col-12 col-md-6 mb-4 mb-md-0">
+                                <div t-if="contract.code" class="row mb-2 mb-sm-1">
+                                    <div class="col-12 col-sm-4">
+                                        <strong>Reference</strong>
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <span t-field="contract.code" />
+                                    </div>
+                                </div>
+                                <div
+                                    t-if="contract.recurring_next_date"
+                                    class="row mb-2 mb-sm-1"
+                                >
+                                    <div class="col-12 col-sm-4">
+                                        <strong>Date of Next Invoice</strong>
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <span
+                                            t-field="contract.recurring_next_date"
+                                            t-options='{"widget": "date"}'
+                                        />
+                                    </div>
+                                </div>
+                                <div t-if="contract.date_end" class="row mb-2 mb-sm-1">
+                                    <div class="col-12 col-sm-4">
+                                        <strong>Date end</strong>
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <span
+                                            t-field="contract.date_end"
+                                            t-options='{"widget": "date"}'
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="item_details">
+                            <table class="table table-sm" id="sales_order_table">
+                                <thead class="bg-100">
+                                    <tr>
+                                        <th
+                                            name="th_name"
+                                            class="text-left"
+                                        >Description</th>
+                                        <th
+                                            name="th_quantity"
+                                            class="text-right"
+                                        >Quantity</th>
+                                        <th
+                                            name="th_price_unit"
+                                            class="text-right"
+                                        >Price unit</th>
+                                        <th
+                                            name="th_recurring_interval"
+                                            class="text-right"
+                                        >Recurrence</th>
+                                        <th
+                                            name="th_recurring_next_date"
+                                            class="text-right"
+                                        >Date of next invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="contract_tbody">
+                                    <t
+                                        t-foreach="contract.contract_line_ids"
+                                        t-as="line"
+                                    >
+                                        <tr
+                                            t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''"
+                                        >
+                                            <t t-if="not line.display_type">
+                                                <td name="td_name">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                                <td
+                                                    name="td_quantity"
+                                                    class="text-right"
+                                                >
+                                                    <span t-field="line.quantity" />
+                                                </td>
+                                                <td
+                                                    name="td_price_unit"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.price_unit"
+                                                        t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
+                                                    />
+                                                </td>
+                                                <td
+                                                    name="td_recurring_interval"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.recurring_interval"
+                                                    />
+                                                    <span
+                                                        t-field="line.recurring_rule_type"
+                                                    />
+                                                </td>
+                                                <td
+                                                    name="td_recurring_next_date"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.recurring_next_date"
+                                                    />
+                                                </td>
+                                            </t>
+                                            <t
+                                                t-if="line.display_type == 'line_section'"
+                                            >
+                                                <td colspan="99">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                                <t
+                                                    t-set="current_section"
+                                                    t-value="line"
+                                                />
+                                                <t
+                                                    t-set="current_subtotal"
+                                                    t-value="0"
+                                                />
+                                            </t>
+                                            <t t-if="line.display_type == 'line_note'">
+                                                <td colspan="99">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <section
+                t-if="contract.modification_ids"
+                class="s_timeline pt24 pb48 o_colored_level"
+                data-snippet="s_timeline"
+            >
+                <div class="container s_timeline_line">
+                    <t t-set="last_modification_date" t-value="False" />
+                    <div
+                        class="s_timeline_row d-block d-md-flex flex-row"
+                        t-foreach="contract.modification_ids"
+                        t-as="modification"
+                    >
+                        <div class="s_timeline_date">
+                            <t
+                                t-if="not last_modification_date or last_modification_date!=modification.date"
+                            >
+                                <t
+                                    t-set="last_modification_date"
+                                    t-value="modification.date"
+                                />
+                                <span class="bg-white">
+                                    <b
+                                        class="o_default_snippet_text"
+                                        t-esc="last_modification_date"
+                                        t-options='{"widget": "date"}'
+                                    />
+                                </span>
+                            </t>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_left d-flex">
+                            <div
+                                class="s_timeline_card s_card card bg-white w-100"
+                                data-snippet="s_card"
+                            >
+                                <div class="card-body">
+                                    <div
+                                        class="card-text o_default_snippet_text"
+                                        t-field="modification.description"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_timeline_content s_timeline_content_right" />
+                    </div>
+                </div>
+            </section>
+            <!-- chatter -->
+            <div id="contract_communication" class="mt-4">
+                <h2>Communication</h2>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="contract" />
+                    <t t-set="token" t-value="contract.access_token" />
+                    <t t-set="pid" t-value="pid" />
+                    <t t-set="hash" t-value="hash" />
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

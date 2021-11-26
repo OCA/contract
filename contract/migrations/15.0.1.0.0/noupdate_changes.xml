@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    This is a copy / paste from contract/data/mail_template.xml
+    The only differences are:
+      - Use noupdate=0
+      - remove template_contract_modification which remains unchanged between 14 and 15
+-->
+<odoo>
+    <record id="email_contract_template" model="mail.template">
+        <field name="name">Email Contract Template</field>
+        <field
+            name="email_from"
+        >{{ (object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '') }}</field>
+        <field
+            name="subject"
+        >{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="model_id" ref="model_contract_contract" />
+        <field name="auto_delete" eval="True" />
+        <field name="report_template" ref="contract.report_contract" />
+        <field name="report_name">Contract</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <div
+                style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+            >
+                <p>Hello <t t-out="object.partner_id.name or '' " />,</p>
+                <p>A new contract has been created: </p>
+
+                <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br />
+                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out="object.name" /><br />
+                    <t t-if="object.date_start">
+                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t
+                            t-out="object.date_start or ''"
+                        /><br />
+                    </t>
+
+                    <t t-if="object.user_id">
+                        <t t-if="object.user_id.email">
+                            &amp;nbsp;&amp;nbsp;Your Contact: <a
+                                t-att-href="'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
+                                t-out="object.user_id.name"
+                            />
+                        </t>
+                        <t t-else="">
+                            &amp;nbsp;&amp;nbsp;Your Contact: <t
+                                t-out="object.user_id.name"
+                            />
+                        </t>
+                    </t>
+                </p>
+
+                <br />
+                <p>If you have any questions, do not hesitate to contact us.</p>
+                <p>Thank you for choosing <t
+                        t-out="object.company_id.name or 'us'"
+                    />!</p>
+                <br />
+                <br />
+                <div
+                    style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;"
+                >
+                    <h3
+                        style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;"
+                    >
+                        <strong
+                            style="text-transform:uppercase;"
+                            t-out="object.company_id.name"
+                        /></h3>
+                </div>
+                <div
+                    style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;"
+                >
+                    <span style="color: #222; margin-bottom: 5px; display: block; ">
+                        <address
+                            t-field="object.company_id.sudo().partner_id"
+                            t-options='{"widget": "contact", "fields": ["name", "address"], "no_marker": True}'
+                        />
+                    </span>
+                    <t t-if="object.company_id.phone">
+                        <div
+                            style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; "
+                        >
+                            Phone: <t t-out="object.company_id.phone" />
+                        </div>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        <div>
+                            Web: <a
+                                t-att-href="object.company_id.website"
+                                t-out="object.company_id.website"
+                            />
+                        </div>
+                    </t>
+                </div>
+                <br />
+                <a
+                    t-att-href="'%s/my/contracts/%s?access_token=%s' % (object.get_base_url(), object.id, object.access_token)"
+                    target="_blank"
+                    style="background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;"
+                >View contract</a>
+            </div>
+        </field>
+    </record>
+    <record id="mail_template_contract_modification" model="mail.template">
+        <field name="name">Contract Modification Template</field>
+        <field
+            name="email_from"
+        >{{ (object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '') }}</field>
+        <field
+            name="subject"
+        >{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - Modifications</field>
+        <field name="model_id" ref="model_contract_contract" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <p>Hello</p>
+            <p>We have modifications on the contract that we want to notify you.</p>
+        </field>
+    </record>
+    <template
+        id="mail_notification_contract"
+        inherit_id="mail.mail_notification_paynow"
+        primary="True"
+    >
+        <xpath expr="//t[@t-out='message.body']" position="after">
+            <t t-out="0" />
+            <t t-if="record._name == 'contract.contract'">
+                <t
+                    t-set="share_url"
+                    t-value="record._get_share_url(redirect=True, signup_partner=True, share_token=True)"
+                />
+                <t
+                    t-set="access_url"
+                    t-value="is_online and share_url and base_url + share_url or ''"
+                />
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

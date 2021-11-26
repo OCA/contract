@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_abstract_contract_line_form_view" model="ir.ui.view">
+        <field
+            name="name"
+        >contract.abstract.contract.line form view (in contract)</field>
+        <field name="model">contract.abstract.contract.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="display_type" invisible="1" />
+                <header attrs="{'invisible': [('display_type', '!=', False)]}" />
+                <sheet>
+                    <field name="specific_price" invisible="1" />
+                    <group
+                        col="4"
+                        attrs="{'invisible': [('display_type', '!=', False)]}"
+                    >
+                        <field
+                            colspan="4"
+                            name="product_id"
+                            attrs="{'required': [('display_type', '=', False)]}"
+                        />
+                        <field name="product_uom_category_id" invisible="1" />
+
+                        <label for="quantity" />
+                        <div class="o_row">
+                            <field name="quantity" class="oe_inline" />
+                            <field
+                                name="uom_id"
+                                class="oe_inline"
+                                groups="uom.group_uom"
+                                attrs="{'required': [('display_type', '=', False)]}"
+                            />
+                        </div>
+                        <field colspan="2" name="automatic_price" />
+                        <field
+                            colspan="2"
+                            name="price_unit"
+                            attrs="{'readonly': [('automatic_price', '=', True)]}"
+                        />
+                        <field colspan="2" name="discount" groups="base.group_no_one" />
+                    </group>
+                    <label
+                        for="name"
+                        string="Description"
+                        attrs="{'invisible': [('display_type', '!=', False)]}"
+                    />
+                    <label
+                        for="name"
+                        string="Section"
+                        attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
+                    />
+                    <label
+                        for="name"
+                        string="Note"
+                        attrs="{'invisible': [('display_type', '!=', 'line_note')]}"
+                    />
+                    <field name="name" nolabel="1" />
+                    <group
+                        name="note_invoicing_mode"
+                        attrs="{'invisible': [('display_type', '!=', 'line_note')]}"
+                    >
+                        <field name="note_invoicing_mode" widget="radio" />
+                    </group>
+                    <group
+                        col="4"
+                        attrs="{'invisible': [('display_type', '!=', False)]}"
+                    >
+                        <field colspan="2" name="is_auto_renew" />
+                        <field colspan="2" name="is_canceled" invisible="1" />
+                    </group>
+                    <group
+                        attrs="{'invisible':['|', ('is_auto_renew', '=', False), ('display_type', '!=', False)]}"
+                    >
+                        <group>
+                            <label for="auto_renew_interval" />
+                            <div>
+                                <field
+                                    name="auto_renew_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                                <field
+                                    name="auto_renew_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="termination_notice_interval" />
+                            <div>
+                                <field
+                                    name="termination_notice_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                                <field
+                                    name="termination_notice_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                            </div>
+                        </group>
+                    </group>
+                    <group
+                        name="recurrence_info"
+                        attrs="{'invisible': ['|', ('display_type', '=', 'line_section'), '&amp;', ('display_type', '=', 'line_note'), ('note_invoicing_mode', '!=', 'custom')]}"
+                    >
+                        <group>
+                            <label for="recurring_interval" />
+                            <div class="o_row">
+                                <field
+                                    name="recurring_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                                <field
+                                    name="recurring_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                            </div>
+                        </group>
+                        <group>
+                            <field name="recurring_invoicing_type" />
+                            <field name="recurring_invoicing_offset" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
