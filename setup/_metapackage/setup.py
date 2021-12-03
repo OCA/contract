@@ -10,9 +10,12 @@ setuptools.setup(
     install_requires=[
         'odoo14-addon-agreement',
         'odoo14-addon-agreement_legal',
+        'odoo14-addon-agreement_project',
         'odoo14-addon-agreement_sale',
         'odoo14-addon-agreement_serviceprofile',
+        'odoo14-addon-agreement_stock',
         'odoo14-addon-contract',
+        'odoo14-addon-contract_mandate',
         'odoo14-addon-contract_payment_mode',
         'odoo14-addon-contract_sale',
     ],

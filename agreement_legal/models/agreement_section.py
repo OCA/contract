@@ -66,7 +66,6 @@ class AgreementSection(models.Model):
     def onchange_copyvalue(self):
         self.sub_object_id = False
         self.copyvalue = False
-        self.sub_object_id = False
         if self.field_id and not self.field_id.relation:
             self.copyvalue = "${{object.{} or {}}}".format(
                 self.field_id.name, self.default_value or "''"
@@ -83,7 +82,7 @@ class AgreementSection(models.Model):
                 self.default_value or "''",
             )
 
-    # compute the dynamic content for mako expression
+    # compute the dynamic content for jinja expression
     def _compute_dynamic_content(self):
         MailTemplates = self.env["mail.template"]
         for section in self:
@@ -92,5 +91,5 @@ class AgreementSection(models.Model):
             )
             content = MailTemplates.with_context(lang=lang)._render_template(
                 section.content, "agreement.section", [section.id]
-            )
+            )[section.id]
             section.dynamic_content = content

@@ -8,5 +8,6 @@ class AgreementSubtype(models.Model):
     _name = "agreement.subtype"
     _description = "Agreement Subtypes"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Sub-Type Name", required=True)
     agreement_type_id = fields.Many2one("agreement.type", string="Agreement Type")
+    active = fields.Boolean(string="Active", default=True)
