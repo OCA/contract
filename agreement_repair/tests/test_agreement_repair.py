@@ -13,9 +13,7 @@ class TestAgreementRepair(common.TransactionCase):
         self.agreement_type_id = self.env["agreement.type"].create(
             {"name": "Test Agreement Type", "active": True}
         )
-        self.product = self.env.ref(
-            "product.product_product_8_product_template"
-        )
+        self.product = self.env.ref("product.product_product_8_product_template")
 
     def test_fieldservice_purchase(self):
         agreement_vals = {
@@ -27,8 +25,8 @@ class TestAgreementRepair(common.TransactionCase):
         }
         agreement = self.agreement_obj.create(agreement_vals)
 
-        repair_rec = self.env.ref('repair.repair_r0')
-        repair_rec.write({'agreement_id': agreement.id})
+        repair_rec = self.env.ref("repair.repair_r0")
+        repair_rec.write({"agreement_id": agreement.id})
 
         agreement._compute_repair_count()
         self.assertEqual(agreement.repair_count, 1, "Wrong no of Repair Orders Count!")
