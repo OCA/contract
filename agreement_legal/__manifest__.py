@@ -11,7 +11,7 @@
     "website": "https://github.com/OCA/contract",
     "category": "Partner",
     "license": "AGPL-3",
-    "version": "13.0.2.5.0",
+    "version": "13.0.2.5.1",
     "depends": ["contacts", "agreement", "product"],
     "data": [
         "data/cron.xml",
