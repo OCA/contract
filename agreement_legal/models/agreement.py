@@ -3,6 +3,7 @@
 
 import ast
 import json as simplejson
+from datetime import timedelta
 
 from lxml import etree
 
@@ -293,6 +294,35 @@ class Agreement(models.Model):
     readonly = fields.Boolean(
         related="stage_id.readonly",
     )
+
+    @api.depends("agreement_type_id", "end_date")
+    def _compute_to_review_date(self):
+        for record in self:
+            if record.end_date:
+                record.to_review_date = record.end_date + timedelta(
+                    days=-record.agreement_type_id.review_days
+                )
+
+    @api.model
+    def _alert_to_review_date(self):
+        agreements = self.search(
+            [
+                ("to_review_date", "=", fields.Date.today()),
+                ("agreement_type_id.review_user_id", "!=", False),
+            ]
+        )
+        for agreement in agreements:
+            if (
+                self.env["mail.activity"].search_count(
+                    [("res_id", "=", agreement.id), ("res_model", "=", self._name)]
+                )
+                == 0
+            ):
+                agreement.activity_schedule(
+                    "agreement_legal.mail_activity_review_agreement",
+                    user_id=agreement.agreement_type_id.review_user_id.id,
+                    note=_("Your activity is going to end soon"),
+                )
 
     # compute the dynamic content for jinja expression
     def _compute_dynamic_description(self):
