@@ -314,22 +314,22 @@ class Agreement(models.Model):
 
     @api.model
     def _alert_to_review_date(self):
-        activities = self.search(
+        agreements = self.search(
             [
-                ("to_review_date", "=", fields.datetime.today()),
+                ("to_review_date", "=", fields.Date.today()),
                 ("agreement_type_id.review_user_id", "!=", False),
             ]
         )
-        for activity in activities:
+        for agreement in agreements:
             if (
                 self.env["mail.activity"].search_count(
-                    [("res_id", "=", activity.id), ("res_model", "=", "agreement")]
+                    [("res_id", "=", agreement.id), ("res_model", "=", self._name)]
                 )
                 == 0
             ):
-                activity.activity_schedule(
+                agreement.activity_schedule(
                     "agreement_legal.mail_activity_review_agreement",
-                    user_id=activity.type_id.review_user_id.id,
+                    user_id=agreement.agreement_type_id.review_user_id.id,
                     note=_("Your activity is going to end soon"),
                 )
 

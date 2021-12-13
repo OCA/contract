@@ -148,3 +148,46 @@ class TestAgreement(TransactionCase):
         self.test_agreement.create_new_version()
         self.assertEqual(self.test_agreement.state, "draft")
         self.assertEqual(len(self.test_agreement.previous_version_agreements_ids), 1)
+
+    def test_cron(self):
+        self.agreement_type.write(
+            {"review_user_id": self.env.user.id, "review_days": 0}
+        )
+        self.agreement_type.flush()
+        self.test_agreement.write({"agreement_type_id": self.agreement_type.id})
+        self.test_agreement.flush()
+        self.test_agreement.refresh()
+        self.assertFalse(
+            self.env["mail.activity"].search_count(
+                [
+                    ("res_id", "=", self.test_agreement.id),
+                    ("res_model", "=", self.test_agreement._name),
+                ]
+            )
+        )
+        self.env["agreement"]._alert_to_review_date()
+        self.assertFalse(
+            self.env["mail.activity"].search_count(
+                [
+                    ("res_id", "=", self.test_agreement.id),
+                    ("res_model", "=", self.test_agreement._name),
+                ]
+            )
+        )
+        self.test_agreement.to_review_date = fields.Date.today()
+        self.env["agreement"]._alert_to_review_date()
+        self.assertTrue(
+            self.env["mail.activity"].search_count(
+                [
+                    ("res_id", "=", self.test_agreement.id),
+                    ("res_model", "=", self.test_agreement._name),
+                ]
+            )
+        )
+
+    def test_partner_action(self):
+        action = self.test_agreement.partner_id.action_open_agreement()
+        self.assertIn(
+            self.test_agreement, self.env[action["res_model"]].search(action["domain"])
+        )
+        self.assertEqual(1, self.test_agreement.partner_id.agreements_count)
