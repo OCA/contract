@@ -15,6 +15,7 @@ setuptools.setup(
         'odoo14-addon-agreement_maintenance',
         'odoo14-addon-agreement_mrp',
         'odoo14-addon-agreement_project',
+        'odoo14-addon-agreement_repair',
         'odoo14-addon-agreement_sale',
         'odoo14-addon-agreement_serviceprofile',
         'odoo14-addon-agreement_stock',
