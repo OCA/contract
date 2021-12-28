@@ -199,16 +199,18 @@ class ContractLine(models.Model):
                 "&",
                 "&",
                 "&",
+                ('display_type', '=', False),
                 ('date_start', '<=', today),
-                ('is_canceled', '=', False),
                 "|",
-                ('date_end', '>=', today),
                 ('date_end', '=', False),
+                ('date_end', '>=', today),
                 "|",
+                "|",
+                "|",
+                ('termination_notice_date', '=', False),
+                ('termination_notice_date', '>=', today),
                 ('is_auto_renew', '=', True),
-                "&",
-                ('is_auto_renew', '=', False),
-                ('termination_notice_date', '>', today),
+                ('manual_renew_needed', '=', True),
             ]
         if state == 'to-renew':
             return [
