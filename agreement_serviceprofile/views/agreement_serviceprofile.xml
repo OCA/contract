@@ -1,5 +1,4 @@
 <odoo>
-
     <!-- Agreement Service Profile List View-->
     <record id="agreement_serviceprofile_tree" model="ir.ui.view">
         <field name="name">Agreement Service Profile Tree</field>
@@ -15,7 +14,6 @@
             </tree>
         </field>
     </record>
-
     <!-- Agreement Service Profile Form View -->
     <record id="agreement_serviceprofile_form" model="ir.ui.view">
         <field name="name">Agreement Service Profile Form</field>
@@ -65,7 +63,7 @@
                         </group>
                     </group>
                     <group string="Notes">
-                            <field name="notes" nolabel="1" widget="html" />
+                        <field name="notes" nolabel="1" widget="html" />
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -75,7 +73,6 @@
             </form>
         </field>
     </record>
-
     <!-- Agreement Service Profile Kanban View -->
     <record id="agreement_serviceprofile_kanban" model="ir.ui.view">
         <field name="name">Agreement Service Profile Kanban</field>
@@ -97,7 +94,6 @@
             </kanban>
         </field>
     </record>
-
     <!-- Agreement Service Profile Search View -->
     <record id="agreement_serviceprofile_search" model="ir.ui.view">
         <field name="name">Agreement Service Profile Search</field>
@@ -126,20 +122,17 @@
             </search>
         </field>
     </record>
-
     <!-- Actions opening views on models -->
     <record id="agreement_serviceprofile_action" model="ir.actions.act_window">
         <field name="name">Service Profiles</field>
         <field name="res_model">agreement.serviceprofile</field>
         <field name="view_mode">tree,form</field>
     </record>
-
     <record id="agreement_serviceprofile_dashboard" model="ir.actions.act_window">
         <field name="name">Service Profiles</field>
         <field name="res_model">agreement.serviceprofile</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
-
     <menuitem
         name="Service Profiles"
         id="agreement_serviceprofiles"
@@ -147,7 +140,6 @@
         sequence="50"
         action="agreement_serviceprofile_action"
     />
-
     <menuitem
         name="Service Profiles"
         id="dashboard_serviceprofiles"
@@ -155,5 +147,4 @@
         sequence="20"
         action="agreement_serviceprofile_dashboard"
     />
-
 </odoo>

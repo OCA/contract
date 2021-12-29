@@ -11,10 +11,7 @@ class TestAgreementServiceProfile(TransactionCase):
         super().setUp()
         self.test_customer = self.env["res.partner"].create({"name": "TestCustomer"})
         self.agreement_type = self.env["agreement.type"].create(
-            {
-                "name": "Test Agreement Type",
-                "domain": "sale",
-            }
+            {"name": "Test Agreement Type", "domain": "sale"}
         )
         self.test_agreement = self.env["agreement"].create(
             {
@@ -27,10 +24,7 @@ class TestAgreementServiceProfile(TransactionCase):
             }
         )
         self.test_serviceprofile = self.env["agreement.serviceprofile"].create(
-            {
-                "name": "TestServiceProfile",
-                "agreement_id": self.test_agreement.id,
-            }
+            {"name": "TestServiceProfile", "agreement_id": self.test_agreement.id}
         )
 
     # TEST 01: Check Default Stage
@@ -44,7 +38,6 @@ class TestAgreementServiceProfile(TransactionCase):
         self.assertEqual(
             sp_01._read_group_stage_ids(self.env["agreement.stage"], [], "id"),
             self.env["agreement.stage"].search(
-                [("stage_type", "=", "serviceprofile")],
-                order="id",
+                [("stage_type", "=", "serviceprofile")], order="id",
             ),
         )

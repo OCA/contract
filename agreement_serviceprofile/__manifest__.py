@@ -4,7 +4,7 @@
 {
     "name": "Agreement Service Profile",
     "summary": "Adds an Agreement Service Profile object",
-    "version": "14.0.1.0.0",
+    "version": "13.0.1.0.0",
     "category": "Contract",
     "author": "Pavlov Media, "
     "Open Source Integrators, "
@@ -20,8 +20,6 @@
         "views/agreement.xml",
     ],
     "development_status": "Beta",
-    "maintainers": [
-        "max3903",
-    ],
+    "maintainers": ["max3903"],
     "installable": True,
 }
