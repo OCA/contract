@@ -12,11 +12,16 @@
                             <field name="name" />
                             <field name="product_id" />
                             <field name="product_variant_id" />
+                            <field name="stage_id" />
                         </tree>
                         <form>
                             <group>
                                 <group>
                                     <field name="name" />
+                                    <field
+                                        name="stage_id"
+                                        domain="[('stage_type', '=', 'serviceprofile')]"
+                                    />
                                 </group>
                                 <group>
                                     <field name="use_product_variant" />
