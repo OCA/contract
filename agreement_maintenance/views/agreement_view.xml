@@ -19,6 +19,22 @@
         </field>
     </record>
 
+    <record
+        model="ir.actions.act_window"
+        id="action_maintenance_equipment_agreement_specific"
+    >
+        <field name="name">Maintenance Equipments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('agreement_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create Maintenance Equipments
+            </p>
+        </field>
+    </record>
+
     <record id="partner_agreement_form_view" model="ir.ui.view">
         <field name="name">agreement.form.maintenance.request</field>
         <field name="model">agreement</field>
@@ -36,6 +52,23 @@
                             <field name="mr_count" widget="statinfo" nolabel="1" />
                         </span>
                         <span class="o_stat_text">Maintenance Requests</span>
+                    </div>
+                </button>
+                <button
+                    name="%(action_maintenance_equipment_agreement_specific)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-archive"
+                >
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field
+                                name="mr_count_equipments"
+                                widget="statinfo"
+                                nolabel="1"
+                            />
+                        </span>
+                        <span class="o_stat_text">Maintenance Equipments</span>
                     </div>
                 </button>
             </xpath>
