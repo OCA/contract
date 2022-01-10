@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract form view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <button name="action_preview" position="after">
+                <button
+                    class="btn-primary"
+                    type="action"
+                    name="%(act_open_wizard_product_set_add_from_contract)d"
+                    icon="fa-cubes"
+                    attrs="{'invisible': [('is_terminated','=',True)]}"
+                    groups="base.group_user"
+                    string="Add set"
+                />
+            </button>
+        </field>
+    </record>
+
+
+</odoo>
