@@ -513,12 +513,14 @@ class ContractContract(models.Model):
             invoice_vals, move_form = contract._prepare_invoice(date_ref)
             invoice_vals["invoice_line_ids"] = []
             for line in contract_lines:
-                invoice_line_vals = line._prepare_invoice_line(move_form=move_form)
+                invoice_line_vals = line._prepare_invoice_line(move_form)
                 if invoice_line_vals:
                     # Allow extension modules to return an empty dictionary for
                     # nullifying line. We should then cleanup certain values.
-                    del invoice_line_vals["company_id"]
-                    del invoice_line_vals["company_currency_id"]
+                    if "company_id" in invoice_line_vals:
+                        del invoice_line_vals["company_id"]
+                    if "company_currency_id" in invoice_line_vals:
+                        del invoice_line_vals["company_currency_id"]
                     invoice_vals["invoice_line_ids"].append((0, 0, invoice_line_vals))
             invoices_values.append(invoice_vals)
             # Force the recomputation of journal items
@@ -531,17 +533,18 @@ class ContractContract(models.Model):
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
-        invoice = self._recurring_create_invoice()
-        if invoice:
-            self.message_post(
-                body=_(
-                    "Contract manually invoiced: "
-                    '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
-                    "</a>"
+        invoices = self._recurring_create_invoice()
+        if invoices:
+            for invoice in invoices:
+                self.message_post(
+                    body=_(
+                        "Contract manually invoiced: "
+                        '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
+                        "</a>"
+                    )
+                    % (invoice._name, invoice.id)
                 )
-                % (invoice._name, invoice.id)
-            )
-        return invoice
+        return invoices
 
     @api.model
     def _invoice_followers(self, invoices):
