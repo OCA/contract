@@ -91,16 +91,14 @@ class ProductSetAdd(models.TransientModel):
     def _prepare_contract_lines(self):
         max_sequence = self._get_max_sequence()
         contract_lines = []
-        for set_line in self._get_lines():
-            contract_lines.append(
-                (
-                    0,
-                    0,
-                    self.prepare_contract_line_data(
-                        set_line, max_sequence=max_sequence
-                    ),
-                )
-            )
+        for seq, set_line in enumerate(self._get_lines(), start=1):
+            values = self.prepare_contract_line_data(set_line)
+            # When we play with sequence widget on a set of product,
+            # it's possible to have a negative sequence.
+            # In this case, the line is not added at the correct place.
+            # So we have to force it with the order of the line.
+            values.update({"sequence": max_sequence + seq})
+            contract_lines.append((0, 0, values))
         return contract_lines
 
     def _get_max_sequence(self):
