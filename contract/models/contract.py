@@ -636,7 +636,7 @@ class ContractContract(models.Model):
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
-        return self._cron_recurring_create(date_ref)
+        return self._cron_recurring_create(date_ref, create_type="invoice")
 
     def action_terminate_contract(self):
         self.ensure_one()
