@@ -11,7 +11,7 @@ class ContractAbstractContract(models.AbstractModel):
     sale_autoconfirm = fields.Boolean(string="Sale Autoconfirm")
 
     @api.model
-    def _get_generation_type_selection(self):
-        res = super()._get_generation_type_selection()
+    def _selection_generation_type(self):
+        res = super()._selection_generation_type()
         res.append(("sale", "Sale"))
         return res
