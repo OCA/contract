@@ -169,7 +169,7 @@ class TestContractBase:
         )
 
 
-class TestContract(TestContractBase):
+class TestContract(TestContractBase, common.SavepointCase):
     def _add_template_line(self, overrides=None):
         if overrides is None:
             overrides = {}
@@ -2412,7 +2412,3 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
-
-
-class TestContractCase(TestContract, common.SavepointCase):
-    """ TESTS """
