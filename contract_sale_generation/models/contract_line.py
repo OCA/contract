@@ -7,11 +7,7 @@ from odoo import models
 class ContractLine(models.Model):
     _inherit = "contract.line"
 
-    def _prepare_sale_line(self, order_id=False, sale_values=False):
-        self.ensure_one()
-        dates = self._get_period_to_invoice(
-            self.last_date_invoiced, self.recurring_next_date
-        )
+    def _prepare_sale_line_vals(self, dates, order_id=False):
         sale_line_vals = {
             "product_id": self.product_id.id,
             "product_uom_qty": self._get_quantity_to_invoice(*dates),
@@ -22,6 +18,15 @@ class ContractLine(models.Model):
         }
         if order_id:
             sale_line_vals["order_id"] = order_id.id
+        return sale_line_vals
+
+    def _prepare_sale_line(self, order_id=False, sale_values=False):
+        self.ensure_one()
+        dates = self._get_period_to_invoice(
+            self.last_date_invoiced, self.recurring_next_date
+        )
+        sale_line_vals = self._prepare_sale_line_vals(dates, order_id)
+
         order_line = (
             self.env["sale.order.line"]
             .with_company(self.contract_id.company_id.id)
