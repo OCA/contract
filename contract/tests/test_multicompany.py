@@ -5,7 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from .test_contract import TestContractBase
 
 
-class ContractMulticompanyCase(TestContractBase):
+class ContractMulticompanyCase(TestContractBase, AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -107,7 +107,3 @@ class ContractMulticompanyCase(TestContractBase):
             len(contracts_company_2.mapped("contract_line_ids")),
             len(invoice_lines_company_2),
         )
-
-
-class TestContractMultiCompany(ContractMulticompanyCase, AccountTestInvoicingCommon):
-    """ TESTS """
