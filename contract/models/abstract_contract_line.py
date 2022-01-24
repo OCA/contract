@@ -20,7 +20,12 @@ class ContractAbstractContractLine(models.AbstractModel):
 
     name = fields.Text(string="Description", required=True)
     quantity = fields.Float(default=1.0, required=True)
-    uom_id = fields.Many2one("uom.uom", string="Unit of Measure")
+    allowed_uom_categ_id = fields.Many2one(related="product_id.uom_id.category_id")
+    uom_id = fields.Many2one(
+        "uom.uom",
+        string="Unit of Measure",
+        domain="[('category_id', '=?', allowed_uom_categ_id)]",
+    )
     automatic_price = fields.Boolean(
         string="Auto-price?",
         help="If this is marked, the price will be obtained automatically "
@@ -232,13 +237,7 @@ class ContractAbstractContractLine(models.AbstractModel):
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
-        if not self.product_id:
-            return {"domain": {"uom_id": []}}
-
         vals = {}
-        domain = {
-            "uom_id": [("category_id", "=", self.product_id.uom_id.category_id.id)]
-        }
         if not self.uom_id or (
             self.product_id.uom_id.category_id.id != self.uom_id.category_id.id
         ):
@@ -257,4 +256,3 @@ class ContractAbstractContractLine(models.AbstractModel):
         vals["name"] = self.product_id.get_product_multiline_description_sale()
         vals["price_unit"] = product.price
         self.update(vals)
-        return {"domain": domain}
