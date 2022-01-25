@@ -1,18 +1,19 @@
 # Copyright 2021 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from .test_contract import TestContractBase
 
 
-class ContractMulticompanyCase(TestContractBase, AccountTestInvoicingCommon):
+class ContractMulticompanyCase(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        chart_template = cls.env.ref("l10n_generic_coa.configurable_chart_template")
         cls.company_obj = cls.env["res.company"]
         cls.company_1 = cls.env.ref("base.main_company")
-        cls.company_2 = cls.company_data_2["company"]
+        vals = {"name": "Company 2"}
+        cls.company_2 = cls.company_obj.create(vals)
+        chart_template.try_loading(company=cls.company_2)
         cls.env.user.company_ids |= cls.company_2
 
         cls.contract_mc = (

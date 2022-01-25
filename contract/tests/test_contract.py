@@ -18,7 +18,7 @@ def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractBase:
+class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -170,7 +170,7 @@ class TestContractBase:
         )
 
 
-class TestContract(TestContractBase, common.SavepointCase):
+class TestContract(TestContractBase):
     def _add_template_line(self, overrides=None):
         if overrides is None:
             overrides = {}
