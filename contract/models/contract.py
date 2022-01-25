@@ -599,21 +599,23 @@ class ContractContract(models.Model):
         return moves
 
     @api.model
+    def _get_recurring_create_func(self, create_type="invoice"):
+        """
+        Allows to retrieve the recurring create function depending
+        on generate_type attribute
+        """
+        if create_type == "invoice":
+            return self.__class__._recurring_create_invoice
+
+    @api.model
     def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
         """
         The cron function in order to create recurrent documents
         from contracts.
         """
-        _recurring_create_func = f"_recurring_create_{create_type}"
-        if not hasattr(self, _recurring_create_func):
-            _logger.info(
-                _(
-                    "No function to create %s documents automatically is "
-                    "declared in contract.contract model. Passing."
-                ),
-                create_type,
-            )
-            return False
+        _recurring_create_func = self._get_recurring_create_func(
+            create_type=create_type
+        )
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
@@ -631,7 +633,7 @@ class ContractContract(models.Model):
                 lambda c: c.company_id == company
                 and (not c.date_end or c.recurring_next_date <= c.date_end)
             ).with_company(company)
-            getattr(contracts_to_invoice, _recurring_create_func)(date_ref)
+            _recurring_create_func(contracts_to_invoice, date_ref)
         return True
 
     @api.model
