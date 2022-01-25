@@ -213,6 +213,14 @@
                                             class="text-right"
                                         >Price unit</th>
                                         <th
+                                            name="th_discount"
+                                            class="text-right"
+                                        >Discount (%)</th>
+                                        <th
+                                            name="th_price_subtotal"
+                                            class="text-right"
+                                        >Sub Total</th>
+                                        <th
                                             name="th_recurring_interval"
                                             class="text-right"
                                         >Recurrence</th>
@@ -246,6 +254,21 @@
                                                 >
                                                     <span
                                                         t-field="line.price_unit"
+                                                        t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
+                                                    />
+                                                </td>
+                                                <td
+                                                    name="td_discount"
+                                                    class="text-right"
+                                                >
+                                                    <span t-field="line.discount" />
+                                                </td>
+                                                <td
+                                                    name="td_price_subtotal"
+                                                    class="text-right"
+                                                >
+                                                    <span
+                                                        t-field="line.price_subtotal"
                                                         t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
                                                     />
                                                 </td>
