@@ -141,8 +141,6 @@ class TestContractSale(SavepointCase):
     def test_contract(self):
         recurring_next_date = to_date("2020-02-15")
         self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
-        res = self.contract_line._onchange_product_id()
-        self.assertIn("uom_id", res["domain"])
         self.contract_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_sale()
@@ -158,8 +156,6 @@ class TestContractSale(SavepointCase):
         recurring_next_date = to_date("2020-02-15")
         self.contract.sale_autoconfirm = True
         self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
-        res = self.contract_line._onchange_product_id()
-        self.assertIn("uom_id", res["domain"])
         self.contract_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_sale()
