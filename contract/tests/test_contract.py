@@ -18,7 +18,7 @@ def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractBase(common.SavepointCase):
+class TestContractBase(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
