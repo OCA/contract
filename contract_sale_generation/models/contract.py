@@ -123,5 +123,12 @@ class ContractContract(models.Model):
         return sale_orders
 
     @api.model
+    def _get_recurring_create_func(self, create_type="invoice"):
+        res = super()._get_recurring_create_func(create_type=create_type)
+        if create_type == "sale":
+            return self.__class__._recurring_create_sale
+        return res
+
+    @api.model
     def cron_recurring_create_sale(self, date_ref=None):
         return self._cron_recurring_create(date_ref, create_type="sale")
