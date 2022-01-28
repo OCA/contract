@@ -52,9 +52,7 @@
             expr="//tbody//tr[hasclass('is-subtotal', 'text-right')]/td/strong"
             position="after"
         >
-            <strong class="mr16">Subtotal <span
-                    t-field="current_section.name"
-                /></strong>
+            <strong class="mr16">Subtotal</strong>
         </xpath>
         <xpath
             expr="//tbody//tr[hasclass('is-subtotal', 'text-right')]"
@@ -70,6 +68,7 @@
                                 t-esc="current_subtotal"
                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'
                             />
+                            <t t-set="total" t-value="total + current_subtotal" />
                         </span>
                     </td>
                 </tr>
