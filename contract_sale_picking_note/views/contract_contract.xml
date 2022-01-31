@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="contract_contract_form_view">
+        <field
+            name="name"
+        >contract.contract.form (in contract_sale_picking_note)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='info']/group[last()]" position="after">
+                <group name="picking_note">
+                    <field name="picking_note" />
+                    <field name="picking_customer_note" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
