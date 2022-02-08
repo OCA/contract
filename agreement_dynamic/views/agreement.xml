@@ -1,0 +1,199 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_agreement_form" model="ir.ui.view">
+        <field name="name">agreement.form.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <h2 attrs="{'invisible': [('is_template', '=', False)]}">
+                    <label for="model_name" />
+                    <field name="model_name" />
+                </h2>
+            </xpath>
+            <!-- remove signature date from form view...-->
+            <xpath expr="//field[@name='signature_date']" position="replace">
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_toggle_active"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-archive"
+                >
+                    <field
+                        name="active"
+                        widget="boolean_button"
+                        options="{'terminology': {
+                            'string_true': 'ACTIVE',
+                            'hover_true': 'PAUSE',
+                            'string_false': 'HELP',
+                            'hover_false': 'FINISH'
+                        }}"
+                    />
+                </button>
+                <field name="section_ids" invisible="1" />
+                <button
+                    type="object"
+                    name="action_view_section"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    attrs="{'invisible': [('section_count', '=', 0)]}"
+                    groups="base.group_user"
+                >
+                    <field name="section_count" widget="statinfo" string="Sections" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='is_template']" position="after">
+                <field
+                    name="template_id"
+                    attrs="{'readonly': [('signature_date', '!=', False)]}"
+                />
+                <!--
+                editable only for templates
+                 -->
+                <field
+                    name="model_id"
+                    attrs="{'invisible':[('is_template', '=', False)]}"
+                />
+                <label for="resource_ref" />
+                <div>
+                    <field
+                        name="resource_ref"
+                        options="{'hide_model': True, 'no_create': True, 'no_edit': True, 'no_open': True}"
+                        class="oe_inline"
+                    />
+                    <!-- Make it obvious that target record for templates is for previewing -->
+                    <span
+                        attrs="{'invisible':['|', ('is_template', '=', False),('model_id', '=', False)]}"
+                    >
+                        <strong> PREVIEW</strong>
+                    </span>
+                </div>
+                <field
+                    name="condition_domain_global"
+                    widget="domain"
+                    options="{'model': 'agreement', 'in_dialog': True}"
+                    attrs="{'invisible': [('is_template', '=', False)]}"
+                />
+                <button
+                    name="action_wizard_sign_agreement"
+                    string="Lock agreement"
+                    type="object"
+                    class="oe_highlight"
+                    attrs="{'invisible': [('signature_date', '!=', False)]}"
+                    context="{'default_agreement_id': active_id}"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="dynamic_content" string="Dynamic content">
+                    <!-- Show this when agreement is locked-->
+                    <div attrs="{'invisible': [('signature_date', '=', False)]}">
+                        <p>
+                            <h2>
+                                <strong>LOCKED</strong>
+                            </h2>
+                        </p>
+                    </div>
+                    <!-- add groups to make this look less repulsive to the eye-->
+                    <group name="main">
+                        <group col="1">
+                            <field
+                                name='signature_date'
+                                attrs="{'readonly': [('signature_date','!=', False)], 'invisible': [('signature_date', '=', False)]}"
+                                force_save='True'
+                            />
+                            <field name="model_name" />
+                            <field
+                                name="wrapper_report_id"
+                                attrs="{'readonly': [('signature_date','!=', False)]}"
+                            />
+                        </group>
+                        <group name="content_buttons" col="1">
+                            <button
+                                name="action_preview_content"
+                                string="Preview"
+                                type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible':[('resource_ref', '=', False)]}"
+                            />
+                        </group>
+                    </group>
+                    <field
+                        name="section_ids"
+                        attrs="{'readonly':[('signature_date', '!=', False)]}"
+                    >
+                        <tree decoration-bf="is_paragraph">
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="condition_python" />
+                            <field name="condition_domain" />
+                            <field name="condition_python_preview" />
+                            <field name="show_in_report" />
+                            <field name="is_paragraph" invisible="1" />
+                        </tree>
+                    </field>
+                </page>
+                <page
+                    name="agreements"
+                    string="Agreements"
+                    attrs="{'invisible':[('is_template', '=', False)]}"
+                >
+                    <field name="agreement_ids" />
+                </page>
+                <page name="help" string="Help">
+                    <field name="documentation" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- add template_id to tree view -->
+    <record id="agreement_tree" model="ir.ui.view">
+        <field name="name">agreement.tree</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="template_id" />
+            </xpath>
+        </field>
+    </record>
+    <!-- search view -->
+    <record id="agreement_search" model="ir.ui.view">
+        <field name="name">agreement.search</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='groupby']" position="inside">
+                <filter
+                    name="template_groupby"
+                    string="Template"
+                    context="{'group_by': 'template_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+    <!-- override agreement action to show only agreements, not templates-->
+    <record id="agreement.agreement_action" model="ir.actions.act_window">
+        <field name="name">Agreements</field>
+        <field name="res_model">agreement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_template', '=', False)]</field>
+    </record>
+    <!-- add action and menu to show only templates-->
+    <record id="agreement_template_action" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">agreement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_template', '=', True)]</field>
+        <field name="context">{'default_is_template': True}</field>
+    </record>
+    <menuitem
+        name="Templates"
+        id="agreement_template_menu_root"
+        parent="agreement.agreement_menu_root"
+        sequence="400"
+        action="agreement_template_action"
+        groups="agreement_dynamic.group_agreement_template_editors"
+    />
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="agreement_dynamic_document" model="ir.actions.report">
+        <field name="name">Agreement Dynamic</field>
+        <field name="model">agreement</field>
+        <field name="binding_model_id" ref="agreement.model_agreement" />
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >agreement_dynamic.report_agreement_dynamic_document</field>
+        <field
+            name="report_file"
+        >agreement_dynamic.report_agreement_dynamic_document</field>
+        <field name="binding_view_types">list,form</field>
+    </record>
+    <record id="agreement_dynamic_document_preview" model="ir.actions.report">
+        <field name="name">Agreement Dynamic Preview</field>
+        <field name="model">agreement</field>
+        <field name="binding_model_id" ref="agreement.model_agreement" />
+        <field name="report_type">qweb-html</field>
+        <field
+            name="report_name"
+        >agreement_dynamic.report_agreement_dynamic_document</field>
+        <field
+            name="report_file"
+        >agreement_dynamic.report_agreement_dynamic_document</field>
+        <field name="binding_view_types">list,form</field>
+    </record>
+    <template id="report_agreement_dynamic_document">
+        <t t-name="agreement.report_agreement_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="#{doc.get_template_xml_id()}">
+                        <div class="page">
+                            <h1 t-field="doc.name" />
+                            <h2>Agreement</h2>
+                            <h3>Content</h3>
+                            <t t-foreach="doc.section_ids" t-as="s">
+                                <t t-if="s.show_in_report">
+                                    <t t-raw="s.dynamic_content" />
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

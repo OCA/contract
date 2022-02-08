@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_agreement_section_search" model="ir.ui.view">
+        <field name="name">agreement.section.search</field>
+        <field name="type">search</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <search string="Sections">
+                <field name="name" />
+                <field name="agreement_id" />
+                <filter
+                    name="Paragraph"
+                    string="Paragraph"
+                    domain="[('is_paragraph','=','True')]"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="view_agreement_section_tree" model="ir.ui.view">
+        <field name="name">agreement.section.tree</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <tree string="Agreement Section">
+                <field name="sequence" />
+                <field name="name" />
+                <field name="agreement_id" />
+                <field name="condition_python" />
+                <field name="condition_domain" />
+                <field name="condition_python_preview" />
+                <field name="show_in_report" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_agreement_section_form" model="ir.ui.view">
+        <field name="name">agreement.section.form</field>
+        <field name="model">agreement.section</field>
+        <field name="arch" type="xml">
+            <form string="Agreement Section">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <div>
+                        <label for="agreement_id" />
+                        <field name="agreement_id" readonly="1" />
+                    </div>
+                    <group name="main">
+                        <group name="left">
+                            <notebook>
+                                <page name="content" string="Content">
+                                    <field name="content" widget="html" />
+                                    <div>
+                                        <label for="is_paragraph" />
+                                        <field name="is_paragraph" />
+                                    </div>
+                                </page>
+                                <page name="condition" string="Conditions">
+                                    <group>
+                                        <field name="condition_python" />
+                                        <field name="model_id_model" invisible="1" />
+                                        <field
+                                            name="condition_domain"
+                                            widget="domain"
+                                            options="{'model': 'model_id_model', 'in_dialog': True}"
+                                        />
+                                        <field name="condition_python_preview" />
+                                        <div>
+                                            <span>Placeholder for help</span>
+                                        </div>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                        <group name="right">
+                            <field name="sequence" />
+                            <field name="resource_ref_model_id" />
+                            <field
+                                name="field_id"
+                                domain="[('model_id', '=', active_model),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                            />
+                            <field name="sub_object_id" readonly="1" />
+                            <field
+                                name="sub_model_object_field_id"
+                                domain="[('model_id', '=', sub_object_id),
+                                            ('ttype', '!=', 'one2many'),
+                                            ('ttype', '!=', 'many2many')]"
+                                attrs="{'readonly':[('sub_object_id', '=', False)],
+                                           'required':[('sub_object_id', '!=', False)]}"
+                            />
+                            <field name="default_value" />
+                            <field name="copyvalue" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
