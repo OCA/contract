@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field
+            name="name"
+        >contract.contract form view (in contract_delivery_zone)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="partner_delivery_zone_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="contract_contract_tree_view" model="ir.ui.view">
+        <field
+            name="name"
+        >contract.contract tree view (in contract_delivery_zone)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_tree_view" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="partner_delivery_zone_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="contract_contract_search_view" model="ir.ui.view">
+        <field
+            name="name"
+        >contract.contract search view (in contract_delivery_zone)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_search_view" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="partner_delivery_zone_id" />
+            </field>
+            <filter name="group_by_partner" position="after">
+                <filter
+                    string="Delivery Zone"
+                    name="group_by_delivery_zone"
+                    domain="[]"
+                    context="{'group_by':'partner_delivery_zone_id'}"
+                />
+            </filter>
+
+        </field>
+    </record>
+
+</odoo>
