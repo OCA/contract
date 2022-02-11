@@ -2,6 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
+from odoo.exceptions import (
+    AccessDenied,
+    AccessError,
+    MissingError,
+    UserError,
+    ValidationError,
+)
 
 
 class ContractManuallyCreateInvoice(models.TransientModel):
@@ -52,7 +59,24 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         self.ensure_one()
         invoices = self.env["account.move"]
         for contract in self.contract_to_invoice_ids:
-            invoices |= contract.recurring_create_invoice()
+            try:
+                invoices |= contract.recurring_create_invoice()
+            except (
+                AccessDenied,
+                AccessError,
+                MissingError,
+                UserError,
+                ValidationError,
+            ) as oe:
+                raise UserError(
+                    _(
+                        "Failed to process the contract %(name)s [id: %(id)s]:\n%(ue)s",
+                        name=contract.name,
+                        id=contract.id,
+                        ue=repr(oe),
+                    )
+                )
+
         return {
             "type": "ir.actions.act_window",
             "name": _("Invoices"),
