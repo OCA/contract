@@ -1743,37 +1743,6 @@ class TestContract(TestContractBase):
             len(invoice_lines),
         )
 
-    def test_contract_manually_create_invoice(self):
-        self.acct_line.date_start = "2018-01-01"
-        self.acct_line.recurring_invoicing_type = "post-paid"
-        self.acct_line.date_end = "2018-03-15"
-        self.contract2.unlink()
-        contracts = self.contract
-        for _i in range(10):
-            contracts |= self.contract.copy()
-        wizard = self.env["contract.manually.create.invoice"].create(
-            {"invoice_date": self.today}
-        )
-        wizard.action_show_contract_to_invoice()
-        contract_to_invoice_count = wizard.contract_to_invoice_count
-        self.assertFalse(
-            contracts
-            - self.env["contract.contract"].search(
-                wizard.action_show_contract_to_invoice()["domain"]
-            ),
-        )
-        action = wizard.create_invoice()
-        invoice_lines = self.env["account.move.line"].search(
-            [("contract_line_id", "in", contracts.mapped("contract_line_ids").ids)]
-        )
-        self.assertEqual(
-            len(contracts.mapped("contract_line_ids")),
-            len(invoice_lines),
-        )
-        invoices = self.env["account.move"].search(action["domain"])
-        self.assertFalse(invoice_lines.mapped("move_id") - invoices)
-        self.assertEqual(len(invoices), contract_to_invoice_count)
-
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = "2018-01-05"
         self.acct_line.recurring_invoicing_type = "post-paid"
