@@ -20,94 +20,91 @@ msgstr ""
 "X-Generator: Weblate 3.10\n"
 
 #. module: contract
+#: model:mail.template,body_html:contract.email_contract_template
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
+"                <p>A new contract has been created: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object.name"
+"\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-out="
+"\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-href="
+"\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)\" t-"
+"out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-out="
+"\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>If you have any questions, do not hesitate to contact us."
+"</p>\n"
+"                <p>Thank you for choosing <t t-out=\"object.company_id.name "
+"or 'us'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out="
+"\"object.company_id.name\"/></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
+"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
+"no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">View "
+"contract</a>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
 msgid ""
-"\n"
-"            <p>Hello</p>\n"
+"<p>Hello</p>\n"
 "            <p>We have modifications on the contract that we want to notify "
 "you.</p>\n"
 "        "
-msgstr ""
-
-#. module: contract
-#: model:mail.template,body_html:contract.email_contract_template
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"    <p>Hello ${object.partner_id.name or ''},</p>\n"
-"    <p>A new contract has been created: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
-"       % if object.date_start:\n"
-"       &nbsp;&nbsp;Contract Date Start: ${object.date_start or ''}<br />\n"
-"       % endif\n"
-"\n"
-"       % if object.user_id:\n"
-"       % if object.user_id.email:\n"
-"       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
-"       % else:\n"
-"       &nbsp;&nbsp;Your Contact: ${object.user_id.name}\n"
-"       % endif\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any questions, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id."
-"name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo()."
-"with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone: ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web: <a href=\"${object.company_id.website}\">${object."
-"company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"    <p></p>\n"
-"    <a href=\"${object.get_base_url()}/my/contracts/${object.id}?"
-"access_token=${object.access_token}\" target=\"_blank\" style=\"background-"
-"color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"#fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
-"</div>\n"
-"        "
-msgstr ""
-
-#. module: contract
-#: model:mail.template,subject:contract.email_contract_template
-msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Sopimus (Viite ${object.name or 'n/a'})"
-
-#. module: contract
-#: model:mail.template,subject:contract.mail_template_contract_modification
-msgid ""
-"${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - "
-"Modifications"
 msgstr ""
 
 #. module: contract
@@ -381,7 +378,6 @@ msgstr "Liitteiden määrä"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_auto_renew
-#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
 msgid "Auto Renew"
 msgstr "Automaattinen uusinta"
@@ -434,6 +430,13 @@ msgstr "Peruminen ei ole sallittu tälle riville"
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__canceled
 msgid "Canceled"
 msgstr "Peruttu"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_uom_category_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
+msgid "Category"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -558,6 +561,11 @@ msgid "Contract Modification"
 msgstr ""
 
 #. module: contract
+#: model:mail.template,name:contract.mail_template_contract_modification
+msgid "Contract Modification Template"
+msgstr ""
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Contract Name"
 msgstr "Sopimuksen nimi"
@@ -634,8 +642,8 @@ msgstr "Sopimusrivin '%s' aloituspäivä ei voi olla päättymispäivän jälkee
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
-msgid "Contract line Un-canceled: %s<br/>- "
-msgstr "Sopimusrivin palautettu perutuista: %s<br/>- "
+msgid "Contract line Un-canceled: %s"
+msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -652,75 +660,55 @@ msgstr "Sopimusrivi ja sen seuraaja ovat päällekkäin"
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
-msgid "Contract line canceled: %s<br/>- "
-msgstr "Sopimusrivi peruttu: %s<br/>- "
+msgid "Contract line canceled: %s"
+msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
-"Contract line for <strong>{product}</strong>\n"
+"Contract line for <strong>%(product)s</strong>\n"
 "                            stopped: <br/>\n"
-"                            - <strong>End</strong>: {old_end} -- {new_end}\n"
+"                            - <strong>End</strong>: %(old_end)s -- "
+"%(new_end)s\n"
 "                            "
 msgstr ""
-"Sopimusrivi <strong>{product}</strong> lopetettu: <br/> - "
-"<strong>Pättyminen</strong>: {old_end} -- {new_end}\n"
-"                            "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
-"Contract line for <strong>{product}</strong>\n"
+"Contract line for <strong>%(product)s</strong>\n"
 "                    planned a successor: <br/>\n"
-"                    - <strong>Start</strong>: {new_date_start}\n"
+"                    - <strong>Start</strong>: %(new_date_start)s\n"
 "                    <br/>\n"
-"                    - <strong>End</strong>: {new_date_end}\n"
+"                    - <strong>End</strong>: %(new_date_end)s\n"
 "                    "
 msgstr ""
-"Sopimusrivin <strong>{product}</strong>\n"
-"                    suunniteltu seuraaja: <br/>\n"
-"                    - <strong>Alku</strong>: {new_date_start}\n"
-"                    <br/>\n"
-"                    - <strong>Päättyminen</strong>: {new_date_end}\n"
-"                    "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
-"Contract line for <strong>{product}</strong>\n"
+"Contract line for <strong>%(product)s</strong>\n"
 "                renewed: <br/>\n"
-"                - <strong>Start</strong>: {new_date_start}\n"
+"                - <strong>Start</strong>: %(new_date_start)s\n"
 "                <br/>\n"
-"                - <strong>End</strong>: {new_date_end}\n"
+"                - <strong>End</strong>: %(new_date_end)s\n"
 "                "
 msgstr ""
-"Sopimusrivi <strong>{product}</strong>\n"
-"                uusittu: <br/>\n"
-"                - <strong>Alku</strong>: {new_date_start}\n"
-"                <br/>\n"
-"                - <strong>Päättyminen</strong>: {new_date_end}\n"
-"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
-"Contract line for <strong>{product}</strong>\n"
+"Contract line for <strong>%(product)s</strong>\n"
 "                suspended: <br/>\n"
-"                - <strong>Suspension Start</strong>: {new_date_start}\n"
+"                - <strong>Suspension Start</strong>: %(new_date_start)s\n"
 "                <br/>\n"
-"                - <strong>Suspension End</strong>: {new_date_end}\n"
+"                - <strong>Suspension End</strong>: %(new_date_end)s\n"
 "                "
 msgstr ""
-"Sopimusrivi <strong>{product}</strong>\n"
-"                keskeytetty: <br/>\n"
-"                - <strong>Keskeytyksen alku</strong>: {new_date_start}\n"
-"                <br/>\n"
-"                - <strong>Keskeytyksen päättyminen</strong>: {new_date_end}\n"
-"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -742,11 +730,9 @@ msgstr ""
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
-"Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
-"\"%s\">Invoice</a>"
+"Contract manually invoiced: <a    href=\"#\" data-oe-model=\"%(model_name)s"
+"\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
 msgstr ""
-"Sopimus laskutettu manuaalisesti: <a href=\"#\" data-oe-model=\"%s\" data-oe-"
-"id=\"%s\">Lasku</a>"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
@@ -785,6 +771,15 @@ msgstr "Sopimukset"
 #, python-format
 msgid "Contracts to invoice"
 msgstr "Laskutettavat sopimukset"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__product_uom_category_id
+#: model:ir.model.fields,help:contract.field_contract_line__product_uom_category_id
+#: model:ir.model.fields,help:contract.field_contract_template_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
@@ -968,6 +963,7 @@ msgstr "Kuvaus"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_contract_line__discount
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__discount
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Discount (%)"
 msgstr "Alennus (%)"
 
@@ -988,25 +984,16 @@ msgstr ""
 "Alennus jota käytetään luotuihin laskuihin. Alennus voi olla korkeintaan 100"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_account_move__display_name
-#: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__display_name
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_modification__display_name
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__display_name
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_tag__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__display_name
-#: model:ir.model.fields,field_description:contract.field_res_company__display_name
-#: model:ir.model.fields,field_description:contract.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:contract.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -1017,6 +1004,19 @@ msgstr "Näyttönimi"
 #, fuzzy
 msgid "Display Type"
 msgstr "Näyttönimi"
+
+#. module: contract
+#: model:mail.template,name:contract.email_contract_template
+msgid "Email Contract Template"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+#, python-format
+msgid ""
+"Failed to process the contract %(name)s [id: %(id)s]:\n"
+"%(ue)s"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1032,11 +1032,6 @@ msgstr "Verokanta"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_follower_ids
 msgid "Followers"
 msgstr "Seuraajat"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seuraajat (Kanavat)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_partner_ids
@@ -1066,25 +1061,21 @@ msgid "Group By..."
 msgstr "Ryhmittele..."
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_account_move__id
-#: model:ir.model.fields,field_description:contract.field_account_move_line__id
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__id
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__id
+#: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__id
 #: model:ir.model.fields,field_description:contract.field_contract_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__id
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__id
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__id
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__id
 #: model:ir.model.fields,field_description:contract.field_contract_tag__id
 #: model:ir.model.fields,field_description:contract.field_contract_template__id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__id
-#: model:ir.model.fields,field_description:contract.field_res_company__id
-#: model:ir.model.fields,field_description:contract.field_res_config_settings__id
-#: model:ir.model.fields,field_description:contract.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1229,6 +1220,11 @@ msgid "Invoicing type"
 msgstr "Laskutusmalli"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
+msgid "Is Auto Renew"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
 msgid "Is Follower"
 msgstr "On seuraaja"
@@ -1273,25 +1269,16 @@ msgid "Last Date Invoiced"
 msgstr "Viimeksi laskutettu"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_account_move____last_update
-#: model:ir.model.fields,field_description:contract.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_contract____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_modification____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_tag____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_template____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason____last_update
-#: model:ir.model.fields,field_description:contract.field_res_company____last_update
-#: model:ir.model.fields,field_description:contract.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:contract.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Viimeksi muokattu"
 
@@ -1342,8 +1329,8 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
-msgid "Manual renew needed"
-msgstr "Manuaalinen uusinta vaaditaan"
+msgid "Manual Renew Needed"
+msgstr ""
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
@@ -1574,8 +1561,9 @@ msgstr "Sopimuksen seuraaja ei ole sallittu tälle riville"
 #. module: contract
 #: code:addons/contract/models/contract.py:0
 #, python-format
-msgid "Please define a %s journal for the company '%s'."
-msgstr "Aseta %s-päiväkirja yritykselle '%s'."
+msgid ""
+"Please define a %(contract_type)s journal for the company '%(company)s'."
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
@@ -1926,6 +1914,7 @@ msgstr "Päättäminen/sopimuksen seuraaja ei ole sallittu tälle riville"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Sub Total"
 msgstr "Välisumma"
 
@@ -2013,6 +2002,11 @@ msgid "Termination Notice Before"
 msgstr "Irtisanomisilmoitus ennen"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
+msgid "Termination Notice Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
@@ -2024,11 +2018,6 @@ msgstr "Irtisanomisilmoituksen tyyppi"
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_reason_id
 #, fuzzy
 msgid "Termination Reason"
-msgstr "Irtisanomisilmoituksen päivämäärä"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
-msgid "Termination notice date"
 msgstr "Irtisanomisilmoituksen päivämäärä"
 
 #. module: contract
@@ -2250,6 +2239,103 @@ msgstr "esim. Sopimus XYZ"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "on"
 msgstr ""
+
+#. module: contract
+#: model:mail.template,subject:contract.email_contract_template
+msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: contract
+#: model:mail.template,subject:contract.mail_template_contract_modification
+msgid ""
+"{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
+"Modifications"
+msgstr ""
+
+#~ msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
+#~ msgstr "${object.company_id.name} Sopimus (Viite ${object.name or 'n/a'})"
+
+#~ msgid "Contract line Un-canceled: %s<br/>- "
+#~ msgstr "Sopimusrivin palautettu perutuista: %s<br/>- "
+
+#~ msgid "Contract line canceled: %s<br/>- "
+#~ msgstr "Sopimusrivi peruttu: %s<br/>- "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                            stopped: <br/>\n"
+#~ "                            - <strong>End</strong>: {old_end} -- "
+#~ "{new_end}\n"
+#~ "                            "
+#~ msgstr ""
+#~ "Sopimusrivi <strong>{product}</strong> lopetettu: <br/> - "
+#~ "<strong>Pättyminen</strong>: {old_end} -- {new_end}\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                    planned a successor: <br/>\n"
+#~ "                    - <strong>Start</strong>: {new_date_start}\n"
+#~ "                    <br/>\n"
+#~ "                    - <strong>End</strong>: {new_date_end}\n"
+#~ "                    "
+#~ msgstr ""
+#~ "Sopimusrivin <strong>{product}</strong>\n"
+#~ "                    suunniteltu seuraaja: <br/>\n"
+#~ "                    - <strong>Alku</strong>: {new_date_start}\n"
+#~ "                    <br/>\n"
+#~ "                    - <strong>Päättyminen</strong>: {new_date_end}\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                renewed: <br/>\n"
+#~ "                - <strong>Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Sopimusrivi <strong>{product}</strong>\n"
+#~ "                uusittu: <br/>\n"
+#~ "                - <strong>Alku</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Päättyminen</strong>: {new_date_end}\n"
+#~ "                "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                suspended: <br/>\n"
+#~ "                - <strong>Suspension Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Suspension End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Sopimusrivi <strong>{product}</strong>\n"
+#~ "                keskeytetty: <br/>\n"
+#~ "                - <strong>Keskeytyksen alku</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Keskeytyksen päättyminen</strong>: "
+#~ "{new_date_end}\n"
+#~ "                "
+
+#~ msgid ""
+#~ "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
+#~ "\"%s\">Invoice</a>"
+#~ msgstr ""
+#~ "Sopimus laskutettu manuaalisesti: <a href=\"#\" data-oe-model=\"%s\" data-"
+#~ "oe-id=\"%s\">Lasku</a>"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seuraajat (Kanavat)"
+
+#~ msgid "Manual renew needed"
+#~ msgstr "Manuaalinen uusinta vaaditaan"
+
+#~ msgid "Please define a %s journal for the company '%s'."
+#~ msgstr "Aseta %s-päiväkirja yritykselle '%s'."
+
+#~ msgid "Termination notice date"
+#~ msgstr "Irtisanomisilmoituksen päivämäärä"
 
 #~ msgid ""
 #~ "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', "
