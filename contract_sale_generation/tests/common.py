@@ -79,11 +79,8 @@ class ContractSaleCommon:
             }
         )
         cls.line_vals = {
-            # "contract_id": cls.contract.id,
-            # "product_id": cls.product_1.id,
             "name": "Services from #START# to #END#",
             "quantity": 1,
-            # "uom_id": cls.product_1.uom_id.id,
             "price_unit": 100,
             "discount": 50,
             "recurring_rule_type": "monthly",
