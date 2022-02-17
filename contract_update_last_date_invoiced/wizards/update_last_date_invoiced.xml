@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="contract_update_last_date_invoiced_wizard_form_view">
+        <field
+            name="name"
+        >contract.update.last.date.invoiced.form (in contract_update_last_date_invoiced)</field>
+        <field name="model">contract.update.last.date.invoiced</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="contract_line_id" invisible="1" />
+                    <field name="last_date_invoiced" />
+                    <field name="recurring_next_date" />
+                </group>
+                <footer>
+                    <button
+                        name="update_last_date_invoiced"
+                        string="Update Last Date Invoiced"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
