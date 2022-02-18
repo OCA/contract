@@ -34,6 +34,7 @@ addon | version | maintainers | summary
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 14.0.1.1.1 |  | Contract from Sale
+[contract_sale_generation](contract_sale_generation/) | 14.0.1.0.0 |  | Contracts Management - Recurring Sales
 [contract_variable_quantity](contract_variable_quantity/) | 14.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 
 [//]: # (end addons)
