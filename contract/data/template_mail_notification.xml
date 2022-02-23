@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<odoo>
+    <template
+        id="mail_notification_contract"
+        inherit_id="mail.mail_notification_paynow"
+        primary="True"
+    >
+        <xpath expr="//t[@t-raw='message.body']" position="after">
+            <t t-raw="0" />
+            <t t-if="record._name == 'contract.contract'">
+                <t
+                    t-set="share_url"
+                    t-value="record._get_share_url(redirect=True, signup_partner=True, share_token=True)"
+                />
+                <t
+                    t-set="access_url"
+                    t-value="is_online and share_url and base_url + share_url or ''"
+                />
+            </t>
+        </xpath>
+    </template>
+    <template id="template_contract_modification" name="Contract Modification">
+        <t t-call="contract.mail_notification_contract">
+            <table border="1" align="center">
+                <thead>
+                    <tr>
+                        <th name="th_date">Date</th>
+                        <th name="th_description">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="record.modification_ids" t-as="modification">
+                        <tr t-if="not modification.sent">
+                            <td name="td_date">
+                                <span t-field="modification.date" />
+                            </td>
+                            <td name="td_description">
+                                <div t-field="modification.description" />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+</odoo>
