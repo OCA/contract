@@ -3,7 +3,7 @@
 
 {
     "name": "Contract from Sale",
-    "version": "14.0.1.1.1",
+    "version": "14.0.1.2.0",
     "category": "Sales",
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
