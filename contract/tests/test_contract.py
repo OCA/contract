@@ -21,6 +21,8 @@ class TestContractBase(common.SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.uom_categ_obj = cls.env["uom.category"]
+        cls.uom_obj = cls.env["uom.uom"]
         cls.today = fields.Date.today()
         cls.pricelist = cls.env["product.pricelist"].create(
             {"name": "pricelist for contract test"}
@@ -30,6 +32,13 @@ class TestContractBase(common.SavepointCase):
                 "name": "partner test contract",
                 "property_product_pricelist": cls.pricelist.id,
                 "email": "demo@demo.com",
+            }
+        )
+        cls.partner_2 = cls.env["res.partner"].create(
+            {
+                "name": "partner test contract 2",
+                "property_product_pricelist": cls.pricelist.id,
+                "email": "demo2@demo.com",
             }
         )
         cls.product_1 = cls.env.ref("product.product_product_1")
@@ -168,6 +177,19 @@ class TestContractBase(common.SavepointCase):
             }
         )
 
+    @classmethod
+    def _create_uom(cls):
+        vals = {
+            "name": "New Uom Categ",
+        }
+        categ = cls.uom_categ_obj.create(vals)
+        vals = {
+            "name": "New Uom",
+            "category_id": categ.id,
+            "factor": 1.0,
+        }
+        return cls.uom_obj.create(vals)
+
 
 class TestContract(TestContractBase):
     def _add_template_line(self, overrides=None):
@@ -252,8 +274,7 @@ class TestContract(TestContractBase):
     def test_contract(self):
         self.assertEqual(self.contract.recurring_next_date, to_date("2018-01-15"))
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
-        res = self.acct_line._onchange_product_id()
-        self.assertIn("uom_id", res["domain"])
+        self.acct_line._onchange_product_id()
         self.acct_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_invoice()
@@ -483,21 +504,35 @@ class TestContract(TestContractBase):
             self.contract.partner_id.property_product_pricelist,
         )
 
+    def test_invoice_partner_id_domain(self):
+        contract_form = self.contract.fields_view_get(False, "form")
+        invoice_partner_id_field = contract_form["fields"].get("invoice_partner_id")
+        self.assertEqual(
+            self.contract._fields["invoice_partner_id"].domain,
+            invoice_partner_id_field.get("domain"),
+        )
+
     def test_uom(self):
         uom_litre = self.env.ref("uom.product_uom_litre")
         self.acct_line.uom_id = uom_litre.id
         self.acct_line._onchange_product_id()
         self.assertEqual(self.acct_line.uom_id, self.acct_line.product_id.uom_id)
 
-    def test_onchange_product_id(self):
-        line = self.env["contract.line"].new()
-        res = line._onchange_product_id()
-        self.assertFalse(res["domain"]["uom_id"])
-
     def test_no_pricelist(self):
         self.contract.pricelist_id = False
         self.acct_line.quantity = 2
         self.assertAlmostEqual(self.acct_line.price_subtotal, 100.0)
+
+    def test_contract_uom_domain(self):
+        """Create a new uom. Try to set it on contract line.
+        The one set should not be that one"""
+        contract_form = self.contract.fields_view_get(False, "form")
+        contract_line_ids_field = contract_form["fields"].get("contract_line_ids")
+        uom_id_field = contract_line_ids_field["views"]["tree"]["fields"].get("uom_id")
+        self.assertEqual(
+            self.contract.contract_line_ids._fields["uom_id"].domain,
+            uom_id_field.get("domain"),
+        )
 
     def test_check_journal(self):
         journal = self.env["account.journal"].search([("type", "=", "sale")])
@@ -580,21 +615,6 @@ class TestContract(TestContractBase):
         self.contract.contract_type = "purchase"
         self.contract._onchange_contract_type()
         self.assertFalse(any(self.contract.contract_line_ids.mapped("automatic_price")))
-
-    def test_contract_onchange_product_id_domain_blank(self):
-        """It should return a blank UoM domain when no product."""
-        line = self.env["contract.template.line"].new()
-        res = line._onchange_product_id()
-        self.assertFalse(res["domain"]["uom_id"])
-
-    def test_contract_onchange_product_id_domain(self):
-        """It should return UoM category domain."""
-        line = self._add_template_line()
-        res = line._onchange_product_id()
-        self.assertEqual(
-            res["domain"]["uom_id"][0],
-            ("category_id", "=", self.product_1.uom_id.category_id.id),
-        )
 
     def test_contract_onchange_product_id_uom(self):
         """It should update the UoM for the line."""

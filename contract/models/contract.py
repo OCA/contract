@@ -93,6 +93,7 @@ class ContractContract(models.Model):
         string="Invoicing contact",
         comodel_name="res.partner",
         ondelete="restrict",
+        domain="['|', ('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner", inverse="_inverse_partner_id", required=True
@@ -375,15 +376,6 @@ class ContractContract(models.Model):
         else:
             self.payment_term_id = partner.property_payment_term_id
         self.invoice_partner_id = self.partner_id.address_get(["invoice"])["invoice"]
-        return {
-            "domain": {
-                "invoice_partner_id": [
-                    "|",
-                    ("id", "parent_of", self.partner_id.id),
-                    ("id", "child_of", self.partner_id.id),
-                ]
-            }
-        }
 
     def _convert_contract_lines(self, contract):
         self.ensure_one()
