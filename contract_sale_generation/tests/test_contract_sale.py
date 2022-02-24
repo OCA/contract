@@ -33,6 +33,27 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.assertAlmostEqual(self.order_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.sale_monthly.user_id)
 
+    def test_contract_next_date(self):
+        """
+        Check the recurring next date value on lines
+        """
+        recurring_next_date = to_date("2020-02-15")
+        self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
+        self.contract_line.price_unit = 100.0
+        self.contract.partner_id = self.partner.id
+        self.contract.recurring_create_sale()
+        self.sale_monthly = self.contract._get_related_sales()
+        self.assertTrue(self.sale_monthly)
+        self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
+        self.order_line = self.sale_monthly.order_line[0]
+        self.assertTrue(self.order_line.tax_id)
+        self.assertAlmostEqual(self.order_line.price_subtotal, 50.0)
+        self.assertEqual(self.contract.user_id, self.sale_monthly.user_id)
+        # Create second sale order
+        self.contract.recurring_create_sale()
+        recurring_next_date = to_date("2020-03-15")
+        self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
+
     def test_contract_autoconfirm(self):
         recurring_next_date = to_date("2020-02-15")
         self.contract.sale_autoconfirm = True
