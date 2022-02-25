@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2021-06-14 04:48+0000\n"
+"PO-Revision-Date: 2022-02-26 17:17+0000\n"
 "Last-Translator: Ignacio Buioli <ibuioli@gmail.com>\n"
-"Language-Team: Spanish (Argentina) (https://www.transifex.com/oca/"
-"teams/23907/es_AR/)\n"
+"Language-Team: Spanish (Argentina) (https://www.transifex.com/oca/teams/"
+"23907/es_AR/)\n"
 "Language: es_AR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +98,79 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
+"                <p>A new contract has been created: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENCIAS</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contrato: <strong t-out=\"object."
+"name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Fecha de Inicio del Contrato: <t "
+"t-out=\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Tu Contrato: <a t-att-href=\""
+"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)\" "
+"t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Tu Contrato:  <t t-out="
+"\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Si tiene alguna pregunta, no dude en contactarnos.</p>\n"
+"                <p>Gracias por elegir <t t-out=\"object.company_id.name or "
+"'a nuestra compañía'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out="
+"\"object.company_id.name\"/></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, "
+"&quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], "
+"&quot;no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Teléfono: <t t-out=\"object.company_id.phone\"/>"
+"\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
+" none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -107,6 +180,10 @@ msgid ""
 "you.</p>\n"
 "        "
 msgstr ""
+"<p>Hola</p>\n"
+"            <p>Tenemos modificaciones en el contrato que queremos "
+"notificarle.</p>\n"
+"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -452,7 +529,7 @@ msgstr "Cancelado"
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -578,7 +655,7 @@ msgstr "Modificación de Contrato"
 #. module: contract
 #: model:mail.template,name:contract.mail_template_contract_modification
 msgid "Contract Modification Template"
-msgstr ""
+msgstr "Modificación de la Plantilal del Contrato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -658,7 +735,7 @@ msgstr ""
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
-msgstr ""
+msgstr "Línea de Contrato Sin Cancelar: %s"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -676,7 +753,7 @@ msgstr "La línea de Contrato y su sucesora se superponen"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
-msgstr ""
+msgstr "Línea de contrato cancelada: %s"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -688,6 +765,11 @@ msgid ""
 "%(new_end)s\n"
 "                            "
 msgstr ""
+"Línea de contrato para <strong>%(product)s</strong>\n"
+"                            ha parado: <br/>\n"
+"                            - <strong>Final</strong>: %(old_end)s -- "
+"%(new_end)s\n"
+"                            "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -700,6 +782,12 @@ msgid ""
 "                    - <strong>End</strong>: %(new_date_end)s\n"
 "                    "
 msgstr ""
+"Línea de contrato para <strong>%(product)s</strong>\n"
+"                    planeó un sucesor: <br/>\n"
+"                    - <strong>Inicio</strong>: %(new_date_start)s\n"
+"                    <br/>\n"
+"                    - <strong>Final</strong>: %(new_date_end)s\n"
+"                    "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -712,6 +800,12 @@ msgid ""
 "                - <strong>End</strong>: %(new_date_end)s\n"
 "                "
 msgstr ""
+"Línea de Contrato para <strong>%(product)s</strong>\n"
+"                renovó: <br/>\n"
+"                - <strong>Inicio</strong>: %(new_date_start)s\n"
+"                <br/>\n"
+"                - <strong>Final</strong>: %(new_date_end)s\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -724,6 +818,13 @@ msgid ""
 "                - <strong>Suspension End</strong>: %(new_date_end)s\n"
 "                "
 msgstr ""
+"Línea de Contrato para <strong>%(product)s</strong>\n"
+"                se suspendió: <br/>\n"
+"                - <strong>Inicio de la Suspención</strong>: %(new_date_start)"
+"s\n"
+"                <br/>\n"
+"                - <strong>Final de la Suspención</strong>: %(new_date_end)s\n"
+"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -748,6 +849,8 @@ msgid ""
 "Contract manually invoiced: <a    href=\"#\" data-oe-model=\"%(model_name)s"
 "\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
 msgstr ""
+"Factura manual del Contrato: <a    href=\"#\" data-oe-model=\"%(model_name)"
+"s\"     data-oe-id=\"%(rec_id)s\">Factura</a>"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
@@ -794,6 +897,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"La conversión entre Unidades de Medida solo puede ocurrir si pertenecen a la "
+"misma categoría. La conversión se hará en base a los ratios."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
@@ -1025,7 +1130,7 @@ msgstr "Tipo de Visualización"
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
-msgstr ""
+msgstr "Plantilla de Email del Contrato"
 
 #. module: contract
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
@@ -1034,6 +1139,8 @@ msgid ""
 "Failed to process the contract %(name)s [id: %(id)s]:\n"
 "%(ue)s"
 msgstr ""
+"Fallo al procesar el contrato %(name)s [id: %(id)s]:\n"
+"%(ue)s"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1080,7 +1187,7 @@ msgstr "Agrupar Por..."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Tiene un Mensaje"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
@@ -1240,7 +1347,7 @@ msgstr "Tipo de facturación"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
 msgid "Is Auto Renew"
-msgstr ""
+msgstr "Es Auto Renovable"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
@@ -1350,7 +1457,7 @@ msgstr "Moneda Manual"
 #: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
 msgid "Manual Renew Needed"
-msgstr ""
+msgstr "Renovación Manual Requerida"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
@@ -1585,6 +1692,7 @@ msgstr "Plan sucesor no está permitido para esta línea"
 msgid ""
 "Please define a %(contract_type)s journal for the company '%(company)s'."
 msgstr ""
+"Por favor, defina un %(contract_type)s diario para la compañía '%(company)s'."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
@@ -2020,7 +2128,7 @@ msgstr "Aviso de Terminación Antes"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
 msgid "Termination Notice Date"
-msgstr ""
+msgstr "Fecha de Aviso de Rescisión"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
@@ -2264,7 +2372,7 @@ msgstr "el"
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }})"
 
 #. module: contract
 #: model:mail.template,subject:contract.mail_template_contract_modification
@@ -2272,6 +2380,8 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+"{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }}) - "
+"Modificaciones"
 
 #~ msgid ""
 #~ "\n"
