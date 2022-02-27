@@ -38,7 +38,6 @@ class Agreement(models.Model):
     )
     domain = fields.Selection(
         "_domain_selection",
-        string="Domain",
         default="sale",
         tracking=True,
     )
