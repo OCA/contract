@@ -42,4 +42,27 @@
         </field>
     </record>
 
+    <record id="agreement_fsm_order_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.fsm.order.view</field>
+        <field name="model">agreement</field>
+        <field
+            name="inherit_id"
+            ref="agreement_serviceprofile.agreement_fsm_order_form_view"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//notebook/page/field[@name='serviceprofile_ids']/tree"
+                position="inside"
+            >
+                <field name="equipment_id" />
+            </xpath>
+            <xpath
+                expr="//notebook/page/field[@name='serviceprofile_ids']/form/group//field[@name='product_id']"
+                position="after"
+            >
+                <field name="equipment_id" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
