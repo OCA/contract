@@ -17,7 +17,6 @@
     "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["base", "account", "product", "portal"],
-    "external_dependencies": {"python": ["dateutil"]},
     "data": [
         "security/groups.xml",
         "security/contract_tag.xml",
