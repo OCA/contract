@@ -1,0 +1,53 @@
+<odoo>
+    <!-- Agreement Form View -->
+    <record id="agreement_fsm_order_form_view" model="ir.ui.view">
+        <field name="name">agreement.form.fsm.order.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="serviceprofiles" string="Service Profiles">
+                    <field name="serviceprofile_ids">
+                        <tree>
+                            <field name="name" />
+                            <field name="product_id" />
+                            <field name="product_variant_id" />
+                            <field name="stage_id" />
+                        </tree>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="name" />
+                                    <field
+                                        name="stage_id"
+                                        domain="[('stage_type', '=', 'serviceprofile')]"
+                                    />
+                                </group>
+                                <group>
+                                    <field name="use_product_variant" />
+                                    <field
+                                        name="product_variant_id"
+                                        context="{'default_is_serviceprofile': True, 'default_type': 'service'}"
+                                        attrs="{'invisible': [('use_product_variant', '=', False)], 'required': [('use_product_variant','!=', False)]}"
+                                    />
+                                    <field
+                                        name="product_id"
+                                        context="{'default_is_serviceprofile': True, 'default_type': 'service'}"
+                                        attrs="{'invisible': [('use_product_variant', '!=', False)], 'required': [('use_product_variant','=', False)]}"
+                                    />
+                                </group>
+                            </group>
+                            <group string="Notes">
+                                <field
+                                    name="notes"
+                                    nolabel="1"
+                                    placeholder="Add notes here..."
+                                />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
