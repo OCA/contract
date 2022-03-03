@@ -8,8 +8,10 @@ from datetime import date
 
 from odoo import fields
 from odoo.tests import common
+from odoo.tools import mute_logger
 
-from odoo.addons.contract_payment_auto.models.contract import Contract
+from odoo.addons.payment.models.payment_acquirer import PaymentAcquirer
+from odoo.addons.contract_payment_auto.models import contract
 
 
 @common.at_install(False)
@@ -100,7 +102,10 @@ class TestContract(common.HttpCase):
 
         def create(vals):
             record = TransactionsCreate(vals)
-            record.state = state
+            features = {"authorize": ["manual"], "tokenize": [], "fees": []}
+            with mock.patch.object(PaymentAcquirer, "_get_feature_support",
+                                   return_value=features):
+                record.state = state
             return record
 
         model_create = mock.MagicMock()
@@ -124,7 +129,7 @@ class TestContract(common.HttpCase):
     def test_create_invoice_no_autopay(self):
         """ It should return the new invoice without calling autopay. """
         self.contract.is_auto_pay = False
-        with mock.patch.object(Contract, '_do_auto_pay') as method:
+        with mock.patch.object(contract.Contract, '_do_auto_pay') as method:
             invoice = self.contract._recurring_create_invoice()
             self._validate_invoice(invoice)
             method.assert_not_called()
@@ -132,7 +137,7 @@ class TestContract(common.HttpCase):
     def test_create_invoice_autopay(self):
         """ It should return the new invoice after calling autopay. """
         self.contract.is_auto_pay = True
-        with mock.patch.object(Contract, '_do_auto_pay') as method:
+        with mock.patch.object(contract.Contract, '_do_auto_pay') as method:
             invoice = self.contract._recurring_create_invoice()
             self._validate_invoice(invoice)
             method.assert_called_once_with(invoice)
@@ -159,14 +164,14 @@ class TestContract(common.HttpCase):
 
     def test_do_auto_pay_sends_message(self):
         """ It should call the send message method with the invoice. """
-        with mock.patch.object(Contract, '_send_invoice_message') as m:
+        with mock.patch.object(contract.Contract, '_send_invoice_message') as m:
             invoice = self._create_invoice()
             self.contract._do_auto_pay(invoice)
             m.assert_called_once_with(invoice)
 
     def test_do_auto_pay_does_pay(self):
         """ It should try to pay the invoice. """
-        with mock.patch.object(Contract, '_pay_invoice') as m:
+        with mock.patch.object(contract.Contract, '_pay_invoice') as m:
             invoice = self._create_invoice()
             self.contract._do_auto_pay(invoice)
             m.assert_called_once_with(invoice)
@@ -202,34 +207,30 @@ class TestContract(common.HttpCase):
                 self.assertEqual(tx_vals.get('payment_token_id'),
                                  expected_token.id)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_success(self):
-    #    """ It should return True on success. """
-    #    self.assert_successful_pay_invoice()
+    def test_pay_invoice_success(self):
+        """ It should return True on success. """
+        self.assert_successful_pay_invoice()
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_with_contract_token(self):
-    #    """ When contract and partner have a token, contract's is used. """
-    #    self.partner.payment_token_id = self.other_payment_token
-    #    self.contract.payment_token_id = self.payment_token
-    #    self.assert_successful_pay_invoice(expected_token=self.payment_token)
+    def test_pay_invoice_with_contract_token(self):
+        """ When contract and partner have a token, contract's is used. """
+        self.partner.payment_token_id = self.other_payment_token
+        self.contract.payment_token_id = self.payment_token
+        self.assert_successful_pay_invoice(expected_token=self.payment_token)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_with_partner_token_success(self):
-    #    """ When contract has no related token, it should use partner's. """
-    #    self.contract.payment_token_id = False
-    #    self.partner.payment_token_id = self.other_payment_token
-    #    self.assert_successful_pay_invoice(
-    #        expected_token=self.other_payment_token)
+    def test_pay_invoice_with_partner_token_success(self):
+        """ When contract has no related token, it should use partner's. """
+        self.contract.payment_token_id = False
+        self.partner.payment_token_id = self.other_payment_token
+        self.assert_successful_pay_invoice(
+            expected_token=self.other_payment_token)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # @mute_logger(contract.__name__)
-    # def test_pay_invoice_exception(self):
-    #    """ It should catch exceptions. """
-    #    with self._mock_transaction(s2s_side_effect=Exception):
-    #        invoice = self._create_invoice(True)
-    #        res = self.contract._pay_invoice(invoice)
-    #        self.assertIs(res, None)
+    @mute_logger(contract.__name__)
+    def test_pay_invoice_exception(self):
+        """ It should catch exceptions. """
+        with self._mock_transaction(s2s_side_effect=Exception):
+            invoice = self._create_invoice(True)
+            res = self.contract._pay_invoice(invoice)
+            self.assertIs(res, None)
 
     def test_pay_invoice_invalid_state(self):
         """ It should return None on invalid state. """
@@ -239,44 +240,40 @@ class TestContract(common.HttpCase):
             res = self.contract._pay_invoice(invoice)
             self.assertIs(res, None)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # @mute_logger(contract.__name__)
-    # def test_pay_invoice_increments_retries(self):
-    #    """ It should increment invoice retries on failure. """
-    #    with self._mock_transaction(s2s_side_effect=False):
-    #        invoice = self._create_invoice(True)
-    #        self.assertFalse(invoice.auto_pay_attempts)
-    #        self.contract._pay_invoice(invoice)
-    #        self.assertTrue(invoice.auto_pay_attempts)
+    @mute_logger(contract.__name__)
+    def test_pay_invoice_increments_retries(self):
+        """ It should increment invoice retries on failure. """
+        with self._mock_transaction(s2s_side_effect=False):
+            invoice = self._create_invoice(True)
+            self.assertFalse(invoice.auto_pay_attempts)
+            self.contract._pay_invoice(invoice)
+            self.assertTrue(invoice.auto_pay_attempts)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_updates_fail_date(self):
-    #    """ It should update the invoice auto pay fail date on failure. """
-    #    with self._mock_transaction(s2s_side_effect=False):
-    #        invoice = self._create_invoice(True)
-    #        self.assertFalse(invoice.auto_pay_failed)
-    #        self.contract._pay_invoice(invoice)
-    #        self.assertTrue(invoice.auto_pay_failed)
+    def test_pay_invoice_updates_fail_date(self):
+        """ It should update the invoice auto pay fail date on failure. """
+        with self._mock_transaction(s2s_side_effect=False):
+            invoice = self._create_invoice(True)
+            self.assertFalse(invoice.auto_pay_failed)
+            self.contract._pay_invoice(invoice)
+            self.assertTrue(invoice.auto_pay_failed)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_too_many_attempts(self):
-    #    """ It should clear autopay after too many attempts. """
-    #    with self._mock_transaction(s2s_side_effect=False):
-    #        invoice = self._create_invoice(True)
-    #        invoice.auto_pay_attempts = self.contract.auto_pay_retries - 1
-    #        self.contract._pay_invoice(invoice)
-    #        self.assertFalse(self.contract.is_auto_pay)
-    #        self.assertFalse(self.contract.payment_token_id)
+    def test_pay_invoice_too_many_attempts(self):
+        """ It should clear autopay after too many attempts. """
+        with self._mock_transaction(s2s_side_effect=False):
+            invoice = self._create_invoice(True)
+            invoice.auto_pay_attempts = self.contract.auto_pay_retries - 1
+            self.contract._pay_invoice(invoice)
+            self.assertFalse(self.contract.is_auto_pay)
+            self.assertFalse(self.contract.payment_token_id)
 
-    # "The ['Test Acquirer'] payment acquirers are not allowed to manual capture mode!"
-    # def test_pay_invoice_too_many_attempts_partner_token(self):
-    #    """ It should clear the partner token when attempts were on it. """
-    #    self.partner.payment_token_id = self.contract.payment_token_id
-    #    with self._mock_transaction(s2s_side_effect=False):
-    #        invoice = self._create_invoice(True)
-    #        invoice.auto_pay_attempts = self.contract.auto_pay_retries
-    #        self.contract._pay_invoice(invoice)
-    #        self.assertFalse(self.partner.payment_token_id)
+    def test_pay_invoice_too_many_attempts_partner_token(self):
+        """ It should clear the partner token when attempts were on it. """
+        self.partner.payment_token_id = self.contract.payment_token_id
+        with self._mock_transaction(s2s_side_effect=False):
+            invoice = self._create_invoice(True)
+            invoice.auto_pay_attempts = self.contract.auto_pay_retries
+            self.contract._pay_invoice(invoice)
+            self.assertFalse(self.partner.payment_token_id)
 
     def test_get_tx_vals(self):
         """ It should return a dict. """
@@ -306,13 +303,11 @@ class TestContract(common.HttpCase):
         self.contract._send_invoice_message(invoice)
         self.assertTrue(invoice.sent)
 
-    # One of the records you are trying to modify has already been deleted
-    # (Document type: Outgoing Mails)
-    # def test_send_invoice_message_returns_mail(self):
-    #    """ It should create and return the message. """
-    #    invoice = self._create_invoice(True)
-    #    res = self.contract._send_invoice_message(invoice)
-    #    self.assertEqual(res._name, 'mail.mail')
+    def test_send_invoice_message_returns_mail(self):
+        """ It should create and return the message. """
+        invoice = self._create_invoice(True)
+        res = self.contract._send_invoice_message(invoice)
+        self.assertEqual(res._name, 'mail.mail')
 
     def test_cron_retry_auto_pay_needed(self):
         """ It should auto-pay the correct invoice if needed. """
