@@ -57,8 +57,10 @@ class Contract(models.Model):
         """ If automatic payment is enabled, perform auto pay actions. """
         invoices = super(Contract, self)._recurring_create_invoice(date_ref)
         for invoice in invoices:
-            contract = invoice.invoice_line_ids[0].contract_line_id.contract_id
-            if contract.is_auto_pay:
+            contract = invoice.mapped(
+                "invoice_line_ids.contract_line_id.contract_id")
+            contract = contract and contract[0]
+            if contract and contract.is_auto_pay:
                 contract._do_auto_pay(invoice)
         return invoices
 
