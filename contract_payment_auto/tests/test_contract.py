@@ -9,6 +9,8 @@ from datetime import date
 from odoo import fields
 from odoo.tests import common
 
+from odoo.addons.contract_payment_auto.models.contract import Contract
+
 
 @common.at_install(False)
 @common.post_install(True)
@@ -122,7 +124,7 @@ class TestContract(common.HttpCase):
     def test_create_invoice_no_autopay(self):
         """ It should return the new invoice without calling autopay. """
         self.contract.is_auto_pay = False
-        with mock.patch.object(self.contract, '_do_auto_pay') as method:
+        with mock.patch.object(Contract, '_do_auto_pay') as method:
             invoice = self.contract._recurring_create_invoice()
             self._validate_invoice(invoice)
             method.assert_not_called()
@@ -130,7 +132,7 @@ class TestContract(common.HttpCase):
     def test_create_invoice_autopay(self):
         """ It should return the new invoice after calling autopay. """
         self.contract.is_auto_pay = True
-        with mock.patch.object(self.contract, '_do_auto_pay') as method:
+        with mock.patch.object(Contract, '_do_auto_pay') as method:
             invoice = self.contract._recurring_create_invoice()
             self._validate_invoice(invoice)
             method.assert_called_once_with(invoice)
@@ -157,14 +159,14 @@ class TestContract(common.HttpCase):
 
     def test_do_auto_pay_sends_message(self):
         """ It should call the send message method with the invoice. """
-        with mock.patch.object(self.contract, '_send_invoice_message') as m:
+        with mock.patch.object(Contract, '_send_invoice_message') as m:
             invoice = self._create_invoice()
             self.contract._do_auto_pay(invoice)
             m.assert_called_once_with(invoice)
 
     def test_do_auto_pay_does_pay(self):
         """ It should try to pay the invoice. """
-        with mock.patch.object(self.contract, '_pay_invoice') as m:
+        with mock.patch.object(Contract, '_pay_invoice') as m:
             invoice = self._create_invoice()
             self.contract._do_auto_pay(invoice)
             m.assert_called_once_with(invoice)
