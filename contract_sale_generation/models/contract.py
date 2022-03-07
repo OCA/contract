@@ -120,6 +120,7 @@ class ContractContract(models.Model):
             lambda sale: sale.contract_auto_confirm
         )
         sale_orders_to_confirm.action_confirm()
+        self._compute_recurring_next_date()
         return sale_orders
 
     @api.model
