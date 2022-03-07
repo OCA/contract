@@ -76,6 +76,7 @@ class ContractSaleCommon:
                 "generation_type": "sale",
                 "sale_autoconfirm": False,
                 "group_id": cls.analytic_account.id,
+                "date_start": "2020-01-15",
             }
         )
         cls.line_vals = {
