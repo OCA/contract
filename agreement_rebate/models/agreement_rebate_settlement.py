@@ -32,6 +32,7 @@ class AgreementRebateSettlement(models.Model):
     amount_invoiced = fields.Float(string="Amount invoiced")
     amount_rebate = fields.Float(string="Amount rebate")
     invoice_id = fields.Many2one(comodel_name="account.move", string="Invoice")
+    active = fields.Boolean(default=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,6 +43,17 @@ class AgreementRebateSettlement(models.Model):
                 "agreement.rebate.settlement"
             )
         return super(AgreementRebateSettlement, self).create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "active" in vals and not self.env.context.get(
+            "skip_active_field_update", False
+        ):
+            lines = self.with_context(active_test=False).line_ids.filtered(
+                lambda ln: ln.active != vals["active"]
+            )
+            lines.with_context(skip_active_field_update=True).active = vals["active"]
+        return res
 
     def _reverse_type_map(self, inv_type):
         return {
@@ -99,6 +111,13 @@ class AgreementRebateSettlement(models.Model):
             action["res_id"] = self.id
         else:
             action["domain"] = [("id", "in", self.ids)]
+        return action
+
+    def action_show_settlement_lines(self):
+        action = self.env.ref(
+            "agreement_rebate.agreement_rebate_settlement_line_action"
+        ).read()[0]
+        action["domain"] = [("settlement_id", "in", self.ids)]
         return action
 
     def action_show_agreement(self):
@@ -167,6 +186,7 @@ class AgreementRebateSettlementLine(models.Model):
         store=True,
         readonly=False,
     )
+    active = fields.Boolean(default=True)
 
     @api.depends(
         "invoice_line_ids",
@@ -187,6 +207,27 @@ class AgreementRebateSettlementLine(models.Model):
                 line.invoice_status = "invoiced"
             else:
                 line.invoice_status = "to_invoice"
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "active" in vals and not self.env.context.get(
+            "skip_active_field_update", False
+        ):
+            if vals["active"]:
+                # If one line is active settlement must be active
+                settlements = self.mapped("settlement_id").filtered(
+                    lambda s: not s.active
+                )
+            else:
+                # If lines are archived and the settlement has not active lines, the
+                # settlement must be archived
+                settlements = self.mapped("settlement_id").filtered(
+                    lambda s: s.active and not s.line_ids
+                )
+            settlements.with_context(skip_active_field_update=True).active = vals[
+                "active"
+            ]
+        return res
 
     def _prepare_invoice(self):
         """
