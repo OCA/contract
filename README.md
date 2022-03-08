@@ -30,11 +30,11 @@ addon | version | maintainers | summary
 [agreement_sale](agreement_sale/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
 [agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
 [agreement_stock](agreement_stock/) | 14.0.1.0.1 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
-[contract](contract/) | 14.0.2.3.2 |  | Recurring - Contracts Management
+[contract](contract/) | 14.0.2.3.3 |  | Recurring - Contracts Management
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 14.0.1.2.0 |  | Contract from Sale
-[contract_sale_generation](contract_sale_generation/) | 14.0.1.0.0 |  | Contracts Management - Recurring Sales
+[contract_sale_generation](contract_sale_generation/) | 14.0.1.0.1 |  | Contracts Management - Recurring Sales
 [contract_variable_quantity](contract_variable_quantity/) | 14.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 
 [//]: # (end addons)
