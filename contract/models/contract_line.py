@@ -605,6 +605,8 @@ class ContractLine(models.Model):
         return name
 
     def _update_recurring_next_date(self):
+        # FIXME: Change method name according to real updated field
+        # e.g.: _update_last_date_invoiced()
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
             rec.write(
