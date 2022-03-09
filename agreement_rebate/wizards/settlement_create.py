@@ -288,7 +288,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         return settlements.action_show_settlement()
 
     def _settlement_line_break_fields(self):
-        return []
+        return ["partner_id"]
 
     def _filter_settlement_lines(self, settlement_lines):
         return [
