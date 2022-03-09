@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="contract_mass_stop_form_view">
+        <field name="name">contract.mass.stop.form (in contract_mass_stop)</field>
+        <field name="model">contract.mass.stop</field>
+        <field name="arch" type="xml">
+            <form string="Contract Mass Stop">
+                <div class="oe_grey">
+                    <span
+                    >Choose the start date and end date you want to stop selected contracts.</span>
+                </div>
+                <group>
+                    <field name="date_start" />
+                    <field name="date_end" />
+                </group>
+                <notebook>
+                    <page name="contracts" string="Contracts">
+                        <group>
+                            <field name="contract_ids" />
+                        </group>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="doit" string="OK" class="btn-primary" type="object" />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="contract_mass_stop_act_window">
+        <field name="name">Contract Mass Stop</field>
+        <field name="res_model">contract.mass.stop</field>
+        <field name="binding_model_id" ref="contract.model_contract_contract" />
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
