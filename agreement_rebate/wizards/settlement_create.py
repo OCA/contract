@@ -136,7 +136,9 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         amount_section = 0.0
         vals = {
             "agreement_id": agreement.id,
-            "partner_id": agreement.partner_id.id,
+            "partner_id": group["partner_id"][0]
+            if "partner_id" in group
+            else agreement.partner_id.id,
         }
         if agreement.rebate_type == "line":
             rebate = amount * line.rebate_discount / 100
