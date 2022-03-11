@@ -42,7 +42,7 @@ class ContractLine(models.Model):
         string="Analytic Tags",
     )
     date_start = fields.Date(required=True)
-    date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
+    date_end = fields.Date()
     termination_notice_date = fields.Date(
         string="Termination notice date",
         compute="_compute_termination_notice_date",
@@ -132,10 +132,6 @@ class ContractLine(models.Model):
             else:
                 rest |= rec
         super(ContractLine, rest)._compute_next_period_date_start()
-
-    @api.depends("contract_id.date_end", "contract_id.line_recurrence")
-    def _compute_date_end(self):
-        self._set_recurrence_field("date_end")
 
     @api.depends(
         "date_end",
@@ -721,9 +717,7 @@ class ContractLine(models.Model):
                 self.recurring_interval,
                 max_date_end=date_end,
             )
-        new_vals = self.read()[0]
-        new_vals.pop("id", None)
-        new_vals.pop("last_date_invoiced", None)
+        new_vals = self.copy_data({"last_date_invoiced": False})[0]
         values = self._convert_to_write(new_vals)
         values["date_start"] = date_start
         values["date_end"] = date_end

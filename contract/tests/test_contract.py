@@ -19,7 +19,6 @@ def to_date(date):
 
 class TestContractBase(common.SavepointCase):
     @classmethod
-    @freeze_time("2018-02-15")
     def setUpClass(cls):
         super().setUpClass()
         cls.uom_categ_obj = cls.env["uom.category"]
@@ -137,6 +136,52 @@ class TestContractBase(common.SavepointCase):
         cls.contract3 = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract 3",
+                "partner_id": cls.partner.id,
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "line_recurrence": False,
+                "contract_type": "sale",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "date_start": "2018-02-15",
+                "contract_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": False,
+                            "name": "Header for Services",
+                            "display_type": "line_section",
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": False,
+                            "name": "Services from #START# to #END#",
+                            "quantity": 1,
+                            "price_unit": 100,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": False,
+                            "name": "Line",
+                            "quantity": 1,
+                            "price_unit": 120,
+                        },
+                    ),
+                ],
+            }
+        )
+
+    @classmethod
+    def _create_contract_global(cls):
+        cls.contract_global = cls.env["contract.contract"].create(
+            {
+                "name": "Test Contract Global",
                 "partner_id": cls.partner.id,
                 "pricelist_id": cls.partner.property_product_pricelist.id,
                 "line_recurrence": False,
@@ -2403,17 +2448,19 @@ class TestContract(TestContractBase):
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
 
+    @freeze_time("2018-02-15")
     def test_contract_stop_plan_global(self):
         """
         Use a contract with several lines and global recurrence
         Stop lines and plan successor
         """
-        self.contract3.recurring_create_invoice()
-        invoices = self.contract3._get_related_invoices()
+        self._create_contract_global()
+        self.contract_global.recurring_create_invoice()
+        invoices = self.contract_global._get_related_invoices()
         self.assertEqual(
-            self.contract3.recurring_next_date, fields.Date.to_date("2018-03-15")
+            self.contract_global.recurring_next_date, fields.Date.to_date("2018-03-15")
         )
         self.assertEqual(fields.Date.to_date("2018-02-15"), invoices.invoice_date)
-        self.contract3.mapped("contract_line_ids").stop_plan_successor(
+        self.contract_global.mapped("contract_line_ids").stop_plan_successor(
             fields.Date.to_date("2018-04-01"), fields.Date.to_date("2018-05-14"), False
         )
