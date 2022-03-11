@@ -2,11 +2,11 @@
 # Copyright 2018-2020 Tecnativa - Pedro M. Baeza
 # Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 from collections import namedtuple
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
@@ -19,6 +19,7 @@ def to_date(date):
 
 class TestContractBase(common.SavepointCase):
     @classmethod
+    @freeze_time("2018-02-15")
     def setUpClass(cls):
         super().setUpClass()
         cls.uom_categ_obj = cls.env["uom.category"]
@@ -2401,3 +2402,18 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
+
+    def test_contract_stop_plan_global(self):
+        """
+        Use a contract with several lines and global recurrence
+        Stop lines and plan successor
+        """
+        self.contract3.recurring_create_invoice()
+        invoices = self.contract3._get_related_invoices()
+        self.assertEqual(
+            self.contract3.recurring_next_date, fields.Date.to_date("2018-03-15")
+        )
+        self.assertEqual(fields.Date.to_date("2018-02-15"), invoices.invoice_date)
+        self.contract3.mapped("contract_line_ids").stop_plan_successor(
+            fields.Date.to_date("2018-04-01"), fields.Date.to_date("2018-05-14"), False
+        )
