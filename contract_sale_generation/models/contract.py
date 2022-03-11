@@ -72,7 +72,13 @@ class ContractContract(models.Model):
         """
         sales = self._recurring_create_sale()
         for sale_rec in sales:
-            self.message_post(
+            contract = self.filtered(
+                lambda contract: any(
+                    line.contract_line_id.contract_id == contract
+                    for line in sale_rec.order_line
+                )
+            )
+            contract.message_post(
                 body=_(
                     "Contract manually sale order: "
                     '<a href="#" data-oe-model="%s" data-oe-id="%s">'

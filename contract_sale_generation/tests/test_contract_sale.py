@@ -112,3 +112,8 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         orders = self.env["sale.order"].browse()
         orders |= self.contract.recurring_create_sale()
         self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
+
+    def test_contract_create_multi(self):
+        orders = self.env["sale.order"]
+        contracts = self.contract | self.contract2
+        orders |= contracts.recurring_create_sale()
