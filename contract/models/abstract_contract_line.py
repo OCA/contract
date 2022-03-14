@@ -162,11 +162,6 @@ class ContractAbstractContractLine(models.AbstractModel):
     def _compute_date_start(self):
         self._set_recurrence_field("date_start")
 
-    @api.depends("contract_id.recurring_next_date", "contract_id.line_recurrence")
-    def _compute_recurring_next_date(self):
-        super()._compute_recurring_next_date()
-        self._set_recurrence_field("recurring_next_date")
-
     @api.depends("display_type", "note_invoicing_mode")
     def _compute_is_recurring_note(self):
         for record in self:
