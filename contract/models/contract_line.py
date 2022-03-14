@@ -113,27 +113,6 @@ class ContractLine(models.Model):
     )
 
     @api.depends(
-        "last_date_invoiced", "date_start", "date_end", "contract_id.last_date_invoiced"
-    )
-    def _compute_next_period_date_start(self):
-        """Rectify next period date start if another line in the contract has been
-        already invoiced previously when the recurrence is by contract.
-        """
-        rest = self.filtered(lambda x: x.contract_id.line_recurrence)
-        for rec in self - rest:
-            lines = rec.contract_id.contract_line_ids
-            if not rec.last_date_invoiced and any(lines.mapped("last_date_invoiced")):
-                next_period_date_start = max(
-                    lines.filtered("last_date_invoiced").mapped("last_date_invoiced")
-                ) + relativedelta(days=1)
-                if rec.date_end and next_period_date_start > rec.date_end:
-                    next_period_date_start = False
-                rec.next_period_date_start = next_period_date_start
-            else:
-                rest |= rec
-        super(ContractLine, rest)._compute_next_period_date_start()
-
-    @api.depends(
         "date_end",
         "termination_notice_rule_type",
         "termination_notice_interval",
