@@ -31,9 +31,9 @@ class ContractMassStop(models.TransientModel):
         return res
 
     def stop_contracts(self):
-        self.contract_ids.mapped("contract_line_ids").stop_plan_successor(
-            self.date_start, self.date_end, self.is_auto_renew
-        )
+        self.contract_ids.mapped("contract_line_ids").filtered(
+            "is_stop_plan_successor_allowed"
+        ).stop_plan_successor(self.date_start, self.date_end, self.is_auto_renew)
 
     def doit(self):
         for wizard in self:

@@ -118,3 +118,67 @@ class TestContractMassStop(TestContractBase):
         self.contract4.recurring_create_invoice()
         invoices4 = self.contract4._get_related_invoices() - past_invoices4
         self.assertEqual(fields.Date.to_date("2018-05-15"), invoices4.invoice_date)
+
+    @freeze_time("2018-02-15")
+    def test_contract_mass_stop_global_several(self):
+        # Test with no recurrence on lines
+        # Test on contract 3 and 4 - start at 2018-02-15
+        # Interrupt from 2018-04-01 to 2018-05-14
+        # Interrupt from 2018-06-01 to 2018-06-14
+        # Create invoices
+        # Check if march ones are created
+        # Create invoices
+        # Check if next invoices are generated from 2018-05-15 (gap)
+        # Check if june invoices are passed
+        self.contract3.recurring_create_invoice()
+        invoices = self.contract3._get_related_invoices()
+        past_invoices = invoices
+        self.assertEqual(
+            self.contract3.recurring_next_date, fields.Date.to_date("2018-03-15")
+        )
+        self.assertEqual(fields.Date.to_date("2018-02-15"), invoices.invoice_date)
+        self.contract4.recurring_create_invoice()
+        invoices4 = self.contract4._get_related_invoices()
+        past_invoices4 = invoices4
+        self.assertEqual(
+            self.contract4.recurring_next_date, fields.Date.to_date("2018-03-15")
+        )
+        self.assertEqual(fields.Date.to_date("2018-02-15"), invoices4.invoice_date)
+        values = {
+            "date_start": "2018-04-01",
+            "date_end": "2018-05-14",
+        }
+        self._create_stop_wizard((self.contract3 | self.contract4), **values)
+
+        self.wizard.doit()
+
+        values = {
+            "date_start": "2018-06-01",
+            "date_end": "2018-06-30",
+        }
+        self._create_stop_wizard((self.contract3 | self.contract4), **values)
+
+        self.wizard.doit()
+        self.contract3.recurring_create_invoice()
+        invoices = self.contract3._get_related_invoices() - past_invoices
+        past_invoices |= invoices
+        self.assertEqual(fields.Date.to_date("2018-03-15"), invoices.invoice_date)
+
+        self.contract3.recurring_create_invoice()
+        invoices = self.contract3._get_related_invoices() - past_invoices
+        past_invoices |= invoices
+        self.assertEqual(fields.Date.to_date("2018-05-15"), invoices.invoice_date)
+
+        self.contract3.recurring_create_invoice()
+        invoices = self.contract3._get_related_invoices() - past_invoices
+        past_invoices |= invoices
+        self.assertEqual(fields.Date.to_date("2018-07-01"), invoices.invoice_date)
+
+        self.contract4.recurring_create_invoice()
+        invoices4 = self.contract4._get_related_invoices() - past_invoices4
+        past_invoices4 |= invoices4
+        self.assertEqual(fields.Date.to_date("2018-03-15"), invoices4.invoice_date)
+
+        self.contract4.recurring_create_invoice()
+        invoices4 = self.contract4._get_related_invoices() - past_invoices4
+        self.assertEqual(fields.Date.to_date("2018-05-15"), invoices4.invoice_date)
