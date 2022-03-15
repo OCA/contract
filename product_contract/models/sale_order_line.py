@@ -101,13 +101,14 @@ class SaleOrderLine(models.Model):
         date_end = (
             self.date_start
             + contract_line_model.get_relative_delta(
-                self._get_auto_renew_rule_type(), int(self.product_uom_qty),
+                self._get_auto_renew_rule_type(),
+                int(self.product_uom_qty),
             )
             - relativedelta(days=1)
         )
         return date_end
 
-    @api.onchange('product_id')
+    @api.onchange("product_id")
     def onchange_product(self):
         for rec in self:
             if rec.product_id.is_contract:
@@ -164,28 +165,28 @@ class SaleOrderLine(models.Model):
         termination_notice_interval = self.product_id.termination_notice_interval
         termination_notice_rule_type = self.product_id.termination_notice_rule_type
         return {
-            'sequence': self.sequence,
-            'product_id': self.product_id.id,
-            'name': self.name,
-            'quantity': self._get_contract_line_qty(),
-            'uom_id': self.product_uom.id,
-            'price_unit': self.price_unit,
-            'discount': self.discount,
-            'date_end': self.date_end,
-            'date_start': self.date_start or fields.Date.today(),
-            'recurring_next_date': recurring_next_date,
-            'recurring_interval': 1,
-            'recurring_invoicing_type': self.recurring_invoicing_type,
-            'recurring_rule_type': self.recurring_rule_type,
-            'is_auto_renew': self.is_auto_renew,
-            'auto_renew_interval': self.auto_renew_interval,
-            'auto_renew_rule_type': self.auto_renew_rule_type,
-            'termination_notice_interval': termination_notice_interval,
-            'termination_notice_rule_type': termination_notice_rule_type,
-            'contract_id': contract.id,
-            'sale_order_line_id': self.id,
-            'predecessor_contract_line_id': predecessor_contract_line_id,
-            'analytic_account_id': self.order_id.analytic_account_id.id,
+            "sequence": self.sequence,
+            "product_id": self.product_id.id,
+            "name": self.name,
+            "quantity": self._get_contract_line_qty(),
+            "uom_id": self.product_uom.id,
+            "price_unit": self.price_unit,
+            "discount": self.discount,
+            "date_end": self.date_end,
+            "date_start": self.date_start or fields.Date.today(),
+            "recurring_next_date": recurring_next_date,
+            "recurring_interval": 1,
+            "recurring_invoicing_type": self.recurring_invoicing_type,
+            "recurring_rule_type": self.recurring_rule_type,
+            "is_auto_renew": self.is_auto_renew,
+            "auto_renew_interval": self.auto_renew_interval,
+            "auto_renew_rule_type": self.auto_renew_rule_type,
+            "termination_notice_interval": termination_notice_interval,
+            "termination_notice_rule_type": termination_notice_rule_type,
+            "contract_id": contract.id,
+            "sale_order_line_id": self.id,
+            "predecessor_contract_line_id": predecessor_contract_line_id,
+            "analytic_account_id": self.order_id.analytic_account_id.id,
         }
 
     def create_contract_line(self, contract):

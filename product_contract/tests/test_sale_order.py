@@ -4,7 +4,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
 
@@ -39,7 +39,7 @@ class TestSaleOrder(TransactionCase):
                 ],
             }
         )
-        self.product1.with_context(force_company=self.sale.company_id.id).write(
+        self.product1.with_company(self.sale.company_id).write(
             {
                 "is_contract": True,
                 "default_qty": 12,
@@ -48,7 +48,7 @@ class TestSaleOrder(TransactionCase):
                 "property_contract_template_id": self.contract_template1.id,
             }
         )
-        self.product2.with_context(force_company=self.sale.company_id.id).write(
+        self.product2.with_company(self.sale.company_id).write(
             {
                 "is_contract": True,
                 "property_contract_template_id": self.contract_template2.id,
@@ -343,7 +343,7 @@ class TestSaleOrder(TransactionCase):
     def test_order_lines_with_the_same_contract_template(self):
         """It should create one contract with two lines grouped by contract
         template"""
-        self.product2.with_context(force_company=self.sale.company_id.id).write(
+        self.product2.with_company(self.sale.company_id).write(
             {
                 "is_contract": True,
                 "property_contract_template_id": self.contract_template1.id,
