@@ -201,7 +201,7 @@ class ContractAbstractContractLine(models.AbstractModel):
                         line.quantity,
                     ),
                     pricelist=pricelist.id,
-                    partner=line.contract_id.partner_id.id,
+                    partner=line.contract_id.partner_id,
                     date=line.env.context.get(
                         "old_date", fields.Date.context_today(line)
                     ),
