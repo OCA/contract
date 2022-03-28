@@ -3,8 +3,12 @@
 # Copyright 2017 Tecnativa - David Vidal
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from unittest.mock import patch
+
 import odoo.tests
 from odoo.tests import tagged
+
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 
 from ..hooks import post_init_hook
 
@@ -14,9 +18,28 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
 
-        self.payment_method = self.env["account.payment.method"].create(
-            {"name": "Test Payment Method", "code": "Test", "payment_type": "inbound"}
+        Method_get_payment_method_information = (
+            AccountPaymentMethod._get_payment_method_information
         )
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res["Test"] = {"mode": "multi", "domain": [("type", "=", "bank")]}
+            return res
+
+        with patch.object(
+            AccountPaymentMethod,
+            "_get_payment_method_information",
+            _get_payment_method_information,
+        ):
+            self.payment_method = self.env["account.payment.method"].create(
+                {
+                    "name": "Test Payment Method",
+                    "code": "Test",
+                    "payment_type": "inbound",
+                }
+            )
+
         self.payment_mode = self.env["account.payment.mode"].create(
             {
                 "name": "Test payment mode",
