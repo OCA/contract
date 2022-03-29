@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, models
+
 from odoo.addons.queue_job.job import job
 
 QUEUE_CHANNEL = "root.CONTRACT_INVOICE"
