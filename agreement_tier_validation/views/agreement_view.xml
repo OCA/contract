@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_agreement_filter" model="ir.ui.view">
+        <field name="name">agreement.select - agreement_tier_validation</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_search_view" />
+        <field name="arch" type="xml">
+            <filter name="filter_templates" position="after">
+                <separator />
+                <filter
+                    name="needs_review"
+                    string="Needs my Review"
+                    domain="[('reviewer_ids','in',uid), ('state', 'not in', ['active', 'inactive'])]"
+                    help="My Areements to review"
+                />
+                <filter
+                    name="tier_validated"
+                    string="Validated"
+                    domain="[('validated', '=', True)]"
+                    help="Agreements validated and ready to be active"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>
