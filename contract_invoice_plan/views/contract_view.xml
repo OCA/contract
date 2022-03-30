@@ -1,0 +1,187 @@
+<odoo>
+    <record id="view_contract_invoice_plan_tree" model="ir.ui.view">
+        <field name="name">view.contract.invoice.plan.tree</field>
+        <field name="model">contract.invoice.plan</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="installment" />
+                <field name="plan_date" />
+                <field name="percent" optional="show" />
+                <field name="amount" optional="show" />
+                <field name="amount_invoiced" optional="hide" sum="Amount" />
+                <field name="to_invoice" />
+                <field name="invoiced" />
+                <field name="invoice_ids" optional="hide" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_contract_invoice_plan_form" model="ir.ui.view">
+        <field name="name">view.contract.invoice.plan.form</field>
+        <field name="model">contract.invoice.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="installment" />
+                        <field name="plan_date" />
+                        <field name="to_invoice" />
+                    </group>
+                    <group>
+                        <field name="percent" />
+                        <field name="amount" />
+                        <field name="invoiced" />
+                    </group>
+                </group>
+                <separator
+                    string="Related Bills"
+                    attrs="{'invisible': [('invoice_ids', '=', [])]}"
+                />
+                <field name="invoice_ids" widget="many2many_tags" />
+            </form>
+        </field>
+    </record>
+
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract.form.view</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="amount_total" />
+                <field
+                    name="use_invoice_plan"
+                    attrs="{'readonly': [('invoice_count', '>', 0)]}"
+                    widget="boolean_toggle"
+                />
+            </field>
+            <xpath expr="//button[@name='recurring_create_invoice']" position="before">
+                <field name="ip_invoice_plan" invisible="1" />
+                <button
+                    name="%(action_view_contract_make_planned_invoice)d"
+                    string="Create Bill by Plan"
+                    type="action"
+                    class="btn-primary"
+                    attrs="{'invisible': [('ip_invoice_plan', '=', False)]}"
+                    groups="account.group_account_user"
+                />
+            </xpath>
+            <group name="recurring_invoices" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('use_invoice_plan', '=', True)]}</attribute>
+            </group>
+            <group name="recurring_type" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('use_invoice_plan', '=', True)]}</attribute>
+            </group>
+            <page name="recurring_invoice_line" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('use_invoice_plan', '=', True)]}</attribute>
+            </page>
+            <xpath
+                expr="/form/sheet/notebook/page[@name='recurring_invoice_line']"
+                position="after"
+            >
+                <page
+                    name="invoice_line"
+                    string="Invoice Lines"
+                    attrs="{'invisible': [('use_invoice_plan', '=', False)]}"
+                >
+                    <field
+                        name="contract_line_ids"
+                        widget="section_and_note_one2many"
+                        context="{'default_contract_type': contract_type, 'default_recurring_rule_type': recurring_rule_type, 'default_recurring_invoicing_type': recurring_invoicing_type, 'default_recurring_interval': recurring_interval, 'default_date_start': date_start, 'default_recurring_next_date': recurring_next_date}"
+                    >
+                        <tree editable="bottom">
+                            <control>
+                                <create string="Add a line" />
+                                <create
+                                    string="Add a section"
+                                    context="{'default_display_type': 'line_section'}"
+                                />
+                                <create
+                                    string="Add a note"
+                                    context="{'default_display_type': 'line_note'}"
+                                />
+                            </control>
+                            <field name="display_type" invisible="1" />
+                            <field name="sequence" widget="handle" />
+                            <field name="product_id" />
+                            <field name="name" widget="section_and_note_text" />
+                            <field
+                                name="analytic_account_id"
+                                groups="analytic.group_analytic_accounting"
+                            />
+                            <field
+                                name="analytic_tag_ids"
+                                widget="many2many_tags"
+                                groups="analytic.group_analytic_tags"
+                            />
+                            <field name="quantity" />
+                            <field name="allowed_uom_categ_id" invisible="1" />
+                            <field name="uom_id" />
+                            <field name="price_unit" />
+                            <field name="price_subtotal" />
+                        </tree>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="product_id" />
+                                    <field name="name" widget="section_and_note_text" />
+                                    <field
+                                        name="analytic_account_id"
+                                        groups="analytic.group_analytic_accounting"
+                                    />
+                                    <field
+                                        name="analytic_tag_ids"
+                                        widget="many2many_tags"
+                                        groups="analytic.group_analytic_tags"
+                                    />
+                                </group>
+                                <group>
+                                    <field name="quantity" />
+                                    <field name="allowed_uom_categ_id" invisible="1" />
+                                    <field name="uom_id" />
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                    <field name="note" />
+                </page>
+                <page
+                    string="Invoice Plan"
+                    attrs="{'invisible': [('use_invoice_plan', '=', False)]}"
+                >
+                    <button
+                        name="%(action_contract_create_invoice_plan)d"
+                        string="⇒ Create Invoice Plan"
+                        type="action"
+                        class="oe_link"
+                        attrs="{'invisible': ['|', ('invoice_plan_ids', '!=', []), ('invoice_count', '>', 0)]}"
+                    />
+                    <button
+                        name="remove_invoice_plan"
+                        string="⇒ Remove Invoice Plan"
+                        type="object"
+                        class="oe_link"
+                        attrs="{'invisible': ['|', ('invoice_plan_ids', '=', []), ('invoice_count', '>', 0)]}"
+                        confirm="Are you sure to remove this invoice plan?"
+                    />
+                    <field
+                        name="invoice_plan_ids"
+                        context="{'tree_view_ref': 'view_contract_invoice_plan_tree'}"
+                        attrs="{'invisible': [('invoice_plan_ids', '=', [])], 'readonly': [('invoice_count', '>', 0)]}"
+                    />
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="ip_total_percent" />
+                        <field name="ip_total_amount" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

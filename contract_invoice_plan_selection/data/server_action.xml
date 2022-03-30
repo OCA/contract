@@ -1,0 +1,33 @@
+<odoo>
+    <record id="apply_on_all_product_line" model="ir.actions.server">
+        <field name="name">1) All contract lines</field>
+        <field
+            name="model_id"
+            ref="contract_invoice_plan.model_contract_make_planned_invoice"
+        />
+        <field name="state">code</field>
+        <field name="code">
+contract_id = env.context.get("contract_id")
+contract = env["contract.contract"].browse(contract_id)
+action = contract.contract_line_ids.filtered(lambda l: l.qty_to_invoice > 0 or not l.quantity).ids
+        </field>
+    </record>
+
+    <record id="apply_on_matched_amount" model="ir.actions.server">
+        <field name="name">2) A contract line with matched amount</field>
+        <field
+            name="model_id"
+            ref="contract_invoice_plan.model_contract_make_planned_invoice"
+        />
+        <field name="state">code</field>
+        <field name="code">
+contract_id = env.context.get("contract_id")
+installment_id = env.context.get("installment_id")
+contract = env["contract.contract"].browse(contract_id)
+installment = env["contract.invoice.plan"].browse(installment_id)
+action = contract.contract_line_ids.filtered(
+    lambda l: l.qty_to_invoice > 0 and l.price_subtotal == installment.amount
+)[:1].ids
+        </field>
+    </record>
+</odoo>
