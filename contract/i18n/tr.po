@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-28 02:01+0000\n"
-"PO-Revision-Date: 2021-08-05 22:50+0000\n"
+"PO-Revision-Date: 2022-04-20 14:05+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish (https://www.transifex.com/oca/teams/23907/tr/)\n"
 "Language: tr\n"
@@ -98,6 +98,81 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Merhaba <t t-out=\"object.partner_id.name or '' \"/>,</p>"
+"\n"
+"                <p>Yeni bir sözleşme oluşturuldu: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERANSLAR</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Sözleşme: <strong t-out=\"object."
+"name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Sözleşme Tarihi Başlanma: <t "
+"t-out=\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Bağlantınız: <a t-att-href=\""
+"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)\" "
+"t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Bağlantınız: <t t-out="
+"\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Herhangi bir sorunuz varsa, bizimle iletişime geçmekten "
+"çekinmeyin.</p>\n"
+"                <p>Seçtiğiniz için teşekkürler <t t-out=\"object."
+"company_id.name or 'us'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out="
+"\"object.company_id.name\"/></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, "
+"&quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], "
+"&quot;no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Telefon: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
+" none; color: #fff; border-radius: 5px; font-size:13px;\">Sözleşmeyi "
+"Görüntüleme</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -107,6 +182,9 @@ msgid ""
 "you.</p>\n"
 "        "
 msgstr ""
+"<p>Merhaba</p>\n"
+"            <p>Sözleşmede size bildirmek istediğimiz değişiklikler var.</p>\n"
+"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -119,6 +197,13 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"                                fatura sözleşmesi\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible': [("
+"'contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                                fatura sözleşmesi\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -134,6 +219,11 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#BİTİŞ#</strong>\n"
+"                                    : Bitiş tarihi\n"
+"                                    \n"
+"                                    \n"
+"                                    fatura dönemi"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -149,6 +239,11 @@ msgid ""
 "                                    of the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#BAŞLAMA#</strong>\n"
+"                                    : Başlama\n"
+"                                    Tarih\n"
+"                                    nın\n"
+"                                    fatura dönemi"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -178,7 +273,7 @@ msgstr "<strong>Bitiş Tarih</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date of Next Invoice</strong>"
-msgstr "<strong>Bir Sonraki Fatura Tarihi</strong>"
+msgstr "<strong>Sonraki Fatura Tarihi</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -245,18 +340,22 @@ msgstr "<strong>Birim Fiyat</strong>"
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr ""
+"İptal edilen bir sözleşme satırı otomatik olarak yenilenecek şekilde "
+"ayarlanamaz"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr ""
+"Bir halefi olan bir sözleşme satırı otomatik olarak yenilenecek şekilde "
+"ayarlanamaz"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
-msgstr ""
+msgstr "Bir halefi olan bir sözleşme satırının bir bitiş tarihi olmalıdır"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract
@@ -266,7 +365,7 @@ msgstr "Soyut Yinelenen Sözleşme"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Soyut Yinelenen Sözleşme Satırı"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
@@ -292,7 +391,7 @@ msgstr "Aktiviteler"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Etkinlik İstisna Donatımı"
+msgstr "Aktivite İstisna Donatımı"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
@@ -320,13 +419,13 @@ msgstr "Not Ekle"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a section"
-msgstr "Bir Bölüm Ekle"
+msgstr "Bölüm Ekle"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
-msgstr ""
+msgstr "Otomatik yenileme satırının bitiş tarihi olmalıdır"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
@@ -347,22 +446,22 @@ msgstr "Arşivlendi"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Are you sure you want to cancel this line"
-msgstr ""
+msgstr "Bu satır iptal etmek istediğinizden emin misiniz"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Are you sure you want to re-activate this contract?"
-msgstr ""
+msgstr "Bu sözleşmeyi yeniden etkinleştirmek istediğinizden emin misiniz?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 msgid "Are you sure you want to terminate this contract?"
-msgstr ""
+msgstr "Bu sözleşmeyi feshetmek istediğinizden emin misiniz?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Associated Partner"
-msgstr ""
+msgstr "İlişkili İş Ortağı"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_attachment_count
@@ -386,7 +485,7 @@ msgstr "Otomatik Fiyat?"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_recurrency_basic_mixin
 msgid "Basic recurrency mixin for abstract contract models"
-msgstr ""
+msgstr "Soyut sözleşme modelleri için temel yineleme karışımı"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -408,13 +507,13 @@ msgstr "Sözleşme Fesihini İptal Et"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_cancel_allowed
 msgid "Cancel allowed?"
-msgstr ""
+msgstr "İptal etme izni var mı?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
-msgstr ""
+msgstr "Bu satır için iptale izin verilmiyor"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_canceled
@@ -429,7 +528,7 @@ msgstr "İptal Edildi"
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -456,7 +555,7 @@ msgstr "Ticari Varlık"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Communication"
-msgstr ""
+msgstr "Bildirim"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_company
@@ -535,12 +634,12 @@ msgstr "Sözleşme Satırı Sihirbazı"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__predecessor_contract_line_id
 msgid "Contract Line origin of this one."
-msgstr ""
+msgstr "Bunun Sözleşme Satırı menşei."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Contract Manually Create Invoice"
-msgstr ""
+msgstr "Sözleşme Manuel Fatura Oluşturma"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_manually_create_invoice
@@ -550,12 +649,12 @@ msgstr "Sözleşme Manuel Fatura Oluşturma Sihirbazı"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_modification
 msgid "Contract Modification"
-msgstr ""
+msgstr "Sözleşme Değişikliği"
 
 #. module: contract
 #: model:mail.template,name:contract.mail_template_contract_modification
 msgid "Contract Modification Template"
-msgstr ""
+msgstr "Sözleşme Değişiklik Şablonu"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -633,25 +732,25 @@ msgstr "Sözleşme satırı '%s' başlangıç tarihi bitiş tarihinden sonra ola
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
-msgstr ""
+msgstr "Sözleşme satırı İptal edilmedi: %s"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its predecessor overlapped"
-msgstr ""
+msgstr "Sözleşme satırı ve selefi çakıştı"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its successor overlapped"
-msgstr ""
+msgstr "Sözleşme satırı ve halefi çakıştı"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
-msgstr ""
+msgstr "Sözleşme satırı iptal edildi: %s"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -704,7 +803,7 @@ msgstr ""
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line must be canceled before delete"
-msgstr ""
+msgstr "Silmeden önce sözleşme satırı iptal edilmelidir"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_ids
@@ -714,7 +813,7 @@ msgstr "Sözleşme Satırları"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_fixed_ids
 msgid "Contract lines (fixed)"
-msgstr ""
+msgstr "Sözleşme satırları (sabit)"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:0
@@ -723,11 +822,13 @@ msgid ""
 "Contract manually invoiced: <a    href=\"#\" data-oe-model=\"%(model_name)s"
 "\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
 msgstr ""
+"Sözleşme manuel olarak faturalandı: <a href=\"#\" data-oe-model=\""
+"%(model_name)s\" data-oe-id=\"%(rec_id)s\">Fatura</a>"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
 msgid "Contract modifications"
-msgstr ""
+msgstr "Sözleşme değişiklikleri"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:0
@@ -769,6 +870,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Ölçü Birimleri arasında dönüştürme, ancak bunlar aynı kategoriye aitse "
+"gerçekleşebilir. Oranlara göre dönüşüm yapılacaktır."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
@@ -785,7 +888,7 @@ msgstr "Faturalar Oluştur"
 #: model:ir.model.fields,field_description:contract.field_res_company__create_new_line_at_contract_line_renew
 #: model:ir.model.fields,field_description:contract.field_res_config_settings__create_new_line_at_contract_line_renew
 msgid "Create New Line At Contract Line Renew"
-msgstr "Sözleşme Satırı Yenilemede Yeni Satır Oluştur"
+msgstr "Sözleşme Satırında Yenileme Satırı Oluştur"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -904,7 +1007,7 @@ msgstr "Sonraki Fatura Tarihi"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
-msgstr ""
+msgstr "Sonraki faturanın tarihi"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__daily
@@ -934,6 +1037,10 @@ msgid ""
 "- With next line: If the next line can be invoiced.\n"
 "- Custom: Depending on the recurrence to be define."
 msgstr ""
+"Belgenin ne zaman faturalandırılacağını tanımlar:\n"
+"- Bir önceki satırla: Bir önceki satır faturalanabiliyorsa.\n"
+"- Sonraki satır ile: Bir sonraki satır faturalanabiliyorsa.\n"
+"- Özel: Tanımlanacak yinelemeye bağlı olarak."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__name
@@ -995,7 +1102,7 @@ msgstr "Ekran Türü"
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
-msgstr ""
+msgstr "E-posta Sözleşme Şablonu"
 
 #. module: contract
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
@@ -1004,6 +1111,8 @@ msgid ""
 "Failed to process the contract %(name)s [id: %(id)s]:\n"
 "%(ue)s"
 msgstr ""
+"%(name)s [id: %(id)s] sözleşmesi işlenemedi:\n"
+"%(ue)s"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1050,7 +1159,7 @@ msgstr "Grupla ..."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Mesajı Var"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
@@ -1084,6 +1193,9 @@ msgid ""
 "to the original one as successor. The default behavior is to extend the end "
 "date of the contract by a new subscription period"
 msgstr ""
+"İşaretlenirse, sözleşme satırı yenilemesinde yeni bir satır oluşturulur ve "
+"halefi olarak orijinal satıra bağlanır. Varsayılan davranış, sözleşmenin "
+"bitiş tarihini yeni bir abonelik dönemi kadar uzatmaktır"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
@@ -1115,6 +1227,8 @@ msgid ""
 "In case of restart after suspension, this field contain the new contract "
 "line created."
 msgstr ""
+"Askıya alındıktan sonra yeniden başlatma durumunda, bu alan oluşturulan yeni "
+"sözleşme satırını içerir."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1204,7 +1318,7 @@ msgstr "Fatura Türü"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
 msgid "Is Auto Renew"
-msgstr ""
+msgstr "Otomatik Yenileme"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
@@ -1216,12 +1330,12 @@ msgstr "Takipçi mi"
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_recurring_note
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_recurring_note
 msgid "Is Recurring Note"
-msgstr ""
+msgstr "Yinelenen Not"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Is suspension without end date"
-msgstr ""
+msgstr "Bitiş tarihi olmadan askıya alma"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__journal_id
@@ -1312,7 +1426,7 @@ msgstr "Manuel Para Birimi"
 #: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
 msgid "Manual Renew Needed"
-msgstr ""
+msgstr "Manuel Yenileme Gerekli"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
@@ -1334,6 +1448,8 @@ msgid ""
 "Mark this check if you want to control recurrrence at line level instead of "
 "all together for the whole contract."
 msgstr ""
+"Tüm sözleşme için hep birlikte yerine satır düzeyinde yinelemeyi kontrol "
+"etmek istiyorsanız bu kontrolü işaretleyin."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
@@ -1384,7 +1500,7 @@ msgstr "Ay(lar) son günü"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Aktivitemin Son Tarihi"
 
 #. module: contract
 #: code:addons/contract/controllers/main.py:0
@@ -1531,13 +1647,13 @@ msgstr "Plan Başlangıcı"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_plan_successor_allowed
 msgid "Plan successor allowed?"
-msgstr ""
+msgstr "Plan halefine izin veriliyor mu?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Plan successor not allowed for this line"
-msgstr ""
+msgstr "Bu satır için plan halefine izin verilmiyor"
 
 #. module: contract
 #: code:addons/contract/models/contract.py:0
@@ -1545,6 +1661,7 @@ msgstr ""
 msgid ""
 "Please define a %(contract_type)s journal for the company '%(company)s'."
 msgstr ""
+"Lütfen '%(company)s' şirketi için bir %(contract_type)s yenmiye tanımlayın."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
@@ -1643,7 +1760,7 @@ msgstr "Çeyrek"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_rule_type
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Recurrence"
-msgstr "Tekrarlayan"
+msgstr "Tekrarlama"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__line_recurrence
@@ -1688,7 +1805,7 @@ msgstr "Sözleşme satırlarını Yenile"
 #: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_interval
 msgid "Renew Every"
-msgstr "Her Yenile"
+msgstr "Hep Yenile"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__auto_renew_interval
@@ -1702,13 +1819,13 @@ msgstr "Yenile Her (Gün / Hafta / Ay / Yıl)"
 #: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_rule_type
 msgid "Renewal type"
-msgstr ""
+msgstr "Yenileme Türü"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_comment_required
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__terminate_comment_required
 msgid "Require a termination comment"
-msgstr ""
+msgstr "Bir sonlandırma yorumu gerektir"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
@@ -1765,7 +1882,7 @@ msgstr "E-posta ile Gönderme"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_modification__sent
 msgid "Sent"
-msgstr ""
+msgstr "Gönderme"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
@@ -1779,7 +1896,7 @@ msgstr "Sıra"
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Sequence of the contract line when displaying contracts"
-msgstr ""
+msgstr "Sözleşmeler görüntülenirken sözleşme satırının sırası"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
@@ -1796,7 +1913,7 @@ msgstr "Bu iş ortağının satış sözleşmelerini göster"
 #: model:ir.model.fields,field_description:contract.field_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__specific_price
 msgid "Specific Price"
-msgstr ""
+msgstr "Özel Fiyat"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract__recurring_rule_type
@@ -1853,23 +1970,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop"
-msgstr ""
+msgstr "Durdur"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 msgid "Stop Date"
-msgstr ""
+msgstr "Durdurma Tarihi"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Stop Plan Successor"
-msgstr ""
+msgstr "Plan Halefini Durdur"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_allowed
 msgid "Stop allowed?"
-msgstr ""
+msgstr "Durdurulmasına izin verildi mi?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:0
@@ -1973,19 +2090,19 @@ msgstr "Sonlandırma Tarihi"
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_interval
 msgid "Termination Notice Before"
-msgstr ""
+msgstr "Fesih Bildirimi Öncesi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
 msgid "Termination Notice Date"
-msgstr ""
+msgstr "Fesih Bildirimi Tarihi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
 msgid "Termination Notice type"
-msgstr ""
+msgstr "Fesih Bildirimi Türü"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__terminate_reason_id
@@ -1996,7 +2113,7 @@ msgstr "Sonlandırma Nedeni"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "This contract was terminated for the reason"
-msgstr ""
+msgstr "Bu sözleşme nedenden dolayı feshedildi"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
@@ -2005,11 +2122,13 @@ msgid ""
 "This flag is used to make a difference between a definitive stopand "
 "temporary one for which a user is not able to plan asuccessor in advance"
 msgstr ""
+"Bu bayrak, kullanıcının önceden bir halefi planlayamadığı kesin durdurma ile "
+"geçici durdurma arasında bir fark yaratmak için kullanılır"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__to-renew
 msgid "To renew"
-msgstr "Yenile"
+msgstr "Yenilecek"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
@@ -2070,7 +2189,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Update Termination Details"
-msgstr ""
+msgstr "Fesih Ayrıntılarını Güncelleyin"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -2210,7 +2329,7 @@ msgstr ""
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Sözleşme (Ref {{ object.name or 'n/a' }})"
 
 #. module: contract
 #: model:mail.template,subject:contract.mail_template_contract_modification
@@ -2218,6 +2337,8 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+"{{ object.company_id.name }} Sözleşme (Ref {{ object.name or 'n/a' }}) - "
+"Değişiklikler"
 
 #~ msgid ""
 #~ "\n"
