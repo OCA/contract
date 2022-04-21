@@ -130,9 +130,10 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     def _prepare_settlement_line(
         self, domain, group, agreement, line=False, section=False
     ):
-        amount = (
-            group[self._get_amount_field()] or 0.0 + agreement.additional_consumption
-        )
+        amount = group[self._get_amount_field()] or 0.0
+        if self.domain == "purchase":
+            amount = -amount
+        amount += agreement.additional_consumption
         amount_section = 0.0
         vals = {
             "agreement_id": agreement.id,
