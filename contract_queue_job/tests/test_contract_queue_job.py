@@ -13,7 +13,7 @@ class TestContractQueueJob(TestContractBase, JobMixin):
 
     def _get_related_invoices(self, contracts):
         return (
-            self.env["account.invoice.line"]
+            self.env["account.move.line"]
             .search(
                 [
                     (
@@ -23,7 +23,7 @@ class TestContractQueueJob(TestContractBase, JobMixin):
                     )
                 ]
             )
-            .mapped("invoice_id")
+            .mapped("move_id")
         )
 
     def test_contract_queue_job(self):

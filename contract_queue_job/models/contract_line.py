@@ -3,16 +3,10 @@
 
 from odoo import models
 
-from odoo.addons.queue_job.job import job
-
-QUEUE_CHANNEL = "root.CONTRACT_LINE_RENEW"
-
 
 class ContractLine(models.Model):
-
     _inherit = "contract.line"
 
-    @job(default_channel=QUEUE_CHANNEL)
     def renew(self):
         if len(self) > 1:
             for rec in self:
