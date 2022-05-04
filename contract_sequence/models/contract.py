@@ -33,7 +33,7 @@ class ContractContract(models.Model):
         if "name" not in vals or vals["name"] == "/":
             sequence = (
                 self.sequence_id
-                or self.template_id.sequence_id
+                or self.contract_template_id.sequence_id
                 or self.env.company.contract_default_sequence
             )
             sequence = self.env.company.contract_default_sequence
@@ -46,7 +46,7 @@ class ContractContract(models.Model):
             for contract in self:
                 sequence = (
                     contract.sequence_id
-                    or contract.template_id.sequence_id
+                    or contract.contract_template_id.sequence_id
                     or self.env.company.contract_default_sequence
                 )
                 vals["name"] = sequence.next_by_id()

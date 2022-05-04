@@ -7,6 +7,9 @@ from odoo import fields, models
 class ContractTemplate(models.Model):
     _inherit = "contract.template"
 
+    def get_default_sequence(self):
+        return self.env.company.contract_default_sequence
+
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Contract Sequence",
@@ -14,4 +17,5 @@ class ContractTemplate(models.Model):
         "of the journal entries of this journal.",
         copy=False,
         required=True,
+        default=get_default_sequence,
     )
