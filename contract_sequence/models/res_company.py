@@ -10,4 +10,6 @@ class ResCompany(models.Model):
     contract_default_sequence = fields.Many2one(
         "ir.sequence",
         string="Default sequence",
+        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id(
+            'contract_sequence.seq_contract_auto')
     )
