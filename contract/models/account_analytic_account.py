@@ -365,7 +365,8 @@ class AccountAnalyticAccount(models.Model):
                 ('date_end', '=', False),
                 ('date_end', '>=', cutoffdate),
             ])
-        return contracts.recurring_create_invoice(limit)
+            contracts.recurring_create_invoice(limit)
+        return True
 
     @api.multi
     def action_contract_send(self):
