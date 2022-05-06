@@ -7,10 +7,13 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    def get_default_contract_sequence(self):
+        return self.env["ir.model.data"].xmlid_to_res_id(
+            "contract_sequence.seq_contract_auto"
+        )
+
     contract_default_sequence = fields.Many2one(
         "ir.sequence",
         string="Default sequence",
-        default=lambda self: self.env["ir.model.data"].xmlid_to_res_id(
-            "contract_sequence.seq_contract_auto"
-        ),
+        default=get_default_contract_sequence,
     )

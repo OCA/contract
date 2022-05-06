@@ -8,7 +8,10 @@ class ContractTemplate(models.Model):
     _inherit = "contract.template"
 
     def get_default_sequence(self):
-        return self.env.company.contract_default_sequence
+        return (
+            self.env.company.contract_default_sequence
+            or self.env.company.get_default_contract_sequence()
+        )
 
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
