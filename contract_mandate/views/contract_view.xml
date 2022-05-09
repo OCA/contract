@@ -12,7 +12,7 @@
             <field name="payment_mode_id" position="after">
                 <field
                     name="mandate_id"
-                    domain="[('partner_id', '=', commercial_partner_id), ('state', '=', 'valid')]"
+                    domain="[('partner_id', '=', commercial_partner_id), ('state', '=', 'valid'), ('company_id', '=', company_id)]"
                     attrs="{'invisible': [('mandate_required', '=', False)]}"
                 />
                 <field name="commercial_partner_id" invisible="1" />
