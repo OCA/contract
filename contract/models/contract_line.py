@@ -16,6 +16,7 @@ from .contract_line_constraints import get_allowed
 class ContractLine(models.Model):
     _name = "contract.line"
     _description = "Contract Line"
+    _check_company_auto = True
     _inherit = [
         "contract.abstract.contract.line",
         "contract.recurrency.mixin",
@@ -36,10 +37,14 @@ class ContractLine(models.Model):
     analytic_account_id = fields.Many2one(
         string="Analytic account",
         comodel_name="account.analytic.account",
+        check_company=True,
+        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
     )
     analytic_tag_ids = fields.Many2many(
         comodel_name="account.analytic.tag",
         string="Analytic Tags",
+        check_company=True,
+        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
     )
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
@@ -59,6 +64,7 @@ class ContractLine(models.Model):
         readonly=True,
         index=True,
         copy=False,
+        check_company=True,
         help="In case of restart after suspension, this field contain the new "
         "contract line created.",
     )
@@ -69,6 +75,7 @@ class ContractLine(models.Model):
         readonly=True,
         index=True,
         copy=False,
+        check_company=True,
         help="Contract Line origin of this one.",
     )
     manual_renew_needed = fields.Boolean(

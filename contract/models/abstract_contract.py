@@ -22,7 +22,12 @@ class ContractAbstractContract(models.AbstractModel):
     partner_id = fields.Many2one(
         comodel_name="res.partner", string="Partner", index=True
     )
-    pricelist_id = fields.Many2one(comodel_name="product.pricelist", string="Pricelist")
+    pricelist_id = fields.Many2one(
+        comodel_name="product.pricelist",
+        string="Pricelist",
+        check_company=True,
+        domain="[('company_id', '=', company_id)]",
+    )
     contract_type = fields.Selection(
         selection=[("sale", "Customer"), ("purchase", "Supplier")],
         default="sale",
@@ -36,6 +41,7 @@ class ContractAbstractContract(models.AbstractModel):
         store=True,
         readonly=False,
         index=True,
+        check_company=True,
     )
     company_id = fields.Many2one(
         "res.company",
