@@ -14,6 +14,7 @@ class ContractContract(models.Model):
         help="If mandate required in payment method and not set mandate, "
         "invoice takes the first valid mandate",
         index=True,
+        check_company=True,
     )
     mandate_required = fields.Boolean(
         related="payment_mode_id.payment_method_id.mandate_required", readonly=True
