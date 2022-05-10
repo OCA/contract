@@ -17,10 +17,12 @@ class ContractContract(models.Model):
     )
 
     def get_default_sequence(self):
-        return (
-            self.env.company.contract_default_sequence
-            or self.env.company.get_default_contract_sequence()
-        )
+        try:
+            return self.env.company.contract_default_sequence or self.env.ref(
+                "contract_sequence.seq_contract_auto"
+            )
+        except Exception:
+            return False
 
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
@@ -37,9 +39,8 @@ class ContractContract(models.Model):
             sequence = (
                 self.sequence_id
                 or self.contract_template_id.sequence_id
-                or self.env.company.contract_default_sequence
+                or self.get_default_sequence()
             )
-            sequence = self.env.company.contract_default_sequence
             vals["name"] = sequence.next_by_id()
         return super().create(vals)
 
@@ -50,7 +51,7 @@ class ContractContract(models.Model):
                 sequence = (
                     contract.sequence_id
                     or contract.contract_template_id.sequence_id
-                    or self.env.company.contract_default_sequence
+                    or self.get_default_sequence()
                 )
                 vals["name"] = sequence.next_by_id()
                 super(ContractContract, contract).write(vals)

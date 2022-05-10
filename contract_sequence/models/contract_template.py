@@ -1,17 +1,19 @@
 # Copyright 2022 Andrea Cometa - Apulia Software (www.apuliasoftware.it)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ContractTemplate(models.Model):
     _inherit = "contract.template"
 
     def get_default_sequence(self):
-        return (
-            self.env.company.contract_default_sequence
-            or self.env.company.get_default_contract_sequence()
-        )
+        try:
+            return self.env.company.contract_default_sequence or self.env.ref(
+                "contract_sequence.seq_contract_auto"
+            )
+        except Exception:
+            return False
 
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
@@ -22,3 +24,10 @@ class ContractTemplate(models.Model):
         required=True,
         default=get_default_sequence,
     )
+
+    @api.model
+    def create(self, vals):
+        if "name" not in vals or vals["name"] == "/":
+            sequence = self.sequence_id or self.get_default_sequence()
+            vals["name"] = sequence.next_by_id()
+        return super().create(vals)
