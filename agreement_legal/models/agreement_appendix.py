@@ -9,22 +9,19 @@ class AgreementAppendix(models.Model):
     _description = "Agreement Appendices"
     _order = "sequence"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     title = fields.Char(
-        string="Title",
         required=True,
         help="The title is displayed on the PDF. The name is not.",
     )
-    sequence = fields.Integer(string="Sequence", default=10)
-    content = fields.Html(string="Content")
+    sequence = fields.Integer(default=10)
+    content = fields.Html()
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
-        string="Dynamic Content",
         help="compute dynamic Content",
     )
     agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide this appendix without "
         "removing it.",
@@ -52,7 +49,6 @@ class AgreementAppendix(models.Model):
           model (sub-model).""",
     )
     default_value = fields.Char(
-        string="Default Value",
         help="Optional value to use if the target field is empty.",
     )
     copyvalue = fields.Char(

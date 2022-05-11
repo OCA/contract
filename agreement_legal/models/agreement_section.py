@@ -9,11 +9,9 @@ class AgreementSection(models.Model):
     _description = "Agreement Sections"
     _order = "sequence"
 
-    name = fields.Char(string="Name", required=True)
-    title = fields.Char(
-        string="Title", help="The title is displayed on the PDF. The name is not."
-    )
-    sequence = fields.Integer(string="Sequence")
+    name = fields.Char(required=True)
+    title = fields.Char(help="The title is displayed on the PDF. The name is not.")
+    sequence = fields.Integer()
     agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     clauses_ids = fields.One2many(
         "agreement.clause", "section_id", string="Clauses", copy=True
@@ -21,11 +19,9 @@ class AgreementSection(models.Model):
     content = fields.Html(string="Section Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
-        string="Dynamic Content",
         help="compute dynamic Content",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the agreement without "
         "removing it.",
@@ -53,7 +49,6 @@ class AgreementSection(models.Model):
           model (sub-model).""",
     )
     default_value = fields.Char(
-        string="Default Value",
         help="Optional value to use if the target field is empty.",
     )
     copyvalue = fields.Char(

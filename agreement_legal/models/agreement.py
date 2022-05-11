@@ -14,35 +14,25 @@ class Agreement(models.Model):
 
     name = fields.Char(string="Title", required=True)
     version = fields.Integer(
-        string="Version",
         default=1,
         copy=False,
         help="The versions are used to keep track of document history and "
         "previous versions can be referenced.",
     )
     revision = fields.Integer(
-        string="Revision",
         default=0,
         copy=False,
         help="The revision will increase with every save event.",
     )
-    description = fields.Text(
-        string="Description", tracking=True, help="Description of the agreement"
-    )
+    description = fields.Text(tracking=True, help="Description of the agreement")
     dynamic_description = fields.Text(
         compute="_compute_dynamic_description",
-        string="Dynamic Description",
         help="Compute dynamic description",
     )
-    start_date = fields.Date(
-        string="Start Date", tracking=True, help="When the agreement starts."
-    )
-    end_date = fields.Date(
-        string="End Date", tracking=True, help="When the agreement ends."
-    )
-    color = fields.Integer(string="Color")
+    start_date = fields.Date(tracking=True, help="When the agreement starts.")
+    end_date = fields.Date(tracking=True, help="When the agreement ends.")
+    color = fields.Integer()
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the agreement without "
         "removing it.",
@@ -68,14 +58,12 @@ class Agreement(models.Model):
         help="Number of Days to be notified before changes.",
     )
     special_terms = fields.Text(
-        string="Special Terms",
         tracking=True,
         help="Any terms that you have agreed to and want to track on the "
         "agreement/contract.",
     )
     dynamic_special_terms = fields.Text(
         compute="_compute_dynamic_special_terms",
-        string="Dynamic Special Terms",
         help="Compute dynamic special terms",
     )
     code = fields.Char(
@@ -92,13 +80,12 @@ class Agreement(models.Model):
         help="Date that a request for termination was received.",
     )
     termination_date = fields.Date(
-        string="Termination Date",
         tracking=True,
         help="Date that the contract was terminated.",
     )
-    reviewed_date = fields.Date(string="Reviewed Date", tracking=True)
+    reviewed_date = fields.Date(tracking=True)
     reviewed_user_id = fields.Many2one("res.users", string="Reviewed By", tracking=True)
-    approved_date = fields.Date(string="Approved Date", tracking=True)
+    approved_date = fields.Date(tracking=True)
     approved_user_id = fields.Many2one("res.users", string="Approved By", tracking=True)
     partner_id = fields.Many2one(
         "res.partner",
@@ -131,9 +118,7 @@ class Agreement(models.Model):
     company_contact_email = fields.Char(
         related="company_contact_id.email", string="Email"
     )
-    use_parties_content = fields.Boolean(
-        string="Use parties content", help="Use custom content for parties"
-    )
+    use_parties_content = fields.Boolean(help="Use custom content for parties")
     company_partner_id = fields.Many2one(
         related="company_id.partner_id", string="Company's Partner"
     )
@@ -164,14 +149,12 @@ class Agreement(models.Model):
         return deftext
 
     parties = fields.Html(
-        string="Parties",
         tracking=True,
         default=_get_default_parties,
         help="Parties of the agreement",
     )
     dynamic_parties = fields.Html(
         compute="_compute_dynamic_parties",
-        string="Dynamic Parties",
         help="Compute dynamic parties",
     )
     agreement_type_id = fields.Many2one(
@@ -251,7 +234,7 @@ class Agreement(models.Model):
     notification_address_id = fields.Many2one(
         "res.partner",
         string="Notification Address",
-        help="The address to send notificaitons to, if different from "
+        help="The address to send notifications to, if different from "
         "customer address.(Address Type = Other)",
     )
     signed_contract_filename = fields.Char(string="Filename")
@@ -277,7 +260,6 @@ class Agreement(models.Model):
           model (sub-model).""",
     )
     default_value = fields.Char(
-        string="Default Value",
         help="Optional value to use if the target field is empty.",
     )
     copyvalue = fields.Char(
