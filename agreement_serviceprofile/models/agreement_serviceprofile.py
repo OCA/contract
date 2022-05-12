@@ -13,7 +13,7 @@ class AgreementServiceProfile(models.Model):
     def _default_stage_id(self):
         return self.env.ref("agreement_serviceprofile.servpro_stage_draft")
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     stage_id = fields.Many2one(
         "agreement.stage",
         string="Stage",
@@ -23,13 +23,12 @@ class AgreementServiceProfile(models.Model):
     )
     agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide this service profile "
         "without removing it.",
     )
 
-    notes = fields.Text(string="Notes")
+    notes = fields.Text()
     product_id = fields.Many2one(
         "product.template",
         "Service Product",
@@ -40,7 +39,7 @@ class AgreementServiceProfile(models.Model):
         "Service Product Variant",
         domain="[('is_serviceprofile', '=', True), ('type', '=', 'service')]",
     )
-    use_product_variant = fields.Boolean("Use Product Variant", default=False)
+    use_product_variant = fields.Boolean(default=False)
     partner_id = fields.Many2one(related="agreement_id.partner_id", string="Partner")
 
     # Used for Kanban grouped_by view
