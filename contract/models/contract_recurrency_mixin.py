@@ -112,7 +112,11 @@ class ContractRecurrencyMixin(models.AbstractModel):
                 next_period_date_start = rec.last_date_invoiced + relativedelta(days=1)
             else:
                 next_period_date_start = rec.date_start
-            if rec.date_end and next_period_date_start > rec.date_end:
+            if (
+                rec.date_end
+                and next_period_date_start
+                and next_period_date_start > rec.date_end
+            ):
                 next_period_date_start = False
             rec.next_period_date_start = next_period_date_start
 
