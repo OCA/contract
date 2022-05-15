@@ -193,4 +193,108 @@
             </field>
         </field>
     </record>
+
+    <!--TREE view - reporting -->
+    <record id="contract_line_report_tree_view" model="ir.ui.view">
+        <field name="name">contract.line report tree view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="contract_id" />
+                <field name="partner_id" />
+                <field name="product_id" />
+                <field
+                    name="analytic_account_id"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field
+                    name="analytic_tag_ids"
+                    widget="many2many_tags"
+                    groups="analytic.group_analytic_tags"
+                />
+                <field name="quantity" />
+                <field name="uom_id" />
+                <field name="price_unit" />
+                <field name="discount" groups="base.group_no_one" />
+                <field name="price_subtotal" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="recurring_interval" />
+                <field name="recurring_rule_type" />
+                <field name="recurring_next_date" />
+                <field name="last_date_invoiced" />
+                <field name="is_auto_renew" />
+                <field name="is_canceled" />
+                <field name="state" />
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Contract lines search view - reporting -->
+    <record id="contract_line_search_view" model="ir.ui.view">
+        <field name="name">contract.line search view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id" />
+                <field name="product_id" />
+                <field name="name" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="recurring_next_date" />
+                <field name="last_date_invoiced" />
+                <separator />
+                <filter name="is_canceled" domain="[('is_canceled', '=', True)]" />
+                <filter name="is_auto_renew" domain="[('is_auto_renew', '=', True)]" />
+                <group expand="0" string="Group By...">
+                    <filter
+                        string="Contract"
+                        name="group_by_contract"
+                        domain="[]"
+                        context="{'group_by':'contract_id'}"
+                    />
+                    </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Add action for contract lines -->
+    <record id="action_supplier_contract_lines" model="ir.actions.act_window">
+        <field name="name">Supplier Contract Lines</field>
+        <field name="res_model">contract.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_id.contract_type', '=', 'purchase')]</field>
+        <field name="context">
+            {'search_default_group_by_contract': 1}
+        </field>
+        <field name="search_view_id" ref="contract_line_search_view" />
+        <field name="view_id" ref="contract_line_report_tree_view" />
+    </record>
+
+    <record id="action_customer_contract_lines" model="ir.actions.act_window">
+        <field name="name">Customer Contract Lines</field>
+        <field name="res_model">contract.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_id.contract_type', '=', 'sale')]</field>
+        <field name="context">
+            {'search_default_group_by_contract': 1}
+        </field>
+        <field name="search_view_id" ref="contract_line_search_view" />
+        <field name="view_id" ref="contract_line_report_tree_view" />
+    </record>
+
+    <record model="ir.ui.menu" id="menu_customer_contract_line_report">
+        <field name="name">Customer Contract lines</field>
+        <field name="parent_id" ref="contract.menu_contract_reporting" />
+        <field name="action" ref="contract.action_customer_contract_lines" />
+        <field name="sequence" eval="10" />
+    </record>
+    <record model="ir.ui.menu" id="menu_supplier_contract_line_report">
+        <field name="name">Supplier Contract lines</field>
+        <field name="parent_id" ref="contract.menu_contract_reporting" />
+        <field name="action" ref="contract.action_supplier_contract_lines" />
+        <field name="sequence" eval="11" />
+    </record>
+
 </odoo>
