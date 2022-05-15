@@ -93,4 +93,34 @@
             </xpath>
         </field>
     </record>
+
+    <record id="contract_line_report_tree_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_report_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="is_auto_renew" />
+                <field name="is_canceled" />
+                <field name="state" />
+            </xpath>
+        </field>
+    </record>
+    <record id="contract_line_search_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator" position="after">
+                <filter
+                    string="Canceled"
+                    name="is_canceled"
+                    domain="[('is_canceled', '=', True)]"
+                />
+                <filter
+                    string="Auto-renew"
+                    name="is_auto_renew"
+                    domain="[('is_auto_renew', '=', True)]"
+                />
+            </xpath>
+        </field>
+    </record>
 </odoo>

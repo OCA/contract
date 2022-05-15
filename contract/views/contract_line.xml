@@ -118,7 +118,7 @@
 
     <!--TREE view - reporting -->
     <record id="contract_line_report_tree_view" model="ir.ui.view">
-        <field name="name">contract.line report list view (in contract)</field>
+        <field name="name">contract.line report tree view (in contract)</field>
         <field name="model">contract.line</field>
         <field name="arch" type="xml">
             <list>
@@ -141,8 +141,6 @@
                 <field name="recurring_rule_type" />
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
-                <field name="is_canceled" />
-                <field name="state" />
             </list>
         </field>
     </record>
@@ -161,7 +159,6 @@
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
                 <separator />
-                <filter name="is_canceled" domain="[('is_canceled', '=', True)]" />
                 <group expand="0" string="Group By...">
                     <filter
                         string="Contract"

@@ -29,7 +29,9 @@ class ContractTemplateLine(models.Model):
     company_id = fields.Many2one(
         related="contract_id.company_id", store=True, readonly=True
     )
-
+    partner_id = fields.Many2one(
+        comodel_name="res.partner", related="contract_id.partner_id"
+    )
     # === Product & UOM ===
     product_id = fields.Many2one("product.product", string="Product")
     name = fields.Text(string="Description", required=True)
