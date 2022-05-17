@@ -1814,7 +1814,7 @@ class TestContract(TestContractBase):
         self.assertEqual(last, to_date("2018-01-31"))
         self.assertEqual(recurring_next_date, to_date("2018-01-31"))
         self.assertEqual(self.acct_line.recurring_next_date, to_date("2018-01-31"))
-        # monthlylastday with match with post-paid
+        # monthlylastday must match with post-paid
         # because in pre-paid the invoice date must be de fist of month
         self.assertEqual(self.acct_line.recurring_invoicing_type, "post-paid")
         self.contract.recurring_create_invoice()
