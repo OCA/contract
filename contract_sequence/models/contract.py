@@ -1,7 +1,7 @@
 # Copyright 2022 Andrea Cometa - Apulia Software (www.apuliasoftware.it)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class ContractContract(models.Model):
@@ -13,16 +13,16 @@ class ContractContract(models.Model):
         tracking=True,
         help="Set to '/' and save if you want a new internal reference "
         "to be proposed.",
-        copy="False",
+        copy=False,
     )
 
     def get_default_sequence(self):
-        try:
-            return self.env.company.contract_default_sequence or self.env.ref(
-                "contract_sequence.seq_contract_auto"
-            )
-        except Exception:
-            return False
+        result = self.env.company.contract_default_sequence or self.env.ref(
+            "contract_sequence.seq_contract_auto"
+        )
+        if not result:
+            raise UserWarning(_("No default sequence found!"))
+        return result
 
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
