@@ -32,7 +32,7 @@ def _init_last_date_invoiced_on_contract_lines(env):
 
 def _init_invoicing_partner_id_on_contracts(env):
     _logger.info("Populate invoicing partner field on contracts")
-    contracts = env["contract.contract"].search([])
+    contracts = env["contract.contract"].with_context(active_test=False).search([])
     contracts._inverse_partner_id()
 
 
