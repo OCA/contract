@@ -135,6 +135,9 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         string="Modifications",
     )
+    free_invoice_date = fields.Boolean(
+        string="Free Invoice Date",
+    )
 
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
@@ -437,6 +440,7 @@ class ContractContract(models.Model):
         if self.fiscal_position_id:
             move_form.fiscal_position_id = self.fiscal_position_id
         invoice_vals = move_form._values_to_save(all_fields=True)
+        date_invoice = not self.free_invoice_date and date_invoice
         invoice_vals.update(
             {
                 "ref": self.code,
