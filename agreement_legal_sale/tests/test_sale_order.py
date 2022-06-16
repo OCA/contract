@@ -53,7 +53,13 @@ class TestSaleOrder(TransactionCase):
                 "agreement_template_id": self.test_agreement_template.id,
                 "date_order": fields.Date.today(),
                 "order_line": [
-                    (0, 0, {"product_id": self.test_product.id, "product_uom_qty": 1.0})
+                    (0, 0, {"display_type": "line_section", "name": "Test section"}),
+                    (0, 0, {"display_type": "line_note", "name": "Test note"}),
+                    (
+                        0,
+                        0,
+                        {"product_id": self.test_product.id, "product_uom_qty": 1.0},
+                    ),
                 ],
             }
         )
@@ -73,6 +79,8 @@ class TestSaleOrder(TransactionCase):
                 "agreement_template_id": self.test_agreement_template.id,
                 "date_order": fields.Date.today(),
                 "order_line": [
+                    (0, 0, {"display_type": "line_section", "name": "Test section"}),
+                    (0, 0, {"display_type": "line_note", "name": "Test note"}),
                     (
                         0,
                         0,
@@ -80,7 +88,7 @@ class TestSaleOrder(TransactionCase):
                             "product_id": self.test_product_is_serviceprofile.id,
                             "product_uom_qty": 1.0,
                         },
-                    )
+                    ),
                 ],
             }
         )
