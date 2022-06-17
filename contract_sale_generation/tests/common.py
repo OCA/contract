@@ -100,7 +100,10 @@ class ContractSaleCommon:
                 line_form.recurring_rule_type = "monthly"
                 line_form.recurring_interval = 1
                 line_form.date_start = "2020-01-15"
-                line_form.recurring_next_date = "2020-01-15"
+        # TODO: Check why this is needed after Form use
+        # At _exit_, during the recurring_next_date compute on contract,
+        # contract_line_ids is void...
+        cls.contract._compute_recurring_next_date()
         cls.contract_line = cls.contract.contract_line_ids[1]
 
         cls.contract2 = cls.env["contract.contract"].create(
