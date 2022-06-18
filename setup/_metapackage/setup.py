@@ -24,6 +24,7 @@ setuptools.setup(
         'odoo14-addon-contract_payment_mode',
         'odoo14-addon-contract_sale',
         'odoo14-addon-contract_sale_generation',
+        'odoo14-addon-contract_sale_tag',
         'odoo14-addon-contract_variable_quantity',
     ],
     classifiers=[
