@@ -10,6 +10,5 @@
     "author": "Tecnativa, " "Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "depends": ["contract", "sale_layout_category_hide_detail"],
-    "development_status": "Production/Stable",
     "data": ["views/abstract_contract_line.xml", "views/contract.xml"],
 }
