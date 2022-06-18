@@ -15,7 +15,8 @@
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
-    "website": "https://github.com/oca/contract",
+    "website": "https://github.com/OCA/contract",
+    "development_status": "Production/Stable",
     "depends": ["base", "account", "product", "portal"],
     "external_dependencies": {"python": ["dateutil"]},
     "data": [
