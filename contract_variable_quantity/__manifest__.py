@@ -10,6 +10,7 @@
     "license": "AGPL-3",
     "author": "Tecnativa," "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
+    "development_status": "Production/Stable",
     "depends": ["contract"],
     "data": [
         "security/ir.model.access.csv",
