@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo13-addon-agreement',
         'odoo13-addon-agreement_legal',
+        'odoo13-addon-agreement_maintenance',
         'odoo13-addon-agreement_sale',
         'odoo13-addon-agreement_serviceprofile',
         'odoo13-addon-contract',
