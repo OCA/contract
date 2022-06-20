@@ -487,6 +487,7 @@ msgstr "Annullamento permesso?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1094
+#: code:addons/contract/models/contract_line.py:1103
 #, python-format
 msgid "Cancel not allowed for this line"
 msgstr "Annullamento non permesso per questa riga"
@@ -694,6 +695,7 @@ msgstr ""
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1123
+#: code:addons/contract/models/contract_line.py:1133
 #, python-format
 msgid "Contract line Un-canceled: %s<br/>- "
 msgstr "Riga contratto ri-attivata: %s<br/>- "
@@ -712,80 +714,97 @@ msgstr "Riga contratto e sua seguente sovrapposte"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1102
+#: code:addons/contract/models/contract_line.py:1111
 #, python-format
 msgid "Contract line canceled: %s<br/>- "
 msgstr "Riga contratto annullata: %s<br/>- "
 
 #. module: contract
+#: code:addons/contract/models/contract_line.py:971
+#, python-format
+msgid ""
+"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id="
+"\"{id}\">{product}</a></strong> planned a successor: <br/>- <strong>Start</"
+"strong>: {new_date_start}<br/>- <strong>End</strong>: {new_date_end}"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:1275
+#, python-format
+msgid ""
+"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id="
+"\"{id}\">{product}</a></strong> renewed: <br/>- <strong>Start</strong>: "
+"{new_date_start}<br/>- <strong>End</strong>: {new_date_end}"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:1082
+#, python-format
+msgid ""
+"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id="
+"\"{id}\">{product}</a></strong> suspended: <br/>- <strong>Suspension Start</"
+"strong>: {new_date_start}<br/>- <strong>Suspension End</strong>: "
+"{new_date_end}"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:890
+#, python-format
+msgid ""
+"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id="
+"\"{id}\">{product}</a></strong>stopped: <br/>- <strong>End</strong>: "
+"{old_end} -- {new_end}"
+msgstr ""
+
+#. module: contract
 #: code:addons/contract/models/contract_line.py:894
 #, python-format
 msgid ""
-"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
+"Contract line for <strong>{product}</strong>\n"
 "                            stopped: <br/>\n"
 "                            - <strong>End</strong>: {old_end} -- {new_end}\n"
 "                            "
 msgstr ""
-"Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
-"                            arrestata: <br/>\n"
-"                            - <strong>Fine</strong>: {old_end} -- {new_end}\n"
-"                            "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:974
 #, python-format
 msgid ""
-"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
+"Contract line for <strong>{product}</strong>\n"
 "                    planned a successor: <br/>\n"
 "                    - <strong>Start</strong>: {new_date_start}\n"
 "                    <br/>\n"
 "                    - <strong>End</strong>: {new_date_end}\n"
 "                    "
 msgstr ""
-"La riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
-"                    ha pianificato un successore: <br/>\n"
-"                    - <strong>Inizio</strong>: {new_date_start}\n"
-"                    <br/>\n"
-"                    - <strong>Fine</strong>: {new_date_end}\n"
-"                    "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1270
 #, python-format
 msgid ""
-"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
+"Contract line for <strong>{product}</strong>\n"
 "                renewed: <br/>\n"
 "                - <strong>Start</strong>: {new_date_start}\n"
 "                <br/>\n"
 "                - <strong>End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
-"Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
-"                rinnovata: <br/>\n"
-"                - <strong>Inizio</strong>: {new_date_start}\n"
-"                <br/>\n"
-"                - <strong>Fine</strong>: {new_date_end}\n"
-"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1082
 #, python-format
 msgid ""
-"Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
+"Contract line for <strong>{product}</strong>\n"
 "                suspended: <br/>\n"
 "                - <strong>Suspension Start</strong>: {new_date_start}\n"
 "                <br/>\n"
 "                - <strong>Suspension End</strong>: {new_date_end}\n"
 "                "
 msgstr ""
-"Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-id=\"{id}\">{product}</a></strong>\n"
-"                sospesa: <br/>\n"
-"                - <strong>Inizio sospensione</strong>: {new_date_start}\n"
-"                <br/>\n"
-"                - <strong>Fine sospensione</strong>: {new_date_end}\n"
-"                "
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1322
+#: code:addons/contract/models/contract_line.py:1336
 #, python-format
 msgid "Contract line must be canceled before delete"
 msgstr "La riga contratto deve essere annullata prima di essere eliminata"
@@ -1541,6 +1560,7 @@ msgstr "Pianificazione successore permessa?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:957
+#: code:addons/contract/models/contract_line.py:960
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Pianificazione successore non permessa per questa riga"
@@ -1850,6 +1870,7 @@ msgstr "Arresto/pianificazione del successore permessi?"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1018
+#: code:addons/contract/models/contract_line.py:1024
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
 msgstr "Arresto/pianificazione del successore non permessi per questa riga"
@@ -1994,6 +2015,7 @@ msgstr "Ri-attivare"
 
 #. module: contract
 #: code:addons/contract/models/contract_line.py:1115
+#: code:addons/contract/models/contract_line.py:1125
 #, python-format
 msgid "Un-cancel not allowed for this line"
 msgstr "Ri-attivazione non permessa per questa riga"
@@ -2178,6 +2200,72 @@ msgstr "e.g. Contratto XYZ"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "on"
 msgstr "su"
+
+#~ msgid ""
+#~ "Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-"
+#~ "id=\"{id}\">{product}</a></strong>\n"
+#~ "                            stopped: <br/>\n"
+#~ "                            - <strong>End</strong>: {old_end} -- "
+#~ "{new_end}\n"
+#~ "                            "
+#~ msgstr ""
+#~ "Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-"
+#~ "oe-id=\"{id}\">{product}</a></strong>\n"
+#~ "                            arrestata: <br/>\n"
+#~ "                            - <strong>Fine</strong>: {old_end} -- "
+#~ "{new_end}\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-"
+#~ "id=\"{id}\">{product}</a></strong>\n"
+#~ "                    planned a successor: <br/>\n"
+#~ "                    - <strong>Start</strong>: {new_date_start}\n"
+#~ "                    <br/>\n"
+#~ "                    - <strong>End</strong>: {new_date_end}\n"
+#~ "                    "
+#~ msgstr ""
+#~ "La riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" "
+#~ "data-oe-id=\"{id}\">{product}</a></strong>\n"
+#~ "                    ha pianificato un successore: <br/>\n"
+#~ "                    - <strong>Inizio</strong>: {new_date_start}\n"
+#~ "                    <br/>\n"
+#~ "                    - <strong>Fine</strong>: {new_date_end}\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-"
+#~ "id=\"{id}\">{product}</a></strong>\n"
+#~ "                renewed: <br/>\n"
+#~ "                - <strong>Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-"
+#~ "oe-id=\"{id}\">{product}</a></strong>\n"
+#~ "                rinnovata: <br/>\n"
+#~ "                - <strong>Inizio</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Fine</strong>: {new_date_end}\n"
+#~ "                "
+
+#~ msgid ""
+#~ "Contract line for <strong><a href=\"#\" data-oe-model=\"{model}\" data-oe-"
+#~ "id=\"{id}\">{product}</a></strong>\n"
+#~ "                suspended: <br/>\n"
+#~ "                - <strong>Suspension Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Suspension End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Riga contratto per <strong><a href=\"#\" data-oe-model=\"{model}\" data-"
+#~ "oe-id=\"{id}\">{product}</a></strong>\n"
+#~ "                sospesa: <br/>\n"
+#~ "                - <strong>Inizio sospensione</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Fine sospensione</strong>: {new_date_end}\n"
+#~ "                "
 
 #~ msgid ""
 #~ "\n"
