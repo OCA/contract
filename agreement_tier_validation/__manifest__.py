@@ -4,7 +4,7 @@
     "name": "Agreement Tier Validation",
     "summary": "Extends the functionality of Agreement to "
     "support a tier validation process.",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Contract Management",
     "website": "https://github.com/OCA/contract",
     "author": "Ecosoft, Odoo Community Association (OCA)",
