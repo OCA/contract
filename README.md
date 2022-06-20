@@ -32,7 +32,7 @@ addon | version | maintainers | summary
 [agreement_sale](agreement_sale/) | 14.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
 [agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.1.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
 [agreement_stock](agreement_stock/) | 14.0.1.0.1 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
-[agreement_tier_validation](agreement_tier_validation/) | 14.0.1.0.0 |  | Extends the functionality of Agreement to support a tier validation process.
+[agreement_tier_validation](agreement_tier_validation/) | 14.0.1.0.1 |  | Extends the functionality of Agreement to support a tier validation process.
 [contract](contract/) | 14.0.2.5.0 |  | Recurring - Contracts Management
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
