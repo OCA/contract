@@ -888,14 +888,17 @@ class ContractLine(models.Model):
                     )
                     if post_message:
                         msg = _(
-                            """Contract line for <strong>{product}</strong>
-                            stopped: <br/>
-                            - <strong>End</strong>: {old_end} -- {new_end}
-                            """.format(
-                                product=rec.name,
-                                old_end=old_date_end,
-                                new_end=rec.date_end,
-                            )
+                            'Contract line for <strong><a href="#" '
+                            'data-oe-model="{model}" data-oe-id="{id}">'
+                            '{product}</a></strong>'
+                            'stopped: <br/>'
+                            '- <strong>End</strong>: {old_end} -- {new_end}'
+                        ).format(
+                            model=self._name,
+                            id=rec.id,
+                            product=rec.name,
+                            old_end=old_date_end,
+                            new_end=rec.date_end,
                         )
                         rec.contract_id.message_post(body=msg)
                 else:
@@ -966,16 +969,19 @@ class ContractLine(models.Model):
             contract_line |= new_line
             if post_message:
                 msg = _(
-                    """Contract line for <strong>{product}</strong>
-                    planned a successor: <br/>
-                    - <strong>Start</strong>: {new_date_start}
-                    <br/>
-                    - <strong>End</strong>: {new_date_end}
-                    """.format(
-                        product=rec.name,
-                        new_date_start=new_line.date_start,
-                        new_date_end=new_line.date_end,
-                    )
+                    'Contract line for <strong><a href="#" '
+                    'data-oe-model="{model}" data-oe-id="{id}">'
+                    '{product}</a></strong>'
+                    ' planned a successor: <br/>'
+                    '- <strong>Start</strong>: {new_date_start}'
+                    '<br/>'
+                    '- <strong>End</strong>: {new_date_end}'
+                ).format(
+                    model=self._name,
+                    id=rec.id,
+                    product=rec.name,
+                    new_date_start=new_line.date_start,
+                    new_date_end=new_line.date_end,
                 )
                 rec.contract_id.message_post(body=msg)
         return contract_line
@@ -1074,16 +1080,19 @@ class ContractLine(models.Model):
                         post_message=False,
                     )
             msg = _(
-                """Contract line for <strong>{product}</strong>
-                suspended: <br/>
-                - <strong>Suspension Start</strong>: {new_date_start}
-                <br/>
-                - <strong>Suspension End</strong>: {new_date_end}
-                """.format(
-                    product=rec.name,
-                    new_date_start=date_start,
-                    new_date_end=date_end,
-                )
+                'Contract line for <strong>'
+                '<a href="#" data-oe-model="{model}" data-oe-id="{id}">'
+                '{product}</a></strong>'
+                ' suspended: <br/>'
+                '- <strong>Suspension Start</strong>: {new_date_start}'
+                '<br/>'
+                '- <strong>Suspension End</strong>: {new_date_end}'
+            ).format(
+                model=self._name,
+                id=rec.id,
+                product=rec.name,
+                new_date_start=date_start,
+                new_date_end=date_end,
             )
             rec.contract_id.message_post(body=msg)
         return contract_line
@@ -1098,8 +1107,9 @@ class ContractLine(models.Model):
                 """Contract line canceled: %s"""
                 % "<br/>- ".join(
                     [
-                        "<strong>%s</strong>" % name
-                        for name in lines.mapped('name')
+                        '<strong><a href="#" data-oe-model="%s" data-oe-id="%s"'
+                        '>%s</a></strong>' % (self._name, l.id, l.name)
+                        for l in lines
                     ]
                 )
             )
@@ -1119,8 +1129,9 @@ class ContractLine(models.Model):
                 """Contract line Un-canceled: %s"""
                 % "<br/>- ".join(
                     [
-                        "<strong>%s</strong>" % name
-                        for name in lines.mapped('name')
+                        '<strong><a href="#" data-oe-model="%s" data-oe-id="%s"'
+                        '>%s</a></strong>' % (self._name, l.id, l.name)
+                        for l in lines
                     ]
                 )
             )
@@ -1262,16 +1273,19 @@ class ContractLine(models.Model):
                 new_line = rec._renew_extend_line(date_end)
             res |= new_line
             msg = _(
-                """Contract line for <strong>{product}</strong>
-                renewed: <br/>
-                - <strong>Start</strong>: {new_date_start}
-                <br/>
-                - <strong>End</strong>: {new_date_end}
-                """.format(
-                    product=rec.name,
-                    new_date_start=date_start,
-                    new_date_end=date_end,
-                )
+                'Contract line for <strong>'
+                '<a href="#" data-oe-model="{model}" data-oe-id="{id}">'
+                '{product}</a></strong>'
+                ' renewed: <br/>'
+                '- <strong>Start</strong>: {new_date_start}'
+                '<br/>'
+                '- <strong>End</strong>: {new_date_end}'
+            ).format(
+                model=self._name,
+                id=rec.id,
+                product=rec.name,
+                new_date_start=date_start,
+                new_date_end=date_end,
             )
             rec.contract_id.message_post(body=msg)
         return res
