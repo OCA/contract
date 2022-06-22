@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class ContractAbstractContract(models.AbstractModel):
     _inherit = "contract.abstract.contract"
 
-    sale_autoconfirm = fields.Boolean(string="Sale Autoconfirm")
+    sale_autoconfirm = fields.Boolean()
 
     @api.model
     def _selection_generation_type(self):
