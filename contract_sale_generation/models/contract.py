@@ -75,11 +75,11 @@ class ContractContract(models.Model):
             self.message_post(
                 body=_(
                     "Contract manually sale order: "
-                    '<a href="#" data-oe-model="%s" data-oe-id="%s">'
+                    '<a href="#" data-oe-model="%(model)s" data-oe-id="%(id)s">'
                     "Sale Order"
                     "</a>"
                 )
-                % (sale_rec._name, sale_rec.id)
+                % {"model": sale_rec._name, "id": sale_rec.id}
             )
         return sales
 
