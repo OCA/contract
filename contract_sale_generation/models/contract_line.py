@@ -25,7 +25,7 @@ class ContractLine(models.Model):
         dates = self._get_period_to_invoice(
             self.last_date_invoiced, self.recurring_next_date
         )
-        sale_line_vals = self._prepare_sale_line_vals(dates, order_id)
+        sale_line_vals = self._prepare_sale_line_vals(dates, order_id=order_id)
 
         order_line = (
             self.env["sale.order.line"]
