@@ -47,22 +47,24 @@ class TestContractManuallyCreateInvoice(TestContractBase):
         self.assertEqual(len(invoices), contract_to_invoice_count)
 
     def test_contract_manually_create_invoice_with_usererror(self):
-
+        print("AAAAA")
         contracts = self.contract
-
+        print("BBBBB")
         accounts = self.product_1.product_tmpl_id.get_product_accounts()
+        print("CCCCC")
         accounts["income"].deprecated = True  # To trigger a UserError
-
+        print("DDDDD")
         for _i in range(3):
             contracts |= self.contract.copy()
+        print("EEEEEE")
         wizard = self.env["contract.manually.create.invoice"].create(
             {"invoice_date": self.acct_line.date_end}
         )
-
+        print("FFFFFF")
         with self.assertRaises(UserError):
             # The UserError re-raise a UserError
             wizard.create_invoice()
-
+        print("GGGGG")
         try:
             wizard.create_invoice()
         except Exception as e:
