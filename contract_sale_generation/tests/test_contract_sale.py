@@ -3,15 +3,10 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase
 
-from .common import ContractSaleCommon
-
-
-def to_date(date):
-    return fields.Date.to_date(date)
+from .common import ContractSaleCommon, to_date
 
 
 class TestContractSale(ContractSaleCommon, SavepointCase):
@@ -96,6 +91,11 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.contract_line.recurring_invoicing_type = "post-paid"
         self.contract_line.date_end = "2020-03-15"
         self.contract_line._onchange_is_auto_renew()
+        # If we do not recompute recurring_next_date
+        # then it maintains it's 'old' value.
+        # TODO: Research that
+        recurring_next_date = self.contract_line.recurring_next_date
+        self.assertGreaterEqual(recurring_next_date, self.contract_line.date_start)
         contracts = self.contract2
         for _i in range(10):
             contracts |= self.contract.copy({"generation_type": "sale"})
@@ -108,7 +108,43 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
             len(order_lines),
         )
 
-    def test_contract_sale_analytic(self):
+    def test_contract_sale_analytic_payment_term_fiscal_position(self):
+        # Call onchange in order to retrieve
+        # payment term and fiscal position
+        self.contract._onchange_partner_id()
         orders = self.env["sale.order"].browse()
         orders |= self.contract.recurring_create_sale()
         self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
+        self.assertEqual(self.payment_term_id, orders.mapped("payment_term_id"))
+        self.assertEqual(self.fiscal_position_id, orders.mapped("fiscal_position_id"))
+
+    def test_recurring_method_retrieval(self):
+        self.assertNotEqual(
+            self.contract._get_recurring_create_func(create_type="sale"),
+            self.contract._get_recurring_create_func(create_type="invoice"),
+        )
+
+    def test__prepare_recurring_sales_values_no_date_ref(self):
+        self.contract.recurring_next_date = False
+        self.assertEqual(self.contract._prepare_recurring_sales_values(), [])
+
+    def test__prepare_recurring_sales_values_no_contract_lines(self):
+        a_contract_with_no_lines = self.env["contract.contract"].create(
+            {
+                "name": "No lines Contract",
+                "partner_id": self.partner.id,
+                "generation_type": "sale",
+                "date_start": "2020-01-15",
+            }
+        )
+        self.assertEqual(a_contract_with_no_lines._prepare_recurring_sales_values(), [])
+
+    def test__prepare_sale_line_vals_with_order_id(self):
+        order = self.contract.recurring_create_sale()[0]
+        recurring_next_date = self.contract.recurring_next_date
+        date_start = self.contract.date_start
+        date_end = self.contract.date_end
+        dates = [date_start, date_end, recurring_next_date]
+        for line in self.contract._get_lines_to_invoice(recurring_next_date):
+            line_vals = line._prepare_sale_line_vals(dates, order)
+            self.assertEqual(line_vals["order_id"], order.id)

@@ -9,11 +9,6 @@ from odoo.tests.common import SavepointCase
 
 from .common import ContractSaleCommon
 
-
-def to_date(date):
-    return fields.Date.to_date(date)
-
-
 today = "2020-01-15"
 
 
