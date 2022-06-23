@@ -8,10 +8,13 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="contract_id" invisible="context.get('default_contract_id', False)"/>
-                        <field name="date"/>
-                        <field name="description"/>
-                        <field name="sent"/>
+                        <field
+                            name="contract_id"
+                            invisible="context.get('default_contract_id', False)"
+                        />
+                        <field name="date" />
+                        <field name="description" />
+                        <field name="sent" />
                     </group>
                 </sheet>
             </form>
@@ -21,10 +24,10 @@
         <field name="model">contract.modification</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="contract_id" optional="hide"/>
-                <field name="date"/>
-                <field name="description"/>
-                <field name="sent"/>
+                <field name="contract_id" optional="hide" />
+                <field name="date" />
+                <field name="description" />
+                <field name="sent" />
             </tree>
         </field>
     </record>
@@ -35,8 +38,8 @@
     </record>
     <record model="ir.ui.menu" id="menu_contract_modification">
         <field name="name">contract.modification</field>
-        <field name="parent_id" ref="contract.menu_config_contract"/>
-        <field name="action" ref="action_contract_modification"/>
+        <field name="parent_id" ref="contract.menu_config_contract" />
+        <field name="action" ref="action_contract_modification" />
         <field name="sequence" eval="16" />
     </record>
 </odoo>
