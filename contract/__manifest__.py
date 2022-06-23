@@ -39,6 +39,7 @@
         "views/contract_tag.xml",
         "views/abstract_contract_line.xml",
         "views/contract.xml",
+        "views/contract_modification.xml",
         "views/contract_line.xml",
         "views/contract_template.xml",
         "views/contract_template_line.xml",

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 BDO Auditores S.L.P
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_contract_modification_form" model="ir.ui.view">
+        <field name="model">contract.modification</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="contract_id" invisible="context.get('default_contract_id', False)"/>
+                        <field name="date"/>
+                        <field name="description"/>
+                        <field name="sent"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_contract_modification_tree">
+        <field name="model">contract.modification</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="contract_id" optional="hide"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="sent"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_contract_modification">
+        <field name="name">Contract modification</field>
+        <field name="res_model">contract.modification</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.ui.menu" id="menu_contract_modification">
+        <field name="name">contract.modification</field>
+        <field name="parent_id" ref="contract.menu_config_contract"/>
+        <field name="action" ref="action_contract_modification"/>
+        <field name="sequence" eval="16" />
+    </record>
+</odoo>
