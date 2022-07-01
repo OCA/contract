@@ -2401,3 +2401,11 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
+
+    def test_contract_line_termination(self):
+        """Don't fail when the line receives an end date."""
+        self.contract.recurring_create_invoice()
+        self.acct_line.date_end = "2018-02-14"
+        self.assertFalse(self.acct_line.recurring_next_date)
+        # This doesn't give any error
+        self.contract.recurring_create_invoice()
