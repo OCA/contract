@@ -142,11 +142,14 @@ class Contract(models.Model):
         """ Return values for creation of a payment.transaction for invoice. """
         amount_due = invoice.residual
         partner = token.partner_id
-        reference = self.env['payment.transaction']._compute_reference()
+        reference = self.env['payment.transaction']._compute_reference({
+            "invoice_ids": invoice.ids,
+        })
         return {
             'reference': '%s' % reference,
             'acquirer_id': token.acquirer_id.id,
             'payment_token_id': token.id,
+            'invoice_ids': [(4, invoice.id)],
             'amount': amount_due,
             'state': 'draft',
             'currency_id': invoice.currency_id.id,
