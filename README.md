@@ -27,7 +27,7 @@ addon | version | maintainers | summary
 [agreement_rebate](agreement_rebate/) | 13.0.1.0.1 |  | Rebate in agreements
 [agreement_sale](agreement_sale/) | 13.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
 [agreement_serviceprofile](agreement_serviceprofile/) | 13.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
-[contract](contract/) | 13.0.2.8.0 |  | Recurring - Contracts Management
+[contract](contract/) | 13.0.2.8.1 |  | Recurring - Contracts Management
 [contract_layout_category_hide_detail](contract_layout_category_hide_detail/) | 13.0.1.0.0 |  | Hide details for sections in Contract lines
 [contract_mandate](contract_mandate/) | 13.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 13.0.1.0.0 |  | Payment mode in contracts and their invoices
