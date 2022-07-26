@@ -45,7 +45,7 @@ class ContractAbstractContract(models.AbstractModel):
     )
     line_recurrence = fields.Boolean(
         string="Recurrence at line level?",
-        help="Mark this check if you want to control recurrrence at line level instead"
+        help="Mark this check if you want to control recurrence at line level instead"
         " of all together for the whole contract.",
     )
     generation_type = fields.Selection(
