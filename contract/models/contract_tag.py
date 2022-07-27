@@ -15,3 +15,4 @@ class ContractTag(models.Model):
         string="Company",
         default=lambda self: self.env.company.id,
     )
+    color = fields.Integer("Color Index", default=0)
