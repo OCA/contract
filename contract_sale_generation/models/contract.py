@@ -8,23 +8,25 @@
 # Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 
 
 class ContractContract(models.Model):
-    _inherit = 'contract.contract'
+    _inherit = "contract.contract"
 
     sale_count = fields.Integer(compute="_compute_sale_count")
 
     def _prepare_sale(self, date_ref):
         self.ensure_one()
-        sale = self.env['sale.order'].new({
-            'partner_id': self.partner_id,
-            'date_order': fields.Date.to_string(date_ref),
-            'origin': self.name,
-            'company_id': self.company_id.id,
-            'user_id': self.partner_id.user_id.id,
-        })
+        sale = self.env["sale.order"].new(
+            {
+            "partner_id": self.partner_id,
+            "date_order": fields.Date.to_string(date_ref),
+            "origin": self.name,
+            "company_id": self.company_id.id,
+            "user_id": self.partner_id.user_id.id,
+            }
+        )
         if self.payment_term_id:
             sale.payment_term_id = self.payment_term_id.id
         if self.fiscal_position_id:
@@ -35,10 +37,11 @@ class ContractContract(models.Model):
 
     def _get_related_sales(self):
         self.ensure_one()
-        sales = (self.env['sale.order.line']
-                 .search([('contract_line_id', 'in',
-                           self.contract_line_ids.ids)
-                          ]).mapped('order_id'))
+        sales = (
+            self.env["sale.order.line"]
+            .search([("contract_line_id", "in", self.contract_line_ids.ids)])
+            .mapped("order_id")
+        )
         return sales
 
     def _compute_sale_count(self):
@@ -47,20 +50,18 @@ class ContractContract(models.Model):
 
     def action_show_sales(self):
         self.ensure_one()
-        tree_view = self.env.ref('sale.view_order_tree',
-                                 raise_if_not_found=False)
-        form_view = self.env.ref('sale.view_order_form',
-                                 raise_if_not_found=False)
+        tree_view = self.env.ref("sale.view_order_tree", raise_if_not_found=False)
+        form_view = self.env.ref("sale.view_order_form", raise_if_not_found=False)
         action = {
-            'type': 'ir.actions.act_window',
-            'name': 'Sales Orders',
-            'res_model': 'sale.order',
-            'view_type': 'form',
-            'view_mode': 'tree,kanban,form,calendar,pivot,graph,activity',
-            'domain': [('id', 'in', self._get_related_sales().ids)],
+            "type": "ir.actions.act_window",
+            "name": "Sales Orders",
+            "res_model": "sale.order",
+            "view_type": "form",
+            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "domain": [("id", "in", self._get_related_sales().ids)],
         }
         if tree_view and form_view:
-            action['views'] = [(tree_view.id, 'tree'), (form_view.id, 'form')]
+            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
         return action
 
     def recurring_create_sale(self):
@@ -72,10 +73,10 @@ class ContractContract(models.Model):
         for sale_rec in sales:
             self.message_post(
                 body=_(
-                    'Contract manually sale order: '
-                    '<a href="#" data-oe-model="%s" data-oe-id="%s">'
-                    'Sale Order'
-                    '</a>'
+                    "Contract manually sale order: "
+                    "<a href="#" data-oe-model="%s" data-oe-id="%s">"
+                    "Sale Order"
+                    "</a>"
                 )
                 % (sale_rec._name, sale_rec.id)
             )
@@ -101,14 +102,10 @@ class ContractContract(models.Model):
                 continue
             sale_values = contract._prepare_sale(date_ref)
             for line in contract_lines:
-                sale_values.setdefault('order_line', [])
-                invoice_line_values = line._prepare_sale_line(
-                    sale_values=sale_values,
-                )
+                sale_values.setdefault("order_line", [])
+                invoice_line_values = line._prepare_sale_line(sale_values=sale_values,)
                 if invoice_line_values:
-                    sale_values['order_line'].append(
-                        (0, 0, invoice_line_values)
-                    )
+                    sale_values["order_line"].append((0, 0, invoice_line_values))
             sales_values.append(sale_values)
             contract_lines._update_recurring_next_date()
         return sales_values
@@ -125,11 +122,10 @@ class ContractContract(models.Model):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain.extend([('type', '=', 'sale')])
+        domain.extend([("type", "=", "sale")])
         sales = self.env["sale.order"]
         # Sales by companies, so assignation emails get correct context
-        companies_to_sale = self.read_group(
-            domain, ["company_id"], ["company_id"])
+        companies_to_sale = self.read_group(domain, ["company_id"], ["company_id"])
         for row in companies_to_sale:
             contracts_to_sale = self.search(row["__domain"]).with_context(
                 allowed_company_ids=[row["company_id"][0]]
@@ -142,15 +138,13 @@ class ContractContract(models.Model):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain.extend([('type', '=', 'invoice')])
+        domain.extend([("type", "=", "invoice")])
         invoices = self.env["account.invoice"]
         # Invoice by companies, so assignation emails get correct context
-        companies_to_invoice = self.read_group(
-            domain, ["company_id"], ["company_id"])
+        companies_to_invoice = self.read_group(domain, ["company_id"], ["company_id"])
         for row in companies_to_invoice:
             contracts_to_invoice = self.search(row["__domain"]).with_context(
                 allowed_company_ids=[row["company_id"][0]]
             )
-            invoices |= contracts_to_invoice._recurring_create_invoice(
-                date_ref)
+            invoices |= contracts_to_invoice._recurring_create_invoice(date_ref)
         return invoices
