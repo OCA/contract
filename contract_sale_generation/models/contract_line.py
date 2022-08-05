@@ -28,9 +28,11 @@ class ContractLine(models.Model):
             .new(sale_line_vals)
         )
         if sale_values and not order_id:
-            sale = self.env["sale.order"].with_context(
-                force_company=self.contract_id.company_id.id,
-            ).new(sale_values)
+            sale = (
+                self.env["sale.order"]
+                .with_context(force_company=self.contract_id.company_id.id,)
+                .new(sale_values)
+            )
             order_line.order_id = sale
         # Get other order line values from product onchange
         order_line.product_id_change()

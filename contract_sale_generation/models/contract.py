@@ -20,11 +20,11 @@ class ContractContract(models.Model):
         self.ensure_one()
         sale = self.env["sale.order"].new(
             {
-            "partner_id": self.partner_id,
-            "date_order": fields.Date.to_string(date_ref),
-            "origin": self.name,
-            "company_id": self.company_id.id,
-            "user_id": self.partner_id.user_id.id,
+                   "partner_id": self.partner_id,
+                   "date_order": fields.Date.to_string(date_ref),
+                   "origin": self.name,
+                   "company_id": self.company_id.id,
+                   "user_id": self.partner_id.user_id.id,
             }
         )
         if self.payment_term_id:
@@ -74,7 +74,7 @@ class ContractContract(models.Model):
             self.message_post(
                 body=_(
                     "Contract manually sale order: "
-                    "<a href="#" data-oe-model="%s" data-oe-id="%s">"
+                    "<a href="  # " data-oe-model="%s" data-oe-id="%s">"
                     "Sale Order"
                     "</a>"
                 )
