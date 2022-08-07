@@ -74,10 +74,9 @@ class ContractPriceRevisionWizard(models.TransientModel):
 
     def _get_contract_lines_to_revise(self, contracts):
         self.ensure_one()
-        to_revise = contracts.mapped("contract_line_ids").filtered(
-            lambda x: not x.automatic_price
-            and not x.successor_contract_line_id
-            and x.recurring_next_date
-            and (not x.date_end or x.date_end >= self.date_start)
+        to_revise = (
+            contracts.mapped("contract_line_ids")
+            .with_context(date_start=self.date_start)
+            .filtered("price_can_be_revised")
         )
         return to_revise
