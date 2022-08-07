@@ -4,8 +4,6 @@
 
 from odoo import api, fields, models
 
-import odoo.addons.decimal_precision as dp
-
 
 class ContractLine(models.Model):
     _inherit = "contract.line"
@@ -18,7 +16,7 @@ class ContractLine(models.Model):
     variation_percent = fields.Float(
         compute="_compute_variation_percent",
         store=True,
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
         string="Variation %",
     )
 
