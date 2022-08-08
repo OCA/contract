@@ -5,6 +5,7 @@
         <field name="inherit_id" ref="contract.contract_line_tree_view" />
         <field name="arch" type="xml">
             <field name="last_date_invoiced" position="after">
+                <field name="never_revise_price" />
                 <field name="variation_percent" groups="base.group_no_one" />
             </field>
         </field>
@@ -14,6 +15,7 @@
         <field name="inherit_id" ref="contract.contract_line_form_view" />
         <field name="arch" type="xml">
             <field name="discount" position="after">
+                <field name="never_revise_price" />
                 <field
                     name="variation_percent"
                     groups="base.group_no_one"

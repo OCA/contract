@@ -46,6 +46,17 @@ class TestContractPriceRevision(TestContractBase):
         )
         self.assertEqual(len(lines), 1)
 
+    def test_contract_price_fixed_revision_wizard_never(self):
+        self.acct_line.copy({"never_revise_price": True})
+        self.assertEqual(len(self.contract.contract_line_ids.ids), 2)
+        self._create_wizard(v_type="fixed", value=120.0)
+        self.execute_wizard()
+        self.assertEqual(len(self.contract.contract_line_ids.ids), 3)
+        lines = self.contract.contract_line_ids.filtered(
+            lambda x: x.price_unit == 120.0
+        )
+        self.assertEqual(len(lines), 1)
+
     def test_contract_price_revision_invoicing(self):
         self.acct_line.copy({"automatic_price": True})
         self._create_wizard(value=100.0)
