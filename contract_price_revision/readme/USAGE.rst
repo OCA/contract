@@ -12,3 +12,7 @@ To use this module:
    will have as ending date the day before the entered date.
 #. When create invoices related to contracts selected, prices will be update
    with the prices that are not out of date.
+
+#. When managing contract with recurrence on line level, you maybe want not
+   to revise price for some lines.
+   Check 'Never Revise Price' on line level to avoid price revisions.
