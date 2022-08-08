@@ -46,13 +46,13 @@ class ContractPriceRevisionWizard(models.TransientModel):
 
     def _get_new_line_value(self, line):
         self.ensure_one()
-        return {
-            "date_start": self.date_start,
-            "last_date_invoiced": False,
-            "date_end": self.date_end,
-            "predecessor_contract_line_id": line.id,
-            "price_unit": self._get_new_price(line),
-        }
+        return line._prepare_value_for_plan_successor_price(
+            self.date_start,
+            self.date_end,
+            line.is_auto_renew,
+            self._get_new_price(line),
+            False,
+        )
 
     def _get_old_line_date_end(self, line):
         return self.date_start - relativedelta(days=1)
@@ -63,8 +63,7 @@ class ContractPriceRevisionWizard(models.TransientModel):
         for line in self._get_contract_lines_to_revise(contracts):
             date_end = self._get_old_line_date_end(line)
             line.stop(date_end)
-            new_line = line.copy()
-            new_line.update(self._get_new_line_value(line))
+            new_line = line.copy(self._get_new_line_value(line))
             line.update({"successor_contract_line_id": new_line.id})
         action = self.env["ir.actions.act_window"].for_xml_id(
             "contract", "action_customer_contract"
