@@ -20,6 +20,9 @@ class ContractLine(models.Model):
         string="Variation %",
     )
 
+    never_revise_price = fields.Boolean(
+        help="Check this if you don't want to allow price revision."
+    )
     price_can_be_revised = fields.Boolean(
         compute="_compute_price_can_be_revised",
         help="Technical field in order to know if the line price can be revised.",
@@ -29,7 +32,8 @@ class ContractLine(models.Model):
     def _compute_price_can_be_revised(self):
         date_start = self.env.context.get("date_start", fields.Datetime.now())
         lines_can_be_revised = self.filtered(
-            lambda line: not line.automatic_price
+            lambda line: not line.never_revise_price
+            and not line.automatic_price
             and not line.successor_contract_line_id
             and line.recurring_next_date
             and not line.display_type
