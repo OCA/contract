@@ -184,6 +184,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         "quantity",
         "contract_id.pricelist_id",
         "contract_id.partner_id",
+        "uom_id",
     )
     def _compute_price_unit(self):
         """Get the specific price if no auto-price, and the price obtained
@@ -207,6 +208,7 @@ class ContractAbstractContractLine(models.AbstractModel):
                     date=line.env.context.get(
                         "old_date", fields.Date.context_today(line)
                     ),
+                    uom=line.uom_id.id,
                 )
                 line.price_unit = product.price
             else:

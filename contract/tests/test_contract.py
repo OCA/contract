@@ -2401,3 +2401,17 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
+
+    def test_automatic_price_with_specific_uom(self):
+        uom_hour = self.env.ref("uom.product_uom_hour")
+        uom_day = self.env.ref("uom.product_uom_day")
+        # Set automatic price on contract line
+        self.acct_line.automatic_price = True
+        # Check UOM from contract line and product and product price to be the same
+        self.assertEqual(self.product_1.uom_id, uom_hour)
+        self.assertEqual(self.acct_line.uom_id, uom_hour)
+        self.assertEqual(self.acct_line.price_unit, 30.75)
+        # Check UOM update and price in contract line
+        self.acct_line.uom_id = uom_day.id
+        self.acct_line.refresh()
+        self.assertEqual(self.acct_line.price_unit, 30.75 * 8)
