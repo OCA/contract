@@ -18,6 +18,11 @@ class ContractAbstractContract(models.AbstractModel):
     NO_SYNC = ["name", "partner_id", "company_id"]
 
     name = fields.Char(required=True)
+    date = fields.Date(
+        required=True,
+        default=lambda self: fields.Date.today(),
+        help="This is the date the contract is taken into account (e.g.: signature date)",
+    )
     # Needed for avoiding errors on several inherited behaviors
     partner_id = fields.Many2one(
         comodel_name="res.partner", string="Partner", index=True
