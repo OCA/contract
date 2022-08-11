@@ -82,7 +82,7 @@
                             <field name="contract_type" invisible="1"
                                    required="1"/>
                             <field name="fiscal_position_id" attrs="{'readonly': [('is_terminated','=',True)]}"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                     </group>
 
@@ -269,6 +269,9 @@
                 <field name="code"/>
                 <field name="journal_id" groups="account.group_account_user"/>
                 <field name="partner_id"/>
+                <field name="tag_ids"
+                       widget="many2many_tags"
+                       options="{'color_field': 'color'}"/>
                 <field name="active" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
