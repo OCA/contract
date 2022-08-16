@@ -6,12 +6,14 @@ from odoo import fields, models
 
 
 class ContractAbstractContract(models.AbstractModel):
-    _inherit = "contract.abstract.contract"
+    _inherit = 'contract.abstract.contract'
 
     type = fields.Selection(
-        [("invoice", "Invoice"), ("sale", "Sale")],
-        string="Type",
-        default="invoice",
+        [('invoice', 'Invoice'),
+         ('sale', 'Sale')],
+        string='Type',
+        default='invoice',
         required=True,
     )
-    sale_autoconfirm = fields.Boolean(string="Sale Autoconfirm")
+    sale_autoconfirm = fields.Boolean(
+        string='Sale Autoconfirm')
