@@ -7,7 +7,6 @@ from odoo import api, models
 class ContractLine(models.Model):
     _inherit = 'contract.line'
 
-    @api.multi
     def _prepare_sale_line(self, order_id=False, sale_values=False):
         self.ensure_one()
         dates = self._get_period_to_invoice(
