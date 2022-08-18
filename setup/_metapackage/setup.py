@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo-addon-contract>=15.0dev,<15.1dev',
+        'odoo-addon-contract_payment_mode>=15.0dev,<15.1dev',
         'odoo-addon-contract_sale>=15.0dev,<15.1dev',
         'odoo-addon-contract_sale_generation>=15.0dev,<15.1dev',
     ],
