@@ -1,6 +1,8 @@
 # Copyright 2017 Carlos Dauden - Tecnativa <carlos.dauden@tecnativa.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+from unittest.mock import patch
 
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
@@ -8,14 +10,28 @@ class TestContractMandate(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.payment_method = cls.env["account.payment.method"].create(
-            {
-                "name": "Test SDD",
-                "code": "test_code_sdd",
-                "payment_type": "inbound",
-                "mandate_required": True,
-            }
+        Method_get_payment_method_information = (
+            AccountPaymentMethod._get_payment_method_information
         )
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res["test_code_sdd"] = {"mode": "multi", "domain": [("type", "=", "bank")]}
+            return res
+
+        with patch.object(
+            AccountPaymentMethod,
+            "_get_payment_method_information",
+            _get_payment_method_information,
+        ):
+            cls.payment_method = cls.env["account.payment.method"].create(
+                {
+                    "name": "Test SDD",
+                    "code": "test_code_sdd",
+                    "payment_type": "inbound",
+                    "mandate_required": True,
+                }
+            )
         cls.payment_mode = cls.env["account.payment.mode"].create(
             {
                 "name": "Test payment mode",
@@ -26,6 +42,7 @@ class TestContractMandate(TestContractBase):
         cls.partner = cls.env["res.partner"].create(
             {"name": "Test Customer", "customer_payment_mode_id": cls.payment_mode.id}
         )
+        cls.company = cls.env["res.company"].create({"name": "Test Company"})
         cls.partner_bank = cls.env["res.partner.bank"].create(
             {"acc_number": "1234", "partner_id": cls.partner.id}
         )
@@ -34,6 +51,15 @@ class TestContractMandate(TestContractBase):
                 "partner_id": cls.partner.id,
                 "partner_bank_id": cls.partner_bank.id,
                 "signature_date": "2017-01-01",
+            }
+        )
+        cls.contract = cls.env["contract.contract"].create(
+            {
+                "name": "Test contract",
+                "partner_id": cls.partner.id,
+                "company_id": cls.company.id,
+                "mandate_id": cls.mandate.id,
+                "mandate_required": False,
             }
         )
         cls.contract_with_mandate = cls.contract2.copy(
@@ -61,3 +87,9 @@ class TestContractMandate(TestContractBase):
         self.contract_with_mandate.mandate_id = False
         new_invoice = self.contract_with_mandate.recurring_create_invoice()
         self.assertFalse(new_invoice.mandate_id)
+
+    def test_onchange_payment_mode_id(self):
+        self.contract._onchange_payment_mode_id()
+        self.assertFalse(
+            self.contract.mandate_required,
+        )
