@@ -34,6 +34,7 @@ addon | version | maintainers | summary
 [agreement_stock](agreement_stock/) | 14.0.1.0.1 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
 [agreement_tier_validation](agreement_tier_validation/) | 14.0.1.0.1 |  | Extends the functionality of Agreement to support a tier validation process.
 [contract](contract/) | 14.0.2.7.0 |  | Recurring - Contracts Management
+[contract_delivery_zone](contract_delivery_zone/) | 14.0.1.0.0 |  | Allows to remind the delivery zone defined on the partner on contract level.
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 14.0.1.2.0 |  | Contract from Sale
