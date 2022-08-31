@@ -23,6 +23,9 @@
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="web.external_layout">
                         <style>
+                            h2 {
+                                padding-top : 2.5rem;
+                            }
                             h3 {
                                 padding-top : 2rem;
                             }
@@ -162,7 +165,7 @@
                                 <tbody>
                                   <tr t-foreach="doc.line_ids" t-as="p">
                                     <td scope="row"><strong><span t-field="p.product_id"/></strong></td>
-                                    <td><t t-if="p.product_id.description_sale"><t t-field="p.product_id.description_sale"/></t></td>
+                                    <td><t t-if="p.product_id.description_sale"><span t-field="p.product_id.description_sale"/></t></td>
                                     <td><span t-field="p.qty"/> <span t-field="p.uom_id"/></td>
                                   </tr>
                                 </tbody>
