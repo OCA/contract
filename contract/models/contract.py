@@ -429,7 +429,7 @@ class ContractContract(models.Model):
         move_form = Form(
             self.env["account.move"]
             .with_company(self.company_id)
-            .with_context(default_move_type=invoice_type)
+            .with_context(default_move_type=invoice_type, default_name="/")
         )
         move_form.partner_id = self.invoice_partner_id
         if self.payment_term_id:
