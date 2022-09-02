@@ -1,4 +1,4 @@
-# Copyright 2020 Tecnativa - Víctor Martínez
+# Copyright 2020-2022 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, http
@@ -9,12 +9,16 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 
 
 class PortalContract(CustomerPortal):
-    def _prepare_portal_layout_values(self):
-        values = super()._prepare_portal_layout_values()
-        model = "contract.contract"
-        values["contract_count"] = 0
-        if request.env[model].check_access_rights("read", raise_exception=False):
-            values["contract_count"] = request.env[model].search_count([])
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if "contract_count" in counters:
+            contract_model = request.env["contract.contract"]
+            contract_count = (
+                contract_model.search_count([])
+                if contract_model.check_access_rights("read", raise_exception=False)
+                else 0
+            )
+            values["contract_count"] = contract_count
         return values
 
     def _contract_get_page_view_values(self, contract, access_token, **kwargs):
@@ -40,6 +44,9 @@ class PortalContract(CustomerPortal):
     ):
         values = self._prepare_portal_layout_values()
         contract_obj = request.env["contract.contract"]
+        # Avoid error if the user does not have access.
+        if not contract_obj.check_access_rights("read", raise_exception=False):
+            return request.redirect("/my")
         domain = self._get_filter_domain(kw)
         searchbar_sortings = {
             "date": {"label": _("Date"), "order": "recurring_next_date desc"},
