@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import Form, common
+from odoo.tests import Form, common, tagged
 
 
 def to_date(date):
@@ -191,6 +191,7 @@ class TestContractBase(common.SavepointCase):
         return cls.uom_obj.create(vals)
 
 
+@tagged("post_install", "-at_install")
 class TestContract(TestContractBase):
     def _add_template_line(self, overrides=None):
         if overrides is None:

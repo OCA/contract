@@ -5,10 +5,12 @@
 
 
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 from .test_contract import TestContractBase
 
 
+@tagged("post_install", "-at_install")
 class TestContractManuallyCreateInvoice(TestContractBase):
     @classmethod
     def setUpClass(cls):
