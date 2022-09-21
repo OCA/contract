@@ -591,9 +591,25 @@ class ContractContract(models.Model):
                     partner_ids=partner_ids.ids
                 )
 
+    @api.model
+    def _add_contract_origin(self, invoices):
+        for item in self:
+            for move in invoices & item._get_related_invoices():
+                move.message_post(
+                    body=(
+                        _("%s by contract %s.")
+                        % (
+                            move._creation_message(),
+                            "<a href=# data-oe-model=contract.contract data-oe-id=%d>%s</a>"
+                            % (item.id, item.display_name),
+                        )
+                    )
+                )
+
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
         moves = self.env["account.move"].create(invoices_values)
+        self._add_contract_origin(moves)
         self._invoice_followers(moves)
         self._compute_recurring_next_date()
         return moves
