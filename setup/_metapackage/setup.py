@@ -18,6 +18,7 @@ setuptools.setup(
         'odoo13-addon-contract_layout_category_hide_detail',
         'odoo13-addon-contract_mandate',
         'odoo13-addon-contract_payment_mode',
+        'odoo13-addon-contract_price_revision',
         'odoo13-addon-contract_sale',
         'odoo13-addon-contract_variable_qty_timesheet',
         'odoo13-addon-contract_variable_quantity',
