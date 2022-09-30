@@ -50,7 +50,7 @@ To use this module:
 #. When create invoices related to contracts selected, prices will be update
    with the prices that are not out of date.
 
-#. When managing contract with recurrence on line level, you maybe want not 
+#. When managing contract with recurrence on line level, you maybe want not
    to revise price for some lines.
    Check 'Never Revise Price' on line level to avoid price revisions.
 
