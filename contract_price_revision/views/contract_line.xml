@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <field name="last_date_invoiced" position="after">
+                <field name="never_revise_price" />
+                <field name="variation_percent" groups="base.group_no_one" />
+            </field>
+        </field>
+    </record>
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <field name="discount" position="after">
+                <field name="never_revise_price" />
+                <field
+                    name="variation_percent"
+                    groups="base.group_no_one"
+                    attrs="{'invisible': [('predecessor_contract_line_id', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
