@@ -31,7 +31,7 @@ addon | version | maintainers | summary
 [contract_layout_category_hide_detail](contract_layout_category_hide_detail/) | 13.0.1.0.0 |  | Hide details for sections in Contract lines
 [contract_mandate](contract_mandate/) | 13.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 13.0.1.0.0 |  | Payment mode in contracts and their invoices
-[contract_price_revision](contract_price_revision/) | 13.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) | Easy revision of contract prices
+[contract_price_revision](contract_price_revision/) | 13.0.1.0.1 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) | Easy revision of contract prices
 [contract_sale](contract_sale/) | 13.0.1.1.0 |  | Contract from Sale
 [contract_variable_qty_timesheet](contract_variable_qty_timesheet/) | 13.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) [![pedrobaeza](https://github.com/pedrobaeza.png?size=30px)](https://github.com/pedrobaeza) | Add formula to invoice
 [contract_variable_quantity](contract_variable_quantity/) | 13.0.1.2.0 |  | Variable quantity in contract recurrent invoicing
