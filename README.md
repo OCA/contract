@@ -25,6 +25,7 @@ addon | version | maintainers | summary
 [agreement_legal](agreement_legal/) | 13.0.2.5.1 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) [![ygol](https://github.com/ygol.png?size=30px)](https://github.com/ygol) | Manage Agreements, LOI and Contracts
 [agreement_maintenance](agreement_maintenance/) | 13.0.1.0.1 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Manage maintenance agreements and contracts
 [agreement_rebate](agreement_rebate/) | 13.0.1.0.1 |  | Rebate in agreements
+[agreement_rebate_partner_company_group](agreement_rebate_partner_company_group/) | 13.0.1.0.0 |  | Rebate agreements applied to all company group members
 [agreement_sale](agreement_sale/) | 13.0.1.0.0 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
 [agreement_serviceprofile](agreement_serviceprofile/) | 13.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
 [contract](contract/) | 13.0.2.10.0 |  | Recurring - Contracts Management
