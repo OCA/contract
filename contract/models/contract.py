@@ -442,6 +442,8 @@ class ContractContract(models.Model):
             move_form.invoice_payment_term_id = self.payment_term_id
         if self.fiscal_position_id:
             move_form.fiscal_position_id = self.fiscal_position_id
+        if invoice_type == "out_invoice" and self.user_id:
+            move_form.invoice_user_id = self.user_id
         invoice_vals = move_form._values_to_save(all_fields=True)
         invoice_vals.update(
             {
@@ -451,7 +453,6 @@ class ContractContract(models.Model):
                 "invoice_date": date_invoice,
                 "journal_id": journal.id,
                 "invoice_origin": self.name,
-                "invoice_user_id": self.user_id.id,
             }
         )
         return invoice_vals, move_form
