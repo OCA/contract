@@ -5,9 +5,9 @@
     "name": "Agreements Legal",
     "summary": "Manage Agreements, LOI and Contracts",
     "author": "Pavlov Media, "
-    "Open Source Integrators, "
-    "Yves Goldberg (Ygol Internetwork), "
-    "Odoo Community Association (OCA)",
+              "Open Source Integrators, "
+              "Yves Goldberg (Ygol Internetwork), "
+              "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "category": "Partner",
     "license": "AGPL-3",
@@ -39,4 +39,12 @@
     "application": True,
     "development_status": "Beta",
     "maintainers": ["max3903", "ygol"],
+    'assets': {
+        'web.assets_backend': [
+            '/agreement_legal/static/src/js/agreement.js'
+        ],
+        'web.assets_qweb': [
+            'agreement_legal/static/src/xml/*.xml',
+        ],
+    }
 }
