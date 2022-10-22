@@ -38,12 +38,10 @@
     "application": True,
     "development_status": "Beta",
     "maintainers": ["max3903", "ygol"],
-    'assets': {
-        'web.assets_backend': [
-            '/agreement_legal/static/src/js/agreement.js'
-        ],
-        'web.assets_qweb': [
-            'agreement_legal/static/src/xml/*.xml',
-        ],
+    "assets": {
+        "web.assets_backend": ["/agreement_legal/static/src/js/agreement.js"],
+        "web.assets_qweb": [
+            "agreement_legal/static/src/xml/*.xml",
+        ]
     }
 }
