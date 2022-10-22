@@ -5,9 +5,10 @@
     "name": "Agreements Legal",
     "summary": "Manage Agreements, LOI and Contracts",
     "author": "Pavlov Media, "
-              "Open Source Integrators, "
-              "Yves Goldberg (Ygol Internetwork), "
-              "Odoo Community Association (OCA)",
+    "Open Source Integrators, "
+    "Yves Goldberg (Ygol Internetwork), "
+    "Odoo Community Association (OCA), "
+    "David Montero (OdooNext), ",
     "website": "https://github.com/OCA/contract",
     "category": "Partner",
     "license": "AGPL-3",
