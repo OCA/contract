@@ -42,6 +42,6 @@
         "web.assets_backend": ["/agreement_legal/static/src/js/agreement.js"],
         "web.assets_qweb": [
             "agreement_legal/static/src/xml/*.xml",
-        ]
-    }
+        ],
+    },
 }
