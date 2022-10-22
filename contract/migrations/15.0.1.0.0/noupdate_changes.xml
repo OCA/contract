@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<odoo noupdate="1">
+<!--
+    This is a copy / paste from contract/data/mail_template.xml
+    The only differences are:
+      - Use noupdate=0
+      - remove template_contract_modification which remains unchanged between 14 and 15
+-->
+<odoo>
     <record id="email_contract_template" model="mail.template">
         <field name="name">Email Contract Template</field>
         <field
@@ -112,4 +118,24 @@
             <p>We have modifications on the contract that we want to notify you.</p>
         </field>
     </record>
+    <template
+        id="mail_notification_contract"
+        inherit_id="mail.mail_notification_paynow"
+        primary="True"
+    >
+        <xpath expr="//t[@t-out='message.body']" position="after">
+            <t t-out="0" />
+            <t t-if="record._name == 'contract.contract'">
+                <t
+                    t-set="share_url"
+                    t-value="record._get_share_url(redirect=True, signup_partner=True, share_token=True)"
+                />
+                <t
+                    t-set="access_url"
+                    t-value="is_online and share_url and base_url + share_url or ''"
+                />
+            </t>
+        </xpath>
+    </template>
+
 </odoo>

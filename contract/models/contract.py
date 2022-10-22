@@ -93,7 +93,7 @@ class ContractContract(models.Model):
         string="Invoicing contact",
         comodel_name="res.partner",
         ondelete="restrict",
-        domain="['|', ('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]",
+        domain="['|',('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner", inverse="_inverse_partner_id", required=True
@@ -312,7 +312,7 @@ class ContractContract(models.Model):
     @api.depends(
         "contract_line_ids.recurring_next_date",
         "contract_line_ids.is_canceled",
-    )
+    )  # pylint: disable=missing-return
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
@@ -420,8 +420,14 @@ class ContractContract(models.Model):
             )
         if not journal:
             raise ValidationError(
-                _("Please define a %s journal for the company '%s'.")
-                % (self.contract_type, self.company_id.name or "")
+                _(
+                    "Please define a %(contract_type)s journal "
+                    "for the company '%(company)s'."
+                )
+                % {
+                    "contract_type": self.contract_type,
+                    "company": self.company_id.name or "",
+                }
             )
         invoice_type = "out_invoice"
         if self.contract_type == "purchase":
@@ -429,7 +435,7 @@ class ContractContract(models.Model):
         move_form = Form(
             self.env["account.move"]
             .with_company(self.company_id)
-            .with_context(default_move_type=invoice_type, default_name="/")
+            .with_context(default_move_type=invoice_type)
         )
         move_form.partner_id = self.invoice_partner_id
         if self.payment_term_id:
@@ -566,17 +572,23 @@ class ContractContract(models.Model):
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
-        invoices = self._recurring_create_invoice()
-        for invoice in invoices:
+        invoice = self._recurring_create_invoice()
+        if invoice:
             self.message_post(
                 body=_(
                     "Contract manually invoiced: "
-                    '<a href="#" data-oe-model="%s" data-oe-id="%s">Invoice'
+                    "<a"
+                    '    href="#" data-oe-model="%(model_name)s" '
+                    '    data-oe-id="%(rec_id)s"'
+                    ">Invoice"
                     "</a>"
                 )
-                % (invoice._name, invoice.id)
+                % {
+                    "model_name": invoice._name,
+                    "rec_id": invoice.id,
+                }
             )
-        return invoices
+        return invoice
 
     @api.model
     def _invoice_followers(self, invoices):
@@ -598,11 +610,14 @@ class ContractContract(models.Model):
             for move in invoices & item._get_related_invoices():
                 move.message_post(
                     body=(
-                        _("%s by contract %s.")
-                        % (
-                            move._creation_message(),
-                            "<a href=# data-oe-model=contract.contract data-oe-id=%d>%s</a>"
-                            % (item.id, item.display_name),
+                        _(
+                            (
+                                "%(msg)s by contract <a href=# data-oe-model=contract.contract"
+                                " data-oe-id=%(contract_id)d>%(contract)s</a>."
+                            ),
+                            msg=move._creation_message(),
+                            contract_id=item.id,
+                            contract=item.display_name,
                         )
                     )
                 )

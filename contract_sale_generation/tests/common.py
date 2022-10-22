@@ -24,6 +24,12 @@ class ContractSaleCommon:
                 "name": "Contracts",
             }
         )
+        cls.payment_term_id = cls.env.ref(
+            "account.account_payment_term_end_following_month"
+        )
+        cls.fiscal_position_id = cls.env["account.fiscal.position"].create(
+            {"name": "Contracts"}
+        )
         contract_date = "2020-01-15"
         cls.pricelist = cls.env["product.pricelist"].create(
             {
@@ -34,6 +40,8 @@ class ContractSaleCommon:
             {
                 "name": "partner test contract",
                 "property_product_pricelist": cls.pricelist.id,
+                "property_payment_term_id": cls.payment_term_id.id,
+                "property_account_position_id": cls.fiscal_position_id.id,
             }
         )
         cls.product_1 = cls.env.ref("product.product_product_1")

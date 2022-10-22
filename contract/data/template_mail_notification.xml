@@ -5,7 +5,7 @@
         inherit_id="mail.mail_notification_paynow"
         primary="True"
     >
-        <xpath expr="//t[@t-raw='message.body']" position="after">
+        <xpath expr="//t[@t-out='message.body']" position="after">
             <t t-raw="0" />
             <t t-if="record._name == 'contract.contract'">
                 <t
