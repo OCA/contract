@@ -31,7 +31,6 @@
         "views/res_partner.xml",
         "views/agreement.xml",
         "views/menu.xml",
-        "views/assets.xml",
         "wizards/create_agreement_wizard.xml",
     ],
     "demo": ["demo/demo.xml"],
