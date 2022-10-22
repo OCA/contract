@@ -11,7 +11,7 @@
     "website": "https://github.com/OCA/contract",
     "category": "Partner",
     "license": "AGPL-3",
-    "version": "14.0.2.4.1",
+    "version": "15.0.1.5.2",
     "depends": ["contacts", "agreement", "product"],
     "data": [
         "data/ir_sequence.xml",
