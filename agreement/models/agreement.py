@@ -10,8 +10,8 @@ class Agreement(models.Model):
     _description = "Agreement"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    code = fields.Char(required=True, tracking=True)
-    name = fields.Char(required=True, tracking=True)
+    code = fields.Char(string="Code", required=True, tracking=True)
+    name = fields.Char(string="Name", required=True, tracking=True)
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -42,7 +42,7 @@ class Agreement(models.Model):
         default="sale",
         tracking=True,
     )
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(string="Active", default=True)
     signature_date = fields.Date(tracking=True)
     start_date = fields.Date(tracking=True)
     end_date = fields.Date(tracking=True)
