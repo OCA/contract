@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 to TODAY, Marcel Savegnago - Escodoo
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="contract_variable_qty_sale_order_line"
+            model="contract.line.qty.formula">
+        <field name='name'>Sale Order Line Quantity</field>
+        <field name="code">
+result = 0
+if line:
+    result = line.sale_order_line_id.product_uom_qty or 1
+
+        </field>
+    </record>
+</odoo>
