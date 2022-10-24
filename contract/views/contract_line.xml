@@ -13,6 +13,9 @@
             <group name="recurrence_info" position="inside">
                 <group>
                     <field name="create_invoice_visibility" invisible="1" />
+                    <field name="is_stop_plan_successor_allowed" invisible="1" />
+                    <field name="is_stop_allowed" invisible="1" />
+                    <field name="is_cancel_allowed" invisible="1" />
                     <field name="date_start" required="1" />
                     <field name="next_period_date_start" />
                     <field name="recurring_next_date" />
@@ -41,7 +44,7 @@
             <group name="recurrence_info" position="after">
                 <group
                     name="analytic"
-                    groups="analytic.group_analytic_accounting,analytic.group_analytic_tags"
+                    groups="analytic.group_analytic_accounting"
                     attrs="{'invisible': [('display_type', '!=', False)]}"
                 >
                     <field
@@ -49,9 +52,9 @@
                         groups="analytic.group_analytic_accounting"
                     />
                     <field
-                        name="analytic_tag_ids"
-                        widget="many2many_tags"
-                        groups="analytic.group_analytic_tags"
+                        name="analytic_distribution"
+                        widget="analytic_distribution"
+                        groups="analytic.group_analytic_accounting"
                     />
                 </group>
             </group>
@@ -104,9 +107,9 @@
                     groups="analytic.group_analytic_accounting"
                 />
                 <field
-                    name="analytic_tag_ids"
-                    widget="many2many_tags"
-                    groups="analytic.group_analytic_tags"
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
                 />
                 <field name="quantity" />
                 <field name="uom_id" />
