@@ -12,34 +12,70 @@
                 <header attrs="{'invisible': [('display_type', '!=', False)]}" />
                 <sheet>
                     <field name="specific_price" invisible="1" />
+                    <field name="currency_id" invisible="1" />
+                    <field colspan="1" name="product_uom_category_id" invisible="1" />
+                    <group>
+                        <field
+                            colspan="1"
+                            name="product_id"
+                            attrs="{'required': [('display_type', '=', 'product')],'invisible': [('display_type', '!=', False)]}"
+                        />
+                    </group>
                     <group
-                        col="4"
+                        col="6"
                         attrs="{'invisible': [('display_type', '!=', False)]}"
                     >
-                        <field
-                            colspan="4"
-                            name="product_id"
-                            attrs="{'required': [('display_type', '=', False)]}"
-                        />
-                        <field name="product_uom_category_id" invisible="1" />
-
-                        <label for="quantity" />
-                        <div class="o_row">
-                            <field name="quantity" class="oe_inline" />
+                        <group colspan="1">
+                            <label for="automatic_price" colspan="2" />
+                            <field colspan="2" name="automatic_price" nolabel="1" />
+                        </group>
+                        <group colspan="1">
+                            <label for="price_unit" colspan="2" />
                             <field
+                                colspan="2"
+                                name="price_unit"
+                                attrs="{'readonly': [('automatic_price', '=', True)]}"
+                                nolabel="1"
+                            />
+                        </group>
+                        <group colspan="1">
+                            <label for="quantity" colspan="2" />
+                            <field
+                                colspan="2"
+                                name="quantity"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                        </group>
+                        <group colspan="1">
+                            <label for="uom_id" colspan="2" />
+                            <field
+                                colspan="2"
                                 name="uom_id"
                                 class="oe_inline"
                                 groups="uom.group_uom"
                                 attrs="{'required': [('display_type', '=', False)]}"
+                                nolabel="1"
                             />
-                        </div>
-                        <field colspan="2" name="automatic_price" />
-                        <field
-                            colspan="2"
-                            name="price_unit"
-                            attrs="{'readonly': [('automatic_price', '=', True)]}"
-                        />
-                        <field colspan="2" name="discount" groups="base.group_no_one" />
+                        </group>
+                        <group colspan="1">
+                            <label for="discount" colspan="2" />
+                            <field
+                                colspan="2"
+                                name="discount"
+                                groups="base.group_no_one"
+                                nolabel="1"
+                            />
+                        </group>
+                        <group colspan="1">
+                            <label for="price_subtotal" colspan="2" />
+                            <field
+                                colspan="2"
+                                name="price_subtotal"
+                                readonly="1"
+                                nolabel="1"
+                            />
+                        </group>
                     </group>
                     <label
                         for="name"

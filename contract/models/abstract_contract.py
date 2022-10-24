@@ -13,6 +13,7 @@ class ContractAbstractContract(models.AbstractModel):
     _inherit = "contract.recurrency.basic.mixin"
     _name = "contract.abstract.contract"
     _description = "Abstract Recurring Contract"
+    _check_company_auto = True
 
     # These fields will not be synced to the contract
     NO_SYNC = ["name", "partner_id", "company_id"]
@@ -31,11 +32,12 @@ class ContractAbstractContract(models.AbstractModel):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",
-        domain="[('type', '=', contract_type)," "('company_id', '=', company_id)]",
+        domain="[('type', '=', contract_type)]",
         compute="_compute_journal_id",
         store=True,
         readonly=False,
         index=True,
+        check_company=True,
     )
     company_id = fields.Many2one(
         "res.company",
@@ -80,3 +82,5 @@ class ContractAbstractContract(models.AbstractModel):
             journal = AccountJournal.search(domain, limit=1)
             if journal:
                 contract.journal_id = journal.id
+            else:
+                contract.journal_id = None

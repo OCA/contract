@@ -207,6 +207,7 @@
                                             context="{'default_display_type': 'line_note'}"
                                         />
                                     </control>
+                                    <field name="currency_id" invisible="1" />
                                     <field name="display_type" invisible="1" />
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id" />
@@ -218,11 +219,6 @@
                                     <field
                                         name="analytic_account_id"
                                         groups="analytic.group_analytic_accounting"
-                                    />
-                                    <field
-                                        name="analytic_tag_ids"
-                                        widget="many2many_tags"
-                                        groups="analytic.group_analytic_tags"
                                     />
                                     <field name="quantity" />
                                     <field name="uom_id" />
@@ -314,6 +310,7 @@
                                             context="{'default_display_type': 'line_note'}"
                                         />
                                     </control>
+                                    <field name="currency_id" invisible="1" />
                                     <field name="display_type" invisible="1" />
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id" />
@@ -321,11 +318,6 @@
                                     <field
                                         name="analytic_account_id"
                                         groups="analytic.group_analytic_accounting"
-                                    />
-                                    <field
-                                        name="analytic_tag_ids"
-                                        widget="many2many_tags"
-                                        groups="analytic.group_analytic_tags"
                                     />
                                     <field name="quantity" />
                                     <field name="uom_id" />
@@ -502,9 +494,7 @@
                 >{'default_customer_rank': 1, 'default_supplier_rank': 0, 'res_partner_search_mode': 'customer', 'show_vat': True}</attribute>
             </field>
             <field name="journal_id" position="attributes">
-                <attribute
-                    name="domain"
-                >[('type', '=', 'sale'),('company_id', '=', company_id)]</attribute>
+                <attribute name="domain">[('type', '=', 'sale')]</attribute>
             </field>
         </field>
     </record>
@@ -523,9 +513,7 @@
                 >{'default_customer_rank': False, 'default_supplier_rank': 1, 'res_partner_search_mode': 'supplier', 'show_vat': True}</attribute>
             </field>
             <field name="journal_id" position="attributes">
-                <attribute
-                    name="domain"
-                >[('type', '=', 'purchase'),('company_id', '=', company_id)]</attribute>
+                <attribute name="domain">[('type', '=', 'purchase')]</attribute>
             </field>
         </field>
     </record>
