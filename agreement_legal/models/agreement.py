@@ -296,28 +296,28 @@ class Agreement(models.Model):
 
     # compute the dynamic content for jinja expression
     def _compute_dynamic_description(self):
-        MailTemplates = self.env["mail.template"]
+        MailTemplates = self.env['mail.render.mixin']
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            description = MailTemplates.with_context(lang=lang)._render_template(
+            description = MailTemplates.with_context(lang=lang)._render_template_inline_template(
                 agreement.description, "agreement", [agreement.id]
             )[agreement.id]
             agreement.dynamic_description = description
 
     def _compute_dynamic_parties(self):
-        MailTemplates = self.env["mail.template"]
+        MailTemplates = self.env['mail.render.mixin']
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            parties = MailTemplates.with_context(lang=lang)._render_template(
+            parties = MailTemplates.with_context(lang=lang)._render_template_inline_template(
                 agreement.parties, "agreement", [agreement.id]
             )[agreement.id]
             agreement.dynamic_parties = parties
 
     def _compute_dynamic_special_terms(self):
-        MailTemplates = self.env["mail.template"]
+        MailTemplates = self.env['mail.render.mixin']
         for agreement in self:
             lang = agreement.partner_id.lang or "en_US"
-            special_terms = MailTemplates.with_context(lang=lang)._render_template(
+            special_terms = MailTemplates.with_context(lang=lang)._render_template_inline_template(
                 agreement.special_terms, "agreement", [agreement.id]
             )[agreement.id]
             agreement.dynamic_special_terms = special_terms
