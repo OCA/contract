@@ -8,9 +8,9 @@ class AgreementType(models.Model):
     _name = "agreement.type"
     _description = "Agreement Types"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    domain = fields.Selection("_domain_selection", string="Domain", default="sale")
+    domain = fields.Selection("_domain_selection", default="sale")
 
     @api.model
     def _domain_selection(self):

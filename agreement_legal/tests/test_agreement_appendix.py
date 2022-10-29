@@ -46,7 +46,7 @@ class TestAgreementAppendices(TransactionCase):
         )
         appendix_01.field_id = field_01.id
         appendix_01.onchange_copyvalue()
-        self.assertEqual(appendix_01.copyvalue, "${object.active or ''}")
+        self.assertEqual(appendix_01.copyvalue, "{{object.active or ''}}")
 
     # TEST 02: Set related 'Field' for dynamic placeholder to
     # test onchange method
@@ -69,12 +69,12 @@ class TestAgreementAppendices(TransactionCase):
         self.assertEqual(appendix_01.sub_object_id.model, "agreement")
         appendix_01.sub_model_object_field_id = sub_field_01.id
         appendix_01.onchange_copyvalue()
-        self.assertEqual(appendix_01.copyvalue, "${object.agreement_id.active or ''}")
+        self.assertEqual(appendix_01.copyvalue, "{{object.agreement_id.active or ''}}")
 
     # TEST 03: Test Dynamic Field
     def test_compute_dynamic_content(self):
         appendix_01 = self.test_appendices
-        appendix_01.content = "${object.name}"
+        appendix_01.content = "{{object.name}}"
         self.assertEqual(
             appendix_01.dynamic_content,
             "<p>TestAppendices</p>",

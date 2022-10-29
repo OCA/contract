@@ -9,11 +9,9 @@ class AgreementSection(models.Model):
     _description = "Agreement Sections"
     _order = "sequence"
 
-    name = fields.Char(string="Name", required=True)
-    title = fields.Char(
-        string="Title", help="The title is displayed on the PDF. The name is not."
-    )
-    sequence = fields.Integer(string="Sequence")
+    name = fields.Char(required=True)
+    title = fields.Char(help="The title is displayed on the PDF. The name is not.")
+    sequence = fields.Integer()
     agreement_id = fields.Many2one("agreement", string="Agreement", ondelete="cascade")
     clauses_ids = fields.One2many(
         "agreement.clause", "section_id", string="Clauses", copy=True
@@ -21,11 +19,9 @@ class AgreementSection(models.Model):
     content = fields.Html(string="Section Content")
     dynamic_content = fields.Html(
         compute="_compute_dynamic_content",
-        string="Dynamic Content",
         help="compute dynamic Content",
     )
     active = fields.Boolean(
-        string="Active",
         default=True,
         help="If unchecked, it will allow you to hide the agreement without "
         "removing it.",
@@ -53,7 +49,6 @@ class AgreementSection(models.Model):
           model (sub-model).""",
     )
     default_value = fields.Char(
-        string="Default Value",
         help="Optional value to use if the target field is empty.",
     )
     copyvalue = fields.Char(
@@ -67,7 +62,7 @@ class AgreementSection(models.Model):
         self.sub_object_id = False
         self.copyvalue = False
         if self.field_id and not self.field_id.relation:
-            self.copyvalue = "${{object.{} or {}}}".format(
+            self.copyvalue = "{{{{object.{} or {}}}}}".format(
                 self.field_id.name, self.default_value or "''"
             )
             self.sub_model_object_field_id = False
@@ -76,7 +71,7 @@ class AgreementSection(models.Model):
                 [("model", "=", self.field_id.relation)]
             )[0]
         if self.sub_model_object_field_id:
-            self.copyvalue = "${{object.{}.{} or {}}}".format(
+            self.copyvalue = "{{{{object.{}.{} or {}}}}}".format(
                 self.field_id.name,
                 self.sub_model_object_field_id.name,
                 self.default_value or "''",

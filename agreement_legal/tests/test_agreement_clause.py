@@ -46,7 +46,7 @@ class TestAgreementClauses(TransactionCase):
         )
         clause_01.field_id = field_01.id
         clause_01.onchange_copyvalue()
-        self.assertEqual(clause_01.copyvalue, "${object.active or ''}")
+        self.assertEqual(clause_01.copyvalue, "{{object.active or ''}}")
 
     # TEST 02: Set related 'Field' for dynamic placeholder to
     # test onchange method
@@ -69,12 +69,12 @@ class TestAgreementClauses(TransactionCase):
         self.assertEqual(clause_01.sub_object_id.model, "agreement")
         clause_01.sub_model_object_field_id = sub_field_01.id
         clause_01.onchange_copyvalue()
-        self.assertEqual(clause_01.copyvalue, "${object.agreement_id.active or ''}")
+        self.assertEqual(clause_01.copyvalue, "{{object.agreement_id.active or ''}}")
 
     # TEST 03: Test Dynamic Field
     def test_compute_dynamic_content(self):
         clause_01 = self.test_clause
-        clause_01.content = "${object.name}"
+        clause_01.content = "{{object.name}}"
         self.assertEqual(
             clause_01.dynamic_content,
             "<p>TestClause</p>",

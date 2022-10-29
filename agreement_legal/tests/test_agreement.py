@@ -41,7 +41,7 @@ class TestAgreement(TransactionCase):
         )
         agreement_01.field_id = field_01.id
         agreement_01.onchange_copyvalue()
-        self.assertEqual(agreement_01.copyvalue, "${object.active or ''}")
+        self.assertEqual(agreement_01.copyvalue, "{{object.active or ''}}")
 
     # TEST 02: Set related 'Field' for dynamic placeholder to
     # test onchange method
@@ -65,7 +65,7 @@ class TestAgreement(TransactionCase):
         agreement_01.sub_model_object_field_id = sub_field_01.id
         agreement_01.onchange_copyvalue()
         self.assertEqual(
-            agreement_01.copyvalue, "${object.agreement_type_id.active or ''}"
+            agreement_01.copyvalue, "{{object.agreement_type_id.active or ''}}"
         )
 
     # TEST 03: Create New Version
@@ -97,7 +97,7 @@ class TestAgreement(TransactionCase):
     # TEST 05: Test Description Dynamic Field
     def test_compute_dynamic_description(self):
         agreement_01 = self.test_agreement
-        agreement_01.description = "${object.name}"
+        agreement_01.description = "{{object.name}}"
         self.assertEqual(
             agreement_01.dynamic_description,
             "TestAgreement",
@@ -106,7 +106,7 @@ class TestAgreement(TransactionCase):
     # TEST 06: Test Parties Dynamic Field
     def test_compute_dynamic_parties(self):
         agreement_01 = self.test_agreement
-        agreement_01.parties = "${object.name}"
+        agreement_01.parties = "{{object.name}}"
         self.assertEqual(
             agreement_01.dynamic_parties,
             "<p>TestAgreement</p>",
@@ -115,7 +115,7 @@ class TestAgreement(TransactionCase):
     # TEST 07: Test Special Terms Dynamic Field
     def test_compute_dynamic_special_terms(self):
         agreement_01 = self.test_agreement
-        agreement_01.special_terms = "${object.name}"
+        agreement_01.special_terms = "{{object.name}}"
         self.assertEqual(
             agreement_01.dynamic_special_terms,
             "TestAgreement",

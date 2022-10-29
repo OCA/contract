@@ -12,7 +12,7 @@ class AgreementStage(models.Model):
 
     # General
     name = fields.Char(string="Stage Name", required=True)
-    sequence = fields.Integer(string="Sequence", default="1", required=False)
+    sequence = fields.Integer(default="1", required=False)
     fold = fields.Boolean(
         string="Is Folded",
         required=False,
@@ -21,9 +21,8 @@ class AgreementStage(models.Model):
     stage_type = fields.Selection(
         [("agreement", "Agreement")], string="Type", required=True
     )
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(default=True)
     readonly = fields.Boolean(
-        string="Readonly",
         default=False,
         help="The agreement can not edit if set Readonly = True.",
     )
