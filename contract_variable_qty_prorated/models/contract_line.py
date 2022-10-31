@@ -7,10 +7,7 @@ from odoo import api, models
 class ContractLine(models.Model):
     _inherit = "contract.line"
 
-    @api.multi
-    def compute_prorated(
-        self, period_first_date, period_last_date, invoice_date
-    ):
+    def compute_prorated(self, period_first_date, period_last_date, invoice_date):
         self.ensure_one()
         return self._compute_prorated(
             period_first_date,
@@ -42,9 +39,7 @@ class ContractLine(models.Model):
             recurring_rule_type == "monthlylastday"
             and recurring_invoicing_type == "post-paid"
         ):
-            relative_delta = self.get_relative_delta(
-                "monthly", recurring_interval
-            )
+            relative_delta = self.get_relative_delta("monthly", recurring_interval)
             theoretical_next_date += self.get_relative_delta("daily", 1)
 
         if recurring_invoicing_type == "pre-paid":

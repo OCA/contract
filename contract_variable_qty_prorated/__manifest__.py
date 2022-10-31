@@ -6,12 +6,12 @@
     "summary": """
         This module adds a formula to compute prorated quantity to invoice as
         extension of the module contract_variable_quantity""",
-    "version": "12.0.1.1.0",
+    "version": "14.0.1.0.0",
     "development_status": "Beta",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "maintainers": ["sbejaoui"],
-    "website": "https://github.com/oca/contract",
+    "website": "https://github.com/OCA/contract",
     "depends": ["contract_variable_quantity"],
     "data": [
         "data/contract_variable_qty_prorated.xml",
