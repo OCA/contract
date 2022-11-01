@@ -4,9 +4,9 @@
 {
     "name": "Agreement Rebate",
     "summary": "Rebate in agreements",
-    "version": "13.0.1.0.1",
+    "version": "15.0.1.0.0",
     "development_status": "Beta",
-    "category": "Contract",
+    "category": "Agreement",
     "website": "https://github.com/OCA/agreement",
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",

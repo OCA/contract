@@ -28,11 +28,11 @@ class Agreement(models.Model):
         inverse_name="agreement_id",
         copy=True,
     )
-    rebate_discount = fields.Float(string="Rebate discount")
+    rebate_discount = fields.Float()
     is_rebate = fields.Boolean(
         related="agreement_type_id.is_rebate", string="Is rebate agreement type"
     )
-    additional_consumption = fields.Float(string="Additional consumption", default=0.0)
+    additional_consumption = fields.Float(default=0.0)
 
 
 class AgreementRebateLine(models.Model):
@@ -67,11 +67,10 @@ class AgreementRebateLine(models.Model):
     )
     rebate_domain = fields.Char(
         compute="_compute_rebate_domain",
-        string="Rebate domain",
         store=True,
         readonly=False,
     )
-    rebate_discount = fields.Float(string="Rebate discount")
+    rebate_discount = fields.Float()
 
     @api.depends(
         "rebate_target",

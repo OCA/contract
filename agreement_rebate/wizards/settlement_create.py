@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class AgreementSettlementCreateWiz(models.TransientModel):
@@ -15,7 +15,7 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date = fields.Date(default=fields.Date.today)
     date_from = fields.Date(string="From")
     date_to = fields.Date(string="To", required=True)
-    domain = fields.Selection("_domain_selection", string="Domain", default="sale")
+    domain = fields.Selection("_domain_selection", default="sale")
     journal_ids = fields.Many2many(
         comodel_name="account.journal",
         string="Journals",

@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class AgreementRebateSettlement(models.Model):
@@ -32,8 +32,8 @@ class AgreementRebateSettlement(models.Model):
         inverse_name="settlement_id",
         string="Settlement Lines",
     )
-    amount_invoiced = fields.Float(string="Amount invoiced")
-    amount_rebate = fields.Float(string="Amount rebate")
+    amount_invoiced = fields.Float()
+    amount_rebate = fields.Float()
     invoice_id = fields.Many2one(comodel_name="account.move", string="Invoice")
     active = fields.Boolean(default=True)
 
@@ -105,9 +105,9 @@ class AgreementRebateSettlement(models.Model):
         }
 
     def action_show_settlement(self):
-        action = self.env.ref(
+        action = self.env["ir.actions.act_window"]._for_xml_id(
             "agreement_rebate.agreement_rebate_settlement_action"
-        ).read()[0]
+        )
         if len(self) == 1:
             form = self.env.ref("agreement_rebate.agreement_rebate_settlement_form")
             action["views"] = [(form.id, "form")]
@@ -117,15 +117,17 @@ class AgreementRebateSettlement(models.Model):
         return action
 
     def action_show_settlement_lines(self):
-        action = self.env.ref(
+        action = self.env["ir.actions.act_window"]._for_xml_id(
             "agreement_rebate.agreement_rebate_settlement_line_action"
-        ).read()[0]
+        )
         action["domain"] = [("settlement_id", "in", self.ids)]
         return action
 
     def action_show_agreement(self):
         agreements = self.line_ids.mapped("agreement_id")
-        action = self.env.ref("agreement.agreement_action").read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "agreement.agreement_action"
+        )
         if len(agreements) == 1:
             form = self.env.ref("agreement.agreement_form")
             action["views"] = [(form.id, "form")]
@@ -169,10 +171,10 @@ class AgreementRebateSettlementLine(models.Model):
     target_domain = fields.Char()
     amount_from = fields.Float(string="From", readonly=True)
     amount_to = fields.Float(string="To", readonly=True)
-    percent = fields.Float(string="Percent", readonly=True)
-    amount_gross = fields.Float(string="Amount gross")
-    amount_invoiced = fields.Float(string="Amount invoiced")
-    amount_rebate = fields.Float(string="Amount rebate")
+    percent = fields.Float(readonly=True)
+    amount_gross = fields.Float()
+    amount_invoiced = fields.Float()
+    amount_rebate = fields.Float()
     agreement_id = fields.Many2one(
         comodel_name="agreement",
         string="Agreement",
@@ -195,7 +197,6 @@ class AgreementRebateSettlementLine(models.Model):
             ("to_invoice", "To Invoice"),
             ("no", "Nothing to Invoice"),
         ],
-        string="Invoice Status",
         compute="_compute_invoice_status",
         store=True,
         readonly=False,
@@ -250,7 +251,7 @@ class AgreementRebateSettlementLine(models.Model):
         (making sure to call super() to establish a clean extension chain).
         """
         self.ensure_one()
-        company_id = self.company_id.id or self.env.user.company_id.id
+        company = self.company_id or self.env.user.company_id
         partner = self.env.context.get("partner_invoice", False)
         if not partner:
             invoice_group = self.env.context.get("invoice_group", "settlement")
@@ -264,7 +265,7 @@ class AgreementRebateSettlementLine(models.Model):
         journal_id = (
             self.env.context.get("journal_id")
             or self.env["account.move"]
-            .with_context(force_company=company_id)
+            .with_company(company=company)
             .default_get(["journal_id"])["journal_id"]
         )
         if not journal_id:
@@ -273,9 +274,9 @@ class AgreementRebateSettlementLine(models.Model):
             )
         vinvoice = self.env["account.move"].new(
             {
-                "company_id": company_id,
+                "company_id": company.id,
                 "partner_id": partner.id,
-                "type": invoice_type,
+                "move_type": invoice_type,
                 "journal_id": journal_id,
             }
         )
@@ -297,7 +298,7 @@ class AgreementRebateSettlementLine(models.Model):
 
     def _prepare_invoice_line(self, invoice_vals):
         self.ensure_one()
-        company_id = self.company_id.id or self.env.user.company_id.id
+        company = self.company_id or self.env.user.company_id
         product = self.env.context.get("product", False)
         invoice_line_vals = {
             "product_id": product.id,
@@ -307,9 +308,7 @@ class AgreementRebateSettlementLine(models.Model):
         }
         invoice_line = (
             self.env["account.move.line"]
-            .with_context(
-                force_company=company_id,
-            )
+            .with_company(company=company)
             .new(invoice_line_vals)
         )
         invoice_vals_new = invoice_vals.copy()
@@ -317,8 +316,8 @@ class AgreementRebateSettlementLine(models.Model):
         invoice_vals_new.pop("check_amount", None)
         invoice = (
             self.env["account.move"]
-            .with_context(
-                force_company=company_id,
+            .with_company(
+                company=company,
             )
             .new(invoice_vals_new)
         )
@@ -329,11 +328,10 @@ class AgreementRebateSettlementLine(models.Model):
         invoice_line_vals.update(
             {
                 "name": _(
-                    "{} - Period: {} - {}".format(
-                        invoice_line_vals["name"],
-                        self.settlement_id.date_from,
-                        self.settlement_id.date_to,
-                    )
+                    "%(name)s - Period: %(date_from)s - %(date_to)s",
+                    name=invoice_line_vals["name"],
+                    date_from=self.settlement_id.date_from,
+                    date_to=self.settlement_id.date_to,
                 ),
                 # 'account_analytic_id': self.analytic_account_id.id,
                 # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],

@@ -46,7 +46,7 @@
         <field name="name">agreement.rebate.settlement</field>
         <field name="model">agreement.rebate.settlement</field>
         <field name="arch" type="xml">
-            <tree string="Rebate Settlements">
+            <tree>
                 <field name="name" />
                 <field name="partner_id" />
                 <field name="date" />
@@ -115,7 +115,7 @@
                     </group>
                     <group string="Lines">
                         <field name="line_ids" nolabel="1">
-                            <tree string="Rebate Settlement lines">
+                            <tree>
                                 <field name="rebate_type" invisible="1" />
                                 <field name="partner_id" readonly="1" />
                                 <field name="amount_invoiced" />
@@ -134,7 +134,7 @@
                                     name="action_show_detail"
                                     type="object"
                                     icon="fa-table"
-                                    string="Show details"
+                                    title="Show details"
                                     attrs="{'invisible': [('rebate_type', '!=', 'line')]}"
                                 />
                                 <field
@@ -153,7 +153,7 @@
         <field name="name">agreement.rebate.settlement.line</field>
         <field name="model">agreement.rebate.settlement.line</field>
         <field name="arch" type="xml">
-            <tree string="Rebate Settlement lines" create="false" edit="false">
+            <tree create="false" edit="false">
                 <field name="date" />
                 <field name="partner_id" />
                 <field name="agreement_id" />
@@ -167,7 +167,7 @@
                     name="action_show_detail"
                     type="object"
                     icon="fa-table"
-                    string="Show details"
+                    title="Show details"
                 />
                 <field
                     name="target_domain"

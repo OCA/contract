@@ -10,7 +10,7 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
 
     date_from = fields.Date(string="From")
     date_to = fields.Date(string="To")
-    domain = fields.Selection("_domain_selection", string="Domain", default="sale")
+    domain = fields.Selection("_domain_selection", default="sale")
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",

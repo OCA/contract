@@ -38,7 +38,7 @@
                             context="{'hide_rebate_discount': rebate_type != 'line'}"
                             nolabel="1"
                         >
-                            <tree string="Rebate Lines">
+                            <tree>
                                 <field name="rebate_target" />
                                 <field
                                     name="rebate_domain"
@@ -78,7 +78,7 @@
         <field name="name">agreement.rebate.line.tree</field>
         <field name="model">agreement.rebate.line</field>
         <field name="arch" type="xml">
-            <tree string="Rebate Lines">
+            <tree>
                 <field name="rebate_target" />
                 <field name="rebate_domain" groups="base.group_no_one" />
                 <field name="rebate_discount" />
@@ -142,7 +142,7 @@
         <field name="name">agreement.rebate.section.tree</field>
         <field name="model">agreement.rebate.section</field>
         <field name="arch" type="xml">
-            <tree string="Rebate Sections" editable="bottom">
+            <tree editable="bottom">
                 <field name="amount_from" />
                 <field name="amount_to" />
                 <field name="rebate_discount" />
