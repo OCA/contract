@@ -23,7 +23,10 @@ class AgreementRebateSettlement(models.Model):
     date = fields.Date(default=fields.Date.today)
     date_from = fields.Date()
     date_to = fields.Date()
-    partner_id = fields.Many2one(comodel_name="res.partner", string="Partner",)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+    )
     line_ids = fields.One2many(
         comodel_name="agreement.rebate.settlement.line",
         inverse_name="settlement_id",
@@ -147,13 +150,21 @@ class AgreementRebateSettlementLine(models.Model):
         string="Rebate settlement",
         ondelete="cascade",
     )
-    date = fields.Date(related="settlement_id.date", store=True,)
-    partner_id = fields.Many2one(comodel_name="res.partner", string="Partner",)
+    date = fields.Date(
+        related="settlement_id.date",
+        store=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+    )
     rebate_line_id = fields.Many2one(
-        comodel_name="agreement.rebate.line", string="Rebate Line",
+        comodel_name="agreement.rebate.line",
+        string="Rebate Line",
     )
     rebate_section_id = fields.Many2one(
-        comodel_name="agreement.rebate.section", string="Rebate section",
+        comodel_name="agreement.rebate.section",
+        string="Rebate section",
     )
     target_domain = fields.Char()
     amount_from = fields.Float(string="From", readonly=True)
@@ -163,10 +174,13 @@ class AgreementRebateSettlementLine(models.Model):
     amount_invoiced = fields.Float(string="Amount invoiced")
     amount_rebate = fields.Float(string="Amount rebate")
     agreement_id = fields.Many2one(
-        comodel_name="agreement", string="Agreement", required=True,
+        comodel_name="agreement",
+        string="Agreement",
+        required=True,
     )
     rebate_type = fields.Selection(
-        related="agreement_id.rebate_type", string="Rebate type",
+        related="agreement_id.rebate_type",
+        string="Rebate type",
     )
     invoice_line_ids = fields.Many2many(
         comodel_name="account.move.line",
@@ -293,7 +307,9 @@ class AgreementRebateSettlementLine(models.Model):
         }
         invoice_line = (
             self.env["account.move.line"]
-            .with_context(force_company=company_id,)
+            .with_context(
+                force_company=company_id,
+            )
             .new(invoice_line_vals)
         )
         invoice_vals_new = invoice_vals.copy()
@@ -301,7 +317,9 @@ class AgreementRebateSettlementLine(models.Model):
         invoice_vals_new.pop("check_amount", None)
         invoice = (
             self.env["account.move"]
-            .with_context(force_company=company_id,)
+            .with_context(
+                force_company=company_id,
+            )
             .new(invoice_vals_new)
         )
         invoice_line.move_id = invoice

@@ -8,4 +8,6 @@ from odoo import fields, models
 class AgreementType(models.Model):
     _inherit = "agreement.type"
 
-    is_rebate = fields.Boolean(string="Is rebate agreement type",)
+    is_rebate = fields.Boolean(
+        string="Is rebate agreement type",
+    )

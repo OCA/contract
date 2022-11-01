@@ -50,16 +50,20 @@ class AgreementRebateLine(models.Model):
         ]
     )
     rebate_product_ids = fields.Many2many(
-        comodel_name="product.product", string="Products",
+        comodel_name="product.product",
+        string="Products",
     )
     rebate_product_tmpl_ids = fields.Many2many(
-        comodel_name="product.template", string="Product templates",
+        comodel_name="product.template",
+        string="Product templates",
     )
     rebate_category_ids = fields.Many2many(
-        comodel_name="product.category", string="Product categories",
+        comodel_name="product.category",
+        string="Product categories",
     )
     rebate_condition_id = fields.Many2one(
-        comodel_name="agreement.rebate.condition", string="Rebate condition",
+        comodel_name="agreement.rebate.condition",
+        string="Rebate condition",
     )
     rebate_domain = fields.Char(
         compute="_compute_rebate_domain",

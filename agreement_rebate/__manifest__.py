@@ -7,7 +7,7 @@
     "version": "13.0.1.0.1",
     "development_status": "Beta",
     "category": "Contract",
-    "website": "https://github.com/OCA/contract",
+    "website": "https://github.com/OCA/agreement",
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "application": False,

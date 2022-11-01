@@ -12,17 +12,26 @@ class AgreementSettlementInvoiceCreateWiz(models.TransientModel):
     date_to = fields.Date(string="To")
     domain = fields.Selection("_domain_selection", string="Domain", default="sale")
     journal_id = fields.Many2one(
-        comodel_name="account.journal", string="Journal", required=True,
+        comodel_name="account.journal",
+        string="Journal",
+        required=True,
     )
     agreement_type_ids = fields.Many2many(
-        comodel_name="agreement.type", string="Agreement types",
+        comodel_name="agreement.type",
+        string="Agreement types",
     )
-    agreement_ids = fields.Many2many(comodel_name="agreement", string="Agreements",)
+    agreement_ids = fields.Many2many(
+        comodel_name="agreement",
+        string="Agreements",
+    )
     settlements_ids = fields.Many2many(
-        comodel_name="agreement.rebate.settlement", string="Rebate settlements",
+        comodel_name="agreement.rebate.settlement",
+        string="Rebate settlements",
     )
     product_id = fields.Many2one(
-        comodel_name="product.product", string="Product", required=True,
+        comodel_name="product.product",
+        string="Product",
+        required=True,
     )
     invoice_group = fields.Selection(
         [

@@ -16,11 +16,18 @@ class AgreementSettlementCreateWiz(models.TransientModel):
     date_from = fields.Date(string="From")
     date_to = fields.Date(string="To", required=True)
     domain = fields.Selection("_domain_selection", string="Domain", default="sale")
-    journal_ids = fields.Many2many(comodel_name="account.journal", string="Journals",)
-    agreement_type_ids = fields.Many2many(
-        comodel_name="agreement.type", string="Agreement types",
+    journal_ids = fields.Many2many(
+        comodel_name="account.journal",
+        string="Journals",
     )
-    agreement_ids = fields.Many2many(comodel_name="agreement", string="Agreements",)
+    agreement_type_ids = fields.Many2many(
+        comodel_name="agreement.type",
+        string="Agreement types",
+    )
+    agreement_ids = fields.Many2many(
+        comodel_name="agreement",
+        string="Agreements",
+    )
     discard_settled_agreement = fields.Boolean(
         string="Discard settled agreements",
         default="True",
@@ -88,11 +95,23 @@ class AgreementSettlementCreateWiz(models.TransientModel):
             domain.extend([("journal_id.type", "=", self.domain)])
         if self.date_from:
             domain.extend(
-                [("invoice_date", ">=", fields.Date.to_string(self.date_from),)]
+                [
+                    (
+                        "invoice_date",
+                        ">=",
+                        fields.Date.to_string(self.date_from),
+                    )
+                ]
             )
         if self.date_to:
             domain.extend(
-                [("invoice_date", "<=", fields.Date.to_string(self.date_to),)]
+                [
+                    (
+                        "invoice_date",
+                        "<=",
+                        fields.Date.to_string(self.date_to),
+                    )
+                ]
             )
         return domain
 
@@ -100,11 +119,19 @@ class AgreementSettlementCreateWiz(models.TransientModel):
         domain = agreement_domain.copy()
         if agreement.start_date:
             domain.append(
-                ("invoice_date", ">=", fields.Date.to_string(agreement.start_date),)
+                (
+                    "invoice_date",
+                    ">=",
+                    fields.Date.to_string(agreement.start_date),
+                )
             )
         if agreement.end_date:
             domain.append(
-                ("invoice_date", "<=", fields.Date.to_string(agreement.end_date),)
+                (
+                    "invoice_date",
+                    "<=",
+                    fields.Date.to_string(agreement.end_date),
+                )
             )
         if line:
             domain += safe_eval(line.rebate_domain)
