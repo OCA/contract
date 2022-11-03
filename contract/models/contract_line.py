@@ -106,9 +106,10 @@ class ContractLine(models.Model):
         readonly=True,
     )
 
+    # pylint: disable=missing-return
     @api.depends(
         "last_date_invoiced", "date_start", "date_end", "contract_id.last_date_invoiced"
-    )  # pylint: disable=missing-return
+    )
     def _compute_next_period_date_start(self):
         """Rectify next period date start if another line in the contract has been
         already invoiced previously when the recurrence is by contract.
