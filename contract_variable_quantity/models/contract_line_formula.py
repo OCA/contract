@@ -33,6 +33,6 @@ class ContractLineFormula(models.Model):
         except Exception as e:
             raise exceptions.ValidationError(
                 _("Error evaluating code.\nDetails: %s") % e
-            )
+            ) from e
         if "result" not in eval_context:
             raise exceptions.ValidationError(_("No valid result returned."))
