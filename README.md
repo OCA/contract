@@ -24,7 +24,7 @@ addon | version | maintainers | summary
 [contract](contract/) | 15.0.1.5.3 |  | Recurring - Contracts Management
 [contract_payment_mode](contract_payment_mode/) | 15.0.1.0.1 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 15.0.1.1.0 |  | Contract from Sale
-[contract_sale_generation](contract_sale_generation/) | 15.0.1.0.2 |  | Contracts Management - Recurring Sales
+[contract_sale_generation](contract_sale_generation/) | 15.0.1.0.3 |  | Contracts Management - Recurring Sales
 
 [//]: # (end addons)
 
