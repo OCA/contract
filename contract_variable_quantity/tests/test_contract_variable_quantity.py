@@ -4,13 +4,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import exceptions
-from odoo.tests.common import SavepointCase
+from odoo.tests import tagged
+from odoo.tests.common import TransactionCase
 
 
-class TestContractVariableQuantity(SavepointCase):
-    at_install = False
-    post_install = True
-
+@tagged("post_install", "-at_install")
+class TestContractVariableQuantity(TransactionCase):
     def setUp(self):
         super().setUp()
         self.partner = self.env["res.partner"].create({"name": "Test partner"})
