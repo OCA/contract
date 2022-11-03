@@ -5,14 +5,14 @@ from freezegun.api import freeze_time
 
 from odoo import fields
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon
 
 today = "2020-01-15"
 
 
-class TestContractSale(ContractSaleCommon, SavepointCase):
+class TestContractSale(ContractSaleCommon, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
