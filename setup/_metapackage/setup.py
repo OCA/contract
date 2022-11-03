@@ -27,6 +27,7 @@ setuptools.setup(
         'odoo14-addon-contract_sale',
         'odoo14-addon-contract_sale_generation',
         'odoo14-addon-contract_sale_tag',
+        'odoo14-addon-contract_update_last_date_invoiced',
         'odoo14-addon-contract_variable_quantity',
     ],
     classifiers=[
