@@ -309,10 +309,11 @@ class ContractContract(models.Model):
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
+    # pylint: disable=missing-return
     @api.depends(
         "contract_line_ids.recurring_next_date",
         "contract_line_ids.is_canceled",
-    )  # pylint: disable=missing-return
+    )
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
