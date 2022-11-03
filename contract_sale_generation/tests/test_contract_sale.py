@@ -4,12 +4,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon, to_date
 
 
-class TestContractSale(ContractSaleCommon, SavepointCase):
+class TestContractSale(ContractSaleCommon, TransactionCase):
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
             self.contract_line.write({"discount": 120})
