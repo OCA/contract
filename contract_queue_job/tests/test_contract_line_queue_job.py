@@ -1,6 +1,8 @@
 # Copyright 2020 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import fields
 
 from odoo.addons.contract.tests.test_contract import TestContractBase
@@ -11,6 +13,7 @@ class TestContractLineQueueJob(TestContractBase, JobMixin):
     @classmethod
     def setUpClass(cls):
         super(TestContractLineQueueJob, cls).setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", True)
         cls.contract3 = cls.contract2.copy()
 
     def test_contract_renew_queue_job_1(self):
@@ -27,3 +30,21 @@ class TestContractLineQueueJob(TestContractBase, JobMixin):
         job_counter = self.job_counter()
         lines.renew()
         self.assertEqual(job_counter.count_created(), len(lines))
+
+    def test_contract_renew_queue_job_3(self):
+        """wrong ir_config_parameter : no job"""
+        self.env["ir.config_parameter"].sudo().set_param(
+            "contract.queue.job", "wronginput"
+        )
+        date_start = self.today - relativedelta(months=9)
+        self.acct_line.write(
+            {
+                "date_start": date_start,
+                "recurring_next_date": date_start,
+                "date_end": self.today,
+            }
+        )
+        lines = self.acct_line | self.acct_line.copy()
+        job_counter = self.job_counter()
+        lines.renew()
+        self.assertEqual(job_counter.count_created(), 0)
