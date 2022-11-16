@@ -9,11 +9,12 @@ class TestContractQueueJob(TestContractBase, JobMixin):
     @classmethod
     def setUpClass(cls):
         super(TestContractQueueJob, cls).setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", True)
         cls.contract3 = cls.contract2.copy()
 
     def _get_related_invoices(self, contracts):
         return (
-            self.env["account.invoice.line"]
+            self.env["account.move.line"]
             .search(
                 [
                     (
@@ -23,7 +24,7 @@ class TestContractQueueJob(TestContractBase, JobMixin):
                     )
                 ]
             )
-            .mapped("invoice_id")
+            .mapped("move_id")
         )
 
     def test_contract_queue_job(self):
@@ -54,10 +55,20 @@ class TestContractQueueJob(TestContractBase, JobMixin):
         wizard = self.env["contract.manually.create.invoice"].create(
             {"invoice_date": self.today, "contract_type": "purchase"}
         )
-        wizard.create_invoice()
+        wizard.create_invoice_queued()
         invoices = self._get_related_invoices(contracts)
         self.assertFalse(invoices)
         self.assertEqual(job_counter.count_created(), 2)
         self.perform_jobs(job_counter)
         invoices = self._get_related_invoices(contracts)
         self.assertEqual(len(invoices), 2)
+
+    def test_contract_queue_job_3(self):
+        """wrong ir_config_parameter : no job"""
+        self.env["ir.config_parameter"].sudo().set_param(
+            "contract.queue.job", "wronginput"
+        )
+        contracts = self.contract2 | self.contract3
+        job_counter = self.job_counter()
+        contracts._recurring_create_invoice()
+        self.assertEqual(job_counter.count_created(), 0)
