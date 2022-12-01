@@ -1691,8 +1691,7 @@ class TestContract(TestContractBase):
         self.assertFalse(line_4.successor_contract_line_id)
 
     def test_renew_create_new_line(self):
-        date_start = self.today - relativedelta(months=9)
-        date_end = date_start + relativedelta(months=12) - relativedelta(days=1)
+        date_start = fields.Date.from_string("2022-01-01")
         self.acct_line.write(
             {
                 "is_auto_renew": True,
@@ -1702,17 +1701,16 @@ class TestContract(TestContractBase):
             }
         )
         self.acct_line._onchange_is_auto_renew()
-        self.assertEqual(self.acct_line.date_end, date_end)
+        self.assertEqual(self.acct_line.date_end, fields.Date.from_string("2022-12-31"))
         new_line = self.acct_line.renew()
         self.assertFalse(self.acct_line.is_auto_renew)
         self.assertTrue(new_line.is_auto_renew)
-        self.assertEqual(new_line.date_start, date_start + relativedelta(months=12))
-        self.assertEqual(new_line.date_end, date_end + relativedelta(months=12))
+        self.assertEqual(new_line.date_start, fields.Date.from_string("2023-01-01"))
+        self.assertEqual(new_line.date_end, fields.Date.from_string("2023-12-31"))
 
     def test_renew_extend_original_line(self):
         self.contract.company_id.create_new_line_at_contract_line_renew = False
-        date_start = self.today - relativedelta(months=9)
-        date_end = date_start + relativedelta(months=12) - relativedelta(days=1)
+        date_start = fields.Date.from_string("2022-01-01")
         self.acct_line.write(
             {
                 "is_auto_renew": True,
@@ -1722,11 +1720,13 @@ class TestContract(TestContractBase):
             }
         )
         self.acct_line._onchange_is_auto_renew()
-        self.assertEqual(self.acct_line.date_end, date_end)
+        self.assertEqual(self.acct_line.date_end, fields.Date.from_string("2022-12-31"))
         self.acct_line.renew()
         self.assertTrue(self.acct_line.is_auto_renew)
-        self.assertEqual(self.acct_line.date_start, date_start)
-        self.assertEqual(self.acct_line.date_end, date_end + relativedelta(months=12))
+        self.assertEqual(
+            self.acct_line.date_start, fields.Date.from_string("2022-01-01")
+        )
+        self.assertEqual(self.acct_line.date_end, fields.Date.from_string("2023-12-31"))
 
     def test_cron_recurring_create_invoice(self):
         self.acct_line.date_start = "2018-01-01"
