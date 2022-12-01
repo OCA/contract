@@ -1723,7 +1723,7 @@ class TestContract(TestContractBase):
         self.assertFalse(line_4.successor_contract_line_id)
 
     def test_renew_create_new_line(self):
-        date_start = self.today - relativedelta(months=9)
+        date_start = fields.Date.from_string("2022-01-01")
         date_end = date_start + relativedelta(months=12) - relativedelta(days=1)
         self.acct_line.write(
             {
@@ -1743,7 +1743,7 @@ class TestContract(TestContractBase):
 
     def test_renew_extend_original_line(self):
         self.contract.company_id.create_new_line_at_contract_line_renew = False
-        date_start = self.today - relativedelta(months=9)
+        date_start = fields.Date.from_string("2022-01-01")
         date_end = date_start + relativedelta(months=12) - relativedelta(days=1)
         self.acct_line.write(
             {
