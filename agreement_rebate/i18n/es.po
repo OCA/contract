@@ -23,6 +23,12 @@ msgid "% Dto"
 msgstr "% Dto"
 
 #. module: agreement_rebate
+#: code:addons/agreement_rebate/models/agreement_rebate_settlement.py:0
+#, python-format
+msgid "%(name)s - Period: %(date_from)s - %(date_to)s"
+msgstr ""
+
+#. module: agreement_rebate
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_form
 msgid ""
 "<i class=\"fa fa-filter\"/>\n"
@@ -46,9 +52,20 @@ msgid "<span>Details</span>"
 msgstr "<span>Detalles</span>"
 
 #. module: agreement_rebate
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
+msgid "<span>Lines</span>"
+msgstr ""
+
+#. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__active
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__active
+msgid "Active"
+msgstr ""
+
+#. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement__additional_consumption
-msgid "Additional consumption"
-msgstr "Consumo adicional"
+msgid "Additional Consumption"
+msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_agreement
@@ -92,7 +109,6 @@ msgstr "Tipos de Acuerdo"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_agreement_invoice_create_wiz
 #, fuzzy
-#| msgid "Agreement rebate lines"
 msgid "Agreement invoice create wizard"
 msgstr "Líneas de rappel"
 
@@ -114,7 +130,6 @@ msgstr "Tramos de rappel"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_agreement_settlement_create_wiz
 #, fuzzy
-#| msgid "Agreement settlement lines"
 msgid "Agreement settlement create wizard"
 msgstr "Líneas de liquidaciones del acuerdo"
 
@@ -146,20 +161,27 @@ msgstr "Acuerdos"
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_gross
-msgid "Amount gross"
-msgstr "Importe bruto"
+msgid "Amount Gross"
+msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__amount_invoiced
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_invoiced
-msgid "Amount invoiced"
-msgstr "Total facturado"
+msgid "Amount Invoiced"
+msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__amount_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_rebate
-msgid "Amount rebate"
-msgstr "Importe rappel"
+msgid "Amount Rebate"
+msgstr ""
+
+#. module: agreement_rebate
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
+msgid "Archived"
+msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement__rebate_type__section_prorated
@@ -237,6 +259,7 @@ msgstr "Factura de cliente"
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__date
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_settlement_create_wiz__date
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
 msgid "Date"
 msgstr "Fecha"
 
@@ -388,7 +411,6 @@ msgstr "Diario"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_account_move_line
 #, fuzzy
-#| msgid "Journal"
 msgid "Journal Item"
 msgstr "Diario"
 
@@ -479,6 +501,7 @@ msgstr "Porcentaje"
 
 #. module: agreement_rebate
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
 msgid "Period"
 msgstr "Período"
 
@@ -523,31 +546,28 @@ msgid "Rebate"
 msgstr "Rappel"
 
 #. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement__rebate_discount
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_discount
+msgid "Rebate Discount"
+msgstr ""
+
+#. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_domain
+msgid "Rebate Domain"
+msgstr ""
+
+#. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__rebate_line_id
 msgid "Rebate Line"
 msgstr "Línea de rappel"
 
 #. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_form
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_line_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_line_tree
 msgid "Rebate Lines"
 msgstr "Líneas de rappel"
 
 #. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_section_tree
-msgid "Rebate Sections"
-msgstr "Tramos de rappel"
-
-#. module: agreement_rebate
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_tree
-msgid "Rebate Settlement lines"
-msgstr "Líneas de liquidaciones de rappels"
-
-#. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_tree
 msgid "Rebate Settlements"
 msgstr "Liquidaciónes de rappel"
 
@@ -561,7 +581,6 @@ msgstr "Origen del rappel"
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_condition_id
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_rebate_line__rebate_target__condition
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_condition_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_condition_tree
 msgid "Rebate condition"
 msgstr "Condición de rappel"
 
@@ -571,13 +590,6 @@ msgid "Rebate conditions"
 msgstr "Condiciones de rappel"
 
 #. module: agreement_rebate
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement__rebate_discount
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_discount
-msgid "Rebate discount"
-msgstr "(%) Descuento de rappel"
-
-#. module: agreement_rebate
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_domain
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_rebate_line__rebate_target__domain
 msgid "Rebate domain"
 msgstr "Filtro de rappel"
@@ -629,6 +641,7 @@ msgstr "Ajustes"
 
 #. module: agreement_rebate
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_invoice_create_wiz__invoice_group__settlement
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
 msgid "Settlement"
 msgstr "Liquidación"
 
@@ -704,11 +717,30 @@ msgstr "Factura rectificativa de proveedor"
 msgid "rebate type"
 msgstr "Tipo rappel"
 
-#. module: agreement_rebate
-#: code:addons/agreement_rebate/models/agreement_rebate_settlement.py:0
+#~ msgid "Additional consumption"
+#~ msgstr "Consumo adicional"
+
+#~ msgid "Amount gross"
+#~ msgstr "Importe bruto"
+
+#~ msgid "Amount invoiced"
+#~ msgstr "Total facturado"
+
+#~ msgid "Amount rebate"
+#~ msgstr "Importe rappel"
+
+#~ msgid "Rebate Sections"
+#~ msgstr "Tramos de rappel"
+
+#~ msgid "Rebate Settlement lines"
+#~ msgstr "Líneas de liquidaciones de rappels"
+
+#~ msgid "Rebate discount"
+#~ msgstr "(%) Descuento de rappel"
+
 #, python-format
-msgid "{} - Period: {} - {}"
-msgstr "{} - Periodo: {} - {}"
+#~ msgid "{} - Period: {} - {}"
+#~ msgstr "{} - Periodo: {} - {}"
 
 #~ msgid "Invoice Line"
 #~ msgstr "Línea de factura"
