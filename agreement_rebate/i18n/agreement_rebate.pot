@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,6 +16,12 @@ msgstr ""
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_section__rebate_discount
 msgid "% Dto"
+msgstr ""
+
+#. module: agreement_rebate
+#: code:addons/agreement_rebate/models/agreement_rebate_settlement.py:0
+#, python-format
+msgid "%(name)s - Period: %(date_from)s - %(date_to)s"
 msgstr ""
 
 #. module: agreement_rebate
@@ -49,7 +55,7 @@ msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement__additional_consumption
-msgid "Additional consumption"
+msgid "Additional Consumption"
 msgstr ""
 
 #. module: agreement_rebate
@@ -144,19 +150,19 @@ msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_gross
-msgid "Amount gross"
+msgid "Amount Gross"
 msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__amount_invoiced
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_invoiced
-msgid "Amount invoiced"
+msgid "Amount Invoiced"
 msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__amount_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_rebate
-msgid "Amount rebate"
+msgid "Amount Rebate"
 msgstr ""
 
 #. module: agreement_rebate
@@ -527,31 +533,28 @@ msgid "Rebate"
 msgstr ""
 
 #. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement__rebate_discount
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_discount
+msgid "Rebate Discount"
+msgstr ""
+
+#. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_domain
+msgid "Rebate Domain"
+msgstr ""
+
+#. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__rebate_line_id
 msgid "Rebate Line"
 msgstr ""
 
 #. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_form
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_line_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_line_tree
 msgid "Rebate Lines"
 msgstr ""
 
 #. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_section_tree
-msgid "Rebate Sections"
-msgstr ""
-
-#. module: agreement_rebate
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_tree
-msgid "Rebate Settlement lines"
-msgstr ""
-
-#. module: agreement_rebate
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_tree
 msgid "Rebate Settlements"
 msgstr ""
 
@@ -565,7 +568,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_condition_id
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_rebate_line__rebate_target__condition
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_condition_form
-#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_condition_tree
 msgid "Rebate condition"
 msgstr ""
 
@@ -575,13 +577,6 @@ msgid "Rebate conditions"
 msgstr ""
 
 #. module: agreement_rebate
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement__rebate_discount
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_discount
-msgid "Rebate discount"
-msgstr ""
-
-#. module: agreement_rebate
-#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_line__rebate_domain
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_rebate_line__rebate_target__domain
 msgid "Rebate domain"
 msgstr ""
@@ -707,10 +702,4 @@ msgstr ""
 #. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement__rebate_type
 msgid "rebate type"
-msgstr ""
-
-#. module: agreement_rebate
-#: code:addons/agreement_rebate/models/agreement_rebate_settlement.py:0
-#, python-format
-msgid "{} - Period: {} - {}"
 msgstr ""
