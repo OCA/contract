@@ -445,6 +445,7 @@ class ContractContract(models.Model):
                 "company_id": self.company_id.id,
                 "currency_id": self.currency_id.id,
                 "invoice_date": date_invoice,
+                "date": date_invoice,
                 "journal_id": journal.id,
                 "invoice_origin": self.name,
             }
