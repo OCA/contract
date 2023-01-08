@@ -37,7 +37,7 @@ addon | version | maintainers | summary
 [contract_delivery_zone](contract_delivery_zone/) | 14.0.1.0.0 |  | Allows to remind the delivery zone defined on the partner on contract level.
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 14.0.1.0.0 | [![florian-dacosta](https://github.com/florian-dacosta.png?size=30px)](https://github.com/florian-dacosta) | Contract Invoice Start End Dates
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
-[contract_payment_mode](contract_payment_mode/) | 14.0.1.0.0 |  | Payment mode in contracts and their invoices
+[contract_payment_mode](contract_payment_mode/) | 14.0.1.1.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 14.0.1.2.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 14.0.1.0.1 |  | Contracts Management - Recurring Sales
 [contract_sale_tag](contract_sale_tag/) | 14.0.1.0.1 | [![rousseldenis](https://github.com/rousseldenis.png?size=30px)](https://github.com/rousseldenis) | Allows to transmit contract tags to sale order (through sale_generation)
