@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2023 elegosoft (https://www.elegosoft.com)
+  License AGPL-3.0 or later
+(http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <template
+        id="report_contract_document_comments"
+        inherit_id="contract.report_contract_document"
+    >
+        <xpath expr="//table[hasclass('table-sm')]" position="before">
+            <t
+                t-foreach="o.comment_template_ids.filtered(lambda x: x.position == 'before_lines')"
+                t-as="comment_template_top"
+            >
+                <div t-raw="o.render_comment(comment_template_top)" />
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t
+                t-foreach="o.comment_template_ids.filtered(lambda x: x.position == 'after_lines')"
+                t-as="comment_template_bottom"
+            >
+                <div t-raw="o.render_comment(comment_template_bottom)" />
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

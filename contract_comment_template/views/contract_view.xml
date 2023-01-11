@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2023 elegosoft (https://www.elegosoft.com)
+  License AGPL-3.0 or later
+(http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+
+    <record model="ir.ui.view" id="contract_contract_form_view_add_comment">
+        <field name="name">contract.contract.form.comment</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Comments" name="comments">
+                    <field name="comment_template_ids" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

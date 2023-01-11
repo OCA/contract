@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2023 elegosoft (https://www.elegosoft.com)
+  License AGPL-3.0 or later
+(http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record model="ir.actions.act_window" id="action_contract_comment_template">
+        <field name="name">Contract Comments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">base.comment.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model_ids.model', '=', 'contract.contract')]</field>
+        <field
+            name="context"
+            eval="{'default_model_ids': [(4, ref('contract.model_contract_contract'))]}"
+        />
+        <field
+            name="view_id"
+            ref="base_comment_template.view_base_comment_template_tree"
+        />
+    </record>
+
+    <record model="ir.ui.menu" id="menu_base_comment_template_contract">
+        <field name="name">Contract Comments</field>
+        <field name="parent_id" ref="contract.menu_config_contract" />
+        <field name="action" ref="action_contract_comment_template" />
+        <field name="sequence" eval="17" />
+    </record>
+</odoo>
