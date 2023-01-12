@@ -22,6 +22,7 @@ class ContractSaleCommon:
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
+                "plan_id": cls.env.ref("analytic.analytic_plan_internal").id,
             }
         )
         cls.payment_term_id = cls.env.ref(
@@ -30,7 +31,7 @@ class ContractSaleCommon:
         cls.fiscal_position_id = cls.env["account.fiscal.position"].create(
             {"name": "Contracts"}
         )
-        contract_date = "2020-01-15"
+        contract_date = "2020-01-01"
         cls.pricelist = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test",
@@ -58,6 +59,7 @@ class ContractSaleCommon:
             "discount": 50,
             "recurring_rule_type": "yearly",
             "recurring_interval": 1,
+            "display_type": False,
         }
         cls.template_vals = {
             "name": "Test Contract Template",
@@ -84,11 +86,13 @@ class ContractSaleCommon:
                 "generation_type": "sale",
                 "sale_autoconfirm": False,
                 "group_id": cls.analytic_account.id,
-                "date_start": "2020-01-15",
+                "date_start": "2020-01-01",
             }
         )
         cls.line_vals = {
             "name": "Services from #START# to #END#",
+            "product_id": cls.product_1.id,
+            "uom_id": cls.product_1.uom_id.id,
             "quantity": 1,
             "price_unit": 100,
             "discount": 50,
@@ -96,19 +100,11 @@ class ContractSaleCommon:
             "recurring_interval": 1,
             "date_start": "2020-01-01",
             "recurring_next_date": "2020-01-15",
+            "display_type": False,
         }
         with Form(cls.contract) as contract_form, freeze_time(contract_date):
             contract_form.contract_template_id = cls.template
-            with contract_form.contract_line_ids.new() as line_form:
-                line_form.product_id = cls.product_1
-                line_form.name = "Services from #START# to #END#"
-                line_form.quantity = 1
-                line_form.price_unit = 100.0
-                line_form.discount = 50
-                line_form.recurring_rule_type = "monthly"
-                line_form.recurring_interval = 1
-                line_form.date_start = "2020-01-15"
-                line_form.recurring_next_date = "2020-01-15"
+            cls.contract.write({"contract_line_ids": [(0, 0, cls.line_vals)]})
         cls.contract_line = cls.contract.contract_line_ids[1]
 
         cls.contract2 = cls.env["contract.contract"].create(
@@ -133,6 +129,7 @@ class ContractSaleCommon:
                             "recurring_interval": 1,
                             "date_start": "2018-02-15",
                             "recurring_next_date": "2018-02-22",
+                            "display_type": False,
                         },
                     )
                 ],

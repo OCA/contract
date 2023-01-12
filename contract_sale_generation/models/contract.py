@@ -33,7 +33,11 @@ class ContractContract(models.Model):
         if self.fiscal_position_id:
             sale.fiscal_position_id = self.fiscal_position_id.id
         # Get other sale values from partner onchange
-        sale.onchange_partner_id()
+        sale._compute_partner_shipping_id()
+        sale._compute_pricelist_id()
+        sale._compute_currency_rate()
+        sale._compute_user_id()
+        sale._compute_team_id()
         return sale._convert_to_write(sale._cache)
 
     def _get_related_sales(self):

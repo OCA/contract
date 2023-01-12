@@ -11,7 +11,7 @@ class ContractLine(models.Model):
         sale_line_vals = {
             "product_id": self.product_id.id,
             "product_uom_qty": self._get_quantity_to_invoice(*dates),
-            "product_uom": self.uom_id.id,
+            "product_uom": self.product_id.uom_id.id,
             "discount": self.discount,
             "contract_line_id": self.id,
             "display_type": self.display_type,
@@ -40,7 +40,7 @@ class ContractLine(models.Model):
             )
             order_line.order_id = sale
         # Get other order line values from product onchange
-        order_line.product_id_change()
+        order_line._onchange_product_id_warning()
         sale_line_vals = order_line._convert_to_write(order_line._cache)
         # Insert markers
         name = self._insert_markers(dates[0], dates[1])
@@ -48,7 +48,6 @@ class ContractLine(models.Model):
             {
                 "sequence": self.sequence,
                 "name": name,
-                "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
                 "price_unit": self.price_unit,
             }
         )
