@@ -4,7 +4,7 @@
 {
     'name': 'Contract Variable Qty Timesheet',
     'summary': 'Add formula to invoice ',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.0.1',
     'category': 'Contract Management',
     'website': 'https://github.com/OCA/contract',
     'author': 'Tecnativa, '
