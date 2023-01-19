@@ -5,7 +5,7 @@
     'name': 'Contract Sale Payment Mode',
     'summary': """
         This addon manages payment mode from sale order to contract.""",
-    'version': '12.0.1.1.0',
+    'version': '12.0.1.1.1',
     'license': 'AGPL-3',
     'author': 'ACSONE SA/NV,Odoo Community Association (OCA)',
     'website': 'https://github.com/OCA/contract',
