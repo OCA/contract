@@ -11,7 +11,7 @@
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "maintainers": ["sbejaoui"],
-    "website": "https://github.com/oca/contract",
+    "website": "https://github.com/OCA/contract",
     "depends": ["contract_variable_quantity"],
     "data": [
         "data/contract_variable_qty_prorated.xml",
