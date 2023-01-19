@@ -9,7 +9,7 @@
     'author': 'Pavlov Media, '
               'Open Source Integrators, '
               'Odoo Community Association (OCA)',
-    'website': 'https://github.com/oca/contract',
+    'website': 'https://github.com/OCA/contract',
     'license': 'AGPL-3',
     'depends': ['agreement_legal'],
     'data': [

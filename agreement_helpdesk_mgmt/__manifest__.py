@@ -8,7 +8,7 @@
     'version': '12.0.1.0.1',
     'license': 'AGPL-3',
     'author': 'Open Source Integrators,Odoo Community Association (OCA)',
-    'website': 'https://github.com/oca/contract',
+    'website': 'https://github.com/OCA/contract',
     'images': ['static/description/banner.png'],
     'depends': [
         "helpdesk_mgmt",
