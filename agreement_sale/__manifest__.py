@@ -4,7 +4,7 @@
 {
     'name': 'Agreement Sale',
     'summary': "Agreement on sales",
-    'version': '12.0.1.0.1',
+    'version': '12.0.1.0.2',
     'category': 'Contract',
     'author': 'Akretion, '
               'Odoo Community Association (OCA)',
