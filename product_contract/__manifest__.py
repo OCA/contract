@@ -10,7 +10,7 @@
     'author': "LasLabs, "
               "ACSONE SA/NV, "
               "Odoo Community Association (OCA)",
-    'website': 'https://github.com/oca/contract',
+    'website': 'https://github.com/OCA/contract',
     'depends': ['product', 'contract_sale'],
     'data': [
         'views/res_config_settings.xml',

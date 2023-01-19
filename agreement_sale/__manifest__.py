@@ -8,7 +8,7 @@
     'category': 'Contract',
     'author': 'Akretion, '
               'Odoo Community Association (OCA)',
-    'website': 'https://github.com/oca/contract',
+    'website': 'https://github.com/OCA/contract',
     'license': 'AGPL-3',
     'depends': [
         'sale_management',
