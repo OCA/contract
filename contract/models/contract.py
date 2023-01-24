@@ -58,6 +58,7 @@ class ContractContract(models.Model):
         comodel_name="contract.line",
         inverse_name="contract_id",
         copy=True,
+        context={"active_test": False},
     )
     # Trick for being able to have 2 different views for the same o2m
     # We need this as one2many widget doesn't allow to define in the view
@@ -68,6 +69,7 @@ class ContractContract(models.Model):
         string="Contract lines (fixed)",
         comodel_name="contract.line",
         inverse_name="contract_id",
+        context={"active_test": False},
     )
 
     user_id = fields.Many2one(
