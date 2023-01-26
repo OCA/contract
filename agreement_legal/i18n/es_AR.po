@@ -141,6 +141,18 @@ msgid "Agreement Types"
 msgstr "Tipos de Acuerdo"
 
 #. module: agreement_legal
+#: model:mail.activity.type,name:agreement_legal.mail_activity_review_agreement
+msgid "Agreement needs a review"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.actions.server,name:agreement_legal.ir_cron_test_acc_move_except_ir_actions_server
+#: model:ir.cron,cron_name:agreement_legal.ir_cron_test_acc_move_except
+#: model:ir.cron,name:agreement_legal.ir_cron_test_acc_move_except
+msgid "Agreement: Check to Review Days"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.actions.act_window,name:agreement_legal.action_agreement_report_order
 #: model:ir.actions.act_window,name:agreement_legal.agreement_dashboard_agreement
 #: model:ir.actions.act_window,name:agreement_legal.agreement_operations_agreement
@@ -180,10 +192,15 @@ msgid "Agreements Sub-Types Search"
 msgstr "Buscar Sub-Tipos de Acuerdos"
 
 #. module: agreement_legal
+#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_search_view
+msgid "Agreements to review"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__special_terms
 msgid ""
-"Any terms that you have agreed to and want to track on the "
-"agreement/contract."
+"Any terms that you have agreed to and want to track on the agreement/"
+"contract."
 msgstr ""
 "Cualquier término que haya aceptado y desee rastrear en el acuerdo/contrato."
 
@@ -381,7 +398,6 @@ msgstr "Crear Asistente de Acuerdo"
 #. module: agreement_legal
 #. openerp-web
 #: code:addons/agreement_legal/static/src/xml/agreement.xml:0
-#: code:addons/agreement_legal/static/src/xml/agreement.xml:0
 #: model:ir.actions.act_window,name:agreement_legal.create_agreement_from_template_action
 #, python-format
 msgid "Create From Template"
@@ -455,6 +471,11 @@ msgstr "Fecha en la cual el contrato fue firmado por la Compañía."
 #: model:ir.model.fields,help:agreement_legal.field_agreement__partner_signed_date
 msgid "Date the contract was signed by the Partner."
 msgstr "Fecha en la cual el contrato fue firmado por el Contacto."
+
+#. module: agreement_legal
+#: model:ir.model.fields,help:agreement_legal.field_agreement__to_review_date
+msgid "Date used to warn us some days before agreement expires"
+msgstr ""
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
@@ -699,8 +720,8 @@ msgstr "Última actualización el"
 #: model:ir.model.fields,help:agreement_legal.field_agreement__parent_agreement_id
 msgid ""
 "Link this agreement to a parent agreement. For example if this agreement is "
-"an amendment to another agreement. This list will only show other agreements"
-" related to the same account."
+"an amendment to another agreement. This list will only show other agreements "
+"related to the same account."
 msgstr ""
 "Vincule este acuerdo a un acuerdo padre. Por ejemplo, si este acuerdo es una "
 "enmienda a otro acuerdo. Esta lista solo mostrará otros acuerdos "
@@ -830,10 +851,6 @@ msgid "Name:"
 msgstr "Nombre:"
 
 #. module: agreement_legal
-#: code:addons/agreement_legal/models/agreement.py:0
-#: code:addons/agreement_legal/models/agreement.py:0
-#: code:addons/agreement_legal/models/agreement.py:0
-#: code:addons/agreement_legal/models/agreement.py:0
 #: code:addons/agreement_legal/models/agreement.py:0
 #, python-format
 msgid "New"
@@ -1071,6 +1088,16 @@ msgid "Returns"
 msgstr "Retornos"
 
 #. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__review_days
+msgid "Review Days"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__review_user_id
+msgid "Review User"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__reviewed_user_id
 msgid "Reviewed By"
 msgstr "Revizado Por"
@@ -1133,7 +1160,8 @@ msgstr "Secciones"
 #: model:ir.model.fields,help:agreement_legal.field_agreement_section__field_id
 msgid ""
 "Select target field from the related document model. If it is a\n"
-"         relationship field you will be able to select a target field at the\n"
+"         relationship field you will be able to select a target field at "
+"the\n"
 "         destination of the relationship."
 msgstr ""
 "Seleccione el campo de destino del modelo de documento relacionado. Si es "
@@ -1358,8 +1386,8 @@ msgstr "Fecha de Solicitud de Terminación"
 #. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement__notification_address_id
 msgid ""
-"The address to send notificaitons to, if different from customer "
-"address.(Address Type = Other)"
+"The address to send notificaitons to, if different from customer address."
+"(Address Type = Other)"
 msgstr ""
 "La dirección a la que enviar notificaciones, si es diferente de la dirección "
 "del cliente. (Tipo de Dirección = Otro)"
@@ -1480,6 +1508,11 @@ msgid "Title:"
 msgstr "Título:"
 
 #. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__to_review_date
+msgid "To Review Date"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__stage_type
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_stage_search_view
 msgid "Type"
@@ -1521,6 +1554,11 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: agreement_legal
+#: model:ir.model.fields,help:agreement_legal.field_agreement_type__review_user_id
+msgid "User assigned automatically the activity on review date"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__version
 msgid "Version"
 msgstr "Versión"
@@ -1538,7 +1576,8 @@ msgstr "Versión:"
 #: model:ir.model.fields,help:agreement_legal.field_agreement_section__sub_model_object_field_id
 msgid ""
 "When a relationship field is selected as first field, this\n"
-"         field lets you select the target field within the destination document\n"
+"         field lets you select the target field within the destination "
+"document\n"
 "          model (sub-model)."
 msgstr ""
 "Cuando se selecciona un campo de relación como primer campo, este\n"
@@ -1570,12 +1609,23 @@ msgid "When the agreement starts."
 msgstr "Cuando el acuerdo inicia."
 
 #. module: agreement_legal
+#: code:addons/agreement_legal/models/agreement.py:0
+#, python-format
+msgid "Your activity is going to end soon"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement_appendix__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_clause__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_recital__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_section__dynamic_content
 msgid "compute dynamic Content"
 msgstr "computar Contenido dinámico"
+
+#. module: agreement_legal
+#: model:mail.activity.type,summary:agreement_legal.mail_activity_review_agreement
+msgid "note"
+msgstr ""
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.view_project_agreement_kanban
