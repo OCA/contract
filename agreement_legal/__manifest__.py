@@ -14,6 +14,7 @@
     "version": "14.0.2.4.1",
     "depends": ["contacts", "agreement", "product"],
     "data": [
+        "data/cron.xml",
         "data/ir_sequence.xml",
         "data/agreement_stage.xml",
         "data/agreement_type.xml",

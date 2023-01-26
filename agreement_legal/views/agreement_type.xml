@@ -18,6 +18,9 @@
         <field name="model">agreement.type</field>
         <field name="inherit_id" ref="agreement.agreement_type_form_view" />
         <field name="arch" type="xml">
+            <xpath expr="//group[@name='main']" position="inside">
+                <field name="review_user_id" />
+            </xpath>
             <xpath expr="//sheet" position="inside">
                 <field name="agreement_subtypes_ids" nolabel="1">
                     <tree editable="bottom">
