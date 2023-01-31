@@ -2324,6 +2324,40 @@ class TestContract(TestContractBase):
         self.assertFalse(self.contract.terminate_reason_id)
         self.assertFalse(self.contract.terminate_comment)
 
+    def test_action_terminate_contract_check_recurring_dates(self):
+        """
+        The use case here is to use a contract with recurrence on its level.
+
+        Create a first invoice
+        Then, terminate it => Lines should have a end_date
+        Then, create a new invoice (the last one).
+        The recurring next date should be False.
+        """
+        group_can_terminate_contract = self.env.ref("contract.can_terminate_contract")
+        group_can_terminate_contract.users |= self.env.user
+        self.contract3.contract_line_ids.write({"date_start": "2018-03-01"})
+        self.contract3.recurring_create_invoice()
+        self.assertEqual(to_date("2018-04-01"), self.contract3.recurring_next_date)
+
+        action = self.contract3.action_terminate_contract()
+        wizard = (
+            self.env[action["res_model"]]
+            .with_context(action["context"])
+            .create(
+                {
+                    "terminate_date": "2018-04-02",
+                    "terminate_reason_id": self.terminate_reason.id,
+                    "terminate_comment": "terminate_comment",
+                }
+            )
+        )
+        wizard.terminate_contract()
+        # This is the last invoice
+        self.contract3.recurring_create_invoice()
+
+        # Recurring next date should be False
+        self.assertFalse(self.contract3.recurring_next_date)
+
     def test_terminate_date_before_last_date_invoiced(self):
         self.contract.recurring_create_invoice()
         self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-02-14"))

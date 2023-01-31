@@ -314,6 +314,8 @@ class ContractContract(models.Model):
         "contract_line_ids.is_canceled",
     )
     def _compute_recurring_next_date(self):
+        # Compute the recurring_next_date on the contract based on the one
+        # defined on line level.
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
                 lambda l: (
@@ -322,15 +324,11 @@ class ContractContract(models.Model):
                     and (not l.display_type or l.is_recurring_note)
                 )
             ).mapped("recurring_next_date")
-            # we give priority to computation from date_start if modified
-            if (
-                contract._origin
-                and contract._origin.date_start != contract.date_start
-                or not recurring_next_date
-            ):
-                super(ContractContract, contract)._compute_recurring_next_date()
-            else:
-                contract.recurring_next_date = min(recurring_next_date)
+            # Take the earliest or set it as False if contract is stopped
+            # (no recurring_next_date).
+            contract.recurring_next_date = (
+                min(recurring_next_date) if recurring_next_date else False
+            )
 
     @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):

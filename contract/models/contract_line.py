@@ -671,15 +671,11 @@ class ContractLine(models.Model):
             "date_end": date_end,
             "is_auto_renew": False,
             "manual_renew_needed": manual_renew_needed,
-            "recurring_next_date": self.get_next_invoice_date(
-                self.next_period_date_start,
-                self.recurring_invoicing_type,
-                self.recurring_invoicing_offset,
-                self.recurring_rule_type,
-                self.recurring_interval,
-                max_date_end=date_end,
-            ),
         }
+
+    def _prepare_value_for_contract_stop(self, date_end):
+        self.ensure_one()
+        return {"date_end": date_end}
 
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
@@ -699,6 +695,15 @@ class ContractLine(models.Model):
                     rec.write(
                         rec._prepare_value_for_stop(date_end, manual_renew_needed)
                     )
+                    if not rec.contract_id.line_recurrence:
+                        # FIXME: This should not happen. As recurring_next_date
+                        # is computed on contract from lines ones, the only
+                        # write({"date_end"}) on lines should be sufficent
+                        # The set_recurrence_field() on date_end should be
+                        # suppressed.
+                        rec.contract_id.write(
+                            rec._prepare_value_for_contract_stop(date_end)
+                        )
                     if post_message:
                         msg = _(
                             """Contract line for <strong>{product}</strong>
