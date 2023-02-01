@@ -9,7 +9,7 @@
 {
     "name": "Contract Payment Mode",
     "summary": "Payment mode in contracts and their invoices",
-    "version": "15.0.1.1.0",
+    "version": "15.0.1.1.1",
     "author": "Domatix, " "Tecnativa, " "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["contract", "account_payment_partner"],
