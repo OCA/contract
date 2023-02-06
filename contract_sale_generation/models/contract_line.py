@@ -40,7 +40,10 @@ class ContractLine(models.Model):
             )
             order_line.order_id = sale
         # Get other order line values from product onchange
+        uom = order_line['product_uom']
         order_line.product_id_change()
+        # Do set again the product_uom - the product_id_change function does reset it before
+        order_line['product_uom'] = uom
         sale_line_vals = order_line._convert_to_write(order_line._cache)
         # Insert markers
         name = self._insert_markers(dates[0], dates[1])
