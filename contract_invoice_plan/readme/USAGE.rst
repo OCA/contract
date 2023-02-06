@@ -1,0 +1,10 @@
+To use this module, you can do following
+
+#. Create new contract as per normal process
+#. Select option "Use Invoice Plan", recurring invoices tab will disappear and invoice line and invoice plan tab will appear
+#. Click on "=> Create Invoice Plan" link to open invoice planning wizard
+#. Do plan for number of installment, start date and interval
+#. Double check that each installment has correct plan percentage
+#. Button "Create Invoice by Plan" will be shown
+#. User can create only next bill or create all bills at the same time
+#. Once all invoices by plan are created, the button "Create Invoice by Plan" disappear
