@@ -29,7 +29,7 @@ class TestAgreementRebatePartnerCompanyGroup(TestAgreementRebate):
         self.invoice_member_2 = self.create_invoice(self.partner_member_2)
 
     def test_create_settlement_wo_filters_global_company_group(self):
-        """ Global rebate without filters apply to all company group members """
+        """Global rebate without filters apply to all company group members"""
         # Total by invoice: 3800 amount invoiced
         # 2 invoice members: 3800 * 2 = 7600
 
