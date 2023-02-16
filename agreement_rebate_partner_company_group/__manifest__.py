@@ -4,7 +4,7 @@
 {
     "name": "Agreement Rebate Partner Company Group",
     "summary": "Rebate agreements applied to all company group members",
-    "version": "13.0.1.0.0",
+    "version": "15.0.1.0.0",
     "development_status": "Beta",
     "category": "Contract",
     "website": "https://github.com/OCA/contract",
@@ -12,6 +12,5 @@
     "license": "AGPL-3",
     "application": False,
     "installable": True,
-    "depends": ["agreement_rebate", "partner_company_group"],
-    "data": [],
+    "depends": ["agreement_rebate", "base_partner_company_group"],
 }
