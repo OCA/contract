@@ -21,6 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[agreement_rebate_partner_company_group](agreement_rebate_partner_company_group/) | 15.0.1.0.0 |  | Rebate agreements applied to all company group members
 [contract](contract/) | 15.0.1.6.0 |  | Recurring - Contracts Management
 [contract_payment_mode](contract_payment_mode/) | 15.0.1.1.1 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 15.0.1.1.0 |  | Contract from Sale
