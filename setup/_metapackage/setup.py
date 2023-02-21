@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-contract Odoo addons",
     version=version,
     install_requires=[
+        'odoo-addon-agreement_rebate_partner_company_group>=15.0dev,<15.1dev',
         'odoo-addon-contract>=15.0dev,<15.1dev',
         'odoo-addon-contract_payment_mode>=15.0dev,<15.1dev',
         'odoo-addon-contract_sale>=15.0dev,<15.1dev',
