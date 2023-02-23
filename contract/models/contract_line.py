@@ -1258,6 +1258,7 @@ class ContractLine(models.Model):
     def _renew_extend_line(self, date_end):
         self.ensure_one()
         self.date_end = date_end
+        self._onchange_date_start()
         return self
 
     @api.multi
