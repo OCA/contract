@@ -3,7 +3,7 @@
 
 {
     "name": "Contract Sequence",
-    "version": "14.0.0.0.1",
+    "version": "14.0.1.0.0",
     "author": "Apulia Software, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "license": "AGPL-3",
