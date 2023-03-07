@@ -2375,7 +2375,7 @@ class TestContract(TestContractBase):
         vals = {
             "recurring_rule_type": "yearly",
             "recurring_interval": 2,
-            "date_start": to_date("2024-01-01"),
+            "date_start": to_date(fields.Datetime.now()),
         }
         vals2 = vals.copy()
         vals2["line_recurrence"] = False
