@@ -141,6 +141,18 @@ msgid "Agreement Types"
 msgstr "Tipos de Acuerdo"
 
 #. module: agreement_legal
+#: model:mail.activity.type,name:agreement_legal.mail_activity_review_agreement
+msgid "Agreement needs a review"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.actions.server,name:agreement_legal.ir_cron_test_acc_move_except_ir_actions_server
+#: model:ir.cron,cron_name:agreement_legal.ir_cron_test_acc_move_except
+#: model:ir.cron,name:agreement_legal.ir_cron_test_acc_move_except
+msgid "Agreement: Check to Review Days"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.actions.act_window,name:agreement_legal.action_agreement_report_order
 #: model:ir.actions.act_window,name:agreement_legal.agreement_dashboard_agreement
 #: model:ir.actions.act_window,name:agreement_legal.agreement_operations_agreement
@@ -177,6 +189,11 @@ msgstr ""
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_subtype_search_view
 msgid "Agreements Sub-Types Search"
+msgstr ""
+
+#. module: agreement_legal
+#: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_search_view
+msgid "Agreements to review"
 msgstr ""
 
 #. module: agreement_legal
@@ -455,6 +472,11 @@ msgstr "Fecha en que el contrato fue firmado por la Empresa."
 #: model:ir.model.fields,help:agreement_legal.field_agreement__partner_signed_date
 msgid "Date the contract was signed by the Partner."
 msgstr "Fecha en que el cliente firmó el contrato."
+
+#. module: agreement_legal
+#: model:ir.model.fields,help:agreement_legal.field_agreement__to_review_date
+msgid "Date used to warn us some days before agreement expires"
+msgstr ""
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.report_agreement_document
@@ -1065,6 +1087,16 @@ msgid "Returns"
 msgstr "Devoluciones"
 
 #. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__review_days
+msgid "Review Days"
+msgstr ""
+
+#. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement_type__review_user_id
+msgid "Review User"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__reviewed_user_id
 msgid "Reviewed By"
 msgstr "Revisado por"
@@ -1470,6 +1502,11 @@ msgid "Title:"
 msgstr "Título:"
 
 #. module: agreement_legal
+#: model:ir.model.fields,field_description:agreement_legal.field_agreement__to_review_date
+msgid "To Review Date"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement_stage__stage_type
 #: model_terms:ir.ui.view,arch_db:agreement_legal.partner_agreement_stage_search_view
 msgid "Type"
@@ -1509,6 +1546,11 @@ msgstr "Usar contenido de partes"
 #: model:res.groups,name:agreement_legal.group_agreement_user
 msgid "User"
 msgstr "Usuario"
+
+#. module: agreement_legal
+#: model:ir.model.fields,help:agreement_legal.field_agreement_type__review_user_id
+msgid "User assigned automatically the activity on review date"
+msgstr ""
 
 #. module: agreement_legal
 #: model:ir.model.fields,field_description:agreement_legal.field_agreement__version
@@ -1555,12 +1597,23 @@ msgid "When the agreement starts."
 msgstr "Cuando comienza el acuerdo."
 
 #. module: agreement_legal
+#: code:addons/agreement_legal/models/agreement.py:0
+#, python-format
+msgid "Your activity is going to end soon"
+msgstr ""
+
+#. module: agreement_legal
 #: model:ir.model.fields,help:agreement_legal.field_agreement_appendix__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_clause__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_recital__dynamic_content
 #: model:ir.model.fields,help:agreement_legal.field_agreement_section__dynamic_content
 msgid "compute dynamic Content"
 msgstr "calcular Contenido dinámico"
+
+#. module: agreement_legal
+#: model:mail.activity.type,summary:agreement_legal.mail_activity_review_agreement
+msgid "note"
+msgstr ""
 
 #. module: agreement_legal
 #: model_terms:ir.ui.view,arch_db:agreement_legal.view_project_agreement_kanban

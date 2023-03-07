@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
                         or False,
                     }
                 )
-                for line in order.order_line:
+                for line in order.order_line.filtered(lambda l: not l.display_type):
                     # Create agreement line
                     self.env["agreement.line"].create(
                         self._get_agreement_line_vals(line)
