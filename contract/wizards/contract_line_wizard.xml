@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_line_wizard_stop_form_view">
+        <field name="name">contract.line.stop.wizard.form (in contract)</field>
+        <field name="model">contract.line.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="contract_line_id" invisible="True" />
+                    <field string="Stop Date" name="date_end" required="True" />
+                    <field
+                        string="Is suspension without end date"
+                        name="manual_renew_needed"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="stop"
+                        string="Validate"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_line_wizard_plan_successor_form_view">
+        <field
+            name="name"
+        >contract.line.plan_successor.wizard.form (in contract)</field>
+        <field name="model">contract.line.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="contract_line_id" invisible="True" />
+                    <field name="date_start" required="True" />
+                    <field
+                        name="date_end"
+                        attrs="{'required': [('is_auto_renew', '=', True)]}"
+                    />
+                    <field name="is_auto_renew" />
+                </group>
+                <footer>
+                    <button
+                        name="plan_successor"
+                        string="Validate"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_line_wizard_stop_plan_successor_form_view">
+        <field
+            name="name"
+        >contract.line.stop_plan_successor.wizard.form (in contract)</field>
+        <field name="model">contract.line.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="contract_line_id" invisible="True" />
+                    <field
+                        string="Suspension Start Date"
+                        name="date_start"
+                        required="True"
+                    />
+                    <field
+                        string="Suspension End Date"
+                        name="date_end"
+                        required="True"
+                    />
+                    <field name="is_auto_renew" invisible="1" />
+                </group>
+                <footer>
+                    <button
+                        name="stop_plan_successor"
+                        string="Validate"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_line_wizard_uncancel_form_view">
+        <field
+            name="name"
+        >contract.line.stop_plan_successor.wizard.form (in contract)</field>
+        <field name="model">contract.line.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="contract_line_id" invisible="True" />
+                    <field name="recurring_next_date" required="True" />
+                </group>
+                <footer>
+                    <button
+                        name="uncancel"
+                        string="Validate"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

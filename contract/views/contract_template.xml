@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_template_form_view" model="ir.ui.view">
+        <field name="name">contract.template form view (in contract)</field>
+        <field name="model">contract.template</field>
+        <field name="arch" type="xml">
+            <form string="Contract Template">
+                <group name="name">
+                    <field name="name" />
+                </group>
+                <group name="group_main">
+                    <group name="group_main_left">
+                        <field name="contract_type" />
+                        <field name="journal_id" />
+                        <field name="pricelist_id" />
+                        <field
+                            name="company_id"
+                            options="{'no_create': True}"
+                            groups="base.group_multi_company"
+                        />
+                    </group>
+                </group>
+                <group name="group_invoice_lines" string="Contract Template Lines">
+                    <field
+                        name="contract_line_ids"
+                        widget="section_and_note_one2many"
+                        nolabel="1"
+                        colspan="2"
+                    >
+                        <tree>
+                            <control>
+                                <create string="Add a line" />
+                                <create
+                                    string="Add a section"
+                                    context="{'default_display_type': 'line_section'}"
+                                />
+                                <create
+                                    string="Add a note"
+                                    context="{'default_display_type': 'line_note'}"
+                                />
+                            </control>
+                            <field name="display_type" invisible="1" />
+                            <field name="sequence" widget="handle" />
+                            <field name="product_id" />
+                            <field name="name" widget="section_and_note_text" />
+                            <field name="quantity" />
+                            <field name="uom_id" />
+                            <field
+                                name="automatic_price"
+                                attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"
+                            />
+                            <field
+                                name="price_unit"
+                                attrs="{'readonly': [('automatic_price', '=', True)]}"
+                            />
+                            <field name="specific_price" invisible="1" />
+                            <field name="discount" groups="base.group_no_one" />
+                            <field name="price_subtotal" />
+                            <field name="recurring_rule_type" invisible="1" />
+                            <field name="recurring_interval" invisible="1" />
+                            <field name="recurring_invoicing_type" invisible="1" />
+                        </tree>
+                    </field>
+                </group>
+                <group
+                    name="group_legend"
+                    string="Legend (for the markers inside invoice lines description)"
+                >
+                    <div colspan="2">
+                        <p> <strong
+                            >#START#</strong>: Start date of the invoiced period</p>
+                        <p> <strong>#END#</strong>: End date of the invoiced period</p>
+                    </div>
+                </group>
+            </form>
+        </field>
+    </record>
+    <!--TREE view-->
+    <record id="contract_template_tree_view" model="ir.ui.view">
+        <field name="name">contract.template tree view (in contract)</field>
+        <field name="model">contract.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="contract_type" />
+                <field name="pricelist_id" />
+            </tree>
+        </field>
+    </record>
+    <!--SEARCH view-->
+    <record id="contract_template_search_view" model="ir.ui.view">
+        <field name="name">contract.template search view (in contract)</field>
+        <field name="model">contract.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="contract_type" />
+                <field name="pricelist_id" />
+                <field name="journal_id" />
+                <filter
+                    name="contract_type"
+                    string="Contract Type"
+                    context="{'group_by': 'contract_type'}"
+                />
+                <filter
+                    name="pricelist_id"
+                    string="Pricelist"
+                    context="{'group_by': 'pricelist_id'}"
+                />
+                <filter
+                    name="journal_id"
+                    string="Journal"
+                    context="{'group_by': 'journal_id'}"
+                />
+            </search>
+        </field>
+    </record>
+    <!--ACTION-->
+    <record id="contract_template_action" model="ir.actions.act_window">
+        <field name="name">Contract Templates</field>
+        <field name="res_model">contract.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="contract_template_search_view" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract template.
+            </p>
+        </field>
+    </record>
+    <menuitem
+        id="contract_template_menu"
+        parent="menu_config_contract"
+        action="contract_template_action"
+        sequence="1"
+    />
+</odoo>

@@ -1,0 +1,2795 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * contract
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-17 13:50+0000\n"
+"PO-Revision-Date: 2022-04-07 14:05+0000\n"
+"Last-Translator: juliap98 <julia.paga@qubiq.es>\n"
+"Language-Team: Catalan (https://www.transifex.com/oca/teams/23907/ca/)\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3.2\n"
+
+#. module: contract
+#: model:mail.template,body_html:contract.email_contract_template
+msgid ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
+"                <p>A new contract has been created: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object.name"
+"\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-out="
+"\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-href="
+"\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)\" t-"
+"out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-out="
+"\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>If you have any questions, do not hesitate to contact us."
+"</p>\n"
+"                <p>Thank you for choosing <t t-out=\"object.company_id.name "
+"or 'us'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out="
+"\"object.company_id.name\"/></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
+"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
+"no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">View "
+"contract</a>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Hola <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
+"                <p>Un nou contracte ha estat creat: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERÈNCIES</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contracte: <strong t-out=\"object."
+"name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Data d'inici del contracte: <t t-"
+"out=\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;El teu contacte: <a t-att-"
+"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
+"name)\" t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;El teu contacte: <t t-out="
+"\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Si tens qualsevol pregunta, no dubtis a contactar amb "
+"nosaltres.</p>\n"
+"                <p>Gràcies per triar <t t-out=\"object.company_id.name or '-"
+"nos'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out="
+"\"object.company_id.name\"/></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
+"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
+"no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">View "
+"contract</a>\n"
+"            </div>\n"
+"        "
+
+#. module: contract
+#: model:mail.template,body_html:contract.mail_template_contract_modification
+msgid ""
+"<p>Hello</p>\n"
+"            <p>We have modifications on the contract that we want to notify "
+"you.</p>\n"
+"        "
+msgstr ""
+"<p>Hola</p>\n"
+"            <p>Tenim modificacions al contracte que us volem comunicar.</p>\n"
+"        "
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
+msgid ""
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"                                contract to invoice\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible': "
+"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                                contracts to invoice\n"
+"                            </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"                                contracte a facturar\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible': "
+"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                                contractes a facturar\n"
+"                            </span>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Subtotal</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid ""
+"<strong>#END#</strong>\n"
+"                                    : End date\n"
+"                                    of\n"
+"                                    the\n"
+"                                    invoiced period"
+msgstr ""
+"<strong>#END#</strong>\n"
+"                                    : Data final\n"
+"                                    del\n"
+"                                    període\n"
+"                                    facturat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "<strong>#END#</strong>: End date of the invoiced period"
+msgstr "<strong>#END#</strong>: Data final del periode facturat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid ""
+"<strong>#START#</strong>\n"
+"                                    : Start\n"
+"                                    date\n"
+"                                    of the\n"
+"                                    invoiced period"
+msgstr ""
+"<strong>#START#</strong>\n"
+"                                    : Data\n"
+"                                    inicial\n"
+"                                    del període\n"
+"                                    facturat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "<strong>#START#</strong>: Start date of the invoiced period"
+msgstr "<strong>#START#</strong>: Data inicial del periode facturat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Contract: </strong>"
+msgstr "<strong>Contracte: </strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Customer:</strong>"
+msgstr "<strong>Client/a:</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Date Start</strong>"
+msgstr "<strong>Data Inicial</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Date end</strong>"
+msgstr "<strong>Data final</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Date of Next Invoice</strong>"
+msgstr "<strong>Data de la propera factura</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Description</strong>"
+msgstr "<strong>Descripció</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Modifications</strong>"
+msgstr "<strong>Modificacions</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Notes: </strong>"
+msgstr "<strong>Notes:</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Partner:</strong>"
+msgstr "<strong>Tercer:</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Price</strong>"
+msgstr "<strong>Preu</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>Quantitat</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Recurring Items</strong>"
+msgstr "<strong>Ítems recurrents</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Reference</strong>"
+msgstr "<strong>Referència</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Responsible: </strong>"
+msgstr "<strong>Responsable: </strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>Responsable:</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Unit Price</strong>"
+msgstr "<strong>Preu unitari</strong>"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "A canceled contract line can't be set to auto-renew"
+msgstr "Una línia de contracte cancel·lat no es pot activar per auto-renovar"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "A contract line with a successor can't be set to auto-renew"
+msgstr ""
+"Una línia de contracte amb una successora no pot estar en mode auto-renovar"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "A contract line with a successor must have a end date"
+msgstr "Una línia de contracte amb una successora ha de tenir una data de fi"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_abstract_contract
+msgid "Abstract Recurring Contract"
+msgstr "Contracte recurrent abstracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_abstract_contract_line
+msgid "Abstract Recurring Contract Line"
+msgstr "Línia de contracte recurrent abstracta"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
+msgid "Access warning"
+msgstr "Alerta d'accés"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
+msgid "Action Needed"
+msgstr "Acció necessària"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__active
+#: model:ir.model.fields,field_description:contract.field_contract_line__active
+msgid "Active"
+msgstr "Actiu"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_ids
+msgid "Activities"
+msgstr "Activitats"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decorador de l'excepció de l'activitat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
+msgid "Activity State"
+msgstr "Estat de l'Activitat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icona del tipus d'activitat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Add a line"
+msgstr "Afegir línia"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Add a note"
+msgstr "Afegir nota"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Add a section"
+msgstr "Afegir secció"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "An auto-renew line must have a end date"
+msgstr "Una línia amb auto-renovació ha de tenir una data de fi"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Etiqueta analítica"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
+msgid "Analytic account"
+msgstr "Compte analític"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Archived"
+msgstr "Arxivat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Are you sure you want to cancel this line"
+msgstr "Esta segur de voler cancel·lar aquesta línia"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Are you sure you want to re-activate this contract?"
+msgstr "Està segur/a de voler reactivar aquest contracte?"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
+msgid "Are you sure you want to terminate this contract?"
+msgstr "Està segur/a de voler cancel·lar aquest contracte?"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Associated Partner"
+msgstr "Tercer Associat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre d'adjunts"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_auto_renew
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
+msgid "Auto Renew"
+msgstr "Renovació automàtica"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__automatic_price
+#: model:ir.model.fields,field_description:contract.field_contract_line__automatic_price
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__automatic_price
+msgid "Auto-price?"
+msgstr "Preu automàtic?"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_recurrency_basic_mixin
+msgid "Basic recurrency mixin for abstract contract models"
+msgstr "Mixin bàsic de moneda per a models de contracte abstractes"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_plan_successor_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_uncancel_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
+msgid "Cancel"
+msgstr "Cancel·lar"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Cancel Contract Termination"
+msgstr "Cancel·lar la finalització del contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_cancel_allowed
+msgid "Cancel allowed?"
+msgstr "Es permet cancel·lar?"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Cancel not allowed for this line"
+msgstr "La cancel·lació no està permesa per a aquesta línia"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_canceled
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_canceled
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__canceled
+msgid "Canceled"
+msgstr "Cancel·lat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_uom_category_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
+msgid "Category"
+msgstr "Categoria"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__generation_type
+#: model:ir.model.fields,help:contract.field_contract_contract__generation_type
+#: model:ir.model.fields,help:contract.field_contract_template__generation_type
+msgid "Choose the document that will be automatically generated by cron."
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.actions.act_window,help:contract.contract_template_action
+msgid "Click to create a new contract template."
+msgstr "Click per crear un nou model de contracte."
+
+#. module: contract
+#: model_terms:ir.actions.act_window,help:contract.action_customer_contract
+#: model_terms:ir.actions.act_window,help:contract.action_supplier_contract
+msgid "Click to create a new contract."
+msgstr "Click per crear un nou contracte."
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__closed
+msgid "Closed"
+msgstr "Tancat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_tag__color
+msgid "Color Index"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Commercial Entity"
+msgstr "Entitat comercial"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Communication"
+msgstr "Comunicació"
+
+#. module: contract
+#: model:ir.model,name:contract.model_res_company
+msgid "Companies"
+msgstr "Companyies"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_tag__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_template__company_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid "Compose Email"
+msgstr "Redacta Email"
+
+#. module: contract
+#: model:ir.model,name:contract.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuració"
+
+#. module: contract
+#: model:ir.model,name:contract.model_res_partner
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: contract
+#: model:ir.actions.report,name:contract.report_contract
+#: model:ir.model,name:contract.model_contract_contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__contract_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__contract_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__contract_id
+#: model:ir.model.fields,field_description:contract.field_contract_modification__contract_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__contract_id
+#: model:mail.template,report_name:contract.email_contract_template
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
+msgid "Contract"
+msgstr "Contracte"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+msgid "Contract #"
+msgstr "Contracte #"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Contract -"
+msgstr "Contracte -"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
+msgid "Contract Contract Terminate"
+msgstr "Finalització de contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_line
+#: model:ir.model.fields,field_description:contract.field_account_move_line__contract_line_id
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__contract_line_id
+msgid "Contract Line"
+msgstr "Línia de Contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_line_wizard
+msgid "Contract Line Wizard"
+msgstr "Wizard Línia de contracte"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_line__predecessor_contract_line_id
+msgid "Contract Line origin of this one."
+msgstr "Origen del la línia de contracte."
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
+msgid "Contract Manually Create Invoice"
+msgstr "Crear manualment factura"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_manually_create_invoice
+msgid "Contract Manually Create Invoice Wizard"
+msgstr "Wizard Crear manualment factura"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_modification
+msgid "Contract Modification"
+msgstr "Modificació de contracte"
+
+#. module: contract
+#: model:mail.template,name:contract.mail_template_contract_modification
+msgid "Contract Modification Template"
+msgstr "Plantilla de modificació del contracte"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Contract Name"
+msgstr "Nom del Contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_tag
+#: model:ir.ui.menu,name:contract.contract_tag_menu
+msgid "Contract Tag"
+msgstr "Etiqueta de contracte"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.contract_tag_act_window
+msgid "Contract Tags"
+msgstr "Etiquetes de contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_template
+#: model:ir.model.fields,field_description:contract.field_contract_contract__contract_template_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Contract Template"
+msgstr "Model de Contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_template_line
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_line_form_view
+msgid "Contract Template Line"
+msgstr "Línia del Model de Contracte"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Contract Template Lines"
+msgstr "Línies del Model de Contracte"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.contract_template_action
+#: model:ir.ui.menu,name:contract.contract_template_menu
+msgid "Contract Templates"
+msgstr "Models de Contractes"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.contract_terminate_reason_act_window
+#: model:ir.model,name:contract.model_contract_terminate_reason
+#: model:ir.ui.menu,name:contract.contract_terminate_reason_menu
+msgid "Contract Termination Reason"
+msgstr "Motiu de finalització de contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_ids
+msgid "Contract To Invoice"
+msgstr "Contracte a facturar"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_count
+msgid "Contract To Invoice Count"
+msgstr "Nombre de contractes a facturar"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__contract_type
+#: model:ir.model.fields,field_description:contract.field_contract_contract__contract_type
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_type
+#: model:ir.model.fields,field_description:contract.field_contract_template__contract_type
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
+msgid "Contract Type"
+msgstr "Tipus de Contracte"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line '%s' start date can't be later than end date"
+msgstr ""
+"Línia de Contracte '%s' la data d'inici no pot ser posterior a la data de fi"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line Un-canceled: %s"
+msgstr "Línia de contracte no cancel·lada: %s"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line and its predecessor overlapped"
+msgstr "La línia de contracte i les seves predecessores estan solapades"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line and its successor overlapped"
+msgstr "La línia de contracte i les seves successores estan solapades"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line canceled: %s"
+msgstr "Línia de contracte cancel·lada: %s"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"Contract line for <strong>%(product)s</strong>\n"
+"                            stopped: <br/>\n"
+"                            - <strong>End</strong>: %(old_end)s -- "
+"%(new_end)s\n"
+"                            "
+msgstr ""
+"Línia de contracte per a <strong>%(product)s</strong>\n"
+"                            aturat: <br/>\n"
+"                            - <strong>Final</strong>: %(old_end)s -- "
+"%(new_end)s\n"
+"                            "
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"Contract line for <strong>%(product)s</strong>\n"
+"                    planned a successor: <br/>\n"
+"                    - <strong>Start</strong>: %(new_date_start)s\n"
+"                    <br/>\n"
+"                    - <strong>End</strong>: %(new_date_end)s\n"
+"                    "
+msgstr ""
+"Línia de contracte per a <strong>%(product)s</strong>\n"
+"                    va planificar un successor: <br/>\n"
+"                    - <strong>Inici</strong>: %(new_date_start)s\n"
+"                    <br/>\n"
+"                    - <strong>Final</strong>: %(new_date_end)s\n"
+"                    "
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"Contract line for <strong>%(product)s</strong>\n"
+"                renewed: <br/>\n"
+"                - <strong>Start</strong>: %(new_date_start)s\n"
+"                <br/>\n"
+"                - <strong>End</strong>: %(new_date_end)s\n"
+"                "
+msgstr ""
+"Línia de contracte per a <strong>%(product)s</strong>\n"
+"                renovat: <br/>\n"
+"                - <strong>Inici</strong>: %(new_date_start)s\n"
+"                <br/>\n"
+"                - <strong>Final</strong>: %(new_date_end)s\n"
+"                "
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"Contract line for <strong>%(product)s</strong>\n"
+"                suspended: <br/>\n"
+"                - <strong>Suspension Start</strong>: %(new_date_start)s\n"
+"                <br/>\n"
+"                - <strong>Suspension End</strong>: %(new_date_end)s\n"
+"                "
+msgstr ""
+"Línia de contracte per a <strong>%(product)s</strong>\n"
+"                suspès: <br/>\n"
+"                - <strong>Inici de la suspensió</strong>: "
+"%(new_date_start)s\n"
+"                <br/>\n"
+"                - <strong>Fi de la suspensió</strong>: %(new_date_end)s\n"
+"                "
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Contract line must be canceled before delete"
+msgstr "La línia de Contracte ha de ser cancel·lada abans d'esborrar-la"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_ids
+msgid "Contract lines"
+msgstr "Línies de Contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_fixed_ids
+msgid "Contract lines (fixed)"
+msgstr "Línies de contracte (fixes)"
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid ""
+"Contract manually invoiced: <a    href=\"#\" data-oe-model=\"%(model_name)s"
+"\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
+msgstr ""
+"Contracte facturat manualment: <a href=\"#\" data-oe-model=\"%(model_name)s"
+"\" data-oe-id=\"%(rec_id)s\">Factura</a>"
+
+#. module: contract
+#: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
+msgid "Contract modifications"
+msgstr "Modificacions del contracte"
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid "Contract start"
+msgstr "Inici del contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
+msgid "Contract template lines"
+msgstr "Línies de model de Contracte"
+
+#. module: contract
+#: model:res.groups,name:contract.can_terminate_contract
+msgid "Contract: Can Terminate Contracts"
+msgstr "Contracte: Poden finalitzar contractes"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_partner__contract_ids
+#: model:ir.model.fields,field_description:contract.field_res_users__contract_ids
+#: model:ir.ui.menu,name:contract.menu_config_contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_menu_contract
+msgid "Contracts"
+msgstr "Contractes"
+
+#. module: contract
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+#, python-format
+msgid "Contracts to invoice"
+msgstr "Contractes a facturar"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__product_uom_category_id
+#: model:ir.model.fields,help:contract.field_contract_line__product_uom_category_id
+#: model:ir.model.fields,help:contract.field_contract_template_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"La conversió entre unitats de mesura només es pot produir si pertanyen a la "
+"mateixa categoria. La conversió es farà en funció de les ràtios."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
+#: model:ir.model.fields,field_description:contract.field_contract_line__create_invoice_visibility
+msgid "Create Invoice Visibility"
+msgstr "Visibilitat per crear factures"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
+msgid "Create Invoices"
+msgstr "Crear factures"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_company__create_new_line_at_contract_line_renew
+#: model:ir.model.fields,field_description:contract.field_res_config_settings__create_new_line_at_contract_line_renew
+msgid "Create New Line At Contract Line Renew"
+msgstr "Crear una nova línia quan es renovi la línia de contracte"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Create invoices"
+msgstr "Generar factures"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_line__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_modification__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_tag__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_template__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_line__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_modification__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_tag__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_template__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__note_invoicing_mode__custom
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__custom
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__custom
+msgid "Custom"
+msgstr "Personalitzat"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__contract_type__sale
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__contract_type__sale
+#: model:ir.model.fields.selection,name:contract.selection__contract_manually_create_invoice__contract_type__sale
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__contract_type__sale
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_customer_form_view
+msgid "Customer"
+msgstr "Client"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.action_customer_contract
+#: model:ir.ui.menu,name:contract.menu_contract_contract_customer
+msgid "Customer Contracts"
+msgstr "Contractes de Clients"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__access_url
+msgid "Customer Portal URL"
+msgstr "URL del client"
+
+#. module: contract
+#: code:addons/contract/controllers/main.py:0
+#: model:ir.model.fields,field_description:contract.field_contract_modification__date
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
+#, python-format
+msgid "Date"
+msgstr "Data"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Date End"
+msgstr "Data Fi"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Date Start"
+msgstr "Data Inici"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+msgid "Date end"
+msgstr "Data de fi"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_template__recurring_next_date
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_next_date
+msgid "Date of Next Invoice"
+msgstr "Data de Propera Factura"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Date of next invoice"
+msgstr "Data de la propera factura"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__termination_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__termination_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__daily
+msgid "Day(s)"
+msgstr "Dia(es)"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__note_invoicing_mode
+#: model:ir.model.fields,help:contract.field_contract_line__note_invoicing_mode
+#: model:ir.model.fields,help:contract.field_contract_template_line__note_invoicing_mode
+msgid ""
+"Defines when the Note is invoiced:\n"
+"- With previous line: If the previous line can be invoiced.\n"
+"- With next line: If the next line can be invoiced.\n"
+"- Custom: Depending on the recurrence to be define."
+msgstr ""
+"Defineix quan una nota es factura: \n"
+"- Amb la línia prèvia: Si la línia prèvia pot ser facturada.\n"
+"- Amb la línia següent: Si la línia següent pot ser facturada.\n"
+"- Personalitzada: Depenent de la recurrència definida."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__name
+#: model:ir.model.fields,field_description:contract.field_contract_line__name
+#: model:ir.model.fields,field_description:contract.field_contract_modification__description
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__name
+#: model_terms:ir.ui.view,arch_db:contract.contract_abstract_contract_line_form_view
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+#: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
+msgid "Description"
+msgstr "Descripció"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__discount
+#: model:ir.model.fields,field_description:contract.field_contract_line__discount
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__discount
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Discount (%)"
+msgstr "Descompte (%)"
+
+#. module: contract
+#: code:addons/contract/models/abstract_contract_line.py:0
+#, python-format
+msgid "Discount should be less or equal to 100"
+msgstr "El descompte ha de ser inferior o igual a 100"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__discount
+#: model:ir.model.fields,help:contract.field_contract_line__discount
+#: model:ir.model.fields,help:contract.field_contract_template_line__discount
+msgid ""
+"Discount that is applied in generated invoices. It should be less or equal "
+"to 100"
+msgstr ""
+"Descompte que s'aplicarà en les factures generades. Ha de ser inferior o "
+"igual a 100"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_line__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_modification__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_tag__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_template__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__display_name
+msgid "Display Name"
+msgstr "Nom a mostrar"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__display_type
+#: model:ir.model.fields,field_description:contract.field_contract_line__display_type
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__display_type
+msgid "Display Type"
+msgstr "Tipus de visualització"
+
+#. module: contract
+#: model:mail.template,name:contract.email_contract_template
+msgid "Email Contract Template"
+msgstr "Plantilla de contracte per correu electrònic"
+
+#. module: contract
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+#, python-format
+msgid ""
+"Failed to process the contract %(name)s [id: %(id)s]:\n"
+"%(ue)s"
+msgstr ""
+"No s'ha pogut tramitar el contracte%(name)s [id: %(id)s]:\n"
+"%(ue)s"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Finished"
+msgstr "Finalitzat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__fiscal_position_id
+msgid "Fiscal Position"
+msgstr "Posició fiscal"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_follower_ids
+msgid "Followers"
+msgstr "Seguidors"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidors (Tercers)"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icona Font Awesome p.e. fa-tasks"
+
+#. module: contract
+#: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
+#: model:ir.cron,cron_name:contract.contract_cron_for_invoice
+#: model:ir.cron,name:contract.contract_cron_for_invoice
+msgid "Generate Recurring Invoices from Contracts"
+msgstr "Generar Factures Recurrents des dels Contractes"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__generation_type
+#: model:ir.model.fields,field_description:contract.field_contract_contract__generation_type
+#: model:ir.model.fields,field_description:contract.field_contract_template__generation_type
+msgid "Generation Type"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__group_id
+msgid "Group"
+msgstr "Agrupar"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Group By..."
+msgstr "Agrupa Per..."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
+msgid "Has Message"
+msgstr "Té missatges"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__id
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__id
+#: model:ir.model.fields,field_description:contract.field_contract_line__id
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__id
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__id
+#: model:ir.model.fields,field_description:contract.field_contract_modification__id
+#: model:ir.model.fields,field_description:contract.field_contract_tag__id
+#: model:ir.model.fields,field_description:contract.field_contract_template__id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__id
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__id
+msgid "ID"
+msgstr "ID"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_icon
+msgid "Icon"
+msgstr "Icona"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icona per a indicar una excepció d'activitat."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_res_company__create_new_line_at_contract_line_renew
+#: model:ir.model.fields,help:contract.field_res_config_settings__create_new_line_at_contract_line_renew
+msgid ""
+"If checked, a new line will be generated at contract line renew and linked "
+"to the original one as successor. The default behavior is to extend the end "
+"date of the contract by a new subscription period"
+msgstr ""
+"Si està marcada, es generarà una nova línia quan es renovi la línia de "
+"contracte i s'enllaçarà a l'original com a successora. El comportament per "
+"defecte és ampliar la data de finalització del contracte mitjançant un nou "
+"període de subscripció"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
+#: model:ir.model.fields,help:contract.field_contract_contract__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Si està marcada, els nous missatges requeriran la teva atenció."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
+#: model:ir.model.fields,help:contract.field_contract_contract__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si està marcada, alguns missatges tenen un error d'entrega."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__automatic_price
+#: model:ir.model.fields,help:contract.field_contract_line__automatic_price
+#: model:ir.model.fields,help:contract.field_contract_template_line__automatic_price
+msgid ""
+"If this is marked, the price will be obtained automatically applying the "
+"pricelist to the product. If not, you will be able to introduce a manual "
+"price"
+msgstr ""
+"I està marcada, el preu s'obtindrà automàticament aplicant la tarifa del "
+"producte. Si no, podràs introduir un preu manualment"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_line__successor_contract_line_id
+msgid ""
+"In case of restart after suspension, this field contain the new contract "
+"line created."
+msgstr ""
+"En cas de reactivació després d'una suspensió, aquest camp conté la nova "
+"línia de contracte creada."
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "In progress"
+msgstr "En curs"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__in-progress
+msgid "In-progress"
+msgstr "En curs"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_count
+msgid "Invoice Count"
+msgstr "Nombre de Factures"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__invoice_date
+msgid "Invoice Date"
+msgstr "Data de factura"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_template__recurring_interval
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_interval
+msgid "Invoice Every"
+msgstr "Facturar Cada"
+
+#. module: contract
+#: model:mail.message.subtype,name:contract.mail_message_subtype_invoice_created
+msgid "Invoice created"
+msgstr "Factura creada"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_contract__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_recurrency_basic_mixin__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_recurrency_mixin__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_template__recurring_interval
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_interval
+msgid "Invoice every (Days/Week/Month/Year)"
+msgstr "Facturar Cada (Dies/Setmana/Mes/Any)"
+
+#. module: contract
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#, python-format
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
+msgid "Invoicing contact"
+msgstr "Contacte de Facturació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_template__recurring_invoicing_offset
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_offset
+msgid "Invoicing offset"
+msgstr "Tipus de facturació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_template__recurring_invoicing_type
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
+msgid "Invoicing type"
+msgstr "Tipus de Facturació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__is_auto_renew
+msgid "Is Auto Renew"
+msgstr "És la renovació automàtica"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
+msgid "Is Follower"
+msgstr "És un/a seguidor/a"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_recurring_note
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_recurring_note
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__is_recurring_note
+msgid "Is Recurring Note"
+msgstr "És una nota recurrent"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
+msgid "Is suspension without end date"
+msgstr "És una suspensió sense data de fi"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__journal_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract__journal_id
+#: model:ir.model.fields,field_description:contract.field_contract_template__journal_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
+msgid "Journal"
+msgstr "Diari"
+
+#. module: contract
+#: model:ir.model,name:contract.model_account_move
+msgid "Journal Entry"
+msgstr "Assentament"
+
+#. module: contract
+#: model:ir.model,name:contract.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunt"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__last_date_invoiced
+#: model:ir.model.fields,field_description:contract.field_contract_contract__last_date_invoiced
+#: model:ir.model.fields,field_description:contract.field_contract_line__last_date_invoiced
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__last_date_invoiced
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__last_date_invoiced
+msgid "Last Date Invoiced"
+msgstr "Darrera Data de Facturació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_line____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_modification____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_tag____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_template____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason____last_update
+msgid "Last Modified on"
+msgstr "Darrera Modificació el"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_line__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_modification__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_tag__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_template__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__write_uid
+msgid "Last Updated by"
+msgstr "Darrera Actualització per"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_line__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_modification__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_tag__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_template__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__write_date
+msgid "Last Updated on"
+msgstr "Darrera Actualització el"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
+msgid "Legend (for the markers inside invoice lines description)"
+msgstr "Llegenda (pels marcadors de les descripcions de les línies de factura)"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Adjunt principal"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
+msgid "Manual Currency"
+msgstr "Moneda manual"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__manual_renew_needed
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__manual_renew_needed
+msgid "Manual Renew Needed"
+msgstr "Necessita renovació manual"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
+#: model:ir.ui.menu,name:contract.purchase_contract_manually_create_invoice_menu
+msgid "Manually Invoice Purchase Contracts"
+msgstr "Facturar manualment contractes de compra"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.sale_contract_manually_create_invoice_act_window
+#: model:ir.ui.menu,name:contract.sale_contract_manually_create_invoice_menu
+msgid "Manually Invoice Sale Contracts"
+msgstr "Facturar manialment contractes de venda"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__line_recurrence
+#: model:ir.model.fields,help:contract.field_contract_contract__line_recurrence
+#: model:ir.model.fields,help:contract.field_contract_template__line_recurrence
+msgid ""
+"Mark this check if you want to control recurrrence at line level instead of "
+"all together for the whole contract."
+msgstr ""
+"Marca aquest check si vols contrlar la recurrència a nivell de línia en "
+"comptes de la totalitat del contracte."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "Error d'Entrega de Missatge"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_ids
+msgid "Messages"
+msgstr "Missatges"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__modification_ids
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Modifications"
+msgstr "Modificacions"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__termination_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__termination_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__monthly
+msgid "Month(s)"
+msgstr "Mes(os)"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthlylastday
+msgid "Month(s) last day"
+msgstr "Darrer dia del mes"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Data límit de la meva activitat"
+
+#. module: contract
+#: code:addons/contract/controllers/main.py:0
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__name
+#: model:ir.model.fields,field_description:contract.field_contract_contract__name
+#: model:ir.model.fields,field_description:contract.field_contract_tag__name
+#: model:ir.model.fields,field_description:contract.field_contract_template__name
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__name
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_tree_view
+#, python-format
+msgid "Name"
+msgstr "Nom"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Data límit de la següent activitat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resum de la següent activitat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipus de la següent activitat"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Next Invoice"
+msgstr "Següent Factura"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line_wizard__recurring_next_date
+msgid "Next Invoice Date"
+msgstr "Data de la Següent Factura"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__next_period_date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__next_period_date_end
+msgid "Next Period End"
+msgstr "Fi del proper període"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__next_period_date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__next_period_date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__next_period_date_start
+msgid "Next Period Start"
+msgstr "Inici del proper període"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__display_type__line_note
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_note
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:contract.contract_abstract_contract_line_form_view
+msgid "Note"
+msgstr "Nota"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__note_invoicing_mode
+#: model:ir.model.fields,field_description:contract.field_contract_line__note_invoicing_mode
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__note_invoicing_mode
+msgid "Note Invoicing Mode"
+msgstr "Mode de facturació de la nota"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__note
+msgid "Notes"
+msgstr "Notes"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'accions"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_contract__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_recurrency_basic_mixin__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_recurrency_mixin__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_template__recurring_invoicing_offset
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_offset
+msgid ""
+"Number of days to offset the invoice from the period end date (in post-paid "
+"mode) or start date (in pre-paid mode)."
+msgstr ""
+"Nombre de dies de desfassament de la factura des de la data de fi del "
+"període (en mode post-pagament) o data d'inici del període (en mode pre-"
+"pagament)."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'errors"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Nombre de missatges que requereixen una acció"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de missatges amb error d'entrega"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Nombre de missatges no llegits"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
+#: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
+#: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
+msgid "Old Contract"
+msgstr "Contracte antic"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Other Information"
+msgstr "Altra informació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__partner_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
+#: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__payment_term_id
+msgid "Payment Terms"
+msgstr "Terminis de pagament"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Plan Start"
+msgstr "Inici del pla"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_plan_successor_allowed
+msgid "Plan successor allowed?"
+msgstr "Permetre successors del pla?"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Plan successor not allowed for this line"
+msgstr "Successor del pla no està permès per aquesta línia"
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid ""
+"Please define a %(contract_type)s journal for the company '%(company)s'."
+msgstr ""
+"Si us plau definiu a %(contract_type)s diari per a l'empresa '%(company)s'."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
+msgid "Portal Access URL"
+msgstr "URL d'accés al portal"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_invoicing_type__post-paid
+msgid "Post-paid"
+msgstr "Post-pagat"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_invoicing_type__pre-paid
+msgid "Pre-paid"
+msgstr "Pre-pagat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__predecessor_contract_line_id
+msgid "Predecessor Contract Line"
+msgstr "Línia de contracte predecessora"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Preview"
+msgstr "Previsualització"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Price unit"
+msgstr "Preu unitari"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__pricelist_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id
+#: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
+msgid "Pricelist"
+msgstr "Llista de preus"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__product_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
+msgid "Product"
+msgstr "Producte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_partner__purchase_contract_count
+#: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
+#: model_terms:ir.ui.view,arch_db:contract.view_partner_form
+msgid "Purchase Contracts"
+msgstr "Contractes de Compra"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__quantity
+#: model:ir.model.fields,field_description:contract.field_contract_line__quantity
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__quantity
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Quantity"
+msgstr "Quantitat"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__quarterly
+msgid "Quarter(s)"
+msgstr "Quatrimestre(s)"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_line__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_basic_mixin__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_recurrency_mixin__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_template__recurring_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_rule_type
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Recurrence"
+msgstr "Recurrència"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__line_recurrence
+#: model:ir.model.fields,field_description:contract.field_contract_contract__line_recurrence
+#: model:ir.model.fields,field_description:contract.field_contract_template__line_recurrence
+msgid "Recurrence at line level?"
+msgstr "Recurrència a nivell de línia?"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_recurrency_mixin
+msgid "Recurrency mixin for contract models"
+msgstr "Mix de recurrència pels models de contracte"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Recurring Invoices"
+msgstr "Factures Recurrents"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Recurring Type"
+msgstr ""
+
+#. module: contract
+#: code:addons/contract/controllers/main.py:0
+#: model:ir.model.fields,field_description:contract.field_contract_contract__code
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+#, python-format
+msgid "Reference"
+msgstr "Referència"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Renew"
+msgstr "Renovar"
+
+#. module: contract
+#: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
+#: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
+#: model:ir.cron,name:contract.contract_line_cron_for_renew
+msgid "Renew Contract lines"
+msgstr "Renovar línies de Contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__auto_renew_interval
+#: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_interval
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_interval
+msgid "Renew Every"
+msgstr "Renovar Cada"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__auto_renew_interval
+#: model:ir.model.fields,help:contract.field_contract_line__auto_renew_interval
+#: model:ir.model.fields,help:contract.field_contract_template_line__auto_renew_interval
+msgid "Renew every (Days/Week/Month/Year)"
+msgstr "Renovar cada (Dies/Setmana/Mes/Any)"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__auto_renew_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_line__auto_renew_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__auto_renew_rule_type
+msgid "Renewal type"
+msgstr "Tipus de Renovació"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_comment_required
+#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__terminate_comment_required
+msgid "Require a termination comment"
+msgstr "La finalització requereix un comentari"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Usuari Responsable"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error d'entrega de SMS"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
+#: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
+#: model_terms:ir.ui.view,arch_db:contract.view_partner_form
+msgid "Sale Contracts"
+msgstr "Contractes de Venda"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__display_type__line_section
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_section
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:contract.contract_abstract_contract_line_form_view
+msgid "Section"
+msgstr "Secció"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
+msgid "Security Token"
+msgstr "Token de seguretat"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__semesterly
+msgid "Semester(s)"
+msgstr "Semestre(s)"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Send by Email"
+msgstr "Enviar per Email"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_modification__sent
+msgid "Sent"
+msgstr "Enviat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
+#: model:ir.model.fields,field_description:contract.field_contract_line__sequence
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__sequence
+msgid "Sequence"
+msgstr "Seqüència"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__sequence
+#: model:ir.model.fields,help:contract.field_contract_line__sequence
+#: model:ir.model.fields,help:contract.field_contract_template_line__sequence
+msgid "Sequence of the contract line when displaying contracts"
+msgstr "Seqüència de la línia de contracte qua es visualitzin els contractes"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.view_partner_form
+msgid "Show the purchase contracts for this partner"
+msgstr "Mostrar els contractes de compra per a aquest tercer"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.view_partner_form
+msgid "Show the sale contracts for this partner"
+msgstr "Mostrar els contractes de venda per a aquest tercer"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__specific_price
+#: model:ir.model.fields,field_description:contract.field_contract_line__specific_price
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__specific_price
+msgid "Specific Price"
+msgstr "Preu Específic"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_contract__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_recurrency_basic_mixin__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_recurrency_mixin__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_template__recurring_rule_type
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
+msgid "Specify Interval for automatic invoice generation."
+msgstr "Especifica un intèrval per la generació automàtica de factures."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__auto_renew_rule_type
+#: model:ir.model.fields,help:contract.field_contract_line__auto_renew_rule_type
+#: model:ir.model.fields,help:contract.field_contract_template_line__auto_renew_rule_type
+msgid "Specify Interval for automatic renewal."
+msgstr "Especifica un interval per la renovació automàtica."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_contract__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_line__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_recurrency_basic_mixin__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_recurrency_mixin__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_template__recurring_invoicing_type
+#: model:ir.model.fields,help:contract.field_contract_template_line__recurring_invoicing_type
+msgid ""
+"Specify if the invoice must be generated at the beginning (pre-paid) or end "
+"(post-paid) of the period."
+msgstr ""
+"Especifica si la factura ha de ser generada al principi (pre-pagada) o al "
+"final (post-pagada) del període."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__state
+msgid "State"
+msgstr "Estat"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estat basat en les activitats\n"
+"Caducada: La data de finalització ja ha passat\n"
+"Avui: La data de l'activitat és avui\n"
+"Planificada: Activitats futures."
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Stop"
+msgstr "Aturar"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
+msgid "Stop Date"
+msgstr "Data d'aturada"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Stop Plan Successor"
+msgstr "Aturar pla successor"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_allowed
+msgid "Stop allowed?"
+msgstr "Aturada permesa?"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Stop not allowed for this line"
+msgstr "Aturada no permesa per aquesta línia"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_stop_plan_successor_allowed
+msgid "Stop/Plan successor allowed?"
+msgstr "Permetre aturar/planificar successor?"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Stop/Plan successor not allowed for this line"
+msgstr "Aturar/planificar successor no està permès per aquesta línia"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_subtotal
+#: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "Sub Total"
+msgstr "Subtotal"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__successor_contract_line_id
+msgid "Successor Contract Line"
+msgstr "Línia de contracte successora"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__contract_type__purchase
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__contract_type__purchase
+#: model:ir.model.fields.selection,name:contract.selection__contract_manually_create_invoice__contract_type__purchase
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__contract_type__purchase
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_supplier_form_view
+msgid "Supplier"
+msgstr "Proveïdor"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.action_supplier_contract
+#: model:ir.ui.menu,name:contract.menu_contract_contract_supplier
+msgid "Supplier Contracts"
+msgstr "Contractes de Proveïdors"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
+msgid "Suspension End Date"
+msgstr "Data de fi de la suspensió"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
+msgid "Suspension Start Date"
+msgstr "Data d'inici de la suspensió"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__tag_ids
+msgid "Tags"
+msgstr "Etiquetes"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__display_type
+#: model:ir.model.fields,help:contract.field_contract_line__display_type
+#: model:ir.model.fields,help:contract.field_contract_template_line__display_type
+msgid "Technical field for UX purpose."
+msgstr "Camp tècnic per fins de UX."
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
+#, python-format
+msgid "Terminate Contract"
+msgstr "Finalitzar contracte"
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_contract_terminate
+msgid "Terminate Contract Wizard"
+msgstr "Wizard finalitzar contracte"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__is_terminated
+msgid "Terminated"
+msgstr "Finalitzat"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__terminate_comment
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_comment
+msgid "Termination Comment"
+msgstr "Comentari de finalització"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__terminate_date
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_date
+msgid "Termination Date"
+msgstr "Data de finalització"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_interval
+#: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_interval
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_interval
+msgid "Termination Notice Before"
+msgstr "Avís de finalització previ"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_date
+msgid "Termination Notice Date"
+msgstr "Data de l'avís de finalització"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__termination_notice_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_line__termination_notice_rule_type
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__termination_notice_rule_type
+msgid "Termination Notice type"
+msgstr "Tipus d'avís de finalització"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__terminate_reason_id
+#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_reason_id
+msgid "Termination Reason"
+msgstr "Motiu de finalització"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "This contract was terminated for the reason"
+msgstr "Aquest contracte ha estat finalitzat per"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_line__manual_renew_needed
+#: model:ir.model.fields,help:contract.field_contract_line_wizard__manual_renew_needed
+msgid ""
+"This flag is used to make a difference between a definitive stopand "
+"temporary one for which a user is not able to plan asuccessor in advance"
+msgstr ""
+"Aquest flag és emprat per diferenciar entre una definitiva i una temporal "
+"per un usuari que no està capacitat per planificar una successora per avançat"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__to-renew
+msgid "To renew"
+msgstr "A renovar"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipus d'excepció d'activitat en registre."
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__is_un_cancel_allowed
+msgid "Un-Cancel allowed?"
+msgstr "És permesa la reactivació?"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Un-cancel"
+msgstr "Reactivar"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "Un-cancel not allowed for this line"
+msgstr "Reactivació no permesa per aquesta línia"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__price_unit
+#: model:ir.model.fields,field_description:contract.field_contract_line__price_unit
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__price_unit
+msgid "Unit Price"
+msgstr "Preu Unitari"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__uom_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__uom_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
+msgid "Unit of Measure"
+msgstr "Unitat de Mesura"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
+msgid "Unread Messages"
+msgstr "Missatges no Llegits"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Comptador de missatges no llegits"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming
+msgid "Upcoming"
+msgstr "Properes"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming-close
+msgid "Upcoming Close"
+msgstr "Propers tancaments"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "Update Termination Details"
+msgstr "Actualitzar detalls de finalització"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "VAT:"
+msgstr "NIF:"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_plan_successor_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_uncancel_form_view
+msgid "Validate"
+msgstr "Validar"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Missatges del Web"
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicació del Web"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__termination_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__termination_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__termination_notice_rule_type__weekly
+msgid "Week(s)"
+msgstr "Setmana(es)"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__note_invoicing_mode__with_next_line
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_next_line
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__with_next_line
+msgid "With next line"
+msgstr "Amb línia següent"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__note_invoicing_mode__with_previous_line
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_previous_line
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__with_previous_line
+msgid "With previous line"
+msgstr "Amb línia prèvia"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
+msgid "With running contracts"
+msgstr "Amb contactes en curs"
+
+#. module: contract
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_line__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_basic_mixin__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_recurrency_mixin__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__yearly
+msgid "Year(s)"
+msgstr "Any(s)"
+
+#. module: contract
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid "You are not allowed to terminate contracts."
+msgstr "No tens permisos per finalitzar contractes."
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "You can't delay a contract line invoiced at least one time."
+msgstr ""
+"No pots endarrerir una línia de contracte facturada com a mínim un cop."
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"You can't have a date of next invoice anterior to the start of the contract "
+"line '%s'"
+msgstr ""
+"No es pot tenir una data de propera factura anterior a l'inici de la línia "
+"de contracte '%s'"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"You can't have the end date before the date of last invoice for the contract "
+"line '%s'"
+msgstr ""
+"No es pot tenir la data de fi prècia a la data de la darrera factura a la "
+"línia de contracte '%s'"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"You can't have the next invoice date before the date of last invoice for the "
+"contract line '%s'"
+msgstr ""
+"No es pot tenir la data de la propera factura anterior a la data de la "
+"darrera factura per la línia de contracte. '%s'"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid ""
+"You can't have the start date after the date of last invoice for the "
+"contract line '%s'"
+msgstr ""
+"No es pot tenir la data d'inici posterior a la data de la darrera factura "
+"per la línia de factura '%s'"
+
+#. module: contract
+#: code:addons/contract/models/contract_line.py:0
+#, python-format
+msgid "You must supply a date of next invoice for contract line '%s'"
+msgstr "Has de posar una data de propera factura a la línia de contracte '%s'"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "e.g. Contract XYZ"
+msgstr "p.ex. Contracte XYZ"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "on"
+msgstr "a"
+
+#. module: contract
+#: model:mail.template,subject:contract.email_contract_template
+msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+"{{ object.company_id.name }} Contracte (Ref {{ object.name or 'n/a' }})"
+
+#. module: contract
+#: model:mail.template,subject:contract.mail_template_contract_modification
+msgid ""
+"{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
+"Modifications"
+msgstr ""
+"{{ object.company_id.name }} Contracte (Ref {{ object.name or 'n/a' }}) - "
+"Modificacions"
+
+#~ msgid ""
+#~ "\n"
+#~ "            <p>Hello</p>\n"
+#~ "            <p>We have modifications on the contract that we want to "
+#~ "notify you.</p>\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>Hola</p>\n"
+#~ "            <p>Hi ha modificacions al contracte que volem notificar-li.</"
+#~ "p>\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "    <p>Hello ${object.partner_id.name or ''},</p>\n"
+#~ "    <p>A new contract has been created: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
+#~ "       % if object.date_start:\n"
+#~ "       &nbsp;&nbsp;Contract Date Start: ${object.date_start or ''}<br />\n"
+#~ "       % endif\n"
+#~ "\n"
+#~ "       % if object.user_id:\n"
+#~ "       % if object.user_id.email:\n"
+#~ "       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email "
+#~ "or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+#~ "       % else:\n"
+#~ "       &nbsp;&nbsp;Your Contact: ${object.user_id.name}\n"
+#~ "       % endif\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any questions, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone: ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web: <a href=\"${object.company_id.website}\">${object."
+#~ "company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "    <p></p>\n"
+#~ "    <a href=\"${object.get_base_url()}/my/contracts/${object.id}?"
+#~ "access_token=${object.access_token}\" target=\"_blank\" style="
+#~ "\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: "
+#~ "none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</"
+#~ "a>\n"
+#~ "</div>\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "    <p>Hola ${object.partner_id.name or ''},</p>\n"
+#~ "    <p>S'ha creat un nou contracte: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERÈNCIES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Contracte: <strong>${object.name}</strong><br />\n"
+#~ "       % if object.date_start:\n"
+#~ "       &nbsp;&nbsp;Data d'inici: ${object.date_start or ''}<br />\n"
+#~ "       % endif\n"
+#~ "\n"
+#~ "       % if object.user_id:\n"
+#~ "       % if object.user_id.email:\n"
+#~ "       &nbsp;&nbsp;Persona de contacte: <a href=\"mailto:${object.user_id."
+#~ "email or ''}?subject=Contracte%20${object.name}\">${object.user_id.name}</"
+#~ "a>\n"
+#~ "       % else:\n"
+#~ "       &nbsp;&nbsp;El seu contracte: ${object.user_id.name}\n"
+#~ "       % endif\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>No dubti en posar-se en contacte amb nosaltres per tal de fer "
+#~ "qualsevol aclariment.</p>\n"
+#~ "    <p>Gràcies per triar ${object.company_id.name or 'us'}!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Telèfon: ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web: <a href=\"${object.company_id.website}\">${object."
+#~ "company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "    <p></p>\n"
+#~ "    <a href=\"${object.get_base_url()}/my/contracts/${object.id}?"
+#~ "access_token=${object.access_token}\" target=\"_blank\" style="
+#~ "\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration: "
+#~ "none; color: #fff; border-radius: 5px; font-size:13px;\">Veure el "
+#~ "contracte</a>\n"
+#~ "</div>\n"
+#~ "        "
+
+#~ msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
+#~ msgstr "${object.company_id.name} Contracte (Ref ${object.name or 'n/d'})"
+
+#~ msgid ""
+#~ "${object.company_id.name} Contract (Ref ${object.name or 'n/a'}) - "
+#~ "Modifications"
+#~ msgstr ""
+#~ "${object.company_id.name} Contracte (Ref ${object.name or 'n/a'}) - "
+#~ "Modificacions"
+
+#~ msgid "Contract line Un-canceled: %s<br/>- "
+#~ msgstr "Línia de contracte reactivada: %s<br/>- "
+
+#~ msgid "Contract line canceled: %s<br/>- "
+#~ msgstr "Línia de contracte cancel·lada: %s<br/>- "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                            stopped: <br/>\n"
+#~ "                            - <strong>End</strong>: {old_end} -- "
+#~ "{new_end}\n"
+#~ "                            "
+#~ msgstr ""
+#~ "Línia de contracte <strong>{product}</strong>\n"
+#~ "                            aturada: <br/>\n"
+#~ "                            - <strong>Fi</strong>: {old_end} -- "
+#~ "{new_end}\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                renewed: <br/>\n"
+#~ "                - <strong>Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Línia de contracte <strong>{product}</strong>\n"
+#~ "                renovada: <br/>\n"
+#~ "                - <strong>Inici</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Fi</strong>: {new_date_end}\n"
+#~ "                "
+
+#~ msgid ""
+#~ "Contract line for <strong>{product}</strong>\n"
+#~ "                suspended: <br/>\n"
+#~ "                - <strong>Suspension Start</strong>: {new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Suspension End</strong>: {new_date_end}\n"
+#~ "                "
+#~ msgstr ""
+#~ "Línia de contracte <strong>{product}</strong>\n"
+#~ "                suspesa: <br/>\n"
+#~ "                - <strong>Inici de la suspensió</strong>: "
+#~ "{new_date_start}\n"
+#~ "                <br/>\n"
+#~ "                - <strong>Fi de la suspensió</strong>: {new_date_end}\n"
+#~ "                "
+
+#~ msgid ""
+#~ "Contract manually invoiced: <a href=\"#\" data-oe-model=\"%s\" data-oe-id="
+#~ "\"%s\">Invoice</a>"
+#~ msgstr ""
+#~ "Contracte facturat manualment: <a href=\"#\" data-oe-model=\"%s\" data-oe-"
+#~ "id=\"%s\">Invoice</a>"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidors (Canals)"
+
+#~ msgid "Manual renew needed"
+#~ msgstr "Renovació manial requerida"
+
+#~ msgid "Please define a %s journal for the company '%s'."
+#~ msgstr "Si us plau estableixi un %s diari per a l'empresa '%s'."
+
+#~ msgid "Termination notice date"
+#~ msgstr "Data de l'avís de la finalització"
+
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "    <p>Hello ${object.partner_id.name or ''},</p>\n"
+#~ "    <p>A new contract has been created: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Contract: <strong>${object.name}</strong><br />\n"
+#~ "       % if object.date_start:\n"
+#~ "       &nbsp;&nbsp;Contract Date Start: ${object.date_start or ''}<br />\n"
+#~ "       % endif\n"
+#~ "\n"
+#~ "       % if object.user_id:\n"
+#~ "       % if object.user_id.email:\n"
+#~ "       &nbsp;&nbsp;Your Contact: <a href=\"mailto:${object.user_id.email "
+#~ "or ''}?subject=Contract%20${object.name}\">${object.user_id.name}</a>\n"
+#~ "       % else:\n"
+#~ "       &nbsp;&nbsp;Your Contact: ${object.user_id.name}\n"
+#~ "       % endif\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any questions, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone: ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web: <a href=\"${object.company_id.website}\">${object."
+#~ "company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "    <p>Hola ${object.partner_id.name or ''},</p>\n"
+#~ "    <p>S'ha creat un nou contracte: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERÈNCIES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Contracte: <strong>${object.name}</strong><br />\n"
+#~ "       % if object.date_start:\n"
+#~ "       &nbsp;&nbsp;Data Inici del Contracte: ${object.date_start or ''}"
+#~ "<br />\n"
+#~ "       % endif\n"
+#~ "\n"
+#~ "       % if object.user_id:\n"
+#~ "       % if object.user_id.email:\n"
+#~ "       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.user_id."
+#~ "email or ''}?subject=Contracte%20${object.name}\">${object.user_id.name}</"
+#~ "a>\n"
+#~ "       % else:\n"
+#~ "       &nbsp;&nbsp;El seu contacte: ${object.user_id.name}\n"
+#~ "       % endif\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>Si te qualsevol pregunta, no dubti a contactar-nos.</p>\n"
+#~ "    <p>Moltes gràcies per escollir ${object.company_id.name or '-nos'}!</"
+#~ "p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone: ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web: <a href=\"${object.company_id.website}\">${object."
+#~ "company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "        "
+
+#~ msgid ""
+#~ "<strong>#END#</strong>: End date\n"
+#~ "                                    of\n"
+#~ "                                    the\n"
+#~ "                                    invoiced period"
+#~ msgstr ""
+#~ "<strong>#END#</strong>: Data Final\n"
+#~ "                                    del\n"
+#~ "                                    periode facturat"
+
+#~ msgid ""
+#~ "<strong>#START#</strong>: Start\n"
+#~ "                                    date\n"
+#~ "                                    of the\n"
+#~ "                                    invoiced period"
+#~ msgstr ""
+#~ "<strong>#START#</strong>: Data inicial\n"
+#~ "                                    del\n"
+#~ "                                    període facturat"
+
+#~ msgid "Invoice"
+#~ msgstr "Factura"
+
+#~ msgid "Invoice Line"
+#~ msgstr "Línia de Factura"
+
+#~ msgid "Today"
+#~ msgstr "Avui"
+
+#~ msgid "account.analytic.invoice.line"
+#~ msgstr "account.analytic.invoice.line"
