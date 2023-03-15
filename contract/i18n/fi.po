@@ -242,12 +242,14 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Yksikköhinta</strong>"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr "Peruttua sopimusriviä ei voida laittaa uusiutumaan automaattisesti"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
@@ -256,6 +258,7 @@ msgstr ""
 "automaattisesti"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
@@ -326,16 +329,21 @@ msgid "Add a section"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "Automaattisesti uusittavalla rivillä täytyy olla päättymispäivä"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
-#, fuzzy
-msgid "Analytic Tags"
-msgstr "Analyyttinen tili"
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
+msgid "Analytic"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -418,6 +426,7 @@ msgid "Cancel allowed?"
 msgstr "Peruminen sallittu"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
@@ -494,6 +503,7 @@ msgid "Company"
 msgstr "Yritys"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Compose Email"
@@ -646,36 +656,42 @@ msgid "Contract Type"
 msgstr "Sopimustyyppi"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr "Sopimusrivin '%s' aloituspäivä ei voi olla päättymispäivän jälkeen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "Sopimusrivi ja sen edeltäjä ovat päällekkäin"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "Sopimusrivi ja sen seuraaja ovat päällekkäin"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -687,6 +703,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -699,6 +716,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -711,6 +729,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -723,6 +742,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line must be canceled before delete"
@@ -739,6 +759,7 @@ msgid "Contract lines (fixed)"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -752,6 +773,7 @@ msgid "Contract modifications"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract start"
@@ -779,6 +801,7 @@ msgid "Contracts"
 msgstr "Sopimukset"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid "Contracts to invoice"
@@ -844,7 +867,10 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__currency_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
 msgstr "Valuutta"
 
@@ -877,6 +903,7 @@ msgid "Customer Portal URL"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -980,6 +1007,7 @@ msgid "Discount (%)"
 msgstr "Alennus (%)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/abstract_contract_line.py:0
 #, python-format
 msgid "Discount should be less or equal to 100"
@@ -1023,6 +1051,7 @@ msgid "Email Contract Template"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid ""
@@ -1058,7 +1087,6 @@ msgstr ""
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
-#: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Luo toistuvaislaskuja sopimuksilta"
 
@@ -1122,7 +1150,6 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Jos valittu, uudet viestit vaativat toimenpiteitä."
 
@@ -1203,6 +1230,7 @@ msgid "Invoice every (Days/Week/Month/Year)"
 msgstr "Laskutusväli (päivää/viikkoa/kuukautta/vuotta)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #, python-format
@@ -1424,6 +1452,7 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__name
@@ -1532,11 +1561,6 @@ msgid "Number of messages with delivery error"
 msgstr "Monenko viestin kohdalla on tapahtunut toimitusvirhe"
 
 #. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Lukemattomien viestien määrä"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
@@ -1572,12 +1596,14 @@ msgid "Plan successor allowed?"
 msgstr "Sopimuksen seuraaja sallittu"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Sopimuksen seuraaja ei ole sallittu tälle riville"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -1706,6 +1732,7 @@ msgid "Recurring Type"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1722,7 +1749,6 @@ msgstr "Uusi"
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
-#: model:ir.cron,name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Uusi sopimusrivit"
 
@@ -1918,6 +1944,7 @@ msgid "Stop allowed?"
 msgstr "Päättäminen sallittu"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop not allowed for this line"
@@ -1929,6 +1956,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Päättäminen/sopimuksen seuraaja sallittu"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
@@ -1985,6 +2013,7 @@ msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
@@ -2081,6 +2110,7 @@ msgid "Un-cancel"
 msgstr "Peru peruminen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Un-cancel not allowed for this line"
@@ -2099,16 +2129,6 @@ msgstr "Yksikköhinta"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
 msgstr "Mittayksikkö"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
-msgid "Unread Messages"
-msgstr "Lukemattomat viestit"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming
@@ -2201,18 +2221,21 @@ msgid "Year(s)"
 msgstr "Vuotta"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr "Et voi viivästyttää sopimusriviä, jos sitä on jo laskutettu."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2222,6 +2245,7 @@ msgstr ""
 "Seuraavan laskun päiväys ei voi olla ennen sopimusrivin '%s' alkamispäivää"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2231,6 +2255,7 @@ msgstr ""
 "Sopimusrivin '%s' päättymispäivä ei voi olla ennen viimeisen laskun päiväystä"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2241,6 +2266,7 @@ msgstr ""
 "päiväystä '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2249,6 +2275,7 @@ msgid ""
 msgstr "Sopimusrivin '%s' alkupäivä ei voi olla päättymispäivän jälkeen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
@@ -2275,6 +2302,19 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Analytic Tags"
+#~ msgstr "Analyyttinen tili"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Lukemattomat viestit"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Lukemattomien viestien laskuri"
 
 #~ msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
 #~ msgstr "${object.company_id.name} Sopimus (Viite ${object.name or 'n/a'})"

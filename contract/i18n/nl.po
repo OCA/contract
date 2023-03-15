@@ -249,6 +249,7 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Prijs per eenheid</strong>"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
@@ -257,6 +258,7 @@ msgstr ""
 "verlengen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
@@ -265,6 +267,7 @@ msgstr ""
 "te verlengen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
@@ -335,15 +338,21 @@ msgid "Add a section"
 msgstr "Sectie toevoegen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "Een automatische verlengingsregel moet een einddatum hebben"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
-msgid "Analytic Tags"
-msgstr "Labels kostenplaats"
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
+msgid "Analytic"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -427,6 +436,7 @@ msgid "Cancel allowed?"
 msgstr "Annuleren toestaan?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
@@ -504,6 +514,7 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Compose Email"
@@ -660,36 +671,42 @@ msgid "Contract Type"
 msgstr "Soort Contract"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr "Contract '%s' startdatum kan niet later zijn dan einddatum"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "Contractregel en zijn voorganger overlappen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "Contractlijn en zijn opvolger overlappen elkaar"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -701,6 +718,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -713,6 +731,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -725,6 +744,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -737,6 +757,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line must be canceled before delete"
@@ -753,6 +774,7 @@ msgid "Contract lines (fixed)"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -766,6 +788,7 @@ msgid "Contract modifications"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract start"
@@ -793,6 +816,7 @@ msgid "Contracts"
 msgstr "Contracten"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, fuzzy, python-format
 msgid "Contracts to invoice"
@@ -860,7 +884,10 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__currency_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
 msgstr "Herhaling"
 
@@ -893,6 +920,7 @@ msgid "Customer Portal URL"
 msgstr "Klantportaal URL"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -996,6 +1024,7 @@ msgid "Discount (%)"
 msgstr "Korting (%)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/abstract_contract_line.py:0
 #, python-format
 msgid "Discount should be less or equal to 100"
@@ -1040,6 +1069,7 @@ msgid "Email Contract Template"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid ""
@@ -1075,7 +1105,6 @@ msgstr ""
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
-#: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Genereer terugkerende facturen van contracten"
 
@@ -1137,7 +1166,6 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt, vereisen nieuwe berichten uw aandacht."
 
@@ -1220,6 +1248,7 @@ msgid "Invoice every (Days/Week/Month/Year)"
 msgstr "Herhaal elke (dag/week/maand/jaar)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #, python-format
@@ -1444,6 +1473,7 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__name
@@ -1550,11 +1580,6 @@ msgid "Number of messages with delivery error"
 msgstr "Aantal berichten met bezorgfout"
 
 #. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
@@ -1590,12 +1615,14 @@ msgid "Plan successor allowed?"
 msgstr "Opvolger plannen toegestaan?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Plannen opvolger niet toegestaan voor deze regel"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -1724,6 +1751,7 @@ msgid "Recurring Type"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1740,7 +1768,6 @@ msgstr "Vernieuwen"
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
-#: model:ir.cron,name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Contractregels vernieuwen"
 
@@ -1934,6 +1961,7 @@ msgid "Stop allowed?"
 msgstr "Stoppen toegestaan?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop not allowed for this line"
@@ -1945,6 +1973,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Stoppen / Plannen opvolger toegestaan?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
@@ -2001,6 +2030,7 @@ msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
@@ -2098,6 +2128,7 @@ msgid "Un-cancel"
 msgstr "Terugdraaien van annuleren"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Un-cancel not allowed for this line"
@@ -2116,16 +2147,6 @@ msgstr "Prijs per eenheid"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
 msgstr "Maateenheid"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Aantal ongelezen berichten"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming
@@ -2218,12 +2239,14 @@ msgid "Year(s)"
 msgstr "Jaar/Jaren"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, fuzzy, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr "U mag geen contracten beindigen"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
@@ -2232,6 +2255,7 @@ msgstr ""
 "uitstellen."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2241,6 +2265,7 @@ msgstr ""
 "U kunt geen volgende factuurdatum vóór het begin van het contract '%s' hebben"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2251,6 +2276,7 @@ msgstr ""
 "contractregel '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, fuzzy, python-format
 msgid ""
@@ -2261,6 +2287,7 @@ msgstr ""
 "contractregel '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2271,6 +2298,7 @@ msgstr ""
 "contractregel '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
@@ -2297,6 +2325,18 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Labels kostenplaats"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Aantal ongelezen berichten"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ongelezen berichten"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Aantal ongelezen berichten"
 
 #~ msgid "${object.company_id.name} Contract (Ref ${object.name or 'n/a'})"
 #~ msgstr "${object.company_id.name} Contract (Ref ${object.name or 'n/b'})"
