@@ -334,12 +334,14 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Preu unitari</strong>"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr "Una línia de contracte cancel·lat no es pot activar per auto-renovar"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
@@ -347,6 +349,7 @@ msgstr ""
 "Una línia de contracte amb una successora no pot estar en mode auto-renovar"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
@@ -417,15 +420,21 @@ msgid "Add a section"
 msgstr "Afegir secció"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
 msgstr "Una línia amb auto-renovació ha de tenir una data de fi"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
-msgid "Analytic Tags"
-msgstr "Etiqueta analítica"
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
+msgid "Analytic"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -505,6 +514,7 @@ msgid "Cancel allowed?"
 msgstr "Es permet cancel·lar?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
@@ -581,6 +591,7 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Compose Email"
@@ -730,6 +741,7 @@ msgid "Contract Type"
 msgstr "Tipus de Contracte"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
@@ -737,30 +749,35 @@ msgstr ""
 "Línia de Contracte '%s' la data d'inici no pot ser posterior a la data de fi"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
 msgstr "Línia de contracte no cancel·lada: %s"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "La línia de contracte i les seves predecessores estan solapades"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "La línia de contracte i les seves successores estan solapades"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
 msgstr "Línia de contracte cancel·lada: %s"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -777,6 +794,7 @@ msgstr ""
 "                            "
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -795,6 +813,7 @@ msgstr ""
 "                    "
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -813,6 +832,7 @@ msgstr ""
 "                "
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -832,6 +852,7 @@ msgstr ""
 "                "
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line must be canceled before delete"
@@ -848,6 +869,7 @@ msgid "Contract lines (fixed)"
 msgstr "Línies de contracte (fixes)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -863,6 +885,7 @@ msgid "Contract modifications"
 msgstr "Modificacions del contracte"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract start"
@@ -889,6 +912,7 @@ msgid "Contracts"
 msgstr "Contractes"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid "Contracts to invoice"
@@ -956,7 +980,10 @@ msgid "Created on"
 msgstr "Creat el"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__currency_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
 msgstr "Moneda"
 
@@ -988,6 +1015,7 @@ msgid "Customer Portal URL"
 msgstr "URL del client"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1095,6 +1123,7 @@ msgid "Discount (%)"
 msgstr "Descompte (%)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/abstract_contract_line.py:0
 #, python-format
 msgid "Discount should be less or equal to 100"
@@ -1138,6 +1167,7 @@ msgid "Email Contract Template"
 msgstr "Plantilla de contracte per correu electrònic"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid ""
@@ -1175,7 +1205,6 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
-#: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Generar Factures Recurrents des dels Contractes"
 
@@ -1240,7 +1269,6 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Si està marcada, els nous missatges requeriran la teva atenció."
 
@@ -1321,6 +1349,7 @@ msgid "Invoice every (Days/Week/Month/Year)"
 msgstr "Facturar Cada (Dies/Setmana/Mes/Any)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #, python-format
@@ -1544,6 +1573,7 @@ msgid "My Activity Deadline"
 msgstr "Data límit de la meva activitat"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__name
@@ -1652,11 +1682,6 @@ msgid "Number of messages with delivery error"
 msgstr "Nombre de missatges amb error d'entrega"
 
 #. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de missatges no llegits"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
@@ -1692,12 +1717,14 @@ msgid "Plan successor allowed?"
 msgstr "Permetre successors del pla?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "Successor del pla no està permès per aquesta línia"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -1827,6 +1854,7 @@ msgid "Recurring Type"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1843,7 +1871,6 @@ msgstr "Renovar"
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
-#: model:ir.cron,name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Renovar línies de Contracte"
 
@@ -2038,6 +2065,7 @@ msgid "Stop allowed?"
 msgstr "Aturada permesa?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop not allowed for this line"
@@ -2049,6 +2077,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Permetre aturar/planificar successor?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
@@ -2105,6 +2134,7 @@ msgid "Technical field for UX purpose."
 msgstr "Camp tècnic per fins de UX."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
@@ -2196,6 +2226,7 @@ msgid "Un-cancel"
 msgstr "Reactivar"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Un-cancel not allowed for this line"
@@ -2214,16 +2245,6 @@ msgstr "Preu Unitari"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
 msgstr "Unitat de Mesura"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
-msgid "Unread Messages"
-msgstr "Missatges no Llegits"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Comptador de missatges no llegits"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming
@@ -2316,12 +2337,14 @@ msgid "Year(s)"
 msgstr "Any(s)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr "No tens permisos per finalitzar contractes."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
@@ -2329,6 +2352,7 @@ msgstr ""
 "No pots endarrerir una línia de contracte facturada com a mínim un cop."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2339,6 +2363,7 @@ msgstr ""
 "de contracte '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2349,6 +2374,7 @@ msgstr ""
 "línia de contracte '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2359,6 +2385,7 @@ msgstr ""
 "darrera factura per la línia de contracte. '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2369,6 +2396,7 @@ msgstr ""
 "per la línia de factura '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
@@ -2398,6 +2426,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contracte (Ref {{ object.name or 'n/a' }}) - "
 "Modificacions"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Etiqueta analítica"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de missatges no llegits"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Missatges no Llegits"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Comptador de missatges no llegits"
 
 #~ msgid ""
 #~ "\n"

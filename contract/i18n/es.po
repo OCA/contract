@@ -106,8 +106,8 @@ msgstr ""
 "                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
 "\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
-"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object."
-"name\"/><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object.name"
+"\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
 "                        &amp;nbsp;&amp;nbsp;Fecha de inicio del contrato: <t "
 "t-out=\"object.date_start or ''\"/><br/>\n"
@@ -115,9 +115,9 @@ msgstr ""
 "\n"
 "                    <t t-if=\"object.user_id\">\n"
 "                        <t t-if=\"object.user_id.email\">\n"
-"                            &amp;nbsp;&amp;nbsp;Su contacto: <a t-att-href=\""
-"'mailto:%s?subject=Contrato %s' % (object.user_id.email, object.name)\" "
-"t-out=\"object.user_id.name\"/>\n"
+"                            &amp;nbsp;&amp;nbsp;Su contacto: <a t-att-href="
+"\"'mailto:%s?subject=Contrato %s' % (object.user_id.email, object.name)\" t-"
+"out=\"object.user_id.name\"/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            &amp;nbsp;&amp;nbsp;Su contacto: <t t-out="
@@ -146,9 +146,9 @@ msgstr ""
 "                    <span style=\"color: #222; margin-bottom: 5px; display: "
 "block; \">\n"
 "                        <address t-field=\"object.company_id.sudo()."
-"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, "
-"&quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], "
-"&quot;no_marker&quot;: True}\"/>\n"
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
+"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
+"no_marker&quot;: True}\"/>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -167,8 +167,9 @@ msgstr ""
 "                <br/>\n"
 "                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
 "(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
-"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
-" none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">View "
+"contract</a>\n"
 "            </div>\n"
 "        "
 
@@ -181,8 +182,8 @@ msgid ""
 "        "
 msgstr ""
 "<p>Hola,</p>\n"
-"            <p>Le notificamos que hay nuevoas modificaciones en el "
-"contrato.</p>\n"
+"            <p>Le notificamos que hay nuevoas modificaciones en el contrato."
+"</p>\n"
 "        "
 
 #. module: contract
@@ -199,8 +200,8 @@ msgstr ""
 "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
 "                                contrato a facturar\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible': [("
-"'contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                            <span attrs=\"{'invisible': "
+"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
 "                                contratos a facturar\n"
 "                            </span>"
 
@@ -333,18 +334,21 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Precio unidad</strong>"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
 msgstr "Una línea de contrato cancelada no puede ser auto renovada"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
 msgstr "Una línea de contrato con sucesor no puede ser auto renovada"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
@@ -415,6 +419,7 @@ msgid "Add a section"
 msgstr "Añadir una sección"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
@@ -422,9 +427,14 @@ msgstr ""
 "Una línea de renovación automática debe tener una fecha de finalización"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_tag_ids
-msgid "Analytic Tags"
-msgstr "Etiquetas Analíticas"
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
+msgid "Analytic"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
+msgid "Analytic Precision"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_account_id
@@ -504,6 +514,7 @@ msgid "Cancel allowed?"
 msgstr "Cancelar permitido?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
@@ -580,6 +591,7 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Compose Email"
@@ -729,6 +741,7 @@ msgid "Contract Type"
 msgstr "Tipo de contrato"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line '%s' start date can't be later than end date"
@@ -737,30 +750,35 @@ msgstr ""
 "fecha de fin"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line Un-canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its predecessor overlapped"
 msgstr "Línea de contrato y su predecesor superpuestos"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line and its successor overlapped"
 msgstr "Línea de contrato y su sucesor superpuestos"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line canceled: %s"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -772,6 +790,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -784,6 +803,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -796,6 +816,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -808,6 +829,7 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Contract line must be canceled before delete"
@@ -824,6 +846,7 @@ msgid "Contract lines (fixed)"
 msgstr "Líneas de contrato (fijo)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -837,6 +860,7 @@ msgid "Contract modifications"
 msgstr "Modificaciones del contrato"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract start"
@@ -863,6 +887,7 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid "Contracts to invoice"
@@ -928,7 +953,10 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__currency_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_line__currency_id
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
 msgstr "Moneda"
 
@@ -960,6 +988,7 @@ msgid "Customer Portal URL"
 msgstr "URL para portal"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1067,6 +1096,7 @@ msgid "Discount (%)"
 msgstr "Descuento (%)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/abstract_contract_line.py:0
 #, python-format
 msgid "Discount should be less or equal to 100"
@@ -1110,6 +1140,7 @@ msgid "Email Contract Template"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #, python-format
 msgid ""
@@ -1145,7 +1176,6 @@ msgstr ""
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_cron_for_invoice
-#: model:ir.cron,name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Generar facturas recurrentes desde los contratos"
 
@@ -1210,7 +1240,6 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Si está marcado los nuevos mensajes requieren su atención."
 
@@ -1291,6 +1320,7 @@ msgid "Invoice every (Days/Week/Month/Year)"
 msgstr "Facturar cada (días/semana/mes/año)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #, python-format
@@ -1515,6 +1545,7 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__name
@@ -1622,11 +1653,6 @@ msgid "Number of messages with delivery error"
 msgstr "Número de mensajes con error de entrega"
 
 #. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Número de mensajes no leídos"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_move__old_contract_id
 #: model:ir.model.fields,field_description:contract.field_account_payment__old_contract_id
@@ -1662,12 +1688,14 @@ msgid "Plan successor allowed?"
 msgstr "Plan sucesor permitido?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Plan successor not allowed for this line"
 msgstr "El sucesor del plan no está permitido para esta línea"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid ""
@@ -1797,6 +1825,7 @@ msgid "Recurring Type"
 msgstr ""
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/controllers/main.py:0
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
@@ -1813,7 +1842,6 @@ msgstr "Renovar"
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
 #: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
-#: model:ir.cron,name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Renovar Líneas de contrato"
 
@@ -2008,6 +2036,7 @@ msgid "Stop allowed?"
 msgstr "Permitir detener?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop not allowed for this line"
@@ -2019,6 +2048,7 @@ msgid "Stop/Plan successor allowed?"
 msgstr "Detener / Plan sucesor permitido?"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Stop/Plan successor not allowed for this line"
@@ -2075,6 +2105,7 @@ msgid "Technical field for UX purpose."
 msgstr "Campo técnico para propósito de UI."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
@@ -2167,6 +2198,7 @@ msgid "Un-cancel"
 msgstr "Descancelar"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Un-cancel not allowed for this line"
@@ -2185,16 +2217,6 @@ msgstr "Precio unidad"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
 msgstr "Unidad de medida"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread
-msgid "Unread Messages"
-msgstr "Mensajes no leídos"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Número de mensajes no leídos"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__upcoming
@@ -2287,18 +2309,21 @@ msgid "Year(s)"
 msgstr "Año(s)"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "You are not allowed to terminate contracts."
 msgstr "No tiene permitido rescindir contratos."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
 msgstr "No puede retrasar una línea de contrato facturada al menos una vez."
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2309,6 +2334,7 @@ msgstr ""
 "del contrato '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2319,6 +2345,7 @@ msgstr ""
 "factura para la línea del contrato '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2329,6 +2356,7 @@ msgstr ""
 "factura para la línea de contrato '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid ""
@@ -2339,6 +2367,7 @@ msgstr ""
 "para la línea del contrato '%s'"
 
 #. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You must supply a date of next invoice for contract line '%s'"
@@ -2367,6 +2396,18 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Etiquetas Analíticas"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensajes no leídos"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensajes no leídos"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Número de mensajes no leídos"
 
 #~ msgid ""
 #~ "\n"
