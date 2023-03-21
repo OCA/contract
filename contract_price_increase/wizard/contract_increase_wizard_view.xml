@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_contract_increase_wizard" model="ir.ui.view">
+        <field name="name">contract.increase.wizard.form</field>
+        <field name="model">contract.increase.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Increase Contract(s)">
+                <group>
+                    <field name="date" />
+                    <field name="rate" widget="percentage" />
+                    <field name="description" />
+                </group>
+                <footer>
+                    <button
+                        name="increase"
+                        string="Increase"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_contract_increase_wizard" model="ir.actions.act_window">
+        <field name="name">Increase Contract(s)</field>
+        <field name="res_model">contract.increase.wizard</field>
+        <field name="view_id" ref="view_contract_increase_wizard" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="contract.model_contract_contract" />
+    </record>
+
+</odoo>

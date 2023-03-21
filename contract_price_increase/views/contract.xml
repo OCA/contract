@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <record id="contract_contract_form_view" model="ir.ui.view">
+    <field name="model">contract.contract</field>
+    <field name="inherit_id" ref="contract.contract_contract_form_view" />
+    <field name="arch" type="xml">
+      <form position="inside">
+        <field name="has_increases" invisible="1" />
+      </form>
+      <page name="modications" position="after">
+        <page
+                    name="increases"
+                    string="Increases"
+                    attrs="{'invisible': [('has_increases','=',False)]}"
+                >
+        <field name="increase_ids" attrs="{'readonly': [('is_terminated','=',True)]}">
+          <tree editable="bottom" delete="1">
+            <field name="date" />
+            <field name="application_date" />
+            <field name="rate" widget="percentage" />
+            <field name="description" />
+          </tree>
+        </field>
+        </page>
+      </page>
+    </field>
+  </record>
+</odoo>
