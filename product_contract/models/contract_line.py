@@ -16,7 +16,6 @@ class ContractLine(models.Model):
         required=False,
         copy=False,
     )
-    display_name = fields.Char(compute="_compute_display_name_2")
 
     def _prepare_invoice_line(self, move_form):
         res = super(ContractLine, self)._prepare_invoice_line(move_form)
@@ -48,11 +47,3 @@ class ContractLine(models.Model):
                 rec.termination_notice_rule_type = (
                     rec.product_id.termination_notice_rule_type
                 )
-
-    @api.depends("name", "date_start")
-    def _compute_display_name_2(self):
-        # FIXME: _compute_display_name depends on rec_name (display_name)
-        #  and this trigger a WARNING : display_name depends on itself;
-        #  please fix its decorator
-        for rec in self:
-            rec.display_name = ("%s - %s") % (rec.date_start, rec.name)

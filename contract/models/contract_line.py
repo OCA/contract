@@ -112,6 +112,10 @@ class ContractLine(models.Model):
         default=True,
     )
 
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = "%s - %s" % (rec.date_start, rec.name)
+
     @api.depends(
         "last_date_invoiced", "date_start", "date_end", "contract_id.last_date_invoiced"
     )
