@@ -127,7 +127,7 @@ class TestContractBase(common.SavepointCase):
             "recurring_next_date": "2018-01-15",
             "is_auto_renew": False,
         }
-        cls.acct_line = cls.env["contract.line"].create(cls.line_vals)
+        cls.acct_line = cls.env["contract.line"].create(cls.line_vals.copy())
         cls.contract.company_id.create_new_line_at_contract_line_renew = True
         cls.terminate_reason = cls.env["contract.terminate.reason"].create(
             {"name": "terminate_reason"}

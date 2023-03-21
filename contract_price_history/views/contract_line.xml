@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="name">contract.line form view</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <group name="recurrence_info" position="after">
+                <group name="history">
+                    <field name="price_history_ids">
+                        <tree editable="0">
+                            <field name="date" />
+                            <field name="type" />
+                            <field name="price_display" />
+                            <button
+                                name="action_revert_price"
+                                string="Revert"
+                                type="object"
+                                icon="fa-clock-o"
+                                attrs="{'invisible': [('type', 'in', ['unknown', 'initial'])]}"
+                            />
+                        </tree>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="contract.action_customer_contract" model="ir.actions.act_window">
+        <field name="res_model">contract.contract</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_type', '=', 'sale')]</field>
+        <field name="context">
+            {'is_contract':1,
+            'search_default_not_finished':1,
+            'default_contract_type': 'sale',
+            'price_unit_update_type': 'ui-update'}
+        </field>
+        <field name="search_view_id" ref="contract.contract_contract_search_view" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract.
+            </p>
+        </field>
+    </record>
+
+    <record id="contract.action_supplier_contract" model="ir.actions.act_window">
+        <field name="res_model">contract.contract</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('contract_type', '=', 'purchase')]</field>
+        <field name="context">
+            {'is_contract':1,
+            'search_default_not_finished':1,
+            'default_contract_type': 'purchase',
+            'price_unit_update_type': 'ui-update'}
+        </field>
+        <field name="search_view_id" ref="contract.contract_contract_search_view" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new contract.
+            </p>
+        </field>
+    </record>
+</odoo>
