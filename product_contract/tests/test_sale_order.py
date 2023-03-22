@@ -6,19 +6,27 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import SavepointCase
 
 
-class TestSaleOrder(TransactionCase):
-    def setUp(self):
-        super(TestSaleOrder, self).setUp()
-        self.product1 = self.env.ref("product.product_product_1")
-        self.product2 = self.env.ref("product.product_product_2")
-        self.sale = self.env.ref("sale.sale_order_2")
-        self.contract_template1 = self.env["contract.template"].create(
+class TestSaleOrder(SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env = cls.env(
+            context=dict(
+                cls.env.context,
+                tracking_disable=True,
+                no_reset_password=True,
+            )
+        )
+        cls.product1 = cls.env.ref("product.product_product_1")
+        cls.product2 = cls.env.ref("product.product_product_2")
+        cls.sale = cls.env.ref("sale.sale_order_2")
+        cls.contract_template1 = cls.env["contract.template"].create(
             {"name": "Template 1"}
         )
-        self.contract_template2 = self.env["contract.template"].create(
+        cls.contract_template2 = cls.env["contract.template"].create(
             {
                 "name": "Template 2",
                 "contract_line_ids": [
@@ -26,10 +34,10 @@ class TestSaleOrder(TransactionCase):
                         0,
                         0,
                         {
-                            "product_id": self.product2.id,
+                            "product_id": cls.product2.id,
                             "name": "Services from #START# to #END#",
                             "quantity": 1,
-                            "uom_id": self.product2.uom_id.id,
+                            "uom_id": cls.product2.uom_id.id,
                             "price_unit": 100,
                             "discount": 50,
                             "recurring_rule_type": "yearly",
@@ -39,44 +47,44 @@ class TestSaleOrder(TransactionCase):
                 ],
             }
         )
-        self.product1.with_company(self.sale.company_id).write(
+        cls.product1.with_company(cls.sale.company_id).write(
             {
                 "is_contract": True,
                 "default_qty": 12,
                 "recurring_rule_type": "monthlylastday",
                 "recurring_invoicing_type": "post-paid",
-                "property_contract_template_id": self.contract_template1.id,
+                "property_contract_template_id": cls.contract_template1.id,
             }
         )
-        self.product2.with_company(self.sale.company_id).write(
+        cls.product2.with_company(cls.sale.company_id).write(
             {
                 "is_contract": True,
-                "property_contract_template_id": self.contract_template2.id,
+                "property_contract_template_id": cls.contract_template2.id,
             }
         )
-        self.order_line1 = self.sale.order_line.filtered(
-            lambda l: l.product_id == self.product1
+        cls.order_line1 = cls.sale.order_line.filtered(
+            lambda l: l.product_id == cls.product1
         )
-        self.order_line1.date_start = "2018-01-01"
-        self.order_line1.product_uom_qty = 12
-        pricelist = self.sale.partner_id.property_product_pricelist.id
-        self.contract = self.env["contract.contract"].create(
+        cls.order_line1.date_start = "2018-01-01"
+        cls.order_line1.product_uom_qty = 12
+        pricelist = cls.sale.partner_id.property_product_pricelist.id
+        cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract 2",
-                "partner_id": self.sale.partner_id.id,
+                "partner_id": cls.sale.partner_id.id,
                 "pricelist_id": pricelist,
                 "contract_type": "sale",
                 "line_recurrence": True,
-                "contract_template_id": self.contract_template1.id,
+                "contract_template_id": cls.contract_template1.id,
                 "contract_line_ids": [
                     (
                         0,
                         0,
                         {
-                            "product_id": self.product1.id,
+                            "product_id": cls.product1.id,
                             "name": "Services from #START# to #END#",
                             "quantity": 1,
-                            "uom_id": self.product1.uom_id.id,
+                            "uom_id": cls.product1.uom_id.id,
                             "price_unit": 100,
                             "discount": 50,
                             "recurring_rule_type": "monthly",
@@ -88,7 +96,7 @@ class TestSaleOrder(TransactionCase):
                 ],
             }
         )
-        self.contract_line = self.contract.contract_line_ids[0]
+        cls.contract_line = cls.contract.contract_line_ids[0]
 
     def test_compute_is_contract(self):
         """Sale Order should have is_contract true if one of its lines is
@@ -98,7 +106,7 @@ class TestSaleOrder(TransactionCase):
     def test_action_confirm(self):
         """It should create a contract for each contract template used in
         order_line"""
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped("contract_id")
         self.assertEqual(len(contracts), 2)
@@ -142,7 +150,7 @@ class TestSaleOrder(TransactionCase):
         """It should create a contract for each contract template used in
         order_line"""
         self.sale.company_id.create_contract_at_sale_order_confirmation = False
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertEqual(len(self.sale.order_line.mapped("contract_id")), 0)
         self.assertTrue(self.sale.need_contract_creation)
@@ -161,14 +169,14 @@ class TestSaleOrder(TransactionCase):
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used
         in order_line"""
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertEqual(self.sale.contract_count, 2)
 
     def test_onchange_product(self):
         """It should get recurrence invoicing info to the sale line from
         its product"""
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.assertEqual(
             self.order_line1.recurring_rule_type,
             self.product1.recurring_rule_type,
@@ -216,7 +224,7 @@ class TestSaleOrder(TransactionCase):
     def test_sale_order_line_invoice_status(self):
         """Sale order line for contract product should have nothing to
         invoice as status"""
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertEqual(self.order_line1.invoice_status, "no")
 
@@ -226,7 +234,7 @@ class TestSaleOrder(TransactionCase):
         self.sale.order_line.filtered(
             lambda line: not line.product_id.is_contract
         ).unlink()
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertEqual(self.sale.invoice_status, "no")
 
@@ -234,7 +242,7 @@ class TestSaleOrder(TransactionCase):
         """Should not invoice contract product on sale order create invoice"""
         self.product2.is_contract = False
         self.product2.invoice_policy = "order"
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.sale._create_invoices()
         self.assertEqual(len(self.sale.invoice_ids), 1)
@@ -245,7 +253,7 @@ class TestSaleOrder(TransactionCase):
 
     def test_link_contract_invoice_to_sale_order(self):
         """It should link contract invoice to sale order"""
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice in self.sale.invoice_ids)
@@ -257,7 +265,7 @@ class TestSaleOrder(TransactionCase):
         self.contract_line.date_end = Date.today() + relativedelta(months=4)
         self.contract_line.is_auto_renew = True
         self.order_line1.date_start = "2018-06-01"
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertEqual(self.contract_line.date_end, Date.to_date("2018-05-31"))
         self.assertFalse(self.contract_line.is_auto_renew)
@@ -283,7 +291,7 @@ class TestSaleOrder(TransactionCase):
             }
         )
         self.order_line1.date_start = "2018-06-01"
-        self.order_line1.onchange_product()
+        self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
         self.assertFalse(self.contract_line.date_end)
         self.assertTrue(self.contract_line.is_canceled)
@@ -349,7 +357,7 @@ class TestSaleOrder(TransactionCase):
                 "property_contract_template_id": self.contract_template1.id,
             }
         )
-        self.sale.order_line.onchange_product()
+        self.sale.order_line._compute_auto_renew()
         self.sale.action_confirm()
         contracts = self.sale.order_line.mapped("contract_id")
         self.assertEqual(len(contracts), 1)
