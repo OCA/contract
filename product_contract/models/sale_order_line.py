@@ -52,10 +52,19 @@ class SaleOrderLine(models.Model):
         required=False,
         copy=False,
     )
-    is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
+    is_auto_renew = fields.Boolean(
+        string="Auto Renew",
+        compute="_compute_auto_renew",
+        default=False,
+        store=True,
+        readonly=False,
+    )
     auto_renew_interval = fields.Integer(
         default=1,
         string="Renew Every",
+        compute="_compute_auto_renew",
+        store=True,
+        readonly=False,
         help="Renew every (Days/Week/Month/Year)",
     )
     auto_renew_rule_type = fields.Selection(
@@ -66,12 +75,15 @@ class SaleOrderLine(models.Model):
             ("yearly", "Year(s)"),
         ],
         default="yearly",
+        compute="_compute_auto_renew",
+        store=True,
+        readonly=False,
         string="Renewal type",
         help="Specify Interval for automatic renewal.",
     )
 
     @api.constrains("contract_id")
-    def check_contact_is_not_terminated(self):
+    def _check_contact_is_not_terminated(self):
         for rec in self:
             if (
                 rec.order_id.state not in ("sale", "done", "cancel")
@@ -108,8 +120,8 @@ class SaleOrderLine(models.Model):
         )
         return date_end
 
-    @api.onchange("product_id")
-    def onchange_product(self):
+    @api.depends("product_id")
+    def _compute_auto_renew(self):
         for rec in self:
             if rec.product_id.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
@@ -248,9 +260,8 @@ class SaleOrderLine(models.Model):
                     )
 
     def _compute_invoice_status(self):
-        res = super(SaleOrderLine, self)._compute_invoice_status()
-        for line in self.filtered("contract_id"):
-            line.invoice_status = "no"
+        res = super()._compute_invoice_status()
+        self.filtered("contract_id").update({"invoice_status": "no"})
         return res
 
     def invoice_line_create(self, invoice_id, qty):

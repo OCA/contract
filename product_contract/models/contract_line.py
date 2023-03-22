@@ -35,15 +35,19 @@ class ContractLine(models.Model):
         for rec in self:
             rec.date_start = fields.Date.today()
             if rec.product_id.is_contract:
-                rec.recurring_rule_type = rec.product_id.recurring_rule_type
-                rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
-                rec.recurring_interval = 1
-                rec.is_auto_renew = rec.product_id.is_auto_renew
-                rec.auto_renew_interval = rec.product_id.auto_renew_interval
-                rec.auto_renew_rule_type = rec.product_id.auto_renew_rule_type
-                rec.termination_notice_interval = (
-                    rec.product_id.termination_notice_interval
-                )
-                rec.termination_notice_rule_type = (
-                    rec.product_id.termination_notice_rule_type
+                rec.update(
+                    {
+                        "recurring_rule_type": rec.product_id.recurring_rule_type,
+                        "recurring_invoicing_type": rec.product_id.recurring_invoicing_type,
+                        "recurring_interval": 1,
+                        "is_auto_renew": rec.product_id.is_auto_renew,
+                        "auto_renew_interval": rec.product_id.auto_renew_interval,
+                        "auto_renew_rule_type": rec.product_id.auto_renew_rule_type,
+                        "termination_notice_interval": (
+                            rec.product_id.termination_notice_interval
+                        ),
+                        "termination_notice_rule_type": (
+                            rec.product_id.termination_notice_rule_type
+                        ),
+                    }
                 )
