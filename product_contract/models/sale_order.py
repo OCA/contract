@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
     need_contract_creation = fields.Boolean(compute="_compute_need_contract_creation")
 
     @api.constrains("state")
-    def check_contact_is_not_terminated(self):
+    def _check_contact_is_not_terminated(self):
         for rec in self:
             if rec.state not in (
                 "sale",
@@ -27,8 +27,8 @@ class SaleOrder(models.Model):
 
     @api.depends("order_line.contract_id", "state")
     def _compute_need_contract_creation(self):
+        self.update({"need_contract_creation": False})
         for rec in self:
-            rec.need_contract_creation = False
             if rec.state in ("sale", "done"):
                 line_to_create_contract = rec.order_line.filtered(
                     lambda r: not r.contract_id and r.product_id.is_contract
@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
 
     def action_create_contract(self):
         contract_model = self.env["contract.contract"]
-        contracts = self.env["contract.contract"]
+        contracts = []
         for rec in self.filtered("is_contract"):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
@@ -98,14 +98,14 @@ class SaleOrder(models.Model):
                 contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
                 )
-                contracts |= contract
+                contracts.append(contract)
                 contract._onchange_contract_template_id()
                 contract._onchange_contract_type()
                 order_lines.create_contract_line(contract)
                 order_lines.write({"contract_id": contract.id})
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
-        return contracts
+        return contract_model.browse(contracts)
 
     def action_confirm(self):
         """If we have a contract in the order, set it up"""
@@ -117,19 +117,22 @@ class SaleOrder(models.Model):
     @api.depends("order_line")
     def _compute_contract_count(self):
         for rec in self:
-            rec.contract_count = len(
-                rec.order_line.mapped("contract_id").filtered(lambda r: r.active)
-            )
+            rec.contract_count = len(rec.order_line.mapped("contract_id"))
 
     def action_show_contracts(self):
         self.ensure_one()
-        action = self.env.ref("contract.action_customer_contract").sudo().read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "contract.action_customer_contract"
+        )
+
         contracts = (
             self.env["contract.line"]
             .search([("sale_order_line_id", "in", self.order_line.ids)])
             .mapped("contract_id")
         )
-        action["domain"] = [("id", "in", contracts.ids)]
+        action["domain"] = [
+            ("contract_line_ids.sale_order_line_id", "in", self.order_line.ids)
+        ]
         if len(contracts) == 1:
             # If there is only one contract, open it directly
             action.update(
