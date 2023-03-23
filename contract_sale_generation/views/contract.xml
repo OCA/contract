@@ -1,0 +1,36 @@
+<odoo>
+    <record id="contract_contract_form_view_recurring_sale_form" model="ir.ui.view">
+        <field name="name">contract.contract.form.recurring.sale.form</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='generation_type']" position="after">
+                <field
+                    attrs="{'invisible':[('generation_type','!=', 'sale')]}"
+                    name="sale_autoconfirm"
+                />
+            </xpath>
+            <xpath expr="//button[@name='recurring_create_invoice']" position="before">
+                <button
+                    attrs="{'invisible': [('generation_type','!=','sale')]}"
+                    class="oe_link"
+                    groups="base.group_no_one"
+                    name="recurring_create_sale"
+                    string="CREATE SALES"
+                    type="object"
+                />
+            </xpath>
+            <xpath expr="//button[@name='action_show_invoices']" position="after">
+                <button
+                    attrs="{'invisible': [('generation_type','!=','sale')]}"
+                    class="oe_stat_button"
+                    icon="fa-list"
+                    name="action_show_sales"
+                    type="object"
+                >
+                    <field name="sale_count" string="Sales Order" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
