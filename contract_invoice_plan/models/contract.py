@@ -3,7 +3,8 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 
 
@@ -70,7 +71,7 @@ class ContractContract(models.Model):
         self.invoice_plan_ids.unlink()
         invoice_plans = []
         Decimal = self.env["decimal.precision"]
-        prec = Decimal.precision_get("Product Unit of Measure")
+        prec = Decimal.precision_get("Contract Invoice Plan Percent")
         percent = float_round(1.0 / num_installment * 100, prec)
         percent_last = 100 - (percent * (num_installment - 1))
         for i in range(num_installment):
@@ -169,7 +170,7 @@ class ContractInvoicePlan(models.Model):
         help="Last installment will create invoice use remaining amount",
     )
     percent = fields.Float(
-        digits="Product Unit of Measure",
+        digits="Contract Invoice Plan Percent",
         help="This percent will be used to calculate new quantity",
     )
     amount = fields.Float(
@@ -276,6 +277,12 @@ class ContractInvoicePlan(models.Model):
         percent = self.percent
         move = invoice_move.with_context(check_move_validity=False)
         for line in move.invoice_line_ids:
+            # Last plan should compute with percent left
+            if self.last:
+                self._compute_amount()
+                installments = self.contract_id.invoice_plan_ids
+                prev_percent = sum((installments - self).mapped("percent"))
+                percent = 100 - prev_percent
             self._update_new_quantity(line, percent)
         move._move_autocomplete_invoice_lines_values()  # recompute dr/cr
 
@@ -288,3 +295,16 @@ class ContractInvoicePlan(models.Model):
     def _get_plan_qty(self, contract_line, percent):
         plan_qty = contract_line.quantity * (percent / 100)
         return plan_qty
+
+    def unlink(self):
+        lines = self.filtered("no_edit")
+        if lines:
+            installments = [str(x) for x in lines.mapped("installment")]
+            raise UserError(
+                _(
+                    "Installment %s: already used and not allowed to delete.\n"
+                    "Please discard changes."
+                )
+                % ", ".join(installments)
+            )
+        return super().unlink()

@@ -55,6 +55,15 @@ class ContractLine(models.Model):
             # compute qty_to_invoice
             line.qty_to_invoice = line.quantity - qty_invoiced
 
+    def _prepare_invoice_line(self, move_form):
+        self.ensure_one()
+        invoice_qty_line_ids = self._context.get("invoice_qty_line_ids", [])
+        if not invoice_qty_line_ids or any(
+            line["contract_line_id"] == self.id for line in invoice_qty_line_ids
+        ):
+            return super()._prepare_invoice_line(move_form)
+        return {}
+
 
 class ContractInvoicePlan(models.Model):
     _inherit = "contract.invoice.plan"

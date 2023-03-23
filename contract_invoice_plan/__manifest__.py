@@ -12,6 +12,7 @@
     "depends": ["contract"],
     "data": [
         "security/ir.model.access.csv",
+        "data/contract_data.xml",
         "wizard/contract_create_invoice_plan_view.xml",
         "wizard/contract_make_planned_invoice_view.xml",
         "views/contract_view.xml",
