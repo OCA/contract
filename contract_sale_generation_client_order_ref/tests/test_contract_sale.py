@@ -13,4 +13,6 @@ class TestContractSale(ContractSaleCommon, TransactionCase):
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_sale()
         self.sale_monthly = self.contract._get_related_sales()
-        self.assertEqual(self.contract.warehouse_id, self.sale_monthly.warehouse_id)
+        self.assertEqual(
+            self.contract.client_order_ref, self.sale_monthly.client_order_ref
+        )

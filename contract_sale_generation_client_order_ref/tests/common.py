@@ -17,9 +17,6 @@ class ContractSaleCommon:
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
-        cls.warehouse = cls.env["stock.warehouse"].create(
-            {"name": "Test WH1", "code": "TST1"}
-        )
         cls.payment_term_id = cls.env.ref(
             "account.account_payment_term_end_following_month"
         )
@@ -95,7 +92,7 @@ class ContractSaleCommon:
                 "generation_type": "sale",
                 "sale_autoconfirm": False,
                 "date_start": "2020-01-01",
-                "warehouse_id": cls.warehouse.id,
+                "client_order_ref": "Test ref",
             }
         )
         cls.line_vals = {

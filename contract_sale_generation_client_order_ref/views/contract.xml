@@ -4,13 +4,10 @@
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//page[@name='info']//field[@name='invoice_partner_id']"
-                position="after"
-            >
+            <xpath expr="//page[@name='info']//field[@name='code']" position="after">
                 <field name="generation_type" invisible="1" />
                 <field
-                    name="warehouse_id"
+                    name="client_order_ref"
                     attrs="{'invisible': [('generation_type','=','invoice')]}"
                 />
             </xpath>
