@@ -7,6 +7,7 @@ from collections import namedtuple
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
@@ -2370,6 +2371,7 @@ class TestContract(TestContractBase):
                 to_date("2018-02-13"),
             )
 
+    @freeze_time("2020-01-01 00:00:00")
     def test_recurrency_propagation(self):
         # Existing contract
         vals = {
