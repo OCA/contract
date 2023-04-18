@@ -38,6 +38,7 @@ addon | version | maintainers | summary
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 14.0.1.0.0 | [![florian-dacosta](https://github.com/florian-dacosta.png?size=30px)](https://github.com/florian-dacosta) | Contract Invoice Start End Dates
 [contract_mandate](contract_mandate/) | 14.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 14.0.1.1.1 |  | Payment mode in contracts and their invoices
+[contract_queue_job](contract_queue_job/) | 14.0.1.0.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) [![BurkhalterY](https://github.com/BurkhalterY.png?size=30px)](https://github.com/BurkhalterY) | This addon make contract invoicing cron plan each contract in a job instead of creating all invoices in one transaction
 [contract_sale](contract_sale/) | 14.0.1.2.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 14.0.1.0.2 |  | Contracts Management - Recurring Sales
 [contract_sale_tag](contract_sale_tag/) | 14.0.1.0.1 | [![rousseldenis](https://github.com/rousseldenis.png?size=30px)](https://github.com/rousseldenis) | Allows to transmit contract tags to sale order (through sale_generation)
