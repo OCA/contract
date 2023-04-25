@@ -124,6 +124,7 @@ Contributors
     * Rafael Blasco
     * Víctor Martínez
 * Iván Antón <ozono@ozonomultimedia.com>
+* Eric Antones <eantones@nuobit.com>
 
 Maintainers
 ~~~~~~~~~~~
