@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
                         self._get_agreement_line_vals(line)
                     )
                     # Create SP's based on product_id config
-                    if line.product_id.is_serviceprofile:
+                    if line.product_id.product_tmpl_id.is_serviceprofile:
                         self.create_sp_qty(line, order)
         return res
 
