@@ -28,7 +28,7 @@ class TestProductTemplate(SavepointCase):
         self.service_product.is_contract = True
         self.service_product.property_contract_template_id = self.contract.id
         self.service_product.is_contract = False
-        self.assertEquals(len(self.service_product.property_contract_template_id), 0)
+        self.assertEqual(len(self.service_product.property_contract_template_id), 0)
 
     def test_check_contract_product_type(self):
         """
