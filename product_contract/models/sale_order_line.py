@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     is_contract = fields.Boolean(
-        string="Is a contract", related="product_id.is_contract"
+        string="Is a contract",
     )
     contract_id = fields.Many2one(
         comodel_name="contract.contract", string="Contract", copy=False
@@ -120,10 +120,10 @@ class SaleOrderLine(models.Model):
         )
         return date_end
 
-    @api.depends("product_id")
+    @api.depends("product_id", "is_contract")
     def _compute_auto_renew(self):
         for rec in self:
-            if rec.product_id.is_contract:
+            if rec.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
                 rec.recurring_rule_type = rec.product_id.recurring_rule_type
                 rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
@@ -135,10 +135,20 @@ class SaleOrderLine(models.Model):
                     rec.auto_renew_interval = rec.product_id.auto_renew_interval
                     rec.auto_renew_rule_type = rec.product_id.auto_renew_rule_type
 
-    @api.onchange("date_start", "product_uom_qty", "recurring_rule_type")
+    @api.onchange("date_start", "product_uom_qty", "recurring_rule_type", "is_contract")
     def onchange_date_start(self):
-        for rec in self.filtered("product_id.is_contract"):
+        for rec in self.filtered("is_contract"):
             rec.date_end = rec._get_date_end() if rec.date_start else False
+
+    @api.onchange("product_id")
+    def onchange_product(self):
+        super().onchange_product()
+        for rec in self:
+            if rec.product_id.is_contract:
+                rec.is_contract = True
+            else:
+                # Don't initialize wrong values
+                rec.is_contract = False
 
     def _get_contract_line_qty(self):
         """Returns the quantity to be put on new contract lines."""
@@ -259,6 +269,16 @@ class SaleOrderLine(models.Model):
                         _("Contract product has different contract template")
                     )
 
+    @api.constrains("product_id", "contract_id")
+    def _check_contract_sale_contract_template(self):
+        for rec in self:
+            if rec.is_contract and not rec.product_id.is_contract:
+                raise ValidationError(
+                    _(
+                        'You can check the field "Is a contract" only for Contract product'
+                    )
+                )
+
     def _compute_invoice_status(self):
         res = super()._compute_invoice_status()
         self.filtered("contract_id").update({"invoice_status": "no"})
@@ -274,12 +294,12 @@ class SaleOrderLine(models.Model):
         "qty_delivered",
         "product_uom_qty",
         "order_id.state",
-        "product_id.is_contract",
+        "is_contract",
     )
     def _get_to_invoice_qty(self):
         """
         sale line linked to contracts must not be invoiced from sale order
         """
         res = super()._get_to_invoice_qty()
-        self.filtered("product_id.is_contract").update({"qty_to_invoice": 0.0})
+        self.filtered("is_contract").update({"qty_to_invoice": 0.0})
         return res
