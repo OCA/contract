@@ -141,8 +141,8 @@ class SaleOrderLine(models.Model):
             rec.date_end = rec._get_date_end() if rec.date_start else False
 
     @api.onchange("product_id")
-    def onchange_product(self):
-        super().onchange_product()
+    def product_id_change(self):
+        super().product_id_change()
         for rec in self:
             if rec.product_id.is_contract:
                 rec.is_contract = True
@@ -270,7 +270,7 @@ class SaleOrderLine(models.Model):
                     )
 
     @api.constrains("product_id", "contract_id")
-    def _check_contract_sale_contract_template(self):
+    def _check_contract_sale_line_is_contract(self):
         for rec in self:
             if rec.is_contract and not rec.product_id.is_contract:
                 raise ValidationError(

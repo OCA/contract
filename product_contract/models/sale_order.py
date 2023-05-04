@@ -83,15 +83,8 @@ class SaleOrder(models.Model):
         contract_model = self.env["contract.contract"]
         contracts = []
         for rec in self.filtered("is_contract"):
-            line_to_create_contract = rec.order_line.filtered(
-                lambda r: not r.contract_id and r.is_contract
-            )
-            line_to_update_contract = rec.order_line.filtered(
-                lambda r: r.contract_id
-                and r.is_contract
-                and r
-                not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
-            )
+            line_to_create_contract = rec._get_line_to_create_contract()
+            line_to_update_contract = rec._get_line_to_update_contract()
             contract_templates = self.env["contract.template"]
             for order_line in line_to_create_contract:
                 contract_template = order_line.product_id.with_company(
