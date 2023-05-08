@@ -11,9 +11,9 @@
       (automatically computed, can be modified) and end date (optional)
     - auto-price, for having a price automatically obtained from the
       price list
-    - \#START# or \#END# in the description field to display the
-      start/end date of the invoiced period in the invoice line
-      description
+    - \#START# - \#END# or \#INVOICEMONTHNAME# in the description field
+      to display the start/end date or the start month of the invoiced
+      period in the invoice line description
     - pre-paid (invoice at period start) or post-paid (invoice at start
       of next period)
 4.  The "Generate Recurring Invoices from Contracts" cron runs daily to
