@@ -57,21 +57,22 @@ Usage
 2. When creating a contract, fill fields for selecting the invoicing
    parameters:
 
-   - a journal
-   - a price list (optional)
+   -  a journal
+   -  a price list (optional)
 
 3. And add the lines to be invoiced with:
 
-   - the product with a description, a quantity and a price
-   - the recurrence parameters: interval (days, weeks, months, months
-     last day or years), start date, date of next invoice (automatically
-     computed, can be modified) and end date (optional)
-   - auto-price, for having a price automatically obtained from the
-     price list
-   - #START# or #END# in the description field to display the start/end
-     date of the invoiced period in the invoice line description
-   - pre-paid (invoice at period start) or post-paid (invoice at start
-     of next period)
+   -  the product with a description, a quantity and a price
+   -  the recurrence parameters: interval (days, weeks, months, months
+      last day or years), start date, date of next invoice
+      (automatically computed, can be modified) and end date (optional)
+   -  auto-price, for having a price automatically obtained from the
+      price list
+   -  #START# - #END# or #INVOICEMONTHNAME# in the description field to
+      display the start/end date or the start month of the invoiced
+      period in the invoice line description
+   -  pre-paid (invoice at period start) or post-paid (invoice at start
+      of next period)
 
 4. The "Generate Recurring Invoices from Contracts" cron runs daily to
    generate the invoices. If you are in debug mode, you can click on the
@@ -85,7 +86,7 @@ Usage
    price list and lines when creating a contract. To use it, just select
    the template on the contract and fields will be filled automatically.
 
-- Contracts appear in portal to following users in every contract:
+-  Contracts appear in portal to following users in every contract:
 
 |image|
 
@@ -100,8 +101,8 @@ Usage
 Known issues / Roadmap
 ======================
 
-- Recover states and others functional fields in Contracts.
-- Add recurrence flag at template level.
+-  Recover states and others functional fields in Contracts.
+-  Add recurrence flag at template level.
 
 Bug Tracker
 ===========
@@ -125,33 +126,33 @@ Authors
 Contributors
 ------------
 
-- Angel Moya <angel.moya@domatix.com>
+-  Angel Moya <angel.moya@domatix.com>
 
-- Dave Lasley <dave@laslabs.com>
+-  Dave Lasley <dave@laslabs.com>
 
-- Miquel Raïch <miquel.raich@eficent.com>
+-  Miquel Raïch <miquel.raich@eficent.com>
 
-- Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+-  Souheil Bejaoui <souheil.bejaoui@acsone.eu>
 
-- Thomas Binsfeld <thomas.binsfeld@acsone.eu>
+-  Thomas Binsfeld <thomas.binsfeld@acsone.eu>
 
-- Guillaume Vandamme <guillaume.vandamme@acsone.eu>
+-  Guillaume Vandamme <guillaume.vandamme@acsone.eu>
 
-- Raphaël Reverdy <raphael.reverdy@akretion.com>
+-  Raphaël Reverdy <raphael.reverdy@akretion.com>
 
-- `Tecnativa <https://www.tecnativa.com>`__:
+-  `Tecnativa <https://www.tecnativa.com>`__:
 
-     - Pedro M. Baeza
-     - Carlos Dauden
-     - Vicent Cubells
-     - Rafael Blasco
-     - Víctor Martínez
+      -  Pedro M. Baeza
+      -  Carlos Dauden
+      -  Vicent Cubells
+      -  Rafael Blasco
+      -  Víctor Martínez
 
-- Iván Antón <ozono@ozonomultimedia.com>
+-  Iván Antón <ozono@ozonomultimedia.com>
 
-- `APSL <https://www.apsl.tech>`__:
+-  `APSL <https://www.apsl.tech>`__:
 
-     - Antoni Marroig <amarroig@apsl.net>
+      -  Antoni Marroig <amarroig@apsl.net>
 
 Maintainers
 -----------
