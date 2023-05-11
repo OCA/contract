@@ -101,20 +101,35 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
         )
 
     def test_post_init_hook(self):
-        contract = self.env["contract.contract"].create(
+        sale_contract = self.env["contract.contract"].create(
             {
-                "name": "Test contract",
+                "name": "Test sale contract",
                 "partner_id": self.partner.id,
                 "payment_mode_id": self.payment_mode.id,
             }
         )
-        self.assertEqual(contract.payment_mode_id, self.payment_mode)
+        self.assertEqual(sale_contract.payment_mode_id, self.payment_mode)
 
-        contract.payment_mode_id = False
-        self.assertEqual(contract.payment_mode_id.id, False)
+        sale_contract.payment_mode_id = False
+        self.assertEqual(sale_contract.payment_mode_id.id, False)
+
+        purchase_contract = self.env["contract.contract"].create(
+            {
+                "name": "Test purchase contract",
+                "partner_id": self.partner.id,
+                "payment_mode_id": self.payment_mode_out.id,
+                "contract_type": "purchase",
+            }
+        )
+        self.assertEqual(purchase_contract.payment_mode_id, self.payment_mode_out)
+
+        purchase_contract.payment_mode_id = False
+        self.assertEqual(purchase_contract.payment_mode_id.id, False)
 
         post_init_hook(self.cr, self.env)
-        self.assertEqual(contract.payment_mode_id, self.payment_mode)
+
+        self.assertEqual(sale_contract.payment_mode_id, self.payment_mode)
+        self.assertEqual(purchase_contract.payment_mode_id, self.payment_mode_out)
 
     def test_contract_and_invoices(self):
         self.contract.write({"partner_id": self.partner.id})

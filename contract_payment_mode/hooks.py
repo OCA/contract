@@ -13,10 +13,27 @@ def post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     m_contract = env["contract.contract"]
     contracts = m_contract.search([("payment_mode_id", "=", False)])
-    if contracts:
-        _logger.info("Setting payment mode: %d contracts" % len(contracts))
-    for contract in contracts:
-        payment_mode = contract.partner_id.customer_payment_mode_id
-        if payment_mode:
-            contract.payment_mode_id = payment_mode.id
+
+    sale_contracts_to_update = contracts.filtered(
+        lambda c: c.contract_type == "sale" and c.partner_id.customer_payment_mode_id
+    )
+    if sale_contracts_to_update:
+        _logger.info(
+            "Setting payment mode: %d sale contracts" % len(sale_contracts_to_update)
+        )
+    for contract in sale_contracts_to_update:
+        contract.payment_mode_id = contract.partner_id.customer_payment_mode_id
+
+    purchase_contracts_to_update = contracts.filtered(
+        lambda c: c.contract_type == "purchase"
+        and c.partner_id.supplier_payment_mode_id
+    )
+    if purchase_contracts_to_update:
+        _logger.info(
+            "Setting payment mode: %d purchase contracts"
+            % len(purchase_contracts_to_update)
+        )
+    for contract in purchase_contracts_to_update:
+        contract.payment_mode_id = contract.partner_id.supplier_payment_mode_id
+
     _logger.info("Setting payment mode: Done")
