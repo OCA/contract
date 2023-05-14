@@ -7,8 +7,8 @@ from odoo import models
 class ContractLine(models.Model):
     _inherit = "contract.line"
 
-    def _prepare_invoice_line(self, move_form):
-        vals = super()._prepare_invoice_line(move_form=move_form)
+    def _prepare_invoice_line(self):
+        vals = super()._prepare_invoice_line()
         if self.product_id.must_have_dates:
             dates = self._get_period_to_invoice(
                 self.last_date_invoiced, self.recurring_next_date

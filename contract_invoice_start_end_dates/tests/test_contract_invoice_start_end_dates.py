@@ -15,3 +15,8 @@ class TestContractInvoiceStartEndDates(TestContractBase):
         invoice = self.contract.recurring_create_invoice()
         self.assertTrue(invoice.invoice_line_ids.start_date)
         self.assertTrue(invoice.invoice_line_ids.end_date)
+
+        self.acct_line.product_id.must_have_dates = False
+        invoice = self.contract.recurring_create_invoice()
+        self.assertFalse(invoice.invoice_line_ids.start_date)
+        self.assertFalse(invoice.invoice_line_ids.end_date)
