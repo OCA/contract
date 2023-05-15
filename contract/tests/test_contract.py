@@ -150,7 +150,7 @@ class TestContractBase(common.SavepointCase):
                         0,
                         {
                             "product_id": False,
-                            "name": "Header for Services",
+                            "name": "Header for #INVOICEMONTHNAME# Services",
                             "display_type": "line_section",
                         },
                     ),
@@ -2453,3 +2453,7 @@ class TestContract(TestContractBase):
         self.acct_line.uom_id = uom_day.id
         self.acct_line.refresh()
         self.assertEqual(self.acct_line.price_unit, 30.75 * 8)
+
+    def test_check_month_name_marker(self):
+        invoice_id = self.contract3.recurring_create_invoice()
+        self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
