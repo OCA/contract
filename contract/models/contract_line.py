@@ -618,18 +618,18 @@ class ContractLine(models.Model):
 
     def _translate_marker_month_name(self, month_name):
         months = {
-            "January": _("January"),
-            "February": _("February"),
-            "March": _("March"),
-            "April": _("April"),
-            "May": _("May"),
-            "June": _("June"),
-            "July": _("July"),
-            "August": _("August"),
-            "September": _("September"),
-            "October": _("October"),
-            "November": _("November"),
-            "December": _("December"),
+            "01": _("January"),
+            "02": _("February"),
+            "03": _("March"),
+            "04": _("April"),
+            "05": _("May"),
+            "06": _("June"),
+            "07": _("July"),
+            "08": _("August"),
+            "09": _("September"),
+            "10": _("October"),
+            "11": _("November"),
+            "12": _("December"),
         }
         return months[month_name]
 
@@ -641,10 +641,12 @@ class ContractLine(models.Model):
         name = self.name
         name = name.replace("#START#", first_date_invoiced.strftime(date_format))
         name = name.replace("#END#", last_date_invoiced.strftime(date_format))
+        name = name.replace("#INVOICEMONTHNUMBER#", first_date_invoiced.strftime("%m"))
+        name = name.replace("#INVOICEYEAR#", first_date_invoiced.strftime("%Y"))
         name = name.replace(
             "#INVOICEMONTHNAME#",
             self.with_context(lang=lang.code)._translate_marker_month_name(
-                first_date_invoiced.strftime("%B")
+                first_date_invoiced.strftime("%m")
             ),
         )
         return name
