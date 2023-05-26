@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        id="menu_contract_sale"
+        name="Contracts"
+        parent="sale.sale_order_menu"
+        action="contract.action_customer_contract"
+        sequence="2"
+        groups="sales_team.group_sale_salesman"
+    />
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="name">contract.contract.form.contract.sale</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_ids']/tree/field[@name='discount']"
+                position="attributes"
+            >
+                <attribute
+                    name="groups"
+                    add="product.group_discount_per_so_line"
+                    separator=","
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
