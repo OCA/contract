@@ -64,6 +64,7 @@ class TestContractSale(ContractSaleCommon, TransactionCase):
                         "discount": 50,
                         "recurring_rule_type": "yearly",
                         "recurring_interval": 1,
+                        "display_type": False,
                     },
                 )
             ],
