@@ -32,8 +32,6 @@ class ContractContract(models.Model):
             sale.payment_term_id = self.payment_term_id.id
         if self.fiscal_position_id:
             sale.fiscal_position_id = self.fiscal_position_id.id
-        # Get other sale values from partner onchange
-        sale.onchange_partner_id()
         return sale._convert_to_write(sale._cache)
 
     def _get_related_sales(self):

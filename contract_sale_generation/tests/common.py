@@ -22,6 +22,7 @@ class ContractSaleCommon:
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
+                "plan_id": cls.env.ref("analytic.analytic_plan_internal").id,
             }
         )
         cls.payment_term_id = cls.env.ref(
@@ -42,6 +43,7 @@ class ContractSaleCommon:
                 "property_product_pricelist": cls.pricelist.id,
                 "property_payment_term_id": cls.payment_term_id.id,
                 "property_account_position_id": cls.fiscal_position_id.id,
+                "user_id": cls.env.user.id,
             }
         )
         cls.product_1 = cls.env.ref("product.product_product_1")
@@ -58,6 +60,7 @@ class ContractSaleCommon:
             "discount": 50,
             "recurring_rule_type": "yearly",
             "recurring_interval": 1,
+            "display_type": False,
         }
         cls.template_vals = {
             "name": "Test Contract Template",
@@ -89,6 +92,8 @@ class ContractSaleCommon:
         )
         cls.line_vals = {
             "name": "Services from #START# to #END#",
+            "product_id": cls.product_1.id,
+            "uom_id": cls.product_1.uom_id.id,
             "quantity": 1,
             "price_unit": 100,
             "discount": 50,
@@ -96,9 +101,15 @@ class ContractSaleCommon:
             "recurring_interval": 1,
             "date_start": "2020-01-01",
             "recurring_next_date": "2020-01-15",
+            "display_type": False,
         }
+        discount_line_group_id = cls.env.ref("product.group_discount_per_so_line")
+        uom_group_id = cls.env.ref("uom.group_uom")
+        cls.env.user.groups_id = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
+
         with Form(cls.contract) as contract_form, freeze_time(contract_date):
             contract_form.contract_template_id = cls.template
+            contract_form.line_recurrence = True
             with contract_form.contract_line_ids.new() as line_form:
                 line_form.product_id = cls.product_1
                 line_form.name = "Services from #START# to #END#"
@@ -133,6 +144,7 @@ class ContractSaleCommon:
                             "recurring_interval": 1,
                             "date_start": "2018-02-15",
                             "recurring_next_date": "2018-02-22",
+                            "display_type": False,
                         },
                     )
                 ],
