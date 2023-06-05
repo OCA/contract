@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo-addon-contract>=16.0dev,<16.1dev',
         'odoo-addon-contract_invoice_start_end_dates>=16.0dev,<16.1dev',
         'odoo-addon-contract_sale>=16.0dev,<16.1dev',
+        'odoo-addon-contract_sale_generation>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
