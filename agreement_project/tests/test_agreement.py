@@ -1,7 +1,12 @@
-from odoo.tests.common import SavepointCase
+from odoo.tests import common
 
 
-class TestAgreement(SavepointCase):
+class TestAgreement(common.SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+    @classmethod
     def test_agreement(self):
         self = self.env["agreement"].search([])
         for ag in self:

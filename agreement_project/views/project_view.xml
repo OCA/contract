@@ -6,9 +6,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project" />
         <field name="arch" type="xml">
-            <field name="allowed_portal_user_ids" position="after">
+            <xpath expr="//field[@name='user_id']" position="after">
                 <field name="agreement_id" domain="[('partner_id', '=', partner_id)]" />
-            </field>
+            </xpath>
         </field>
     </record>
     <record id="view_task_form2_agreement" model="ir.ui.view">
@@ -16,7 +16,7 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
+            <xpath expr="//field[@name='user_ids']" position="after">
                 <field name="agreement_id" readonly="1" />
             </xpath>
         </field>
