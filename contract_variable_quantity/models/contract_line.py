@@ -32,16 +32,13 @@ class AccountAnalyticInvoiceLine(models.Model):
                 "contract": self.contract_id,
             }
             safe_eval(
-                self.qty_formula_id.code.strip(),
-                eval_context,
-                mode="exec",
-                nocopy=True,
+                self.qty_formula_id.code.strip(), eval_context, mode="exec", nocopy=True
             )  # nocopy for returning result
             quantity = eval_context.get("result", 0)
         return quantity
 
-    def _prepare_invoice_line(self, move_form):
-        vals = super()._prepare_invoice_line(move_form)
+    def _prepare_invoice_line(self):
+        vals = super()._prepare_invoice_line()
         if (
             "quantity" in vals
             and self.contract_id.skip_zero_qty

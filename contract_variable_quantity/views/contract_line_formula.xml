@@ -18,51 +18,52 @@
                             <field name="name" placeholder="Name" />
                         </h1>
                     </div>
-                    <group string="Code">
-                        <div style="margin-top: 4px;">
-                            <field
-                                name="code"
-                                nolabel="1"
-                                widget="ace"
-                                options="{'mode': 'python'}"
-                            />
-                            <h3>Help with Python expressions.</h3>
-                            <p>You have to insert valid Python code block that
-                                stores at some moment a float/integer value of
-                                the quantity to invoice in the variable
-                                'result'.
-                            </p>
-                            <p>You can use these variables to compute your
-                                formula:
-                            </p>
-                            <ul>
-                                <li><i>env</i>: Environment variable for
-                                    getting other models.
-                                </li>
-                                <li><i>context</i>: Current context dictionary.
-                                </li>
-                                <li><i>user</i>: Current user.
-                                </li>
-                                <li><i>line</i>: Contract recurring invoice
-                                    line that triggers this formula.
-                                </li>
-                                <li><i>contract</i>: Contract whose line
-                                    belongs to.
-                                </li>
-                                <li><i>invoice</i>: Invoice (header) being
-                                    created.
-                                </li>
-                            </ul>
-                            <div>
-                                <p>Example of Python code</p>
-                                <code>
-                                    result =
-                                    env['product.product'].search_count([('sale_ok',
-                                    '=', True)])
-                                </code>
-                            </div>
+                    <!-- <group string="Code"> -->
+                    <div>Code</div>
+                    <div style="margin-top: 4px;">
+                        <field
+                            name="code"
+                            nolabel="1"
+                            widget="ace"
+                            options="{'mode': 'python'}"
+                        />
+                        <h3>Help with Python expressions.</h3>
+                        <p>You have to insert valid Python code block that
+                            stores at some moment a float/integer value of
+                            the quantity to invoice in the variable
+                            'result'.
+                        </p>
+                        <p>You can use these variables to compute your
+                            formula:
+                        </p>
+                        <ul>
+                            <li><i>env</i>: Environment variable for
+                                getting other models.
+                            </li>
+                            <li><i>context</i>: Current context dictionary.
+                            </li>
+                            <li><i>user</i>: Current user.
+                            </li>
+                            <li><i>line</i>: Contract recurring invoice
+                                line that triggers this formula.
+                            </li>
+                            <li><i>contract</i>: Contract whose line
+                                belongs to.
+                            </li>
+                            <li><i>invoice</i>: Invoice (header) being
+                                created.
+                            </li>
+                        </ul>
+                        <div>
+                            <p>Example of Python code</p>
+                            <code>
+                                result =
+                                env['product.product'].search_count([('sale_ok',
+                                '=', True)])
+                            </code>
                         </div>
-                    </group>
+                    </div>
+                    <!-- </group> -->
                 </sheet>
             </form>
         </field>
