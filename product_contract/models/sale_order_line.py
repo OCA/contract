@@ -43,8 +43,8 @@ class SaleOrderLine(models.Model):
         help="Specify if process date is 'from' or 'to' invoicing date",
         copy=False,
     )
-    date_start = fields.Date(string="Date Start")
-    date_end = fields.Date(string="Date End")
+    date_start = fields.Date()
+    date_end = fields.Date()
 
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
                     _("You can't upsell or downsell a terminated contract")
                 )
 
-    @api.depends("product_id")
+    @api.depends("product_id", "order_id.company_id")
     def _compute_contract_template_id(self):
         for rec in self:
             rec.contract_template_id = rec.product_id.with_company(
@@ -141,21 +141,13 @@ class SaleOrderLine(models.Model):
             rec.date_end = rec._get_date_end() if rec.date_start else False
 
     def _get_contract_line_qty(self):
-        """Returns the quantity to be put on new contract lines."""
+        """Returns the amount that will be placed in new contract lines."""
         self.ensure_one()
-        # The quantity on the generated contract line is 1, as it
-        # correspond to the most common use cases:
-        # - quantity on the SO line = number of periods sold and unit
-        #   price the price of one period, so the
-        #   total amount of the SO corresponds to the planned value
-        #   of the contract; in this case the quantity on the contract
-        #   line must be 1
-        # - quantity on the SO line = number of hours sold,
-        #   automatic invoicing of the actual hours through a variable
-        #   quantity formula, in which case the quantity on the contract
-        #   line is not used
+        # The quantity in the generated contract line is the quantity of
+        # product requested in the order, since they correspond to the most common
+        # use cases.
         # Other use cases are easy to implement by overriding this method.
-        return 1.0
+        return self.product_uom_qty
 
     def _prepare_contract_line_values(
         self, contract, predecessor_contract_line_id=False
@@ -198,7 +190,7 @@ class SaleOrderLine(models.Model):
             "contract_id": contract.id,
             "sale_order_line_id": self.id,
             "predecessor_contract_line_id": predecessor_contract_line_id,
-            "analytic_account_id": self.order_id.analytic_account_id.id,
+            "analytic_distribution": self.analytic_distribution,
         }
 
     def create_contract_line(self, contract):
@@ -269,17 +261,11 @@ class SaleOrderLine(models.Model):
             SaleOrderLine, self.filtered(lambda l: not l.contract_id)
         ).invoice_line_create(invoice_id, qty)
 
-    @api.depends(
-        "qty_invoiced",
-        "qty_delivered",
-        "product_uom_qty",
-        "order_id.state",
-        "product_id.is_contract",
-    )
-    def _get_to_invoice_qty(self):
+    @api.depends("qty_invoiced", "qty_delivered", "product_uom_qty", "state")
+    def _compute_qty_to_invoice(self):
         """
         sale line linked to contracts must not be invoiced from sale order
         """
-        res = super()._get_to_invoice_qty()
+        res = super()._compute_qty_to_invoice()
         self.filtered("product_id.is_contract").update({"qty_to_invoice": 0.0})
         return res

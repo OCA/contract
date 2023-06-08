@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestSaleOrder(SavepointCase):
+class TestSaleOrder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -143,7 +143,9 @@ class TestSaleOrder(SavepointCase):
         self.assertEqual(self.order_line1.invoice_status, "no")
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice)
-        self.assertEqual(self.order_line1.qty_invoiced, 1)
+        self.assertEqual(
+            self.order_line1.qty_invoiced, self.order_line1.product_uom_qty
+        )
         self.assertEqual(self.order_line1.qty_to_invoice, 0)
 
     def test_action_confirm_without_contract_creation(self):
@@ -342,7 +344,7 @@ class TestSaleOrder(SavepointCase):
         self.order_line1.contract_id = self.contract
         self.sale.action_confirm()
         self.contract.is_terminated = True
-        self.sale.action_cancel()
+        self.sale._action_cancel()
         with self.assertRaises(ValidationError):
             self.sale.action_draft()
         self.contract.is_terminated = False

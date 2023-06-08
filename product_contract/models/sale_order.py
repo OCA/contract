@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
     need_contract_creation = fields.Boolean(compute="_compute_need_contract_creation")
 
     @api.constrains("state")
-    def _check_contact_is_not_terminated(self):
+    def _check_contract_is_not_terminated(self):
         for rec in self:
             if rec.state not in (
                 "sale",
@@ -49,9 +49,7 @@ class SaleOrder(models.Model):
     def _prepare_contract_value(self, contract_template):
         self.ensure_one()
         return {
-            "name": "{template_name}: {sale_name}".format(
-                template_name=contract_template.name, sale_name=self.name
-            ),
+            "name": f"{contract_template.name}: {self.name}",
             "partner_id": self.partner_id.id,
             "company_id": self.company_id.id,
             "contract_template_id": contract_template.id,
@@ -59,7 +57,7 @@ class SaleOrder(models.Model):
             "payment_term_id": self.payment_term_id.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "invoice_partner_id": self.partner_invoice_id.id,
-            "line_recurrence": self.partner_invoice_id.id,
+            "line_recurrence": True,
         }
 
     def action_create_contract(self):
@@ -84,8 +82,13 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         _(
                             "You must specify a contract "
-                            "template for '{}' product in '{}' company."
-                        ).format(order_line.product_id.name, rec.company_id.name)
+                            "template for '%(product_name)s' product "
+                            "in '%(company_name)s' company."
+                        )
+                        % {
+                            "product_name": order_line.product_id.name,
+                            "company_name": rec.company_id.name,
+                        }
                     )
                 contract_templates |= contract_template
             for contract_template in contract_templates:
@@ -98,7 +101,7 @@ class SaleOrder(models.Model):
                 contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
                 )
-                contracts.append(contract)
+                contracts.append(contract.id)
                 contract._onchange_contract_template_id()
                 contract._onchange_contract_type()
                 order_lines.create_contract_line(contract)
@@ -112,7 +115,7 @@ class SaleOrder(models.Model):
         self.filtered(
             lambda order: (order.company_id.create_contract_at_sale_order_confirmation)
         ).action_create_contract()
-        return super(SaleOrder, self).action_confirm()
+        return super().action_confirm()
 
     @api.depends("order_line")
     def _compute_contract_count(self):
