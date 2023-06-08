@@ -68,7 +68,7 @@ class ProductTemplate(models.Model):
                 self.with_company(company).write(
                     {"property_contract_template_id": False}
                 )
-        super().write(vals)
+        return super().write(vals)
 
     @api.constrains("is_contract", "type")
     def _check_contract_product_type(self):

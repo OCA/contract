@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestSaleOrder(SavepointCase):
+class TestSaleOrder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -342,7 +342,7 @@ class TestSaleOrder(SavepointCase):
         self.order_line1.contract_id = self.contract
         self.sale.action_confirm()
         self.contract.is_terminated = True
-        self.sale.action_cancel()
+        self.sale._action_cancel()
         with self.assertRaises(ValidationError):
             self.sale.action_draft()
         self.contract.is_terminated = False
