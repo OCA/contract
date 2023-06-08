@@ -84,8 +84,13 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         _(
                             "You must specify a contract "
-                            "template for '{}' product in '{}' company."
-                        ).format(order_line.product_id.name, rec.company_id.name)
+                            "template for '%(product_name)s' product "
+                            "in '%(company_name)s' company."
+                        )
+                        % {
+                            "product_name": order_line.product_id.name,
+                            "company_name": rec.company_id.name,
+                        }
                     )
                 contract_templates |= contract_template
             for contract_template in contract_templates:
@@ -112,7 +117,7 @@ class SaleOrder(models.Model):
         self.filtered(
             lambda order: (order.company_id.create_contract_at_sale_order_confirmation)
         ).action_create_contract()
-        return super(SaleOrder, self).action_confirm()
+        return super().action_confirm()
 
     @api.depends("order_line")
     def _compute_contract_count(self):
