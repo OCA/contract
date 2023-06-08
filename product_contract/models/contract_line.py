@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class ContractLine(models.Model):
@@ -17,10 +17,10 @@ class ContractLine(models.Model):
         copy=False,
     )
 
-    def _prepare_invoice_line(self, move_form):
-        res = super(ContractLine, self)._prepare_invoice_line(move_form)
+    def _prepare_invoice_line(self):
+        res = super()._prepare_invoice_line()
         if self.sale_order_line_id and res:
-            res["sale_line_ids"] = [(6, 0, [self.sale_order_line_id.id])]
+            res["sale_line_ids"] = [Command.set([self.sale_order_line_id.id])]
         return res
 
     def _get_auto_renew_rule_type(self):
@@ -37,9 +37,6 @@ class ContractLine(models.Model):
             if rec.product_id.is_contract:
                 rec.update(
                     {
-                        "recurring_rule_type": rec.product_id.recurring_rule_type,
-                        "recurring_invoicing_type": rec.product_id.recurring_invoicing_type,
-                        "recurring_interval": 1,
                         "is_auto_renew": rec.product_id.is_auto_renew,
                         "auto_renew_interval": rec.product_id.auto_renew_interval,
                         "auto_renew_rule_type": rec.product_id.auto_renew_rule_type,
@@ -51,3 +48,30 @@ class ContractLine(models.Model):
                         ),
                     }
                 )
+
+    def _set_recurrence_field(self, field):
+        res = super()._set_recurrence_field(field)
+        for record in self:
+            if record.product_id.is_contract and field in record.product_id:
+                record[field] = record.product_id[field]
+        return res
+
+    @api.depends(
+        "contract_id.recurring_rule_type", "contract_id.line_recurrence", "product_id"
+    )
+    def _compute_recurring_rule_type(self):
+        return super()._compute_recurring_rule_type()
+
+    @api.depends(
+        "contract_id.recurring_invoicing_type",
+        "contract_id.line_recurrence",
+        "product_id",
+    )
+    def _compute_recurring_invoicing_type(self):
+        return super()._compute_recurring_invoicing_type()
+
+    @api.depends(
+        "contract_id.recurring_interval", "contract_id.line_recurrence", "product_id"
+    )
+    def _compute_recurring_interval(self):
+        return super()._compute_recurring_interval()
