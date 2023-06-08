@@ -43,8 +43,8 @@ class SaleOrderLine(models.Model):
         help="Specify if process date is 'from' or 'to' invoicing date",
         copy=False,
     )
-    date_start = fields.Date(string="Date Start")
-    date_end = fields.Date(string="Date End")
+    date_start = fields.Date()
+    date_end = fields.Date()
 
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
                     _("You can't upsell or downsell a terminated contract")
                 )
 
-    @api.depends("product_id")
+    @api.depends("product_id", "order_id.company_id")
     def _compute_contract_template_id(self):
         for rec in self:
             rec.contract_template_id = rec.product_id.with_company(
@@ -269,17 +269,11 @@ class SaleOrderLine(models.Model):
             SaleOrderLine, self.filtered(lambda l: not l.contract_id)
         ).invoice_line_create(invoice_id, qty)
 
-    @api.depends(
-        "qty_invoiced",
-        "qty_delivered",
-        "product_uom_qty",
-        "order_id.state",
-        "product_id.is_contract",
-    )
-    def _get_to_invoice_qty(self):
+    @api.depends("qty_invoiced", "qty_delivered", "product_uom_qty", "state")
+    def _compute_qty_to_invoice(self):
         """
         sale line linked to contracts must not be invoiced from sale order
         """
-        res = super()._get_to_invoice_qty()
+        res = super()._compute_qty_to_invoice()
         self.filtered("product_id.is_contract").update({"qty_to_invoice": 0.0})
         return res
