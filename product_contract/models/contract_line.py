@@ -37,9 +37,6 @@ class ContractLine(models.Model):
             if rec.product_id.is_contract:
                 rec.update(
                     {
-                        "recurring_rule_type": rec.product_id.recurring_rule_type,
-                        "recurring_invoicing_type": rec.product_id.recurring_invoicing_type,
-                        "recurring_interval": 1,
                         "is_auto_renew": rec.product_id.is_auto_renew,
                         "auto_renew_interval": rec.product_id.auto_renew_interval,
                         "auto_renew_rule_type": rec.product_id.auto_renew_rule_type,
@@ -51,3 +48,29 @@ class ContractLine(models.Model):
                         ),
                     }
                 )
+
+    def _set_recurrence_field(self, field):
+        super()._set_recurrence_field(field)
+        for record in self:
+            if record.product_id.is_contract:
+                record[field] = record.product_id[field]
+
+    @api.depends(
+        "contract_id.recurring_rule_type", "contract_id.line_recurrence", "product_id"
+    )
+    def _compute_recurring_rule_type(self):
+        super()._compute_recurring_rule_type()
+
+    @api.depends(
+        "contract_id.recurring_invoicing_type",
+        "contract_id.line_recurrence",
+        "product_id",
+    )
+    def _compute_recurring_invoicing_type(self):
+        super()._compute_recurring_invoicing_type()
+
+    @api.depends(
+        "contract_id.recurring_interval", "contract_id.line_recurrence", "product_id"
+    )
+    def _compute_recurring_interval(self):
+        super()._compute_recurring_interval()
