@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from collections import namedtuple
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -2456,4 +2456,7 @@ class TestContract(TestContractBase):
 
     def test_check_month_name_marker(self):
         invoice_id = self.contract3.recurring_create_invoice()
-        self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
+        self.assertEqual(
+            invoice_id.invoice_line_ids[0].name,
+            f"Header for {datetime.now().strftime('%B')} Services",
+        )
