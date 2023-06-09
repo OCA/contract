@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_split_contract_form" model="ir.ui.view">
+        <field name="name">split.contract.form</field>
+        <field name="model">split.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="main_contract_id" />
+                    <field name="partner_id" />
+                    <field name="invoice_partner_id" />
+                </group>
+                <notebook>
+                    <page name="lines" string="Lines">
+                        <field name="split_line_ids" nolabel="1">
+                            <tree>
+                                <field name="original_contract_line_id" />
+                                <field name="product_id" />
+                                <field name="name" />
+                                <field name="original_qty" />
+                                <field name="uom_id" />
+                                <field name="quantity_to_split" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button
+                        string="Split"
+                        name="action_split_contract"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="split_contract_wizard_action" model="ir.actions.act_window">
+            <field name="name">Split Contract</field>
+            <field name="res_model">split.contract</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>
