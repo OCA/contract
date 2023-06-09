@@ -20,7 +20,7 @@ class ContractLine(models.Model):
     def _prepare_invoice_line(self):
         res = super()._prepare_invoice_line()
         if self.sale_order_line_id and res:
-            res["sale_line_ids"] = Command.set([self.sale_order_line_id.id])
+            res["sale_line_ids"] = [Command.set([self.sale_order_line_id.id])]
         return res
 
     def _get_auto_renew_rule_type(self):
