@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class ContractLine(models.Model):
@@ -18,9 +18,9 @@ class ContractLine(models.Model):
     )
 
     def _prepare_invoice_line(self):
-        res = super(ContractLine, self)._prepare_invoice_line()
+        res = super()._prepare_invoice_line()
         if self.sale_order_line_id and res:
-            res["sale_line_ids"] = [(6, 0, [self.sale_order_line_id.id])]
+            res["sale_line_ids"] = Command.set([self.sale_order_line_id.id])
         return res
 
     def _get_auto_renew_rule_type(self):

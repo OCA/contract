@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
                     _("You can't upsell or downsell a terminated contract")
                 )
 
-    @api.depends("product_id")
+    @api.depends("product_id", "order_id.company_id")
     def _compute_contract_template_id(self):
         for rec in self:
             rec.contract_template_id = rec.product_id.with_company(

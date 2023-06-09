@@ -75,5 +75,5 @@ class ProductTemplate(models.Model):
         """
         Contract product should be service type
         """
-        if self.is_contract and self.type != "service":
+        if any([product.is_contract and product.type != "service" for product in self]):
             raise ValidationError(_("Contract product should be service type"))

@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
         self.filtered(
             lambda order: (order.company_id.create_contract_at_sale_order_confirmation)
         ).action_create_contract()
-        return super(SaleOrder, self).action_confirm()
+        return super().action_confirm()
 
     @api.depends("order_line")
     def _compute_contract_count(self):
