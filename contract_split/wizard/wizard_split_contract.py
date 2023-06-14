@@ -38,6 +38,7 @@ class SplitContract(models.TransientModel):
     def _get_default_split_line_values(self, line) -> list:
         return {
             "original_contract_line_id": line.id,
+            "quantity_to_split": line.quantity,
         }
 
     def _get_contract_name(self):
