@@ -8,6 +8,7 @@ from odoo.tools import float_compare
 
 class SplitContract(models.TransientModel):
     _name = "split.contract"
+    _description = "Contract split transient model"
 
     split_line_ids = fields.One2many(
         comodel_name="split.contract.line", inverse_name="split_contract_id"
@@ -21,38 +22,8 @@ class SplitContract(models.TransientModel):
         vals = super().default_get(fields)
         contract_id = self.env.context.get("active_id")
         contract = self.env["contract.contract"].browse(contract_id)
-        vals.update(self._get_default_values_from_contract(contract))
+        vals.update(contract._get_default_split_values())
         return vals
-
-    def _get_default_values_from_contract(self, contract) -> dict:
-        return {
-            "main_contract_id": contract.id,
-            "partner_id": contract.partner_id.id,
-            "invoice_partner_id": contract.invoice_partner_id.id,
-            "split_line_ids": [
-                (0, 0, self._get_default_split_line_values(line))
-                for line in contract.contract_line_ids
-            ],
-        }
-
-    def _get_default_split_line_values(self, line) -> list:
-        return {
-            "original_contract_line_id": line.id,
-            "quantity_to_split": line.quantity,
-        }
-
-    def _get_contract_name(self):
-        return self.main_contract_id.name
-
-    def _get_values_create_contract(self):
-        self.ensure_one()
-        return {
-            "name": self._get_contract_name(),
-            "partner_id": self.partner_id.id,
-            "invoice_partner_id": self.invoice_partner_id.id,
-            "original_contract_id": self.main_contract_id.id,
-            "line_recurrence": True,
-        }
 
     def action_split_contract(self):
         """
@@ -68,8 +39,9 @@ class SplitContract(models.TransientModel):
         if self.split_line_ids and any(
             line.quantity_to_split for line in self.split_line_ids
         ):
-            new_contract = self.env["contract.contract"].create(
-                self._get_values_create_contract()
+            contract_obj = self.env["contract.contract"]
+            new_contract = contract_obj.create(
+                contract_obj._get_values_create_split_contract(self)
             )
             # TODO: play onchange on partner_id. use onchange_helper from OCA ?
             for line in self.split_line_ids:
@@ -84,7 +56,7 @@ class SplitContract(models.TransientModel):
                 ):
                     # only move because new_qty = original_qty
                     original_line.write(
-                        line._get_write_values_when_moving_line(new_contract)
+                        original_line._get_write_values_when_moving_line(new_contract)
                     )
                 elif (
                     float_compare(
@@ -95,11 +67,10 @@ class SplitContract(models.TransientModel):
                     # need to split and move
                     new_line = original_line.copy()
                     new_line.write(
-                        line._get_write_values_when_splitting_and_moving_line(
-                            new_contract, line
+                        original_line._get_write_values_when_splitting_and_moving_line(
+                            new_contract, line.quantity_to_split
                         )
                     )
-
                     original_line.quantity -= new_line.quantity
             return new_contract
         return True
@@ -107,17 +78,12 @@ class SplitContract(models.TransientModel):
 
 class SplitContractLine(models.TransientModel):
     _name = "split.contract.line"
+    _description = "Contract split line transient model"
 
     split_contract_id = fields.Many2one(comodel_name="split.contract")
     original_contract_line_id = fields.Many2one(comodel_name="contract.line")
     original_qty = fields.Float(
         related="original_contract_line_id.quantity",
-        readonly=True,
-        store=False,
-    )
-    original_contract_id = fields.Many2one(
-        comodel_name="contract.contract",
-        related="original_contract_line_id.contract_id",
         readonly=True,
         store=False,
     )
@@ -156,17 +122,3 @@ class SplitContractLine(models.TransientModel):
                         "original quantity of the initial contract line."
                     )
                 )
-
-    def _get_write_values_when_moving_line(self, new_contract):
-        return {
-            "contract_id": new_contract.id,
-            "splitted_from_contract_id": self.original_contract_id.id,
-        }
-
-    def _get_write_values_when_splitting_and_moving_line(self, new_contract, line):
-        return {
-            "contract_id": new_contract.id,
-            "splitted_from_contract_id": self.original_contract_id.id,
-            "splitted_from_line_id": self.original_contract_line_id.id,
-            "quantity": line.quantity_to_split,
-        }
