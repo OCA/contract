@@ -25,6 +25,32 @@ class TestContractSplit(TestContractBase):
         self.assertEqual(self.contract3.id, wizard.main_contract_id.id)
         self.assertEqual(3, len(wizard.split_line_ids.ids))
 
+    def test_contract_default_get_method_1(self):
+        wizard = (
+            self.env["split.contract"]
+            .with_context(active_id=self.contract3.id)
+            .create({})
+        )
+        contract_split_name = self.contract3._get_contract_split_name(wizard)
+        self.assertEqual(contract_split_name, self.contract3.name)
+        expected_result = {
+            "main_contract_id": self.contract3.id,
+            "partner_id": self.contract3.partner_id.id,
+            "invoice_partner_id": self.contract3.invoice_partner_id.id,
+            "split_line_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "original_contract_line_id": line.id,
+                        "quantity_to_split": line.quantity,
+                    },
+                )
+                for line in self.contract_line_ids
+            ],
+        }
+        self.assertEqual(self.contract3._get_default_split_values(), expected_result)
+
     def test_no_split_because_no_qty_set(self):
         wizard = (
             self.env["split.contract"]
