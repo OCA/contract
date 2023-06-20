@@ -3,7 +3,7 @@
 
 {
     "name": "Contract from Sale",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.1.0",
     "category": "Sales",
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
@@ -20,5 +20,5 @@
     ],
     "license": "AGPL-3",
     "installable": True,
-    "auto_install": True,
+    "auto_install": False,
 }
