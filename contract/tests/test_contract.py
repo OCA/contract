@@ -2462,4 +2462,6 @@ class TestContract(TestContractBase):
 
     def test_check_month_name_marker(self):
         invoice_id = self.contract3.recurring_create_invoice()
-        self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for February Services")
+        self.assertEqual(
+            invoice_id.invoice_line_ids[0].name, "Header for February Services"
+        )
