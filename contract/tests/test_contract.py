@@ -2454,6 +2454,10 @@ class TestContract(TestContractBase):
         self.acct_line.refresh()
         self.assertEqual(self.acct_line.price_unit, 30.75 * 8)
 
+    @freeze_time("2023-05-01")
     def test_check_month_name_marker(self):
+        """Set fixed date to check test correctly."""
+        self.contract3.contract_line_ids.date_start = fields.Date.today()
+        self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
         invoice_id = self.contract3.recurring_create_invoice()
         self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
