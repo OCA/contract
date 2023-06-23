@@ -7,7 +7,7 @@
         Allows to hide some section details that will be used also on invoices and sales.""",
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
-    "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV,Odoo Community Association (OCA), Mind And Go",
     "website": "https://github.com/OCA/contract",
     "depends": [
         "contract",

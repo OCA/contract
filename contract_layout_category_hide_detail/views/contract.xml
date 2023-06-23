@@ -29,6 +29,22 @@
                     attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
                 />
                 <field
+                name="show_section_subtotal"
+                widget="boolean_fa_icon"
+                options="{
+                        'show_in_line_section': true,
+                        'fa_icons': {
+                            'icon_true': 'fa-envelope-open',
+                            'icon_false': 'fa-envelope',
+                        },
+                        'terminology': {
+                            'hover_true': 'Switch to: section subtotal hidden',
+                            'hover_false': 'Switch to: section subtotal shown',
+                        },
+                   }"
+                attrs="{'invisible': ['|', ('display_type', '!=', 'line_section'), ('display_type', '=', 'line_section'), ('show_details', '=', True)]}"
+            />
+                <field
                     name="show_subtotal"
                     widget="boolean_fa_icon"
                     options="{
