@@ -9,6 +9,6 @@
     "website": "https://github.com/OCA/contract",
     "author": "Mind And Go " "Odoo Community Association (OCA)",
     "license": "AGPL-3",
-    "depends": ["contract_layout_category_hide_detail", "contract_sale_generation"],
+    "depends": ["contract_layout_category_hide_detail", "contract_sale_generation","sale_layout_category_hide_detail"],
     "data": [],
 }
