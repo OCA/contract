@@ -46,7 +46,7 @@ class TestContractSplit(TestContractBase):
                         "quantity_to_split": line.quantity,
                     },
                 )
-                for line in self.contract_line_ids
+                for line in self.contract3.contract_line_ids
             ],
         }
         self.assertEqual(self.contract3._get_default_split_values(), expected_result)
@@ -58,6 +58,7 @@ class TestContractSplit(TestContractBase):
             .create({})
         )
         wizard.partner_id = self.partner_2.id
+        wizard.split_line_ids.quantity_to_split = 0
         initial_contracts_length = self.env["contract.contract"].search_count([])
         # confirm wizard without setting to_split quantities
         wizard.action_split_contract()
@@ -75,6 +76,7 @@ class TestContractSplit(TestContractBase):
             .create({})
         )
         wizard.partner_id = self.partner_2.id
+        wizard.split_line_ids.quantity_to_split = 0
         initial_contracts_length = self.env["contract.contract"].search_count([])
         # set quantity to split in the wizard
         wizard.split_line_ids[0].quantity_to_split = wizard.split_line_ids[
@@ -87,10 +89,10 @@ class TestContractSplit(TestContractBase):
             initial_contracts_length + 1, self.env["contract.contract"].search_count([])
         )
         # new contract has now the splitted line
-        self.assertEqual(self.partner2.id, new_contract.partner_id.id)
+        self.assertEqual(self.partner_2.id, new_contract.partner_id.id)
         self.assertEqual(1, len(new_contract.contract_line_ids.ids))
         self.assertEqual(
-            self.contract3.id,
+            self.contract3,
             new_contract.contract_line_ids.mapped("splitted_from_contract_id"),
         )
         # Original contract has now only 2 lines (3 at the beginning)
@@ -107,6 +109,7 @@ class TestContractSplit(TestContractBase):
             .create({})
         )
         wizard.partner_id = self.partner_2.id
+        wizard.split_line_ids.quantity_to_split = 0
         initial_contracts_length = self.env["contract.contract"].search_count([])
         # set quantity to split in the wizard
         wizard.split_line_ids.filtered(lambda l: l.name == "Line").quantity_to_split = 1
@@ -116,13 +119,13 @@ class TestContractSplit(TestContractBase):
         self.assertEqual(
             initial_contracts_length + 1, self.env["contract.contract"].search_count([])
         )
-        # new contract has partner2 as partner_id
-        self.assertEqual(self.partner2.id, new_contract.partner_id.id)
+        # new contract has partner_2 as partner_id
+        self.assertEqual(self.partner_2.id, new_contract.partner_id.id)
         # new contract has now the splitted line with a qty of one
         self.assertEqual(1, len(new_contract.contract_line_ids.ids))
         self.assertEqual(1, new_contract.contract_line_ids.quantity)
         self.assertEqual(
-            self.contract3.id,
+            self.contract3,
             new_contract.contract_line_ids.mapped("splitted_from_contract_id"),
         )
         # Original contract still has 3 lines but with a qty=1 in the last line named "Line"
@@ -141,9 +144,7 @@ class TestContractSplit(TestContractBase):
             .create({})
         )
         # set quantity to split in the wizard
-        wizard.split_line_ids[0].quantity_to_split = (
-            wizard.split_line_ids[0].original_qty + 2
-        )
-        # confirm wizard with setting to_split quantities that should raise an error
         with self.assertRaises(ValidationError):
-            wizard.action_split_contract()
+            wizard.split_line_ids[0].quantity_to_split = (
+                wizard.split_line_ids[0].original_qty + 2
+            )

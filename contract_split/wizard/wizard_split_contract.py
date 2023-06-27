@@ -44,13 +44,19 @@ class SplitContract(models.TransientModel):
                 contract_obj._get_values_create_split_contract(self)
             )
             # TODO: play onchange on partner_id. use onchange_helper from OCA ?
+            precision = self.env["decimal.precision"].precision_get(
+                "Product Unit of Measure"
+            )
             for line in self.split_line_ids:
                 original_line = line.original_contract_line_id
                 if not line.quantity_to_split:
                     continue
                 if (
                     float_compare(
-                        line.quantity_to_split, line.original_qty, precision_digits=2
+                        line.quantity_to_split,
+                        line.original_qty,
+                        precision_digits=line.uom_id and None or precision,
+                        precision_rounding=line.uom_id.rounding or None,
                     )
                     == 0
                 ):
@@ -60,7 +66,10 @@ class SplitContract(models.TransientModel):
                     )
                 elif (
                     float_compare(
-                        line.quantity_to_split, line.original_qty, precision_digits=2
+                        line.quantity_to_split,
+                        line.original_qty,
+                        precision_digits=line.uom_id and None or precision,
+                        precision_rounding=line.uom_id.rounding or None,
                     )
                     < 0
                 ):
@@ -108,10 +117,16 @@ class SplitContractLine(models.TransientModel):
 
     @api.constrains("quantity_to_split")
     def _check_quantity_to_move(self):
+        precision = self.env["decimal.precision"].precision_get(
+            "Product Unit of Measure"
+        )
         for rec in self:
             if (
                 float_compare(
-                    rec.quantity_to_split, rec.original_qty, precision_digits=2
+                    rec.quantity_to_split,
+                    rec.original_qty,
+                    precision_digits=rec.uom_id and None or precision,
+                    precision_rounding=rec.uom_id.rounding or None,
                 )
                 > 0
             ):
