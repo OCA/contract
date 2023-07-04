@@ -23,7 +23,7 @@ addon | version | maintainers | summary
 --- | --- | --- | ---
 [contract](contract/) | 16.0.1.0.0 |  | Recurring - Contracts Management
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 16.0.1.0.0 | [![florian-dacosta](https://github.com/florian-dacosta.png?size=30px)](https://github.com/florian-dacosta) | Contract Invoice Start End Dates
-[contract_sale](contract_sale/) | 16.0.1.0.0 |  | Contract from Sale
+[contract_sale](contract_sale/) | 16.0.1.0.1 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 16.0.1.0.0 |  | Contracts Management - Recurring Sales
 
 [//]: # (end addons)
