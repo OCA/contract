@@ -2211,8 +2211,21 @@ class TestContract(TestContractBase):
         parent_partner = self.env["res.partner"].create(
             {"name": "parent partner", "is_company": True}
         )
+        journal2 = self.env["account.journal"].create(
+            {
+                "name": "Test journal Company2",
+                "code": "VTC2",
+                "type": "sale",
+                "company_id": company2.id,
+            }
+        )
         # Assume contract 2 is for company 2
-        self.contract2.company_id = company2
+        self.contract2.write(
+            {
+                "company_id": company2.id,
+                "journal_id": journal2.id,
+            }
+        )
         # Update the partner attached to both contracts
         self.partner.with_user(unprivileged_user).with_company(company2).with_context(
             company_id=company2.id
@@ -2412,6 +2425,7 @@ class TestContract(TestContractBase):
                 "code": "TCAD",
                 "type": "sale",
                 "currency_id": currency_cad.id,
+                "company_id": self.contract2.company_id.id,
             }
         )
         self.contract2.journal_id = journal.id

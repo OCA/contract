@@ -21,6 +21,7 @@ class ContractContract(models.Model):
     _name = "contract.contract"
     _description = "Contract"
     _order = "code, name asc"
+    _check_company_auto = True
     _inherit = [
         "mail.thread",
         "mail.activity.mixin",
@@ -39,6 +40,8 @@ class ContractContract(models.Model):
         string="Group",
         comodel_name="account.analytic.account",
         ondelete="restrict",
+        check_company=True,
+        domain="[('company_id', '=', company_id)]",
     )
     currency_id = fields.Many2one(
         compute="_compute_currency_id",
@@ -81,13 +84,19 @@ class ContractContract(models.Model):
     )
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     payment_term_id = fields.Many2one(
-        comodel_name="account.payment.term", string="Payment Terms", index=True
+        comodel_name="account.payment.term",
+        string="Payment Terms",
+        index=True,
+        check_company=True,
+        domain="[('company_id', '=', company_id)]",
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
         string="Fiscal Position",
         ondelete="restrict",
+        check_company=True,
+        domain="[('company_id', '=', company_id)]",
     )
     invoice_partner_id = fields.Many2one(
         string="Invoicing contact",

@@ -49,7 +49,9 @@
         <field name="inherit_id" ref="contract.contract_contract_supplier_form_view" />
         <field name="arch" type="xml">
             <field name="payment_mode_id" position="attributes">
-                <attribute name="domain">[('payment_type', '=', 'outbound')]</attribute>
+                <attribute
+                    name="domain"
+                >[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]</attribute>
             </field>
         </field>
     </record>
