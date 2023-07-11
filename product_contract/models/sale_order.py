@@ -25,20 +25,37 @@ class SaleOrder(models.Model):
                     _("You can't upsell or downsell a terminated contract")
                 )
 
+    def _get_line_to_create_contract(self):
+        """
+        Override this method to define more filter criteria of line for which we create contract
+        :return: line to create contract
+        """
+        self.ensure_one()
+        line_to_create_contract = self.order_line.filtered(
+            lambda r: not r.contract_id and r.is_contract
+        )
+        return line_to_create_contract
+
+    def _get_line_to_update_contract(self):
+        """
+        Override this method to define more filter criteria of line for which we update contract
+        :return: line to update contract
+        """
+        self.ensure_one()
+        line_to_update_contract = self.order_line.filtered(
+            lambda r: r.contract_id
+            and r.is_contract
+            and r not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
+        )
+        return line_to_update_contract
+
     @api.depends("order_line.contract_id", "state")
     def _compute_need_contract_creation(self):
         self.update({"need_contract_creation": False})
         for rec in self:
             if rec.state in ("sale", "done"):
-                line_to_create_contract = rec.order_line.filtered(
-                    lambda r: not r.contract_id and r.product_id.is_contract
-                )
-                line_to_update_contract = rec.order_line.filtered(
-                    lambda r: r.contract_id
-                    and r.product_id.is_contract
-                    and r
-                    not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
-                )
+                line_to_create_contract = rec._get_line_to_create_contract()
+                line_to_update_contract = rec._get_line_to_update_contract()
                 if line_to_create_contract or line_to_update_contract:
                     rec.need_contract_creation = True
 
@@ -66,15 +83,8 @@ class SaleOrder(models.Model):
         contract_model = self.env["contract.contract"]
         contracts = []
         for rec in self.filtered("is_contract"):
-            line_to_create_contract = rec.order_line.filtered(
-                lambda r: not r.contract_id and r.product_id.is_contract
-            )
-            line_to_update_contract = rec.order_line.filtered(
-                lambda r: r.contract_id
-                and r.product_id.is_contract
-                and r
-                not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
-            )
+            line_to_create_contract = rec._get_line_to_create_contract()
+            line_to_update_contract = rec._get_line_to_update_contract()
             contract_templates = self.env["contract.template"]
             for order_line in line_to_create_contract:
                 contract_template = order_line.product_id.with_company(

@@ -65,8 +65,15 @@ class TestSaleOrder(SavepointCase):
         cls.order_line1 = cls.sale.order_line.filtered(
             lambda l: l.product_id == cls.product1
         )
+
         cls.order_line1.date_start = "2018-01-01"
         cls.order_line1.product_uom_qty = 12
+        cls.order_line1.product_id_change()
+        cls.order_line2 = cls.sale.order_line.filtered(
+            lambda l: l.product_id == cls.product2
+        )
+        cls.order_line2.product_id_change()
+
         pricelist = cls.sale.partner_id.property_product_pricelist.id
         cls.contract = cls.env["contract.contract"].create(
             {
@@ -194,7 +201,7 @@ class TestSaleOrder(SavepointCase):
             {
                 "name": "Contract",
                 "contract_template_id": self.contract_template2.id,
-                "partner_id": self.sale.partner_id.id,
+                "partner_id": self.env.user.partner_id.id,
                 "line_recurrence": True,
             }
         )
@@ -218,6 +225,7 @@ class TestSaleOrder(SavepointCase):
     def test_no_contract_proudct(self):
         """it should create contract for only product contract"""
         self.product1.is_contract = False
+        self.order_line1.product_id_change()
         self.sale.action_confirm()
         self.assertFalse(self.order_line1.contract_id)
 
@@ -241,6 +249,7 @@ class TestSaleOrder(SavepointCase):
     def test_sale_order_create_invoice(self):
         """Should not invoice contract product on sale order create invoice"""
         self.product2.is_contract = False
+        self.order_line2.product_id_change()
         self.product2.invoice_policy = "order"
         self.order_line1._compute_auto_renew()
         self.sale.action_confirm()
