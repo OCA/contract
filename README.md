@@ -42,6 +42,7 @@ addon | version | maintainers | summary
 [contract_sale](contract_sale/) | 14.0.1.2.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 14.0.1.0.2 |  | Contracts Management - Recurring Sales
 [contract_sale_tag](contract_sale_tag/) | 14.0.1.0.1 | [![rousseldenis](https://github.com/rousseldenis.png?size=30px)](https://github.com/rousseldenis) | Allows to transmit contract tags to sale order (through sale_generation)
+[contract_split](contract_split/) | 14.0.1.0.0 |  | Split contract
 [contract_update_last_date_invoiced](contract_update_last_date_invoiced/) | 14.0.1.0.0 |  | This module allows to update the last date invoiced if invoices are deleted.
 [contract_variable_qty_prorated](contract_variable_qty_prorated/) | 14.0.1.0.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) | This module adds a formula to compute prorated quantity to invoice as extension of the module contract_variable_quantity
 [contract_variable_quantity](contract_variable_quantity/) | 14.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
