@@ -15,4 +15,5 @@
         "views/contract_line.xml",
         "wizards/update_last_date_invoiced.xml",
     ],
+    "auto_install": True,
 }
