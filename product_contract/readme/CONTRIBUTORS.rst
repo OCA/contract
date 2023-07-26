@@ -4,3 +4,6 @@
 
   * Ernesto Tejeda
   * Pedro M. Baeza
+* `Binhex <https://binhex.cloud>`__:
+
+  * Adasat Torres

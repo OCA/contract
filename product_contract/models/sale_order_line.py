@@ -43,8 +43,8 @@ class SaleOrderLine(models.Model):
         help="Specify if process date is 'from' or 'to' invoicing date",
         copy=False,
     )
-    date_start = fields.Date(string="Date Start")
-    date_end = fields.Date(string="Date End")
+    date_start = fields.Date()
+    date_end = fields.Date()
 
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
@@ -142,13 +142,13 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("product_id")
     def product_id_change(self):
-        super().product_id_change()
         for rec in self:
             if rec.product_id.is_contract:
                 rec.is_contract = True
             else:
                 # Don't initialize wrong values
                 rec.is_contract = False
+        return super().product_id_change()
 
     def _get_contract_line_qty(self):
         """Returns the quantity to be put on new contract lines."""

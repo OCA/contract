@@ -94,8 +94,9 @@ class SaleOrder(models.Model):
                     raise ValidationError(
                         _(
                             "You must specify a contract "
-                            "template for '{}' product in '{}' company."
-                        ).format(order_line.product_id.name, rec.company_id.name)
+                            "template for '%(order_line.product_id.name)s' "
+                            "product in '%(rec.company_id.name)s' company."
+                        )
                     )
                 contract_templates |= contract_template
             for contract_template in contract_templates:

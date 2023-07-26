@@ -18,7 +18,7 @@ class ContractLine(models.Model):
     )
 
     def _prepare_invoice_line(self, move_form):
-        res = super(ContractLine, self)._prepare_invoice_line(move_form)
+        res = super()._prepare_invoice_line(move_form)
         if self.sale_order_line_id and res:
             res["sale_line_ids"] = [(6, 0, [self.sale_order_line_id.id])]
         return res

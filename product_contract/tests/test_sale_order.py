@@ -6,10 +6,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestSaleOrder(SavepointCase):
+class TestSaleOrder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
