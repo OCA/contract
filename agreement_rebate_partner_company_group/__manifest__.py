@@ -4,7 +4,7 @@
 {
     "name": "Agreement Rebate Partner Company Group",
     "summary": "Rebate agreements applied to all company group members",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "development_status": "Beta",
     "category": "Contract",
     "website": "https://github.com/OCA/contract",
