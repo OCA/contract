@@ -114,7 +114,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         help="Specify Interval for automatic renewal.",
     )
     termination_notice_interval = fields.Integer(
-        default=1, string='Termination Notice Before'
+        default=1, string='Time before Termination Notice'
     )
     termination_notice_rule_type = fields.Selection(
         [('daily', 'Day(s)'), ('weekly', 'Week(s)'), ('monthly', 'Month(s)')],
