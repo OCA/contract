@@ -31,7 +31,7 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='order_line']" position="before">
-                <field name="is_contract" attrs="{'invisible': []}" />
+                <field name="is_contract" invisible="1" />
             </xpath>
             <xpath
                 expr="//field[@name='order_line']/form//field[@name='product_id']"
@@ -59,7 +59,7 @@
                 expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
                 position="after"
             >
-                <field name="is_contract" attrs="{'invisible': []}" />
+                <field name="is_contract" invisible="1" />
                 <separator
                     colspan="4"
                     string="Recurrence Invoicing"
