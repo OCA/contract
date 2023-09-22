@@ -14,6 +14,7 @@ setuptools.setup(
         'odoo-addon-contract_sale>=15.0dev,<15.1dev',
         'odoo-addon-contract_sale_generation>=15.0dev,<15.1dev',
         'odoo-addon-contract_variable_quantity>=15.0dev,<15.1dev',
+        'odoo-addon-subscription_oca>=15.0dev,<15.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
