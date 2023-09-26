@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="seq_agreement_option_1" model="ir.sequence">
+        <field name="name">Agreement: Option 1</field>
+        <field name="padding" eval="5" />
+        <field name="prefix">AG-1/</field>
+    </record>
+
+    <record id="agreement_sequence_option_line_1" model="ir.sequence.option.line">
+        <field
+            name="base_id"
+            ref="agreement_sequence_option.agreement_sequence_option"
+        />
+        <field name="name">AG Option 1</field>
+        <field name="filter_domain">[]</field>
+        <field
+            name="sequence_id"
+            ref="agreement_sequence_option.seq_agreement_option_1"
+        />
+    </record>
+
+</odoo>
