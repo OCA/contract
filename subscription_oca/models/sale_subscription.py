@@ -451,8 +451,8 @@ class SaleSubscription(models.Model):
     def create(self, values):
         if "recurring_rule_boundary" in values:
             if not values["recurring_rule_boundary"]:
-                template_id = self.env["sale.subscription.template"].search(
-                    [("id", "=", values["template_id"])]
+                template_id = self.env["sale.subscription.template"].browse(
+                    values["template_id"]
                 )
                 date_start = values["date_start"]
                 if not isinstance(values["date_start"], date):
@@ -464,7 +464,7 @@ class SaleSubscription(models.Model):
                 values["date_start"] = values["recurring_next_date"]
             values["stage_id"] = (
                 self.env["sale.subscription.stage"]
-                .search([("type", "=", "pre")], order="sequence desc")[-1]
+                .search([("type", "=", "pre")], order="sequence desc", limit=1)
                 .id
             )
         return super(SaleSubscription, self).create(values)
