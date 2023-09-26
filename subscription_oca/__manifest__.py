@@ -3,7 +3,7 @@
 {
     "name": "Subscription management",
     "summary": "Generate recurring invoices.",
-    "version": "15.0.1.0.0",
+    "version": "15.0.1.0.1",
     "development_status": "Beta",
     "category": "Subscription Management",
     "website": "https://github.com/OCA/contract",
