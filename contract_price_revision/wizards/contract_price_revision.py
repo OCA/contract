@@ -9,19 +9,24 @@ from odoo import api, fields, models
 
 
 class ContractPriceRevisionWizard(models.TransientModel):
-    """ Update contract price based on percentage variation """
+    """Update contract price based on percentage variation"""
 
     _name = "contract.price.revision.wizard"
     _description = "Wizard to update price based on percentage variation"
 
-    date_start = fields.Date(required=True,)
+    date_start = fields.Date(
+        required=True,
+    )
     date_end = fields.Date()
     variation_type = fields.Selection(
         selection=lambda self: self._get_variation_type(),
         required=True,
         default=lambda self: self._get_default_variation_type(),
     )
-    variation_percent = fields.Float(digits="Product Price", string="Variation %",)
+    variation_percent = fields.Float(
+        digits="Product Price",
+        string="Variation %",
+    )
     fixed_price = fields.Float(digits="Product Price")
 
     @api.model
@@ -36,8 +41,7 @@ class ContractPriceRevisionWizard(models.TransientModel):
         return "percentage"
 
     def _get_new_price(self, line):
-        """Get the price depending the change type chosen
-        """
+        """Get the price depending the change type chosen"""
         if self.variation_type == "percentage":
             return line.price_unit * (1.0 + self.variation_percent / 100.0)
         elif self.variation_type == "fixed":
