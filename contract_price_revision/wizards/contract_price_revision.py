@@ -69,8 +69,8 @@ class ContractPriceRevisionWizard(models.TransientModel):
             line.stop(date_end)
             new_line = line.copy(self._get_new_line_value(line))
             line.update({"successor_contract_line_id": new_line.id})
-        action = self.env["ir.actions.act_window"].for_xml_id(
-            "contract", "action_customer_contract"
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "contract.action_customer_contract"
         )
         action["domain"] = [("id", "in", active_ids)]
         return action
