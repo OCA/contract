@@ -1,6 +1,7 @@
 # Copyright 2019 Tecnativa - Vicent Cubells
 # Copyright 2019 Tecnativa - Carlos Dauden
 # Copyright 2020 ACSONE SA/NV
+# Copyright 2023 Tecnativa - Carolina Fernandez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo.addons.contract.tests.test_contract import TestContractBase
@@ -20,7 +21,7 @@ class TestContractPriceRevision(TestContractBase):
         )
 
     def execute_wizard(self):
-        self.wizard.with_context({"active_ids": [self.contract.id]}).action_apply()
+        self.wizard.with_context(active_ids=self.contract.id).action_apply()
 
     def test_contract_price_revision_wizard(self):
         # This is for checking if this line is not versioned
