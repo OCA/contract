@@ -5,7 +5,7 @@ from odoo import fields
 from odoo.tests import common
 
 
-class TestContractVariableQtyTimesheet(common.SavepointCase):
+class TestContractVariableQtyTimesheet(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
