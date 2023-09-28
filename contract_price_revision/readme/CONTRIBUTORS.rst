@@ -2,3 +2,4 @@
 
   * Vicent Cubells
   * Carlos Dauden
+  * Carolina Fernandez
