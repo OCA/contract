@@ -26,6 +26,7 @@ addon | version | maintainers | summary
 [contract_payment_mode](contract_payment_mode/) | 15.0.1.1.1 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 15.0.1.1.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 15.0.1.0.3 |  | Contracts Management - Recurring Sales
+[contract_variable_qty_timesheet](contract_variable_qty_timesheet/) | 15.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) [![pedrobaeza](https://github.com/pedrobaeza.png?size=30px)](https://github.com/pedrobaeza) | Add formula to invoice
 [contract_variable_quantity](contract_variable_quantity/) | 15.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 [subscription_oca](subscription_oca/) | 15.0.1.0.1 |  | Generate recurring invoices.
 
