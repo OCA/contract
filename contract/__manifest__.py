@@ -37,6 +37,7 @@
         "wizards/contract_contract_terminate.xml",
         "views/contract_tag.xml",
         "views/abstract_contract_line.xml",
+        "views/account_move_views.xml",
         "views/contract.xml",
         "views/contract_line.xml",
         "views/contract_template.xml",
