@@ -20,9 +20,9 @@ class ContractContract(models.Model):
             self.payment_mode_id = partner.customer_payment_mode_id.id
 
     def _prepare_invoice(self, date_invoice, journal=None):
-        invoice_vals, move_form = super()._prepare_invoice(
+        invoice_vals = super()._prepare_invoice(
             date_invoice=date_invoice, journal=journal
         )
         if self.payment_mode_id:
             invoice_vals["payment_mode_id"] = self.payment_mode_id.id
-        return invoice_vals, move_form
+        return invoice_vals
