@@ -1,6 +1,7 @@
 # Copyright 2015 Antiun Ingenieria S.L. - Antonio Espinosa
 # Copyright 2017 Tecnativa - Vicent Cubells
 # Copyright 2017 Tecnativa - David Vidal
+# Copyright 2023 Tecnativa - Carolina Fernandez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from unittest.mock import patch
@@ -15,8 +16,9 @@ from ..hooks import post_init_hook
 
 @tagged("post_install", "-at_install")
 class TestContractPaymentInit(odoo.tests.HttpCase):
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         Method_get_payment_method_information = (
             AccountPaymentMethod._get_payment_method_information
@@ -32,7 +34,7 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
             "_get_payment_method_information",
             _get_payment_method_information,
         ):
-            self.payment_method = self.env["account.payment.method"].create(
+            cls.payment_method = cls.env["account.payment.method"].create(
                 {
                     "name": "Test Payment Method",
                     "code": "Test",
@@ -40,34 +42,34 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
                 }
             )
 
-        self.payment_mode = self.env["account.payment.mode"].create(
+        cls.payment_mode = cls.env["account.payment.mode"].create(
             {
                 "name": "Test payment mode",
                 "active": True,
-                "payment_method_id": self.payment_method.id,
+                "payment_method_id": cls.payment_method.id,
                 "bank_account_link": "variable",
             }
         )
-        self.partner = self.env["res.partner"].create(
+        cls.partner = cls.env["res.partner"].create(
             {
                 "name": "Test contract partner",
-                "customer_payment_mode_id": self.payment_mode,
+                "customer_payment_mode_id": cls.payment_mode,
             }
         )
-        self.product = self.env["product.product"].create(
+        cls.product = cls.env["product.product"].create(
             {
                 "name": "Custom Service",
                 "type": "service",
-                "uom_id": self.env.ref("uom.product_uom_hour").id,
-                "uom_po_id": self.env.ref("uom.product_uom_hour").id,
+                "uom_id": cls.env.ref("uom.product_uom_hour").id,
+                "uom_po_id": cls.env.ref("uom.product_uom_hour").id,
                 "sale_ok": True,
             }
         )
-        self.contract = self.env["contract.contract"].create(
-            {"name": "Maintenance of Servers", "partner_id": self.partner.id}
+        cls.contract = cls.env["contract.contract"].create(
+            {"name": "Maintenance of Servers", "partner_id": cls.partner.id}
         )
-        company = self.env.ref("base.main_company")
-        self.journal = self.env["account.journal"].create(
+        company = cls.env.ref("base.main_company")
+        cls.journal = cls.env["account.journal"].create(
             {
                 "name": "Sale Journal - Test",
                 "code": "HRTSJ",
