@@ -614,14 +614,14 @@ class ContractContract(models.Model):
                 move.message_post(
                     body=(
                         _(
-                            (
-                                "%(msg)s by contract <a href=# data-oe-model=contract.contract"
-                                " data-oe-id=%(contract_id)d>%(contract)s</a>."
-                            ),
-                            msg=move._creation_message(),
-                            contract_id=item.id,
-                            contract=item.display_name,
+                            "%(msg)s by contract <a href=# data-oe-model=contract.contract"
+                            " data-oe-id=%(contract_id)d>%(contract)s</a>."
                         )
+                        % {
+                            "msg": move._creation_message(),
+                            "contract_id": item.id,
+                            "contract": item.display_name,
+                        }
                     )
                 )
 
