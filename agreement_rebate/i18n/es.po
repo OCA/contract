@@ -46,6 +46,17 @@ msgid "<span>Details</span>"
 msgstr "<span>Detalles</span>"
 
 #. module: agreement_rebate
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
+msgid "<span>Lines</span>"
+msgstr ""
+
+#. module: agreement_rebate
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement__active
+#: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__active
+msgid "Active"
+msgstr ""
+
+#. module: agreement_rebate
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement__additional_consumption
 msgid "Additional consumption"
 msgstr "Consumo adicional"
@@ -92,7 +103,6 @@ msgstr "Tipos de Acuerdo"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_agreement_invoice_create_wiz
 #, fuzzy
-#| msgid "Agreement rebate lines"
 msgid "Agreement invoice create wizard"
 msgstr "Líneas de rappel"
 
@@ -114,7 +124,6 @@ msgstr "Tramos de rappel"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_agreement_settlement_create_wiz
 #, fuzzy
-#| msgid "Agreement settlement lines"
 msgid "Agreement settlement create wizard"
 msgstr "Líneas de liquidaciones del acuerdo"
 
@@ -160,6 +169,13 @@ msgstr "Total facturado"
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__amount_rebate
 msgid "Amount rebate"
 msgstr "Importe rappel"
+
+#. module: agreement_rebate
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_form
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
+msgid "Archived"
+msgstr ""
 
 #. module: agreement_rebate
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement__rebate_type__section_prorated
@@ -237,6 +253,7 @@ msgstr "Factura de cliente"
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_rebate_settlement_line__date
 #: model:ir.model.fields,field_description:agreement_rebate.field_agreement_settlement_create_wiz__date
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
 msgid "Date"
 msgstr "Fecha"
 
@@ -388,7 +405,6 @@ msgstr "Diario"
 #. module: agreement_rebate
 #: model:ir.model,name:agreement_rebate.model_account_move_line
 #, fuzzy
-#| msgid "Journal"
 msgid "Journal Item"
 msgstr "Diario"
 
@@ -479,6 +495,7 @@ msgstr "Porcentaje"
 
 #. module: agreement_rebate
 #: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_search
 msgid "Period"
 msgstr "Período"
 
@@ -629,6 +646,7 @@ msgstr "Ajustes"
 
 #. module: agreement_rebate
 #: model:ir.model.fields.selection,name:agreement_rebate.selection__agreement_invoice_create_wiz__invoice_group__settlement
+#: model_terms:ir.ui.view,arch_db:agreement_rebate.agreement_rebate_settlement_line_search
 msgid "Settlement"
 msgstr "Liquidación"
 
