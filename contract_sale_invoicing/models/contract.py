@@ -5,12 +5,12 @@ from odoo import api, fields, models
 
 
 class ContractContract(models.Model):
-    _inherit = 'contract.contract'
+    _inherit = "contract.contract"
 
     invoicing_sales = fields.Boolean(
-        string='Invoice Pending Sales Orders',
-        help='If checked include sales with same analytic account to invoice '
-             'in contract invoice creation.',
+        string="Invoice Pending Sales Orders",
+        help="If checked include sales with same analytic account to invoice "
+        "in contract invoice creation.",
     )
 
     @api.multi
@@ -19,16 +19,24 @@ class ContractContract(models.Model):
         for contract in self:
             if not contract.invoicing_sales or not contract.recurring_next_date:
                 continue
-            sales = self.env['sale.order'].search([
-                ('analytic_account_id', '=', contract.group_id.id),
-                ('partner_invoice_id', 'child_of',
-                 contract.partner_id.commercial_partner_id.ids),
-                ('invoice_status', '=', 'to invoice'),
-                ('date_order', '<=',
-                 '{} 23:59:59'.format(contract.recurring_next_date)),
-            ])
+            sales = self.env["sale.order"].search(
+                [
+                    ("analytic_account_id", "=", contract.group_id.id),
+                    (
+                        "partner_invoice_id",
+                        "child_of",
+                        contract.partner_id.commercial_partner_id.ids,
+                    ),
+                    ("invoice_status", "=", "to invoice"),
+                    (
+                        "date_order",
+                        "<=",
+                        "{} 23:59:59".format(contract.recurring_next_date),
+                    ),
+                ]
+            )
             if sales:
                 invoice_ids = sales.action_invoice_create()
-                invoices |= self.env['account.invoice'].browse(invoice_ids)[:1]
+                invoices |= self.env["account.invoice"].browse(invoice_ids)[:1]
 
         return invoices
