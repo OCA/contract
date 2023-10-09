@@ -575,8 +575,8 @@ class ContractContract(models.Model):
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
-        invoice = self._recurring_create_invoice()
-        if invoice:
+        invoices = self._recurring_create_invoice()
+        for invoice in invoices:
             self.message_post(
                 body=_(
                     "Contract manually invoiced: "
@@ -591,7 +591,7 @@ class ContractContract(models.Model):
                     "rec_id": invoice.id,
                 }
             )
-        return invoice
+        return invoices
 
     @api.model
     def _invoice_followers(self, invoices):
