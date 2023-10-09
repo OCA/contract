@@ -32,7 +32,6 @@ msgid "Add notes here..."
 msgstr "Agrega notas aquí ..."
 
 #. module: agreement_serviceprofile
-#: selection:agreement.stage,stage_type:0
 #: model:ir.model,name:agreement_serviceprofile.model_agreement
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__agreement_id
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_search
@@ -48,6 +47,11 @@ msgstr "Acuerdo de perfiles de servicio"
 #: model:ir.model,name:agreement_serviceprofile.model_agreement_stage
 msgid "Agreement Stages"
 msgstr "Etapas del acuerdo"
+
+#. module: agreement_serviceprofile
+#: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_form
+msgid "Archived"
+msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__message_attachment_count
@@ -71,7 +75,11 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement__display_name
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product__display_name
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template__display_name
 msgid "Display Name"
 msgstr "Nombre a Mostrar"
 
@@ -91,7 +99,11 @@ msgid "Followers (Partners)"
 msgstr "Seguidores (Contactos)"
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement__id
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product__id
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template__id
 msgid "ID"
 msgstr "ID"
 
@@ -106,17 +118,14 @@ msgstr ""
 "         acuerdo cuando se confirma el pedido de ventas."
 
 #. module: agreement_serviceprofile
-#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si está marcado, los nuevos mensajes requieren su atención."
-
-#. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_needaction
+#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Si está marcado, los nuevos mensajes requieren su atención."
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_has_error
+#: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si está marcado, algunos mensajes tienen un error de entrega."
 
@@ -135,7 +144,11 @@ msgid "Is Follower"
 msgstr "Es Seguidor"
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement____last_update
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_stage____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_product____last_update
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_product_template____last_update
 msgid "Last Modified on"
 msgstr "Última modificación el"
 
@@ -183,8 +196,8 @@ msgstr "Número de Acciones"
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__message_has_error_counter
-msgid "Number of error"
-msgstr "Número de error"
+msgid "Number of errors"
+msgstr ""
 
 #. module: agreement_serviceprofile
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__message_needaction_counter
@@ -223,6 +236,11 @@ msgid "Product Variant"
 msgstr ""
 
 #. module: agreement_serviceprofile
+#: model:ir.model.fields,field_description:agreement_serviceprofile.field_agreement_serviceprofile__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: agreement_serviceprofile
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.product_product_form_view
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.product_template_form_view
 msgid "Service"
@@ -239,7 +257,7 @@ msgid "Service Product Variant"
 msgstr ""
 
 #. module: agreement_serviceprofile
-#: selection:agreement.stage,stage_type:0
+#: model:ir.model.fields.selection,name:agreement_serviceprofile.selection__agreement_stage__stage_type__serviceprofile
 #: model_terms:ir.ui.view,arch_db:agreement_serviceprofile.agreement_serviceprofile_form
 msgid "Service Profile"
 msgstr "Perfil de Servicio"
@@ -294,3 +312,9 @@ msgstr "Mensajes del Sitio Web"
 #: model:ir.model.fields,help:agreement_serviceprofile.field_agreement_serviceprofile__website_message_ids
 msgid "Website communication history"
 msgstr "Historial de comunicación del sitio web"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si está marcado, los nuevos mensajes requieren su atención."
+
+#~ msgid "Number of error"
+#~ msgstr "Número de error"
