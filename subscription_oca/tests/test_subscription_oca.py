@@ -4,10 +4,10 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.tests import TransactionCase
+from odoo.tests import SavepointCase
 
 
-class TestSubscriptionOCA(TransactionCase):
+class TestSubscriptionOCA(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
