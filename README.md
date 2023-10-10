@@ -24,6 +24,7 @@ addon | version | maintainers | summary
 [agreement_rebate_partner_company_group](agreement_rebate_partner_company_group/) | 15.0.1.0.0 |  | Rebate agreements applied to all company group members
 [contract](contract/) | 15.0.1.7.1 |  | Recurring - Contracts Management
 [contract_payment_mode](contract_payment_mode/) | 15.0.1.1.1 |  | Payment mode in contracts and their invoices
+[contract_price_revision](contract_price_revision/) | 15.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) | Easy revision of contract prices
 [contract_sale](contract_sale/) | 15.0.1.1.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 15.0.1.0.3 |  | Contracts Management - Recurring Sales
 [contract_variable_qty_timesheet](contract_variable_qty_timesheet/) | 15.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) [![pedrobaeza](https://github.com/pedrobaeza.png?size=30px)](https://github.com/pedrobaeza) | Add formula to invoice
