@@ -1,13 +1,28 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
+# Copyright 2023 Tecnativa - Carolina Fernandez
+# Copyright 2023 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+from freezegun import freeze_time
 
 from odoo.addons.contract.tests.test_contract import TestContractBase
 
 
+@freeze_time("2016-02-28")
 class TestContractSaleInvoicing(TestContractBase):
     @classmethod
     def setUpClass(cls):
-        super(TestContractSaleInvoicing, cls).setUpClass()
+        super().setUpClass()
+        cls.env = cls.env(
+            context=dict(
+                cls.env.context,
+                mail_create_nolog=True,
+                mail_create_nosubscribe=True,
+                mail_notrack=True,
+                no_reset_password=True,
+                tracking_disable=True,
+            )
+        )
         cls.contract.group_id = cls.env["account.analytic.account"].search([], limit=1)
         cls.product_so = cls.env.ref("product.product_product_1")
         cls.product_so.invoice_policy = "order"
@@ -31,7 +46,6 @@ class TestContractSaleInvoicing(TestContractBase):
                 ],
                 "pricelist_id": cls.partner.property_product_pricelist.id,
                 "analytic_account_id": cls.contract.group_id.id,
-                "date_order": "2016-02-15",
             }
         )
 
