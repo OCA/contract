@@ -68,7 +68,7 @@ class ContractLine(models.Model):
     @job(default_channel=QUEUE_CHANNEL)
     def _generate_forecast_periods(self):
         values = []
-        for rec in self:
+        for rec in self.exists():
             rec.forecast_period_ids.unlink()
             if rec.recurring_next_date:
                 period_date_start = rec.next_period_date_start
