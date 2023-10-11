@@ -38,11 +38,11 @@
                         groups="base.group_user"
                     />
                     <button
-                        name="recurring_create_invoice"
-                        type="object"
-                        attrs="{'invisible': ['|', ('create_invoice_visibility', '=', False),('generation_type','!=','invoice')]}"
-                        string="Create invoices"
-                        groups="base.group_no_one"
+                        name="%(contract.contract_manually_single_invoice_act_window)s"
+                        type="action"
+                        string="Process manually"
+                        context="{'default_contract_id': id, 'default_date': recurring_next_date}"
+                        attrs="{'invisible': [('id', '=', False)]}"
                     />
                     <button
                         name="action_terminate_contract"
