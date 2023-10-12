@@ -34,6 +34,7 @@ setuptools.setup(
         'odoo14-addon-contract_variable_qty_prorated',
         'odoo14-addon-contract_variable_quantity',
         'odoo14-addon-product_contract',
+        'odoo14-addon-subscription_oca',
     ],
     classifiers=[
         'Programming Language :: Python',
