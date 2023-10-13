@@ -15,6 +15,11 @@ def to_date(date):
 
 
 class TestContractSale(ContractSaleCommon, SavepointCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.contract.generation_type = "sale"
+
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
             self.contract_line.write({"discount": 120})
@@ -24,7 +29,9 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
         self.contract_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
-        self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         self.sale_monthly = self.contract._get_related_sales()
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
@@ -39,7 +46,9 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
         self.contract_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
-        self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         self.sale_monthly = self.contract._get_related_sales()
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
@@ -77,19 +86,30 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.assertDictEqual(res, self.template_vals)
 
     def test_contract_count_sale(self):
-        self.contract.recurring_create_sale()
-        self.contract.recurring_create_sale()
-        self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         self.contract._compute_sale_count()
         self.assertEqual(self.contract.sale_count, 3)
 
     def test_contract_count_sale_2(self):
-        orders = self.env["sale.order"]
-        orders |= self.contract.recurring_create_sale()
-        orders |= self.contract.recurring_create_sale()
-        orders |= self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         action = self.contract.action_show_sales()
-        self.assertEqual(set(action["domain"][0][2]), set(orders.ids))
+        self.assertEqual(len(self.env[action["res_model"]].search(action["domain"])), 3)
 
     def test_cron_recurring_create_sale(self):
         self.contract_line.date_start = "2020-01-01"
@@ -109,6 +129,8 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         )
 
     def test_contract_sale_analytic(self):
-        orders = self.env["sale.order"].browse()
-        orders |= self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
+        orders = self.contract._get_related_sales()
         self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
