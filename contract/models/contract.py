@@ -62,6 +62,9 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         copy=True,
     )
+    recurring_next_date = fields.Date(
+        compute="_compute_recurring_next_date", store=True, readonly=True
+    )
     # Trick for being able to have 2 different views for the same o2m
     # We need this as one2many widget doesn't allow to define in the view
     # the same field 2 times with different views. 2 views are needed because
