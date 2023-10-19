@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="name">contract.contract_line_tree_view</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+
+        <field name="arch" type="xml">
+            <field name="discount" position="after">
+                <field
+                    name="discount_fixed"
+                    groups="product.group_discount_per_so_line"
+                    optional="show"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="contract_line_report_tree_view" model="ir.ui.view">
+        <field name="name">contract.contract_line_report_tree_view</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_report_tree_view" />
+
+        <field name="arch" type="xml">
+            <field name="discount" position="after">
+                <field
+                    name="discount_fixed"
+                    groups="product.group_discount_per_so_line"
+                    optional="show"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>

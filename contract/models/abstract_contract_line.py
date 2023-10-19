@@ -217,12 +217,18 @@ class ContractAbstractContractLine(models.AbstractModel):
         for line in self.filtered(lambda x: not x.automatic_price):
             line.specific_price = line.price_unit
 
+    def _compute_price_subtotal_helper(self):
+        self.ensure_one()
+        subtotal = self.quantity * self.price_unit
+        discount = self.discount / 100
+        subtotal *= 1 - discount
+        return subtotal
+
     @api.depends("quantity", "price_unit", "discount")
     def _compute_price_subtotal(self):
         for line in self:
-            subtotal = line.quantity * line.price_unit
-            discount = line.discount / 100
-            subtotal *= 1 - discount
+            subtotal = line._compute_price_subtotal_helper()
+
             if line.contract_id.pricelist_id:
                 cur = line.contract_id.pricelist_id.currency_id
                 line.price_subtotal = cur.round(subtotal)
