@@ -88,7 +88,7 @@ class ContractContract(models.Model):
         string="Payment Terms",
         index=True,
         check_company=True,
-        domain="[('company_id', '=', company_id)]",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
     fiscal_position_id = fields.Many2one(
