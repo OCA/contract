@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_invoice_create_wiz" model="ir.ui.view">
+        <field name="name">agreement.invoice.create.wiz</field>
+        <field name="model">agreement.invoice.create.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Create invoices">
+                <group string="Dates filter">
+                    <group>
+                        <field name="date_from" />
+                    </group>
+                    <group>
+                        <field name="date_to" />
+                    </group>
+                </group>
+                <group string="Invoice data">
+                    <group>
+                        <field name="domain" />
+                    </group>
+                    <group>
+                        <field name="invoice_type" />
+                    </group>
+                    <group>
+                        <field name="journal_id" />
+                    </group>
+                    <group>
+                        <field name="product_id" />
+                    </group>
+                    <group>
+                        <field name="invoice_partner_id" />
+                    </group>
+                    <group>
+                        <field name="invoice_group" />
+                    </group>
+                </group>
+                <group string="Agreement types">
+                    <field
+                        name="agreement_type_ids"
+                        domain="[('domain', '=', domain)]"
+                        options="{'no_create': True}"
+                        widget="many2many_tags"
+                        nolabel="1"
+                    />
+                </group>
+                <group string="Agreements">
+                    <field
+                        name="agreement_ids"
+                        domain="[('agreement_type_id.domain', '=', domain)]"
+                        options="{'no_create': True}"
+                        widget="many2many_tags"
+                        nolabel="1"
+                    />
+                </group>
+                <group string="Settlements">
+                    <field
+                        name="settlements_ids"
+                        domain="[('line_ids.agreement_id.agreement_type_id.domain', '=', domain)]"
+                        options="{'no_create': True}"
+                        widget="many2many_tags"
+                        nolabel="1"
+                    />
+                </group>
+                <footer>
+                    <button
+                        string="Create invoices"
+                        name="action_create_invoice"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="agreement_invoice_create_action" model="ir.actions.act_window">
+        <field name="name">Invoice create</field>
+        <field name="res_model">agreement.invoice.create.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

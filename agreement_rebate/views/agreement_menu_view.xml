@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<odoo>
+    <menuitem
+        id="agreement_rebate_settlement_menu_root"
+        name="Settlements"
+        parent="agreement.agreement_menu_root"
+        groups="group_use_agreement_rebate"
+        sequence="10"
+    />
+    <menuitem
+        id="agreement_rebate_settlement_menu"
+        action="agreement_rebate_settlement_action"
+        name="Settlements"
+        parent="agreement_rebate_settlement_menu_root"
+        sequence="10"
+    />
+    <menuitem
+        id="agreement_rebate_settlement_line_menu"
+        action="agreement_rebate_settlement_line_action"
+        name="Settlement Lines"
+        parent="agreement_rebate_settlement_menu_root"
+        sequence="20"
+    />
+    <menuitem
+        id="agreement_settlement_create_menu"
+        action="agreement_settlement_create_action"
+        name="Create settlements"
+        parent="agreement_rebate_settlement_menu_root"
+        sequence="60"
+    />
+    <menuitem
+        id="agreement_invoice_create_menu"
+        action="agreement_invoice_create_action"
+        name="Create invoices"
+        parent="agreement_rebate_settlement_menu_root"
+        sequence="70"
+    />
+    <menuitem
+        id="agreement_rebate_condition_menu"
+        action="agreement_rebate_condition_action"
+        name="Rebate conditions"
+        parent="agreement.agreement_setting_menu"
+        groups="group_use_agreement_rebate"
+        sequence="10"
+    />
+</odoo>
