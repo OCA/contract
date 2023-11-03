@@ -29,14 +29,15 @@ class ContractManuallySingleInvoice(models.TransientModel):
                     domain=[("id", "=", self.contract_id.id)],
                 )
             )
-            for record in result:
-                self.contract_id.message_post(
-                    body=_(
-                        "Contract manually generated: "
-                        '<a href="#" data-oe-model="%s" data-oe-id="%s">'
-                        "%s"
-                        "</a>"
+            for list in result:
+                for record in list:
+                    self.contract_id.message_post(
+                        body=_(
+                            "Contract manually generated: "
+                            '<a href="#" data-oe-model="%s" data-oe-id="%s">'
+                            "%s"
+                            "</a>"
+                        )
+                        % (record._name, record.id, record.display_name)
                     )
-                    % (record._name, record.id, record.display_name)
-                )
         return True
