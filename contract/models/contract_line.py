@@ -559,12 +559,24 @@ class ContractLine(models.Model):
             self.last_date_invoiced, self.recurring_next_date
         )
         name = self._insert_markers(dates[0], dates[1])
+
+        analytic_distribution = self.analytic_distribution
+        analytic_account_id = self.analytic_account_id.id
+        if analytic_account_id:
+            analytic_account_id = str(analytic_account_id)
+            if analytic_distribution:
+                analytic_distribution[analytic_account_id] = (
+                    analytic_distribution.get(analytic_account_id, 0) + 100
+                )
+            else:
+                analytic_distribution = {analytic_account_id: 100}
+
         return {
             "quantity": self._get_quantity_to_invoice(*dates),
             "product_uom_id": self.uom_id.id,
             "discount": self.discount,
             "contract_line_id": self.id,
-            "analytic_distribution": self.analytic_distribution,
+            "analytic_distribution": analytic_distribution,
             "sequence": self.sequence,
             "name": name,
             "price_unit": self.price_unit,
