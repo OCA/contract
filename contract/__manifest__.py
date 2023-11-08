@@ -18,7 +18,6 @@
     "website": "https://github.com/OCA/contract",
     "depends": ["base", "account", "product", "portal"],
     "development_status": "Production/Stable",
-    "external_dependencies": {"python": ["dateutil"]},
     "data": [
         "security/groups.xml",
         "security/contract_tag.xml",
