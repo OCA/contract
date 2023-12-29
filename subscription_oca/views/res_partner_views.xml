@@ -7,16 +7,17 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <field name="subscription_ids" invisible="1"/>
+                <field name="subscription_ids" invisible="1" />
                 <button 
-                type="object" 
-                class="oe_stat_button" 
-                icon="fa-recycle" 
-                name="action_view_subscription_ids" 
-                attrs="{'invisible': [('subscription_ids', '=', False)]}">
+                    type="object" 
+                    class="oe_stat_button" 
+                    icon="fa-recycle" 
+                    name="action_view_subscription_ids" 
+                    attrs="{'invisible': [('subscription_ids', '=', False)]}"
+                >
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_value">
-                            <field name="subscription_count"/>
+                            <field name="subscription_count" />
                         </span>
                         <span class="o_stat_text">Subscriptions</span>
                     </div>
