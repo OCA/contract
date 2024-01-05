@@ -1,11 +1,12 @@
 # Copyright 2016-2019 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Tecnativa - Carlos Dauden
 # Copyright 2019 ACSONE SA/NV
+# Copyright 2024 Tecnativa - Carolina fernandez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     "name": "Variable quantity in contract recurrent invoicing",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa, Odoo Community Association (OCA)",

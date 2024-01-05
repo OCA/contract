@@ -1,6 +1,7 @@
 # Copyright 2016 Tecnativa - Pedro M. Baeza
 # Copyright 2018 Tecnativa - Carlos Dauden
 # Copyright 2018 ACSONE SA/NV
+# Copyright 2024 Tecnativa - Carolina Fernandez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import exceptions
@@ -10,18 +11,19 @@ from odoo.tests.common import TransactionCase
 
 @tagged("post_install", "-at_install")
 class TestContractVariableQuantity(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.partner = self.env["res.partner"].create({"name": "Test partner"})
-        self.product = self.env["product.product"].create({"name": "Test product"})
-        self.contract = self.env["contract.contract"].create(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env["res.partner"].create({"name": "Test partner"})
+        cls.product = cls.env["product.product"].create({"name": "Test product"})
+        cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract",
-                "partner_id": self.partner.id,
-                "pricelist_id": self.partner.property_product_pricelist.id,
+                "partner_id": cls.partner.id,
+                "pricelist_id": cls.partner.property_product_pricelist.id,
             }
         )
-        self.formula = self.env["contract.line.qty.formula"].create(
+        cls.formula = cls.env["contract.line.qty.formula"].create(
             {
                 "name": "Test formula",
                 # For testing each of the possible variables
@@ -37,15 +39,15 @@ class TestContractVariableQuantity(TransactionCase):
                 "result = 12",
             }
         )
-        self.contract_line = self.env["contract.line"].create(
+        cls.contract_line = cls.env["contract.line"].create(
             {
-                "contract_id": self.contract.id,
-                "product_id": self.product.id,
+                "contract_id": cls.contract.id,
+                "product_id": cls.product.id,
                 "name": "Test",
                 "qty_type": "variable",
-                "qty_formula_id": self.formula.id,
+                "qty_formula_id": cls.formula.id,
                 "quantity": 1,
-                "uom_id": self.product.uom_id.id,
+                "uom_id": cls.product.uom_id.id,
                 "price_unit": 100,
                 "discount": 50,
                 "recurring_rule_type": "monthly",
