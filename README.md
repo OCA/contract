@@ -27,6 +27,7 @@ addon | version | maintainers | summary
 [contract_payment_mode](contract_payment_mode/) | 16.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 16.0.1.1.0 |  | Contract from Sale
 [contract_sale_generation](contract_sale_generation/) | 16.0.1.0.0 |  | Contracts Management - Recurring Sales
+[contract_variable_quantity](contract_variable_quantity/) | 16.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 
 [//]: # (end addons)
 
