@@ -181,7 +181,7 @@ class SaleSubscription(models.Model):
             slash = "/" if template_code and code else ""
             record.name = "{}{}{}".format(template_code, slash, code)
 
-    @api.depends("template_id", "date_start")
+    @api.depends("template_id.recurring_rule_boundary", "date_start")
     def _compute_rule_boundary(self):
         for record in self:
             if record.template_id.recurring_rule_boundary == "unlimited":
