@@ -148,7 +148,11 @@
                         </group>
                     </group>
                     <group name="recurring_invoices">
-                        <field name="line_recurrence" class="oe_inline" />
+                        <field
+                            name="line_recurrence"
+                            class="oe_inline"
+                            attrs="{'readonly': [('line_recurrence', '=', True), ('invoice_count', '!=', 0)]}"
+                        />
                         <label for="line_recurrence" />
                         <group attrs="{'invisible': [('line_recurrence', '=', True)]}">
                             <label for="recurring_interval" />
