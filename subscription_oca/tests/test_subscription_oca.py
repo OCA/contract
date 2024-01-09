@@ -15,6 +15,13 @@ class TestSubscriptionOCA(SavepointCase):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.portal_user = cls.env.ref("base.demo_user0")
+        cls.line_placeholders = [
+            "#START#",
+            "#END#",
+            "#INVOICEMONTHNAME#",
+            "#INVOICEMONTHNUMBER#",
+            "#INVOICEYEAR#",
+        ]
         cls.cash_journal = cls.env["account.journal"].search(
             [
                 ("type", "=", "cash"),
@@ -181,15 +188,15 @@ class TestSubscriptionOCA(SavepointCase):
                 "sale_subscription_id": cls.sub1.id,
             }
         )
-        cls.sub_line21 = cls.create_sub_line(cls.sub2)
+        cls.sub_line21 = cls.create_sub_line(cls.sub2, name="#START#")
         cls.sub_line22 = cls.create_sub_line(cls.sub2, cls.product_2.id)
-        cls.sub_line31 = cls.create_sub_line(cls.sub3)
+        cls.sub_line31 = cls.create_sub_line(cls.sub3, name="#END#")
         cls.sub_line32 = cls.create_sub_line(cls.sub3, cls.product_2.id)
-        cls.sub_line41 = cls.create_sub_line(cls.sub4)
+        cls.sub_line41 = cls.create_sub_line(cls.sub4, name="#INVOICEMONTHNAME#")
         cls.sub_line42 = cls.create_sub_line(cls.sub4, cls.product_2.id)
-        cls.sub_line51 = cls.create_sub_line(cls.sub5)
+        cls.sub_line51 = cls.create_sub_line(cls.sub5, name="#INVOICEMONTHNUMBER#")
         cls.sub_line52 = cls.create_sub_line(cls.sub5, cls.product_2.id)
-        cls.sub_line71 = cls.create_sub_line(cls.sub7)
+        cls.sub_line71 = cls.create_sub_line(cls.sub7, name="#INVOICEYEAR#")
         cls.sub_line72 = cls.create_sub_line(cls.sub7, cls.product_2.id)
 
         cls.close_reason = cls.env["sale.subscription.close.reason"].create(
@@ -263,14 +270,15 @@ class TestSubscriptionOCA(SavepointCase):
         return rec
 
     @classmethod
-    def create_sub_line(cls, sub, prod=None):
-        ssl = cls.env["sale.subscription.line"].create(
-            {
-                "company_id": 1,
-                "sale_subscription_id": sub.id,
-                "product_id": prod or cls.product_1.id,
-            }
-        )
+    def create_sub_line(cls, sub, prod=None, name=None):
+        create_dict = {
+            "company_id": 1,
+            "sale_subscription_id": sub.id,
+            "product_id": prod or cls.product_1.id,
+        }
+        if name:
+            create_dict["name"] = name
+        ssl = cls.env["sale.subscription.line"].create(create_dict)
         return ssl
 
     @classmethod
@@ -320,9 +328,11 @@ class TestSubscriptionOCA(SavepointCase):
         self.assertEqual(self.sub_line.discount, 0)
         res = self.sub_line._get_display_price(self.product_2)
         self.assertEqual(res, 38.25)
-        sol_res = self.sub_line._prepare_sale_order_line()
+        date_start = self.sub_line.sale_subscription_id.date_start
+        date_end = self.sub_line.sale_subscription_id.date
+        sol_res = self.sub_line._prepare_sale_order_line(date_start, date_end)
         self.assertIsInstance(sol_res, dict)
-        move_res = self.sub_line._prepare_account_move_line()
+        move_res = self.sub_line._prepare_account_move_line(date_start, date_end)
         self.assertIsInstance(move_res, dict)
 
     def test_subscription_oca_sub_cron(self):
@@ -593,13 +603,37 @@ class TestSubscriptionOCA(SavepointCase):
         res = self.sub_line.read(["discount"])
         self.assertEqual(res[0]["discount"], 0)
 
+    def get_converted_placeholders(self, placeholder_lines, date_from, date_to):
+        return [line._insert_markers(date_from, date_to) for line in placeholder_lines]
+
     def _collect_all_sub_test_results(self, subscription):
         test_res = []
         sale_order = subscription.create_sale_order()
         test_res.append(sale_order)
         move_id = subscription.create_invoice()
         test_res.append(move_id)
+        lines_w_placeholder = subscription.sale_subscription_line_ids.filtered(
+            lambda line: any(p == line.name for p in self.line_placeholders)
+        )
+        start_date = subscription.recurring_next_date or subscription.date_start
+        end_date = subscription._get_next_period_date_end(start_date, subscription.date)
+        # remove the lines with #INVOICEYEAR# if the end_date is not set
+        if not end_date and "#INVOICEYEAR#" in lines_w_placeholder.mapped("name"):
+            target = lines_w_placeholder.filtered(
+                lambda line: line.name == "#INVOICEYEAR#"
+            )
+            lines_w_placeholder -= target
         res = subscription.manual_invoice()
+        if lines_w_placeholder:
+            markers = self.get_converted_placeholders(
+                lines_w_placeholder, start_date, end_date
+            )
+            # all markers must be among the line names
+            account_move_line_names = (
+                self.env["account.move"].browse(res["res_id"]).line_ids.mapped("name")
+            )
+            result = all(m in account_move_line_names for m in markers)
+            self.assertTrue(result)
         test_res.append(res["type"])
         inv_ids = self.env["account.move"].search(
             [("subscription_id", "=", subscription.id)]

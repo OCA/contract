@@ -1,6 +1,6 @@
 # Copyright 2023 Domatix - Carlos Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.misc import get_lang
 
 
@@ -290,11 +290,11 @@ class SaleSubscriptionLine(models.Model):
             )
         return max(base_price, final_price)
 
-    def _prepare_sale_order_line(self):
+    def _prepare_sale_order_line(self, start_date, end_date):
         self.ensure_one()
         return {
             "product_id": self.product_id.id,
-            "name": self.name,
+            "name": self._generate_name(start_date, end_date),
             "product_uom_qty": self.product_uom_qty,
             "price_unit": self.price_unit,
             "discount": self.discount,
@@ -303,7 +303,7 @@ class SaleSubscriptionLine(models.Model):
             "product_uom": self.product_id.uom_id.id,
         }
 
-    def _prepare_account_move_line(self):
+    def _prepare_account_move_line(self, start_date, end_date):
         self.ensure_one()
         account = (
             self.product_id.property_account_income_id
@@ -311,7 +311,7 @@ class SaleSubscriptionLine(models.Model):
         )
         return {
             "product_id": self.product_id.id,
-            "name": self.name,
+            "name": self._generate_name(start_date, end_date),
             "quantity": self.product_uom_qty,
             "price_unit": self.price_unit,
             "discount": self.discount,
@@ -320,3 +320,43 @@ class SaleSubscriptionLine(models.Model):
             "product_uom_id": self.product_id.uom_id.id,
             "account_id": account.id,
         }
+
+    def _generate_name(self, start_date, end_date):
+        return self._insert_markers(start_date, end_date)
+
+    def _insert_markers(self, start_date, end_date):
+        self.ensure_one()
+        lang_obj = self.env["res.lang"]
+        lang = lang_obj.search(
+            [("code", "=", self.sale_subscription_id.partner_id.lang)]
+        )
+        date_format = lang.date_format or "%m/%d/%Y"
+        name = self.name
+        name = name.replace("#START#", start_date.strftime(date_format))
+        name = name.replace("#END#", end_date.strftime(date_format)) if end_date else ""
+        name = name.replace("#INVOICEMONTHNUMBER#", start_date.strftime("%m"))
+        name = name.replace("#INVOICEYEAR#", start_date.strftime("%Y"))
+        name = name.replace(
+            "#INVOICEMONTHNAME#",
+            self.with_context(lang=lang.code)._translate_marker_month_name(
+                start_date.strftime("%m")
+            ),
+        )
+        return name
+
+    def _translate_marker_month_name(self, month_name):
+        months = {
+            "01": _("January"),
+            "02": _("February"),
+            "03": _("March"),
+            "04": _("April"),
+            "05": _("May"),
+            "06": _("June"),
+            "07": _("July"),
+            "08": _("August"),
+            "09": _("September"),
+            "10": _("October"),
+            "11": _("November"),
+            "12": _("December"),
+        }
+        return months[month_name]

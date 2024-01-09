@@ -277,6 +277,7 @@ class SaleSubscription(models.Model):
         return values
 
     def create_invoice(self):
+        self.ensure_one()
         if not self.env["account.move"].check_access_rights("create", False):
             try:
                 self.check_access_rights("write")
@@ -284,8 +285,10 @@ class SaleSubscription(models.Model):
             except AccessError:
                 return self.env["account.move"]
         line_ids = []
+        start_date = self.recurring_next_date or self.date_start
+        end_date = self._get_next_period_date_end(start_date, self.date)
         for line in self.sale_subscription_line_ids:
-            line_values = line._prepare_account_move_line()
+            line_values = line._prepare_account_move_line(start_date, end_date)
             line_ids.append((0, 0, line_values))
         invoice_values = self._prepare_account_move(line_ids)
         invoice_id = (
@@ -305,8 +308,10 @@ class SaleSubscription(models.Model):
             except AccessError:
                 return self.env["sale.order"]
         line_ids = []
+        start_date = self.recurring_next_date or self.date_start
+        end_date = self._get_next_period_date_end(start_date, self.date)
         for line in self.sale_subscription_line_ids:
-            line_values = line._prepare_sale_order_line()
+            line_values = line._prepare_sale_order_line(start_date, end_date)
             line_ids.append((0, 0, line_values))
         values = self._prepare_sale_order(line_ids)
         order_id = self.env["sale.order"].sudo().create(values)
@@ -430,6 +435,27 @@ class SaleSubscription(models.Model):
             if date_start > date_next_invoice:
                 return True
         return False
+
+    def _get_next_period_date_end(
+        self,
+        next_period_date_start,
+        max_date_end,
+    ):
+        self.ensure_one()
+        if not next_period_date_start:
+            return False
+        if max_date_end and next_period_date_start > max_date_end:
+            return False
+        next_period_date_end = (
+            next_period_date_start
+            + self.template_id.get_relative_delta()
+            - relativedelta(days=1)
+        )
+        if not max_date_end:
+            return next_period_date_end
+        if next_period_date_end > max_date_end:
+            return max_date_end
+        return next_period_date_end
 
     def write(self, values):
         res = super().write(values)
