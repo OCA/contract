@@ -370,12 +370,63 @@
         <field name="model">sale.subscription</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name" />
                 <field name="to_renew" />
+                <field name="description" />
+                <field name="journal_id" />
+                <field name="partner_id" />
+                <field name="pricelist_id" />
+                <field name="sale_order_id" />
+                <separator />
                 <filter
                     string="Pending subscriptions"
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
                 />
+                <filter
+                    name="not_finished"
+                    string="In progress"
+                    domain="[
+                        '|',
+                        ('date', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                        '&amp;',
+                        ('date', '=', False),
+                        ('recurring_next_date', '!=', False)
+                    ]"
+                />
+                <filter
+                    name="finished"
+                    string="Finished"
+                    domain="[
+                        ('date', '&lt;', context_today().strftime('%Y-%m-%d')),
+                        ('recurring_next_date', '=', False)
+                    ]"
+                />
+                <filter
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                    name="inactive"
+                />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="group_by_partner"
+                        string="Partner"
+                        domain="[]"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        name="group_by_next_invoice"
+                        string="Next Invoice"
+                        domain="[('recurring_next_date', '!=', False)]"
+                        context="{'group_by':'recurring_next_date'}"
+                    />
+                    <filter
+                        name="group_by_date"
+                        string="Date"
+                        domain="[]"
+                        context="{'group_by':'date'}"
+                    />
+                </group>
             </search>
         </field>
     </record>
