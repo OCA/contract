@@ -45,6 +45,9 @@ class SaleSubscription(models.Model):
         required=True,
         string="Subscription template",
     )
+    template_invoicing_mode = fields.Selection(
+        related="template_id.invoicing_mode", readonly=True
+    )
     code = fields.Char(
         string="Reference",
         default=lambda self: self.env["ir.sequence"].next_by_code("sale.subscription"),
@@ -321,34 +324,52 @@ class SaleSubscription(models.Model):
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
                 if self.template_id.invoicing_mode == "invoice_send":
-                    mail_template = self.template_id.invoice_mail_template_id
-                    invoice.with_context(force_send=True).message_post_with_template(
-                        mail_template.id,
-                        composition_mode="comment",
-                        email_layout_xmlid="mail.mail_notification_paynow",
-                    )
+                    self.send_invoice(invoice)
                 invoice_number = invoice.name
                 message_body = (
                     "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
                     % (msg_static, invoice.id, invoice_number)
                 )
 
-        if self.template_id.invoicing_mode == "sale_and_invoice":
+        elif self.template_id.invoicing_mode in ["sale_draft"]:
+            self.create_sale_order()
+
+        elif self.template_id.invoicing_mode in ["sale_confirmed"]:
+            order_id = self.create_sale_order()
+            order_id.action_confirm()
+
+        elif self.template_id.invoicing_mode in [
+            "sale_and_invoice",
+            "sale_and_invoice_draft",
+            "sale_and_invoice_send",
+        ]:
             order_id = self.create_sale_order()
             order_id.action_done()
             new_invoice = order_id._create_invoices()
-            new_invoice.action_post()
+            self.write({"invoice_ids": [(4, new_invoice.id)]})
+            if self.template_id.invoicing_mode == "sale_and_invoice":
+                new_invoice.action_post()
             new_invoice.invoice_origin = order_id.name + ", " + self.name
             invoice_number = new_invoice.name
             message_body = (
                 "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
                 % (msg_static, new_invoice.id, invoice_number)
             )
+            if self.template_id.invoicing_mode == "sale_and_invoice_send":
+                self.send_invoice(new_invoice)
         if not invoice_number:
             invoice_number = _("To validate")
             message_body = "<b>%s</b> %s" % (msg_static, invoice_number)
         self.calculate_recurring_next_date(self.recurring_next_date)
         self.message_post(body=message_body)
+
+    def send_invoice(self, invoice):
+        mail_template = self.template_id.invoice_mail_template_id
+        invoice.with_context(force_send=True).message_post_with_template(
+            mail_template.id,
+            composition_mode="comment",
+            email_layout_xmlid="mail.mail_notification_paynow",
+        )
 
     def manual_invoice(self):
         invoice_id = self.create_invoice()
@@ -368,6 +389,43 @@ class SaleSubscription(models.Model):
             "type": "ir.actions.act_window",
             "context": context,
         }
+
+    def manual_sale_order(self):
+        order = self.create_sale_order()
+        msg_static = _("Created Sale Order with reference")
+        message_body = (
+            "<b>%s</b> <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a>"
+            % (msg_static, order.id, order.name)
+        )
+        self.message_post(body=message_body)
+        return {
+            "name": self.name,
+            "view_type": "form",
+            "view_mode": "form",
+            "res_model": "sale.order",
+            "res_id": order.id,
+            "type": "ir.actions.act_window",
+        }
+
+    def manual_invoice_and_sale_order(self):
+        order_id = self.manual_sale_order()["res_id"]
+        order = self.env["sale.order"].browse(order_id)
+        order.action_done()
+        new_invoice = order._create_invoices()
+        if self.template_invoicing_mode in [
+            "sale_and_invoice",
+            "sale_and_invoice_send",
+        ]:
+            new_invoice.action_post()
+        new_invoice.invoice_origin = order.name + ", " + self.name
+        invoice_number = new_invoice.name
+        msg_static = _("Created invoice with reference")
+        message_body = (
+            "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
+            % (msg_static, new_invoice.id, invoice_number)
+        )
+        self.message_post(body=message_body)
+        return order, new_invoice
 
     @api.depends("invoice_ids", "sale_order_ids.invoice_ids")
     def _compute_account_invoice_ids_count(self):

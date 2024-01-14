@@ -65,6 +65,9 @@ class TestSubscriptionOCA(SavepointCase):
         cls.product_1.taxes_id = [(6, 0, cls.tax_10pc_incl.ids)]
         cls.product_2 = cls.env.ref("product.product_product_2")
         cls.product_2.subscribable = True
+        cls.product_3 = cls.env.ref("product.product_product_3")
+        cls.product_3.subscribable = True
+        cls.product_3.invoice_policy = "order"
 
         cls.country = cls.env["res.country"].search([], limit=1)
         cls.fiscal = cls.env["account.fiscal.position"].create(
@@ -101,6 +104,27 @@ class TestSubscriptionOCA(SavepointCase):
             {
                 "recurring_rule_boundary": "unlimited",
                 "invoicing_mode": "invoice",
+                "recurring_rule_type": "days",
+            }
+        )
+        cls.tmpl_sale_draft = cls.create_sub_template(
+            {
+                "recurring_rule_boundary": "unlimited",
+                "invoicing_mode": "sale_draft",
+                "recurring_rule_type": "days",
+            }
+        )
+        cls.tmpl_sale_confirmed = cls.create_sub_template(
+            {
+                "recurring_rule_boundary": "unlimited",
+                "invoicing_mode": "sale_confirmed",
+                "recurring_rule_type": "days",
+            }
+        )
+        cls.tmpl_sale_and_invoice_send = cls.create_sub_template(
+            {
+                "recurring_rule_boundary": "unlimited",
+                "invoicing_mode": "sale_and_invoice_send",
                 "recurring_rule_type": "days",
             }
         )
@@ -173,6 +197,36 @@ class TestSubscriptionOCA(SavepointCase):
                 "journal_id": cls.cash_journal.id,
             }
         )
+        cls.sub_sale_draft = cls.create_sub(
+            {
+                "template_id": cls.tmpl_sale_draft.id,
+                "pricelist_id": cls.pricelist2.id,
+                "date_start": fields.Date.today() - relativedelta(days=100),
+                "recurring_next_date": fields.Date.today(),
+                "in_progress": True,
+                "journal_id": cls.sale_journal.id,
+            }
+        )
+        cls.sub_sale_confirmed = cls.create_sub(
+            {
+                "template_id": cls.tmpl_sale_confirmed.id,
+                "pricelist_id": cls.pricelist2.id,
+                "date_start": fields.Date.today() - relativedelta(days=100),
+                "recurring_next_date": fields.Date.today(),
+                "in_progress": True,
+                "journal_id": cls.sale_journal.id,
+            }
+        )
+        cls.sub_sale_and_invoice_send = cls.create_sub(
+            {
+                "template_id": cls.tmpl_sale_and_invoice_send.id,
+                "pricelist_id": cls.pricelist2.id,
+                "date_start": fields.Date.today() - relativedelta(days=100),
+                "recurring_next_date": fields.Date.today(),
+                "in_progress": True,
+                "journal_id": cls.sale_journal.id,
+            }
+        )
 
         cls.sub_line = cls.create_sub_line(cls.sub1)
         cls.sub_line2 = cls.env["sale.subscription.line"].create(
@@ -191,6 +245,11 @@ class TestSubscriptionOCA(SavepointCase):
         cls.sub_line52 = cls.create_sub_line(cls.sub5, cls.product_2.id)
         cls.sub_line71 = cls.create_sub_line(cls.sub7)
         cls.sub_line72 = cls.create_sub_line(cls.sub7, cls.product_2.id)
+        cls.sub_line_sd = cls.create_sub_line(cls.sub_sale_draft, cls.product_3.id)
+        cls.sub_line_sc = cls.create_sub_line(cls.sub_sale_confirmed, cls.product_3.id)
+        cls.sub_line_sais = cls.create_sub_line(
+            cls.sub_sale_and_invoice_send, cls.product_3.id
+        )
 
         cls.close_reason = cls.env["sale.subscription.close.reason"].create(
             {
@@ -503,13 +562,35 @@ class TestSubscriptionOCA(SavepointCase):
         with self.assertRaises(exceptions.AccessError):
             subscription.partner_id = self.partner_2
 
+    def test_subscription_oca_sub_sale_draft_workflow(self):
+        res = self._collect_all_sub_test_results(self.sub_sale_draft)
+        self.assertEqual(res[4], 900.0)
+        self.sub_sale_draft.manual_sale_order()
+        self.sub_sale_draft.manual_invoice_and_sale_order()
+
+    def test_subscription_oca_sub_sale_confirmed_workflow(self):
+        res = self._collect_all_sub_test_results(self.sub_sale_confirmed)
+        self.assertEqual(res[4], 900.0)
+        self.sub_sale_confirmed.manual_sale_order()
+        self.sub_sale_confirmed.manual_invoice_and_sale_order()
+
+    def test_subscription_oca_sub_sale_and_invoice_send_workflow(self):
+        res = self._collect_all_sub_test_results(self.sub_sale_and_invoice_send)
+        self.assertEqual(res[4], 900.0)
+        self.sub_sale_and_invoice_send.manual_sale_order()
+        self.sub_sale_and_invoice_send.manual_invoice_and_sale_order()
+
+    def test_subscription_oca_sub_sale_and_invoice_send_workflow_2(self):
+        self.sub_sale_and_invoice_send.generate_invoice()
+        self.assertEqual(len(self.sub_sale_and_invoice_send.invoice_ids), 1)
+
     def test_subscription_oca_sub_stage(self):
         # sale.subscription.stage
         self.stage._check_lot_product()  # should not raise
 
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
-        self.assertEqual(res[0]["subscription_count"], 8)
+        self.assertEqual(res[0]["subscription_count"], 11)
         res = self.partner.action_view_subscription_ids()
         self.assertIsInstance(res, dict)
         sale_order = self.sub1.create_sale_order()

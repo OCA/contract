@@ -12,6 +12,23 @@
                         name="manual_invoice"
                         type="object"
                         class="btn-primary"
+                        attrs="{'invisible': [('template_invoicing_mode', 'not in', ['draft','invoice','invoice_send'])]}"
+                    />
+
+                    <button
+                        string="Create Sale Order and Invoice"
+                        name="manual_invoice_and_sale_order"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('template_invoicing_mode', 'not in', ['sale_and_invoice','sale_and_invoice_draft','sale_and_invoice_send'])]}"
+                    />
+
+                    <button
+                        string="Create Sale Order"
+                        name="manual_sale_order"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('template_invoicing_mode', 'not in', ['sale_draft','sale_confirmed'])]}"
                     />
 
                     <button
@@ -99,6 +116,7 @@
                         <group name="right_group">
 
                             <field name="template_id" />
+                            <field name="template_invoicing_mode" />
                             <field name="crm_team_id" />
                             <field
                                 name="recurring_next_date"
