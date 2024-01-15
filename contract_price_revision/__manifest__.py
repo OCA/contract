@@ -6,14 +6,15 @@
 {
     "name": "Contract Price Revision",
     "summary": "Easy revision of contract prices",
-    "version": "15.0.1.0.0",
-    "category": "Contract",
+    "version": "16.0.1.0.0",
+    "category": "Contract Management",
     "author": "ACSONE SA/NV, Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "website": "https://github.com/OCA/contract",
     "depends": ["contract"],
     "data": [
         "security/ir.model.access.csv",
+        "views/contract_contract.xml",
         "views/contract_line.xml",
         "wizards/contract_price_revision_views.xml",
     ],

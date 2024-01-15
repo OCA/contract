@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class ContractLine(models.Model):
     _inherit = "contract.line"
 
-    previous_price = fields.Float(
+    previous_price = fields.Monetary(
         string="Previous price",
         related="predecessor_contract_line_id.price_unit",
         readonly=True,
@@ -55,12 +55,11 @@ class ContractLine(models.Model):
     def _prepare_value_for_plan_successor_price(
         self, date_start, date_end, is_auto_renew, price, recurring_next_date=False
     ):
-        """
-        Override contract function to prepare values for new contract line
+        """Wrap contract function to prepare values for new contract line
         adding the new price as parameter
         """
-        res = super()._prepare_value_for_plan_successor(
+        values = self._prepare_value_for_plan_successor(
             date_start, date_end, is_auto_renew, recurring_next_date=recurring_next_date
         )
-        res.update({"price_unit": price})
-        return res
+        values["price_unit"] = price
+        return values
