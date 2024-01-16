@@ -118,7 +118,7 @@ class SaleSubscription(models.Model):
     )
     stage_str = fields.Char(
         related="stage_id.name",
-        string="Etapa",
+        string="Stage",
         store=True,
     )
     sale_subscription_line_ids = fields.One2many(
