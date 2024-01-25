@@ -100,3 +100,16 @@ class SaleSubscriptionTemplate(models.Model):
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.product_ids.ids)],
         }
+
+    def get_relative_delta(self):
+        self.ensure_one()
+        rule_type = self.recurring_rule_type
+        interval = self.recurring_interval
+        if rule_type == "days":
+            return relativedelta(days=interval)
+        elif rule_type == "weeks":
+            return relativedelta(weeks=interval)
+        elif rule_type == "months":
+            return relativedelta(months=interval)
+        else:
+            return relativedelta(years=interval)
