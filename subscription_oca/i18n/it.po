@@ -313,6 +313,22 @@ msgid "Create Invoice"
 msgstr "Crea fattura"
 
 #. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Create Sale Order"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Create Sale Order and Invoice"
+msgstr ""
+
+#. module: subscription_oca
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "Created Sale Order with reference"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
@@ -554,6 +570,7 @@ msgid "Invoicing"
 msgstr "Fatturazione"
 
 #. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__template_invoicing_mode
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoicing_mode
 msgid "Invoicing mode"
 msgstr "Modo fatturazione"
@@ -858,14 +875,34 @@ msgid "Rule count"
 msgstr "Numero regole"
 
 #. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
+msgid "Sale Order & Invoice"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice_draft
+msgid "Sale Order & Invoice Draft"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice_send
+msgid "Sale Order & Invoice send"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_confirmed
+msgid "Sale Order Confirmed"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_draft
+msgid "Sale Order Draft"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_subscription_line_ids
 msgid "Sale Subscription Line"
 msgstr "Riga vendita sottoscrizione"
-
-#. module: subscription_oca
-#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
-msgid "Sale order & Invoice"
-msgstr "Ordine di vendita & fattura"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids_count
@@ -1199,6 +1236,9 @@ msgstr "product_ids"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_count
 msgid "subscription_ids"
 msgstr "subscription_ids"
+
+#~ msgid "Sale order & Invoice"
+#~ msgstr "Ordine di vendita & fattura"
 
 #~ msgid "Etapa"
 #~ msgstr "Fase"
