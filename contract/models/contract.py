@@ -574,6 +574,9 @@ class ContractContract(models.Model):
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
+        _logger.warning(
+            "recurring_create_invoice is no longer necessary. It should be removed on v17"
+        )
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
             self.message_post(
@@ -633,17 +636,24 @@ class ContractContract(models.Model):
             return self.__class__._recurring_create_invoice
 
     @api.model
-    def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
+    def _cron_recurring_create(
+        self, date_ref=False, create_type="invoice", domain=None
+    ):
         """
         The cron function in order to create recurrent documents
         from contracts.
+        The domain is used to add an extra filter
         """
+        if domain is None:
+            domain = []
         _recurring_create_func = self._get_recurring_create_func(
             create_type=create_type
         )
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain = self._get_contracts_to_invoice_domain(date_ref)
+        domain = expression.AND(
+            [domain, self._get_contracts_to_invoice_domain(date_ref)]
+        )
         domain = expression.AND(
             [
                 domain,
@@ -652,14 +662,15 @@ class ContractContract(models.Model):
         )
         contracts = self.search(domain)
         companies = set(contracts.mapped("company_id"))
+        result = []
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
             contracts_to_invoice = contracts.filtered(
                 lambda c: c.company_id == company
                 and (not c.date_end or c.recurring_next_date <= c.date_end)
             ).with_company(company)
-            _recurring_create_func(contracts_to_invoice, date_ref)
-        return True
+            result.append(_recurring_create_func(contracts_to_invoice, date_ref))
+        return result
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):

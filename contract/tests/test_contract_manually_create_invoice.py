@@ -48,6 +48,31 @@ class TestContractManuallyCreateInvoice(TestContractBase):
         self.assertFalse(invoice_lines.mapped("move_id") - invoices)
         self.assertEqual(len(invoices), contract_to_invoice_count)
 
+    def test_contract_manually_single_contract(self):
+        contracts = self.env["contract.contract"]
+        for _i in range(10):
+            contracts |= self.contract.copy()
+        wizard = self.env["contract.manually.single.invoice"].create(
+            {"date": self.today, "contract_id": self.contract.id}
+        )
+        wizard.create_invoice()
+        invoice_lines = self.env["account.move.line"].search(
+            [("contract_line_id", "in", contracts.mapped("contract_line_ids").ids)]
+        )
+        self.assertEqual(
+            0,
+            len(invoice_lines),
+        )
+        invoice_lines = self.env["account.move.line"].search(
+            [("contract_line_id", "in", self.contract.mapped("contract_line_ids").ids)]
+        )
+        self.assertEqual(
+            2,
+            len(invoice_lines),
+        )
+        # Two invoices are available from to 2018-1-1 2018-3-15.
+        # We are invoicing at the end of the month
+
     def test_contract_manually_create_invoice_with_usererror(self):
 
         contracts = self.contract

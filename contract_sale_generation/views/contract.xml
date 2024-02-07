@@ -10,16 +10,6 @@
                     name="sale_autoconfirm"
                 />
             </xpath>
-            <xpath expr="//button[@name='recurring_create_invoice']" position="before">
-                <button
-                    attrs="{'invisible': [('generation_type','!=','sale')]}"
-                    class="oe_link"
-                    groups="base.group_no_one"
-                    name="recurring_create_sale"
-                    string="CREATE SALES"
-                    type="object"
-                />
-            </xpath>
             <xpath expr="//button[@name='action_show_invoices']" position="after">
                 <button
                     attrs="{'invisible': [('generation_type','!=','sale')]}"
