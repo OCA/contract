@@ -43,6 +43,12 @@ class SaleSubscriptionTemplate(models.Model):
     )
     code = fields.Char()
     recurring_rule_count = fields.Integer(default=1, string="Rule count")
+    company_id = fields.Many2one(
+        "res.company",
+        "Company",
+        default=lambda self: self.env.company,
+        domain=lambda self: [("id", "in", self.env.companies.ids)],
+    )
     invoice_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Invoice Email",

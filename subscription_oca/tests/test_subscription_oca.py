@@ -6,6 +6,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 
 from odoo import exceptions, fields
+from odoo.exceptions import ValidationError
 from odoo.tests import SavepointCase
 
 
@@ -756,3 +757,24 @@ class TestSubscriptionOCA(SavepointCase):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_template_other_company(self):
+        other_company = self.env["res.company"].create(
+            {
+                "name": "Other Company",
+            }
+        )
+        template = self.env["sale.subscription.template"].create(
+            {
+                "name": "Test Template",
+                "company_id": other_company.id,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.env["sale.subscription"].create(
+                {
+                    "partner_id": self.partner.id,
+                    "pricelist_id": self.pricelist1.id,
+                    "template_id": template.id,
+                }
+            )
