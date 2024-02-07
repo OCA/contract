@@ -11,7 +11,7 @@ class SaleSubscriptionStage(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer()
-    display_name = fields.Char(string="Display name")
+    display_name = fields.Char(string="Display name", compute="_compute_display_name")
     in_progress = fields.Boolean(string="In progress", default=False)
     fold = fields.Boolean(string="Kanban folded")
     description = fields.Text(translate=True)
@@ -27,3 +27,8 @@ class SaleSubscriptionStage(models.Model):
         )
         if len(post_stages) > 1:
             raise ValidationError(_("There is already a Closed-type stage declared"))
+
+    @api.depends("name")
+    def _compute_display_name(self):
+        for stage in self:
+            stage.display_name = stage.name

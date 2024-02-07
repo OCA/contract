@@ -26,8 +26,7 @@
                     <field
                         name="stage_id"
                         widget="statusbar"
-                        clickable="1"
-                        options="{'fold_field': 'fold'}"
+                        options="{'fold_field': 'fold', 'clickable': '1'}"
                     />
 
                 </header>
@@ -104,6 +103,7 @@
                                 name="recurring_next_date"
                                 attrs="{'invisible': ['|', ('recurring_next_date', '=', False), ('in_progress', '=', False)]}"
                             />
+                            <field name="company_id" invisible="1" />
                             <field
                                 name="company_id"
                                 options="{'no_create': True}"
