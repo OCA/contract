@@ -1,4 +1,5 @@
 * Carlos Martínez <carlos@domatix.com>
+* Carolina Ferrer <carolina@domatix.com>
 
 
 * `Ooops404 <https://www.ooops404.com>`__:

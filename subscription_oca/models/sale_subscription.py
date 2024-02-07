@@ -114,7 +114,7 @@ class SaleSubscription(models.Model):
         string="Stage",
         tracking=True,
         group_expand="_read_group_stage_ids",
-        store="true",
+        store=True,
     )
     stage_str = fields.Char(
         related="stage_id.name",
@@ -228,7 +228,7 @@ class SaleSubscription(models.Model):
         self.fiscal_position_id = (
             self.env["account.fiscal.position"]
             .with_company(self.company_id)
-            .get_fiscal_position(self.partner_id.id)
+            ._get_fiscal_position(self.partner_id)
         )
 
     def action_start_subscription(self):
