@@ -5,3 +5,7 @@
 
   * Ilyas <irazor147@gmail.com>
   * Giovanni Serra <giovanni@gslab.it>
+
+* `PyTech-SRL <https://pytech.it>`_:
+
+  * Sebastiano Picchi <sebastiano.picchi@pytech.it>
