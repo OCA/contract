@@ -593,6 +593,20 @@ class TestSubscriptionOCA(TransactionCase):
         res = self.sub_line.read(["discount"])
         self.assertEqual(res[0]["discount"], 0)
 
+    def test_compute_display_name(self):
+        stage = self.env["sale.subscription.stage"].create(
+            {
+                "name": "Test Stage",
+                "type": "pre",
+            }
+        )
+        self.assertEqual(stage.display_name, "Test Stage", "display_name not computed")
+        stage.name = "Updated Test Stage"
+        stage._compute_display_name()
+        self.assertEqual(
+            stage.display_name, "Updated Test Stage", "display_name not computed"
+        )
+
     def _collect_all_sub_test_results(self, subscription):
         test_res = []
         sale_order = subscription.create_sale_order()
