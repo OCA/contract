@@ -34,7 +34,7 @@ addon | version | maintainers | summary
 [agreement_sale](agreement_sale/) | 12.0.1.0.2 | [![alexis-via](https://github.com/alexis-via.png?size=30px)](https://github.com/alexis-via) [![bealdav](https://github.com/bealdav.png?size=30px)](https://github.com/bealdav) | Agreement on sales
 [agreement_serviceprofile](agreement_serviceprofile/) | 12.0.1.2.1 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
 [agreement_stock](agreement_stock/) | 12.0.1.0.1 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
-[contract](contract/) | 12.0.8.6.1 |  | Recurring - Contracts Management
+[contract](contract/) | 12.0.8.7.0 |  | Recurring - Contracts Management
 [contract_digitized_signature](contract_digitized_signature/) | 12.0.1.0.0 | [![cubells](https://github.com/cubells.png?size=30px)](https://github.com/cubells) | Contract Digitized Signature
 [contract_forecast](contract_forecast/) | 12.0.1.2.0 |  | Contract forecast
 [contract_invoice_auto_validate](contract_invoice_auto_validate/) | 12.0.1.0.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) | This addon auto-validate invoices after its creation from a contract
