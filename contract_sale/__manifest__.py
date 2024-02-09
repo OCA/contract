@@ -12,10 +12,7 @@
     "data": [
         "security/ir.model.access.csv",
         "security/contract_security.xml",
-        "views/abstract_contract_line.xml",
         "views/contract.xml",
-        "views/contract_line.xml",
-        "views/contract_template.xml",
         "views/res_partner_view.xml",
     ],
     "license": "AGPL-3",
