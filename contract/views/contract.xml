@@ -232,7 +232,10 @@
                                         attrs="{'readonly': [('automatic_price', '=', True)]}"
                                     />
                                     <field name="specific_price" invisible="1" />
-                                    <field name="discount" groups="base.group_no_one" />
+                                    <field
+                                        name="discount"
+                                        groups="product.group_discount_per_so_line"
+                                    />
                                     <field name="price_subtotal" />
                                     <field name="recurring_interval" invisible="1" />
                                     <field name="recurring_rule_type" invisible="1" />
@@ -332,7 +335,10 @@
                                         attrs="{'readonly': [('automatic_price', '=', True)]}"
                                     />
                                     <field name="specific_price" invisible="1" />
-                                    <field name="discount" groups="base.group_no_one" />
+                                    <field
+                                        name="discount"
+                                        groups="product.group_discount_per_so_line"
+                                    />
                                     <field name="price_subtotal" />
                                     <field name="recurring_interval" invisible="1" />
                                     <field name="recurring_rule_type" invisible="1" />
