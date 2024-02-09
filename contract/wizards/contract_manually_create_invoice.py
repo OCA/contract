@@ -56,10 +56,17 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         invoices = self.env['account.invoice']
         for contract in self.contract_to_invoice_ids:
             invoices |= contract.recurring_create_invoice()
+        if self.contract_type == "sale":
+            tree_view_id = self.env.ref('account.invoice_tree').id
+            form_view_id = self.env.ref('account.invoice_form').id
+        else:
+            tree_view_id = self.env.ref('account.invoice_supplier_tree').id
+            form_view_id = self.env.ref('account.invoice_supplier_form').id
         return {
             "type": "ir.actions.act_window",
             "name": _("Invoices"),
             "res_model": "account.invoice",
+            "views": [[tree_view_id, "tree"], [form_view_id, "form"]],
             "domain": [('id', 'in', invoices.ids)],
             "view_mode": "tree,form",
             "context": self.env.context,
