@@ -199,6 +199,7 @@ class SaleOrderLine(models.Model):
             "sale_order_line_id": self.id,
             "predecessor_contract_line_id": predecessor_contract_line_id,
             "analytic_account_id": self.order_id.analytic_account_id.id,
+            "analytic_distribution": self.analytic_distribution,
         }
 
     def create_contract_line(self, contract):
