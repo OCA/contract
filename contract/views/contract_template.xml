@@ -48,12 +48,9 @@
                             <field name="uom_id" />
                             <field
                                 name="automatic_price"
-                                attrs="{'column_invisible': [('parent.contract_type','=','purchase')]}"
+                                column_invisible="parent.contract_type == 'purchase' and not is_auto_renew"
                             />
-                            <field
-                                name="price_unit"
-                                attrs="{'readonly': [('automatic_price', '=', True)]}"
-                            />
+                            <field name="price_unit" readonly="automatic_price" />
                             <field name="specific_price" invisible="1" />
                             <field
                                 name="discount"
