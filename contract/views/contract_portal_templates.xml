@@ -33,9 +33,14 @@
     >
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t
+                    t-set="icon"
+                    t-value="'/contract/static/description/contract_logo.svg'"
+                />
                 <t t-set="title">Contracts</t>
+                <t t-set="text">Total <t t-esc="contract_count" /> Contracts.</t>
                 <t t-set="url" t-value="'/my/contracts'" />
-                <t t-set="placeholder_count" t-value="'contract_count'" />
+                <t t-set="config_card" t-value="True" />
             </t>
         </xpath>
     </template>

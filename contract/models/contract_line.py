@@ -33,6 +33,10 @@ class ContractLine(models.Model):
         ondelete="cascade",
     )
     currency_id = fields.Many2one(related="contract_id.currency_id")
+    analytic_account_id = fields.Many2one(
+        string="Analytic account",
+        comodel_name="account.analytic.account",
+    )
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     termination_notice_date = fields.Date(
@@ -690,7 +694,7 @@ class ContractLine(models.Model):
                             "old_end": old_date_end,
                             "new_end": rec.date_end,
                         }
-                        rec.contract_id.message_post(body=msg)
+                        rec.contract_id.message_post(body=msg, body_is_html=True)
                 else:
                     rec.write(
                         {
@@ -766,7 +770,7 @@ class ContractLine(models.Model):
                     "new_date_start": new_line.date_start,
                     "new_date_end": new_line.date_end,
                 }
-                rec.contract_id.message_post(body=msg)
+                rec.contract_id.message_post(body=msg, body_is_html=True)
         return contract_line
 
     def stop_plan_successor(self, date_start, date_end, is_auto_renew):
@@ -869,24 +873,21 @@ class ContractLine(models.Model):
                 "new_date_start": date_start,
                 "new_date_end": date_end,
             }
-            rec.contract_id.message_post(body=msg)
+            rec.contract_id.message_post(body=msg, body_is_html=True)
         return contract_line
 
     def cancel(self):
         if not all(self.mapped("is_cancel_allowed")):
             raise ValidationError(_("Cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
-            lines = self.filtered(lambda l, c=contract: l.contract_id == c)
+            lines = self.filtered(lambda r, c=contract: r.contract_id == c)
             msg = _(
                 "Contract line canceled: %s",
                 "<br/>- ".join(
-                    [
-                        "<strong>%(product)s</strong>" % {"product": name}
-                        for name in lines.mapped("name")
-                    ]
+                    [f"<strong>{name}</strong>" for name in lines.mapped("name")]
                 ),
             )
-            contract.message_post(body=msg)
+            contract.message_post(body=msg, body_is_html=True)
         self.mapped("predecessor_contract_line_id").write(
             {"successor_contract_line_id": False}
         )
@@ -896,17 +897,14 @@ class ContractLine(models.Model):
         if not all(self.mapped("is_un_cancel_allowed")):
             raise ValidationError(_("Un-cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
-            lines = self.filtered(lambda l, c=contract: l.contract_id == c)
+            lines = self.filtered(lambda r, c=contract: r.contract_id == c)
             msg = _(
                 "Contract line Un-canceled: %s",
                 "<br/>- ".join(
-                    [
-                        "<strong>%(product)s</strong>" % {"product": name}
-                        for name in lines.mapped("name")
-                    ]
+                    [f"<strong>{name}</strong>" for name in lines.mapped("name")]
                 ),
             )
-            contract.message_post(body=msg)
+            contract.message_post(body=msg, body_is_html=True)
         for rec in self:
             if rec.predecessor_contract_line_id:
                 predecessor_contract_line = rec.predecessor_contract_line_id
@@ -1038,7 +1036,7 @@ class ContractLine(models.Model):
                 "new_date_start": date_start,
                 "new_date_end": date_end,
             }
-            rec.contract_id.message_post(body=msg)
+            rec.contract_id.message_post(body=msg, body_is_html=True)
         return res
 
     @api.model

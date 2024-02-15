@@ -156,7 +156,7 @@ class ContractContract(models.Model):
             ).write(vals)
             self._modification_mail_send()
         else:
-            res = super(ContractContract, self).write(vals)
+            res = super().write(vals)
         return res
 
     @api.model
@@ -186,13 +186,13 @@ class ContractContract(models.Model):
             )
             if modification_ids_not_sent:
                 if not self.env.context.get("skip_modification_mail"):
-                    record.with_context(
-                        default_subtype_id=self.env.ref(
-                            "contract.mail_message_subtype_contract_modification"
-                        ).id,
-                    ).message_post_with_template(
-                        self.env.ref("contract.mail_template_contract_modification").id,
+                    mail_template = self.env.ref(
+                        "contract.mail_template_contract_modification"
+                    ).sudo()
+                    record.message_post_with_source(
+                        mail_template,
                         email_layout_xmlid="contract.template_contract_modification",
+                        subtype_xmlid="contract.mail_message_subtype_contract_modification",
                     )
                 modification_ids_not_sent.write({"sent": True})
 
@@ -318,10 +318,10 @@ class ContractContract(models.Model):
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
-                lambda l: (
-                    l.recurring_next_date
-                    and not l.is_canceled
-                    and (not l.display_type or l.is_recurring_note)
+                lambda r: (
+                    r.recurring_next_date
+                    and not r.is_canceled
+                    and (not r.display_type or r.is_recurring_note)
                 )
             ).mapped("recurring_next_date")
             # we give priority to computation from date_start if modified
@@ -470,7 +470,7 @@ class ContractContract(models.Model):
         compose_form = self.env.ref("mail.email_compose_message_wizard_form")
         ctx = dict(
             default_model="contract.contract",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_composition_mode="comment",
@@ -584,20 +584,15 @@ class ContractContract(models.Model):
         """
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
-            self.message_post(
-                body=_(
-                    "Contract manually invoiced: "
-                    "<a"
-                    '    href="#" data-oe-model="%(model_name)s" '
-                    '    data-oe-id="%(rec_id)s"'
-                    ">Invoice"
-                    "</a>"
-                )
-                % {
-                    "model_name": invoice._name,
-                    "rec_id": invoice.id,
-                }
+            msg = _(
+                "Contract manually invoiced: "
+                "<a"
+                f'    href="#" data-oe-model="{invoice._name}" '
+                f'    data-oe-id="{invoice.id}"'
+                ">Invoice"
+                "</a>"
             )
+            self.message_post(body=msg, body_is_html=True)
         return invoices
 
     @api.model
@@ -629,7 +624,8 @@ class ContractContract(models.Model):
                             contract_id=item.id,
                             contract=item.display_name,
                         )
-                    )
+                    ),
+                    body_is_html=True,
                 )
 
     def _recurring_create_invoice(self, date_ref=False):
@@ -672,7 +668,7 @@ class ContractContract(models.Model):
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
             contracts_to_invoice = contracts.filtered(
-                lambda c: c.company_id == company
+                lambda c, company=company: c.company_id == company
                 and (not c.date_end or c.recurring_next_date <= c.date_end)
             ).with_company(company)
             _recurring_create_func(contracts_to_invoice, date_ref)

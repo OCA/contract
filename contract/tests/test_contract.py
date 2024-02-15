@@ -857,25 +857,15 @@ class TestContract(TestContractBase):
             max_date_end,
         ):
             return (
-                "Error in case %s:"
-                "date_start: %s, "
-                "date_end: %s, "
-                "last_date_invoiced: %s, "
-                "recurring_next_date: %s, "
-                "recurring_invoicing_type: %s, "
-                "recurring_rule_type: %s, "
-                "recurring_interval: %s, "
-                "max_date_end: %s, "
-            ) % (
-                case,
-                date_start,
-                date_end,
-                last_date_invoiced,
-                recurring_next_date,
-                recurring_invoicing_type,
-                recurring_rule_type,
-                recurring_interval,
-                max_date_end,
+                "Error in case {case}:"
+                "date_start: {date_start}, "
+                "date_end: {date_end}, "
+                "last_date_invoiced: {last_date_invoiced}, "
+                "recurring_next_date: {recurring_next_date}, "
+                "recurring_invoicing_type: {recurring_invoicing_type}, "
+                "recurring_rule_type: {recurring_rule_type}, "
+                "recurring_interval: {recurring_interval}, "
+                "max_date_end: {max_date_end}, "
             )
 
         Result = namedtuple(

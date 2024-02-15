@@ -8,12 +8,47 @@ class ContractMulticompanyCase(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        chart_template = cls.env.ref("l10n_generic_coa.configurable_chart_template")
         cls.company_obj = cls.env["res.company"]
         cls.company_1 = cls.env.ref("base.main_company")
         vals = {"name": "Company 2"}
         cls.company_2 = cls.company_obj.create(vals)
-        chart_template.try_loading(company=cls.company_2)
+        cls.account_sale = cls.env["account.account"].create(
+            {
+                "name": "Inside Purchases",
+                "code": "5100",
+                "account_type": "liability_payable",
+                "company_id": cls.company_2.id,
+            }
+        )
+        cls.account_sale_2 = cls.env["account.account"].create(
+            {
+                "name": "Inside Cash",
+                "code": "51000",
+                "account_type": "expense_direct_cost",
+                "company_id": cls.company_2.id,
+            }
+        )
+        cls.env["account.journal"].create(
+            [
+                {
+                    "name": "Test journal CAD",
+                    "code": "TPUR",
+                    "type": "purchase",
+                    "company_id": cls.company_2.id,
+                    "default_account_id": cls.account_sale_2.id,
+                },
+                {
+                    "name": "Test journal CAD",
+                    "code": "TCASH",
+                    "type": "cash",
+                    "company_id": cls.company_2.id,
+                    "default_account_id": cls.account_sale.id,
+                },
+            ]
+        )
+        # cls.env['account.chart.template'].try_loading('generic_coa',
+        #                                               company=cls.company_2,
+        #                                               install_demo=False)
         cls.env.user.company_ids |= cls.company_2
 
         cls.contract_mc = (
