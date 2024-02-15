@@ -88,6 +88,22 @@
                                 </group>
                                 <group name="right_group">
                                     <field name="code" readonly="0" />
+                                    <field
+                                        name="stage_ids"
+                                        widget="many2many_tags"
+                                        options="{
+                                            'no_create_edit': True,
+                                            'no_quick_create': True,
+                                        }"
+                                    />
+                                    <field name="has_expiring" invisible="1" />
+                                    <field
+                                        name="days_before_expiring"
+                                        attrs="{'invisible': [
+                                            ('recurring_rule_boundary', '=', 'unlimited'),
+                                            ('has_expiring', '=', True),
+                                        ]}"
+                                    />
                                 </group>
                             </group>
                         </page>

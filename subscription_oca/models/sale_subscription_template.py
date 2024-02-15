@@ -2,7 +2,8 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleSubscriptionTemplate(models.Model):
@@ -65,6 +66,23 @@ class SaleSubscriptionTemplate(models.Model):
         compute="_compute_subscription_count", string="subscription_ids"
     )
 
+    def _default_stages(self):
+        return self.env["sale.subscription.stage"].search([("is_default", "=", True)])
+
+    stage_ids = fields.Many2many(
+        "sale.subscription.stage",
+        string="Stages",
+        default=lambda self: self._default_stages(),
+    )
+    days_before_expiring = fields.Integer("Days Before Expiring", default=0)
+    has_expiring = fields.Boolean(store=False)
+
+    @api.onchange("stage_ids")
+    def _onchange_stage_ids(self):
+        self.has_expiring = bool(
+            self.stage_ids.filtered(lambda s: s.type == "expiring")
+        )
+
     def _compute_subscription_count(self):
         data = self.env["sale.subscription"].read_group(
             domain=[("template_id", "in", self.ids)],
@@ -117,3 +135,57 @@ class SaleSubscriptionTemplate(models.Model):
             return relativedelta(months=interval)
         else:
             return relativedelta(years=interval)
+
+    def _check_stages_validity(self, stage_ids, duration):
+        stages = self.env["sale.subscription.stage"].browse(stage_ids)
+        expiring_stages = (self.stage_ids + stages).filtered(
+            lambda s: s.type == "expiring"
+        )
+        if expiring_stages:
+            if len(expiring_stages) >= 2:
+                raise ValidationError(_("Can't have more than one 'expiring' stage"))
+            if duration == "unlimited":
+                raise ValidationError(
+                    _("Can't have an unlimited duration and an 'expiring' stage")
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "stage_ids" in vals.keys():
+                self._check_stages_validity(
+                    vals["stage_ids"][0][-1], vals["recurring_rule_boundary"]
+                )
+        res = super().create(vals_list)
+        return res
+
+    def write(self, vals):
+        if ("stage_ids" in vals.keys()) or ("recurring_rule_boundary" in vals.keys()):
+            stages = vals.get("stage_ids")
+            recurring_rule_boundary = vals.get(
+                "recurring_rule_boundary", self.recurring_rule_boundary
+            )
+            self._check_stages_validity(
+                stages[0][-1] if stages else self.stage_ids.ids,
+                recurring_rule_boundary,
+            )
+        res = super().write(vals)
+        return res
+
+    def cron_expiring_subscriptions(self):
+        templates = self.search(
+            [
+                ("subscription_ids", "!=", False),
+                ("days_before_expiring", ">", 0),
+                ("stage_ids.type", "=", "expiring"),
+            ]
+        )
+        for template in templates:
+            expire_stage = template.stage_ids.filtered(lambda s: s.type == "expiring")
+            for sub in template.subscription_ids.filtered(
+                lambda s: s.stage_id.type in "in_progress"
+            ):
+                if sub.date and fields.Date.today() >= sub.date - relativedelta(
+                    days=template.days_before_expiring
+                ):
+                    sub.stage_id = expire_stage

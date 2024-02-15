@@ -596,7 +596,7 @@ class TestSubscriptionOCA(SavepointCase):
 
     def test_subscription_oca_sub_stage(self):
         # sale.subscription.stage
-        self.stage._check_lot_product()  # should not raise
+        self.stage._check_type()  # should not raise
 
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
@@ -756,3 +756,6 @@ class TestSubscriptionOCA(SavepointCase):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_stages_validity(self):
+        pass
