@@ -139,10 +139,10 @@
                         <field
                             name="line_recurrence"
                             class="oe_inline"
-                            attrs="{'readonly': [('line_recurrence', '=', True), ('invoice_count', '!=', 0)]}"
+                            readonly="line_recurrence and invoice_count != 0"
                         />
                         <label for="line_recurrence" />
-                        <group attrs="{'invisible': [('line_recurrence', '=', True)]}">
+                        <group invisible="line_recurrence">
                             <label for="recurring_interval" />
                             <div class="o_row">
                                 <field
