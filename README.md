@@ -33,7 +33,7 @@ addon | version | maintainers | summary
 [agreement_serviceprofile](agreement_serviceprofile/) | 14.0.1.1.1 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Adds an Agreement Service Profile object
 [agreement_stock](agreement_stock/) | 14.0.1.0.1 | [![smangukiya](https://github.com/smangukiya.png?size=30px)](https://github.com/smangukiya) [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Link picking to an agreement
 [agreement_tier_validation](agreement_tier_validation/) | 14.0.1.0.1 |  | Extends the functionality of Agreement to support a tier validation process.
-[contract](contract/) | 14.0.2.14.0 |  | Recurring - Contracts Management
+[contract](contract/) | 14.0.2.14.1 |  | Recurring - Contracts Management
 [contract_delivery_zone](contract_delivery_zone/) | 14.0.1.0.0 |  | Allows to remind the delivery zone defined on the partner on contract level.
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 14.0.1.0.0 | [![florian-dacosta](https://github.com/florian-dacosta.png?size=30px)](https://github.com/florian-dacosta) | Contract Invoice Start End Dates
 [contract_mandate](contract_mandate/) | 14.0.1.0.1 |  | Mandate in contracts and their invoices
