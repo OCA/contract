@@ -167,6 +167,33 @@ class ContractContract(models.Model):
             res = super(ContractContract, self).write(vals)
         return res
 
+    def generate_invoices_manually(self, date=None):
+        if date is None:
+            date = fields.Date.today()
+
+        while (
+            self.recurring_next_date
+            and self.recurring_next_date <= date
+            and (not self.date_end or self.recurring_next_date <= self.date_end)
+        ):
+            result = self.with_company(self.company_id.id)._cron_recurring_create(
+                self.recurring_next_date,
+                create_type=self.generation_type,
+                domain=[("id", "=", self.id)],
+            )
+            for record_list in result:
+                for record in record_list:
+                    self.message_post(
+                        body=_(
+                            "Contract manually generated: "
+                            '<a href="#" data-oe-model="%s" data-oe-id="%s">'
+                            "%s"
+                            "</a>"
+                        )
+                        % (record._name, record.id, record.display_name)
+                    )
+        return True
+
     @api.model
     def _set_start_contract_modification(self):
         subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
