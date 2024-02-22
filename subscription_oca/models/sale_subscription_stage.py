@@ -16,14 +16,42 @@ class SaleSubscriptionStage(models.Model):
     fold = fields.Boolean(string="Kanban folded")
     description = fields.Text(translate=True)
     type = fields.Selection(
-        [("pre", "Ready to start"), ("in_progress", "In progress"), ("post", "Closed")],
+        [
+            ("pre", "Ready to start"),
+            ("in_progress", "In progress"),
+            ("expiring", "Expiring"),
+            ("post", "Closed"),
+        ],
         default="pre",
     )
+    is_default = fields.Boolean("Is Default", default=False)
 
     @api.constrains("type")
-    def _check_lot_product(self):
+    def _check_type(self):
         post_stages = self.env["sale.subscription.stage"].search(
             [("type", "=", "post")]
         )
         if len(post_stages) > 1:
             raise ValidationError(_("There is already a Closed-type stage declared"))
+
+    @api.constrains("is_default")
+    def _check_is_default(self):
+        stage_type = self.type
+        default_stages = self.env["sale.subscription.stage"].search(
+            [
+                ("type", "=", stage_type),
+                ("is_default", "=", True),
+            ]
+        )
+        if len(default_stages) > 1:
+            raise ValidationError(
+                _("Can't have more than one default stage with the same type")
+            )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "display_name" not in vals.keys():
+                vals["display_name"] = vals["name"]
+        res = super().create(vals_list)
+        return res

@@ -12,4 +12,18 @@
         <field name="state">code</field>
         <field name="code">model.cron_subscription_management()</field>
     </record>
+    <record id="ir_cron_expiring_subscriptions" model="ir.cron">
+        <field name="name">Update Expiring Subscriptions</field>
+        <field name="model_id" ref="model_sale_subscription_template" />
+        <field name="state">code</field>
+        <field name="code">model.cron_expiring_subscriptions()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field
+            name="nextcall"
+            eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+    </record>
 </odoo>

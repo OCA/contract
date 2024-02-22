@@ -236,8 +236,8 @@ class SaleSubscription(models.Model):
 
     def action_start_subscription(self):
         self.close_reason_id = False
-        in_progress_stage = self.env["sale.subscription.stage"].search(
-            [("type", "=", "in_progress")], limit=1
+        in_progress_stage = self.template_id.stage_ids.filtered(
+            lambda s: s.type == "in_progress"
         )
         self.stage_id = in_progress_stage
 
@@ -520,7 +520,7 @@ class SaleSubscription(models.Model):
         if "stage_id" in values:
             for record in self:
                 if record.stage_id:
-                    if record.stage_id.type == "in_progress":
+                    if record.stage_id.type in ["in_progress", "expiring"]:
                         record.in_progress = True
                         record.date_start = date.today()
                     elif record.stage_id.type == "post":
