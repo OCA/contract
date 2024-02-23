@@ -6,7 +6,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ class SaleSubscription(models.Model):
         required=True,
         index=True,
         default=lambda self: self.env.company,
+        readonly=True,
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner", required=True, string="Partner", index=True
@@ -44,6 +45,7 @@ class SaleSubscription(models.Model):
         comodel_name="sale.subscription.template",
         required=True,
         string="Subscription template",
+        check_company=True,
     )
     template_invoicing_mode = fields.Selection(
         related="template_id.invoicing_mode", readonly=True
@@ -160,6 +162,15 @@ class SaleSubscription(models.Model):
                 if subscription.date_start == today:
                     subscription.action_start_subscription()
                     subscription.generate_invoice()
+
+    @api.constrains("template_id")
+    def _check_template_id(self):
+        if self.template_id.company_id not in [False, self.env.company]:
+            raise ValidationError(
+                _(
+                    "Cannot link a Template owned by another company to this subscription"
+                )
+            )
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):

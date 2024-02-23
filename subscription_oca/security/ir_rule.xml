@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_subscription_rule" model="ir.rule">
+        <field name="name">Sale Subscription rule</field>
+        <field name="model_id" ref="model_sale_subscription" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+    <record id="sale_subscription_line_rule" model="ir.rule">
+        <field name="name">Sale Subscription Line rule</field>
+        <field name="model_id" ref="model_sale_subscription_line" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+    <record id="sale_subscription_template_rule" model="ir.rule">
+        <field name="name">Sale Subscription Template rule</field>
+        <field name="model_id" ref="model_sale_subscription_template" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+    </record>
+</odoo>

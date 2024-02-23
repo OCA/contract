@@ -88,6 +88,7 @@
                                 </group>
                                 <group name="right_group">
                                     <field name="code" readonly="0" />
+                                    <field name="company_id" />
                                 </group>
                             </group>
                         </page>
@@ -117,7 +118,22 @@
                 <field name="name" />
                 <field name="recurring_interval" />
                 <field name="recurring_rule_type" />
+                <field name="company_id" />
+                <field name="invoicing_mode" />
             </tree>
+        </field>
+    </record>
+
+    <record id="view_sale_subscription_template_filter" model="ir.ui.view">
+        <field name="name">sale.subscription.template.filter</field>
+        <field name="model">sale.subscription.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <field name="company_id" />
+                <field name="invoicing_mode" />
+            </search>
         </field>
     </record>
 
