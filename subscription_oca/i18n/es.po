@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-12-19 10:35+0000\n"
+"PO-Revision-Date: 2024-02-25 20:34+0000\n"
 "Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -94,6 +94,11 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#END#</strong>\n"
+"                                    : Fecha final\n"
+"                                    del\n"
+"                                    periodo\n"
+"                                    facturado"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
@@ -104,17 +109,24 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>\n"
+"                                    : Nombre del mes\n"
+"                                    \n"
+"                                    del\n"
+"                                    periodo facturado"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid ""
 "<strong>#INVOICEMONTHNUMBER#</strong>: Invoice month number of the period"
 msgstr ""
+"<strong>#INVOICEMONTHNUMBER#</strong>: Número del mes de facturación del "
+"periodo"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid "<strong>#INVOICEYEAR#</strong>: Invoice year of the period"
-msgstr ""
+msgstr "<strong>#INVOICEYEAR#</strong>: Año de facturación del periodo"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
@@ -125,6 +137,11 @@ msgid ""
 "                                    of the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#INICIO#</strong>:\n"
+"                                    inicio\n"
+"                                    fecha\n"
+"                                    del\n"
+"                                    periodo facturado"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
@@ -184,12 +201,12 @@ msgstr "Importe Total"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archivado"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
@@ -200,7 +217,7 @@ msgstr "Conteo de Adjuntos"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_rule_boundary
@@ -217,6 +234,8 @@ msgstr "Cancelar"
 #, python-format
 msgid "Cannot link a Template owned by another company to this subscription"
 msgstr ""
+"No se puede vincular una Plantilla propiedad de otra empresa a esta "
+"suscripción"
 
 #. module: subscription_oca
 #: model_terms:ir.actions.act_window,help:subscription_oca.subscription_stage_action
@@ -306,18 +325,18 @@ msgstr "Crear Factura"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid "Create Sale Order"
-msgstr ""
+msgstr "Crear Orden de Venta"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid "Create Sale Order and Invoice"
-msgstr ""
+msgstr "Crear Orden de Venta y Factura"
 
 #. module: subscription_oca
 #: code:addons/subscription_oca/models/sale_subscription.py:0
 #, python-format
 msgid "Created Sale Order with reference"
-msgstr ""
+msgstr "Orden de Venta Creada con referencia"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
@@ -356,7 +375,7 @@ msgstr "Divisa"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__days
@@ -367,7 +386,7 @@ msgstr "Día(s)"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "December"
-msgstr ""
+msgstr "Diciembre"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
@@ -425,7 +444,7 @@ msgstr "Editar"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date
@@ -435,7 +454,7 @@ msgstr "Fecha de fin"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Finished"
-msgstr ""
+msgstr "Terminado"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__fiscal_position_id
@@ -475,7 +494,7 @@ msgstr "Para Siempre"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar Por..."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_account_move__id
@@ -576,7 +595,7 @@ msgstr "Es Seguidor/a"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__journal_id
@@ -592,13 +611,13 @@ msgstr "Entrada en Diario"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #. module: subscription_oca
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__fold
@@ -647,6 +666,8 @@ msgstr "Última Actualización el"
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid "Legend (for the markers inside invoice lines description)"
 msgstr ""
+"Leyenda (para los marcadores dentro de la descripción de las líneas de "
+"factura)"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_main_attachment_id
@@ -657,13 +678,13 @@ msgstr "Archivo Adjunto Principal"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #. module: subscription_oca
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
@@ -726,7 +747,7 @@ msgstr "Tipo de la Siguiente Actividad"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Next Invoice"
-msgstr ""
+msgstr "Próxima Factura"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_next_date
@@ -737,7 +758,7 @@ msgstr "Fecha siguiente factura"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
@@ -768,7 +789,7 @@ msgstr "Número de mensajes no leídos"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
@@ -868,27 +889,27 @@ msgstr "Regla de Conteo"
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
 msgid "Sale Order & Invoice"
-msgstr ""
+msgstr "Orden de venta y Factura"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice_draft
 msgid "Sale Order & Invoice Draft"
-msgstr ""
+msgstr "Orden de Venta y Factura"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice_send
 msgid "Sale Order & Invoice send"
-msgstr ""
+msgstr "Envío de Orden de Venta y Factura"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_confirmed
 msgid "Sale Order Confirmed"
-msgstr ""
+msgstr "Orden de Venta Confirmada"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_draft
 msgid "Sale Order Draft"
-msgstr ""
+msgstr "Borrador de Orden de Venta"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_subscription_line_ids
@@ -924,7 +945,7 @@ msgstr "Línea de Orden de Venta"
 #: code:addons/subscription_oca/models/sale_subscription_line.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "Septiembre"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sequence
