@@ -266,35 +266,6 @@
                                     <field name="is_cancel_allowed" invisible="1" />
                                     <field name="is_un_cancel_allowed" invisible="1" />
                                     <field name="is_canceled" invisible="1" />
-                                    <button
-                                        name="action_plan_successor"
-                                        string="Plan Start"
-                                        type="object"
-                                        icon="fa-calendar text-success"
-                                        attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"
-                                    />
-                                    <button
-                                        name="action_stop"
-                                        string="Stop"
-                                        type="object"
-                                        icon="fa-stop text-danger"
-                                        attrs="{'invisible': [('is_stop_allowed', '=', False)]}"
-                                    />
-                                    <button
-                                        name="cancel"
-                                        string="Cancel"
-                                        type="object"
-                                        icon="fa-ban text-danger"
-                                        confirm="Are you sure you want to cancel this line"
-                                        attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"
-                                    />
-                                    <button
-                                        name="action_uncancel"
-                                        string="Un-cancel"
-                                        type="object"
-                                        icon="fa-ban text-success"
-                                        attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"
-                                    />
                                 </tree>
                             </field>
                             <field
