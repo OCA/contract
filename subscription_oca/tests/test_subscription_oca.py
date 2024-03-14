@@ -106,9 +106,7 @@ class TestSubscriptionOCA(TransactionCase):
         )
 
         cls.stage = cls.env["sale.subscription.stage"].create(
-            {
-                "name": "Test Sub Stage",
-            }
+            {"name": "Test Sub Stage", "type": "in_progress"}
         )
         cls.stage_2 = cls.env["sale.subscription.stage"].create(
             {
@@ -505,7 +503,7 @@ class TestSubscriptionOCA(TransactionCase):
 
     def test_subscription_oca_sub_stage(self):
         # sale.subscription.stage
-        self.stage._check_lot_product()  # should not raise
+        self.stage._check_subscription_stages()  # should not raise
 
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
@@ -531,7 +529,7 @@ class TestSubscriptionOCA(TransactionCase):
         wiz = self.env["close.reason.wizard"].create({})
         wiz.with_context(active_id=self.sub1.id).button_confirm()
         self.assertEqual(self.sub1.stage_id.name, "Closed")
-        self.assertFalse(self.sub1.active)
+        self.assertTrue(self.sub1.active)
         self.tmpl1.action_view_subscription_ids()
         self.tmpl1.action_view_product_ids()
         self.tmpl1.read(["product_ids_count", "subscription_count"])

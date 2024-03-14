@@ -15,7 +15,7 @@ class SaleSubscription(models.Model):
     _name = "sale.subscription"
     _description = "Subscription"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-    _order = "id desc"
+    _order = "recurring_next_date ASC, commercial_partner_id, id DESC"
 
     color = fields.Integer("Color Index")
     name = fields.Char(
@@ -33,6 +33,14 @@ class SaleSubscription(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner", required=True, string="Partner", index=True
     )
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Commercial Entity",
+        compute_sudo=True,
+        related="partner_id.commercial_partner_id",
+        index=True,
+        store=True,
+    )
     fiscal_position_id = fields.Many2one(
         "account.fiscal.position",
         string="Fiscal Position",
@@ -49,7 +57,14 @@ class SaleSubscription(models.Model):
         string="Reference",
         default=lambda self: self.env["ir.sequence"].next_by_code("sale.subscription"),
     )
-    in_progress = fields.Boolean(string="In progress", default=False)
+    in_progress = fields.Boolean(
+        string="In progress",
+        compute="_compute_status",
+        readonly=False,
+        index=True,
+        store=True,
+        copy=False,
+    )
     recurring_rule_boundary = fields.Boolean(
         string="Boundary", compute="_compute_rule_boundary", store=True
     )
@@ -90,10 +105,18 @@ class SaleSubscription(models.Model):
         string="Orders",
     )
     recurring_total = fields.Monetary(
-        compute="_compute_total", string="Recurring price", store=True
+        compute="_compute_total",
+        string="Recurring price",
+        store=True,
     )
-    amount_tax = fields.Monetary(compute="_compute_total", store=True)
-    amount_total = fields.Monetary(compute="_compute_total", store=True)
+    amount_tax = fields.Monetary(
+        compute="_compute_total",
+        store=True,
+    )
+    amount_total = fields.Monetary(
+        compute="_compute_total",
+        store=True,
+    )
     tag_ids = fields.Many2many(comodel_name="sale.subscription.tag", string="Tags")
     image = fields.Binary("Image", related="user_id.image_512", store=True)
     journal_id = fields.Many2one(comodel_name="account.journal", string="Journal")
@@ -109,12 +132,22 @@ class SaleSubscription(models.Model):
         stage_ids = stages.search([], order=order)
         return stage_ids
 
+    def _get_default_stage_id(self):
+        """Gives default stage_id"""
+        first_stage = self.env["sale.subscription.stage"].search(
+            [("type", "=", "draft")], order="sequence"
+        )
+        return first_stage[:1]
+
     stage_id = fields.Many2one(
         comodel_name="sale.subscription.stage",
         string="Stage",
         tracking=True,
         group_expand="_read_group_stage_ids",
+        required=True,
         store=True,
+        default=_get_default_stage_id,
+        copy=False,
     )
     stage_str = fields.Char(
         related="stage_id.name",
@@ -135,14 +168,14 @@ class SaleSubscription(models.Model):
         comodel_name="sale.subscription.close.reason", string="Close Reason"
     )
     crm_team_id = fields.Many2one(comodel_name="crm.team", string="Sale team")
-    to_renew = fields.Boolean(default=False, string="To renew")
+    to_renew = fields.Boolean(default=False, string="To renew")  # TODO: Seems not used
 
     def cron_subscription_management(self):
         today = date.today()
         for subscription in self.search([]):
             if subscription.in_progress:
                 if (
-                    subscription.recurring_next_date == today
+                    subscription.recurring_next_date <= today
                     and subscription.sale_subscription_line_ids
                 ):
                     try:
@@ -150,13 +183,22 @@ class SaleSubscription(models.Model):
                     except Exception:
                         logger.exception("Error on subscription invoice generate")
                 if not subscription.recurring_rule_boundary:
-                    if subscription.date == today:
+                    if subscription.date <= today:
                         subscription.action_close_subscription()
 
-            else:
-                if subscription.date_start == today:
-                    subscription.action_start_subscription()
-                    subscription.generate_invoice()
+            elif (
+                subscription.date_start <= today and subscription.stage_id.type == "pre"
+            ):
+                subscription.action_start_subscription()
+                subscription.generate_invoice()
+
+    @api.depends("stage_id")
+    def _compute_status(self):
+        for record in self:
+            in_progress = False
+            if record.stage_id and record.stage_id.type == "in_progress":
+                in_progress = True
+            record.in_progress = in_progress
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):
@@ -181,7 +223,7 @@ class SaleSubscription(models.Model):
             slash = "/" if template_code and code else ""
             record.name = "{}{}{}".format(template_code, slash, code)
 
-    @api.depends("template_id", "date_start")
+    @api.depends("template_id", "date_start", "stage_id")
     def _compute_rule_boundary(self):
         for record in self:
             if record.template_id.recurring_rule_boundary == "unlimited":
@@ -234,12 +276,11 @@ class SaleSubscription(models.Model):
     def action_start_subscription(self):
         self.close_reason_id = False
         in_progress_stage = self.env["sale.subscription.stage"].search(
-            [("type", "=", "in_progress")], limit=1
+            [("type", "=", "in_progress")], order="sequence", limit=1
         )
         self.stage_id = in_progress_stage
 
     def action_close_subscription(self):
-        self.recurring_next_date = False
         return {
             "view_type": "form",
             "view_mode": "form",
@@ -248,6 +289,17 @@ class SaleSubscription(models.Model):
             "target": "new",
             "res_id": False,
         }
+
+    def close_subscription(self, close_reason_id=False):
+        self.ensure_one()
+        self.recurring_next_date = False
+        closed_stage_ids = self.env["sale.subscription.stage"].search(
+            [("type", "=", "post")],
+        )
+        closed_stage = closed_stage_ids[:1]
+        self.close_reason_id = close_reason_id
+        if self.stage_id != closed_stage and closed_stage:
+            self.stage_id = closed_stage
 
     def _prepare_sale_order(self, line_ids=False):
         self.ensure_one()
@@ -268,9 +320,11 @@ class SaleSubscription(models.Model):
             "invoice_date": self.recurring_next_date,
             "invoice_payment_term_id": self.partner_id.property_payment_term_id.id,
             "invoice_origin": self.name,
+            "ref": self.code,
             "invoice_user_id": self.user_id.id,
             "partner_bank_id": self.company_id.partner_id.bank_ids[:1].id,
             "invoice_line_ids": line_ids,
+            "subscription_id": self.id,
         }
         if self.journal_id:
             values["journal_id"] = self.journal_id.id
@@ -294,7 +348,6 @@ class SaleSubscription(models.Model):
             .with_context(default_move_type="out_invoice", journal_type="sale")
             .create(invoice_values)
         )
-        self.write({"invoice_ids": [(4, invoice_id.id)]})
         return invoice_id
 
     def create_sale_order(self):
@@ -372,8 +425,8 @@ class SaleSubscription(models.Model):
     @api.depends("invoice_ids", "sale_order_ids.invoice_ids")
     def _compute_account_invoice_ids_count(self):
         for record in self:
-            record.account_invoice_ids_count = len(self.invoice_ids) + len(
-                self.sale_order_ids.invoice_ids
+            record.account_invoice_ids_count = len(record.invoice_ids) + len(
+                record.sale_order_ids.invoice_ids
             )
 
     def action_view_account_invoice_ids(self):
@@ -431,22 +484,6 @@ class SaleSubscription(models.Model):
                 return True
         return False
 
-    def write(self, values):
-        res = super().write(values)
-        if "stage_id" in values:
-            for record in self:
-                if record.stage_id:
-                    if record.stage_id.type == "in_progress":
-                        record.in_progress = True
-                        record.date_start = date.today()
-                    elif record.stage_id.type == "post":
-                        record.close_reason_id = False
-                        record.in_progress = False
-                    else:
-                        record.in_progress = False
-
-        return res
-
     @api.model
     def create(self, values):
         if "recurring_rule_boundary" in values:
@@ -464,7 +501,7 @@ class SaleSubscription(models.Model):
                 values["date_start"] = values["recurring_next_date"]
             values["stage_id"] = (
                 self.env["sale.subscription.stage"]
-                .search([("type", "=", "pre")], order="sequence desc", limit=1)
+                .search([("type", "=", "draft")], order="sequence desc", limit=1)
                 .id
             )
         return super(SaleSubscription, self).create(values)

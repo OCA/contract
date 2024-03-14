@@ -12,16 +12,21 @@ class SaleSubscriptionStage(models.Model):
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer()
     display_name = fields.Char(string="Display name", compute="_compute_display_name")
-    in_progress = fields.Boolean(string="In progress", default=False)
     fold = fields.Boolean(string="Kanban folded")
     description = fields.Text(translate=True)
     type = fields.Selection(
-        [("pre", "Ready to start"), ("in_progress", "In progress"), ("post", "Closed")],
-        default="pre",
+        [
+            ("draft", "Draft"),
+            ("pre", "Ready to start"),
+            ("in_progress", "In progress"),
+            ("post", "Closed"),
+        ],
+        required=True,
+        default="draft",
     )
 
     @api.constrains("type")
-    def _check_lot_product(self):
+    def _check_subscription_stages(self):
         post_stages = self.env["sale.subscription.stage"].search(
             [("type", "=", "post")]
         )

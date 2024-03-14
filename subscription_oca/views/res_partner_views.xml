@@ -7,14 +7,15 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <button name="action_view_partner_invoices" position="after">
-                <field name="subscription_ids" invisible="1" />
                 <button
                     type="object"
                     class="oe_stat_button"
                     icon="fa-recycle"
                     name="action_view_subscription_ids"
                     attrs="{'invisible': [('subscription_ids', '=', False)]}"
+                    groups="sales_team.group_sale_salesman"
                 >
+                    <field name="subscription_ids" invisible="1" />
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_value">
                             <field name="subscription_count" />

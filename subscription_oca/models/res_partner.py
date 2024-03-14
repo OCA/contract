@@ -12,8 +12,7 @@ class Partner(models.Model):
         string="Subscriptions",
     )
     subscription_count = fields.Integer(
-        required=False,
-        compute="_compute_subscription_count",
+        required=False, compute="_compute_subscription_count", compute_sudo=True
     )
 
     def _compute_subscription_count(self):

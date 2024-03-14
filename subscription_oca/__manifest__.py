@@ -9,9 +9,10 @@
     "website": "https://github.com/OCA/contract",
     "license": "AGPL-3",
     "author": "Domatix, Odoo Community Association (OCA)",
-    "depends": ["sale_management", "account"],
+    "depends": ["sale_management", "sales_team", "account"],
     "data": [
         "views/product_template_views.xml",
+        "views/account_move_views.xml",
         "views/sale_subscription_views.xml",
         "views/sale_subscription_stage_views.xml",
         "views/sale_subscription_tag_views.xml",
