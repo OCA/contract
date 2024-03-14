@@ -1,5 +1,14 @@
 <?xml version="1.0" ?>
 <odoo>
+    <template
+        id="mail_notification_contract"
+        inherit_id="mail.mail_notification_layout"
+        primary="True"
+    >
+        <xpath expr="//div[@t-out='message.body']" position="after">
+            <t t-raw="0" />
+        </xpath>
+    </template>
     <template id="template_contract_modification" name="Contract Modification">
         <t t-call="contract.mail_notification_contract">
             <table border="1" align="center">
@@ -12,10 +21,10 @@
                 <tbody>
                     <t t-foreach="record.modification_ids" t-as="modification">
                         <tr t-if="not modification.sent">
-                            <td name="td_date">
+                            <td name="td_date" style="padding: 10px">
                                 <span t-field="modification.date" />
                             </td>
-                            <td name="td_description">
+                            <td name="td_description" style="padding: 10px">
                                 <div t-field="modification.description" />
                             </td>
                         </tr>
