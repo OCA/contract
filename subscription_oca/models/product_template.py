@@ -8,5 +8,7 @@ class Product(models.Model):
 
     subscribable = fields.Boolean(string="Subscribable product")
     subscription_template_id = fields.Many2one(
-        comodel_name="sale.subscription.template", string="Subscription template"
+        comodel_name="sale.subscription.template",
+        string="Subscription template",
+        company_dependent=True,
     )

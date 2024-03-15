@@ -46,6 +46,7 @@ class SaleSubscriptionTemplate(models.Model):
     company_id = fields.Many2one(
         "res.company",
         "Company",
+        required=True,
         default=lambda self: self.env.company,
         domain=lambda self: [("id", "in", self.env.companies.ids)],
     )
