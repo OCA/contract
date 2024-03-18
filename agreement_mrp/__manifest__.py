@@ -4,7 +4,7 @@
 {
     "name": "Agreement - MRP",
     "summary": "Link manufacturing orders to an agreement",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Contract",
     "author": "Open Source Integrators, " "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
