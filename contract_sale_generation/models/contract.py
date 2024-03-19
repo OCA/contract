@@ -8,7 +8,11 @@
 # Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import logging
+
 from odoo import _, api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class ContractContract(models.Model):
@@ -70,6 +74,10 @@ class ContractContract(models.Model):
         This method triggers the creation of the next sale order of the
         contracts even if their next sale order date is in the future.
         """
+        _logger.warning(
+            "recurring_create_invoice is deprecated in favor of "
+            "_recurring_create_invoice instead"
+        )
         sales = self._recurring_create_sale()
         for sale_rec in sales:
             self.message_post(

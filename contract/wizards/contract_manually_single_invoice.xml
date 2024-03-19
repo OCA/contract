@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="contract_manually_single_invoice_form_view">
+        <field name="name">contract.manually.single.invoice.form (in contract)</field>
+        <field name="model">contract.manually.single.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Contract Manually Single Invoice">
+                <!-- TODO -->
+                <group>
+                    <field name="contract_id" invisible="1" />
+                    <field name="date" />
+                </group>
+                <footer>
+                    <button
+                        name="create_invoice"
+                        string="Generate invoices"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record
+        model="ir.actions.act_window"
+        id="contract_manually_single_invoice_act_window"
+    >
+        <field name="name">Process Contract Manually</field> <!-- TODO -->
+        <field name="res_model">contract.manually.single.invoice</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

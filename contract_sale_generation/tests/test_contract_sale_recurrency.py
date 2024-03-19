@@ -67,12 +67,15 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         self.assertEqual(
             fields.Date.to_date("2020-01-15"), self.contract.recurring_next_date
         )
-
-        self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         self.assertEqual(
             fields.Date.to_date("2020-01-22"), self.contract.recurring_next_date
         )
-        self.contract.recurring_create_sale()
+        self.env["contract.manually.single.invoice"].create(
+            {"date": self.contract.recurring_next_date, "contract_id": self.contract.id}
+        ).create_invoice()
         self.assertEqual(
             fields.Date.to_date("2020-01-29"), self.contract.recurring_next_date
         )
