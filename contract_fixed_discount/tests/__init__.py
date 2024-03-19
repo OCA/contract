@@ -1,0 +1,1 @@
+from . import test_contract_discount_fixed, test_contract_invoice_discount_fixed
