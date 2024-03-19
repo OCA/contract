@@ -47,7 +47,7 @@ addon | version | maintainers | summary
 [contract_variable_qty_prorated](contract_variable_qty_prorated/) | 14.0.1.0.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) | This module adds a formula to compute prorated quantity to invoice as extension of the module contract_variable_quantity
 [contract_variable_quantity](contract_variable_quantity/) | 14.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 [product_contract](product_contract/) | 14.0.1.2.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) | Recurring - Product Contract
-[subscription_oca](subscription_oca/) | 14.0.1.3.0 | [![ilyasProgrammer](https://github.com/ilyasProgrammer.png?size=30px)](https://github.com/ilyasProgrammer) [![aleuffre](https://github.com/aleuffre.png?size=30px)](https://github.com/aleuffre) [![renda-dev](https://github.com/renda-dev.png?size=30px)](https://github.com/renda-dev) [![PicchiSeba](https://github.com/PicchiSeba.png?size=30px)](https://github.com/PicchiSeba) | Generate recurring invoices.
+[subscription_oca](subscription_oca/) | 14.0.2.0.0 | [![ilyasProgrammer](https://github.com/ilyasProgrammer.png?size=30px)](https://github.com/ilyasProgrammer) [![aleuffre](https://github.com/aleuffre.png?size=30px)](https://github.com/aleuffre) [![renda-dev](https://github.com/renda-dev.png?size=30px)](https://github.com/renda-dev) [![PicchiSeba](https://github.com/PicchiSeba.png?size=30px)](https://github.com/PicchiSeba) | Generate recurring invoices.
 
 [//]: # (end addons)
 
