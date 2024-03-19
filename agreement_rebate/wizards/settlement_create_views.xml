@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_settlement_create_wiz" model="ir.ui.view">
+        <field name="name">agreement.settlement.create.wiz</field>
+        <field name="model">agreement.settlement.create.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Create settlements">
+                <group>
+                    <field name="date" required="1" />
+                    <field name="domain" />
+                </group>
+                <group string="Dates filter">
+                    <group>
+                        <field name="date_from" />
+                    </group>
+                    <group>
+                        <field name="date_to" />
+                    </group>
+                    <group>
+                        <field name="discard_settled_agreement" />
+                    </group>
+                </group>
+                <group string="Journals">
+                    <field
+                        name="journal_ids"
+                        widget="many2many_tags"
+                        domain="[('type', '=', domain)]"
+                        options="{'no_create': True}"
+                        nolabel="1"
+                    />
+                </group>
+                <group string="Agreement types">
+                    <field
+                        name="agreement_type_ids"
+                        domain="[('domain', '=', domain)]"
+                        options="{'no_create': True}"
+                        widget="many2many_tags"
+                        nolabel="1"
+                    />
+                </group>
+                <group string="Agreements">
+                    <field
+                        name="agreement_ids"
+                        domain="[('agreement_type_id.domain', '=', domain)]"
+                        options="{'no_create': True}"
+                        widget="many2many_tags"
+                        nolabel="1"
+                    />
+                </group>
+                <footer>
+                    <button
+                        string="Create settlements"
+                        name="action_create_settlement"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="agreement_settlement_create_action" model="ir.actions.act_window">
+        <field name="name">Settlement create</field>
+        <field name="res_model">agreement.settlement.create.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

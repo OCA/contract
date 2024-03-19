@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="agreement_form" model="ir.ui.view">
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page
+                    name="rebate"
+                    string="Rebate"
+                    attrs="{'invisible': [('is_rebate', '=', False)]}"
+                >
+                    <field name="is_rebate" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="rebate_type" />
+                        </group>
+                        <group>
+                            <field
+                                name="rebate_discount"
+                                attrs="{'invisible': [('rebate_type', '!=', 'global')]}"
+                            />
+                        </group>
+                    </group>
+                    <group
+                        string="Lines"
+                        attrs="{'invisible': [('rebate_type', '=', False)]}"
+                    >
+                        <p class="text-muted" colspan="2">
+                            <i class="fa fa-filter" />
+                            You can create a filter to apply the rebate.
+                            Categories, products, variants, generic conditions to reuse or a custom filter
+<!--                            Puede crear un filtro para aplicar el rápel.-->
+<!--                            Categorías, productos, variantes, condiciones genéricas para reutilizar o un filtro personalizado-->
+                        </p>
+                        <field
+                            name="rebate_line_ids"
+                            context="{'hide_rebate_discount': rebate_type != 'line'}"
+                            nolabel="1"
+                        >
+                            <tree>
+                                <field name="rebate_target" />
+                                <field
+                                    name="rebate_domain"
+                                    groups="base.group_no_one"
+                                />
+                                <field
+                                    name="rebate_discount"
+                                    attrs="{'column_invisible': [('parent.rebate_type', '!=', 'line')]}"
+                                />
+                            </tree>
+                        </field>
+                    </group>
+                    <group
+                        string="Sections"
+                        attrs="{'invisible': [('rebate_type', 'not in', ['section_total', 'section_prorated'])]}"
+                    >
+                        <field name="rebate_section_ids" nolabel="1" />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    <record id="agreement_search" model="ir.ui.view">
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement.agreement_search" />
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter
+                    name="rebate"
+                    string="Rebate"
+                    domain="[('is_rebate', '=', True)]"
+                />
+            </filter>
+        </field>
+    </record>
+    <record id="agreement_rebate_line_tree" model="ir.ui.view">
+        <field name="name">agreement.rebate.line.tree</field>
+        <field name="model">agreement.rebate.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="rebate_target" />
+                <field name="rebate_domain" groups="base.group_no_one" />
+                <field name="rebate_discount" />
+            </tree>
+        </field>
+    </record>
+    <record id="agreement_rebate_line_form" model="ir.ui.view">
+        <field name="name">agreement.rebate.line.form</field>
+        <field name="model">agreement.rebate.line</field>
+        <field name="arch" type="xml">
+            <form string="Rebate Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="rebate_target" />
+                        </group>
+                        <group>
+                            <field
+                                name="rebate_discount"
+                                invisible="context.get('hide_rebate_discount')"
+                            />
+                        </group>
+                    </group>
+                    <group string="Select items" col="1">
+                        <field
+                            name="rebate_product_ids"
+                            widget="many2many_tags"
+                            attrs="{'invisible': [('rebate_target', '!=', 'product')]}"
+                            nolabel="1"
+                        />
+                        <field
+                            name="rebate_product_tmpl_ids"
+                            widget="many2many_tags"
+                            attrs="{'invisible': [('rebate_target', '!=', 'product_tmpl')]}"
+                            nolabel="1"
+                        />
+                        <field
+                            name="rebate_category_ids"
+                            widget="many2many_tags"
+                            attrs="{'invisible': [('rebate_target', '!=', 'category')]}"
+                            nolabel="1"
+                        />
+                        <field
+                            name="rebate_condition_id"
+                            attrs="{'invisible': [('rebate_target', '!=', 'condition')]}"
+                            nolabel="1"
+                        />
+                        <field
+                            name="rebate_domain"
+                            widget="domain"
+                            options="{'model': 'account.move.line', 'in_dialog': True}"
+                            attrs="{'invisible': [('rebate_target', '!=', 'domain')]}"
+                            nolabel="1"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="agreement_rebate_section_tree" model="ir.ui.view">
+        <field name="name">agreement.rebate.section.tree</field>
+        <field name="model">agreement.rebate.section</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="amount_from" />
+                <field name="amount_to" />
+                <field name="rebate_discount" />
+            </tree>
+        </field>
+    </record>
+</odoo>

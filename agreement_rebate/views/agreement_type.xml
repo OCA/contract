@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Agreement Type List View-->
+    <record model="ir.ui.view" id="agreement_type_list_view">
+        <field name="model">agreement.type</field>
+        <field name="inherit_id" ref="agreement.agreement_type_list_view" />
+        <field name="arch" type="xml">
+            <field name="domain" position="after">
+                <field name="is_rebate" />
+            </field>
+        </field>
+    </record>
+    <!-- Agreement Type Form View -->
+    <record model="ir.ui.view" id="agreement_type_form_view">
+        <field name="model">agreement.type</field>
+        <field name="inherit_id" ref="agreement.agreement_type_form_view" />
+        <field name="arch" type="xml">
+            <field name="domain" position="after">
+                <field name="is_rebate" />
+            </field>
+        </field>
+    </record>
+    <record id="agreement_type_search" model="ir.ui.view">
+        <field name="model">agreement.type</field>
+        <field name="inherit_id" ref="agreement.agreement_type_search" />
+        <field name="arch" type="xml">
+            <filter name="archived" position="before">
+                <separator />
+                <filter
+                    name="is_rebate"
+                    string="Rebate"
+                    domain="[('is_rebate', '=', True)]"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>
