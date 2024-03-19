@@ -265,14 +265,22 @@ class SaleSubscription(models.Model):
 
     def _prepare_sale_order(self, line_ids=False):
         self.ensure_one()
+        company = self.company_id
+        # Fix for multi-company issue with team_id
+        # Cannot assign team belonging to a different company
+        team_id = self.env["sale.order"]._get_default_team()
+        if team_id.company_id and team_id.company_id != company:
+            team_id = False
         return {
             "partner_id": self.partner_id.id,
+            "company_id": company.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "date_order": datetime.now(),
             "payment_term_id": self.partner_id.property_payment_term_id.id,
             "user_id": self.user_id.id,
             "origin": self.name,
             "order_line": line_ids,
+            "team_id": team_id and team_id.id or False,
         }
 
     def _prepare_account_move(self, line_ids):
