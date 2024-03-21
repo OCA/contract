@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Add our fields within contract line views.
+        Note: We do not add them within their parent contract.abstract.contract.line views as
+        price revision only works on contracts with recurrence at line level. -->
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <label for="name" position="before">
+                <group>
+                    <field name="never_revise_price" />
+                    <field
+                        name="variation_percent"
+                        groups="base.group_no_one"
+                        attrs="{'invisible': [('predecessor_contract_line_id', '=', False)]}"
+                    />
+                </group>
+            </label>
+        </field>
+    </record>
+</odoo>
