@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form (in product_contract)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="need_contract_creation" invisible="1" />
+                <button
+                    name="action_create_contract"
+                    string="Create Contracts"
+                    type="object"
+                    class="oe_highlight"
+                    attrs="{'invisible': [('need_contract_creation', '=', False)]}"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_show_contracts"
+                    type="object"
+                    icon="fa-book"
+                    class="oe_stat_button"
+                    attrs="{'invisible': ['|', '|', ('is_contract', '!=', True), ('state', 'not in', ['sale', 'done']), ('contract_count', '=', 0)]}"
+                >
+                    <field string="Contracts" name="contract_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="before">
+                <field name="is_contract" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='product_id']"
+                position="after"
+            >
+                <field name="contract_template_id" invisible="1" />
+                <field
+                    name="contract_id"
+                    options='{"no_create": True}'
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                       ]"
+                />
+                <field
+                    name="contract_line_id"
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
+                    domain="[('contract_id','=',contract_id)]"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='tax_id']/parent::group"
+                position="after"
+            >
+                <field name="is_contract" invisible="1" />
+                <separator
+                    colspan="4"
+                    string="Recurrence Invoicing"
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
+                />
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field name="recurring_rule_type" />
+                </group>
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field name="recurring_invoicing_type" />
+                </group>
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field
+                        name="date_start"
+                        attrs="{'required': [('is_contract', '=', True)]}"
+                    />
+                </group>
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field
+                        name="date_end"
+                        attrs="{'required': [('is_contract', '=', True)]}"
+                    />
+                </group>
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field name="is_auto_renew" />
+                </group>
+                <group attrs="{'invisible': [('is_auto_renew', '=', False)]}">
+                    <label for="auto_renew_interval" />
+                    <div>
+                        <field
+                            name="auto_renew_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                            attrs="{'required':[('is_auto_renew', '=', True)]}"
+                        />
+                        <field
+                            name="auto_renew_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            attrs="{'required':[('is_auto_renew', '=', True)]}"
+                        />
+                    </div>
+                </group>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='price_total']"
+                position="after"
+            >
+                <field
+                    name="date_start"
+                    attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
+                />
+                <field
+                    name="date_end"
+                    attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="editable" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
