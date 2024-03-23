@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ContractLineWizard(models.TransientModel):
-
     _name = "contract.line.wizard"
     _description = "Contract Line Wizard"
 
