@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class ContractModification(models.Model):
-
     _name = "contract.modification"
     _description = "Contract Modification"
     _order = "date desc"
