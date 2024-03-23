@@ -198,7 +198,7 @@ class ContractContract(models.Model):
 
     def _compute_access_url(self):
         for record in self:
-            record.access_url = "/my/contracts/{}".format(record.id)
+            record.access_url = f"/my/contracts/{record.id}"
 
     def action_preview(self):
         """Invoked when 'Preview' button in contract form view is clicked."""
