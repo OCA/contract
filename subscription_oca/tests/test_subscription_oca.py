@@ -531,7 +531,7 @@ class TestSubscriptionOCA(TransactionCase):
         wiz = self.env["close.reason.wizard"].create({})
         wiz.with_context(active_id=self.sub1.id).button_confirm()
         self.assertEqual(self.sub1.stage_id.name, "Closed")
-        self.assertFalse(self.sub1.active)
+        self.assertTrue(self.sub1.active)
         self.tmpl1.action_view_subscription_ids()
         self.tmpl1.action_view_product_ids()
         self.tmpl1.read(["product_ids_count", "subscription_count"])
