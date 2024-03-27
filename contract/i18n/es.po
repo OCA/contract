@@ -190,21 +190,14 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid ""
-"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                contract to invoice\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible': "
-"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                            <span invisible=\"contract_to_invoice_count &lt;"
+"= 1\">\n"
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
-"                                contrato a facturar\n"
-"                            </span>\n"
-"                            <span attrs=\"{'invisible': "
-"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
-"                                contratos a facturar\n"
-"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -431,8 +424,8 @@ msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
-msgid "Analytic"
-msgstr "Analítico"
+msgid "Analytic Distribution"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution_search
@@ -620,7 +613,6 @@ msgstr "Contacto"
 #: model:ir.model.fields,field_description:contract.field_contract_line__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__contract_id
-#: model:mail.template,report_name:contract.email_contract_template
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
 msgid "Contract"
@@ -1209,7 +1201,6 @@ msgstr "Icono de fuente impresionante, por ejemplo fa-tasks"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
-#: model:ir.cron,cron_name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Generar facturas recurrentes desde los contratos"
 
@@ -1279,6 +1270,7 @@ msgstr "Si está marcado los nuevos mensajes requieren su atención."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
+#: model:ir.model.fields,help:contract.field_contract_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si está marcado algunos mensajes tienen un error de entrega."
 
@@ -1446,20 +1438,6 @@ msgid "Last Date Invoiced"
 msgstr "Última fecha facturada"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_line____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_line_wizard____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_modification____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_tag____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_template____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason____last_update
-msgid "Last Modified on"
-msgstr "Última Modificación en"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_line__write_uid
@@ -1493,11 +1471,6 @@ msgstr "Última Actualización en"
 msgid "Legend (for the markers inside invoice lines description)"
 msgstr ""
 "Leyenda (para los marcadores dentro de descripción en lineas de factura)"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Adjunto principal"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
@@ -1881,7 +1854,6 @@ msgstr "Renovar"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
-#: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Renovar Líneas de contrato"
 
@@ -1921,6 +1893,11 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_user_id
 msgid "Responsible User"
 msgstr "Usuario Responsable"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de entrega de SMS"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
@@ -2434,11 +2411,36 @@ msgstr ""
 "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }}) - "
 "Modificaciones"
 
+#~ msgid ""
+#~ "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', "
+#~ "1)]}\">\n"
+#~ "                                contract to invoice\n"
+#~ "                            </span>\n"
+#~ "                            <span attrs=\"{'invisible': "
+#~ "[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+#~ "                                contracts to invoice\n"
+#~ "                            </span>"
+#~ msgstr ""
+#~ "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', "
+#~ "1)]}\">\n"
+#~ "                                contrato a facturar\n"
+#~ "                            </span>\n"
+#~ "                            <span attrs=\"{'invisible': "
+#~ "[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+#~ "                                contratos a facturar\n"
+#~ "                            </span>"
+
+#~ msgid "Analytic"
+#~ msgstr "Analítico"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Última Modificación en"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Adjunto principal"
+
 #~ msgid "Analytic account"
 #~ msgstr "Cuenta analítica"
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "Error de entrega de SMS"
 
 #~ msgid "Number of messages which requires an action"
 #~ msgstr "Número de mensajes que requieren una acción"

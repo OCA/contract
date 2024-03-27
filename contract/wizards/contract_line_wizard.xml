@@ -37,10 +37,7 @@
                 <group>
                     <field name="contract_line_id" invisible="True" />
                     <field name="date_start" required="True" />
-                    <field
-                        name="date_end"
-                        attrs="{'required': [('is_auto_renew', '=', True)]}"
-                    />
+                    <field name="date_end" required="is_auto_renew" />
                     <field name="is_auto_renew" />
                 </group>
                 <footer>

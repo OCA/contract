@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <form>
                 <field name="display_type" invisible="1" />
-                <header attrs="{'invisible': [('display_type', '!=', False)]}" />
+                <header invisible="display_type" />
                 <sheet>
                     <field name="specific_price" invisible="1" />
                     <field name="currency_id" invisible="1" />
@@ -17,23 +17,23 @@
                     <group>
                         <field
                             name="product_id"
-                            attrs="{'required': [('display_type', '=', 'product')],'invisible': [('display_type', '!=', False)]}"
+                            required="display_type == 'product'"
+                            invisible="display_type"
                         />
                     </group>
-                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                    <group invisible="display_type">
                         <group>
                             <field name="automatic_price" />
-                            <field
-                                name="price_unit"
-                                attrs="{'readonly': [('automatic_price', '=', True)]}"
-                            />
+
+
+                            <field name="price_unit" readonly="automatic_price" />
                             <field name="quantity" />
                         </group>
                         <group>
                             <field
                                 name="uom_id"
                                 groups="uom.group_uom"
-                                attrs="{'required': [('display_type', '=', False)]}"
+                                required="not display_type"
                             />
                             <field
                                 name="discount"
@@ -42,45 +42,41 @@
                             <field name="price_subtotal" readonly="1" />
                         </group>
                     </group>
-                    <label
-                        for="name"
-                        string="Description"
-                        attrs="{'invisible': [('display_type', '!=', False)]}"
-                    />
+                    <label for="name" string="Description" invisible="display_type" />
                     <label
                         for="name"
                         string="Section"
-                        attrs="{'invisible': [('display_type', '!=', 'line_section')]}"
+                        invisible="display_type != 'line_section'"
                     />
                     <label
                         for="name"
                         string="Note"
-                        attrs="{'invisible': [('display_type', '!=', 'line_note')]}"
+                        invisible="display_type != 'line_note'"
                     />
                     <field name="name" nolabel="1" />
                     <group
                         name="note_invoicing_mode"
-                        attrs="{'invisible': [('display_type', '!=', 'line_note')]}"
+                        invisible="display_type != 'line_note'"
                     >
                         <field name="note_invoicing_mode" widget="radio" />
                     </group>
-                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                    <group invisible="display_type">
                         <field name="is_auto_renew" />
                         <field name="is_canceled" invisible="1" />
                     </group>
-                    <group
-                        attrs="{'invisible':['|', ('is_auto_renew', '=', False), ('display_type', '!=', False)]}"
-                    >
+                    <group invisible="not is_auto_renew or display_type">
                         <group>
                             <label for="auto_renew_interval" />
                             <div class="o_row">
                                 <field
                                     name="auto_renew_interval"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
                                 />
                                 <field
                                     name="auto_renew_rule_type"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
                                 />
                             </div>
                         </group>
@@ -90,19 +86,19 @@
                                 <field
                                     name="termination_notice_interval"
                                     class="oe_inline"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew"
                                 />
                                 <field
                                     name="termination_notice_rule_type"
                                     class="oe_inline"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew"
                                 />
                             </div>
                         </group>
                     </group>
                     <group
                         name="recurrence_info"
-                        attrs="{'invisible': ['|', ('display_type', '=', 'line_section'), '&amp;', ('display_type', '=', 'line_note'), ('note_invoicing_mode', '!=', 'custom')]}"
+                        invisible="display_type == 'line_section' or (display_type == 'line_note' and note_invoicing_mode != 'custom')"
                     >
                         <group>
                             <label for="recurring_interval" />
