@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_tag_form_view" model="ir.ui.view">
+        <field name="model">contract.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" />
+                    <field name="color" />
+                    <field
+                        name="company_id"
+                        options="{'no_create': True}"
+                        groups="base.group_multi_company"
+                    />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_tag_tree_view">
+        <field name="model">contract.tag</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field
+                    name="company_id"
+                    options="{'no_create': True}"
+                    groups="base.group_multi_company"
+                />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="contract_tag_act_window">
+        <field name="name">Contract Tags</field>
+        <field name="res_model">contract.tag</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.ui.menu" id="contract_tag_menu">
+        <field name="name">Contract Tag</field>
+        <field name="parent_id" ref="menu_config_contract" />
+        <field name="action" ref="contract_tag_act_window" />
+        <field name="sequence" eval="16" />
+    </record>
+</odoo>
