@@ -21,10 +21,7 @@
                     <field name="recurring_next_date" />
                 </group>
                 <group>
-                    <field
-                        name="date_end"
-                        attrs="{'required': [('is_auto_renew', '=', True)]}"
-                    />
+                    <field name="date_end" required="is_auto_renew" />
                     <field name="next_period_date_end" />
                 </group>
                 <group groups="base.group_no_one">
@@ -45,7 +42,7 @@
                 <group
                     name="analytic"
                     groups="analytic.group_analytic_accounting"
-                    attrs="{'invisible': [('display_type', '!=', False)]}"
+                    invisible="display_type"
                 >
                     <field
                         name="analytic_distribution"
@@ -106,48 +103,45 @@
                 <field name="quantity" />
                 <field name="uom_id" />
                 <field name="automatic_price" />
-                <field
-                    name="price_unit"
-                    attrs="{'readonly': [('automatic_price', '=', True)]}"
-                />
-                <field name="specific_price" invisible="1" />
+                <field name="price_unit" readonly="automatic_price" />
+                <field name="specific_price" column_invisible="True" />
                 <field name="discount" groups="product.group_discount_per_so_line" />
                 <field name="price_subtotal" />
-                <field name="recurring_interval" invisible="1" />
-                <field name="recurring_rule_type" invisible="1" />
-                <field name="recurring_invoicing_type" invisible="1" />
-                <field name="date_start" required="1" />
+                <field name="recurring_interval" column_invisible="True" />
+                <field name="recurring_rule_type" column_invisible="True" />
+                <field name="recurring_invoicing_type" column_invisible="True" />
+                <field name="date_start" column_invisible="True" />
                 <field name="date_end" />
-                <field name="recurring_next_date" required="1" />
+                <field name="recurring_next_date" column_invisible="True" />
                 <field name="last_date_invoiced" groups="base.group_no_one" />
-                <field name="create_invoice_visibility" invisible="1" />
-                <field name="is_plan_successor_allowed" invisible="1" />
-                <field name="is_stop_plan_successor_allowed" invisible="1" />
-                <field name="is_stop_allowed" invisible="1" />
-                <field name="is_cancel_allowed" invisible="1" />
-                <field name="is_un_cancel_allowed" invisible="1" />
-                <field name="is_auto_renew" invisible="1" />
-                <field name="is_canceled" invisible="1" />
+                <field name="create_invoice_visibility" column_invisible="True" />
+                <field name="is_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_allowed" column_invisible="True" />
+                <field name="is_cancel_allowed" column_invisible="True" />
+                <field name="is_un_cancel_allowed" column_invisible="True" />
+                <field name="is_auto_renew" column_invisible="True" />
+                <field name="is_canceled" column_invisible="True" />
                 <button
                     name="action_plan_successor"
                     title="Plan Start"
                     type="object"
                     icon="fa-calendar text-success"
-                    attrs="{'invisible': [('is_plan_successor_allowed', '=', False)]}"
+                    invisible="not is_plan_successor_allowed"
                 />
                 <button
                     name="action_stop_plan_successor"
                     title="Stop Plan Successor"
                     type="object"
                     icon="fa-pause text-muted"
-                    attrs="{'invisible': [('is_stop_plan_successor_allowed', '=', False)]}"
+                    invisible="not is_stop_plan_successor_allowed"
                 />
                 <button
                     name="action_stop"
                     title="Stop"
                     type="object"
                     icon="fa-stop text-danger"
-                    attrs="{'invisible': [('is_stop_allowed', '=', False)]}"
+                    invisible="not is_stop_allowed"
                 />
                 <button
                     name="cancel"
@@ -155,14 +149,14 @@
                     type="object"
                     icon="fa-ban text-danger"
                     confirm="Are you sure you want to cancel this line"
-                    attrs="{'invisible': [('is_cancel_allowed', '=', False)]}"
+                    invisible="not is_cancel_allowed"
                 />
                 <button
                     name="action_uncancel"
                     title="Un-cancel"
                     type="object"
                     icon="fa-ban text-success"
-                    attrs="{'invisible': [('is_un_cancel_allowed', '=', False)]}"
+                    invisible="not is_un_cancel_allowed"
                 />
                 <button
                     name="renew"
@@ -170,7 +164,7 @@
                     type="object"
                     icon="fa-fast-forward text-success"
                     groups="base.group_no_one"
-                    attrs="{'invisible': [('is_auto_renew', '=', False)]}"
+                    invisible="not is_auto_renew"
                 />
             </tree>
         </field>
