@@ -321,12 +321,11 @@ class SaleSubscription(models.Model):
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
                 if self.template_id.invoicing_mode == "invoice_send":
-                    mail_template = self.template_id.invoice_mail_template_id
-                    invoice.with_context(force_send=True).message_post_with_template(
-                        mail_template.id,
-                        composition_mode="comment",
-                        email_layout_xmlid="mail.mail_notification_paynow",
-                    )
+                    if not invoice.is_move_sent and invoice._is_ready_to_be_sent() and invoice.state == 'posted':
+                        subscription = invoice.subscription_id
+                        mail_template = self.template_id.invoice_mail_template_id
+                        template = self.env.ref(invoice._get_mail_template())
+                        invoice.with_context(force_send=True)._generate_pdf_and_send_invoice(mail_template)
                 invoice_number = invoice.name
                 message_body = (
                     "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
