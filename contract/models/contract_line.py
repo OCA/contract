@@ -876,14 +876,11 @@ class ContractLine(models.Model):
         if not all(self.mapped("is_cancel_allowed")):
             raise ValidationError(_("Cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
-            lines = self.filtered(lambda l, c=contract: l.contract_id == c)
+            lines = self.filtered(lambda line, c=contract: line.contract_id == c)
             msg = _(
                 "Contract line canceled: %s",
                 "<br/>- ".join(
-                    [
-                        "<strong>%(product)s</strong>" % {"product": name}
-                        for name in lines.mapped("name")
-                    ]
+                    [f"<strong>{name}</strong>" for name in lines.mapped("name")]
                 ),
             )
             contract.message_post(body=msg)
@@ -896,14 +893,11 @@ class ContractLine(models.Model):
         if not all(self.mapped("is_un_cancel_allowed")):
             raise ValidationError(_("Un-cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
-            lines = self.filtered(lambda l, c=contract: l.contract_id == c)
+            lines = self.filtered(lambda line, c=contract: line.contract_id == c)
             msg = _(
                 "Contract line Un-canceled: %s",
                 "<br/>- ".join(
-                    [
-                        "<strong>%(product)s</strong>" % {"product": name}
-                        for name in lines.mapped("name")
-                    ]
+                    [f"<strong>{name}</strong>" for name in lines.mapped("name")]
                 ),
             )
             contract.message_post(body=msg)
