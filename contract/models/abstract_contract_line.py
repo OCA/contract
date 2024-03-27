@@ -38,8 +38,8 @@ class ContractAbstractContractLine(models.AbstractModel):
     # Just to have a currency_id here - will get overwriten in contract.line
     # model with the related currency from the contract
     currency_id = fields.Many2one("res.currency")
-    specific_price = fields.Monetary()
-    price_unit = fields.Monetary(
+    specific_price = fields.Float()
+    price_unit = fields.Float(
         string="Unit Price",
         compute="_compute_price_unit",
         inverse="_inverse_price_unit",

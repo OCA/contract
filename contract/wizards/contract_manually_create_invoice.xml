@@ -16,17 +16,13 @@
                             name="action_show_contract_to_invoice"
                             type="object"
                             class="btn-link"
-                            attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                            invisible="contract_to_invoice_count == 0"
                         >
                             <field name="contract_to_invoice_count" />
-                            <span
-                                attrs="{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}"
-                            >
+                            <span invisible="contract_to_invoice_count > 1">
                                 contract to invoice
                             </span>
-                            <span
-                                attrs="{'invisible': [('contract_to_invoice_count', '&lt;=', 1)]}"
-                            >
+                            <span invisible="contract_to_invoice_count &lt;= 1">
                                 contracts to invoice
                             </span>
                         </button>
@@ -35,7 +31,7 @@
                 <footer>
                     <button
                         name="create_invoice"
-                        attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                        invisible="contract_to_invoice_count == 0"
                         string="Create Invoices"
                         class="btn-primary"
                         type="object"

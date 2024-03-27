@@ -11,8 +11,10 @@
         <field name="partner_to">{{ object.partner_id.id }}</field>
         <field name="model_id" ref="model_contract_contract" />
         <field name="auto_delete" eval="True" />
-        <field name="report_template" ref="contract.report_contract" />
-        <field name="report_name">Contract</field>
+        <field
+            name="report_template_ids"
+            eval="[(4, ref('contract.report_contract'))]"
+        />
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="body_html" type="html">
             <div

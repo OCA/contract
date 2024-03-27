@@ -156,7 +156,7 @@ class ContractContract(models.Model):
             ).write(vals)
             self._modification_mail_send()
         else:
-            res = super(ContractContract, self).write(vals)
+            res = super().write(vals)
         return res
 
     @api.model
@@ -186,13 +186,15 @@ class ContractContract(models.Model):
             )
             if modification_ids_not_sent:
                 if not self.env.context.get("skip_modification_mail"):
-                    record.with_context(
-                        default_subtype_id=self.env.ref(
-                            "contract.mail_message_subtype_contract_modification"
-                        ).id,
-                    ).message_post_with_template(
-                        self.env.ref("contract.mail_template_contract_modification").id,
-                        email_layout_xmlid="contract.template_contract_modification",
+                    subtype_id = self.env["ir.model.data"]._xmlid_to_res_id(
+                        "contract.mail_message_subtype_contract_modification"
+                    )
+                    template_id = self.env.ref(
+                        "contract.mail_template_contract_modification"
+                    )
+                    record.message_post_with_source(
+                        template_id,
+                        subtype_id=subtype_id,
                     )
                 modification_ids_not_sent.write({"sent": True})
 
@@ -318,10 +320,10 @@ class ContractContract(models.Model):
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
-                lambda l: (
-                    l.recurring_next_date
-                    and not l.is_canceled
-                    and (not l.display_type or l.is_recurring_note)
+                lambda line: (
+                    line.recurring_next_date
+                    and not line.is_canceled
+                    and (not line.display_type or line.is_recurring_note)
                 )
             ).mapped("recurring_next_date")
             # we give priority to computation from date_start if modified
@@ -622,7 +624,8 @@ class ContractContract(models.Model):
                     body=(
                         _(
                             (
-                                "%(msg)s by contract <a href=# data-oe-model=contract.contract"
+                                "%(msg)s by contract <a href=#"
+                                " data-oe-model=contract.contract"
                                 " data-oe-id=%(contract_id)d>%(contract)s</a>."
                             ),
                             msg=move._creation_message(),
@@ -672,8 +675,11 @@ class ContractContract(models.Model):
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
             contracts_to_invoice = contracts.filtered(
-                lambda c: c.company_id == company
-                and (not c.date_end or c.recurring_next_date <= c.date_end)
+                lambda contract, comp=company: contract.company_id == comp
+                and (
+                    not contract.date_end
+                    or contract.recurring_next_date <= contract.date_end
+                )
             ).with_company(company)
             _recurring_create_func(contracts_to_invoice, date_ref)
         return True
