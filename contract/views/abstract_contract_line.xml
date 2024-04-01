@@ -16,65 +16,30 @@
                     <field colspan="1" name="product_uom_category_id" invisible="1" />
                     <group>
                         <field
-                            colspan="1"
                             name="product_id"
                             attrs="{'required': [('display_type', '=', 'product')],'invisible': [('display_type', '!=', False)]}"
                         />
                     </group>
-                    <group
-                        col="2"
-                        attrs="{'invisible': [('display_type', '!=', False)]}"
-                    >
-                        <group colspan="1">
-                            <label for="automatic_price" colspan="2" />
-                            <field colspan="2" name="automatic_price" nolabel="1" />
-                        </group>
-                        <group colspan="1">
-                            <label for="price_unit" colspan="2" />
+                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                        <group>
+                            <field name="automatic_price" />
                             <field
-                                colspan="2"
                                 name="price_unit"
                                 attrs="{'readonly': [('automatic_price', '=', True)]}"
-                                nolabel="1"
                             />
+                            <field name="quantity" />
                         </group>
-                        <group colspan="1">
-                            <label for="quantity" colspan="2" />
+                        <group>
                             <field
-                                colspan="2"
-                                name="quantity"
-                                class="oe_inline"
-                                nolabel="1"
-                            />
-                        </group>
-                        <group colspan="1">
-                            <label for="uom_id" colspan="2" />
-                            <field
-                                colspan="2"
                                 name="uom_id"
-                                class="oe_inline"
                                 groups="uom.group_uom"
                                 attrs="{'required': [('display_type', '=', False)]}"
-                                nolabel="1"
                             />
-                        </group>
-                        <group colspan="1">
-                            <label for="discount" colspan="2" />
                             <field
-                                colspan="2"
                                 name="discount"
                                 groups="product.group_discount_per_so_line"
-                                nolabel="1"
                             />
-                        </group>
-                        <group colspan="1">
-                            <label for="price_subtotal" colspan="2" />
-                            <field
-                                colspan="2"
-                                name="price_subtotal"
-                                readonly="1"
-                                nolabel="1"
-                            />
+                            <field name="price_subtotal" readonly="1" />
                         </group>
                     </group>
                     <label
@@ -99,46 +64,37 @@
                     >
                         <field name="note_invoicing_mode" widget="radio" />
                     </group>
-                    <group
-                        col="4"
-                        attrs="{'invisible': [('display_type', '!=', False)]}"
-                    >
-                        <field colspan="2" name="is_auto_renew" />
-                        <field colspan="2" name="is_canceled" invisible="1" />
+                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                        <field name="is_auto_renew" />
+                        <field name="is_canceled" invisible="1" />
                     </group>
                     <group
                         attrs="{'invisible':['|', ('is_auto_renew', '=', False), ('display_type', '!=', False)]}"
                     >
                         <group>
                             <label for="auto_renew_interval" />
-                            <div>
+                            <div class="o_row">
                                 <field
                                     name="auto_renew_interval"
-                                    class="oe_inline"
-                                    nolabel="1"
                                     attrs="{'required':[('is_auto_renew', '=', True)]}"
                                 />
                                 <field
                                     name="auto_renew_rule_type"
-                                    class="oe_inline"
-                                    nolabel="1"
                                     attrs="{'required':[('is_auto_renew', '=', True)]}"
                                 />
                             </div>
                         </group>
                         <group>
                             <label for="termination_notice_interval" />
-                            <div>
+                            <div class="o_row">
                                 <field
                                     name="termination_notice_interval"
                                     class="oe_inline"
-                                    nolabel="1"
                                     attrs="{'required':[('is_auto_renew', '=', True)]}"
                                 />
                                 <field
                                     name="termination_notice_rule_type"
                                     class="oe_inline"
-                                    nolabel="1"
                                     attrs="{'required':[('is_auto_renew', '=', True)]}"
                                 />
                             </div>
@@ -151,19 +107,9 @@
                         <group>
                             <label for="recurring_interval" />
                             <div class="o_row">
-                                <field
-                                    name="recurring_interval"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
-                                <field
-                                    name="recurring_rule_type"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
+                                <field name="recurring_interval" />
+                                <field name="recurring_rule_type" />
                             </div>
-                        </group>
-                        <group>
                             <field name="recurring_invoicing_type" />
                             <field name="recurring_invoicing_offset" />
                         </group>
