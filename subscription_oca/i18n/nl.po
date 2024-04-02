@@ -1,0 +1,996 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* subscription_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-04-02 12:39+0000\n"
+"Last-Translator: Thijs van Oers <thijsvanoers@yahoo.com>\n"
+"Language-Team: none\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
+msgid ""
+"\n"
+"        As an 'In progress'-type of stage, it will trigger the recurring invoicing process if applicable. If this stage is the first - sequence order - of the available 'In progress' types and there's a stage change from any other non-'In progress' types to this one, an invoice will be created automatically if the start date is the present day.\n"
+"      "
+msgstr ""
+"\n"
+"        Dit is een fase van het type 'In behandeling' en activeert het "
+"terugkerende factureringsproces, indien van toepassing. Als deze stap de "
+"eerste is - in volgorde - van de beschikbare 'In behandeling'-typen en er "
+"een stapwijziging is van een ander niet 'In behandeling'-type naar dit type, "
+"wordt er automatisch een factuur gemaakt als de begindatum de huidige dag "
+"is..\n"
+"      "
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
+msgid ""
+"\n"
+"        Draft equivalent, a subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.\n"
+"      "
+msgstr ""
+"\n"
+"        Vergelijkbaar met een concept kan een abonnement starten als het "
+"niet gemarkeerd is als lopend, maar dat kan op elk moment wel het geval "
+"zijn. Als er geen fase van het type 'Gesloten' is gedefinieerd, wordt een "
+"abonnement dat automatisch wordt beëindigd, gemarkeerd met deze fase..\n"
+"      "
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
+msgid ""
+"\n"
+"        The final stage of a subscription. There are two ways to mark a subscription as closed. The easiest one is using the kanban card-moving capabilities, pressing the 'Close subscription' button (only available if a subscription is in progress).\n"
+"      "
+msgstr ""
+"\n"
+"        De laatste fase van een abonnement. Er zijn twee manieren om een "
+"abonnement als gesloten te markeren. De eenvoudigste is om de kanban-kaart "
+"te gebruiken en op de knop 'Abonnement sluiten' te drukken (alleen "
+"beschikbaar als een abonnement nog loopt)..\n"
+"      "
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"every\">Every</span>"
+msgstr "<span class=\"every\">iedere</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"mr-1\">For</span>"
+msgstr "<span class=\"mr-1\">voor</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Subscriptions</span>"
+msgstr "<span class=\"o_stat_text\">Abonnementen</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid ""
+"A given subscription can be marked as closed when, for example, renewal is "
+"not desired."
+msgstr ""
+"Een abonnement kan als gesloten worden gemarkeerd wanneer verlenging "
+"bijvoorbeeld niet gewenst is."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction
+msgid "Action Needed"
+msgstr "Actie nodig"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_ids
+msgid "Activities"
+msgstr "Activiteiten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "activiteit uitzondering weergave"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_state
+msgid "Activity State"
+msgstr "Status activiteit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteit type icoon"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Add new description..."
+msgstr "Voeg een nieuw omschrijving toe.."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
+msgid "Amount Tax"
+msgstr "bedrag belasting"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_total
+msgid "Amount Total"
+msgstr "Totaal bedrag"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
+msgid "Attachment Count"
+msgstr "Aantal bijlages"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_rule_boundary
+msgid "Boundary"
+msgstr "Grens"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Cancel"
+msgstr "Annuleer"
+
+#. module: subscription_oca
+#: model_terms:ir.actions.act_window,help:subscription_oca.subscription_stage_action
+msgid "Click to create a new subscription stage."
+msgstr "Klik op om een nieuwe abonnementsfase te maken."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__close_reason_id
+msgid "Close Reason"
+msgstr "Reden voor sluiten"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.close_reason_wizard_act_window
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Close reason"
+msgstr "Afsluitreden"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_close_reason
+msgid "Close reason model"
+msgstr "Sluit reden model"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_close_reason_wizard
+msgid "Close reason wizard"
+msgstr "Sluit reden wizard"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_close_reason_action
+#: model:ir.ui.menu,name:subscription_oca.subscription_close_reason_menu
+msgid "Close reasons"
+msgstr "Sluit redenen"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Close subscription"
+msgstr "Sluit abonnement"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__post
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_closed
+msgid "Closed"
+msgstr "Gesloten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__code
+msgid "Code"
+msgstr "code"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__color
+msgid "Color Index"
+msgstr "Kleur index"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__user_id
+msgid "Commercial agent"
+msgstr "Commercieel agent"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__company_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_configuration_menu
+msgid "Configuration"
+msgstr "Configuratie"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Confirm"
+msgstr "Bevestig"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_res_partner
+msgid "Contact"
+msgstr "Relatie"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Create Invoice"
+msgstr "Genereer factuur"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "Created invoice with reference"
+msgstr "Factuur aangemaakt met referentie"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__currency_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__days
+msgid "Day(s)"
+msgstr "Dag(en)"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Delete"
+msgstr "Verwijder"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__description
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__discount
+msgid "Discount (%)"
+msgstr "Korting (%)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__display_name
+msgid "Display Name"
+msgstr "Naam"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__display_name
+msgid "Display name"
+msgstr "Naam"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__draft
+msgid "Draft"
+msgstr "Concept"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_boundary
+msgid "Duration"
+msgstr "Duur"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Edit"
+msgstr "Wijzig"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__stage_str
+msgid "Etapa"
+msgstr "Status"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date
+msgid "Finish date"
+msgstr "Einddatum"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__fiscal_position_id
+msgid "Fiscal Position"
+msgstr "Fiscale positie"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__limited
+msgid "Fixed"
+msgstr "Vast"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (klanten)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__unlimited
+msgid "Forever"
+msgstr "Altijd"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__has_message
+msgid "Has Message"
+msgstr "Heeft een bericht"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__id
+msgid "ID"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon"
+msgstr "icoon"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icoon voor indicatie van afwijkende activiteit."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Als deze optie is ingeschakeld, vereisen nieuwe berichten uw aandacht."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Als deze optie is ingeschakeld dan hebben sommige berichten een aflever fout."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__image
+msgid "Image"
+msgstr "beeld"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__in_progress
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__in_progress
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__in_progress
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_in_progress
+msgid "In progress"
+msgstr "lopend"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoice"
+msgstr "factuur"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice_send
+msgid "Invoice & send"
+msgstr "Factureer en verzend"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__account_invoice_ids_count
+msgid "Invoice Count"
+msgstr "Aantal facturen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoice_mail_template_id
+msgid "Invoice Email"
+msgstr "Email factuur"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__invoice_ids
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Invoices"
+msgstr "Facturen"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoicing"
+msgstr "Facturatie"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoicing_mode
+msgid "Invoicing mode"
+msgstr "facturatie wijze"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__journal_id
+msgid "Journal"
+msgstr "Dagboek"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_account_move
+msgid "Journal Entry"
+msgstr "Boeking"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__fold
+msgid "Kanban folded"
+msgstr "Ingevouwen kanban"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag____last_update
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template____last_update
+msgid "Last Modified on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hoofdbijlage"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Menú desplegable"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error
+msgid "Message Delivery error"
+msgstr "Foutmelding aflevering e-mail"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Misc"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__months
+msgid "Month(s)"
+msgstr "Maand(en)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline van mijn activiteit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "New subscription"
+msgstr "Nieuw abonnement"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Deadline volgende activiteit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_summary
+msgid "Next Activity Summary"
+msgstr "Samenvatting volgende activiteit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type van volgende activiteit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_next_date
+msgid "Next invoice date"
+msgstr "Volgende factuurdatum"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal fouten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Aantal berichten waar actie voor nodig is"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met een afleverfout"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
+msgid "Orders"
+msgstr "Verkooporders"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_id
+msgid "Origin sale order"
+msgstr "Onderliggende verkooporder"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Other info"
+msgstr "Andere informatie"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_id
+msgid "Partner"
+msgstr "Klant"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Pending subscriptions"
+msgstr "Lopende abonnementen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__pricelist_id
+msgid "Pricelist"
+msgstr "Prijslijst"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_product_template
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_id
+msgid "Product"
+msgstr "Artikel"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_product_template_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids
+#: model:ir.ui.menu,name:subscription_oca.product_subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Products"
+msgstr "Artikelen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_uom_qty
+msgid "Quantity"
+msgstr "Aantal"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__pre
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
+msgid "Ready to start"
+msgstr "Klaar om te starten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__close_reason_id
+msgid "Reason"
+msgstr "Reden"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_type
+msgid "Recurrence"
+msgstr "Terugkerend"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_total
+msgid "Recurring price"
+msgstr "Terugkerende prijs"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__code
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_interval
+msgid "Repeat every"
+msgstr "Herhaal iedere"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_user_id
+msgid "Responsible User"
+msgstr "Verantwoordelijke gebruiker"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_count
+msgid "Rule count"
+msgstr "Aantal regels"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_subscription_line_ids
+msgid "Sale Subscription Line"
+msgstr "Verkoop abonnementsregel"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
+msgid "Sale order & Invoice"
+msgstr "Verkooporder & factuur"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids_count
+msgid "Sale orders"
+msgstr "Verkooporders"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__crm_team_id
+msgid "Sale team"
+msgstr "Verkoopteam"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Sales"
+msgstr "Verkoop"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Orderregel"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sequence
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__sequence
+msgid "Sequence"
+msgstr "Volgorde"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__stage_id
+msgid "Stage"
+msgstr "Fase"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"Stages define the life-cycle of a given subscription; this is,"
+"                 a subscription can be a 'Ready to start', 'In progress' or "
+"'Closed' type of stage.                 Bear in mind that there can only be "
+"one 'Closed'-type stage."
+msgstr ""
+"Fasen definiëren de levenscyclus van een bepaald abonnement; dit "
+"is,                 Een abonnement kan van het type 'Klaar om te starten', "
+"'In uitvoering' of 'Afgesloten' zijn.                 Houd er rekening mee "
+"dat er maar één fase van het type 'Gesloten' kan zijn."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date_start
+msgid "Start date"
+msgstr "Startdatum"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status gebaseerd op activiteiten\n"
+"Achterstallig: De vervaldatum is al verstreken\n"
+"Vandaag: Activiteitsdatum is vandaag\n"
+"Gepland: Toekomstige activiteiten."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscribable
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscribable
+msgid "Subscribable product"
+msgstr "Abonnement product"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription
+#: model:ir.model.fields,field_description:subscription_oca.field_account_bank_statement_line__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_move__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_payment__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__order_subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__sale_subscription_id
+msgid "Subscription"
+msgstr "Abonnement"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_count
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_count
+msgid "Subscription Count"
+msgstr "Aantal abonnementen"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Subscription lines"
+msgstr "Abonnementsregels"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_line
+msgid "Subscription lines added to a given subscription"
+msgstr "Abonnementsregels toegevoegd aan een bepaald abonnement"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_stage
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Subscription stage"
+msgstr "Abonnementsfase"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_stage_menu
+msgid "Subscription stages"
+msgstr "Abonnementsfases"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_tag_menu
+msgid "Subscription tags"
+msgstr "Abonnement labels"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__template_id
+msgid "Subscription template"
+msgstr "Abonnement template"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_template_act_window
+#: model:ir.model,name:subscription_oca.model_sale_subscription_template
+#: model:ir.ui.menu,name:subscription_oca.sale_template_subscription_menu
+msgid "Subscription templates"
+msgstr "Abonnement templates"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_action
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_ids
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_menu
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_root
+#: model:ir.ui.menu,name:subscription_oca.subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_form
+msgid "Subscriptions"
+msgstr "Abonnementen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscriptions_count
+msgid "Subscriptions Count"
+msgstr "Aantal abonnementen"
+
+#. module: subscription_oca
+#: model:ir.actions.server,name:subscription_oca.ir_cron_subscription_management_ir_actions_server
+#: model:ir.cron,cron_name:subscription_oca.ir_cron_subscription_management
+msgid "Subscriptions management"
+msgstr "Abonnementen management"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_subtotal
+msgid "Subtotal"
+msgstr "Subtotaal"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_stage_action
+msgid "Susbcription stages"
+msgstr "Abonnementen fases"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_product_suscribable_filter
+msgid "Suscribable products"
+msgstr "Abonnementen producten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__name
+msgid "Tag name"
+msgstr "Labelnaam"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_tag_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__tag_ids
+msgid "Tags"
+msgstr "Labels"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_tag
+msgid "Tags for sale subscription"
+msgstr "Labels voor verkoop abonnement"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__tax_ids
+msgid "Taxes"
+msgstr "Belastingen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__amount_tax_line_amount
+msgid "Taxes Amount"
+msgstr "Bedrag belastingen"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Terms and Conditions"
+msgstr "Algemene voorwaarden"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__terms
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__description
+msgid "Terms and conditions"
+msgstr "Algemene voorwaarden"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription_stage.py:0
+#, python-format
+msgid "There is already a Closed-type stage declared"
+msgstr "Er is al een fase van het 'gesloten' type aangegeven"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid ""
+"This bar allows to filter the opportunities based on scheduled activities."
+msgstr ""
+"Met deze balk kun je de kansen filteren op basis van geplande activiteiten."
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"This field dictates the stages' visual order on the Kanban and form view. "
+"Although is purely visual, mind that if the order isn't                 "
+"consequent with your needs, you could have a 'Closed'-type stage before a "
+"'Ready to start' one."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__to_renew
+msgid "To renew"
+msgstr "Te vernieuwen"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "To validate"
+msgstr "Te valideren"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_total
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total"
+msgstr "Totaal"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total Tax"
+msgstr "Totaal belasting"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total subtotal"
+msgstr "Totaal subtotaal"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__type
+msgid "Type"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Soort uitzonderingsactiviteit op het record."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_unit
+msgid "Unit price"
+msgstr "Stuksprijs"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website Messages"
+msgstr "Website berichten"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website communication history"
+msgstr "Geschiedenis van website communicatie"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__weeks
+msgid "Week(s)"
+msgstr "Week/weken"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__years
+msgid "Year(s)"
+msgstr "Jaar/jaren"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "e.g. Monthly Subscription"
+msgstr "Bijv. maandelijks abonnement"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "month(s)"
+msgstr "Maand/maanden"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids_count
+msgid "product_ids"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_count
+msgid "subscription_ids"
+msgstr ""
