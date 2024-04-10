@@ -114,21 +114,14 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid ""
-"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                contract to invoice\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible': "
-"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                            <span invisible=\"contract_to_invoice_count &lt;"
+"= 1\">\n"
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
-"                                contracte a facturar\n"
-"                            </span>\n"
-"                            <span attrs=\"{'invisible': "
-"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
-"                                contractes a facturar\n"
-"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -355,7 +348,7 @@ msgstr "Una línia amb auto-renovació ha de tenir una data de fi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
-msgid "Analytic"
+msgid "Analytic Distribution"
 msgstr ""
 
 #. module: contract
@@ -544,7 +537,6 @@ msgstr "Contacte"
 #: model:ir.model.fields,field_description:contract.field_contract_line__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__contract_id
-#: model:mail.template,report_name:contract.email_contract_template
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
 msgid "Contract"
@@ -1132,7 +1124,6 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
-#: model:ir.cron,cron_name:contract.contract_cron_for_invoice
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Generar Factures Recurrents des dels Contractes"
 
@@ -1202,6 +1193,7 @@ msgstr "Si està marcada, els nous missatges requeriran la teva atenció."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
+#: model:ir.model.fields,help:contract.field_contract_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si està marcada, alguns missatges tenen un error d'entrega."
 
@@ -1369,20 +1361,6 @@ msgid "Last Date Invoiced"
 msgstr "Darrera Data de Facturació"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_line____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_line_wizard____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_modification____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_tag____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_template____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_template_line____last_update
-#: model:ir.model.fields,field_description:contract.field_contract_terminate_reason____last_update
-msgid "Last Modified on"
-msgstr "Darrera Modificació el"
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_line__write_uid
@@ -1415,11 +1393,6 @@ msgstr "Darrera Actualització el"
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Legend (for the markers inside invoice lines description)"
 msgstr "Llegenda (pels marcadors de les descripcions de les línies de factura)"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Adjunt principal"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
@@ -1804,7 +1777,6 @@ msgstr "Renovar"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_line_cron_for_renew_ir_actions_server
-#: model:ir.cron,cron_name:contract.contract_line_cron_for_renew
 msgid "Renew Contract lines"
 msgstr "Renovar línies de Contracte"
 
@@ -1844,6 +1816,11 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_user_id
 msgid "Responsible User"
 msgstr "Usuari Responsable"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error d'entrega de SMS"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
@@ -2356,11 +2333,33 @@ msgstr ""
 "{{ object.company_id.name }} Contracte (Ref {{ object.name or 'n/a' }}) - "
 "Modificacions"
 
+#~ msgid ""
+#~ "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', "
+#~ "1)]}\">\n"
+#~ "                                contract to invoice\n"
+#~ "                            </span>\n"
+#~ "                            <span attrs=\"{'invisible': "
+#~ "[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+#~ "                                contracts to invoice\n"
+#~ "                            </span>"
+#~ msgstr ""
+#~ "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', "
+#~ "1)]}\">\n"
+#~ "                                contracte a facturar\n"
+#~ "                            </span>\n"
+#~ "                            <span attrs=\"{'invisible': "
+#~ "[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+#~ "                                contractes a facturar\n"
+#~ "                            </span>"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Darrera Modificació el"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Adjunt principal"
+
 #~ msgid "Analytic account"
 #~ msgstr "Compte analític"
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "Error d'entrega de SMS"
 
 #~ msgid "Number of messages which requires an action"
 #~ msgstr "Nombre de missatges que requereixen una acció"
