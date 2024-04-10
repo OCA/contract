@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="mail_message_subtype_invoice_created" model="mail.message.subtype">
+        <field name="name">Invoice created</field>
+        <field name="res_model">contract.contract</field>
+    </record>
+    <record
+        id="mail_message_subtype_contract_modification"
+        model="mail.message.subtype"
+    >
+        <field name="name">Contract modifications</field>
+        <field name="res_model">contract.contract</field>
+        <field name="default" eval="False" />
+    </record>
+</odoo>
