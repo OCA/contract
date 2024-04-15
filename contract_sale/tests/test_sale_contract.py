@@ -8,7 +8,7 @@ from odoo.tests.common import TransactionCase
 class TestSaleContract(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestSaleContract, cls).setUpClass()
+        super().setUpClass()
 
         cls.user_sales_all_documents = cls.env["res.users"].create(
             {
