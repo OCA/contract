@@ -365,6 +365,29 @@
         </field>
     </record>
 
+    <record id="sale_subscription_pivot" model="ir.ui.view">
+        <field name="name">sale.subscription.pivot</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <pivot string="Subscription OCA Pivot">
+                <field name="date_start" type="row" />
+                <field name="stage_id" type="col" />
+                <field name="amount_total" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+     <record id="sale_subscription_graph" model="ir.ui.view">
+        <field name="name">sale.subscription.graph</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <graph string="Subscription OCA Graph">
+                <field name="partner_id" />
+                <field name="amount_total" type="measure" />
+            </graph>
+        </field>
+    </record>
+
     <record id="view_sale_order_pending_filter" model="ir.ui.view">
         <field name="name">sale.order.pending.filter</field>
         <field name="model">sale.subscription</field>
@@ -414,7 +437,7 @@
     <record id="sale_subscription_action" model="ir.actions.act_window">
         <field name="name">Subscriptions</field>
         <field name="res_model">sale.subscription</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph</field>
     </record>
 
     <record id="subscription_product_template_action" model="ir.actions.act_window">
