@@ -21,7 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[contract](contract/) | 17.0.1.0.0 |  | Recurring - Contracts Management
+[contract](contract/) | 17.0.1.0.1 |  | Recurring - Contracts Management
 
 [//]: # (end addons)
 
