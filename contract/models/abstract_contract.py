@@ -80,3 +80,20 @@ class ContractAbstractContract(models.AbstractModel):
                 contract.journal_id = journal.id
             else:
                 contract.journal_id = None
+
+    @api.onchange(
+        "date_start",
+        "date_end",
+        "recurring_interval",
+        "recurring_rule_type",
+        "recurring_invoicing_type",
+    )
+    def _onchange_recurrency_fields(self):
+        if self.contract_line_fixed_ids:
+            self.contract_line_fixed_ids.date_start = self.date_start
+            self.contract_line_fixed_ids.date_end = self.date_end
+            self.contract_line_fixed_ids.recurring_interval = self.recurring_interval
+            self.contract_line_fixed_ids.recurring_rule_type = self.recurring_rule_type
+            self.contract_line_fixed_ids.recurring_invoicing_type = (
+                self.recurring_invoicing_type
+            )
