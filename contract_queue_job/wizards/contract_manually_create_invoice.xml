@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_manually_create_invoice_form_view" model="ir.ui.view">
+        <field name="model">contract.manually.create.invoice</field>
+        <field
+            name="inherit_id"
+            ref="contract.contract_manually_create_invoice_form_view"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='create_invoice']" position="after">
+                <button
+                    name="create_invoice_queued"
+                    attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                    string="Enqueue invoices creation"
+                    class="btn-primary"
+                    type="object"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
