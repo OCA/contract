@@ -11,7 +11,7 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
-                <div attrs="{'invisible': [('type', '!=', 'service')],}">
+                <div invisible="type != 'service'">
                     <field name="is_contract" />
                     <label for="is_contract" />
                 </div>
@@ -20,7 +20,7 @@
                 <page
                     string="Contract"
                     name="contract"
-                    attrs="{'invisible': [('is_contract', '=', False)],}"
+                    invisible="is_contract == False"
                 >
                     <group>
                         <field name="property_contract_template_id" />
@@ -38,37 +38,37 @@
                         <field name="is_auto_renew" />
                     </group>
                     <group>
-                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                        <group invisible="is_auto_renew == False">
                             <label for="auto_renew_interval" />
                             <div>
                                 <field
                                     name="auto_renew_interval"
                                     class="oe_inline"
                                     nolabel="1"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew == True"
                                 />
                                 <field
                                     name="auto_renew_rule_type"
                                     class="oe_inline"
                                     nolabel="1"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew == True"
                                 />
                             </div>
                         </group>
-                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                        <group invisible="is_auto_renew == False">
                             <label for="termination_notice_interval" />
                             <div>
                                 <field
                                     name="termination_notice_interval"
                                     class="oe_inline"
                                     nolabel="1"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew == True"
                                 />
                                 <field
                                     name="termination_notice_rule_type"
                                     class="oe_inline"
                                     nolabel="1"
-                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                    required="is_auto_renew == True"
                                 />
                             </div>
                         </group>
