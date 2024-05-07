@@ -81,6 +81,8 @@ Contributors
    -  Ernesto Tejeda
    -  Pedro M. Baeza
 
+-  David Jaen <david.jaen.revert@gmail.com>
+
 Maintainers
 -----------
 
