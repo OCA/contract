@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
             "payment_term_id": self.payment_term_id.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "invoice_partner_id": self.partner_invoice_id.id,
-            "line_recurrence": self.partner_invoice_id.id,
+            "line_recurrence": True,
         }
 
     def action_create_contract(self):
@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
                 contract = contract_model.create(
                     rec._prepare_contract_value(contract_template)
                 )
-                contracts.append(contract)
+                contracts.append(contract.id)
                 contract._onchange_contract_template_id()
                 contract._onchange_contract_type()
                 order_lines.create_contract_line(contract)

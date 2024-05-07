@@ -63,7 +63,7 @@ class TestSaleOrder(TransactionCase):
             }
         )
         cls.order_line1 = cls.sale.order_line.filtered(
-            lambda l: l.product_id == cls.product1
+            lambda line: line.product_id == cls.product1
         )
         cls.order_line1.date_start = "2018-01-01"
         cls.order_line1.product_uom_qty = 12
@@ -143,7 +143,9 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(self.order_line1.invoice_status, "no")
         invoice = self.order_line1.contract_id.recurring_create_invoice()
         self.assertTrue(invoice)
-        self.assertEqual(self.order_line1.qty_invoiced, 1)
+        self.assertEqual(
+            self.order_line1.qty_invoiced, self.order_line1.product_uom_qty
+        )
         self.assertEqual(self.order_line1.qty_to_invoice, 0)
 
     def test_action_confirm_without_contract_creation(self):
