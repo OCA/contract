@@ -49,9 +49,7 @@ class SaleOrder(models.Model):
     def _prepare_contract_value(self, contract_template):
         self.ensure_one()
         return {
-            "name": "{template_name}: {sale_name}".format(
-                template_name=contract_template.name, sale_name=self.name
-            ),
+            "name": f"{contract_template.name}: {self.name}",
             "partner_id": self.partner_id.id,
             "company_id": self.company_id.id,
             "contract_template_id": contract_template.id,
