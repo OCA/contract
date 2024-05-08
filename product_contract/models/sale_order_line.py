@@ -141,21 +141,13 @@ class SaleOrderLine(models.Model):
             rec.date_end = rec._get_date_end() if rec.date_start else False
 
     def _get_contract_line_qty(self):
-        """Returns the quantity to be put on new contract lines."""
+        """Returns the amount that will be placed in new contract lines."""
         self.ensure_one()
-        # The quantity on the generated contract line is 1, as it
-        # correspond to the most common use cases:
-        # - quantity on the SO line = number of periods sold and unit
-        #   price the price of one period, so the
-        #   total amount of the SO corresponds to the planned value
-        #   of the contract; in this case the quantity on the contract
-        #   line must be 1
-        # - quantity on the SO line = number of hours sold,
-        #   automatic invoicing of the actual hours through a variable
-        #   quantity formula, in which case the quantity on the contract
-        #   line is not used
+        # The quantity in the generated contract line is the quantity of
+        # product requested in the order, since they correspond to the most common
+        # use cases.
         # Other use cases are easy to implement by overriding this method.
-        return 1.0
+        return self.product_uom_qty
 
     def _prepare_contract_line_values(
         self, contract, predecessor_contract_line_id=False
