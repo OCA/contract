@@ -10,6 +10,7 @@
         />
         <field name="arch" type="xml">
             <field name="payment_mode_id" position="after">
+                <field name="company_id" invisible="1" />
                 <field
                     name="mandate_id"
                     domain="[('partner_id', '=', commercial_partner_id), ('state', '=', 'valid'), ('company_id', '=', company_id)]"
