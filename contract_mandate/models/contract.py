@@ -32,9 +32,7 @@ class ContractContract(models.Model):
             self.mandate_id = False
 
     def _prepare_invoice(self, date_invoice, journal=None):
-        invoice_vals, move_form = super()._prepare_invoice(
-            date_invoice, journal=journal
-        )
+        invoice_vals = super()._prepare_invoice(date_invoice, journal=journal)
         if self.mandate_id:
             invoice_vals["mandate_id"] = self.mandate_id.id
         elif self.payment_mode_id.payment_method_id.mandate_required:
@@ -47,4 +45,4 @@ class ContractContract(models.Model):
                 limit=1,
             )
             invoice_vals["mandate_id"] = mandate.id
-        return invoice_vals, move_form
+        return invoice_vals

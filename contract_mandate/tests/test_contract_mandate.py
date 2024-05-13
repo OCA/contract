@@ -56,6 +56,11 @@ class TestContractMandate(TestContractBase):
         new_invoice = self.contract_with_mandate.recurring_create_invoice()
         self.assertEqual(new_invoice.mandate_id, self.mandate2)
 
+    def test_onchange_payment_mode_id(self):
+        self.contract_with_mandate.mandate_required = False
+        self.contract_with_mandate._onchange_payment_mode_id()
+        self.assertFalse(self.contract_with_mandate.mandate_id)
+
     def test_contract_mandate_default(self):
         self.payment_mode.payment_method_id.mandate_required = False
         self.contract_with_mandate.mandate_id = False
