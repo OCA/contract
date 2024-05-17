@@ -510,6 +510,7 @@ class ContractContract(models.Model):
                 not contract_line.is_canceled
                 and contract_line.recurring_next_date
                 and contract_line.recurring_next_date <= date_ref
+                and contract_line.next_period_date_start
             )
 
         lines2invoice = previous = self.env["contract.line"]

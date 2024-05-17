@@ -1744,6 +1744,29 @@ class TestContract(TestContractBase):
             len(invoice_lines),
         )
 
+    def test_recurring_create_invoice(self):
+        self.acct_line.date_start = "2024-01-01"
+        self.acct_line.recurring_invoicing_type = "pre-paid"
+        self.acct_line.date_end = "2024-04-01"
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2024-01-31"))
+        self.assertEqual(self.acct_line.recurring_next_date, to_date("2024-02-01"))
+        self.assertEqual(len(self.contract._get_related_invoices()), 1)
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2024-02-29"))
+        self.assertEqual(self.acct_line.recurring_next_date, to_date("2024-03-01"))
+        self.assertEqual(len(self.contract._get_related_invoices()), 2)
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2024-03-31"))
+        self.assertEqual(self.acct_line.recurring_next_date, to_date("2024-04-01"))
+        self.assertEqual(len(self.contract._get_related_invoices()), 3)
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2024-04-01"))
+        self.assertFalse(self.acct_line.recurring_next_date)
+        self.assertEqual(len(self.contract._get_related_invoices()), 4)
+        self.contract.recurring_create_invoice()
+        self.assertEqual(len(self.contract._get_related_invoices()), 4)
+
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = "2018-01-05"
         self.acct_line.recurring_invoicing_type = "post-paid"
