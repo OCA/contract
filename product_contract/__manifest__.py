@@ -18,6 +18,6 @@
     ],
     "installable": True,
     "application": False,
-    "external_dependencies": {"python": ["dateutil"]},
+    "external_dependencies": {"python": ["python-dateutil"]},
     "maintainers": ["sbejaoui"],
 }
