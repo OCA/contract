@@ -10,8 +10,7 @@ class ContractMulticompanyCase(TestContractBase):
         super().setUpClass()
         cls.company_obj = cls.env["res.company"]
         cls.company_1 = cls.env.ref("base.main_company")
-        vals = {"name": "Company 2"}
-        cls.company_2 = cls.company_obj.create(vals)
+        cls.company_2 = cls.company_obj.create({"name": "Company 2"})
         cls.env.user.company_ids |= cls.company_2
         cls.env["account.journal"].create(
             {
@@ -21,25 +20,11 @@ class ContractMulticompanyCase(TestContractBase):
                 "company_id": cls.company_2.id,
             }
         )
-        account_payable_type = cls.env["account.account.type"].create(
-            {
-                "name": "Payable account type",
-                "type": "payable",
-                "internal_group": "liability",
-            }
-        )
-        account_expense_type = cls.env["account.account.type"].create(
-            {
-                "name": "Expense account type",
-                "type": "other",
-                "internal_group": "expense",
-            }
-        )
         payable_account = cls.env["account.account"].create(
             {
                 "name": "Payable Account",
                 "code": "PAY",
-                "user_type_id": account_payable_type.id,
+                "account_type": "liability_payable",
                 "reconcile": True,
                 "company_id": cls.company_2.id,
             }
@@ -48,7 +33,7 @@ class ContractMulticompanyCase(TestContractBase):
             {
                 "name": "Expense Account",
                 "code": "EXP",
-                "user_type_id": account_expense_type.id,
+                "account_type": "expense",
                 "reconcile": False,
                 "company_id": cls.company_2.id,
             }
