@@ -8,14 +8,42 @@ class ContractMulticompanyCase(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        chart_template = cls.env.ref("l10n_generic_coa.configurable_chart_template")
         cls.company_obj = cls.env["res.company"]
         cls.company_1 = cls.env.ref("base.main_company")
-        vals = {"name": "Company 2"}
-        cls.company_2 = cls.company_obj.create(vals)
-        chart_template.try_loading(company=cls.company_2)
+        cls.company_2 = cls.company_obj.create({"name": "Company 2"})
         cls.env.user.company_ids |= cls.company_2
-
+        cls.env["account.journal"].create(
+            {
+                "name": "Journal purchase test 1",
+                "code": "JP1",
+                "type": "purchase",
+                "company_id": cls.company_2.id,
+            }
+        )
+        payable_account = cls.env["account.account"].create(
+            {
+                "name": "Payable Account",
+                "code": "PAY",
+                "account_type": "liability_payable",
+                "reconcile": True,
+                "company_id": cls.company_2.id,
+            }
+        )
+        expense_account = cls.env["account.account"].create(
+            {
+                "name": "Expense Account",
+                "code": "EXP",
+                "account_type": "expense",
+                "reconcile": False,
+                "company_id": cls.company_2.id,
+            }
+        )
+        cls.partner.with_company(
+            cls.company_2
+        ).property_account_payable_id = payable_account.id
+        cls.product_1.with_company(
+            cls.company_2
+        ).property_account_expense_id = expense_account.id
         cls.contract_mc = (
             cls.env["contract.contract"]
             .with_company(cls.company_2)
