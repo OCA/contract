@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="product_template_form_contract_view" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div attrs="{'invisible': [('type', '!=', 'service')],}">
+                    <field name="is_contract" />
+                    <label for="is_contract" />
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Contract"
+                    name="contract"
+                    attrs="{'invisible': [('is_contract', '=', False)],}"
+                >
+                    <group>
+                        <field name="property_contract_template_id" />
+                    </group>
+                    <group name="recurrence_info">
+                        <group>
+                            <field name="recurring_rule_type" />
+                        </group>
+                        <group>
+                            <field name="default_qty" />
+                            <field name="recurring_invoicing_type" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="is_auto_renew" />
+                    </group>
+                    <group>
+                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                            <label for="auto_renew_interval" />
+                            <div>
+                                <field
+                                    name="auto_renew_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                                <field
+                                    name="auto_renew_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                            </div>
+                        </group>
+                        <group attrs="{'invisible':[('is_auto_renew', '=', False)]}">
+                            <label for="termination_notice_interval" />
+                            <div>
+                                <field
+                                    name="termination_notice_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                                <field
+                                    name="termination_notice_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                    attrs="{'required':[('is_auto_renew', '=', True)]}"
+                                />
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
