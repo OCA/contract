@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2019-12-02 16:28+0000\n"
+"PO-Revision-Date: 2024-05-28 16:35+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (https://www.transifex.com/oca/teams/23907/hr/)\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.9.1\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -108,6 +108,9 @@ msgid ""
 "you.</p>\n"
 "        "
 msgstr ""
+"<p>Pozdrav</p>\n"
+"            <p>Imamo izmjene ugovora o kojima Vas želimo obavijestiti.</p>\n"
+"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -120,10 +123,16 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
+"                                ugovor za račun\n"
+"                            </span>\n"
+"                            <span attrs=\"{'invisible': [("
+"'contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                                ugovora za račun\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong>Ukupno</strong>"
 
@@ -136,6 +145,9 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#END#</strong>\n"
+"                                    : Zadnji dan\n"
+"                                    obračunatog perioda"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -165,7 +177,7 @@ msgstr "<strong>Ugovor: </strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>Korisnik:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -175,12 +187,12 @@ msgstr "<strong>Datum početka</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
-msgstr ""
+msgstr "<strong>Datum završetka</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date of Next Invoice</strong>"
-msgstr ""
+msgstr "<strong>Datum sljedećeg računa</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -190,17 +202,15 @@ msgstr "<strong>Opis</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Modifications</strong>"
-msgstr ""
+msgstr "<strong>Izmjene</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
 msgid "<strong>Notes: </strong>"
-msgstr "<strong>Ukupno</strong>"
+msgstr "<strong>Bilješke:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
 msgid "<strong>Partner:</strong>"
 msgstr "<strong>Partner:</strong>"
 
@@ -222,7 +232,7 @@ msgstr "<strong>Ponavljajuće stavke</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>Referenca</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -232,7 +242,7 @@ msgstr "<strong>Odgovoran: </strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Odgovoran:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -249,52 +259,52 @@ msgstr "<strong>Jed.cijena</strong>"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A canceled contract line can't be set to auto-renew"
-msgstr ""
+msgstr "Otkazana stavka ugovora ne može se koristiti za automatsko obnavljanje"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor can't be set to auto-renew"
-msgstr ""
+msgstr "Stavka ugovora sa nasljednikom ne može se automatski obnoviti"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "A contract line with a successor must have a end date"
-msgstr ""
+msgstr "Ugovora sa nasljednikom mora imati datum završetka"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract
 msgid "Abstract Recurring Contract"
-msgstr ""
+msgstr "Apstraktni ponavljajući ugovor"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Stavka apstraktnog ponavljajućeg ugovora"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Upozorenje pristupa"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebna radnja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__active
 #: model:ir.model.fields,field_description:contract.field_contract_line__active
 msgid "Active"
-msgstr ""
+msgstr "Aktivan"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_decoration
@@ -304,103 +314,103 @@ msgstr ""
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stanje aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a line"
-msgstr ""
+msgstr "Dodaj stavku"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj napomenu"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a section"
-msgstr ""
+msgstr "Dodaj sekciju"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "An auto-renew line must have a end date"
-msgstr ""
+msgstr "Stavka za automatsku obnovu mora imati datum završetka"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic"
-msgstr ""
+msgstr "Analitika"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Pretraga analitičke distribucije"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Preciznost analitike"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Are you sure you want to cancel this line"
-msgstr ""
+msgstr "Jeste li sigurni da želite otkazati ovu stavku"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Are you sure you want to re-activate this contract?"
-msgstr ""
+msgstr "Jeste li sigurni da želite re-aktivirati ovaj ugovor?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
 msgid "Are you sure you want to terminate this contract?"
-msgstr ""
+msgstr "Jeste li sigurni da želite okončati ovaj ugovor?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Associated Partner"
-msgstr ""
+msgstr "Pridruženi partner"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Broj priloga"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
 msgid "Auto Renew"
-msgstr ""
+msgstr "Automatski obnovi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__automatic_price
 msgid "Auto-price?"
-msgstr ""
+msgstr "Automatska cijena?"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_recurrency_basic_mixin
 msgid "Basic recurrency mixin for abstract contract models"
-msgstr ""
+msgstr "Osnovni model ponavljanja za apstrakne modele ugovora"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -412,25 +422,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_uncancel_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Otkaži"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#, fuzzy
 msgid "Cancel Contract Termination"
-msgstr "Ugovor"
+msgstr "Otkažu završetak ugovora"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_cancel_allowed
 msgid "Cancel allowed?"
-msgstr ""
+msgstr "Dozvoljeno otkazivanje?"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "Cancel not allowed for this line"
-msgstr ""
+msgstr "Otkazivanje nije dozvoljeno za ovu stavku"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_canceled
@@ -438,26 +447,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__canceled
 msgid "Canceled"
-msgstr ""
+msgstr "Otkazano"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_uom_category_id
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_template__generation_type
 msgid "Choose the document that will be automatically generated by cron."
-msgstr ""
+msgstr "Odaberite dokument koji će biti automatski generiran iz crona."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
 msgid "Click to create a new contract template."
-msgstr ""
+msgstr "Kliknite za kreiranje novog predloška ugovora."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.action_customer_contract
@@ -468,28 +477,28 @@ msgstr "Kliknite za kreiranje novog ugovora."
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__closed
 msgid "Closed"
-msgstr ""
+msgstr "Zatvoreno"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Index boje"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Poslovni subjekt"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Communication"
-msgstr ""
+msgstr "Komunikacija"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Tvrtke"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__company_id
@@ -500,14 +509,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__company_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__company_id
 msgid "Company"
-msgstr ""
+msgstr "Tvrtka"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Sastavi email"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_config_settings
@@ -518,7 +527,7 @@ msgstr ""
 #: model:ir.model,name:contract.model_res_partner
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: contract
 #: model:ir.actions.report,name:contract.report_contract
@@ -537,53 +546,49 @@ msgstr "Ugovor"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
-msgstr ""
+msgstr "Ugovora #"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contract -"
-msgstr ""
+msgstr "Ugovor -"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
-#, fuzzy
 msgid "Contract Contract Terminate"
-msgstr "Ugovor"
+msgstr "Prekid ugovora"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
 #: model:ir.model.fields,field_description:contract.field_account_move_line__contract_line_id
 #: model:ir.model.fields,field_description:contract.field_contract_line_wizard__contract_line_id
-#, fuzzy
 msgid "Contract Line"
-msgstr "Ugovor"
+msgstr "Stavka ugovora"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line_wizard
-#, fuzzy
 msgid "Contract Line Wizard"
-msgstr "Ugovor"
+msgstr "Čarobnjak za stavke ugovora"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__predecessor_contract_line_id
 msgid "Contract Line origin of this one."
-msgstr ""
+msgstr "Stavka ugovora iz koje potiče ova stavka."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Contract Manually Create Invoice"
-msgstr ""
+msgstr "Ručno kreiranje računa iz ugovora"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_manually_create_invoice
-#, fuzzy
 msgid "Contract Manually Create Invoice Wizard"
-msgstr "Ugovor"
+msgstr "čarobnjak za ručno kreiranje računa iz ugovora"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_modification
 msgid "Contract Modification"
-msgstr ""
+msgstr "Modifikacije ugovora"
 
 #. module: contract
 #: model:mail.template,name:contract.mail_template_contract_modification
