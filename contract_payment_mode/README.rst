@@ -86,6 +86,7 @@ Contributors
 -  Guillermo Llinares <guillermo@studio73.es>
 -  Amamr Officewala <aofficewala@opensourceintegrators.com>
 -  Carolina Fernandez <carolina.fernandez@tecnativa.com>
+-  David Jaen <david.jaen.revert@gmail.com>
 
 Maintainers
 -----------

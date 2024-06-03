@@ -91,7 +91,7 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
         contract.payment_mode_id = False
         self.assertEqual(contract.payment_mode_id.id, False)
 
-        post_init_hook(self.cr, self.env)
+        post_init_hook(self.env)
         self.assertEqual(contract.payment_mode_id, self.payment_mode)
 
     def test_contract_and_invoices(self):
