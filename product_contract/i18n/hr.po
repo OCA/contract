@@ -79,13 +79,15 @@ msgid "Contract Template"
 msgstr "Predložak ugovora"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:266
+#. odoo-python
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "Contract product has different contract template"
 msgstr "Predložak proizvoda ima drugačiji predložak ugovora pridružen"
 
 #. module: product_contract
-#: code:addons/product_contract/models/product_template.py:79
+#. odoo-python
+#: code:addons/product_contract/models/product_template.py:0
 #, python-format
 msgid "Contract product should be service type"
 msgstr "Predložak ugovora bi trebao biti tipa Usluga"
@@ -111,11 +113,11 @@ msgid "Date Start"
 msgstr "Početni datum"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__daily
 msgid "Day(s)"
 msgstr "Dan(a)"
 
@@ -124,11 +126,6 @@ msgstr "Dan(a)"
 #: model:ir.model.fields,field_description:product_contract.field_product_template__default_qty
 msgid "Default Quantity"
 msgstr "Zadana količina"
-
-#. module: product_contract
-#: model:ir.model.fields,field_description:product_contract.field_contract_line__display_name
-msgid "Display Name"
-msgstr "Naziv"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__recurring_rule_type
@@ -153,17 +150,17 @@ msgid "Is a contract"
 msgstr "Je ugovor"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthly
 msgid "Month(s)"
 msgstr "Mjesec(i)"
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
 msgstr "Mjesec(i) zadnji dan"
 
@@ -173,25 +170,25 @@ msgid "Need Contract Creation"
 msgstr "Potrebno kreiranje Ugovora"
 
 #. module: product_contract
-#: selection:product.template,recurring_invoicing_type:0
-#: selection:sale.order.line,recurring_invoicing_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__post-paid
 msgid "Post-paid"
 msgstr "Plaćanje poslje"
 
 #. module: product_contract
-#: selection:product.template,recurring_invoicing_type:0
-#: selection:sale.order.line,recurring_invoicing_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__pre-paid
 msgid "Pre-paid"
 msgstr "Plaćanje prije"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_product_template
-msgid "Product Template"
-msgstr "Predložak proizvoda"
+msgid "Product"
+msgstr ""
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__quarterly
 msgid "Quarter(s)"
 msgstr ""
 
@@ -223,11 +220,6 @@ msgid "Renewal type"
 msgstr ""
 
 #. module: product_contract
-#: model:ir.model,name:product_contract.model_sale_order
-msgid "Sale Order"
-msgstr "Ponuda"
-
-#. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_contract_contract__sale_order_count
 msgid "Sale Order Count"
 msgstr "Broj ponuda"
@@ -238,10 +230,16 @@ msgid "Sale Order Line"
 msgstr "Stavka ponude"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:250
+#. odoo-python
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr "Ponuda i Ugovor bi trebali biti vezani na istog partnera"
+
+#. module: product_contract
+#: model:ir.model,name:product_contract.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_sale_order_line
@@ -249,14 +247,15 @@ msgid "Sales Order Line"
 msgstr "Stavka ponude"
 
 #. module: product_contract
-#: code:addons/product_contract/models/contract.py:34
+#. odoo-python
+#: code:addons/product_contract/models/contract.py:0
 #, python-format
 msgid "Sales Orders"
 msgstr "Ponude"
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__semesterly
 msgid "Semester(s)"
 msgstr ""
 
@@ -295,31 +294,44 @@ msgid "Termination Notice type"
 msgstr "Tip obavjesti o raskidu"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__weekly
 msgid "Week(s)"
 msgstr "Tjedan(a)"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__yearly
 msgid "Year(s)"
 msgstr "Godina(e)"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order.py:29
-#: code:addons/product_contract/models/sale_order_line.py:80
+#. odoo-python
+#: code:addons/product_contract/models/sale_order.py:0
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
 msgstr ""
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order.py:93
+#. odoo-python
+#: code:addons/product_contract/models/sale_order.py:0
 #, python-format
-msgid "You must specify a contract template for '{}' product in '{}' company."
+msgid ""
+"You must specify a contract template for '%(product_name)s' product in "
+"'%(company_name)s' company."
 msgstr ""
+
+#~ msgid "Display Name"
+#~ msgstr "Naziv"
+
+#~ msgid "Product Template"
+#~ msgstr "Predložak proizvoda"
+
+#~ msgid "Sale Order"
+#~ msgstr "Ponuda"

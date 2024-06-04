@@ -12,8 +12,8 @@ msgstr ""
 "POT-Creation-Date: 2017-06-13 02:40+0000\n"
 "PO-Revision-Date: 2020-08-10 16:59+0000\n"
 "Last-Translator: Fernando Colus <fcolus1@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/teams/"
-"23907/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/oca/"
+"teams/23907/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,13 +80,15 @@ msgid "Contract Template"
 msgstr "Modelo do Contrato"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:266
+#. odoo-python
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "Contract product has different contract template"
 msgstr "O produto do contrato tem um modelo de contrato diferente"
 
 #. module: product_contract
-#: code:addons/product_contract/models/product_template.py:79
+#. odoo-python
+#: code:addons/product_contract/models/product_template.py:0
 #, python-format
 msgid "Contract product should be service type"
 msgstr "O produto do contrato deve ser do tipo serviço"
@@ -112,11 +114,11 @@ msgid "Date Start"
 msgstr "Data Inicial"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__daily
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__daily
 msgid "Day(s)"
 msgstr "Dia(s)"
 
@@ -125,11 +127,6 @@ msgstr "Dia(s)"
 #: model:ir.model.fields,field_description:product_contract.field_product_template__default_qty
 msgid "Default Quantity"
 msgstr "Quantidade Padrão"
-
-#. module: product_contract
-#: model:ir.model.fields,field_description:product_contract.field_contract_line__display_name
-msgid "Display Name"
-msgstr "Exibir Nome"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__recurring_rule_type
@@ -154,17 +151,17 @@ msgid "Is a contract"
 msgstr "É um contrato"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__monthly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthly
 msgid "Month(s)"
 msgstr "Mês(es)"
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthlylastday
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
 msgstr "Último dia do Mês(es)"
 
@@ -174,25 +171,25 @@ msgid "Need Contract Creation"
 msgstr "Necessidade de Criação de Contrato"
 
 #. module: product_contract
-#: selection:product.template,recurring_invoicing_type:0
-#: selection:sale.order.line,recurring_invoicing_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__post-paid
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__post-paid
 msgid "Post-paid"
 msgstr "Pós-pago"
 
 #. module: product_contract
-#: selection:product.template,recurring_invoicing_type:0
-#: selection:sale.order.line,recurring_invoicing_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__pre-paid
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__pre-paid
 msgid "Pre-paid"
 msgstr "Pré-pago"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_product_template
-msgid "Product Template"
-msgstr "Modelo de Produto"
+msgid "Product"
+msgstr ""
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__quarterly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__quarterly
 msgid "Quarter(s)"
 msgstr "Trimestre(s)"
 
@@ -223,11 +220,6 @@ msgid "Renewal type"
 msgstr "Tipo de renovação"
 
 #. module: product_contract
-#: model:ir.model,name:product_contract.model_sale_order
-msgid "Sale Order"
-msgstr "Pedido de Venda"
-
-#. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_contract_contract__sale_order_count
 msgid "Sale Order Count"
 msgstr "Contagem de Ordem de Venda"
@@ -238,10 +230,16 @@ msgid "Sale Order Line"
 msgstr "Linha da Ordem de Venda"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order_line.py:250
+#. odoo-python
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "Sale Order and contract should be linked to the same partner"
 msgstr "Ordem de Venda e contrato devem ser relacionadas ao mesmo parceiro"
+
+#. module: product_contract
+#: model:ir.model,name:product_contract.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_sale_order_line
@@ -249,14 +247,15 @@ msgid "Sales Order Line"
 msgstr "Linha do Pedido de Venda"
 
 #. module: product_contract
-#: code:addons/product_contract/models/contract.py:34
+#. odoo-python
+#: code:addons/product_contract/models/contract.py:0
 #, python-format
 msgid "Sales Orders"
 msgstr "Ordens de Venda"
 
 #. module: product_contract
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__semesterly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__semesterly
 msgid "Semester(s)"
 msgstr "Semestre(s)"
 
@@ -294,33 +293,51 @@ msgid "Termination Notice type"
 msgstr "Tipo de Aviso de Rescisão"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:product.template,termination_notice_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__weekly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__weekly
 msgid "Week(s)"
 msgstr "Semana(s)"
 
 #. module: product_contract
-#: selection:product.template,auto_renew_rule_type:0
-#: selection:product.template,recurring_rule_type:0
-#: selection:sale.order.line,auto_renew_rule_type:0
-#: selection:sale.order.line,recurring_rule_type:0
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__yearly
+#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__yearly
 msgid "Year(s)"
 msgstr "Ano(s)"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order.py:29
-#: code:addons/product_contract/models/sale_order_line.py:80
+#. odoo-python
+#: code:addons/product_contract/models/sale_order.py:0
+#: code:addons/product_contract/models/sale_order_line.py:0
 #, python-format
 msgid "You can't upsell or downsell a terminated contract"
 msgstr "Não se pode adicionar ou remover ao contrato terminado"
 
 #. module: product_contract
-#: code:addons/product_contract/models/sale_order.py:93
+#. odoo-python
+#: code:addons/product_contract/models/sale_order.py:0
 #, python-format
-msgid "You must specify a contract template for '{}' product in '{}' company."
+msgid ""
+"You must specify a contract template for '%(product_name)s' product in "
+"'%(company_name)s' company."
 msgstr ""
-"Você deve especificar um modelo de contrato para o produto '{}' na empresa "
-"'{}'."
+
+#~ msgid "Display Name"
+#~ msgstr "Exibir Nome"
+
+#~ msgid "Product Template"
+#~ msgstr "Modelo de Produto"
+
+#~ msgid "Sale Order"
+#~ msgstr "Pedido de Venda"
+
+#, python-format
+#~ msgid ""
+#~ "You must specify a contract template for '{}' product in '{}' company."
+#~ msgstr ""
+#~ "Você deve especificar um modelo de contrato para o produto '{}' na "
+#~ "empresa '{}'."
