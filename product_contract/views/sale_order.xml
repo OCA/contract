@@ -16,7 +16,7 @@
                     string="Create Contracts"
                     type="object"
                     class="oe_highlight"
-                    invisible="need_contract_creation == False"
+                    attrs="{'invisible': [('need_contract_creation', '=', False)]}"
                 />
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
@@ -25,7 +25,7 @@
                     type="object"
                     icon="fa-book"
                     class="oe_stat_button"
-                    insivible="is_contract != True or state not in ['sale', 'done'] or contract_count == 0"
+                    attrs="{'invisible': ['|', '|', ('is_contract', '!=', True), ('state', 'not in', ['sale', 'done']), ('contract_count', '=', 0)]}"
                 >
                     <field string="Contracts" name="contract_count" widget="statinfo" />
                 </button>
@@ -41,13 +41,13 @@
                 <field
                     name="contract_id"
                     options='{"no_create": True}'
-                    invisible="is_contract == False"
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
                     domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
                        ]"
                 />
                 <field
                     name="contract_line_id"
-                    invible="is_contract == False"
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
                     domain="[('contract_id','=',contract_id)]"
                 />
             </xpath>
@@ -59,37 +59,43 @@
                 <separator
                     colspan="4"
                     string="Recurrence Invoicing"
-                    invisible="is_contract == False"
+                    attrs="{'invisible': [('is_contract', '=', False)]}"
                 />
-                <group invisible="is_contract == False">
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="recurring_rule_type" />
                 </group>
-                <group invisible="is_contract == False">
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="recurring_invoicing_type" />
                 </group>
-                <group invisible="is_contract == False">
-                    <field name="date_start" required="is_contract == True" />
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field
+                        name="date_start"
+                        attrs="{'required': [('is_contract', '=', True)]}"
+                    />
                 </group>
-                <group invisible="is_contract == False">
-                    <field name="date_end" required="is_contract == True" />
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
+                    <field
+                        name="date_end"
+                        attrs="{'required': [('is_contract', '=', True)]}"
+                    />
                 </group>
-                <group invisible="is_contract == False">
+                <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="is_auto_renew" />
                 </group>
-                <group invisible="is_auto_renew == False">
+                <group attrs="{'invisible': [('is_auto_renew', '=', False)]}">
                     <label for="auto_renew_interval" />
                     <div>
                         <field
                             name="auto_renew_interval"
                             class="oe_inline"
                             nolabel="1"
-                            required="is_auto_renew == True"
+                            attrs="{'required':[('is_auto_renew', '=', True)]}"
                         />
                         <field
                             name="auto_renew_rule_type"
                             class="oe_inline"
                             nolabel="1"
-                            required="is_auto_renew == True"
+                            attrs="{'required':[('is_auto_renew', '=', True)]}"
                         />
                     </div>
                 </group>
@@ -100,9 +106,12 @@
             >
                 <field
                     name="date_start"
-                    column_invisible="parent.is_contract == False"
+                    attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
                 />
-                <field name="date_end" column_invisible="parent.is_contract == False" />
+                <field
+                    name="date_end"
+                    attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
+                />
             </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="attributes">
                 <attribute name="editable" />
