@@ -14,3 +14,4 @@
     * Rafael Blasco
     * Víctor Martínez
 * Iván Antón <ozono@ozonomultimedia.com>
+* Yves Goldberg <yves@ygol.com>

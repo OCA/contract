@@ -159,6 +159,23 @@ class ContractContract(models.Model):
             res = super(ContractContract, self).write(vals)
         return res
 
+    @api.constrains('company_id')
+    def _check_related_companies(self):
+        """
+            Constrains to check the company with many2one records which are having company in it
+            returns: None, raise error
+        """
+        for record in self:
+            company_id = record.company_id.id
+            for field_name, field in self._fields.items():
+                if isinstance(field, fields.Many2one):
+                    related_model = self.env[field.comodel_name]
+                    related_record = getattr(record, field_name)
+
+                    if related_record and 'company_id' in related_model._fields and related_record.company_id.id != company_id:
+                        raise ValidationError(
+                            f"The company for {field.string} does not match the company of this record.")
+
     @api.model
     def _set_start_contract_modification(self):
         subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
