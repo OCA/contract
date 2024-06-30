@@ -32,6 +32,7 @@ class ContractLine(models.Model):
         auto_join=True,
         ondelete="cascade",
     )
+    company_id = fields.Many2one(related="contract_id.company_id")
     currency_id = fields.Many2one(related="contract_id.currency_id")
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
