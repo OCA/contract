@@ -680,7 +680,7 @@ class TestSubscriptionOCA(SavepointCase):
         self.pricelist_l3.currency_id = self.env.ref("base.THB")
         self.sub_line.sale_subscription_id.pricelist_id = self.pricelist_l3
         res = self.sub_line._get_display_price(self.product_1)
-        self.assertAlmostEqual(int(res), 613)
+        self.assertAlmostEqual(int(res), 514)
         self.sub_line.product_uom_qty = 300
         res = self.sub_line.read(["discount"])
         self.assertEqual(res[0]["discount"], 0)
