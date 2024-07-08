@@ -39,6 +39,24 @@ class SaleSubscriptionLine(models.Model):
         store=True,
         readonly=False,
     )
+    price_subtotal = fields.Monetary(
+        string="Subtotal", readonly=True, compute="_compute_subtotal", store=True
+    )
+    price_total = fields.Monetary(
+        string="Total", readonly=True, compute="_compute_subtotal", store=True
+    )
+    amount_tax_line_amount = fields.Float(
+        string="Taxes Amount", compute="_compute_subtotal", store=True
+    )
+    sale_subscription_id = fields.Many2one(
+        comodel_name="sale.subscription", string="Subscription"
+    )
+    company_id = fields.Many2one(
+        related="sale_subscription_id.company_id",
+        string="Company",
+        store=True,
+        index=True,
+    )
 
     @api.depends("product_id", "price_unit", "product_uom_qty", "discount", "tax_ids")
     def _compute_subtotal(self):
@@ -60,25 +78,6 @@ class SaleSubscriptionLine(models.Model):
                     "price_subtotal": taxes["total_excluded"],
                 }
             )
-
-    price_subtotal = fields.Monetary(
-        string="Subtotal", readonly="True", compute=_compute_subtotal, store=True
-    )
-    price_total = fields.Monetary(
-        string="Total", readonly="True", compute=_compute_subtotal, store=True
-    )
-    amount_tax_line_amount = fields.Float(
-        string="Taxes Amount", compute="_compute_subtotal", store=True
-    )
-    sale_subscription_id = fields.Many2one(
-        comodel_name="sale.subscription", string="Subscription"
-    )
-    company_id = fields.Many2one(
-        related="sale_subscription_id.company_id",
-        string="Company",
-        store=True,
-        index=True,
-    )
 
     @api.depends("product_id")
     def _compute_name(self):
@@ -102,7 +101,7 @@ class SaleSubscriptionLine(models.Model):
             )
             # If company_id is set, always filter taxes by the company
             taxes = line.product_id.taxes_id.filtered(
-                lambda t: t.company_id == line.env.company
+                lambda t: t.company_id == self.env.company
             )
             line.tax_ids = fpos.map_tax(taxes)
 

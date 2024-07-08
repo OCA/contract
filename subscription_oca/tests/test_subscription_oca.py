@@ -60,10 +60,18 @@ class TestSubscriptionOCA(TransactionCase):
                 "price_include": True,
             }
         )
+        cls.tax_0pc = cls.env["account.tax"].create(
+            {
+                "name": "0% Tax",
+                "amount_type": "percent",
+                "amount": 0,
+            }
+        )
         cls.product_1 = cls.env.ref("product.product_product_1")
         cls.product_1.subscribable = True
         cls.product_1.taxes_id = [(6, 0, cls.tax_10pc_incl.ids)]
         cls.product_2 = cls.env.ref("product.product_product_2")
+        cls.product_2.taxes_id = [(6, 0, cls.tax_0pc.ids)]
         cls.product_2.subscribable = True
 
         cls.country = cls.env["res.country"].search([], limit=1)
@@ -201,7 +209,6 @@ class TestSubscriptionOCA(TransactionCase):
         cls.sub_line2.unlink()
 
         # Pricelists.
-        cls.pricelist_default = cls.env.ref("product.list0")
         cls.pricelist_l1 = cls._create_price_list("Level 1")
         cls.pricelist_l2 = cls._create_price_list("Level 2")
         cls.pricelist_l3 = cls._create_price_list("Level 3")
@@ -588,7 +595,13 @@ class TestSubscriptionOCA(TransactionCase):
         self.pricelist_l3.currency_id = self.env.ref("base.THB")
         self.sub_line.sale_subscription_id.pricelist_id = self.pricelist_l3
         res = self.sub_line._get_display_price(self.product_1)
-        self.assertAlmostEqual(int(res), 514)
+        self.assertAlmostEqual(
+            int(res),
+            round(
+                self.product_1.standard_price
+                * self.pricelist_l3.currency_id.rate_ids[:1].company_rate
+            ),
+        )
         self.sub_line.product_uom_qty = 300
         res = self.sub_line.read(["discount"])
         self.assertEqual(res[0]["discount"], 0)
@@ -608,6 +621,24 @@ class TestSubscriptionOCA(TransactionCase):
         )
 
     def _collect_all_sub_test_results(self, subscription):
+        """Creates the invoice of a subscription and returns its data
+        :param subscription: subscription to invoice
+        :returns: Lists with the following data
+            returns[0]: Created sale order record
+            returns[1]: Created invoice record
+            returns[2]: Type of the action to see a manually created invoice
+            returns[3]: Number of invoices
+            returns[4]: Amount total (wout taxes) of all the invoices
+            returns[5]: Invoices count of the subscription
+            returns[6]: Type of the action to the subscription invoices
+            returns[7]: Sale order count of the subscription
+            returns[8]: Id of the sale order
+            returns[9]: Recurring next date of the subscription
+            returns[10]: Id of the pricelist of the subsciption
+            returns[11]: Fiscal position record of the subscription
+            returns[12]: Type of the wizard action close a subscription
+            returns[13]: Subscription stages
+        """
         test_res = []
         sale_order = subscription.create_sale_order()
         test_res.append(sale_order)

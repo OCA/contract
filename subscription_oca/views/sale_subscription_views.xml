@@ -20,7 +20,7 @@
                         name="action_close_subscription"
                         type="object"
                         help="A given subscription can be marked as closed when, for example, renewal is not desired."
-                        attrs="{'invisible': [('in_progress', '=', False)]}"
+                        invisible="not in_progress"
                     />
 
                     <field
@@ -36,7 +36,7 @@
                         <button
                             name="action_view_sale_order_ids"
                             type="object"
-                            attrs="{'invisible': [('sale_order_ids_count', '=', 0)]}"
+                            invisible="sale_order_ids_count == 0"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o"
                         >
@@ -48,7 +48,7 @@
                         </button>
                         <button
                             name="action_view_account_invoice_ids"
-                            attrs="{'invisible': [('account_invoice_ids_count', '=', 0)]}"
+                            invisible="account_invoice_ids_count == 0"
                             type="object"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o"
@@ -66,7 +66,7 @@
                         name="web_ribbon"
                         text="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <div class="oe_title">
                         <h1 class="flex-fill d-flex flex-row">
@@ -82,16 +82,10 @@
                             <field name="pricelist_id" />
                             <field
                                 name="date_start"
-                                attrs="{'readonly':['|',('active','=',False), ('in_progress', '=', True)]}"
+                                readonly="not active or in_progress"
                             />
-                            <field
-                                name="date"
-                                attrs="{'invisible':[('recurring_rule_boundary', '=', True)]}"
-                            />
-                            <field
-                                name="close_reason_id"
-                                attrs="{'invisible': [('active', '=', True)]}"
-                            />
+                            <field name="date" invisible="recurring_rule_boundary" />
+                            <field name="close_reason_id" invisible="active" />
                             <field name="recurring_rule_boundary" invisible="1" />
 
                         </group>
@@ -101,7 +95,7 @@
                             <field name="crm_team_id" />
                             <field
                                 name="recurring_next_date"
-                                attrs="{'invisible': ['|', ('recurring_next_date', '=', False), ('in_progress', '=', False)]}"
+                                invisible="not recurring_next_date or not in_progress"
                             />
                             <field name="company_id" invisible="1" />
                             <field
@@ -126,7 +120,7 @@
                                         required="True"
                                         widget="section_and_note_text"
                                     />
-                                    <field name="currency_id" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
                                     <field name="product_uom_qty" required="True" />
                                     <field name="price_unit" required="True" />
                                     <field name="discount" required="True" />
@@ -220,7 +214,7 @@
                 <field name="amount_tax" sum="Total Tax" optional="show" />
                 <field name="amount_total" sum="Total" optional="show" />
                 <field name="template_id" optional="show" />
-                <field name="stage_str" optional="show" />
+                <field name="stage_id" optional="show" />
             </tree>
         </field>
     </record>
