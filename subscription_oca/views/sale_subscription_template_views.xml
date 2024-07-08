@@ -64,11 +64,11 @@
                                     />
                                     <label
                                         for="recurring_rule_count"
-                                        attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}"
+                                        invisible="recurring_rule_boundary == 'unlimited'"
                                     />
                                     <div
                                         class="o_row "
-                                        attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}"
+                                        invisible="recurring_rule_boundary == 'unlimited'"
                                     >
                                         <span class="mr-1">For</span>
                                         <field
@@ -80,7 +80,8 @@
                                     <field name="invoicing_mode" widget="radio" />
                                     <field
                                         name="invoice_mail_template_id"
-                                        attrs="{'invisible': [('invoicing_mode','!=','invoice_send')], 'required': [('invoicing_mode', '=', 'invoice_send')]}"
+                                        invisible="invoicing_mode != 'invoice_send'"
+                                        required="invoicing_mode == 'invoice_send'"
                                     />
                                 </group>
                                 <group name="right_group">

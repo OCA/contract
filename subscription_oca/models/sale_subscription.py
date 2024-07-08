@@ -116,11 +116,6 @@ class SaleSubscription(models.Model):
         group_expand="_read_group_stage_ids",
         store=True,
     )
-    stage_str = fields.Char(
-        related="stage_id.name",
-        string="Etapa",
-        store=True,
-    )
     sale_subscription_line_ids = fields.One2many(
         comodel_name="sale.subscription.line",
         inverse_name="sale_subscription_id",
@@ -320,22 +315,22 @@ class SaleSubscription(models.Model):
             invoice = self.create_invoice()
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
-                if self.template_id.invoicing_mode == "invoice_send":
-                    mail_template = self.template_id.invoice_mail_template_id
-                    invoice.with_context(force_send=True).message_post_with_template(
-                        mail_template.id,
-                        composition_mode="comment",
-                        email_layout_xmlid="mail.mail_notification_paynow",
-                    )
+                mail_template = self.template_id.invoice_mail_template_id
+                invoice.with_context(force_send=True)._generate_pdf_and_send_invoice(
+                    mail_template
+                )
                 invoice_number = invoice.name
                 message_body = (
-                    "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
-                    % (msg_static, invoice.id, invoice_number)
+                    f"<b>{msg_static}</b> "
+                    f"<a href=# data-oe-model=account.move data-oe-id={invoice.id}>"
+                    f"{invoice_number}"
+                    "</a>"
                 )
 
         if self.template_id.invoicing_mode == "sale_and_invoice":
             order_id = self.create_sale_order()
-            order_id.action_done()
+            order_id.action_confirm()
+            order_id.action_lock()
             new_invoice = order_id._create_invoices()
             new_invoice.action_post()
             new_invoice.invoice_origin = order_id.name + ", " + self.name
@@ -346,7 +341,7 @@ class SaleSubscription(models.Model):
             )
         if not invoice_number:
             invoice_number = _("To validate")
-            message_body = "<b>%s</b> %s" % (msg_static, invoice_number)
+            message_body = f"<b>{msg_static}</b> {invoice_number}"
         self.calculate_recurring_next_date(self.recurring_next_date)
         self.message_post(body=message_body)
 
@@ -447,24 +442,27 @@ class SaleSubscription(models.Model):
 
         return res
 
-    @api.model
-    def create(self, values):
-        if "recurring_rule_boundary" in values:
-            if not values["recurring_rule_boundary"]:
-                template_id = self.env["sale.subscription.template"].browse(
-                    values["template_id"]
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if "recurring_rule_boundary" in values:
+                if not values["recurring_rule_boundary"]:
+                    template_id = self.env["sale.subscription.template"].browse(
+                        values["template_id"]
+                    )
+                    date_start = values["date_start"]
+                    if not isinstance(values["date_start"], date):
+                        date_start = fields.Date.to_date(values["date_start"])
+                    values["date"] = template_id._get_date(date_start)
+            if "date_start" in values and "recurring_next_date" in values:
+                res = self._check_dates(
+                    values["date_start"], values["recurring_next_date"]
                 )
-                date_start = values["date_start"]
-                if not isinstance(values["date_start"], date):
-                    date_start = fields.Date.to_date(values["date_start"])
-                values["date"] = template_id._get_date(date_start)
-        if "date_start" in values and "recurring_next_date" in values:
-            res = self._check_dates(values["date_start"], values["recurring_next_date"])
-            if res:
-                values["date_start"] = values["recurring_next_date"]
-            values["stage_id"] = (
-                self.env["sale.subscription.stage"]
-                .search([("type", "=", "pre")], order="sequence desc", limit=1)
-                .id
-            )
-        return super(SaleSubscription, self).create(values)
+                if res:
+                    values["date_start"] = values["recurring_next_date"]
+                values["stage_id"] = (
+                    self.env["sale.subscription.stage"]
+                    .search([("type", "=", "pre")], order="sequence desc", limit=1)
+                    .id
+                )
+        return super().create(vals_list)

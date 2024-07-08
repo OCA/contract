@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
             rec = self.env["sale.subscription"].create(
                 {
                     "partner_id": self.partner_id.id,
-                    "user_id": self._context["uid"],
+                    "user_id": self.env.context.get("uid", self.env.uid),
                     "template_id": subscription_tmpl.id,
                     "pricelist_id": self.partner_id.property_product_pricelist.id,
                     "date_start": date.today(),
@@ -75,7 +75,7 @@ class SaleOrder(models.Model):
         return grouped
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
+        res = super().action_confirm()
         for record in self:
             grouped = self.group_subscription_lines()
             for tmpl, lines in grouped.items():
