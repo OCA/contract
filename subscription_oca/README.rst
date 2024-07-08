@@ -101,6 +101,12 @@ Contributors
 
    -  Ilyas <irazor147@gmail.com>
 
+-  `Sygel <https://www.sygel.es>`__:
+
+   -  Harald Panten
+   -  Valentin Vinagre
+   -  Alberto Martínez
+
 Maintainers
 -----------
 
