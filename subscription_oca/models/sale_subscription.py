@@ -179,7 +179,7 @@ class SaleSubscription(models.Model):
             template_code = record.template_id.code if record.template_id.code else ""
             code = record.code if record.code else ""
             slash = "/" if template_code and code else ""
-            record.name = "{}{}{}".format(template_code, slash, code)
+            record.name = f"{template_code}{slash}{code}"
 
     @api.depends("template_id", "date_start")
     def _compute_rule_boundary(self):
