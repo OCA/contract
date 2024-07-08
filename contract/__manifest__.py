@@ -11,7 +11,7 @@
 
 {
     "name": "Recurring - Contracts Management",
-    "version": "16.0.2.8.2",
+    "version": "16.0.2.9.0",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
