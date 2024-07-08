@@ -60,6 +60,9 @@ class TestContractMandate(TestContractBase):
         self.contract_with_mandate.mandate_required = False
         self.contract_with_mandate._onchange_payment_mode_id()
         self.assertFalse(self.contract_with_mandate.mandate_id)
+        self.contract_with_mandate.mandate_required = True
+        self.contract_with_mandate._onchange_payment_mode_id()
+        self.assertFalse(self.contract_with_mandate.mandate_id)
 
     def test_contract_mandate_default(self):
         self.payment_mode.payment_method_id.mandate_required = False
