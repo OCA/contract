@@ -34,6 +34,7 @@ class ContractLine(models.Model):
     )
     company_id = fields.Many2one(related="contract_id.company_id")
     currency_id = fields.Many2one(related="contract_id.currency_id")
+    partner_id = fields.Many2one(related="contract_id.partner_id")
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     termination_notice_date = fields.Date(
