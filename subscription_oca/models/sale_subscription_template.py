@@ -1,4 +1,5 @@
 # Copyright 2023 Domatix - Carlos Martínez
+# Copyright 2024 Binhex - Adasat Torres de León
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from dateutil.relativedelta import relativedelta
 
@@ -45,7 +46,7 @@ class SaleSubscriptionTemplate(models.Model):
         domain="[('model', '=', 'account.move')]",
     )
     product_ids = fields.One2many(
-        comodel_name="product.template",
+        comodel_name="product.product",
         inverse_name="subscription_template_id",
         string="Products",
     )
@@ -96,7 +97,7 @@ class SaleSubscriptionTemplate(models.Model):
             "name": self.name,
             "view_type": "form",
             "view_mode": "tree,form",
-            "res_model": "product.template",
+            "res_model": "product.product",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.product_ids.ids)],
         }
