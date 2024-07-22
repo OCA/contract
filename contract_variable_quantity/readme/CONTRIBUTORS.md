@@ -4,6 +4,8 @@
   > - Carlos Roca
   > - Víctor Martínez
   > - Carolina Fernandez
+  > - Juan José Seguí
+
 
 - Dave Lasley \<<dave@laslabs.com>\>
 

@@ -33,7 +33,7 @@ class AccountAnalyticInvoiceLine(models.Model):
                 "contract": self.contract_id,
             }
             safe_eval(
-                self.qty_formula_id.code.strip(),
+                str(self.qty_formula_id.code).strip(),
                 eval_context,
                 mode="exec",
                 nocopy=True,

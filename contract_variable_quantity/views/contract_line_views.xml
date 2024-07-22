@@ -11,15 +11,10 @@
         <field name="arch" type="xml">
             <field name="quantity" position="before">
                 <field name="qty_type" />
-                <field
-                    name="qty_formula_id"
-                    attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
-                />
+                <field name="qty_formula_id" invisible="qty_type != 'variable'" />
             </field>
             <field name="quantity" position="attributes">
-                <attribute
-                    name="attrs"
-                >{'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
+                <attribute name="invisible">"qty_type != 'fixed'"</attribute>
             </field>
         </field>
     </record>

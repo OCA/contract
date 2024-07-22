@@ -14,13 +14,13 @@
             <xpath expr="//field[@name='quantity']" position="after">
                 <field
                     name="qty_formula_id"
-                    attrs="{'required': [('qty_type', '=', 'variable')], 'invisible': [('qty_type', '!=', 'variable')]}"
+                    required="qty_type == 'variable'"
+                    invisible="qty_type != 'variable'"
                 />
             </xpath>
             <xpath expr="//field[@name='quantity']" position="attributes">
-                <attribute name="attrs">{'required': [('qty_type', '=',
-                    'fixed')], 'invisible': [('qty_type', '!=', 'fixed')]}
-                </attribute>
+                <attribute name="required">"qty_type == 'fixed'"</attribute>
+                <attribute name="invisible">"qty_type != 'fixed'"</attribute>
             </xpath>
         </field>
     </record>
