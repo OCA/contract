@@ -1,6 +1,6 @@
 To use this module, you need to:
 
-1.  Go to Invoicing \> Sales \> Contracts and select or create a new
+1.  Go to Invoicing \> Customers \> Customers Contracts and select or create a new
     contract.
 2.  Check *Generate recurring invoices automatically*.
 3.  Add a new recurring invoicing line.
