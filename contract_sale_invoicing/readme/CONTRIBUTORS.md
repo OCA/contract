@@ -2,4 +2,5 @@
   - Carlos Dauden
   - Carolina Fernandez
   - Pedro M. Baeza
+  - Juan José Seguí
 - Souheil Bejaoui \<<souheil.bejaoui@acsone.eu>\>

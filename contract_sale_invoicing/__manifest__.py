@@ -4,7 +4,7 @@
 {
     "name": "Contract Invoicing of Pending Sales Orders",
     "summary": "Include sales to invoice in contract invoice creation",
-    "version": "15.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Contract Management",
     "website": "https://github.com/OCA/contract",
     "author": "Tecnativa, " "Odoo Community Association (OCA)",
