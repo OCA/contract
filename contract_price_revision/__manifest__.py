@@ -6,7 +6,7 @@
 {
     "name": "Contract Price Revision",
     "summary": "Easy revision of contract prices",
-    "version": "15.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Contract",
     "author": "ACSONE SA/NV, Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",
