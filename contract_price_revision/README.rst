@@ -83,6 +83,7 @@ Contributors
    -  Vicent Cubells
    -  Carlos Dauden
    -  Carolina Fernandez
+   -  Juan José Seguí
 
 Maintainers
 -----------

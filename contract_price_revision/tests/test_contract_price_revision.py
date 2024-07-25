@@ -82,3 +82,9 @@ class TestContractPriceRevision(TestContractBase):
         self.assertEqual(len(lines), 2)
         lines = lines.filtered(lambda x: x.price_unit == 200.0)
         self.assertEqual(len(lines), 1)
+
+    def test_compute_variation_percent(self):
+        self.acct_line.write({"price_unit": 200.0, "previous_price": 100.0})
+        self.assertEqual(self.acct_line.variation_percent, 100.0)
+        self.acct_line.write({"price_unit": 200.0, "previous_price": 0.0})
+        self.assertEqual(self.acct_line.variation_percent, 0.0)

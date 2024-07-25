@@ -30,7 +30,7 @@ class ContractLine(models.Model):
 
     @api.depends_context("date_start")
     def _compute_price_can_be_revised(self):
-        date_start = self.env.context.get("date_start", fields.Date.today())
+        date_start = self.env.context.get("date_start", fields.Date.context_today(self))
         lines_can_be_revised = self.filtered(
             lambda line: not line.never_revise_price
             and not line.automatic_price
