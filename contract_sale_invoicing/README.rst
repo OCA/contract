@@ -17,20 +17,20 @@ Contract Invoicing of Pending Sales Orders
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/15.0/contract_sale_invoicing
+    :target: https://github.com/OCA/contract/tree/17.0/contract_sale_invoicing
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-15-0/contract-15-0-contract_sale_invoicing
+    :target: https://translation.odoo-community.org/projects/contract-17-0/contract-17-0-contract_sale_invoicing
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=15.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=17.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This modules allows to include on the same invoice than the recurring invoice
-contract, all the pending to invoice sales orders that you have with the same
-analytic account.
+This modules allows to include on the same invoice than the recurring
+invoice contract, all the pending to invoice sales orders that you have
+with the same analytic account.
 
 **Table of contents**
 
@@ -42,12 +42,13 @@ Usage
 
 To use this module, you need to:
 
-#. Go to Invoicing > Sales > Contracts and select or create a new contract.
-#. Check *Generate recurring invoices automatically*.
-#. Mark the check "Invoice Pending Sales Orders".
-#. On each invoicing, system will check if there's any pending sales orders
-   with same analyitic account and will append the lines to the invoice being
-   generated.
+1. Go to Invoicing > Sales > Contracts and select or create a new
+   contract.
+2. Check *Generate recurring invoices automatically*.
+3. Mark the check "Invoice Pending Sales Orders".
+4. On each invoicing, system will check if there's any pending sales
+   orders with same analyitic account and will append the lines to the
+   invoice being generated.
 
 Bug Tracker
 ===========
@@ -55,7 +56,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_sale_invoicing%0Aversion:%2015.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_sale_invoicing%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -63,22 +64,23 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Tecnativa
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* `Tecnativa <https://www.tecnativa.com>`_:
+-  `Tecnativa <https://www.tecnativa.com>`__:
 
-  * Carlos Dauden
-  * Carolina Fernandez
-  * Pedro M. Baeza
-* Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+   -  Carlos Dauden
+   -  Carolina Fernandez
+   -  Pedro M. Baeza
+
+-  Souheil Bejaoui <souheil.bejaoui@acsone.eu>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -90,6 +92,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/15.0/contract_sale_invoicing>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/17.0/contract_sale_invoicing>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

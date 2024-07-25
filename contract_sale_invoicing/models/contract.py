@@ -30,7 +30,7 @@ class ContractContract(models.Model):
                     (
                         "date_order",
                         "<=",
-                        "{} 23:59:59".format(contract.recurring_next_date),
+                        f"{contract.recurring_next_date} 23:59:59",
                     ),
                 ]
             )
