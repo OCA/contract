@@ -8,8 +8,10 @@
         model="contract.line.qty.formula"
     >
         <field name='name'>Project Timesheets</field>
-        <field name="code">group = env['account.analytic.line'].read_group([
-    ('account_id', '=', line.analytic_account_id.id),
+        <field name="code">
+account_analytic_ids = line.analytic_distribution and [int(_id) for _id in list(line.analytic_distribution.keys())] or []
+group = env['account.analytic.line'].read_group([
+    ('account_id', 'in', account_analytic_ids),
     ('product_id', '=', False),
     ('project_id', '!=', False),
     ('date', '&gt;=', period_first_date),
@@ -23,8 +25,10 @@ result = group and group[0]['unit_amount'] or 0.0
         model="contract.line.qty.formula"
     >
         <field name='name'>Task Timesheets</field>
-        <field name="code">group = env['account.analytic.line'].read_group([
-    ('account_id', '=', line.analytic_account_id.id),
+        <field name="code">
+account_analytic_ids = line.analytic_distribution and [int(_id) for _id in list(line.analytic_distribution.keys())] or []
+group = env['account.analytic.line'].read_group([
+    ('account_id', 'in', account_analytic_ids),
     ('product_id', '=', False),
     ('task_id', '!=', False),
     ('date', '&gt;=', period_first_date),
@@ -38,8 +42,10 @@ result = group and group[0]['unit_amount'] or 0.0
         model="contract.line.qty.formula"
     >
         <field name='name'>Analytic Same Product</field>
-        <field name="code">group = env['account.analytic.line'].read_group([
-    ('account_id', '=', line.analytic_account_id.id),
+        <field name="code">
+account_analytic_ids = line.analytic_distribution and [int(_id) for _id in list(line.analytic_distribution.keys())] or []
+group = env['account.analytic.line'].read_group([
+    ('account_id', 'in', account_analytic_ids),
     ('product_id', '=', line.product_id.id),
     ('date', '&gt;=', period_first_date),
     ('date', '&lt;=', period_last_date),
