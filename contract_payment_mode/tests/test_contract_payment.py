@@ -6,8 +6,7 @@
 
 from unittest.mock import patch
 
-import odoo.tests
-from odoo.tests import tagged
+from odoo.tests import common, tagged
 
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 
@@ -15,7 +14,7 @@ from ..hooks import post_init_hook
 
 
 @tagged("post_install", "-at_install")
-class TestContractPaymentInit(odoo.tests.HttpCase):
+class TestContractPaymentInit(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -91,12 +90,11 @@ class TestContractPaymentInit(odoo.tests.HttpCase):
         contract.payment_mode_id = False
         self.assertEqual(contract.payment_mode_id.id, False)
 
-        post_init_hook(self.cr, self.env)
+        post_init_hook(self.env)
         self.assertEqual(contract.payment_mode_id, self.payment_mode)
 
     def test_contract_and_invoices(self):
         self.contract.write({"partner_id": self.partner.id})
-        self.contract.on_change_partner_id()
         self.assertEqual(
             self.contract.payment_mode_id,
             self.contract.partner_id.customer_payment_mode_id,
