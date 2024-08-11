@@ -3,14 +3,11 @@
 
 import logging
 
-from odoo import SUPERUSER_ID, api
-
 _logger = logging.getLogger(__name__)
 
 
-def post_init_hook(cr, registry):
+def post_init_hook(env):
     """Copy payment mode from partner to the new field at contract."""
-    env = api.Environment(cr, SUPERUSER_ID, {})
     m_contract = env["contract.contract"]
     contracts = m_contract.search([("payment_mode_id", "=", False)])
     if contracts:
