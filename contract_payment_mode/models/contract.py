@@ -9,15 +9,19 @@ class ContractContract(models.Model):
         string="Payment Mode",
         domain=[("payment_type", "=", "inbound")],
         index=True,
+        compute="_compute_payment_mode_id",
+        store=True,
+        readonly=False,
     )
 
-    @api.onchange("partner_id")
-    def on_change_partner_id(self):
-        partner = self.with_company(self.company_id).partner_id
-        if self.contract_type == "purchase":
-            self.payment_mode_id = partner.supplier_payment_mode_id.id
-        else:
-            self.payment_mode_id = partner.customer_payment_mode_id.id
+    @api.depends("partner_id", "contract_type")
+    def _compute_payment_mode_id(self):
+        for rec in self:
+            partner = rec.with_company(rec.company_id).partner_id
+            if rec.contract_type == "purchase":
+                rec.payment_mode_id = partner.supplier_payment_mode_id.id
+            else:
+                rec.payment_mode_id = partner.customer_payment_mode_id.id
 
     def _prepare_invoice(self, date_invoice, journal=None):
         invoice_vals = super()._prepare_invoice(
