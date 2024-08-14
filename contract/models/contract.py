@@ -472,7 +472,7 @@ class ContractContract(models.Model):
         compose_form = self.env.ref("mail.email_compose_message_wizard_form")
         ctx = dict(
             default_model="contract.contract",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_composition_mode="comment",
