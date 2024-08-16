@@ -1,0 +1,1 @@
+This module allows to set a subscription dashboard in sale dashboard.
