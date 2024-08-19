@@ -16,6 +16,7 @@ class SaleSubscription(models.Model):
     _description = "Subscription"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "id desc"
+    _check_company_auto = True
 
     color = fields.Integer("Color Index")
     name = fields.Char(
