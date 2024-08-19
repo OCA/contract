@@ -24,6 +24,7 @@ addon | version | maintainers | summary
 [agreement_rebate_partner_company_group](agreement_rebate_partner_company_group/) | 16.0.1.0.0 |  | Rebate agreements applied to all company group members
 [contract](contract/) | 16.0.2.9.0 |  | Recurring - Contracts Management
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 16.0.1.0.0 | [![florian-dacosta](https://github.com/florian-dacosta.png?size=30px)](https://github.com/florian-dacosta) | Contract Invoice Start End Dates
+[contract_mandate](contract_mandate/) | 16.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 16.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_queue_job](contract_queue_job/) | 16.0.1.0.1 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) [![BurkhalterY](https://github.com/BurkhalterY.png?size=30px)](https://github.com/BurkhalterY) | This addon make contract invoicing cron plan each contract in a job instead of creating all invoices in one transaction
 [contract_sale](contract_sale/) | 16.0.1.2.0 |  | Contract from Sale
