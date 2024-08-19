@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="portal_contract_page"
+        inherit_id="contract.portal_contract_page"
+        name="My Contract - Qty types"
+    >
+        <xpath expr="//td[@name='td_quantity']/span" position="attributes">
+            <attribute name="t-if">line.qty_type=='fixed'</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_quantity']/span" position="after">
+            <span t-if="line.qty_type=='variable'">Variable</span>
+        </xpath>
+    </template>
+</odoo>
