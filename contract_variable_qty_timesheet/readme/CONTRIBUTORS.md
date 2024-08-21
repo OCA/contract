@@ -1,0 +1,8 @@
+- [Tecnativa](https://www.tecnativa.com):
+  - Carlos Dauden
+  - Pedro M. Baeza
+  - Carolina Fernandez
+- [Guadaltech](https://www.guadaltech.es):
+  - Fernando La Chica \<<fernandolachica@gmail.com>\>
+- [Coopdevs Treball](https://coopdevs.coop):
+  - Daniel Palomar \<<daniel.palomar@coopdevs.org>\>
