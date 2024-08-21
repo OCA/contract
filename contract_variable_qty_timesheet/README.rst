@@ -76,6 +76,7 @@ Contributors
    -  Carlos Dauden
    -  Pedro M. Baeza
    -  Carolina Fernandez
+   -  Juan José Seguí
 
 -  `Guadaltech <https://www.guadaltech.es>`__:
 
