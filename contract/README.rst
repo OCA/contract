@@ -127,6 +127,9 @@ Contributors
     * Rafael Blasco
     * Víctor Martínez
 * Iván Antón <ozono@ozonomultimedia.com>
+* `[APSL] <https://www.apsl.tech>`_:
+
+    * Antoni Marroig <amarroig@apsl.net>
 
 Maintainers
 ~~~~~~~~~~~
