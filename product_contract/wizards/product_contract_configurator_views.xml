@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_contract_configurator_form" model="ir.ui.view">
+        <field name="model">product.contract.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="product_contract_configurator_form">
+                <group>
+                    <field name="product_id" invisible="1" />
+                    <field name="partner_id" invisible="1" />
+                    <field name="contract_template_id" invisible="1" />
+                    <group colspan="2">
+                        <field name="product_uom_qty" />
+                    </group>
+                    <separator colspan="4" string="Recurrence Invoicing" />
+                    <group>
+                        <field name="recurring_rule_type" />
+                         <field name="date_start" required="1" />
+                         <field name="is_auto_renew" />
+                    </group>
+                    <group>
+                        <field name="recurring_invoicing_type" />
+                        <field name="date_end" required="1" />
+                        <label
+                            for="auto_renew_interval"
+                            invisible="not is_auto_renew"
+                        />
+                        <div invisible="not is_auto_renew">
+                            <field
+                                name="auto_renew_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                                required="is_auto_renew"
+                            />
+                            <field
+                                name="auto_renew_rule_type"
+                                class="oe_inline"
+                                nolabel="1"
+                                required="is_auto_renew"
+                            />
+                        </div>
+                    </group>
+                    <separator colspan="4" string="Contract" />
+                    <group colspan="2">
+                        <field
+                            name="contract_id"
+                            options='{"no_create": True}'
+                            domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id), ('is_terminated','=',False),
+                            ]"
+                        />
+                        <field
+                            name="contract_line_id"
+                            domain="[('contract_id','=',contract_id)]"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        string="Ok"
+                        class="btn-primary"
+                        special="save"
+                        data-hotkey="q"
+                    />
+                    <button
+                        string="Cancel"
+                        class="btn-secondary"
+                        special="cancel"
+                        data-hotkey="x"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_contract_configurator_action" model="ir.actions.act_window">
+        <field name="name">Configure a contract</field>
+        <field name="res_model">product.contract.configurator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="product_contract_configurator_form" />
+    </record>
+</odoo>
