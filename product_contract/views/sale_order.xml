@@ -41,13 +41,13 @@
                 <field
                     name="contract_id"
                     options='{"no_create": True}'
-                    invisible="is_contract == False"
+                    invisible="not is_contract"
                     domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
                        ]"
                 />
                 <field
                     name="contract_line_id"
-                    invible="is_contract == False"
+                    invisible="not is_contract"
                     domain="[('contract_id','=',contract_id)]"
                 />
             </xpath>
@@ -59,37 +59,37 @@
                 <separator
                     colspan="4"
                     string="Recurrence Invoicing"
-                    invisible="is_contract == False"
+                    invisible="not is_contract"
                 />
-                <group invisible="is_contract == False">
+                <group invisible="not is_contract">
                     <field name="recurring_rule_type" />
                 </group>
-                <group invisible="is_contract == False">
+                <group invisible="not is_contract">
                     <field name="recurring_invoicing_type" />
                 </group>
-                <group invisible="is_contract == False">
-                    <field name="date_start" required="is_contract == True" />
+                <group invisible="not is_contract">
+                    <field name="date_start" required="is_contract" />
                 </group>
-                <group invisible="is_contract == False">
-                    <field name="date_end" required="is_contract == True" />
+                <group invisible="not is_contract">
+                    <field name="date_end" required="is_contract" />
                 </group>
-                <group invisible="is_contract == False">
+                <group invisible="not is_contract">
                     <field name="is_auto_renew" />
                 </group>
-                <group invisible="is_auto_renew == False">
+                <group invisible="not is_auto_renew">
                     <label for="auto_renew_interval" />
                     <div>
                         <field
                             name="auto_renew_interval"
                             class="oe_inline"
                             nolabel="1"
-                            required="is_auto_renew == True"
+                            required="is_auto_renew"
                         />
                         <field
                             name="auto_renew_rule_type"
                             class="oe_inline"
                             nolabel="1"
-                            required="is_auto_renew == True"
+                            required="is_auto_renew"
                         />
                     </div>
                 </group>
@@ -98,14 +98,40 @@
                 expr="//field[@name='order_line']/tree//field[@name='price_total']"
                 position="after"
             >
+                <field name="contract_template_id" column_invisible="1" />
+                <field name="is_contract" column_invisible="1" />
                 <field
-                    name="date_start"
-                    column_invisible="parent.is_contract == False"
+                    name="contract_id"
+                    options='{"no_create": True}'
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                    ]"
+                    optional="hide"
+                />
+                <field
+                    name="contract_line_id"
+                    domain="[('contract_id','=',contract_id)]"
+                    optional="hide"
+                />
+                <field name="recurring_rule_type" optional="hide" />
+                <field name="recurring_invoicing_type" optional="hide" />
+                <field name="date_start" optional="hide" required="is_contract" />
+                <field name="date_end" required="is_contract" optional="hide" />
+                <field name="is_auto_renew" optional="hide" />
+                <field
+                    name="auto_renew_interval"
+                    class="oe_inline"
+                    nolabel="1"
+                    required="is_auto_renew"
+                    optional="hide"
+                />
+                <field
+                    name="auto_renew_rule_type"
+                    class="oe_inline"
+                    nolabel="1"
+                    required="is_auto_renew"
+                    optional="hide"
                 />
                 <field name="date_end" column_invisible="parent.is_contract == False" />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="editable" />
             </xpath>
         </field>
     </record>
