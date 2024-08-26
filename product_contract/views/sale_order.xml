@@ -104,6 +104,8 @@
                 expr="//field[@name='order_line']/tree//field[@name='price_total']"
                 position="after"
             >
+                <field name="contract_template_id" invisible="1" />
+                <field name="is_contract" invisible="1" />
                 <field
                     name="date_start"
                     attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
@@ -112,9 +114,35 @@
                     name="date_end"
                     attrs="{'column_invisible': [('parent.is_contract', '=', False)]}"
                 />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="editable" />
+                <field
+                    name="contract_id"
+                    options='{"no_create": True}'
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                    ]"
+                    optional="hide"
+                />
+                <field
+                    name="contract_line_id"
+                    domain="[('contract_id','=',contract_id)]"
+                    optional="hide"
+                />
+                <field name="recurring_rule_type" optional="hide" />
+                <field name="recurring_invoicing_type" optional="hide" />
+                <field name="is_auto_renew" optional="hide" />
+                <field
+                    name="auto_renew_interval"
+                    class="oe_inline"
+                    nolabel="1"
+                    attrs="{'required': [('is_auto_renew', '!=', False)]}"
+                    optional="hide"
+                />
+                <field
+                    name="auto_renew_rule_type"
+                    class="oe_inline"
+                    nolabel="1"
+                    attrs="{'required': [('is_auto_renew', '!=', False)]}"
+                    optional="hide"
+                />
             </xpath>
         </field>
     </record>
