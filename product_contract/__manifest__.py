@@ -11,13 +11,16 @@
     "website": "https://github.com/OCA/contract",
     "depends": ["product", "contract", "sale"],
     "data": [
+        "security/ir.model.access.csv",
         "wizards/res_config_settings.xml",
         "views/contract.xml",
         "views/product_template.xml",
         "views/sale_order.xml",
+        "wizards/product_contract_configurator_views.xml",
     ],
     "installable": True,
     "application": False,
     "external_dependencies": {"python": ["dateutil"]},
     "maintainers": ["sbejaoui"],
+    "assets": {"web.assets_backend": ["product_contract/static/src/js/*"]},
 }
