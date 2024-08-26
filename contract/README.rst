@@ -149,6 +149,10 @@ Contributors
 
 -  Iván Antón <ozono@ozonomultimedia.com>
 
+-  `APSL <https://www.apsl.tech>`__:
+
+      -  Antoni Marroig <amarroig@apsl.net>
+
 Maintainers
 -----------
 
