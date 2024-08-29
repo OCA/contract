@@ -67,6 +67,7 @@ class SaleOrder(models.Model):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
             )
+            line_to_create_contract._set_contract_line_start_date()
             line_to_update_contract = rec.order_line.filtered(
                 lambda r: r.contract_id
                 and r.product_id.is_contract

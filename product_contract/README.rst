@@ -52,6 +52,12 @@ To use this module, you need to:
    product
 3. Define default recurrence rules
 
+Known issues / Roadmap
+======================
+
+-  There's no support right now for computing the start date for the
+   following recurrent types: daily, weekly and monthlylastday.
+
 Bug Tracker
 ===========
 
@@ -80,6 +86,7 @@ Contributors
 
    -  Ernesto Tejeda
    -  Pedro M. Baeza
+   -  Carlos Roca
 
 -  David Jaen <david.jaen.revert@gmail.com>
 

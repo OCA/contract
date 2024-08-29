@@ -36,6 +36,19 @@
                     </group>
                     <group>
                         <field name="is_auto_renew" />
+                        <field name="contract_start_date_method" required="True" />
+                        <field
+                            name="force_month_yearly"
+                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'yearly'"
+                        />
+                        <field
+                            name="force_month_quarterly"
+                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'quarterly'"
+                        />
+                        <field
+                            name="force_month_semesterly"
+                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'semesterly'"
+                        />
                     </group>
                     <group>
                         <group invisible="is_auto_renew == False">
