@@ -14,17 +14,27 @@
                     <separator colspan="4" string="Recurrence Invoicing" />
                     <group>
                         <field name="recurring_rule_type" />
-                         <field name="date_start" required="1" />
-                         <field name="is_auto_renew" />
+                        <field name="contract_start_date_method" />
+                        <field
+                            name="date_start"
+                            required="contract_start_date_method == 'manual'"
+                            invisible="contract_start_date_method != 'manual'"
+                        />
+                        <field name="is_auto_renew" invisible="not date_end" />
                     </group>
                     <group>
                         <field name="recurring_invoicing_type" />
-                        <field name="date_end" required="1" />
+                        <field
+                            name="date_end"
+                            invisible="contract_start_date_method != 'manual'"
+                        />
                         <label
                             for="auto_renew_interval"
-                            invisible="not is_auto_renew"
+                            invisible="not is_auto_renew or contract_start_date_method != 'manual'"
                         />
-                        <div invisible="not is_auto_renew">
+                        <div
+                            invisible="not is_auto_renew or contract_start_date_method != 'manual'"
+                        >
                             <field
                                 name="auto_renew_interval"
                                 class="oe_inline"

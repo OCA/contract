@@ -15,8 +15,6 @@ export class ProductContractConfiguratorController extends formView.Controller {
         const {
             product_uom_qty,
             contract_id,
-            recurring_rule_type,
-            recurring_invoicing_type,
             date_start,
             date_end,
             contract_line_id,
@@ -30,8 +28,6 @@ export class ProductContractConfiguratorController extends formView.Controller {
                 productContractConfiguration: {
                     product_uom_qty,
                     contract_id,
-                    recurring_rule_type,
-                    recurring_invoicing_type,
                     date_start,
                     date_end,
                     contract_line_id,

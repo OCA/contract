@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-27 02:40+0000\n"
-"PO-Revision-Date: 2024-08-29 10:06+0000\n"
+"PO-Revision-Date: 2024-09-03 06:43+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (https://www.transifex.com/oca/teams/23907/it/)\n"
 "Language: it\n"
@@ -25,6 +25,17 @@ msgid "<span class=\"o_stat_text\">Sale Orders</span>"
 msgstr "<span class=\"o_stat_text\">Ordini di vendita</span>"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__4
+msgid "April"
+msgstr "Aprile"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__8
+msgid "August"
+msgstr "Agosto"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__is_auto_renew
 #: model:ir.model.fields,field_description:product_contract.field_product_product__is_auto_renew
 #: model:ir.model.fields,field_description:product_contract.field_product_template__is_auto_renew
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__is_auto_renew
@@ -39,9 +50,19 @@ msgid "Automatically Create Contracts At Sale Order Confirmation"
 msgstr "Crea automaticamente contratti alla conferma dell'ordine di vendita"
 
 #. module: product_contract
+#: model_terms:ir.ui.view,arch_db:product_contract.product_contract_configurator_form
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: product_contract
 #: model:ir.model,name:product_contract.model_res_company
 msgid "Companies"
 msgstr "Aziende"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__company_id
+msgid "Company"
+msgstr "Azienda"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_res_config_settings
@@ -49,8 +70,15 @@ msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
 
 #. module: product_contract
+#: model:ir.actions.act_window,name:product_contract.product_contract_configurator_action
+msgid "Configure a contract"
+msgstr "Configura un contratto"
+
+#. module: product_contract
 #: model:ir.model,name:product_contract.model_contract_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__contract_id
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__contract_id
+#: model_terms:ir.ui.view,arch_db:product_contract.product_contract_configurator_form
 #: model_terms:ir.ui.view,arch_db:product_contract.product_template_form_contract_view
 msgid "Contract"
 msgstr "Contratto"
@@ -66,11 +94,13 @@ msgid "Contract Line"
 msgstr "Riga contratto"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__contract_line_id
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__contract_line_id
 msgid "Contract Line to replace"
 msgstr "Riga di contratto da sostituire"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__contract_template_id
 #: model:ir.model.fields,field_description:product_contract.field_product_product__property_contract_template_id
 #: model:ir.model.fields,field_description:product_contract.field_product_template__property_contract_template_id
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__contract_template_id
@@ -102,23 +132,40 @@ msgid "Create Contracts"
 msgstr "Crea Contratti"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__date_end
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__date_end
 msgid "Date End"
 msgstr "Data fine"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__date_start
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__date_start
 msgid "Date Start"
 msgstr "Data inizio"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_contract_configurator__auto_renew_rule_type__daily
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__daily
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__daily
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__daily
 #: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__daily
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__daily
 msgid "Day(s)"
 msgstr "Giorno(i)"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__12
+msgid "December"
+msgstr "Dicembre"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__default_qty
@@ -127,6 +174,70 @@ msgid "Default Quantity"
 msgstr "Quantità standard"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__contract_start_date_method__end_this
+msgid "End of current period"
+msgstr "Fine periodo attuale"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__contract_start_date_method__end_next
+msgid "End of next period"
+msgstr "Fine del periodo successivo"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__2
+msgid "February"
+msgstr "Febbraio"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__5
+msgid "Fifth month"
+msgstr "Quinto mese"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_quarterly__1
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__1
+msgid "First month"
+msgstr "Primo mese"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_product__force_month_quarterly
+#: model:ir.model.fields,field_description:product_contract.field_product_product__force_month_semesterly
+#: model:ir.model.fields,field_description:product_contract.field_product_product__force_month_yearly
+#: model:ir.model.fields,field_description:product_contract.field_product_template__force_month_quarterly
+#: model:ir.model.fields,field_description:product_contract.field_product_template__force_month_semesterly
+#: model:ir.model.fields,field_description:product_contract.field_product_template__force_month_yearly
+msgid "Force Month"
+msgstr "Forza mese"
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_product__force_month_quarterly
+#: model:ir.model.fields,help:product_contract.field_product_template__force_month_quarterly
+msgid "Force the month to be used inside the quarter"
+msgstr "Forze il mese da utilizzare nel trimestre"
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_product__force_month_semesterly
+#: model:ir.model.fields,help:product_contract.field_product_template__force_month_semesterly
+msgid "Force the month to be used inside the semester"
+msgstr "Forse il mese da utilizzare nel semestre"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__4
+msgid "Fourth month"
+msgstr "Quarto mese"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__recurring_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_product_product__recurring_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_product_template__recurring_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__recurring_rule_type
@@ -134,6 +245,7 @@ msgid "Invoice Every"
 msgstr "Fattura ogni"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__recurring_invoicing_type
 #: model:ir.model.fields,field_description:product_contract.field_product_product__recurring_invoicing_type
 #: model:ir.model.fields,field_description:product_contract.field_product_template__recurring_invoicing_type
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__recurring_invoicing_type
@@ -149,17 +261,56 @@ msgid "Is a contract"
 msgstr "è un contratto"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__1
+msgid "January"
+msgstr "Gennaio"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__7
+msgid "July"
+msgstr "Luglio"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__6
+msgid "June"
+msgstr "Giugno"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__contract_start_date_method__manual
+msgid "Manual"
+msgstr "Manuale"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__3
+msgid "March"
+msgstr "Marzo"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__5
+msgid "May"
+msgstr "Maggio"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_contract_configurator__auto_renew_rule_type__monthly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__monthly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__monthly
 #: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__monthly
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthly
 msgid "Month(s)"
 msgstr "Mese(i)"
 
 #. module: product_contract
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__monthlylastday
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
 msgstr "Ultimo giorno mese(i)"
 
@@ -169,34 +320,64 @@ msgid "Need Contract Creation"
 msgstr "Necessita creazione contratto"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__11
+msgid "November"
+msgstr "Novembre"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__10
+msgid "October"
+msgstr "Ottobre"
+
+#. module: product_contract
+#: model_terms:ir.ui.view,arch_db:product_contract.product_contract_configurator_form
+msgid "Ok"
+msgstr "Ok"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: product_contract
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__post-paid
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__post-paid
 msgid "Post-paid"
 msgstr "Post pagato"
 
 #. module: product_contract
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_invoicing_type__pre-paid
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_invoicing_type__pre-paid
 msgid "Pre-paid"
 msgstr "Pre pagato"
 
 #. module: product_contract
 #: model:ir.model,name:product_contract.model_product_template
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__product_id
 msgid "Product"
 msgstr "Prodotto"
 
 #. module: product_contract
+#: model:ir.model,name:product_contract.model_product_contract_configurator
+msgid "Product Contract Configurator Wizard"
+msgstr "Procedura guidata configurazione contratto prodotto"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__product_uom_qty
+msgid "Quantity"
+msgstr "Quantità"
+
+#. module: product_contract
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__quarterly
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__quarterly
 msgid "Quarter(s)"
 msgstr "Trimestre/i"
 
 #. module: product_contract
+#: model_terms:ir.ui.view,arch_db:product_contract.product_contract_configurator_form
 #: model_terms:ir.ui.view,arch_db:product_contract.view_order_form
 msgid "Recurrence Invoicing"
 msgstr "Fatturazione ricorrente"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_interval
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_interval
@@ -204,6 +385,7 @@ msgid "Renew Every"
 msgstr "Rinnovare ogni"
 
 #. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_contract_configurator__auto_renew_interval
 #: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_interval
 #: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_interval
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_interval
@@ -211,6 +393,7 @@ msgid "Renew every (Days/Week/Month/Year)"
 msgstr "Rinnovare ogni (giorno/settimana/mese/anno)"
 
 #. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__auto_renew_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_product_product__auto_renew_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_product_template__auto_renew_rule_type
 #: model:ir.model.fields,field_description:product_contract.field_sale_order_line__auto_renew_rule_type
@@ -254,18 +437,36 @@ msgid "Sales Orders"
 msgstr "Ordini di vendita"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_quarterly__2
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__2
+msgid "Second month"
+msgstr "Secondo mese"
+
+#. module: product_contract
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__semesterly
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__semesterly
 msgid "Semester(s)"
 msgstr "Semestre/i"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_yearly__9
+msgid "September"
+msgstr "Settembre"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__6
+msgid "Sixth month"
+msgstr "Sesto mese"
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_contract_configurator__recurring_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_template__recurring_rule_type
+#: model:ir.model.fields,help:product_contract.field_sale_order_line__recurring_rule_type
 msgid "Specify Interval for automatic invoice generation."
 msgstr "Specifica un intervallo per la generazione automatica della fattura."
 
 #. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_contract_configurator__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_product__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_product_template__auto_renew_rule_type
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__auto_renew_rule_type
@@ -273,12 +474,31 @@ msgid "Specify Interval for automatic renewal."
 msgstr "Specificare l'intervallo per il rinnovo automatico."
 
 #. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_contract_configurator__recurring_invoicing_type
 #: model:ir.model.fields,help:product_contract.field_product_product__recurring_invoicing_type
 #: model:ir.model.fields,help:product_contract.field_product_template__recurring_invoicing_type
 #: model:ir.model.fields,help:product_contract.field_sale_order_line__recurring_invoicing_type
 msgid "Specify if process date is 'from' or 'to' invoicing date"
 msgstr ""
 "Specifica se la data di elaborazione è 'dalla' o 'alla' data di fatturazione"
+
+#. module: product_contract
+#: model:ir.model.fields,field_description:product_contract.field_product_contract_configurator__contract_start_date_method
+#: model:ir.model.fields,field_description:product_contract.field_product_product__contract_start_date_method
+#: model:ir.model.fields,field_description:product_contract.field_product_template__contract_start_date_method
+#: model:ir.model.fields,field_description:product_contract.field_sale_order_line__contract_start_date_method
+msgid "Start Date Method"
+msgstr "Metodo data inizio"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__contract_start_date_method__start_this
+msgid "Start of current period"
+msgstr "Inizio periodo attuale"
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__contract_start_date_method__start_next
+msgid "Start of next period"
+msgstr "Inizio del periodo successivo"
 
 #. module: product_contract
 #: model:ir.model.fields,field_description:product_contract.field_product_product__termination_notice_interval
@@ -293,19 +513,91 @@ msgid "Termination Notice type"
 msgstr "Tipo notifica termine"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_quarterly__3
+#: model:ir.model.fields.selection,name:product_contract.selection__product_template__force_month_semesterly__3
+msgid "Third month"
+msgstr "Terzo mese"
+
+#. module: product_contract
+#: model:ir.model.fields,help:product_contract.field_product_contract_configurator__contract_start_date_method
+#: model:ir.model.fields,help:product_contract.field_product_product__contract_start_date_method
+#: model:ir.model.fields,help:product_contract.field_product_template__contract_start_date_method
+#: model:ir.model.fields,help:product_contract.field_sale_order_line__contract_start_date_method
+msgid ""
+"This field allows to define how the start date of the contract will\n"
+"        be calculated:\n"
+"\n"
+"        - Manual: The start date will be selected by the user, by default "
+"will be the\n"
+"        date of sale confirmation.\n"
+"        - Start of current period: The start date will be the first day of "
+"the actual\n"
+"        period selected on 'Invoicing Every' field. Example: If we are on "
+"2024/08/27\n"
+"        and the period selected is 'Year(s)' the start date will be "
+"2024/01/01.\n"
+"        - End of current period: The start date will be the last day of the "
+"actual\n"
+"        period selected on 'Invoicing Every' field. Example: If we are on "
+"2024/08/27\n"
+"        and the period selected is 'Year(s)' the start date will be "
+"2024/12/31.\n"
+"        - Start of next period: The start date will be the first day of the "
+"next\n"
+"        period selected on 'Invoicing Every' field. Example: If we are on "
+"2024/08/27\n"
+"        and the period selected is 'Year(s)' the start date will be "
+"2025/01/01.\n"
+"        - End of next period: The start date will be the last day of the "
+"actual\n"
+"        period selected on 'Invoicing Every' field. Example: If we are on "
+"2024/08/27\n"
+"        and the period selected is 'Year(s)' the start date will be "
+"2025/12/31.\n"
+"        "
+msgstr ""
+"Questo campo permette di definire come verrà calcolata la data di inizio \n"
+"        del contratto:\n"
+"\n"
+"        - Manuale: la data di inizio sarà selezionata dall'utente, per "
+"impostazione predefinita sarà\n"
+"        la data di conferma della vendita.\n"
+"        - Inizio del periodo corrente: la data di inizio sarà il primo "
+"giorno del periodo effettivo \n"
+"        selezionato nel campo \"Fatturazione ogni\". Esempio: se siamo il 27/"
+"08/2024 e il periodo \n"
+"        selezionato è \"Anno/i\", la data di inizio sarà il 01/01/2024.\n"
+"        - Fine del periodo corrente: la data di inizio sarà l'ultimo giorno "
+"del periodo effettivo \n"
+"        selezionato nel campo \"Fatturazione ogni\". Esempio: se siamo il 27/"
+"08/2024 e il periodo \n"
+"        selezionato è \"Anno/i\", la data di inizio sarà il 31/12/2024.\n"
+"        - Inizio del periodo successivo: la data di inizio sarà il primo "
+"giorno del periodo successivo \n"
+"        selezionato nel campo \"Fatturazione ogni\". Esempio: se siamo il 27/"
+"08/2024 e il periodo \n"
+"        selezionato è \"Anno/i\", la data di inizio sarà il 01/01/2025..\n"
+"        - Fine del periodo successivo: la data di inizio sarà l'ultimo "
+"giorno del periodo effettivo \n"
+"        selezionato nel campo \"Fatturazione ogni\". Esempio: se siamo il 27/"
+"08/2024 e il periodo \n"
+"        selezionato è \"Anno/i\", la data di inizio sarà il 31/12/2025.\n"
+"        "
+
+#. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_contract_configurator__auto_renew_rule_type__weekly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__weekly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__weekly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__termination_notice_rule_type__weekly
 #: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__weekly
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__weekly
 msgid "Week(s)"
 msgstr "Settimana(e)"
 
 #. module: product_contract
+#: model:ir.model.fields.selection,name:product_contract.selection__product_contract_configurator__auto_renew_rule_type__yearly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__auto_renew_rule_type__yearly
 #: model:ir.model.fields.selection,name:product_contract.selection__product_template__recurring_rule_type__yearly
 #: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__auto_renew_rule_type__yearly
-#: model:ir.model.fields.selection,name:product_contract.selection__sale_order_line__recurring_rule_type__yearly
 msgid "Year(s)"
 msgstr "Anno(i)"
 
@@ -328,8 +620,22 @@ msgstr ""
 "Bisogna indicare un modello di contratto per il prodotto '%(product_name)s' "
 "nell'azienda '%(company_name)s'."
 
-#~ msgid "Display Name"
-#~ msgstr "Nome visualizzato"
+#. module: product_contract
+#. odoo-python
+#: code:addons/product_contract/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"{product}:\n"
+"    - Recurrency: {recurring_rule}\n"
+"    - Invoicing Type: {invoicing_type}\n"
+"    - Date: {date_text}\n"
+"                "
+msgstr ""
+"{product}:\n"
+"    - Ricorrenza: {recurring_rule}\n"
+"    - Tipo fatturazione: {invoicing_type}\n"
+"    - Data: {date_text}\n"
+"                "
 
 #~ msgid "Product Template"
 #~ msgstr "Modello prodotto"
