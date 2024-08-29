@@ -71,7 +71,7 @@
                     <field name="date_start" required="is_contract" />
                 </group>
                 <group invisible="not is_contract">
-                    <field name="date_end" required="is_contract" />
+                    <field name="date_end" />
                 </group>
                 <group invisible="not is_contract">
                     <field name="is_auto_renew" />
@@ -114,8 +114,13 @@
                 />
                 <field name="recurring_rule_type" optional="hide" />
                 <field name="recurring_invoicing_type" optional="hide" />
-                <field name="date_start" optional="hide" required="is_contract" />
-                <field name="date_end" required="is_contract" optional="hide" />
+                <field name="contract_start_date_method" column_invisible="1" />
+                <field
+                    name="date_start"
+                    optional="hide"
+                    required="is_contract and contract_start_date_method == 'manual'"
+                />
+                <field name="date_end" optional="hide" />
                 <field name="is_auto_renew" optional="hide" />
                 <field
                     name="auto_renew_interval"
@@ -131,7 +136,6 @@
                     required="is_auto_renew"
                     optional="hide"
                 />
-                <field name="date_end" column_invisible="parent.is_contract == False" />
             </xpath>
         </field>
     </record>

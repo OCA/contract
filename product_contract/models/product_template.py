@@ -61,6 +61,73 @@ class ProductTemplate(models.Model):
         string="Renewal type",
         help="Specify Interval for automatic renewal.",
     )
+    contract_start_date_method = fields.Selection(
+        [
+            ("manual", "Manual"),
+            ("start_this", "Start of current period"),
+            ("end_this", "End of current period"),
+            ("start_next", "Start of next period"),
+            ("end_next", "End of next period"),
+        ],
+        "Start Date Method",
+        default="manual",
+        help="""This field allows to define how the start date of the contract will
+        be calculated:
+
+        - Manual: The start date will be selected by the user, by default will be the
+        date of sale confirmation.
+        - Start of current period: The start date will be the first day of the actual
+        period selected on 'Invoicing Every' field. Example: If we are on 2024/08/27
+        and the period selected is 'Year(s)' the start date will be 2024/01/01.
+        - End of current period: The start date will be the last day of the actual
+        period selected on 'Invoicing Every' field. Example: If we are on 2024/08/27
+        and the period selected is 'Year(s)' the start date will be 2024/12/31.
+        - Start of next period: The start date will be the first day of the next
+        period selected on 'Invoicing Every' field. Example: If we are on 2024/08/27
+        and the period selected is 'Year(s)' the start date will be 2025/01/01.
+        - End of next period: The start date will be the last day of the actual
+        period selected on 'Invoicing Every' field. Example: If we are on 2024/08/27
+        and the period selected is 'Year(s)' the start date will be 2025/12/31.
+        """,
+    )
+    force_month_yearly = fields.Selection(
+        [
+            ("1", "January"),
+            ("2", "February"),
+            ("3", "March"),
+            ("4", "April"),
+            ("5", "May"),
+            ("6", "June"),
+            ("7", "July"),
+            ("8", "August"),
+            ("9", "September"),
+            ("10", "October"),
+            ("11", "November"),
+            ("12", "December"),
+        ],
+        "Force Month",
+    )
+    force_month_quarterly = fields.Selection(
+        [
+            ("1", "First month"),
+            ("2", "Second month"),
+            ("3", "Third month"),
+        ],
+        "Force Month",
+        help="Force the month to be used inside the quarter",
+    )
+    force_month_semesterly = fields.Selection(
+        [
+            ("1", "First month"),
+            ("2", "Second month"),
+            ("3", "Third month"),
+            ("4", "Fourth month"),
+            ("5", "Fifth month"),
+            ("6", "Sixth month"),
+        ],
+        "Force Month",
+        help="Force the month to be used inside the semester",
+    )
 
     def write(self, vals):
         if "is_contract" in vals and vals["is_contract"] is False:

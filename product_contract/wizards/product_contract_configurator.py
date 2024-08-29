@@ -20,24 +20,9 @@ class ProductContractConfigurator(models.TransientModel):
         string="Contract Template",
         compute="_compute_contract_template_id",
     )
-    recurring_rule_type = fields.Selection(
-        [
-            ("daily", "Day(s)"),
-            ("weekly", "Week(s)"),
-            ("monthly", "Month(s)"),
-            ("monthlylastday", "Month(s) last day"),
-            ("quarterly", "Quarter(s)"),
-            ("semesterly", "Semester(s)"),
-            ("yearly", "Year(s)"),
-        ],
-        default="monthly",
-        string="Invoice Every",
-    )
+    recurring_rule_type = fields.Selection(related="product_id.recurring_rule_type")
     recurring_invoicing_type = fields.Selection(
-        [("pre-paid", "Pre-paid"), ("post-paid", "Post-paid")],
-        default="pre-paid",
-        string="Invoicing type",
-        help="Specify if process date is 'from' or 'to' invoicing date",
+        related="product_id.recurring_invoicing_type"
     )
     date_start = fields.Date()
     date_end = fields.Date()
@@ -75,6 +60,9 @@ class ProductContractConfigurator(models.TransientModel):
         string="Renewal type",
         help="Specify Interval for automatic renewal.",
     )
+    contract_start_date_method = fields.Selection(
+        related="product_id.contract_start_date_method"
+    )
 
     @api.depends("product_id", "company_id")
     def _compute_contract_template_id(self):
@@ -88,10 +76,9 @@ class ProductContractConfigurator(models.TransientModel):
         for rec in self:
             if rec.product_id.is_contract:
                 rec.product_uom_qty = rec.product_id.default_qty
-                rec.recurring_rule_type = rec.product_id.recurring_rule_type
-                rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
-                rec.date_start = rec.date_start or fields.Date.today()
-
+                contract_start_date_method = rec.product_id.contract_start_date_method
+                if contract_start_date_method == "manual":
+                    rec.date_start = rec.date_start or fields.Date.today()
                 rec.date_end = rec._get_date_end()
                 rec.is_auto_renew = rec.product_id.is_auto_renew
                 if rec.is_auto_renew:
@@ -118,7 +105,7 @@ class ProductContractConfigurator(models.TransientModel):
         )
         return date_end
 
-    @api.onchange("date_start", "product_uom_qty", "recurring_rule_type")
+    @api.onchange("date_start", "product_uom_qty")
     def _onchange_date_start(self):
         for rec in self.filtered("product_id.is_contract"):
             rec.date_end = rec._get_date_end() if rec.date_start else False

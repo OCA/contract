@@ -3,7 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
+from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
@@ -20,6 +22,7 @@ class TestSaleOrder(TransactionCase):
                 no_reset_password=True,
             )
         )
+        cls.partner = cls.env["res.partner"].create({"name": "Test partner"})
         cls.product1 = cls.env.ref("product.product_product_1")
         cls.product2 = cls.env.ref("product.product_product_2")
         cls.sale = cls.env.ref("sale.sale_order_2")
@@ -370,3 +373,249 @@ class TestSaleOrder(TransactionCase):
             .mapped("contract_id")
         )
         self.assertEqual(len(contracts), 1)
+
+    def _create_contract_product(
+        self, recurring_rule_type, contract_start_date_method, force_month=False
+    ):
+        product = self.env["product.product"].create(
+            {
+                "name": "Contract Test",
+                "type": "service",
+                "is_contract": True,
+                "recurring_rule_type": recurring_rule_type,
+                "contract_start_date_method": contract_start_date_method,
+                "property_contract_template_id": self.contract_template1,
+            }
+        )
+        if recurring_rule_type != "monthly":
+            product["force_month_%s" % recurring_rule_type] = force_month
+        return product
+
+    def _create_and_confirm_sale(self, product):
+        sale = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": product.id,
+                        },
+                    ),
+                ],
+            }
+        )
+        sale.action_confirm()
+        return sale
+
+    @freeze_time("2024-08-15")
+    def test_order_line_date_start_confirm(self):
+        # This start no force date
+        contract_month = self._create_contract_product("monthly", "start_this")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-01"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "start_this")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-07-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-07-01"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "start_this")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-07-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-07-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_this")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-01-01"),
+        )
+        # This end no force date
+        contract_month = self._create_contract_product("monthly", "end_this")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "end_this")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-09-30
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-30"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_this")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_this")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        # Next start no force date
+        contract_month = self._create_contract_product("monthly", "start_next")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-09-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-01"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "start_next")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "start_next")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2025-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-01-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_next")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-01-01"),
+        )
+        # Next end no force date
+        contract_month = self._create_contract_product("monthly", "end_next")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "end_next")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-09-30
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-30"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_next")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_next")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        # This start force month
+        contract_quarter = self._create_contract_product("quarterly", "start_this", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-01"),
+        )
+        contract_semester = self._create_contract_product(
+            "semesterly", "start_this", "4"
+        )
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_this", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-02-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-02-01"),
+        )
+        # This end force month
+        contract_quarter = self._create_contract_product("quarterly", "end_this", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_this", "4")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_this", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-02-29
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-02-29"),
+        )
+        # Next start force month
+        contract_quarter = self._create_contract_product("quarterly", "start_next", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-11-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-11-01"),
+        )
+        contract_semester = self._create_contract_product(
+            "semesterly", "start_next", "4"
+        )
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_next", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-02-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-02-01"),
+        )
+        # Next end force month
+        contract_quarter = self._create_contract_product("quarterly", "end_next", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_next", "4")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_next", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-02-28
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-02-28"),
+        )
