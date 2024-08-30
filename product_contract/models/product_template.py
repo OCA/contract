@@ -73,7 +73,13 @@ class ProductTemplate(models.Model):
     @api.constrains("is_contract", "type")
     def _check_contract_product_type(self):
         """
-        Contract product should be service type
+        Contract product should be service type, check by recordset
         """
-        if self.is_contract and self.type != "service":
-            raise ValidationError(_("Contract product should be service type"))
+        for record in self:
+            if record.is_contract and record.type != "service":
+                raise ValidationError(
+                    _(
+                        "Contract product (%(product_name)s) should be service type",
+                        product_name=record.name,
+                    )
+                )
