@@ -25,7 +25,7 @@ class TestSaleOrder(TransactionCase):
                 "result = 12",
             }
         )
-        self.product1.with_context(force_company=self.sale.company_id.id).write(
+        self.product1.with_context(company_id=self.sale.company_id.id).write(
             {
                 "is_contract": True,
                 "default_qty": 12,
