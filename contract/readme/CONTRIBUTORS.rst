@@ -15,3 +15,6 @@
     * Víctor Martínez
 * Iván Antón <ozono@ozonomultimedia.com>
 * Eric Antones <eantones@nuobit.com>
+* `Dixmit <https://www.dixmit.com>`_:
+
+    * Enric Tobella
