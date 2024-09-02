@@ -3,4 +3,5 @@
 - [Tecnativa](https://www.tecnativa.com):
   - Ernesto Tejeda
   - Pedro M. Baeza
+  - Carlos Roca
 - David Jaen \<<david.jaen.revert@gmail.com>\>
