@@ -8,6 +8,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import logging
 
+from markupsafe import Markup
+
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -587,20 +589,10 @@ class ContractContract(models.Model):
         """
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
-            self.message_post(
-                body=_(
-                    "Contract manually invoiced: "
-                    "<a"
-                    '    href="#" data-oe-model="%(model_name)s" '
-                    '    data-oe-id="%(rec_id)s"'
-                    ">Invoice"
-                    "</a>"
-                )
-                % {
-                    "model_name": invoice._name,
-                    "rec_id": invoice.id,
-                }
-            )
+            body = Markup(_("Contract manually invoiced: %(invoice_link)s")) % {
+                "invoice_link": invoice._get_html_link(title=invoice.name)
+            }
+            self.message_post(body=body)
         return invoices
 
     @api.model
@@ -621,20 +613,11 @@ class ContractContract(models.Model):
     def _add_contract_origin(self, invoices):
         for item in self:
             for move in invoices & item._get_related_invoices():
-                move.message_post(
-                    body=(
-                        _(
-                            (
-                                "%(msg)s by contract <a href=#"
-                                " data-oe-model=contract.contract"
-                                " data-oe-id=%(contract_id)d>%(contract)s</a>."
-                            ),
-                            msg=move._creation_message(),
-                            contract_id=item.id,
-                            contract=item.display_name,
-                        )
-                    )
-                )
+                body = Markup(_("%(msg)s by contract: %(contract_link)s")) % {
+                    "msg": move._creation_message(),
+                    "contract_link": move._get_html_link(title=item.display_name),
+                }
+                move.message_post(body=body)
 
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
