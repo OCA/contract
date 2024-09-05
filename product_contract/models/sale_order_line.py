@@ -43,6 +43,9 @@ class SaleOrderLine(models.Model):
         help="Specify if process date is 'from' or 'to' invoicing date",
         copy=False,
     )
+    recurring_interval = fields.Integer(
+        string="Invoice Every", help="Invoice every (Days/Week/Month/Year)", copy=False
+    )
     date_start = fields.Date()
     date_end = fields.Date()
 
@@ -114,7 +117,7 @@ class SaleOrderLine(models.Model):
             self.date_start
             + contract_line_model.get_relative_delta(
                 self._get_auto_renew_rule_type(),
-                int(self.product_uom_qty),
+                int(self.recurring_interval),
             )
             - relativedelta(days=1)
         )
@@ -124,7 +127,7 @@ class SaleOrderLine(models.Model):
     def _compute_auto_renew(self):
         for rec in self:
             if rec.product_id.is_contract:
-                rec.product_uom_qty = rec.product_id.default_qty
+                rec.recurring_interval = rec.product_id.default_qty
                 rec.recurring_rule_type = rec.product_id.recurring_rule_type
                 rec.recurring_invoicing_type = rec.product_id.recurring_invoicing_type
                 rec.date_start = rec.date_start or fields.Date.today()
@@ -164,7 +167,7 @@ class SaleOrderLine(models.Model):
             self.date_start or fields.Date.today(),
             self.recurring_invoicing_type,
             self.recurring_rule_type,
-            1,
+            self.recurring_interval,
         )
         termination_notice_interval = self.product_id.termination_notice_interval
         termination_notice_rule_type = self.product_id.termination_notice_rule_type
@@ -179,7 +182,7 @@ class SaleOrderLine(models.Model):
             "date_end": self.date_end,
             "date_start": self.date_start or fields.Date.today(),
             "recurring_next_date": recurring_next_date,
-            "recurring_interval": 1,
+            "recurring_interval": self.recurring_interval,
             "recurring_invoicing_type": self.recurring_invoicing_type,
             "recurring_rule_type": self.recurring_rule_type,
             "is_auto_renew": self.is_auto_renew,
