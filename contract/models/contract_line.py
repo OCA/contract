@@ -609,7 +609,7 @@ class ContractLine(models.Model):
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
             if invoicing_date:
-                last_date_invoiced = self.get_next_period_date_end(
+                last_date_invoiced = rec.get_next_period_date_end(
                     invoicing_date,
                     rec.recurring_rule_type,
                     rec.recurring_interval,
