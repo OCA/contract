@@ -62,7 +62,19 @@
                     attrs="{'invisible': [('is_contract', '=', False)]}"
                 />
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
-                    <field name="recurring_rule_type" />
+                    <label for="recurring_rule_type" />
+                    <div class="o_row">
+                        <field
+                            name="recurring_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                        />
+                        <field
+                            name="recurring_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                        />
+                    </div>
                 </group>
                 <group attrs="{'invisible': [('is_contract', '=', False)]}">
                     <field name="recurring_invoicing_type" />

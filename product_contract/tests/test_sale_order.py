@@ -117,7 +117,7 @@ class TestSaleOrder(TransactionCase):
         contract_line = self.order_line1.contract_id.contract_line_ids
         self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
         self.assertEqual(contract_line.date_end, Date.to_date("2018-12-31"))
-        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-01-31"))
+        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-12-31"))
 
     def test_change_sale_company(self):
         self.assertTrue(self.sale.company_id)
@@ -166,7 +166,7 @@ class TestSaleOrder(TransactionCase):
         contract_line = self.order_line1.contract_id.contract_line_ids
         self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
         self.assertEqual(contract_line.date_end, Date.to_date("2018-12-31"))
-        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-01-31"))
+        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-12-31"))
 
     def test_sale_contract_count(self):
         """It should count contracts as many different contract template used
@@ -186,6 +186,10 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(
             self.order_line1.recurring_invoicing_type,
             self.product1.recurring_invoicing_type,
+        )
+        self.assertEqual(
+            self.order_line1.recurring_interval,
+            self.product1.default_qty,
         )
         self.assertEqual(self.order_line1.date_end, Date.to_date("2018-12-31"))
 
