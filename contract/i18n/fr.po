@@ -20,6 +20,13 @@ msgstr ""
 "X-Generator: Weblate 4.17\n"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid "%(msg)s by contract: %(contract_link)s"
+msgstr ""
+
+#. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
 msgid ""
 "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
@@ -870,12 +877,8 @@ msgstr "Lignes de contrat (fixe)"
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 #, python-format
-msgid ""
-"Contract manually invoiced: <a    href=\"#\" data-oe-"
-"model=\"%(model_name)s\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
+msgid "Contract manually invoiced: %(invoice_link)s"
 msgstr ""
-"Contract facturé manuellement : <a    href=\"#\" data-oe-"
-"model=\"%(model_name)s\"     data-oe-id=\"%(rec_id)s\">Facture</a>"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
@@ -2411,6 +2414,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contrat (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
+
+#, python-format
+#~ msgid ""
+#~ "Contract manually invoiced: <a    href=\"#\" data-oe-"
+#~ "model=\"%(model_name)s\"     data-oe-id=\"%(rec_id)s\">Invoice</a>"
+#~ msgstr ""
+#~ "Contract facturé manuellement : <a    href=\"#\" data-oe-"
+#~ "model=\"%(model_name)s\"     data-oe-id=\"%(rec_id)s\">Facture</a>"
 
 #~ msgid "SMS Delivery error"
 #~ msgstr "Erreur d'acheminement de SMS"
