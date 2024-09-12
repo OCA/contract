@@ -13,5 +13,35 @@ class TestContractInvoiceStartEndDates(TestContractBase):
 
     def test_invoice_start_end_dates(self):
         invoice = self.contract.recurring_create_invoice()
-        self.assertTrue(invoice.invoice_line_ids.start_date)
-        self.assertTrue(invoice.invoice_line_ids.end_date)
+        self.assertTrue(
+            invoice.invoice_line_ids.start_date,
+            "Start date is not present in invoice line",
+        )
+        self.assertTrue(
+            invoice.invoice_line_ids.end_date,
+            "End date is not present in invoice line",
+        )
+
+        # Test scenario where product must not have dates
+        self.acct_line.product_id.must_have_dates = False
+        invoice = self.contract.recurring_create_invoice()
+        self.assertFalse(
+            invoice.invoice_line_ids.start_date,
+            "Start date should not be present in invoice line",
+        )
+        self.assertFalse(
+            invoice.invoice_line_ids.end_date,
+            "End date should not be present in invoice line",
+        )
+
+        # Test scenario where contract has no end date
+        self.contract.date_end = False
+        invoice = self.contract.recurring_create_invoice()
+        self.assertFalse(
+            invoice.invoice_line_ids.start_date,
+            "Start date should not be present in invoice line",
+        )
+        self.assertFalse(
+            invoice.invoice_line_ids.end_date,
+            "End date should not be present in invoice line",
+        )

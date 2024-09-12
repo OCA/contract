@@ -3,7 +3,7 @@
 
 {
     "name": "Contract Invoice Start End Dates",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "category": "Contract Management",
     "author": "Akretion, Odoo Community Association (OCA)",
     "maintainers": ["florian-dacosta"],
