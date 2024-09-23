@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 ASCONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form" />
+        <field name="arch" type="xml">
+            <field name="sale_line_employee_ids" position="before">
+                <group>
+                    <field name="contract_line_id" />
+                    <field name="contract_id" />
+                </group>
+            </field>
+        </field>
+    </record>
+
+</odoo>
