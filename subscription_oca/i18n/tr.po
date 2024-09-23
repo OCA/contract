@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-20 16:06+0000\n"
+"PO-Revision-Date: 2024-09-23 08:06+0000\n"
 "Last-Translator: Ömer KÜLAK <omer.kulak@kitayazilim.com>\n"
 "Language-Team: none\n"
 "Language: tr\n"
@@ -23,6 +23,13 @@ msgid ""
 "        As an 'In progress'-type of stage, it will trigger the recurring invoicing process if applicable. If this stage is the first - sequence order - of the available 'In progress' types and there's a stage change from any other non-'In progress' types to this one, an invoice will be created automatically if the start date is the present day.\n"
 "      "
 msgstr ""
+"\n"
+"        'Devam Ediyor ' türünde bir aşama mevcutsa ve 'Devam Ediyor' aşaması "
+"bir aboneliğe uygulanacak ilk aşamaysa ya da 'Devam Ediyor' aşamalarının "
+"haricinde bir aşamadan 'Devam Ediyor' aşamlarından birine geçiş yapılırsa "
+"faturalamaya uygun aboneliklerde ve aboneliğin başlangıcı bugün ise otomatik "
+"olarak faturalama yapılır.\n"
+"      "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
@@ -31,6 +38,12 @@ msgid ""
 "        Draft equivalent, a subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.\n"
 "      "
 msgstr ""
+"\n"
+"        Taslak Aşaması, bir abonelik 'Devam Ediyor' aşamalarından birine "
+"getrilmesiyse Başlamaya Hazır' konumadadır. Eğer herhangi bir 'Kapalı' "
+"aşaması tamamlanmadıysa da bir abonelik sistem tarafından otomatik olarak "
+"sonlandırıldığında bu aşamaya getirilir.\n"
+"      "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
@@ -39,6 +52,12 @@ msgid ""
 "        The final stage of a subscription. There are two ways to mark a subscription as closed. The easiest one is using the kanban card-moving capabilities, pressing the 'Close subscription' button (only available if a subscription is in progress).\n"
 "      "
 msgstr ""
+"\n"
+"        Aboneliğin son aşaması. Bir aboneliği kapalı olarak işaretlemenin "
+"iki yolu vardır. En kolayı, kanban kart taşıma yeteneklerini kullanarak "
+"'Aboneliği Kapat' düğmesine basmaktır (yalnızca bir abonelik devam ediyorsa "
+"kullanılabilir).\n"
+"      "
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
@@ -61,41 +80,43 @@ msgid ""
 "A given subscription can be marked as closed when, for example, renewal is "
 "not desired."
 msgstr ""
+"Örneğin yenilenmesi istenmediğinde, belirli bir abonelik kapalı olarak "
+"işaretlenebilir."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "İşlem Gerekiyor"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__active
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Aktiviteler"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Etkinlik İstisna Dekorasyonu"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Ativite Durumu"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Aktvite Türü İkonu"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
 msgid "Add new description..."
-msgstr ""
+msgstr "Yeni açıklama ekle..."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
@@ -115,7 +136,7 @@ msgstr "Ek Sayısı"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_rule_boundary
 msgid "Boundary"
-msgstr ""
+msgstr "Sınır"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
@@ -141,12 +162,12 @@ msgstr "Kapatma nedeni"
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_sale_subscription_close_reason
 msgid "Close reason model"
-msgstr ""
+msgstr "Kapama sebebi modeli"
 
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_close_reason_wizard
 msgid "Close reason wizard"
-msgstr ""
+msgstr "Kapama sebebi sihirbazı"
 
 #. module: subscription_oca
 #: model:ir.actions.act_window,name:subscription_oca.subscription_close_reason_action
@@ -173,7 +194,7 @@ msgstr "Kod"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__color
 msgid "Color Index"
-msgstr ""
+msgstr "Renk İndeksi"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__user_id
@@ -215,14 +236,14 @@ msgstr "Fatura Oluştur"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: subscription_oca
 #. odoo-python
 #: code:addons/subscription_oca/models/sale_subscription.py:0
 #, python-format
 msgid "Created invoice with reference"
-msgstr ""
+msgstr "Fatura referans ile oluşturuldu"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_date
@@ -233,7 +254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__currency_id
@@ -321,12 +342,12 @@ msgstr "Takipçiler"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Takipçiler (İş Ortakları)"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikonu e.g. fa-tasks"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__unlimited
@@ -347,27 +368,27 @@ msgstr "Mesaj Var"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "İkon"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "İstisnai bir etkinliği belirtmek için kullanılan simge."
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse, yeni mesajlarla ilgilenmeniz gerekiyor."
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretlendiğinde bazı mesajların iletim hatası olduğu görülür."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__image
@@ -432,12 +453,12 @@ msgstr "Yevmiye"
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Yevmiye Kaydı"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__fold
 msgid "Kanban folded"
-msgstr ""
+msgstr "Kanban katlandı"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard____last_update
@@ -448,7 +469,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag____last_update
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Son Değiştirilme"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_uid
@@ -459,7 +480,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_date
@@ -470,22 +491,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Ana Ek"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
 msgid "Menú desplegable"
-msgstr ""
+msgstr "Açılabilir Menü"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Mesaj İletim hatası"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_ids
@@ -505,7 +526,7 @@ msgstr "Ay"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Aktivite Bitiş"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__name
@@ -523,17 +544,17 @@ msgstr "Yeni abonelik"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Sonraki Aktivite Bitiş"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Sonraki Aktivite Özeti"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Sonraki Aktivite Türü"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_next_date
@@ -543,27 +564,27 @@ msgstr "Sonraki fatura Tarihi"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "İşlem Adedi"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Hata Sayısı"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Eylem gerektiren mesaj sayısı"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan ileti sayısı"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
 msgid "Orders"
-msgstr ""
+msgstr "Siparişler"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_id
@@ -704,6 +725,10 @@ msgid ""
 "'Closed' type of stage.                 Bear in mind that there can only be "
 "one 'Closed'-type stage."
 msgstr ""
+"Aşamalar, belirli bir aboneliğin yaşam döngüsünü tanımlar;                 "
+"yani bir abonelik 'Başlamaya hazır', 'Devam ediyor' veya 'Kapalı' türünde "
+"bir aşama olabilir.                 Yalnızca bir 'Kapalı' türü aşama "
+"olabileceğini unutmayın."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date_start
@@ -718,6 +743,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Aktivitelere dayalı durum\n"
+"Gecikmiş: Son tarih çoktan geçti\n"
+"Bugün: Aktivite tarihi bugün\n"
+"Planlanmış: Gelecekteki aktiviteler."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscribable
@@ -749,7 +778,7 @@ msgstr "Abonelik Satırları"
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_sale_subscription_line
 msgid "Subscription lines added to a given subscription"
-msgstr ""
+msgstr "Belirli bir aboneliğe eklenen abonelik satırları"
 
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_sale_subscription_stage
@@ -793,7 +822,7 @@ msgstr "Abonelik Şablonları"
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_form
 msgid "Subscriptions"
-msgstr "Abonelik"
+msgstr "Abonelikler"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscriptions_count
@@ -869,7 +898,7 @@ msgstr "Kapanış aşaması olarak bir aşama daha önce tanımlandı"
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr ""
+msgstr "Buradan planlanan aktivitelere göre fırsatları filitreleyebilirsiniz."
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
@@ -879,6 +908,10 @@ msgid ""
 "consequent with your needs, you could have a 'Closed'-type stage before a "
 "'Ready to start' one."
 msgstr ""
+"Bu alan, Kanban ve form görünümündeki aşamaların görsel sırasını belirler. "
+"Tamamen görsel olmasına rağmen, sıranın ihtiyaçlarınızla tutarlı olmaması "
+"durumunda, 'Başlamaya hazır' aşamasından önce 'Kapalı' türünde bir aşamaya "
+"sahip olabileceğinizi unutmayın."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__to_renew
@@ -916,7 +949,7 @@ msgstr "Tür"
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Aktivite kaydındaki istisna türü."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_unit
@@ -926,12 +959,12 @@ msgstr "Birim Fiyat"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Websitesi Mesajları"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Websitesi iletişim geçmişi"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__weeks
@@ -946,7 +979,7 @@ msgstr "Yıl"
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
 msgid "e.g. Monthly Subscription"
-msgstr ""
+msgstr "Örn. Aylık Abonelik"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
@@ -956,9 +989,9 @@ msgstr "ay"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids_count
 msgid "product_ids"
-msgstr ""
+msgstr "Ürünler"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_count
 msgid "subscription_ids"
-msgstr ""
+msgstr "Abonelikler"
