@@ -294,9 +294,6 @@ class Agreement(models.Model):
     readonly = fields.Boolean(
         related="stage_id.readonly",
     )
-    readonly = fields.Boolean(
-        related="stage_id.readonly",
-    )
     to_review_date = fields.Date(
         compute="_compute_to_review_date",
         store=True,
