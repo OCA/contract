@@ -22,6 +22,7 @@
         "data/sale_subscription_data.xml",
         "wizard/close_subscription_wizard.xml",
         "security/ir.model.access.csv",
+        "security/ir_rule.xml",
     ],
     "installable": True,
     "application": True,
