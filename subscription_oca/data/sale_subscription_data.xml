@@ -13,11 +13,21 @@
   <data noupdate="1">
     <record id="subscription_stage_draft" model="sale.subscription.stage">
       <!-- <field eval="True" name="active"/> -->
-      <field name="name">Ready to start</field>
+      <field name="name">Draft</field>
       <field name="sequence">0</field>
+      <field name="type">draft</field>
+      <field name="description">
+        Draft, still working on the specifics.
+      </field>
+      <field eval="False" name="fold" />
+    </record>
+    <record id="subscription_stage_ready" model="sale.subscription.stage">
+      <!-- <field eval="True" name="active"/> -->
+      <field name="name">Ready to start</field>
+      <field name="sequence">1</field>
       <field name="type">pre</field>
       <field name="description">
-        Draft equivalent, a subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.
+        A subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.
       </field>
       <field eval="False" name="fold" />
     </record>
@@ -25,7 +35,7 @@
     <record id="subscription_stage_in_progress" model="sale.subscription.stage">
       <!-- <field eval="True" name="active"/> -->
       <field name="name">In progress</field>
-      <field name="sequence">1</field>
+      <field name="sequence">2</field>
       <field name="type">in_progress</field>
       <field eval="False" name="fold" />
       <field name="description">
@@ -36,7 +46,7 @@
     <record id="subscription_stage_closed" model="sale.subscription.stage">
       <!-- <field eval="True" name="active"/> -->
       <field name="name">Closed</field>
-      <field name="sequence">2</field>
+      <field name="sequence">3</field>
       <field name="type">post</field>
       <field eval="False" name="fold" />
       <field name="description">
