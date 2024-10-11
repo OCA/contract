@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo-addon-agreement_rebate_partner_company_group>=16.0dev,<16.1dev',
         'odoo-addon-contract>=16.0dev,<16.1dev',
+        'odoo-addon-contract_analytic_tag>=16.0dev,<16.1dev',
         'odoo-addon-contract_invoice_start_end_dates>=16.0dev,<16.1dev',
         'odoo-addon-contract_mandate>=16.0dev,<16.1dev',
         'odoo-addon-contract_payment_mode>=16.0dev,<16.1dev',
