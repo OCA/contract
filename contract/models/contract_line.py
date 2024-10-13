@@ -603,11 +603,18 @@ class ContractLine(models.Model):
         name = name.replace("#END#", last_date_invoiced.strftime(date_format))
         return name
 
-    def _update_recurring_next_date(self):
+    def _update_recurring_next_date(self, invoicing_date=False):
         # FIXME: Change method name according to real updated field
         # e.g.: _update_last_date_invoiced()
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
+            if invoicing_date:
+                last_date_invoiced = rec.get_next_period_date_end(
+                    invoicing_date,
+                    rec.recurring_rule_type,
+                    rec.recurring_interval,
+                    rec.date_end,
+                )
             rec.write(
                 {
                     "last_date_invoiced": last_date_invoiced,

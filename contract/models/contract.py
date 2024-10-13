@@ -575,7 +575,7 @@ class ContractContract(models.Model):
                     )
             invoices_values.append(invoice_vals)
             # Force the recomputation of journal items
-            contract_lines._update_recurring_next_date()
+            contract_lines._update_recurring_next_date(date_ref)
         return invoices_values
 
     def recurring_create_invoice(self):
