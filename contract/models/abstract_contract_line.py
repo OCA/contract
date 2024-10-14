@@ -85,6 +85,12 @@ class ContractAbstractContractLine(models.AbstractModel):
         readonly=False,
         copy=True,
     )
+    date_end = fields.Date(
+        compute="_compute_date_end",
+        store=True,
+        readonly=False,
+        copy=True,
+    )
     last_date_invoiced = fields.Date()
     is_canceled = fields.Boolean(string="Canceled", default=False)
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
@@ -166,11 +172,9 @@ class ContractAbstractContractLine(models.AbstractModel):
     def _compute_date_start(self):
         self._set_recurrence_field("date_start")
 
-    # pylint: disable=missing-return
-    @api.depends("contract_id.recurring_next_date", "contract_id.line_recurrence")
-    def _compute_recurring_next_date(self):
-        super()._compute_recurring_next_date()
-        self._set_recurrence_field("recurring_next_date")
+    @api.depends("contract_id.date_end", "contract_id.line_recurrence")
+    def _compute_date_end(self):
+        self._set_recurrence_field("date_end")
 
     @api.depends("display_type", "note_invoicing_mode")
     def _compute_is_recurring_note(self):

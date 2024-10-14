@@ -80,7 +80,6 @@ class ContractContract(models.Model):
     create_invoice_visibility = fields.Boolean(
         compute="_compute_create_invoice_visibility"
     )
-    date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     payment_term_id = fields.Many2one(
         comodel_name="account.payment.term", string="Payment Terms", index=True
     )
@@ -301,14 +300,6 @@ class ContractContract(models.Model):
         if tree_view and form_view:
             action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
         return action
-
-    @api.depends("contract_line_ids.date_end")
-    def _compute_date_end(self):
-        for contract in self:
-            contract.date_end = False
-            date_end = contract.contract_line_ids.mapped("date_end")
-            if date_end and all(date_end):
-                contract.date_end = max(date_end)
 
     @api.depends(
         "contract_line_ids.recurring_next_date",

@@ -251,6 +251,7 @@ class TestContract(TestContractBase):
         self.assertEqual(self.acct_line.price_unit, 10)
 
     def test_contract(self):
+        self.assertEqual(self.acct_line.recurring_next_date, to_date("2018-01-15"))
         self.assertEqual(self.contract.recurring_next_date, to_date("2018-01-15"))
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
         self.acct_line.price_unit = 100.0
