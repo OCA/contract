@@ -16,7 +16,12 @@ class SaleSubscriptionStage(models.Model):
     fold = fields.Boolean(string="Kanban folded")
     description = fields.Text(translate=True)
     type = fields.Selection(
-        [("pre", "Ready to start"), ("in_progress", "In progress"), ("post", "Closed")],
+        [
+            ("draft", "Draft"),
+            ("pre", "Ready to start"),
+            ("in_progress", "In progress"),
+            ("post", "Closed"),
+        ],
         default="pre",
     )
 
