@@ -27,7 +27,7 @@ class ContractContract(models.Model):
         orders = self.contract_line_ids.mapped("sale_order_line_id.order_id")
         action = {
             "name": _("Sales Orders"),
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "sale.order",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", orders.ids)],

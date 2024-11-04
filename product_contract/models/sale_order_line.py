@@ -287,7 +287,7 @@ class SaleOrderLine(models.Model):
             forced_month = 0
             if line.recurring_rule_type != "monthly":
                 forced_value = int(
-                    line.product_id["force_month_%s" % line.recurring_rule_type]
+                    line.product_id[f"force_month_{line.recurring_rule_type}"]
                 )
                 if forced_value:
                     # When the selected period is yearly, the period_number field is
@@ -312,11 +312,10 @@ class SaleOrderLine(models.Model):
         res = super()._compute_name()
         for line in self:
             if line.is_contract:
-                date_text = ""
                 if line.contract_start_date_method == "manual":
-                    date_text = "%s" % line.date_start
+                    date_text = f"{line.date_start}"
                     if line.date_end:
-                        date_text += " -> %s" % line.date_end
+                        date_text += f" -> {line.date_end}"
                 else:
                     field_info = dict(
                         line._fields["contract_start_date_method"].get_description(
@@ -327,21 +326,21 @@ class SaleOrderLine(models.Model):
                     start_method_label = field_selection.get(
                         line.contract_start_date_method
                     )
-                    date_text = "%s" % start_method_label
+                    date_text = f"{start_method_label}"
                     if (
                         line.recurring_rule_type != "monthly"
-                        and line.product_id["force_month_%s" % line.recurring_rule_type]
+                        and line.product_id[f"force_month_{line.recurring_rule_type}"]
                     ):
                         field_info = dict(
                             self.env["product.template"]
-                            ._fields["force_month_%s" % line.recurring_rule_type]
+                            ._fields[f"force_month_{line.recurring_rule_type}"]
                             .get_description(self.env)
                         )
                         field_selection = dict(field_info.get("selection"))
                         force_month_label = field_selection.get(
-                            line.product_id["force_month_%s" % line.recurring_rule_type]
+                            line.product_id[f"force_month_{line.recurring_rule_type}"]
                         )
-                        date_text += " (%s)" % force_month_label
+                        date_text += f" ({force_month_label})"
                 field_info = dict(
                     self._fields["recurring_rule_type"].get_description(self.env)
                 )
