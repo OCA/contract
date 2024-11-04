@@ -1,11 +1,12 @@
 # Copyright 2022 ForgeFlow - Joan Mateu
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl)
 
+from odoo import Command
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestSaleContract(TransactionCase):
+class TestSaleContract(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -15,7 +16,9 @@ class TestSaleContract(TransactionCase):
                 "name": "user rights all documents ",
                 "login": "test1",
                 "groups_id": [
-                    (6, 0, [cls.env.ref("sales_team.group_sale_salesman_all_leads").id])
+                    Command.set(
+                        cls.env.ref("sales_team.group_sale_salesman_all_leads").ids
+                    )
                 ],
             }
         )
@@ -24,7 +27,7 @@ class TestSaleContract(TransactionCase):
                 "name": "user rights own documents ",
                 "login": "test2",
                 "groups_id": [
-                    (6, 0, [cls.env.ref("sales_team.group_sale_salesman").id])
+                    Command.set(cls.env.ref("sales_team.group_sale_salesman").ids)
                 ],
             }
         )
