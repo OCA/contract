@@ -29,7 +29,7 @@
                         nolabel="1"
                         colspan="2"
                     >
-                        <tree>
+                        <list>
                             <control>
                                 <create string="Add a line" />
                                 <create
@@ -53,10 +53,7 @@
                             />
                             <field name="price_unit" readonly="automatic_price" />
                             <field name="specific_price" column_invisible="True" />
-                            <field
-                                name="discount"
-                                groups="product.group_discount_per_so_line"
-                            />
+                            <field name="discount" />
                             <field name="price_subtotal" />
                             <field name="recurring_rule_type" column_invisible="True" />
                             <field name="recurring_interval" column_invisible="True" />
@@ -64,7 +61,7 @@
                                 name="recurring_invoicing_type"
                                 column_invisible="True"
                             />
-                        </tree>
+                        </list>
                     </field>
                 </group>
                 <group
@@ -73,10 +70,10 @@
                 >
                     <div colspan="2">
                         <p> <strong
-                            >#START#</strong>: Start date of the invoiced period</p>
+                        >#START#</strong>: Start date of the invoiced period</p>
                         <p> <strong>#END#</strong>: End date of the invoiced period</p>
                         <p> <strong
-                            >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
+                        >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
                     </div>
                 </group>
             </form>
@@ -84,14 +81,14 @@
     </record>
     <!--TREE view-->
     <record id="contract_template_tree_view" model="ir.ui.view">
-        <field name="name">contract.template tree view (in contract)</field>
+        <field name="name">contract.template list view (in contract)</field>
         <field name="model">contract.template</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="contract_type" />
                 <field name="pricelist_id" />
-            </tree>
+            </list>
         </field>
     </record>
     <!--SEARCH view-->
@@ -126,7 +123,7 @@
     <record id="contract_template_action" model="ir.actions.act_window">
         <field name="name">Contract Templates</field>
         <field name="res_model">contract.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="contract_template_search_view" />
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
