@@ -1,6 +1,5 @@
-/** @odoo-module **/
-
 import {registry} from "@web/core/registry";
+import {redirect} from "@web/core/utils/urls";
 
 registry.category("web_tour.tours").add("contract_portal_tour", {
     test: true,
@@ -9,10 +8,13 @@ registry.category("web_tour.tours").add("contract_portal_tour", {
         {
             content: "Go /my/contracts url",
             trigger: 'a[href*="/my/contracts"]',
+            run: function () {
+                redirect("/my/contracts");
+            },
         },
         {
             content: "Go to Contract item",
-            trigger: ".tr_contract_link:eq(0)",
+            trigger: "table.o_portal_my_doc_table tr:eq(0)",
         },
     ],
 });

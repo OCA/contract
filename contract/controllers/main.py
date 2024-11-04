@@ -14,11 +14,7 @@ class PortalContract(CustomerPortal):
         values = super()._prepare_home_portal_values(counters)
         if "contract_count" in counters:
             contract_model = request.env["contract.contract"]
-            contract_count = (
-                contract_model.search_count([])
-                if contract_model.check_access_rights("read", raise_exception=False)
-                else 0
-            )
+            contract_count = contract_model.search_count([])
             values["contract_count"] = contract_count
         return values
 
@@ -45,9 +41,6 @@ class PortalContract(CustomerPortal):
     ):
         values = self._prepare_portal_layout_values()
         contract_obj = request.env["contract.contract"]
-        # Avoid error if the user does not have access.
-        if not contract_obj.check_access_rights("read", raise_exception=False):
-            return request.redirect("/my")
         domain = self._get_filter_domain(kw)
         searchbar_sortings = {
             "date": {"label": _("Date"), "order": "recurring_next_date desc"},
