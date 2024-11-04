@@ -17,11 +17,8 @@
                     <p>
                         This contract was terminated for the reason
                         <strong>
-                            <field
-                                name="terminate_reason_id"
-                                options="{'no_open':True}"
-                            />
-                        </strong>
+                        <field name="terminate_reason_id" options="{'no_open':True}" />
+                    </strong>
                         on
                         <field name="terminate_date" />
                         .
@@ -183,7 +180,7 @@
                                 widget="section_and_note_one2many"
                                 context="{'default_contract_type': contract_type, 'default_recurring_rule_type': recurring_rule_type, 'default_recurring_invoicing_type': recurring_invoicing_type, 'default_recurring_interval': recurring_interval, 'default_date_start': date_start, 'default_recurring_next_date': recurring_next_date}"
                             >
-                                <tree
+                                <list
                                     decoration-muted="is_canceled"
                                     decoration-info="create_invoice_visibility and not is_canceled"
                                     editable="bottom"
@@ -230,10 +227,7 @@
                                         name="specific_price"
                                         column_invisible="True"
                                     />
-                                    <field
-                                        name="discount"
-                                        groups="product.group_discount_per_so_line"
-                                    />
+                                    <field name="discount" />
                                     <field name="price_subtotal" />
                                     <field
                                         name="recurring_interval"
@@ -278,7 +272,7 @@
                                         column_invisible="True"
                                     />
                                     <field name="is_canceled" column_invisible="True" />
-                                </tree>
+                                </list>
                             </field>
                             <field
                                 name="contract_line_ids"
@@ -287,7 +281,7 @@
                                 widget="section_and_note_one2many"
                                 context="{'default_contract_type': contract_type}"
                             >
-                                <tree
+                                <list
                                     decoration-muted="is_canceled"
                                     decoration-info="create_invoice_visibility and not is_canceled"
                                 >
@@ -329,10 +323,7 @@
                                         name="specific_price"
                                         column_invisible="True"
                                     />
-                                    <field
-                                        name="discount"
-                                        groups="product.group_discount_per_so_line"
-                                    />
+                                    <field name="discount" />
                                     <field name="price_subtotal" />
                                     <field
                                         name="recurring_interval"
@@ -426,17 +417,17 @@
                                         groups="base.group_no_one"
                                         invisible="not is_auto_renew"
                                     />
-                                </tree>
+                                </list>
                             </field>
                             <field name="note" />
                         </page>
                         <page name="modications" string="Modifications">
                             <field name="modification_ids" readonly="is_terminated">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="date" />
                                     <field name="description" />
                                     <field name="sent" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page name="info" string="Other Information">
@@ -489,11 +480,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -537,10 +524,10 @@
     </record>
     <!--TREE view-->
     <record id="contract_contract_tree_view" model="ir.ui.view">
-        <field name="name">contract.contract tree view (in contract)</field>
+        <field name="name">contract.contract list view (in contract)</field>
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" string="Name" />
                 <field name="code" />
                 <field name="journal_id" groups="account.group_account_user" />
@@ -552,7 +539,7 @@
                 />
                 <field name="active" column_invisible="True" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
     <!--SEARCH view-->
@@ -618,7 +605,7 @@
     <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">
             {'is_contract':1,
@@ -634,7 +621,7 @@
     </record>
     <record id="action_customer_contract_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1" />
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="contract_contract_tree_view" />
         <field name="act_window_id" ref="action_customer_contract" />
     </record>
@@ -654,7 +641,7 @@
     <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">
             {'is_contract':1,
@@ -670,7 +657,7 @@
     </record>
     <record id="action_supplier_contract_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1" />
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="contract_contract_tree_view" />
         <field name="act_window_id" ref="action_supplier_contract" />
     </record>
