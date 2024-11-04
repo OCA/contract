@@ -8,31 +8,31 @@
                 <field name="skip_zero_qty" />
             </xpath>
             <xpath
-                expr="//field[@name='contract_line_ids']/tree/field[@name='quantity']"
+                expr="//field[@name='contract_line_ids']/list/field[@name='quantity']"
                 position="before"
             >
                 <field name="qty_type" />
                 <field name="qty_formula_id" invisible="qty_type != 'variable'" />
             </xpath>
             <xpath
-                expr="//field[@name='contract_line_ids']/tree/field[@name='quantity']"
-                position="attributes"
-            >
-                <attribute name="invisible">"qty_type != 'fixed'"</attribute>
-            </xpath>
-            <xpath
-                expr="//field[@name='contract_line_fixed_ids']/tree/field[@name='quantity']"
-                position="before"
-            >
-                <field name="qty_type" />
-                <field name="qty_formula_id" invisible="qty_type != 'variable'" />
-            </xpath>
-            <xpath
-                expr="//field[@name='contract_line_fixed_ids']/tree/field[@name='quantity']"
+                expr="//field[@name='contract_line_ids']/list/field[@name='quantity']"
                 position="attributes"
             >
                 <attribute name="invisible">qty_type != 'fixed'</attribute>
-                </xpath>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']/list/field[@name='quantity']"
+                position="before"
+            >
+                <field name="qty_type" />
+                <field name="qty_formula_id" invisible="qty_type != 'variable'" />
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']/list/field[@name='quantity']"
+                position="attributes"
+            >
+                <attribute name="invisible">qty_type != 'fixed'</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

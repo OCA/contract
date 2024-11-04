@@ -6,11 +6,12 @@
 
 from odoo import exceptions
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
 @tagged("post_install", "-at_install")
-class TestContractVariableQuantity(TransactionCase):
+class TestContractVariableQuantity(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -6,8 +6,8 @@
 from odoo import fields, models
 
 
-class ContractAbstractContractLine(models.AbstractModel):
-    _inherit = "contract.abstract.contract.line"
+class ContractTemplateLine(models.Model):
+    _inherit = "contract.template.line"
 
     qty_type = fields.Selection(
         selection=[("fixed", "Fixed quantity"), ("variable", "Variable quantity")],

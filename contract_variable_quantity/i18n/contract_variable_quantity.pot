@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -62,11 +62,6 @@ msgid "<i>user</i>: Current user."
 msgstr ""
 
 #. module: contract_variable_quantity
-#: model:ir.model,name:contract_variable_quantity.model_contract_abstract_contract_line
-msgid "Abstract Recurring Contract Line"
-msgstr ""
-
-#. module: contract_variable_quantity
 #: model_terms:ir.actions.act_window,help:contract_variable_quantity.action_contract_quantity_formula
 msgid "Click to create a new formula for variable quantities."
 msgstr ""
@@ -93,6 +88,11 @@ msgid "Contract Line Formula"
 msgstr ""
 
 #. module: contract_variable_quantity
+#: model:ir.model,name:contract_variable_quantity.model_contract_template_line
+msgid "Contract Template Line"
+msgstr ""
+
+#. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__create_uid
 msgid "Created by"
 msgstr ""
@@ -110,7 +110,6 @@ msgstr ""
 #. module: contract_variable_quantity
 #. odoo-python
 #: code:addons/contract_variable_quantity/models/contract_line_formula.py:0
-#, python-format
 msgid ""
 "Error evaluating code.\n"
 "Details: %s"
@@ -122,7 +121,6 @@ msgid "Example of Python code"
 msgstr ""
 
 #. module: contract_variable_quantity
-#: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__fixed
 msgid "Fixed quantity"
@@ -168,19 +166,16 @@ msgstr ""
 #. module: contract_variable_quantity
 #. odoo-python
 #: code:addons/contract_variable_quantity/models/contract_line_formula.py:0
-#, python-format
 msgid "No valid result returned."
 msgstr ""
 
 #. module: contract_variable_quantity
-#: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_formula_id
 msgid "Qty. formula"
 msgstr ""
 
 #. module: contract_variable_quantity
-#: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_type
 msgid "Qty. type"
@@ -192,12 +187,6 @@ msgid "Skip Zero Qty Lines"
 msgstr ""
 
 #. module: contract_variable_quantity
-#: model_terms:ir.ui.view,arch_db:contract_variable_quantity.portal_contract_page
-msgid "Variable"
-msgstr ""
-
-#. module: contract_variable_quantity
-#: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__variable
 msgid "Variable quantity"

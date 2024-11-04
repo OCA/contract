@@ -9,7 +9,7 @@ from odoo.tools import float_is_zero
 from odoo.tools.safe_eval import safe_eval
 
 
-class AccountAnalyticInvoiceLine(models.Model):
+class ContractLine(models.Model):
     _inherit = "contract.line"
 
     def _get_quantity_to_invoice(
