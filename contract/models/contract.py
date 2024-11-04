@@ -299,19 +299,21 @@ class ContractContract(models.Model):
             "type": "ir.actions.act_window",
             "name": "Invoices",
             "res_model": "account.move",
-            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "view_mode": "list,kanban,form,calendar,pivot,graph,activity",
             "domain": [("id", "in", self._get_related_invoices().ids)],
             "context": ctx,
         }
         if tree_view and form_view:
-            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
+            action["views"] = [(tree_view.id, "list"), (form_view.id, "form")]
         return action
 
-    @api.depends("contract_line_ids.date_end")
+    @api.depends("contract_line_ids.date_end", "contract_line_ids.state")
     def _compute_date_end(self):
         for contract in self:
             contract.date_end = False
-            date_end = contract.contract_line_ids.mapped("date_end")
+            date_end = contract.contract_line_ids.filtered(
+                lambda line: line.state != "canceled"
+            ).mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 

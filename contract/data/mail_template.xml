@@ -28,30 +28,30 @@
                     &amp;nbsp;&amp;nbsp;Contract: <strong t-out="object.name" /><br />
                     <t t-if="object.date_start">
                         &amp;nbsp;&amp;nbsp;Contract Date Start: <t
-                            t-out="object.date_start or ''"
-                        /><br />
+                    t-out="object.date_start or ''"
+                /><br />
                     </t>
 
                     <t t-if="object.user_id">
-                        <t t-if="object.user_id.email">
+                    <t t-if="object.user_id.email">
                             &amp;nbsp;&amp;nbsp;Your Contact: <a
-                                t-att-href="'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
-                                t-out="object.user_id.name"
-                            />
+                        t-att-href="'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
+                        t-out="object.user_id.name"
+                    />
                         </t>
-                        <t t-else="">
+                    <t t-else="">
                             &amp;nbsp;&amp;nbsp;Your Contact: <t
-                                t-out="object.user_id.name"
-                            />
+                        t-out="object.user_id.name"
+                    />
                         </t>
-                    </t>
+                </t>
                 </p>
 
                 <br />
                 <p>If you have any questions, do not hesitate to contact us.</p>
                 <p>Thank you for choosing <t
-                        t-out="object.company_id.name or 'us'"
-                    />!</p>
+                    t-out="object.company_id.name or 'us'"
+                />!</p>
                 <br />
                 <br />
                 <div
@@ -63,7 +63,8 @@
                         <strong
                             style="text-transform:uppercase;"
                             t-out="object.company_id.name"
-                        /></h3>
+                        />
+                    </h3>
                 </div>
                 <div
                     style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;"
@@ -84,9 +85,9 @@
                     <t t-if="object.company_id.website">
                         <div>
                             Web: <a
-                                t-att-href="object.company_id.website"
-                                t-out="object.company_id.website"
-                            />
+                            t-att-href="object.company_id.website"
+                            t-out="object.company_id.website"
+                        />
                         </div>
                     </t>
                 </div>

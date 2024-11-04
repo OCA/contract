@@ -25,7 +25,6 @@
                         <group>
                             <field name="automatic_price" />
 
-
                             <field name="price_unit" readonly="automatic_price" />
                             <field name="quantity" />
                         </group>
@@ -35,10 +34,7 @@
                                 groups="uom.group_uom"
                                 required="not display_type"
                             />
-                            <field
-                                name="discount"
-                                groups="product.group_discount_per_so_line"
-                            />
+                            <field name="discount" />
                             <field name="price_subtotal" readonly="1" />
                         </group>
                     </group>
@@ -106,6 +102,8 @@
                                 <field name="recurring_interval" />
                                 <field name="recurring_rule_type" />
                             </div>
+                        </group>
+                        <group>
                             <field name="recurring_invoicing_type" />
                             <field name="recurring_invoicing_offset" />
                         </group>
