@@ -303,7 +303,7 @@ class SaleSubscriptionLine(models.Model):
         self.ensure_one()
         account = (
             self.product_id.property_account_income_id
-            #company context for product category account defaults
+            # company context for product category account defaults
             or self.product_id.categ_id.with_context(
                 company_id=self.sale_subscription_id.company_id.id
             ).property_account_income_categ_id
