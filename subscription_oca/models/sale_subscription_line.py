@@ -303,8 +303,10 @@ class SaleSubscriptionLine(models.Model):
         self.ensure_one()
         account = (
             self.product_id.property_account_income_id
-            # added company context to the product category account defaults for multi-company setups
-            or self.product_id.categ_id.with_context(company_id=self.sale_subscription_id.company_id.id).property_account_income_categ_id
+            #company context for product category account defaults
+            or self.product_id.categ_id.with_context(
+                company_id=self.sale_subscription_id.company_id.id
+            ).property_account_income_categ_id
         )
         return {
             "product_id": self.product_id.id,
