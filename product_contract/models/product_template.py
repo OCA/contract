@@ -15,7 +15,22 @@ class ProductTemplate(models.Model):
         string="Contract Template",
         company_dependent=True,
     )
-    default_qty = fields.Integer(string="Default Quantity", default=1)
+    default_qty = fields.Integer(string="Recurrence Number", default=1)
+    recurrence_interval = fields.Selection(
+        [
+            ("monthly", "Month(s)"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
+        ],
+        default="monthly",
+        help="Specify Interval for contract duration.",
+    )
+    recurring_interval = fields.Integer(
+        default=1,
+        string="Invoice Every",
+        help="Invoice every (Days/Week/Month/Year)",
+    )
     recurring_rule_type = fields.Selection(
         [
             ("daily", "Day(s)"),
@@ -27,7 +42,7 @@ class ProductTemplate(models.Model):
             ("yearly", "Year(s)"),
         ],
         default="monthly",
-        string="Invoice Every",
+        string="Recurrence",
         help="Specify Interval for automatic invoice generation.",
     )
     recurring_invoicing_type = fields.Selection(
