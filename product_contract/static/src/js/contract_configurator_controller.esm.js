@@ -14,6 +14,10 @@ export class ProductContractConfiguratorController extends formView.Controller {
         await super.onRecordSaved(...arguments);
         const {
             product_uom_qty,
+            recurrence_number,
+            recurring_interval,
+            recurring_rule_type,
+            recurrence_interval,
             contract_id,
             date_start,
             date_end,
@@ -27,6 +31,10 @@ export class ProductContractConfiguratorController extends formView.Controller {
             infos: {
                 productContractConfiguration: {
                     product_uom_qty,
+                    recurrence_number,
+                    recurring_interval,
+                    recurring_rule_type,
+                    recurrence_interval,
                     contract_id,
                     date_start,
                     date_end,

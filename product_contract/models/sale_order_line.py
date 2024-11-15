@@ -16,64 +16,8 @@ MONTH_NB_MAPPING = {
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    is_contract = fields.Boolean(
-        string="Is a contract", related="product_id.is_contract"
-    )
-    contract_id = fields.Many2one(
-        comodel_name="contract.contract", string="Contract", copy=False
-    )
-    contract_template_id = fields.Many2one(
-        comodel_name="contract.template",
-        string="Contract Template",
-        compute="_compute_contract_template_id",
-    )
-    recurring_rule_type = fields.Selection(related="product_id.recurring_rule_type")
-    recurring_invoicing_type = fields.Selection(
-        related="product_id.recurring_invoicing_type"
-    )
-    date_start = fields.Date()
-    date_end = fields.Date()
-
-    contract_line_id = fields.Many2one(
-        comodel_name="contract.line",
-        string="Contract Line to replace",
-        required=False,
-        copy=False,
-    )
-    is_auto_renew = fields.Boolean(
-        string="Auto Renew",
-        compute="_compute_auto_renew",
-        default=False,
-        store=True,
-        readonly=False,
-    )
-    auto_renew_interval = fields.Integer(
-        default=1,
-        string="Renew Every",
-        compute="_compute_auto_renew",
-        store=True,
-        readonly=False,
-        help="Renew every (Days/Week/Month/Year)",
-    )
-    auto_renew_rule_type = fields.Selection(
-        [
-            ("daily", "Day(s)"),
-            ("weekly", "Week(s)"),
-            ("monthly", "Month(s)"),
-            ("yearly", "Year(s)"),
-        ],
-        default="yearly",
-        compute="_compute_auto_renew",
-        store=True,
-        readonly=False,
-        string="Renewal type",
-        help="Specify Interval for automatic renewal.",
-    )
-    contract_start_date_method = fields.Selection(
-        related="product_id.contract_start_date_method"
-    )
+    _name = "sale.order.line"
+    _inherit = ["sale.order.line", "sale.order.line.contract.mixin"]
 
     @api.constrains("contract_id")
     def _check_contact_is_not_terminated(self):
@@ -85,55 +29,6 @@ class SaleOrderLine(models.Model):
                 raise ValidationError(
                     _("You can't upsell or downsell a terminated contract")
                 )
-
-    @api.depends("product_id", "order_id.company_id")
-    def _compute_contract_template_id(self):
-        for rec in self:
-            rec.contract_template_id = rec.product_id.with_company(
-                rec.order_id.company_id
-            ).property_contract_template_id
-
-    def _get_auto_renew_rule_type(self):
-        """monthly last day don't make sense for auto_renew_rule_type"""
-        self.ensure_one()
-        if self.recurring_rule_type == "monthlylastday":
-            return "monthly"
-        return self.recurring_rule_type
-
-    def _get_date_end(self):
-        self.ensure_one()
-        contract_start_date_method = self.product_id.contract_start_date_method
-        date_end = False
-        if contract_start_date_method == "manual":
-            contract_line_model = self.env["contract.line"]
-            date_end = (
-                self.date_start
-                + contract_line_model.get_relative_delta(
-                    self._get_auto_renew_rule_type(),
-                    int(self.product_uom_qty),
-                )
-                - relativedelta(days=1)
-            )
-        return date_end
-
-    @api.depends("product_id")
-    def _compute_auto_renew(self):
-        for rec in self:
-            if rec.product_id.is_contract:
-                rec.product_uom_qty = rec.product_id.default_qty
-                contract_start_date_method = rec.product_id.contract_start_date_method
-                if contract_start_date_method == "manual":
-                    rec.date_start = rec.date_start or fields.Date.today()
-                rec.date_end = rec._get_date_end()
-                rec.is_auto_renew = rec.product_id.is_auto_renew
-                if rec.is_auto_renew:
-                    rec.auto_renew_interval = rec.product_id.auto_renew_interval
-                    rec.auto_renew_rule_type = rec.product_id.auto_renew_rule_type
-
-    @api.onchange("date_start", "product_uom_qty")
-    def onchange_date_start(self):
-        for rec in self.filtered("product_id.is_contract"):
-            rec.date_end = rec._get_date_end() if rec.date_start else False
 
     def _get_contract_line_qty(self):
         """Returns the amount that will be placed in new contract lines."""
@@ -174,7 +69,7 @@ class SaleOrderLine(models.Model):
             "date_end": self.date_end,
             "date_start": self.date_start or fields.Date.today(),
             "recurring_next_date": recurring_next_date,
-            "recurring_interval": 1,
+            "recurring_interval": self.recurring_interval,
             "recurring_invoicing_type": self.recurring_invoicing_type,
             "recurring_rule_type": self.recurring_rule_type,
             "is_auto_renew": self.is_auto_renew,
@@ -268,26 +163,23 @@ class SaleOrderLine(models.Model):
     def _set_contract_line_start_date(self):
         """Set date start of lines using it's method and the confirmation date."""
         for line in self:
-            if (
-                line.contract_start_date_method == "manual"
-                or line.recurring_rule_type in ["daily", "weekly", "monthlylastday"]
-            ):
+            if line.contract_start_date_method == "manual":
                 continue
             is_end = "end_" in line.contract_start_date_method
             today = fields.Date.today()
             month_period = month = today.month
-            month_nb = MONTH_NB_MAPPING[line.recurring_rule_type]
+            month_nb = MONTH_NB_MAPPING[line.recurrence_interval]
             # The period number is started by 0 to be able to calculate the month
             period_number = (month - 1) // month_nb
-            if line.recurring_rule_type == "yearly":
+            if line.recurrence_interval == "yearly":
                 month_period = 1
-            elif line.recurring_rule_type != "monthly":
+            elif line.recurrence_interval != "monthly":
                 # Checking quarterly and semesterly
                 month_period = period_number * month_nb + 1
             forced_month = 0
-            if line.recurring_rule_type != "monthly":
+            if line.recurrence_interval != "monthly":
                 forced_value = int(
-                    line.product_id[f"force_month_{line.recurring_rule_type}"]
+                    line.product_id[f"force_month_{line.recurrence_interval}"]
                 )
                 if forced_value:
                     # When the selected period is yearly, the period_number field is
@@ -307,7 +199,15 @@ class SaleOrderLine(models.Model):
                     start_date = start_date + relativedelta(day=31)
             line.date_start = start_date
 
-    @api.depends("product_id")
+    @api.depends(
+        "product_id",
+        "contract_start_date_method",
+        "date_start",
+        "date_end",
+        "recurring_rule_type",
+        "recurrence_interval",
+        "recurring_invoicing_type",
+    )
     def _compute_name(self):
         res = super()._compute_name()
         for line in self:
@@ -328,21 +228,21 @@ class SaleOrderLine(models.Model):
                     )
                     date_text = f"{start_method_label}"
                     if (
-                        line.recurring_rule_type != "monthly"
-                        and line.product_id[f"force_month_{line.recurring_rule_type}"]
+                        line.recurrence_interval != "monthly"
+                        and line.product_id[f"force_month_{line.recurrence_interval}"]
                     ):
                         field_info = dict(
                             self.env["product.template"]
-                            ._fields[f"force_month_{line.recurring_rule_type}"]
+                            ._fields[f"force_month_{line.recurrence_interval}"]
                             .get_description(self.env)
                         )
                         field_selection = dict(field_info.get("selection"))
                         force_month_label = field_selection.get(
-                            line.product_id[f"force_month_{line.recurring_rule_type}"]
+                            line.product_id[f"force_month_{line.recurrence_interval}"]
                         )
                         date_text += f" ({force_month_label})"
                 field_info = dict(
-                    self._fields["recurring_rule_type"].get_description(self.env)
+                    self._fields["recurrence_interval"].get_description(self.env)
                 )
                 field_selection = dict(field_info.get("selection"))
                 recurring_rule_label = field_selection.get(line.recurring_rule_type)
