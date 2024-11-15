@@ -62,7 +62,16 @@
                     invisible="not is_contract"
                 />
                 <group invisible="not is_contract">
-                    <field name="recurring_rule_type" />
+                    <label for="recurrence_number" />
+                    <div class="o_row">
+                        <field name="recurrence_number" />
+                        <field name="recurrence_interval" />
+                    </div>
+                    <label for="recurring_interval" />
+                    <div class="o_row">
+                        <field name="recurring_interval" />
+                        <field name="recurring_rule_type" />
+                    </div>
                 </group>
                 <group invisible="not is_contract">
                     <field name="recurring_invoicing_type" />
@@ -112,6 +121,9 @@
                     domain="[('contract_id','=',contract_id)]"
                     optional="hide"
                 />
+                <field name="recurrence_number" optional="hide" />
+                <field name="recurrence_interval" optional="hide" />
+                <field name="recurring_interval" optional="hide" />
                 <field name="recurring_rule_type" optional="hide" />
                 <field name="recurring_invoicing_type" optional="hide" />
                 <field name="contract_start_date_method" column_invisible="1" />
