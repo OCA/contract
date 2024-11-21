@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 n
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="product_contract_configurator_form_view">
+        <field name="model">product.contract.configurator</field>
+        <field
+            name="inherit_id"
+            ref="product_contract.product_contract_configurator_form"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='product_uom_qty']//parent::group"
+                position="before"
+            >
+                <group>
+                    <field
+                        name="qty_type"
+                        required="is_contract"
+                        invisible="not is_contract"
+                    />
+                </group>
+                <group>
+                    <field
+                        name="qty_formula_id"
+                        required="qty_type == 'variable'"
+                        invisible="qty_type != 'variable'"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
