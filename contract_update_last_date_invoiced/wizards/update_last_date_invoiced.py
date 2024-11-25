@@ -15,8 +15,8 @@ class PrgEditLastDateInvoicedWizard(models.TransientModel):
         required=True,
         ondelete="cascade",
     )
-    last_date_invoiced = fields.Date(string="Last Date Invoiced")
-    recurring_next_date = fields.Date(string="Recurring Next Date")
+    last_date_invoiced = fields.Date()
+    recurring_next_date = fields.Date()
 
     def update_last_date_invoiced(self):
         for wizard in self:
