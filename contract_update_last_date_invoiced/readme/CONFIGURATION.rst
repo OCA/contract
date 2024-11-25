@@ -1,0 +1,4 @@
+- Access in development mode
+- Go to Settings > Users & Companies > Users
+- Select the user you want to configure
+- Give the user "Contract: Can update last date invoiced?" permission
