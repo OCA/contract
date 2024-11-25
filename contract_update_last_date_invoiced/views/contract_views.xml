@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view_inherit" model="ir.ui.view">
+        <field name="name">contract.contract.form.inherit</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//form/sheet/notebook/page[@name='recurring_invoice_line']/field[@name='contract_line_fixed_ids']/tree"
+                position="attributes"
+            >
+                <attribute name="editable" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
