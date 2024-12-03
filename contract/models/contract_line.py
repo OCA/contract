@@ -452,7 +452,10 @@ class ContractLine(models.Model):
     @api.constrains("recurring_next_date", "date_start")
     def _check_recurring_next_date_start_date(self):
         for line in self:
-            if line.display_type == "line_section" or not line.recurring_next_date:
+            if (
+                line.display_type in ("line_section", "line_note")
+                or not line.recurring_next_date
+            ):
                 continue
             if line.date_start and line.recurring_next_date:
                 if line.date_start > line.recurring_next_date:
