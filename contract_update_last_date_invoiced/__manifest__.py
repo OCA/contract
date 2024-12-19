@@ -5,7 +5,7 @@
     "name": "Contract Last Date Update",
     "summary": """
         This module allows to update the last date invoiced if invoices are deleted.""",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.0.1",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
