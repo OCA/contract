@@ -615,7 +615,7 @@ class ContractContract(models.Model):
             for move in invoices & item._get_related_invoices():
                 body = Markup(_("%(msg)s by contract: %(contract_link)s")) % {
                     "msg": move._creation_message(),
-                    "contract_link": move._get_html_link(title=item.display_name),
+                    "contract_link": item._get_html_link(title=item.display_name),
                 }
                 move.message_post(body=body)
 
