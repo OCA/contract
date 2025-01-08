@@ -14,6 +14,7 @@
     "data": [
         "data/contract_cron.xml",
         "views/contract.xml",
+        "views/contract_template.xml",
     ],
     "installable": True,
 }
