@@ -2295,6 +2295,15 @@ class TestContract(TestContractBase):
                 "terminate_comment",
                 to_date("2018-02-13"),
             )
+        # Try terminate contract line with last_date_invoiced allowed
+        self.contract._terminate_contract(
+            self.terminate_reason,
+            "terminate_comment",
+            to_date("2018-02-13"),
+            terminate_lines_with_last_date_invoiced=True,
+        )
+        self.assertTrue(self.contract.is_terminated)
+        self.assertEqual(self.acct_line.date_end, to_date("2018-02-14"))
 
     def test_recurrency_propagation(self):
         # Existing contract
