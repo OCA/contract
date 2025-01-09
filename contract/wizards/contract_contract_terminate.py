@@ -25,6 +25,11 @@ class ContractContractTerminate(models.TransientModel):
     terminate_comment_required = fields.Boolean(
         related="terminate_reason_id.terminate_comment_required"
     )
+    terminate_with_last_date_invoiced = fields.Boolean(
+        string="Terminate lines with last date invoiced",
+        help="Terminate the contract lines with the last invoiced date if they cannot "
+        "be terminated with the date reported in the wizard.",
+    )
 
     def terminate_contract(self):
         for wizard in self:
@@ -32,5 +37,6 @@ class ContractContractTerminate(models.TransientModel):
                 wizard.terminate_reason_id,
                 wizard.terminate_comment,
                 wizard.terminate_date,
+                wizard.terminate_with_last_date_invoiced,
             )
         return True

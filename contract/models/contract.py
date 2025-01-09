@@ -685,12 +685,21 @@ class ContractContract(models.Model):
         }
 
     def _terminate_contract(
-        self, terminate_reason_id, terminate_comment, terminate_date
+        self,
+        terminate_reason_id,
+        terminate_comment,
+        terminate_date,
+        terminate_lines_with_last_date_invoiced=False,
     ):
         self.ensure_one()
         if not self.env.user.has_group("contract.can_terminate_contract"):
             raise UserError(_("You are not allowed to terminate contracts."))
-        self.contract_line_ids.filtered("is_stop_allowed").stop(terminate_date)
+        for line in self.contract_line_ids.filtered("is_stop_allowed"):
+            line.stop(
+                max(terminate_date, line.last_date_invoiced)
+                if terminate_lines_with_last_date_invoiced and line.last_date_invoiced
+                else terminate_date
+            )
         self.write(
             {
                 "is_terminated": True,
