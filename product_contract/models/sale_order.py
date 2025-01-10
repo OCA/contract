@@ -110,6 +110,11 @@ class SaleOrder(models.Model):
                 line.create_contract_line(line.contract_id)
         return contract_model.browse(contracts)
 
+    def action_quotation_sent(self):
+        for line in self.order_line:
+            line._compute_auto_renew()
+        return super().action_quotation_sent()
+
     def action_confirm(self):
         """If we have a contract in the order, set it up"""
         self.filtered(
