@@ -23,7 +23,7 @@
                         <p t-field="o.code" />
                     </div>
                 </div>
-                <div class="row" id="invoice_info">
+                <div id="invoice_info">
                     <t t-set="total" t-value="0" />
                     <div class="col-12">
                         <p id="services_info">
@@ -117,7 +117,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="row" id="modification_info" t-if="o.modification_ids">
+                <div id="modification_info" t-if="o.modification_ids">
                     <div class="col-12">
                         <p id="modification_info_p">
                             <strong>Modifications</strong>
@@ -155,7 +155,7 @@
                 <div id="total" class="row" name="total">
                     <div class="col-4 ml-auto">
                         <table class="table table-sm">
-                            <tr class="border-black o_subtotal" style="">
+                            <tr class="border-black o_subtotal o_total">
                                 <td>
                                     <strong>Total</strong>
                                 </td>
