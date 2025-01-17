@@ -2145,12 +2145,12 @@ class TestContract(TestContractBase):
         )
 
     def test_purchase_get_view(self):
-        purchase_tree_view = self.env.ref("contract.contract_line_supplier_tree_view")
+        purchase_list_view = self.env.ref("contract.contract_line_supplier_list_view")
         purchase_form_view = self.env.ref("contract.contract_line_supplier_form_view")
         view = self.acct_line.with_context(default_contract_type="purchase").get_view(
-            view_type="tree"
+            view_type="list"
         )
-        self.assertEqual(view["id"], purchase_tree_view.id)
+        self.assertEqual(view["id"], purchase_list_view.id)
         view = self.acct_line.with_context(default_contract_type="purchase").get_view(
             view_type="form"
         )
@@ -2295,15 +2295,6 @@ class TestContract(TestContractBase):
                 "terminate_comment",
                 to_date("2018-02-13"),
             )
-        # Try terminate contract line with last_date_invoiced allowed
-        self.contract._terminate_contract(
-            self.terminate_reason,
-            "terminate_comment",
-            to_date("2018-02-13"),
-            terminate_lines_with_last_date_invoiced=True,
-        )
-        self.assertTrue(self.contract.is_terminated)
-        self.assertEqual(self.acct_line.date_end, to_date("2018-02-14"))
 
     def test_recurrency_propagation(self):
         # Existing contract

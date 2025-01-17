@@ -285,7 +285,7 @@ class ContractContract(models.Model):
 
     def action_show_invoices(self):
         self.ensure_one()
-        tree_view = self.env.ref("account.view_invoice_tree", raise_if_not_found=False)
+        list_view = self.env.ref("account.view_invoice_list", raise_if_not_found=False)
         form_view = self.env.ref("account.view_move_form", raise_if_not_found=False)
         ctx = dict(self.env.context)
         if ctx.get("default_contract_type"):
@@ -298,12 +298,12 @@ class ContractContract(models.Model):
             "type": "ir.actions.act_window",
             "name": "Invoices",
             "res_model": "account.move",
-            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "view_mode": "list,kanban,form,calendar,pivot,graph,activity",
             "domain": [("id", "in", self._get_related_invoices().ids)],
             "context": ctx,
         }
-        if tree_view and form_view:
-            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
+        if list_view and form_view:
+            action["views"] = [(list_view.id, "list"), (form_view.id, "form")]
         return action
 
     @api.depends("contract_line_ids.date_end")
@@ -685,21 +685,12 @@ class ContractContract(models.Model):
         }
 
     def _terminate_contract(
-        self,
-        terminate_reason_id,
-        terminate_comment,
-        terminate_date,
-        terminate_lines_with_last_date_invoiced=False,
+        self, terminate_reason_id, terminate_comment, terminate_date
     ):
         self.ensure_one()
         if not self.env.user.has_group("contract.can_terminate_contract"):
             raise UserError(_("You are not allowed to terminate contracts."))
-        for line in self.contract_line_ids.filtered("is_stop_allowed"):
-            line.stop(
-                max(terminate_date, line.last_date_invoiced)
-                if terminate_lines_with_last_date_invoiced and line.last_date_invoiced
-                else terminate_date
-            )
+        self.contract_line_ids.filtered("is_stop_allowed").stop(terminate_date)
         self.write(
             {
                 "is_terminated": True,

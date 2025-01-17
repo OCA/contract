@@ -390,7 +390,7 @@ msgstr "Arquivado"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Are you sure you want to cancel this line"
 msgstr "Tem a certeza que quer cancelar esta linha"
 
@@ -443,7 +443,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_terminate_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_plan_successor_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_wizard_stop_plan_successor_form_view
@@ -566,7 +566,6 @@ msgstr "Contacto"
 #: model:ir.model.fields,field_description:contract.field_contract_modification__contract_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__contract_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
 msgid "Contract"
 msgstr "Contrato"
@@ -825,7 +824,6 @@ msgstr "Contrato: Pode Terminar Contratos"
 #: model:ir.model.fields,field_description:contract.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:contract.field_res_users__contract_ids
 #: model:ir.ui.menu,name:contract.menu_config_contract
-#: model:ir.ui.menu,name:contract.menu_contract_reporting
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_home_menu_contract
@@ -921,16 +919,6 @@ msgstr "Personalizado"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_customer_form_view
 msgid "Customer"
 msgstr "Cliente"
-
-#. module: contract
-#: model:ir.actions.act_window,name:contract.action_customer_contract_lines
-msgid "Customer Contract Lines"
-msgstr ""
-
-#. module: contract
-#: model:ir.ui.menu,name:contract.menu_customer_contract_line_report
-msgid "Customer Contract lines"
-msgstr ""
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract
@@ -1157,7 +1145,6 @@ msgstr "Grupo"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Group By..."
 msgstr "Agrupar Por..."
 
@@ -1535,7 +1522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_tag__name
 #: model:ir.model.fields,field_description:contract.field_contract_template__name
 #: model:ir.model.fields,field_description:contract.field_contract_terminate_reason__name
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_list_view
 #, python-format
 msgid "Name"
 msgstr "Nome"
@@ -1663,11 +1650,8 @@ msgstr "Outra Informação"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__partner_id
-#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
-#: model:ir.model.fields,field_description:contract.field_contract_line__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__partner_id
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -1678,7 +1662,7 @@ msgstr "Termos de Pagamento"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Plan Start"
 msgstr "Início do Plano"
 
@@ -1839,7 +1823,7 @@ msgstr "Referência"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Renew"
 msgstr "Renovação"
 
@@ -2020,7 +2004,7 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Stop"
 msgstr "Parar"
 
@@ -2031,7 +2015,7 @@ msgstr "Data de Paragem"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Stop Plan Successor"
 msgstr "Parar Plano Sucessor"
 
@@ -2082,16 +2066,6 @@ msgid "Supplier"
 msgstr "Fornecedor"
 
 #. module: contract
-#: model:ir.actions.act_window,name:contract.action_supplier_contract_lines
-msgid "Supplier Contract Lines"
-msgstr ""
-
-#. module: contract
-#: model:ir.ui.menu,name:contract.menu_supplier_contract_line_report
-msgid "Supplier Contract lines"
-msgstr ""
-
-#. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_supplier
 msgid "Supplier Contracts"
@@ -2132,18 +2106,6 @@ msgstr "Terminar Contrato"
 #: model:ir.model,name:contract.model_contract_contract_terminate
 msgid "Terminate Contract Wizard"
 msgstr "Assistente de Término de Contrato"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_with_last_date_invoiced
-msgid "Terminate lines with last date invoiced"
-msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract_terminate__terminate_with_last_date_invoiced
-msgid ""
-"Terminate the contract lines with the last invoiced date if they cannot be "
-"terminated with the date reported in the wizard."
-msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__is_terminated
@@ -2220,7 +2182,7 @@ msgstr "Autorizado o Descancelamento?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_list_view
 msgid "Un-cancel"
 msgstr "Descancelar"
 

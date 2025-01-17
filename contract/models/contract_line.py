@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from .contract_line_constraints import get_allowed
@@ -360,17 +360,17 @@ class ContractLine(models.Model):
             if rec.is_auto_renew:
                 if rec.successor_contract_line_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "A contract line with a successor "
                             "can't be set to auto-renew"
                         )
                     )
                 if not rec.date_end:
-                    raise ValidationError(_("An auto-renew line must have a end date"))
+                    raise ValidationError(self.env._("An auto-renew line must have a end date"))
             else:
                 if not rec.date_end and rec.successor_contract_line_id:
                     raise ValidationError(
-                        _("A contract line with a successor " "must have a end date")
+                        self.env._("A contract line with a successor " "must have a end date")
                     )
 
     @api.constrains("successor_contract_line_id", "date_end")
@@ -379,7 +379,7 @@ class ContractLine(models.Model):
             if rec.date_end and rec.successor_contract_line_id:
                 if rec.date_end >= rec.successor_contract_line_id.date_start:
                     raise ValidationError(
-                        _("Contract line and its successor overlapped")
+                        self.env._("Contract line and its successor overlapped")
                     )
 
     @api.constrains("predecessor_contract_line_id", "date_start")
@@ -391,7 +391,7 @@ class ContractLine(models.Model):
             ):
                 if rec.date_start <= rec.predecessor_contract_line_id.date_end:
                     raise ValidationError(
-                        _("Contract line and its predecessor overlapped")
+                        self.env._("Contract line and its predecessor overlapped")
                     )
 
     @api.model
@@ -446,7 +446,7 @@ class ContractLine(models.Model):
         for rec in self:
             if rec.is_canceled and rec.is_auto_renew:
                 raise ValidationError(
-                    _("A canceled contract line can't be set to auto-renew")
+                    self.env._("A canceled contract line can't be set to auto-renew")
                 )
 
     @api.constrains("recurring_next_date", "date_start")
@@ -460,7 +460,7 @@ class ContractLine(models.Model):
             if line.date_start and line.recurring_next_date:
                 if line.date_start > line.recurring_next_date:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You can't have a date of next invoice anterior "
                             "to the start of the contract line '%s'"
                         )
@@ -474,7 +474,7 @@ class ContractLine(models.Model):
         for rec in self.filtered("last_date_invoiced"):
             if rec.date_end and rec.date_end < rec.last_date_invoiced:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the end date before the date of last "
                         "invoice for the contract line '%s'"
                     )
@@ -484,7 +484,7 @@ class ContractLine(models.Model):
                 continue
             if rec.date_start and rec.date_start > rec.last_date_invoiced:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the start date after the date of last "
                         "invoice for the contract line '%s'"
                     )
@@ -495,7 +495,7 @@ class ContractLine(models.Model):
                 and rec.recurring_next_date <= rec.last_date_invoiced
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the next invoice date before the date "
                         "of last invoice for the contract line '%s'"
                     )
@@ -511,7 +511,7 @@ class ContractLine(models.Model):
                 or rec.last_date_invoiced < rec.date_end
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You must supply a date of next invoice for contract "
                         "line '%s'"
                     )
@@ -524,7 +524,7 @@ class ContractLine(models.Model):
             if line.date_start and line.date_end:
                 if line.date_start > line.date_end:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Contract line '%s' start date can't be later than"
                             " end date"
                         )
@@ -597,18 +597,18 @@ class ContractLine(models.Model):
 
     def _translate_marker_month_name(self, month_name):
         months = {
-            "01": _("January"),
-            "02": _("February"),
-            "03": _("March"),
-            "04": _("April"),
-            "05": _("May"),
-            "06": _("June"),
-            "07": _("July"),
-            "08": _("August"),
-            "09": _("September"),
-            "10": _("October"),
-            "11": _("November"),
-            "12": _("December"),
+            "January": self.env._("January"),
+            "February": self.env._("February"),
+            "March": self.env._("March"),
+            "April": self.env._("April"),
+            "May": self.env._("May"),
+            "June": self.env._("June"),
+            "July": self.env._("July"),
+            "August": self.env._("August"),
+            "September": self.env._("September"),
+            "October": self.env._("October"),
+            "November": self.env._("November"),
+            "December": self.env._("December"),
         }
         return months[month_name]
 
@@ -623,7 +623,7 @@ class ContractLine(models.Model):
         name = name.replace(
             "#INVOICEMONTHNAME#",
             self.with_context(lang=lang.code)._translate_marker_month_name(
-                first_date_invoiced.strftime("%m")
+                first_date_invoiced.strftime("%B")
             ),
         )
         return name
@@ -648,7 +648,7 @@ class ContractLine(models.Model):
         for rec in self:
             if rec.last_date_invoiced:
                 raise ValidationError(
-                    _("You can't delay a contract line " "invoiced at least one time.")
+                    self.env._("You can't delay a contract line " "invoiced at least one time.")
                 )
             new_date_start = rec.date_start + delay_delta
             if rec.date_end:
@@ -695,7 +695,7 @@ class ContractLine(models.Model):
         :return: True
         """
         if not all(self.mapped("is_stop_allowed")):
-            raise ValidationError(_("Stop not allowed for this line"))
+            raise ValidationError(self.env._("Stop not allowed for this line"))
         for rec in self:
             if date_end < rec.date_start:
                 rec.cancel()
@@ -706,7 +706,7 @@ class ContractLine(models.Model):
                         rec._prepare_value_for_stop(date_end, manual_renew_needed)
                     )
                     if post_message:
-                        msg = _(
+                        msg = self.env._(
                             """Contract line for <strong>%(product)s</strong>
                             stopped: <br/>
                             - <strong>End</strong>: %(old_end)s -- %(new_end)s
@@ -770,7 +770,7 @@ class ContractLine(models.Model):
         contract_line = self.env["contract.line"]
         for rec in self:
             if not rec.is_plan_successor_allowed:
-                raise ValidationError(_("Plan successor not allowed for this line"))
+                raise ValidationError(self.env._("Plan successor not allowed for this line"))
             rec.is_auto_renew = False
             new_line = self.create(
                 rec._prepare_value_for_plan_successor(
@@ -780,7 +780,7 @@ class ContractLine(models.Model):
             rec.successor_contract_line_id = new_line
             contract_line |= new_line
             if post_message:
-                msg = _(
+                msg = self.env._(
                     """Contract line for <strong>%(product)s</strong>
                     planned a successor: <br/>
                     - <strong>Start</strong>: %(new_date_start)s
@@ -828,7 +828,7 @@ class ContractLine(models.Model):
         :return: created contract line
         """
         if not all(self.mapped("is_stop_plan_successor_allowed")):
-            raise ValidationError(_("Stop/Plan successor not allowed for this line"))
+            raise ValidationError(self.env._("Stop/Plan successor not allowed for this line"))
         contract_line = self.env["contract.line"]
         for rec in self:
             if rec.date_start >= date_start:
@@ -883,7 +883,7 @@ class ContractLine(models.Model):
                         is_auto_renew,
                         post_message=False,
                     )
-            msg = _(
+            msg = self.env._(
                 """Contract line for <strong>%(product)s</strong>
                 suspended: <br/>
                 - <strong>Suspension Start</strong>: %(new_date_start)s
@@ -900,10 +900,10 @@ class ContractLine(models.Model):
 
     def cancel(self):
         if not all(self.mapped("is_cancel_allowed")):
-            raise ValidationError(_("Cancel not allowed for this line"))
+            raise ValidationError(self.env._("Cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
             lines = self.filtered(lambda line, c=contract: line.contract_id == c)
-            msg = _(
+            msg = self.env._(
                 "Contract line canceled: %s",
                 "<br/>- ".join(
                     [f"<strong>{name}</strong>" for name in lines.mapped("name")]
@@ -917,10 +917,10 @@ class ContractLine(models.Model):
 
     def uncancel(self, recurring_next_date):
         if not all(self.mapped("is_un_cancel_allowed")):
-            raise ValidationError(_("Un-cancel not allowed for this line"))
+            raise ValidationError(self.env._("Un-cancel not allowed for this line"))
         for contract in self.mapped("contract_id"):
             lines = self.filtered(lambda line, c=contract: line.contract_id == c)
-            msg = _(
+            msg = self.env._(
                 "Contract line Un-canceled: %s",
                 "<br/>- ".join(
                     [f"<strong>{name}</strong>" for name in lines.mapped("name")]
@@ -1046,7 +1046,7 @@ class ContractLine(models.Model):
             else:
                 new_line = rec._renew_extend_line(date_end)
             res |= new_line
-            msg = _(
+            msg = self.env._(
                 """Contract line for <strong>%(product)s</strong>
                 renewed: <br/>
                 - <strong>Start</strong>: %(new_date_start)s
@@ -1079,8 +1079,8 @@ class ContractLine(models.Model):
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
         default_contract_type = self.env.context.get("default_contract_type")
-        if view_type == "tree" and default_contract_type == "purchase":
-            view_id = self.env.ref("contract.contract_line_supplier_tree_view").id
+        if view_type == "list" and default_contract_type == "purchase":
+            view_id = self.env.ref("contract.contract_line_supplier_list_view").id
         if view_type == "form":
             if default_contract_type == "purchase":
                 view_id = self.env.ref("contract.contract_line_supplier_form_view").id
@@ -1092,7 +1092,7 @@ class ContractLine(models.Model):
         """stop unlink uncnacled lines"""
         for record in self:
             if not (record.is_canceled or record.display_type):
-                raise ValidationError(_("Contract line must be canceled before delete"))
+                raise ValidationError(self.env._("Contract line must be canceled before delete"))
         return super().unlink()
 
     def _get_quantity_to_invoice(
