@@ -19,6 +19,7 @@
         "views/sale_subscription_template_views.xml",
         "views/sale_order_views.xml",
         "views/res_partner_views.xml",
+        "views/account_move_views.xml",
         "data/ir_cron.xml",
         "data/sale_subscription_data.xml",
         "wizard/close_subscription_wizard.xml",
