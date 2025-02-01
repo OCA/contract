@@ -20,13 +20,6 @@ msgstr ""
 "X-Generator: Weblate 5.6.2\n"
 
 #. module: contract
-#. odoo-python
-#: code:addons/contract/models/contract.py:0
-#, python-format
-msgid "%(msg)s by contract: %(contract_link)s"
-msgstr "%(msg)s por el contrato: %(contract_link)s"
-
-#. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
 msgid ""
 "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
@@ -2543,6 +2536,13 @@ msgstr ""
 "'%s'"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+#, python-format
+msgid "by contract"
+msgstr "por el contrato"
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "e.g. Contract XYZ"
 msgstr "ejemplo Contrato XYZ"
@@ -2565,3 +2565,7 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }}) - "
 "Modificaciones"
+
+#, python-format
+#~ msgid "%(msg)s by contract: %(contract_link)s"
+#~ msgstr "%(msg)s por el contrato: %(contract_link)s"
