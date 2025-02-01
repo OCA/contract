@@ -613,11 +613,13 @@ class ContractContract(models.Model):
     def _add_contract_origin(self, invoices):
         for item in self:
             for move in invoices & item._get_related_invoices():
-                body = Markup(_("%(msg)s by contract: %(contract_link)s")) % {
-                    "msg": move._creation_message(),
-                    "contract_link": item._get_html_link(title=item.display_name),
-                }
-                move.message_post(body=body)
+                translation = _("by contract")
+                move.message_post(
+                    body=Markup(
+                        f"{move._creation_message()} {translation} "
+                        f"{item._get_html_link(title=item.display_name)}."
+                    )
+                )
 
     def _recurring_create_invoice(self, date_ref=False):
         invoices_values = self._prepare_recurring_invoices_values(date_ref)
