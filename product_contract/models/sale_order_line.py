@@ -108,12 +108,13 @@ class SaleOrderLine(models.Model):
 
     @api.depends("product_id")
     def _compute_date_start(self):
+        today = fields.Date.context_today(self)
         for sol in self:
             if sol.contract_start_date_method == "start_this":
-                sol.date_start = sol.order_id.date_order.replace(day=1)
+                sol.date_start = today.replace(day=1)
             elif sol.contract_start_date_method == "end_this":
                 sol.date_start = (
-                    sol.order_id.date_order
+                    today
                     + self.get_relative_delta(
                         sol.recurring_rule_type, sol.product_id.default_qty
                     )
@@ -121,7 +122,7 @@ class SaleOrderLine(models.Model):
             elif sol.contract_start_date_method == "start_next":
                 # Dia 1 del siguiente recurring_rule_type
                 sol.date_start = (
-                    sol.order_id.date_order
+                    today
                     + self.get_relative_delta(
                         sol.recurring_rule_type, sol.product_id.default_qty
                     )
@@ -129,7 +130,7 @@ class SaleOrderLine(models.Model):
             elif sol.contract_start_date_method == "end_next":
                 # Last day of next recurring period
                 sol.date_start = (
-                    sol.order_id.date_order
+                    today
                     + self.get_relative_delta(
                         sol.recurring_rule_type, sol.product_id.default_qty + 1
                     )
@@ -190,7 +191,7 @@ class SaleOrderLine(models.Model):
         recurring_next_date = self.env[
             "contract.line"
         ]._compute_first_recurring_next_date(
-            self.date_start or fields.Date.today(),
+            self.date_start or fields.Date.context_today(self),
             self.recurring_invoicing_type,
             self.recurring_rule_type,
             1,
@@ -206,7 +207,7 @@ class SaleOrderLine(models.Model):
             "price_unit": self.price_unit,
             "discount": self.discount,
             "date_end": self.date_end,
-            "date_start": self.date_start or fields.Date.today(),
+            "date_start": self.date_start or fields.Date.context_today(self),
             "recurring_next_date": recurring_next_date,
             "recurring_interval": self.recurring_interval or 1,
             "recurring_invoicing_type": self.recurring_invoicing_type,
@@ -308,7 +309,7 @@ class SaleOrderLine(models.Model):
             ):
                 continue
             is_end = "end_" in line.contract_start_date_method
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             month_period = month = today.month
             month_nb = MONTH_NB_MAPPING[line.recurring_rule_type]
             # The period number is started by 0 to be able to calculate the month
