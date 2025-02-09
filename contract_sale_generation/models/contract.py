@@ -16,7 +16,7 @@ class ContractContract(models.Model):
 
     sale_count = fields.Integer(compute="_compute_sale_count")
 
-    @api.depends('contract_line_ids.order_id')
+    @api.depends('contract_line_ids.sale_order_line.order_id')
     def _compute_sale_count(self):
         for rec in self:
             rec.sale_count = len(rec._get_related_sales())
