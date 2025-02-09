@@ -16,6 +16,11 @@ class ContractContract(models.Model):
 
     sale_count = fields.Integer(compute="_compute_sale_count")
 
+    @api.depends('contract_line_ids.order_id')
+    def _compute_sale_count(self):
+        for rec in self:
+            rec.sale_count = len(rec._get_related_sales())
+
     def _prepare_sale(self, date_ref):
         self.ensure_one()
         sale = self.env["sale.order"].new(
@@ -42,10 +47,6 @@ class ContractContract(models.Model):
             .mapped("order_id")
         )
         return sales
-
-    def _compute_sale_count(self):
-        for rec in self:
-            rec.sale_count = len(rec._get_related_sales())
 
     def action_show_sales(self):
         self.ensure_one()
