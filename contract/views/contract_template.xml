@@ -46,11 +46,10 @@
                             <field name="product_id" />
                             <field name="name" widget="section_and_note_text" />
                             <field name="quantity" />
-                            <field name="is_auto_renew" column_invisible="True" />
                             <field name="uom_id" />
                             <field
                                 name="automatic_price"
-                                column_invisible="parent.contract_type == 'purchase' and not is_auto_renew"
+                                column_invisible="parent.contract_type == 'purchase'"
                             />
                             <field name="price_unit" readonly="automatic_price" />
                             <field name="specific_price" column_invisible="True" />
