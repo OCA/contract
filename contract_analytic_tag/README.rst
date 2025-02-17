@@ -62,6 +62,10 @@ Contributors
   - Víctor Martínez
   - Pedro M. Baeza
 
+- `Heliconia Solutions Pvt. Ltd. <https://www.heliconia.io>`__
+
+  - Bhavesh Heliconia
+
 Maintainers
 -----------
 

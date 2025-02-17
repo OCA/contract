@@ -10,7 +10,6 @@ class TestContractAnalyticTag(TestContractBase):
         cls.plan = cls.env["account.analytic.plan"].create(
             {
                 "name": "Projects Plan",
-                "company_id": False,
             }
         )
         cls.analytic_account_1 = cls.env["account.analytic.account"].create(
