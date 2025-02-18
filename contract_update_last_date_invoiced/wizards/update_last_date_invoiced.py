@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class PrgEditLastDateInvoicedWizard(models.TransientModel):
-
     _name = "contract.update.last.date.invoiced"
     _description = "Update Contract Last Date Invoiced Wizard"
 

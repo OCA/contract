@@ -5,7 +5,6 @@ from odoo import _, models
 
 
 class ContractLine(models.Model):
-
     _inherit = "contract.line"
 
     def action_update_last_date_invoiced(self):
