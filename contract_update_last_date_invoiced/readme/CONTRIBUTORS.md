@@ -2,3 +2,5 @@
 - Denis Roussel \<<denis.roussel@acsone.eu>\>
 - [Moduon](https://www.moduon.team):
   - Eduardo López
+- [Heliconia Solutions Pvt. Ltd.](https://www.heliconia.io)
+  - Bhavesh Heliconia
