@@ -12,17 +12,28 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import Form, common
+from odoo.tests import Form, common, tagged
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
+@tagged("post_install", "-at_install")
 class TestContractBase(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        if not cls.env.company.chart_template_id:
+            # Load a CoA if there's none in current company
+            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
+            if not coa:
+                # Load the first available CoA
+                coa = cls.env["account.chart.template"].search(
+                    [("visible", "=", True)], limit=1
+                )
+            coa.try_loading(company=cls.env.company, install_demo=False)
+
         cls.today = fields.Date.today()
         cls.pricelist = cls.env["product.pricelist"].create(
             {"name": "pricelist for contract test"}
@@ -2329,6 +2340,7 @@ class TestContract(TestContractBase):
                 to_date("2018-02-13"),
             )
 
+    @freeze_time("2020-01-01")
     def test_recurrency_propagation(self):
         # Existing contract
         vals = {
