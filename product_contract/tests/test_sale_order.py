@@ -6,9 +6,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
+@tagged("post_install", "-at_install")
 class TestSaleOrder(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -20,6 +22,15 @@ class TestSaleOrder(TransactionCase):
                 no_reset_password=True,
             )
         )
+        if not cls.env.company.chart_template_id:
+            # Load a CoA if there's none in current company
+            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
+            if not coa:
+                # Load the first available CoA
+                coa = cls.env["account.chart.template"].search(
+                    [("visible", "=", True)], limit=1
+                )
+            coa.try_loading(company=cls.env.company, install_demo=False)
         cls.product1 = cls.env.ref("product.product_product_1")
         cls.product2 = cls.env.ref("product.product_product_2")
         cls.sale = cls.env.ref("sale.sale_order_2")
