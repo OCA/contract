@@ -5,19 +5,29 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
+@tagged("post_install", "-at_install")
 class ContractSaleCommon:
     # Use case : Prepare some data for current test case
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        if not cls.env.company.chart_template_id:
+            # Load a CoA if there's none in current company
+            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
+            if not coa:
+                # Load the first available CoA
+                coa = cls.env["account.chart.template"].search(
+                    [("visible", "=", True)], limit=1
+                )
+            coa.try_loading(company=cls.env.company, install_demo=False)
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
