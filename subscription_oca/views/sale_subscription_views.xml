@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <record id="sale_subscription_form" model="ir.ui.view">
         <field name="name">sale.subscription.form</field>
         <field name="model">sale.subscription</field>
@@ -28,10 +27,8 @@
                         widget="statusbar"
                         options="{'fold_field': 'fold', 'clickable': '1'}"
                     />
-
                 </header>
                 <sheet>
-
                     <div class="oe_button_box" name="button_box">
                         <button
                             name="action_view_sale_order_ids"
@@ -59,8 +56,6 @@
                                 string="Invoices"
                             />
                         </button>
-
-
                     </div>
                     <widget
                         name="web_ribbon"
@@ -87,10 +82,8 @@
                             <field name="date" invisible="recurring_rule_boundary" />
                             <field name="close_reason_id" invisible="active" />
                             <field name="recurring_rule_boundary" invisible="1" />
-
                         </group>
                         <group name="right_group">
-
                             <field name="template_id" />
                             <field name="crm_team_id" />
                             <field
@@ -103,8 +96,6 @@
                                 options="{'no_create': True}"
                                 groups="base.group_multi_company"
                             />
-
-
                         </group>
                     </group>
                     <notebook>
@@ -188,7 +179,6 @@
                             </group>
                         </page>
                     </notebook>
-
                 </sheet>
 
                 <div class="oe_chatter">
@@ -218,7 +208,6 @@
             </tree>
         </field>
     </record>
-
 
     <record id="sale_subscription_kanban" model="ir.ui.view">
         <field name="name">sale.subscription.kanban</field>
@@ -347,10 +336,8 @@
                                             t-att-alt="record.user_id.value"
                                             class="oe_kanban_avatar"
                                         />
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </t>
@@ -463,5 +450,4 @@
         sequence="30"
         name="Close reasons"
     />
-
 </odoo>
