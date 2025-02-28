@@ -60,6 +60,9 @@ class SaleSubscriptionTemplate(models.Model):
     subscription_count = fields.Integer(
         compute="_compute_subscription_count", string="subscription_ids"
     )
+    show_subscription_range = fields.Boolean(
+        help="Display the subscription range in the invoice",
+    )
 
     def _compute_subscription_count(self):
         data = self.env["sale.subscription"].read_group(

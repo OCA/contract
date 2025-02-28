@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <div name="invoice_date" position="after">
+            <div
+                class="col-auto col-3 mw-100 mb-2"
+                t-if="o.subscription_id.template_id.show_subscription_range and o.subscription_start_date and o.subscription_end_date"
+                name="subscription_range"
+            >
+                <strong>Subscription:</strong>
+                <p class="m-0">
+                    <span t-field="o.subscription_start_date" /> - <span
+                        t-field="o.subscription_end_date"
+                    />
+                </p>
+            </div>
+        </div>
+    </template>
+
+</odoo>

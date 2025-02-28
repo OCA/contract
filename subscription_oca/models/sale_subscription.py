@@ -212,15 +212,17 @@ class SaleSubscription(models.Model):
         else:
             self.calculate_recurring_next_date(today)
 
-    def calculate_recurring_next_date(self, start_date):
+    def _calculate_recurring_next_date(self, start_date):
+        self.ensure_one()
         if self.account_invoice_ids_count == 0:
-            self.recurring_next_date = date.today()
-        else:
-            type_interval = self.template_id.recurring_rule_type
-            interval = int(self.template_id.recurring_interval)
-            self.recurring_next_date = start_date + relativedelta(
-                **{type_interval: interval}
-            )
+            return date.today()
+        type_interval = self.template_id.recurring_rule_type
+        interval = int(self.template_id.recurring_interval)
+        return start_date + relativedelta(**{type_interval: interval})
+
+    def calculate_recurring_next_date(self, start_date):
+        self.ensure_one()
+        self.recurring_next_date = self._calculate_recurring_next_date(start_date)
 
     @api.onchange("partner_id")
     def onchange_partner_id(self):
@@ -272,8 +274,21 @@ class SaleSubscription(models.Model):
             "order_line": line_ids,
         }
 
+    def _generate_subscription_date_range(self):
+        self.ensure_one()
+        if self.account_invoice_ids_count == 0:
+            start_date = self.date_start
+            end_date = self.recurring_next_date
+        else:
+            start_date = self.recurring_next_date
+            end_date = self._calculate_recurring_next_date(self.recurring_next_date)
+
+        return start_date, end_date
+
     def _prepare_account_move(self, line_ids):
         self.ensure_one()
+        start_date, end_date = self._generate_subscription_date_range()
+
         values = {
             "partner_id": self.partner_id.id,
             "invoice_date": self.recurring_next_date,

@@ -11,6 +11,7 @@
     "author": "Domatix, Odoo Community Association (OCA)",
     "depends": ["sale_management", "account"],
     "data": [
+        "views/account_move_views.xml",
         "views/product_template_views.xml",
         "views/account_move_views.xml",
         "views/sale_subscription_views.xml",
@@ -21,6 +22,7 @@
         "views/res_partner_views.xml",
         "data/ir_cron.xml",
         "data/sale_subscription_data.xml",
+        "report/report_invoice.xml",
         "wizard/close_subscription_wizard.xml",
         "security/ir.model.access.csv",
     ],
