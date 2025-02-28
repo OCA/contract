@@ -18,22 +18,38 @@ class ContractContract(models.Model):
         for contract in self:
             if not contract.invoicing_sales or not contract.recurring_next_date:
                 continue
+            common_domain = [
+                (
+                    "partner_invoice_id",
+                    "child_of",
+                    contract.partner_id.commercial_partner_id.ids,
+                ),
+                ("invoice_status", "=", "to invoice"),
+                (
+                    "date_order",
+                    "<=",
+                    f"{contract.recurring_next_date} 23:59:59",
+                ),
+            ]
             sales = self.env["sale.order"].search(
-                [
+                common_domain
+                + [
                     ("analytic_account_id", "=", contract.group_id.id),
-                    (
-                        "partner_invoice_id",
-                        "child_of",
-                        contract.partner_id.commercial_partner_id.ids,
-                    ),
-                    ("invoice_status", "=", "to invoice"),
-                    (
-                        "date_order",
-                        "<=",
-                        f"{contract.recurring_next_date} 23:59:59",
-                    ),
                 ]
             )
+            sales |= self.env["sale.order"].search(
+                common_domain
+                + [
+                    (
+                        "order_line.distribution_analytic_account_ids",
+                        "in",
+                        self.group_id.ids,
+                    )
+                ]
+            )
+            sales = sales.with_context(
+                filter_on_analytic_account=contract.group_id.id
+            ).filtered(lambda s: s._get_invoiceable_lines())
             if sales:
                 invoices |= sales._create_invoices()
         return invoices
