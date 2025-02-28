@@ -21,7 +21,9 @@ class TestContractPriceRevision(TestContractBase):
         )
 
     def execute_wizard(self):
-        self.wizard.with_context(active_ids=self.contract.id).action_apply()
+        self.wizard.with_context(
+            active_ids=self.contract.ids, active_model=self.contract._name
+        ).action_apply()
 
     def test_contract_price_revision_wizard(self):
         # This is for checking if this line is not versioned
