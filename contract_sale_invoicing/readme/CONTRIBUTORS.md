@@ -3,4 +3,6 @@
   - Carolina Fernandez
   - Pedro M. Baeza
   - Juan José Seguí
-- Souheil Bejaoui \<<souheil.bejaoui@acsone.eu>\>
+- [Acsone](https://www.acsone.eu)
+  - Souheil Bejaoui
+  - Tobias Zehntner

@@ -20,7 +20,11 @@ class ContractContract(models.Model):
                 continue
             sales = self.env["sale.order"].search(
                 [
-                    ("analytic_account_id", "=", contract.group_id.id),
+                    (
+                        "order_line.distribution_analytic_account_ids",
+                        "in",
+                        self.group_id.ids,
+                    ),
                     (
                         "partner_invoice_id",
                         "child_of",
@@ -34,6 +38,9 @@ class ContractContract(models.Model):
                     ),
                 ]
             )
+            sales = sales.with_context(
+                filter_on_analytic_account=contract.group_id.id
+            ).filtered(lambda s: s._get_invoiceable_lines())
             if sales:
                 invoices |= sales._create_invoices()
         return invoices
