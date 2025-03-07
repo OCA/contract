@@ -70,10 +70,7 @@
                     </div>
                     <group>
                         <group name="left_group">
-                            <field name="active" invisible="1" />
-                            <field name="in_progress" invisible="True" />
                             <field name="partner_id" />
-                            <field name="currency_id" invisible="1" />
                             <field name="pricelist_id" />
                             <field
                                 name="date_start"
@@ -81,7 +78,6 @@
                             />
                             <field name="date" invisible="recurring_rule_boundary" />
                             <field name="close_reason_id" invisible="active" />
-                            <field name="recurring_rule_boundary" invisible="1" />
                         </group>
                         <group name="right_group">
                             <field name="template_id" />
@@ -104,14 +100,13 @@
                             name="subscription_lines_page"
                         >
                             <field name="sale_subscription_line_ids">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="product_id" required="True" />
                                     <field
                                         name="name"
                                         required="True"
                                         widget="section_and_note_text"
                                     />
-                                    <field name="currency_id" column_invisible="1" />
                                     <field name="product_uom_qty" required="True" />
                                     <field name="price_unit" required="True" />
                                     <field name="discount" required="True" />
@@ -124,7 +119,7 @@
                                         name="price_total"
                                         options="{'currency_field': 'currency_id'}"
                                     />
-                                </tree>
+                                </list>
                             </field>
                             <group
                                 class="oe_subtotal_footer oe_right"
@@ -181,20 +176,16 @@
                     </notebook>
                 </sheet>
 
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
 
     <record id="sale_subscription_tree" model="ir.ui.view">
-        <field name="name">sale.subscription.tree</field>
+        <field name="name">sale.subscription.list</field>
         <field name="model">sale.subscription</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" optional="show" />
                 <field name="partner_id" optional="show" />
                 <field name="recurring_next_date" optional="show" />
@@ -205,7 +196,7 @@
                 <field name="amount_total" sum="Total" optional="show" />
                 <field name="template_id" optional="show" />
                 <field name="stage_id" optional="show" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -240,7 +231,7 @@
                     help="This bar allows to filter the opportunities based on scheduled activities."
                 />
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div
                             t-attf-class="
                           #{!selection_mode ? kanban_color(record.color.raw_value) : ''}
@@ -377,31 +368,31 @@
     </record>
 
     <record id="view_subscription_close_reason_tree" model="ir.ui.view">
-        <field name="name">view.subscription.close.reason.tree</field>
+        <field name="name">view.subscription.close.reason.list</field>
         <field name="model">sale.subscription.close.reason</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="subscription_close_reason_action" model="ir.actions.act_window">
         <field name="name">Close reasons</field>
         <field name="res_model">sale.subscription.close.reason</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
     </record>
 
     <record id="sale_subscription_action" model="ir.actions.act_window">
         <field name="name">Subscriptions</field>
         <field name="res_model">sale.subscription</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
     </record>
 
     <record id="subscription_product_template_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">
             {'search_default_subsproducts': True, "default_type": "service", "default_subscribable": True}
         </field>

@@ -26,7 +26,7 @@ class Partner(models.Model):
             "res_model": "sale.subscription",
             "domain": [("id", "in", self.subscription_ids.ids)],
             "name": self.name,
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "context": {
                 "default_partner_id": self.id,
             },
