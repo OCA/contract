@@ -15,11 +15,4 @@ class CloseSubscriptionWizard(models.TransientModel):
         sale_subscription = self.env["sale.subscription"].browse(
             self.env.context["active_id"]
         )
-        sale_subscription.close_reason_id = self.close_reason_id.id
-        stage = sale_subscription.stage_id
-        closed_stage = self.env["sale.subscription.stage"].search(
-            [("type", "=", "post")], limit=1
-        )
-        if stage != closed_stage:
-            sale_subscription.stage_id = closed_stage
-            sale_subscription.active = False
+        sale_subscription.close_subscription(self.close_reason_id.id)

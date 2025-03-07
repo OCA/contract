@@ -76,7 +76,7 @@ class SaleSubscriptionTemplate(models.Model):
     def action_view_subscription_ids(self):
         return {
             "name": self.name,
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "sale.subscription",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.subscription_ids.ids)],
@@ -89,13 +89,13 @@ class SaleSubscriptionTemplate(models.Model):
     @api.depends("product_ids")
     def _compute_product_ids_count(self):
         for record in self:
-            record.product_ids_count = len(self.product_ids)
+            record.product_ids_count = len(record.product_ids)
 
     def action_view_product_ids(self):
         return {
             "name": self.name,
             "view_type": "form",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "product.template",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.product_ids.ids)],

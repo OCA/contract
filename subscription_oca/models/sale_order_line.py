@@ -14,4 +14,5 @@ class SaleOrderLine(models.Model):
             "price_unit": self.price_unit,
             "discount": self.discount,
             "price_subtotal": self.price_subtotal,
+            "analytic_distribution": self.analytic_distribution,
         }

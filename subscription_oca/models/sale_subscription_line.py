@@ -1,12 +1,13 @@
 # Copyright 2023 Domatix - Carlos Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.tools.misc import get_lang
 
 
 class SaleSubscriptionLine(models.Model):
     _name = "sale.subscription.line"
     _description = "Subscription lines added to a given subscription"
+    _inherit = "analytic.mixin"
 
     product_id = fields.Many2one(
         comodel_name="product.product",
@@ -150,9 +151,7 @@ class SaleSubscriptionLine(models.Model):
                 and record.product_id.uom_id
                 and record.sale_subscription_id.partner_id
                 and record.sale_subscription_id.pricelist_id
-                and record.sale_subscription_id.pricelist_id.discount_policy
-                == "without_discount"
-                and self.env.user.has_group("product.group_discount_per_so_line")
+                and self.env.user.has_group("sale.group_discount_per_so_line")
             ):
                 record.discount = 0.0
                 continue
@@ -206,16 +205,17 @@ class SaleSubscriptionLine(models.Model):
         product_currency = product.currency_id
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
-            if pricelist_item.pricelist_id.discount_policy == "without_discount":
+            if pricelist_item.compute_price == "fixed":
                 while (
                     pricelist_item.base == "pricelist"
                     and pricelist_item.base_pricelist_id
-                    and pricelist_item.base_pricelist_id.discount_policy
-                    == "without_discount"
+                    and pricelist_item.compute_price == "fixed"
                 ):
-                    _price, rule_id = pricelist_item.base_pricelist_id.with_context(
-                        uom=uom.id
-                    )._get_product_price_rule(product, qty)
+                    _price, rule_id = (
+                        pricelist_item.base_pricelist_id._get_product_price_rule(
+                            product, qty, uom=uom
+                        )
+                    )
                     pricelist_item = PricelistItem.browse(rule_id)
 
             if pricelist_item.base == "standard_price":
@@ -257,11 +257,6 @@ class SaleSubscriptionLine(models.Model):
         return product_price * uom_factor * cur_factor, currency_id
 
     def _get_display_price(self, product):
-        if self.sale_subscription_id.pricelist_id.discount_policy == "with_discount":
-            return self.sale_subscription_id.pricelist_id._get_product_price(
-                product, self.product_uom_qty or 1.0, uom=self.product_id.uom_id
-            )
-
         final_price, rule_id = self.sale_subscription_id.pricelist_id.with_context(
             partner_id=self.sale_subscription_id.partner_id.id,
             date=fields.Datetime.now(),
@@ -297,6 +292,7 @@ class SaleSubscriptionLine(models.Model):
             "price_subtotal": self.price_subtotal,
             "tax_id": self.tax_ids,
             "product_uom": self.product_id.uom_id.id,
+            "analytic_distribution": self.analytic_distribution,
         }
 
     def _prepare_account_move_line(self):
@@ -312,7 +308,8 @@ class SaleSubscriptionLine(models.Model):
             "price_unit": self.price_unit,
             "discount": self.discount,
             "price_subtotal": self.price_subtotal,
-            "tax_ids": [(6, 0, self.tax_ids.ids)],
+            "tax_ids": [Command.set(self.tax_ids.ids)],
             "product_uom_id": self.product_id.uom_id.id,
             "account_id": account.id,
+            "analytic_distribution": self.analytic_distribution,
         }

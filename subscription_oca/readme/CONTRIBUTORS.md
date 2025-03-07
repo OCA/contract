@@ -6,3 +6,4 @@
   - Harald Panten
   - Valentin Vinagre
   - Alberto Martínez
+- Dennis Sluijk \<<d.sluijk@onestein.nl>\>
