@@ -6,6 +6,7 @@ from odoo.tools.misc import get_lang
 
 class SaleSubscriptionLine(models.Model):
     _name = "sale.subscription.line"
+    _inherit = "analytic.mixin"
     _description = "Subscription lines added to a given subscription"
 
     product_id = fields.Many2one(
@@ -298,6 +299,7 @@ class SaleSubscriptionLine(models.Model):
             "price_subtotal": self.price_subtotal,
             "tax_id": self.tax_ids,
             "product_uom": self.product_id.uom_id.id,
+            "analytic_distribution": self.analytic_distribution,
         }
 
     def _prepare_account_move_line(self):
@@ -316,4 +318,5 @@ class SaleSubscriptionLine(models.Model):
             "tax_ids": [(6, 0, self.tax_ids.ids)],
             "product_uom_id": self.product_id.uom_id.id,
             "account_id": account.id,
+            "analytic_distribution": self.analytic_distribution,
         }
