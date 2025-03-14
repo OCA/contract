@@ -23,8 +23,16 @@ class SaleOrder(models.Model):
 
     @api.depends("subscription_ids")
     def _compute_subscriptions_count(self):
+        data = self.env["sale.subscription"].read_group(
+            domain=[("sale_order_id", "in", self.ids)],
+            fields=["sale_order_id"],
+            groupby=["sale_order_id"],
+        )
+        count_dict = {
+            item["sale_order_id"][0]: item["sale_order_id_count"] for item in data
+        }
         for record in self:
-            record.subscriptions_count = len(record.subscription_ids)
+            record.subscriptions_count = count_dict.get(record.id, 0)
 
     def action_view_subscriptions(self):
         return {
