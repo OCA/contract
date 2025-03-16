@@ -14,6 +14,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_ready
+msgid ""
+"\n"
+"        A subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.\n"
+"      "
+msgstr ""
+
+#. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
 msgid ""
 "\n"
@@ -25,7 +33,7 @@ msgstr ""
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
 msgid ""
 "\n"
-"        Draft equivalent, a subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.\n"
+"        Draft, still working on the specifics.\n"
 "      "
 msgstr ""
 
@@ -276,7 +284,9 @@ msgid "Display name"
 msgstr ""
 
 #. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__draft
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__draft
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
 msgid "Draft"
 msgstr ""
 
@@ -608,7 +618,7 @@ msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__pre
-#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_ready
 msgid "Ready to start"
 msgstr ""
 
@@ -729,6 +739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription_oca.field_account_payment__subscription_id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_order__order_subscription_id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__sale_subscription_id
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_move_form
 msgid "Subscription"
 msgstr ""
 
