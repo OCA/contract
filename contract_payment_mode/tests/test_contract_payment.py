@@ -6,15 +6,17 @@
 
 from unittest.mock import patch
 
-from odoo.tests import common, tagged
+from odoo import Command
+from odoo.tests import tagged
 
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
+from odoo.addons.base.tests.common import BaseCommon
 
 from ..hooks import post_init_hook
 
 
 @tagged("post_install", "-at_install")
-class TestContractPaymentInit(common.TransactionCase):
+class TestContractPaymentInit(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -52,7 +54,7 @@ class TestContractPaymentInit(common.TransactionCase):
         cls.partner = cls.env["res.partner"].create(
             {
                 "name": "Test contract partner",
-                "customer_payment_mode_id": cls.payment_mode,
+                "customer_payment_mode_id": cls.payment_mode.id,
             }
         )
         cls.product = cls.env["product.product"].create(
@@ -107,9 +109,7 @@ class TestContractPaymentInit(common.TransactionCase):
                 "recurring_rule_type": "monthly",
                 "date_start": "2018-01-15",
                 "contract_line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "product_id": self.product.id,
                             "name": "Database Administration 25",
