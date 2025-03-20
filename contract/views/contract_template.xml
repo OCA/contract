@@ -29,7 +29,7 @@
                         nolabel="1"
                         colspan="2"
                     >
-                        <tree>
+                        <list>
                             <control>
                                 <create string="Add a line" />
                                 <create
@@ -46,10 +46,11 @@
                             <field name="product_id" />
                             <field name="name" widget="section_and_note_text" />
                             <field name="quantity" />
+                            <field name="is_auto_renew" column_invisible="True" />
                             <field name="uom_id" />
                             <field
                                 name="automatic_price"
-                                column_invisible="parent.contract_type == 'purchase'"
+                                column_invisible="parent.contract_type == 'purchase' and not is_auto_renew"
                             />
                             <field name="price_unit" readonly="automatic_price" />
                             <field name="specific_price" column_invisible="True" />
@@ -64,7 +65,7 @@
                                 name="recurring_invoicing_type"
                                 column_invisible="True"
                             />
-                        </tree>
+                        </list>
                     </field>
                 </group>
                 <group
@@ -82,16 +83,16 @@
             </form>
         </field>
     </record>
-    <!--TREE view-->
+    <!--LIST view-->
     <record id="contract_template_tree_view" model="ir.ui.view">
         <field name="name">contract.template tree view (in contract)</field>
         <field name="model">contract.template</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="contract_type" />
                 <field name="pricelist_id" />
-            </tree>
+            </list>
         </field>
     </record>
     <!--SEARCH view-->
@@ -126,7 +127,7 @@
     <record id="contract_template_action" model="ir.actions.act_window">
         <field name="name">Contract Templates</field>
         <field name="res_model">contract.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="contract_template_search_view" />
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
