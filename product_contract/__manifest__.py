@@ -4,7 +4,7 @@
 
 {
     "name": "Recurring - Product Contract",
-    "version": "17.0.2.1.4",
+    "version": "17.0.2.2.0",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "LasLabs, " "ACSONE SA/NV, " "Odoo Community Association (OCA)",
