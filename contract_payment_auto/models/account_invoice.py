@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+    _inherit = "account.invoice"
 
     auto_pay_attempts = fields.Integer()
     auto_pay_failed = fields.Datetime()
