@@ -7,16 +7,14 @@ from datetime import date
 import mock
 
 from odoo import fields
-from odoo.tests import common
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.contract_payment_auto.models import contract
-from odoo.addons.payment.models.payment_acquirer import PaymentAcquirer
 
 
-@common.at_install(False)
-@common.post_install(True)
-class TestContract(common.HttpCase):
+@tagged("-at_install", "post_install")
+class TestContract(HttpCase):
     def setUp(self):
         super(TestContract, self).setUp()
         self.Model = self.env["contract.contract"]
@@ -33,31 +31,34 @@ class TestContract(common.HttpCase):
         self.template = self.env["contract.template"].create(
             self.template_vals,
         )
-        self.acquirer = self.env["payment.acquirer"].create(
+        self.provider = self.env["payment.provider"].create(
             {
                 "name": "Test Acquirer",
-                "provider": "manual",
-                "view_template_id": self.env["ir.ui.view"].search([], limit=1).id,
+                "inline_form_view_id": self.env["ir.ui.view"].search([], limit=1).id,
             }
         )
         self.payment_token = self.env["payment.token"].create(
             {
-                "name": "Test Token",
+                "payment_details": "Test Token",
                 "partner_id": self.partner.id,
                 "active": True,
-                "acquirer_id": self.acquirer.id,
-                "acquirer_ref": "Test",
+                "provider_id": self.provider.id,
+                "provider_ref": "Test",
             }
         )
         self.other_payment_token = self.env["payment.token"].create(
             {
-                "name": "Test Other Token",
+                "payment_details": "Test Other Token",
                 "partner_id": self.partner.id,
                 "active": True,
-                "acquirer_id": self.acquirer.id,
-                "acquirer_ref": "OtherTest",
+                "provider_id": self.provider.id,
+                "provider_ref": "OtherTest",
             }
         )
+        self.env["account.journal"].create(
+            {"name": "test journal", "code": "TST", "type": "sale"}
+        )
+
         values = {
             "name": "Test Contract",
             "partner_id": self.partner.id,
@@ -85,15 +86,15 @@ class TestContract(common.HttpCase):
 
     def _validate_invoice(self, invoice):
         self.assertEqual(len(invoice), 1)
-        self.assertEqual(invoice._name, "account.invoice")
+        self.assertEqual(invoice._name, "account.move")
 
-    def _create_invoice(self, opened=False, sent=False):
+    def _create_invoice(self, posted=False, sent=False):
         self.contract.is_auto_pay = False
         invoice = self.contract._recurring_create_invoice()
-        if opened or sent:
-            invoice.action_invoice_open()
+        if posted or sent:
+            invoice.action_post()
         if sent:
-            invoice.sent = True
+            invoice.is_move_sent = True
         self.contract.is_auto_pay = True
         return invoice
 
@@ -113,7 +114,7 @@ class TestContract(common.HttpCase):
             record = TransactionsCreate(vals)
             features = {"authorize": ["manual"], "tokenize": [], "fees": []}
             with mock.patch.object(
-                PaymentAcquirer, "_get_feature_support", return_value=features
+                PaymentProvider, "_get_feature_support", return_value=features
             ):
                 record.state = state
             return record
@@ -122,13 +123,13 @@ class TestContract(common.HttpCase):
         model_create.side_effect = create
 
         Transactions._patch_method("create", model_create)
-        Transactions._patch_method("s2s_do_transaction", s2s)
+        Transactions._patch_method("_send_payment_request", s2s)
 
         try:
             yield
         finally:
             Transactions._revert_method("create")
-            Transactions._revert_method("s2s_do_transaction")
+            Transactions._revert_method("_send_payment_request")
 
     def test_onchange_partner_id_payment_token(self):
         """It should clear the payment token."""
@@ -163,14 +164,14 @@ class TestContract(common.HttpCase):
         """It should ensure_one on the invoice."""
         with self.assertRaises(ValueError):
             self.contract._do_auto_pay(
-                self.env["account.invoice"],
+                self.env["account.move"],
             )
 
     def test_do_auto_pay_open_invoice(self):
         """It should open the invoice."""
         invoice = self._create_invoice()
         self.contract._do_auto_pay(invoice)
-        self.assertEqual(invoice.state, "open")
+        self.assertEqual(invoice.state, "posted")
 
     def test_do_auto_pay_sends_message(self):
         """It should call the send message method with the invoice."""
@@ -195,7 +196,7 @@ class TestContract(common.HttpCase):
     def test_pay_invoice_no_residual(self):
         """It should return None if no residual on the invoice."""
         invoice = self._create_invoice()
-        invoice.state = "open"
+        invoice.state = "posted"
         res = self.contract._pay_invoice(invoice)
         self.assertIs(res, None)
 
@@ -308,9 +309,9 @@ class TestContract(common.HttpCase):
     def test_send_invoice_message_sets_invoice_state(self):
         """It should set the invoice to sent."""
         invoice = self._create_invoice(True)
-        self.assertFalse(invoice.sent)
+        self.assertFalse(invoice.is_move_sent)
         self.contract._send_invoice_message(invoice)
-        self.assertTrue(invoice.sent)
+        self.assertTrue(invoice.is_move_sent)
 
     def test_send_invoice_message_returns_mail(self):
         """It should create and return the message."""

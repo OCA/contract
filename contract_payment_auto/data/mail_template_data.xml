@@ -9,41 +9,41 @@
         <field name="name">Invoice - AutoPay To Retry</field>
         <field
             name="email_from"
-        >${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        >{{(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')}}</field>
         <field
             name="subject"
-        >Automatic Payment Failure (Ref ${object.number or 'n/a'})</field>
-        <field name="partner_to">${object.partner_id.id}</field>
-        <field name="model_id" ref="account.model_account_invoice" />
+        >Automatic Payment Failure (Ref {{object.name or 'n/a'}})</field>
+        <field name="partner_to">{{object.partner_id.id}}</field>
+        <field name="model_id" ref="account.model_account_move" />
         <field name="auto_delete" eval="True" />
         <field name="report_template" ref="account.account_invoices" />
         <field
             name="report_name"
-        >Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
-        <field name="lang">${object.partner_id.lang}</field>
+        >Invoice_{{(object.name or '').replace('/','_')}}_{{object.state == 'draft' and 'draft' or ''}}</field>
+        <field name="lang">{{object.partner_id.lang}}</field>
         <field
             name="body_html"
         ><![CDATA[
 
 <p>
-    Hello ${object.partner_id.name}
-    % set access_action = object.get_access_action()
-    % set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
-    % if object.partner_id.parent_id:
-        (<i>${object.partner_id.parent_id.name}</i>)
-    % endif
+    Hello <t t-out="object.partner_id.name" />
+    <t t-set="access_action" t-value="object.get_formview_action()"/>
+    <t t-set="access_url" t-value="access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)"/>
+    <t t-if="object.partner_id.parent_id">
+        (<i><t t-out="object.partner_id.parent_id.name" /></i>)
+    </t>
     ,
 </p>
 
 <p>
     The automatic payment for your invoice
-    <a href="${access_url}">
+    <a t-attf-href="{{access_url}}">
         <strong>
-            ${object.number}
+            <t t-out="object.name" />
         </strong>
-        % if object.origin:
-            (with reference: ${object.origin} )
-        % endif
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin" /> )
+        </t>
     </a>
     failed.
 </p>
@@ -61,41 +61,41 @@
         <field name="name">Invoice - AutoPay Failed</field>
         <field
             name="email_from"
-        >${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        >{{(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')}}</field>
         <field
             name="subject"
-        >Automatic Payment Failure (Ref ${object.number or 'n/a'})</field>
-        <field name="partner_to">${object.partner_id.id}</field>
-        <field name="model_id" ref="account.model_account_invoice" />
+        >Automatic Payment Failure (Ref {{object.name or 'n/a'}})</field>
+        <field name="partner_to">{{object.partner_id.id}}</field>
+        <field name="model_id" ref="account.model_account_move" />
         <field name="auto_delete" eval="True" />
         <field name="report_template" ref="account.account_invoices" />
         <field
             name="report_name"
-        >Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
-        <field name="lang">${object.partner_id.lang}</field>
+        >Invoice_{{(object.name or '').replace('/','_')}}_{{object.state == 'draft' and 'draft' or ''}}</field>
+        <field name="lang">{{object.partner_id.lang}}</field>
         <field
             name="body_html"
         ><![CDATA[
 
 <p>
-    Hello ${object.partner_id.name}
-    % set access_action = object.get_access_action()
-    % set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
-    % if object.partner_id.parent_id:
-        (<i>${object.partner_id.parent_id.name}</i>)
-    % endif
+    Hello <t t-out="object.partner_id.name" />
+    <t t-set="access_action" t-value="object.get_formview_action()"/>
+    <t t-set="access_url" t-value="access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)"/>
+    <t t-if="object.partner_id.parent_id">
+        (<i><t t-out="object.partner_id.parent_id.name" /></i>)
+    </t>
     ,
 </p>
 
 <p>
     The automatic payment for your invoice
-    <a href="${access_url}">
+    <a t-attf-href="{{access_url}}">
         <strong>
-            ${object.number}
+            <t t-out="object.name" />
         </strong>
-        % if object.origin:
-            (with reference: ${object.origin} )
-        % endif
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin" /> )
+        </t>
     </a>
     failed.
 </p>

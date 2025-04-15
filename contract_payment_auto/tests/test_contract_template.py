@@ -14,7 +14,7 @@ class TestContractTemplate(TransactionCase):
         res = self.Model._default_invoice_mail_template_id()
         self.assertEqual(
             res.model,
-            "account.invoice",
+            "account.move",
         )
 
     def test_default_pay_retry_mail_template_id(self):
@@ -22,7 +22,7 @@ class TestContractTemplate(TransactionCase):
         res = self.Model._default_pay_retry_mail_template_id()
         self.assertEqual(
             res.model,
-            "account.invoice",
+            "account.move",
         )
 
     def test_default_pay_fail_mail_template_id(self):
@@ -30,7 +30,7 @@ class TestContractTemplate(TransactionCase):
         res = self.Model._default_pay_fail_mail_template_id()
         self.assertEqual(
             res.model,
-            "account.invoice",
+            "account.move",
         )
 
     def test_default_auto_pay_retries(self):

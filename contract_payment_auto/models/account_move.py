@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+class AccountMove(models.Model):
+    _inherit = "account.move"
 
     auto_pay_attempts = fields.Integer()
     auto_pay_failed = fields.Datetime()

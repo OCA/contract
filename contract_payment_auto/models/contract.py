@@ -22,7 +22,6 @@ class Contract(models.Model):
         "bill to partner's default token will be used.",
     )
 
-    @api.multi
     @api.onchange("partner_id")
     def _onchange_partner_id_payment_token(self):
         """Clear the payment token when the partner is changed."""
@@ -32,10 +31,10 @@ class Contract(models.Model):
     def cron_retry_auto_pay(self):
         """Retry automatic payments for appropriate invoices."""
 
-        invoice_lines = self.env["account.invoice.line"].search(
+        invoice_lines = self.env["account.move.line"].search(
             [
-                ("invoice_id.state", "=", "open"),
-                ("invoice_id.auto_pay_attempts", ">", 0),
+                ("move_id.state", "=", "posted"),
+                ("move_id.auto_pay_attempts", ">", 0),
                 ("contract_line_id.contract_id.is_auto_pay", "=", True),
             ]
         )
@@ -44,7 +43,7 @@ class Contract(models.Model):
         for invoice_line in invoice_lines:
 
             contract = invoice_line.contract_line_id.contract_id
-            invoice = invoice_line.invoice_id
+            invoice = invoice_line.move_id
             fail_time = invoice.auto_pay_failed
             retry_delta = timedelta(hours=contract.auto_pay_retry_hours)
             retry_time = fail_time + retry_delta
@@ -52,35 +51,32 @@ class Contract(models.Model):
             if retry_time < now:
                 contract._do_auto_pay(invoice)
 
-    @api.multi
     def _recurring_create_invoice(self, date_ref=False):
         """If automatic payment is enabled, perform auto pay actions."""
         invoices = super(Contract, self)._recurring_create_invoice(date_ref)
         for invoice in invoices:
-            contract = invoice.mapped("invoice_line_ids.contract_line_id.contract_id")
+            contract = invoice.mapped("line_ids.contract_line_id.contract_id")
             contract = contract and contract[0]
             if contract and contract.is_auto_pay:
                 contract._do_auto_pay(invoice)
         return invoices
 
-    @api.multi
     def _do_auto_pay(self, invoice):
         """Perform all automatic payment operations on open invoices."""
         self.ensure_one()
         invoice.ensure_one()
-        invoice.action_invoice_open()
+        invoice.action_post()
         self._send_invoice_message(invoice)
         self._pay_invoice(invoice)
 
-    @api.multi
     def _pay_invoice(self, invoice):
         """Pay the invoice using the account or partner token."""
 
-        if invoice.state != "open":
-            _logger.info("Cannot pay an invoice that is not in open state.")
+        if invoice.state != "posted":
+            _logger.info("Cannot pay an invoice that is not in posted state.")
             return
 
-        if not invoice.residual:
+        if not invoice.amount_residual:
             _logger.debug("Cannot pay an invoice with no balance.")
             return
 
@@ -97,8 +93,8 @@ class Contract(models.Model):
         valid_states = ["authorized", "done"]
 
         try:
-            result = transaction.s2s_do_transaction()
-            if not result or transaction.state not in valid_states:
+            transaction._send_payment_request()
+            if transaction.state not in valid_states:
                 _logger.debug(
                     "Payment transaction failed (%s)",
                     transaction.state_message,
@@ -140,10 +136,9 @@ class Contract(models.Model):
 
         return
 
-    @api.multi
     def _get_tx_vals(self, invoice, token):
         """Return values for creation of a payment.transaction for invoice."""
-        amount_due = invoice.residual
+        amount_due = invoice.amount_residual
         partner = token.partner_id
         reference = self.env["payment.transaction"]._compute_reference(
             {
@@ -152,8 +147,8 @@ class Contract(models.Model):
         )
         return {
             "reference": "%s" % reference,
-            "acquirer_id": token.acquirer_id.id,
-            "payment_token_id": token.id,
+            "provider_id": token.provider_id.id,
+            "token_id": token.id,
             "invoice_ids": [(4, invoice.id)],
             "amount": amount_due,
             "state": "draft",
@@ -165,21 +160,20 @@ class Contract(models.Model):
             "partner_email": partner.email,
         }
 
-    @api.multi
     def _send_invoice_message(self, invoice):
         """Send the appropriate emails for the invoices if needed."""
-        if invoice.sent:
+        if invoice.is_move_sent:
             return
         if not self.invoice_mail_template_id:
             return
         _logger.info(
             "Sending invoice %s, %s (template %s)",
             invoice,
-            invoice.number,
+            invoice.name,
             self.invoice_mail_template_id,
         )
         mail_id = self.invoice_mail_template_id.send_mail(invoice.id)
         invoice.with_context(mail_post_autofollow=True)
-        invoice.sent = True
+        invoice.is_move_sent = True
         invoice.message_post(body=_("Invoice sent"))
         return self.env["mail.mail"].browse(mail_id)

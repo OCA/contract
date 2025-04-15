@@ -15,7 +15,7 @@ class AbstractContract(models.AbstractModel):
         string="Invoice Message",
         comodel_name="mail.template",
         default=lambda s: s._default_invoice_mail_template_id(),
-        domain="[('model', '=', 'account.invoice')]",
+        domain="[('model', '=', 'account.move')]",
         context=_context_mail_templates,
         help="During the automatic payment process, an invoice will be "
         "created and validated. If this template is selected, it will "
@@ -26,7 +26,7 @@ class AbstractContract(models.AbstractModel):
         string="Payment Retry Message",
         comodel_name="mail.template",
         default=lambda s: s._default_pay_retry_mail_template_id(),
-        domain="[('model', '=', 'account.invoice')]",
+        domain="[('model', '=', 'account.move')]",
         context=_context_mail_templates,
         help="If automatic payment fails for some reason, but will be "
         "re-attempted later, this message  will be sent to the billed "
@@ -36,7 +36,7 @@ class AbstractContract(models.AbstractModel):
         string="Payment Failed Message",
         comodel_name="mail.template",
         default=lambda s: s._default_pay_fail_mail_template_id(),
-        domain="[('model', '=', 'account.invoice')]",
+        domain="[('model', '=', 'account.move')]",
         context=_context_mail_templates,
         help="If automatic payment fails for some reason, this message "
         "will be sent to the billed partner.",
@@ -90,7 +90,7 @@ class AbstractContract(models.AbstractModel):
     @api.model
     def _context_mail_templates(self):
         """Return a context for use in mail templates."""
-        default_model = self.env.ref("account.model_account_invoice")
+        default_model = self.env.ref("account.model_account_move")
         report_template = self.env.ref("account.account_invoices")
         return {
             "default_model_id": default_model.id,
