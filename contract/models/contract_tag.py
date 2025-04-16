@@ -10,8 +10,6 @@ class ContractTag(models.Model):
 
     name = fields.Char(required=True)
     company_id = fields.Many2one(
-        "res.company",
-        string="Company",
-        default=lambda self: self.env.company.id,
+        "res.company", string="Company", default=lambda self: self.env.company
     )
     color = fields.Integer("Color Index", default=0)

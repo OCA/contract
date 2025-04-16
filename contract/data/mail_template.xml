@@ -13,7 +13,7 @@
         <field name="auto_delete" eval="True" />
         <field
             name="report_template_ids"
-            eval="[(4, ref('contract.report_contract'))]"
+            eval="[Command.link(ref('contract.report_contract'))]"
         />
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="body_html" type="html">
