@@ -1,11 +1,15 @@
 # Copyright 2021 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from odoo import Command
+from odoo.tools import mute_logger
+
 from .test_contract import TestContractBase
 
 
 class ContractMulticompanyCase(TestContractBase):
     @classmethod
+    @mute_logger("odoo.addons.account.models.chart_template")
     def setUpClass(cls):
         super().setUpClass()
         cls.company_obj = cls.env["res.company"]
@@ -31,9 +35,7 @@ class ContractMulticompanyCase(TestContractBase):
                     "line_recurrence": True,
                     "contract_type": "purchase",
                     "contract_line_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "product_id": cls.product_1.id,
                                 "name": "Services from #START# to #END#",
@@ -63,7 +65,6 @@ class ContractMulticompanyCase(TestContractBase):
             "recurring_interval": 1,
             "date_start": "2018-01-01",
             "recurring_next_date": "2018-01-15",
-            "is_auto_renew": False,
         }
         cls.acct_line_mc = (
             cls.env["contract.line"].with_company(cls.company_2).create(cls.line_vals)
