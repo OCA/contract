@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_contract_form_view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_line_ids']//list" position="inside">
+                <field name="is_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_allowed" column_invisible="True" />
+                <field name="is_cancel_allowed" column_invisible="True" />
+                <field name="is_un_cancel_allowed" column_invisible="True" />
+                <field name="is_auto_renew" column_invisible="True" />
+                <field name="is_canceled" column_invisible="True" />
+                <button
+                    name="action_plan_successor"
+                    title="Plan Start"
+                    type="object"
+                    icon="fa-calendar text-success"
+                    invisible="not is_plan_successor_allowed"
+                />
+                <button
+                    name="action_stop_plan_successor"
+                    title="Stop Plan Successor"
+                    type="object"
+                    icon="fa-pause text-muted"
+                    invisible="not is_stop_plan_successor_allowed"
+                />
+                <button
+                    name="action_stop"
+                    title="Stop"
+                    type="object"
+                    icon="fa-stop text-danger"
+                    invisible="not is_stop_allowed"
+                />
+                <button
+                    name="cancel"
+                    title="Cancel"
+                    type="object"
+                    icon="fa-ban text-danger"
+                    confirm="Are you sure you want to cancel this line"
+                    invisible="not is_cancel_allowed"
+                />
+                <button
+                    name="action_uncancel"
+                    title="Un-cancel"
+                    type="object"
+                    icon="fa-ban text-success"
+                    invisible="not is_un_cancel_allowed"
+                />
+                <button
+                    name="renew"
+                    title="Renew"
+                    type="object"
+                    icon="fa-fast-forward text-success"
+                    groups="base.group_no_one"
+                    invisible="not is_auto_renew"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']//list"
+                position="attributes"
+            >
+                <attribute name="decoration-muted">is_canceled</attribute>
+                <attribute
+                    name="decoration-info"
+                >create_invoice_visibility and not is_canceled</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_template_line_form_view">
+        <field name="model">contract.template.line</field>
+        <field name="inherit_id" ref="contract.contract_template_line_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='recurrence_info']" position="after">
+                <page string="Renewal" name="renewal" invisible="display_type">
+                    <group>
+                        <field name="is_auto_renew" />
+                    </group>
+                    <group invisible="not is_auto_renew">
+                        <group>
+                            <label for="auto_renew_interval" />
+                            <div class="o_row">
+                                <field
+                                    name="auto_renew_interval"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
+                                />
+                                <field
+                                    name="auto_renew_rule_type"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
+                                />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="termination_notice_interval" />
+                            <div class="o_row">
+                                <field
+                                    name="termination_notice_interval"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
+                                />
+                                <field
+                                    name="termination_notice_rule_type"
+                                    class="oe_inline"
+                                    required="is_auto_renew"
+                                />
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
