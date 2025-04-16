@@ -14,8 +14,6 @@
     <record id="contract_tag_multi_company_rule" model="ir.rule">
         <field name="name">Contract tag multi-company</field>
         <field name="model_id" ref="model_contract_tag" />
-        <field
-            name="domain_force"
-        >['|',('company_id','=',False),('company_id','in',company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 </odoo>

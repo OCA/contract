@@ -6,76 +6,107 @@
         <field name="model">contract.template</field>
         <field name="arch" type="xml">
             <form string="Contract Template">
-                <group name="name">
-                    <field name="name" />
-                </group>
-                <group name="group_main">
-                    <group name="group_main_left">
-                        <field name="contract_type" />
-                        <field name="company_id" invisible="1" />
-                        <field name="journal_id" />
-                        <field name="pricelist_id" />
-                        <field
-                            name="company_id"
-                            options="{'no_create': True}"
-                            groups="base.group_multi_company"
-                        />
-                    </group>
-                </group>
-                <group name="group_invoice_lines" string="Contract Template Lines">
-                    <field
-                        name="contract_line_ids"
-                        widget="section_and_note_one2many"
-                        nolabel="1"
-                        colspan="2"
-                    >
-                        <list>
-                            <control>
-                                <create string="Add a line" />
-                                <create
-                                    string="Add a section"
-                                    context="{'default_display_type': 'line_section'}"
-                                />
-                                <create
-                                    string="Add a note"
-                                    context="{'default_display_type': 'line_note'}"
-                                />
-                            </control>
-                            <field name="display_type" column_invisible="True" />
-                            <field name="sequence" widget="handle" />
-                            <field name="product_id" />
-                            <field name="name" widget="section_and_note_text" />
-                            <field name="quantity" />
-                            <field name="uom_id" />
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Contract Name" class="oe_edit_only" />
+                        <h3>
                             <field
-                                name="automatic_price"
-                                column_invisible="parent.contract_type == 'purchase'"
+                                name="name"
+                                class="oe_inline"
+                                placeholder="e.g. Contract XYZ"
                             />
-                            <field name="price_unit" readonly="automatic_price" />
-                            <field name="specific_price" column_invisible="True" />
-                            <field name="discount" />
-                            <field name="price_subtotal" />
-                            <field name="recurring_rule_type" column_invisible="True" />
-                            <field name="recurring_interval" column_invisible="True" />
-                            <field
-                                name="recurring_invoicing_type"
-                                column_invisible="True"
-                            />
-                        </list>
-                    </field>
-                </group>
-                <group
-                    name="group_legend"
-                    string="Legend (for the markers inside invoice lines description)"
-                >
-                    <div colspan="2">
-                        <p> <strong
-                        >#START#</strong>: Start date of the invoiced period</p>
-                        <p> <strong>#END#</strong>: End date of the invoiced period</p>
-                        <p> <strong
-                        >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
+                        </h3>
                     </div>
-                </group>
+                    <group name="group_main">
+                        <group name="group_main_left">
+                            <field name="contract_type" />
+                        </group>
+                        <group name="group_main_right">
+                            <field name="journal_id" />
+                            <field name="pricelist_id" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines">
+                            <field
+                                name="contract_line_ids"
+                                widget="section_and_note_one2many"
+                                nolabel="1"
+                                colspan="2"
+                            >
+                                <list>
+                                    <control>
+                                        <create string="Add a line" />
+                                        <create
+                                            string="Add a section"
+                                            context="{'default_display_type': 'line_section'}"
+                                        />
+                                        <create
+                                            string="Add a note"
+                                            context="{'default_display_type': 'line_note'}"
+                                        />
+                                    </control>
+                                    <field
+                                        name="display_type"
+                                        column_invisible="True"
+                                    />
+                                    <field name="sequence" widget="handle" />
+                                    <field name="product_id" />
+                                    <field name="name" widget="section_and_note_text" />
+                                    <field name="quantity" />
+                                    <field name="uom_id" />
+                                    <field
+                                        name="automatic_price"
+                                        column_invisible="parent.contract_type == 'purchase'"
+                                    />
+                                    <field
+                                        name="price_unit"
+                                        readonly="automatic_price"
+                                    />
+                                    <field
+                                        name="specific_price"
+                                        column_invisible="True"
+                                    />
+                                    <field name="discount" />
+                                    <field name="price_subtotal" />
+                                    <field
+                                        name="recurring_rule_type"
+                                        column_invisible="True"
+                                    />
+                                    <field
+                                        name="recurring_interval"
+                                        column_invisible="True"
+                                    />
+                                    <field
+                                        name="recurring_invoicing_type"
+                                        column_invisible="True"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="info" string="Other Information">
+                            <group
+                                name="group_legend"
+                                string="Legend (for the markers inside invoice lines description)"
+                            >
+                                <div colspan="2">
+                                    <p><strong>#START#</strong>: Start date of the
+                                        invoiced period
+                                    </p>
+                                    <p><strong
+                                    >#END#</strong>: End date of the invoiced period</p>
+                                    <p> <strong
+                                    >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
