@@ -3,10 +3,14 @@
 
 from odoo import http
 from odoo.tests import HttpCase, tagged
+from odoo.tools import mute_logger
 
 
 @tagged("post_install", "-at_install")
 class TestContractPortal(HttpCase):
+    @mute_logger(
+        "odoo.addons.contract.tests.test_portal.TestContractPortal.test_tour.browser"
+    )
     def test_tour(self):
         partner = self.env["res.partner"].create({"name": "partner test contract"})
         contract = self.env["contract.contract"].create(

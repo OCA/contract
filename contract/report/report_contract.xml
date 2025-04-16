@@ -35,16 +35,16 @@
                                     <th>
                                         <strong>Description</strong>
                                     </th>
-                                    <th class="text-right">
+                                    <th class="text-end">
                                         <strong>Quantity</strong>
                                     </th>
-                                    <th class="text-right">
+                                    <th class="text-end">
                                         <strong>Unit Price</strong>
                                     </th>
-                                    <th class="text-right">
+                                    <th class="text-end">
                                         <strong>Price</strong>
                                     </th>
-                                    <th class="text-right">
+                                    <th class="text-end">
                                         <strong>Date Start</strong>
                                     </th>
                                 </tr>
@@ -63,22 +63,22 @@
                                             <td>
                                                 <span t-field="l.name" />
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-end">
                                                 <span t-field="l.quantity" />
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-end">
                                                 <span
                                                     t-field="l.price_unit"
                                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                                 />
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-end">
                                                 <span
                                                     t-field="l.price_subtotal"
                                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                                 />
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-end">
                                                 <span t-field="l.date_start" />
                                             </td>
                                             <t
@@ -102,7 +102,7 @@
                                     <t
                                         t-if="current_section and (l_last or o.contract_line_ids[l_index+1].display_type == 'line_section')"
                                     >
-                                        <tr class="is-subtotal text-right">
+                                        <tr class="is-subtotal text-end">
                                             <td colspan="99">
                                                 <strong class="mr16">Subtotal</strong>
                                                 <span
@@ -128,7 +128,7 @@
                                     <th name="th_date">Date</th>
                                     <th
                                         name="th_description"
-                                        class="text-right"
+                                        class="text-end"
                                     >Description</th>
                                 </tr>
                             </thead>
@@ -141,7 +141,7 @@
                                         <td name="td_date">
                                             <span t-field="notification_id.date" />
                                         </td>
-                                        <td name="td_description" class="text-right">
+                                        <td name="td_description" class="text-end">
                                             <div
                                                 t-field="notification_id.description"
                                             />
@@ -159,7 +159,7 @@
                                 <td>
                                     <strong>Total</strong>
                                 </td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <span
                                         t-esc="total"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'
