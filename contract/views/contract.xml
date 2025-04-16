@@ -17,11 +17,8 @@
                     <p>
                         This contract was terminated for the reason
                         <strong>
-                            <field
-                                name="terminate_reason_id"
-                                options="{'no_open':True}"
-                            />
-                        </strong>
+                        <field name="terminate_reason_id" options="{'no_open':True}" />
+                    </strong>
                         on
                         <field name="terminate_date" />
                         .
@@ -327,7 +324,7 @@
                                         column_invisible="True"
                                     />
                                     <field name="discount" />
-                                    <field name="price_subtotal" />
+                                    <field name="price_subtotal" optional="hide" />
                                     <field
                                         name="recurring_interval"
                                         column_invisible="True"
@@ -346,6 +343,7 @@
                                     <field
                                         name="last_date_invoiced"
                                         groups="base.group_no_one"
+                                        optional="hide"
                                     />
                                     <field
                                         name="create_invoice_visibility"
@@ -378,28 +376,28 @@
                                     <field name="is_canceled" column_invisible="True" />
                                     <button
                                         name="action_plan_successor"
-                                        string="Plan Start"
+                                        title="Plan Start"
                                         type="object"
                                         icon="fa-calendar text-success"
                                         invisible="not is_plan_successor_allowed"
                                     />
                                     <button
                                         name="action_stop_plan_successor"
-                                        string="Stop Plan Successor"
+                                        title="Stop Plan Successor"
                                         type="object"
                                         icon="fa-pause text-muted"
                                         invisible="not is_stop_plan_successor_allowed"
                                     />
                                     <button
                                         name="action_stop"
-                                        string="Stop"
+                                        title="Stop"
                                         type="object"
                                         icon="fa-stop text-danger"
                                         invisible="not is_stop_allowed"
                                     />
                                     <button
                                         name="cancel"
-                                        string="Cancel"
+                                        title="Cancel"
                                         type="object"
                                         icon="fa-ban text-danger"
                                         confirm="Are you sure you want to cancel this line"
@@ -407,10 +405,18 @@
                                     />
                                     <button
                                         name="action_uncancel"
-                                        string="Un-cancel"
+                                        title="Un-cancel"
                                         type="object"
                                         icon="fa-ban text-success"
                                         invisible="not is_un_cancel_allowed"
+                                    />
+                                    <button
+                                        name="renew"
+                                        title="Renew"
+                                        type="object"
+                                        icon="fa-fast-forward text-success"
+                                        groups="base.group_no_one"
+                                        invisible="not is_auto_renew"
                                     />
                                 </list>
                             </field>
