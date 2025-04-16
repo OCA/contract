@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_contract_form_view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_terminate_contract"
+                    type="object"
+                    string="Terminate Contract"
+                    invisible="is_terminated"
+                    groups="contract_termination.can_terminate_contract"
+                />
+                <button
+                    name="action_terminate_contract"
+                    type="object"
+                    string="Update Termination Details"
+                    invisible="not is_terminated"
+                    groups="contract_termination.can_terminate_contract"
+                />
+                <button
+                    name="action_cancel_contract_termination"
+                    type="object"
+                    confirm="Are you sure you want to re-activate this contract?"
+                    string="Cancel Contract Termination"
+                    invisible="not is_terminated"
+                    groups="contract_termination.can_terminate_contract"
+                />
+            </xpath>
+            <xpath expr="//header" position="before">
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not is_terminated"
+                >
+                    <p>
+                        This contract was terminated for the reason
+                        <strong>
+                        <field name="terminate_reason_id" options="{'no_open':True}" />
+                    </strong>
+                        on
+                        <field name="terminate_date" />
+                        .
+                    </p>
+                    <p>
+                        <field name="terminate_comment" />
+                    </p>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_contract_send']" position="attributes">
+                <attribute name="invisible">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_contract_send']" position="attributes">
+                <attribute name="invisible">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_template_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']"
+                position="attributes"
+            >
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='modification_ids']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='code']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_partner_id']" position="attributes">
+                <attribute name="readonly">is_terminated</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
