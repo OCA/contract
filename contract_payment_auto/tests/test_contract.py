@@ -1,10 +1,10 @@
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from contextlib import contextmanager
 from datetime import date
 
 import mock
+from odoo_test_helper import FakeModelLoader
 
 from odoo import fields
 from odoo.tests import HttpCase, tagged
@@ -15,6 +15,22 @@ from odoo.addons.contract_payment_auto.models import contract
 
 @tagged("-at_install", "post_install")
 class TestContract(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Create a fake model to override PaymentTransaction method
+        cls.loader = FakeModelLoader(cls.env, cls.__module__)
+        cls.loader.backup_registry()
+        from .models import TransactionTest
+
+        cls.loader.update_registry((TransactionTest,))
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
+
     def setUp(self):
         super(TestContract, self).setUp()
         self.Model = self.env["contract.contract"]
@@ -98,39 +114,6 @@ class TestContract(HttpCase):
         self.contract.is_auto_pay = True
         return invoice
 
-    @contextmanager
-    def _mock_transaction(self, state="authorized", s2s_side_effect=None):
-
-        Transactions = self.contract.env["payment.transaction"]
-        TransactionsCreate = Transactions.create
-
-        if not callable(s2s_side_effect):
-            s2s_side_effect = [s2s_side_effect]
-
-        s2s = mock.MagicMock()
-        s2s.side_effect = s2s_side_effect
-
-        def create(vals):
-            record = TransactionsCreate(vals)
-            features = {"authorize": ["manual"], "tokenize": [], "fees": []}
-            with mock.patch.object(
-                PaymentProvider, "_get_feature_support", return_value=features
-            ):
-                record.state = state
-            return record
-
-        model_create = mock.MagicMock()
-        model_create.side_effect = create
-
-        Transactions._patch_method("create", model_create)
-        Transactions._patch_method("_send_payment_request", s2s)
-
-        try:
-            yield
-        finally:
-            Transactions._revert_method("create")
-            Transactions._revert_method("_send_payment_request")
-
     def test_onchange_partner_id_payment_token(self):
         """It should clear the payment token."""
         self.assertTrue(self.contract.payment_token_id)
@@ -208,14 +191,11 @@ class TestContract(HttpCase):
         self.assertIs(res, None)
 
     def assert_successful_pay_invoice(self, expected_token=None):
-        with self._mock_transaction(s2s_side_effect=True):
-            invoice = self._create_invoice(True)
-            res = self.contract._pay_invoice(invoice)
-            self.assertTrue(res)
-            if expected_token is not None:
-                Transactions = self.contract.env["payment.transaction"]
-                tx_vals = Transactions.create.call_args[0][0]
-                self.assertEqual(tx_vals.get("payment_token_id"), expected_token.id)
+        invoice = self._create_invoice(True)
+        res = self.contract.with_context(test_target_state="done")._pay_invoice(invoice)
+        self.assertTrue(res)
+        if expected_token is not None:
+            self.assertEqual(invoice.transaction_ids[0].token_id, expected_token)
 
     def test_pay_invoice_success(self):
         """It should return True on success."""
@@ -236,53 +216,49 @@ class TestContract(HttpCase):
     @mute_logger(contract.__name__)
     def test_pay_invoice_exception(self):
         """It should catch exceptions."""
-        with self._mock_transaction(s2s_side_effect=Exception):
-            invoice = self._create_invoice(True)
-            res = self.contract._pay_invoice(invoice)
-            self.assertIs(res, None)
+        invoice = self._create_invoice(True)
+        res = self.contract.with_context(test_target_state="Exception")._pay_invoice(
+            invoice
+        )
+        self.assertIs(res, None)
 
     def test_pay_invoice_invalid_state(self):
         """It should return None on invalid state."""
-        with self._mock_transaction(s2s_side_effect=True):
-            invoice = self._create_invoice(True)
-            invoice.state = "draft"
-            res = self.contract._pay_invoice(invoice)
-            self.assertIs(res, None)
+        invoice = self._create_invoice(True)
+        invoice.state = "draft"
+        res = self.contract.with_context(test_target_state="done")._pay_invoice(invoice)
+        self.assertIs(res, None)
 
     @mute_logger(contract.__name__)
     def test_pay_invoice_increments_retries(self):
         """It should increment invoice retries on failure."""
-        with self._mock_transaction(s2s_side_effect=False):
-            invoice = self._create_invoice(True)
-            self.assertFalse(invoice.auto_pay_attempts)
-            self.contract._pay_invoice(invoice)
-            self.assertTrue(invoice.auto_pay_attempts)
+        invoice = self._create_invoice(True)
+        self.assertFalse(invoice.auto_pay_attempts)
+        self.contract.with_context(test_target_state="draft")._pay_invoice(invoice)
+        self.assertTrue(invoice.auto_pay_attempts)
 
     def test_pay_invoice_updates_fail_date(self):
         """It should update the invoice auto pay fail date on failure."""
-        with self._mock_transaction(s2s_side_effect=False):
-            invoice = self._create_invoice(True)
-            self.assertFalse(invoice.auto_pay_failed)
-            self.contract._pay_invoice(invoice)
-            self.assertTrue(invoice.auto_pay_failed)
+        invoice = self._create_invoice(True)
+        self.assertFalse(invoice.auto_pay_failed)
+        self.contract.with_context(test_target_state="draft")._pay_invoice(invoice)
+        self.assertTrue(invoice.auto_pay_failed)
 
     def test_pay_invoice_too_many_attempts(self):
         """It should clear autopay after too many attempts."""
-        with self._mock_transaction(s2s_side_effect=False):
-            invoice = self._create_invoice(True)
-            invoice.auto_pay_attempts = self.contract.auto_pay_retries - 1
-            self.contract._pay_invoice(invoice)
-            self.assertFalse(self.contract.is_auto_pay)
-            self.assertFalse(self.contract.payment_token_id)
+        invoice = self._create_invoice(True)
+        invoice.auto_pay_attempts = self.contract.auto_pay_retries - 1
+        self.contract.with_context(test_target_state="draft")._pay_invoice(invoice)
+        self.assertFalse(self.contract.is_auto_pay)
+        self.assertFalse(self.contract.payment_token_id)
 
     def test_pay_invoice_too_many_attempts_partner_token(self):
         """It should clear the partner token when attempts were on it."""
         self.partner.payment_token_id = self.contract.payment_token_id
-        with self._mock_transaction(s2s_side_effect=False):
-            invoice = self._create_invoice(True)
-            invoice.auto_pay_attempts = self.contract.auto_pay_retries
-            self.contract._pay_invoice(invoice)
-            self.assertFalse(self.partner.payment_token_id)
+        invoice = self._create_invoice(True)
+        invoice.auto_pay_attempts = self.contract.auto_pay_retries
+        self.contract.with_context(test_target_state="draft")._pay_invoice(invoice)
+        self.assertFalse(self.partner.payment_token_id)
 
     def test_get_tx_vals(self):
         """It should return a dict."""
