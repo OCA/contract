@@ -458,24 +458,25 @@ class SaleSubscription(models.Model):
 
         return res
 
-    @api.model
-    def create(self, values):
-        if "recurring_rule_boundary" in values:
-            if not values["recurring_rule_boundary"]:
-                template_id = self.env["sale.subscription.template"].browse(
-                    values["template_id"]
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "recurring_rule_boundary" in vals:
+                if not vals["recurring_rule_boundary"]:
+                    template_id = self.env["sale.subscription.template"].browse(
+                        vals["template_id"]
+                    )
+                    date_start = vals["date_start"]
+                    if not isinstance(vals["date_start"], date):
+                        date_start = fields.Date.to_date(vals["date_start"])
+                    vals["date"] = template_id._get_date(date_start)
+            if "date_start" in vals and "recurring_next_date" in vals:
+                res = self._check_dates(vals["date_start"], vals["recurring_next_date"])
+                if res:
+                    vals["date_start"] = vals["recurring_next_date"]
+                vals["stage_id"] = (
+                    self.env["sale.subscription.stage"]
+                    .search([("type", "=", "draft")], order="sequence desc", limit=1)
+                    .id
                 )
-                date_start = values["date_start"]
-                if not isinstance(values["date_start"], date):
-                    date_start = fields.Date.to_date(values["date_start"])
-                values["date"] = template_id._get_date(date_start)
-        if "date_start" in values and "recurring_next_date" in values:
-            res = self._check_dates(values["date_start"], values["recurring_next_date"])
-            if res:
-                values["date_start"] = values["recurring_next_date"]
-            values["stage_id"] = (
-                self.env["sale.subscription.stage"]
-                .search([("type", "=", "draft")], order="sequence desc", limit=1)
-                .id
-            )
-        return super(SaleSubscription, self).create(values)
+        return super(SaleSubscription, self).create(vals_list)
