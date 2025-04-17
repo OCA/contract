@@ -11,11 +11,3 @@ class AccountMove(models.Model):
 
     # We keep this field for migration purpose
     old_contract_id = fields.Many2one("contract.contract")
-
-
-class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
-
-    contract_line_id = fields.Many2one(
-        "contract.line", string="Contract Line", index=True
-    )

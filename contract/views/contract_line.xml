@@ -6,16 +6,14 @@
         <field name="inherit_id" ref="contract_template_line_form_view" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <header position="inside">
-                <field name="state" widget="statusbar" />
-            </header>
             <group name="recurrence_info" position="inside">
                 <group>
-                    <field name="create_invoice_visibility" invisible="1" />
-                    <field name="is_stop_plan_successor_allowed" invisible="1" />
-                    <field name="is_stop_allowed" invisible="1" />
-                    <field name="is_cancel_allowed" invisible="1" />
                     <field name="date_start" required="1" />
+                </group>
+                <group>
+                    <field name="date_end" />
+                </group>
+                <group>
                     <field name="next_period_date_start" />
                     <field name="recurring_next_date" />
                 </group>
@@ -25,16 +23,6 @@
                 </group>
                 <group groups="base.group_no_one">
                     <field name="last_date_invoiced" readonly="True" />
-                    <field name="termination_notice_date" readonly="True" />
-                </group>
-                <group>
-                    <field name="manual_renew_needed" />
-                </group>
-                <group>
-                    <field name="predecessor_contract_line_id" />
-                </group>
-                <group>
-                    <field name="successor_contract_line_id" />
                 </group>
             </group>
             <group name="recurrence_info" position="after">
@@ -81,16 +69,13 @@
             </field>
         </field>
     </record>
-    <!-- TODO: Delete this view in migration to v13 or further migrations -->
+
     <!--TREE view-->
     <record id="contract_line_tree_view" model="ir.ui.view">
         <field name="name">contract.line list view (in contract)</field>
         <field name="model">contract.line</field>
         <field name="arch" type="xml">
-            <list
-                decoration-muted="is_canceled"
-                decoration-info="create_invoice_visibility and not is_canceled"
-            >
+            <list>
                 <field name="sequence" widget="handle" />
                 <field name="product_id" />
                 <field name="name" />
@@ -114,57 +99,6 @@
                 <field name="recurring_next_date" column_invisible="True" />
                 <field name="last_date_invoiced" groups="base.group_no_one" />
                 <field name="create_invoice_visibility" column_invisible="True" />
-                <field name="is_plan_successor_allowed" column_invisible="True" />
-                <field name="is_stop_plan_successor_allowed" column_invisible="True" />
-                <field name="is_stop_allowed" column_invisible="True" />
-                <field name="is_cancel_allowed" column_invisible="True" />
-                <field name="is_un_cancel_allowed" column_invisible="True" />
-                <field name="is_auto_renew" column_invisible="True" />
-                <field name="is_canceled" column_invisible="True" />
-                <button
-                    name="action_plan_successor"
-                    title="Plan Start"
-                    type="object"
-                    icon="fa-calendar text-success"
-                    invisible="not is_plan_successor_allowed"
-                />
-                <button
-                    name="action_stop_plan_successor"
-                    title="Stop Plan Successor"
-                    type="object"
-                    icon="fa-pause text-muted"
-                    invisible="not is_stop_plan_successor_allowed"
-                />
-                <button
-                    name="action_stop"
-                    title="Stop"
-                    type="object"
-                    icon="fa-stop text-danger"
-                    invisible="not is_stop_allowed"
-                />
-                <button
-                    name="cancel"
-                    title="Cancel"
-                    type="object"
-                    icon="fa-ban text-danger"
-                    confirm="Are you sure you want to cancel this line"
-                    invisible="not is_cancel_allowed"
-                />
-                <button
-                    name="action_uncancel"
-                    title="Un-cancel"
-                    type="object"
-                    icon="fa-ban text-success"
-                    invisible="not is_un_cancel_allowed"
-                />
-                <button
-                    name="renew"
-                    title="Renew"
-                    type="object"
-                    icon="fa-fast-forward text-success"
-                    groups="base.group_no_one"
-                    invisible="not is_auto_renew"
-                />
             </list>
         </field>
     </record>

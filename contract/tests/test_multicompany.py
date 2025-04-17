@@ -66,7 +66,6 @@ class ContractMulticompanyCase(TestContractBase):
             "recurring_interval": 1,
             "date_start": "2018-01-01",
             "recurring_next_date": "2018-01-15",
-            "is_auto_renew": False,
         }
         cls.acct_line_mc = (
             cls.env["contract.line"].with_company(cls.company_2).create(cls.line_vals)

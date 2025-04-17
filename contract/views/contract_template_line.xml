@@ -53,42 +53,7 @@
                     >
                         <field name="note_invoicing_mode" widget="radio" />
                     </group>
-                    <group invisible="display_type">
-                        <field name="is_auto_renew" />
-                        <field name="is_canceled" invisible="1" />
-                    </group>
-                    <group invisible="not is_auto_renew or display_type">
-                        <group>
-                            <label for="auto_renew_interval" />
-                            <div class="o_row">
-                                <field
-                                    name="auto_renew_interval"
-                                    class="oe_inline"
-                                    required="is_auto_renew"
-                                />
-                                <field
-                                    name="auto_renew_rule_type"
-                                    class="oe_inline"
-                                    required="is_auto_renew"
-                                />
-                            </div>
-                        </group>
-                        <group>
-                            <label for="termination_notice_interval" />
-                            <div class="o_row">
-                                <field
-                                    name="termination_notice_interval"
-                                    class="oe_inline"
-                                    required="is_auto_renew"
-                                />
-                                <field
-                                    name="termination_notice_rule_type"
-                                    class="oe_inline"
-                                    required="is_auto_renew"
-                                />
-                            </div>
-                        </group>
-                    </group>
+
                     <group
                         name="recurrence_info"
                         invisible="display_type == 'line_section' or (display_type == 'line_note' and note_invoicing_mode != 'custom')"

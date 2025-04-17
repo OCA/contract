@@ -12,7 +12,7 @@ import logging
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.translate import _
 
@@ -114,29 +114,6 @@ class ContractContract(models.Model):
         context={"active_test": False},
     )
 
-    # === Termination ===
-    is_terminated = fields.Boolean(string="Terminated", readonly=True, copy=False)
-    terminate_reason_id = fields.Many2one(
-        comodel_name="contract.terminate.reason",
-        string="Termination Reason",
-        ondelete="restrict",
-        readonly=True,
-        copy=False,
-        tracking=True,
-    )
-    terminate_comment = fields.Text(
-        string="Termination Comment",
-        readonly=True,
-        copy=False,
-        tracking=True,
-    )
-    terminate_date = fields.Date(
-        string="Termination Date",
-        readonly=True,
-        copy=False,
-        tracking=True,
-    )
-
     # === Modification tracking ===
     modification_ids = fields.One2many(
         comodel_name="contract.modification",
@@ -224,13 +201,11 @@ class ContractContract(models.Model):
                 contract.contract_line_ids.mapped("create_invoice_visibility")
             )
 
-    @api.depends("contract_line_ids.date_end", "contract_line_ids.state")
+    @api.depends("contract_line_ids.date_end")
     def _compute_date_end(self):
         for contract in self:
             contract.date_end = False
-            date_end = contract.contract_line_ids.filtered(
-                lambda line: line.state != "canceled"
-            ).mapped("date_end")
+            date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
@@ -362,29 +337,6 @@ class ContractContract(models.Model):
             "context": ctx,
         }
 
-    def action_terminate_contract(self):
-        self.ensure_one()
-        context = {"default_contract_id": self.id}
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Terminate Contract"),
-            "res_model": "contract.contract.terminate",
-            "view_mode": "form",
-            "target": "new",
-            "context": context,
-        }
-
-    def action_cancel_contract_termination(self):
-        self.ensure_one()
-        self.write(
-            {
-                "is_terminated": False,
-                "terminate_reason_id": False,
-                "terminate_comment": False,
-                "terminate_date": False,
-            }
-        )
-
     def recurring_create_invoice(self):
         """
         This method triggers the creation of the next invoices of the contracts
@@ -420,7 +372,9 @@ class ContractContract(models.Model):
             record.with_context(skip_modification_mail=True).write(
                 {
                     "modification_ids": [
-                        (0, 0, {"date": date_start, "description": _("Contract start")})
+                        Command.create(
+                            {"date": date_start, "description": _("Contract start")}
+                        )
                     ]
                 }
             )
@@ -491,7 +445,6 @@ class ContractContract(models.Model):
             vals["date_start"] = fields.Date.context_today(contract_line)
             vals["recurring_next_date"] = fields.Date.context_today(contract_line)
             new_lines += contract_line_model.new(vals)
-        new_lines._onchange_is_auto_renew()
         return new_lines
 
     def _prepare_invoice(self, date_invoice, journal=None):
@@ -646,7 +599,7 @@ class ContractContract(models.Model):
                     )
             invoices_values.append(invoice_vals)
             # Force the recomputation of journal items
-            contract_lines._update_recurring_next_date()
+            contract_lines._update_last_date_invoiced()
         return invoices_values
 
     @api.model
@@ -727,29 +680,3 @@ class ContractContract(models.Model):
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
         return self._cron_recurring_create(date_ref, create_type="invoice")
-
-    def _terminate_contract(
-        self,
-        terminate_reason_id,
-        terminate_comment,
-        terminate_date,
-        terminate_lines_with_last_date_invoiced=False,
-    ):
-        self.ensure_one()
-        if not self.env.user.has_group("contract.can_terminate_contract"):
-            raise UserError(_("You are not allowed to terminate contracts."))
-        for line in self.contract_line_ids.filtered("is_stop_allowed"):
-            line.stop(
-                max(terminate_date, line.last_date_invoiced)
-                if terminate_lines_with_last_date_invoiced and line.last_date_invoiced
-                else terminate_date
-            )
-        self.write(
-            {
-                "is_terminated": True,
-                "terminate_reason_id": terminate_reason_id.id,
-                "terminate_comment": terminate_comment,
-                "terminate_date": terminate_date,
-            }
-        )
-        return True
