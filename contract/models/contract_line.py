@@ -459,7 +459,10 @@ class ContractLine(models.Model):
             ):
                 continue
             if line.date_start and line.recurring_next_date:
-                if line.date_start > line.recurring_next_date:
+                if (
+                    line.date_start > line.recurring_next_date
+                    and line.contract_id._get_posted_related_invoices()
+                ):
                     raise ValidationError(
                         _(
                             "You can't have a date of next invoice anterior "
@@ -467,6 +470,13 @@ class ContractLine(models.Model):
                         )
                         % line.name
                     )
+
+    @api.onchange(
+        "recurring_invoicing_offset",
+    )
+    def onchange_recurring_invoicing_offset(self):
+        for rec in self:
+            rec._compute_recurring_next_date()
 
     @api.constrains(
         "date_start", "date_end", "last_date_invoiced", "recurring_next_date"
@@ -493,6 +503,7 @@ class ContractLine(models.Model):
                 )
             if (
                 rec.recurring_next_date
+                and rec.contract_id._get_posted_related_invoices()
                 and rec.recurring_next_date <= rec.last_date_invoiced
             ):
                 raise ValidationError(
@@ -621,12 +632,6 @@ class ContractLine(models.Model):
         name = self.name
         name = name.replace("#START#", first_date_invoiced.strftime(date_format))
         name = name.replace("#END#", last_date_invoiced.strftime(date_format))
-        name = name.replace(
-            "#INVOICEMONTHNAME#",
-            self.with_context(lang=lang.code)._translate_marker_month_name(
-                first_date_invoiced.strftime("%m")
-            ),
-        )
         return name
 
     def _update_recurring_next_date(self):

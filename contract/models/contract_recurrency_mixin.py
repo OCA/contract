@@ -37,6 +37,8 @@ class ContractRecurrencyBasicMixin(models.AbstractModel):
     recurring_invoicing_offset = fields.Integer(
         compute="_compute_recurring_invoicing_offset",
         string="Invoicing offset",
+        store=True,
+        readonly=False,
         help=(
             "Number of days to offset the invoice from the period end "
             "date (in post-paid mode) or start date (in pre-paid mode)."

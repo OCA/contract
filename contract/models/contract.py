@@ -237,6 +237,21 @@ class ContractContract(models.Model):
         invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
         return invoices
 
+    def _get_posted_related_invoices(self):
+        """
+        Retrieve related invoices for the contract, filtered by 'posted' state.
+
+        This method calls the standard _get_related_invoices and then filters
+        the result to include only confirmed (posted) invoices.
+
+        :return: Recordset of account.move in 'posted' state.
+        :rtype: <account.move> recordset
+        """
+        self.ensure_one()
+        all_invoices = self._get_related_invoices()
+        posted_invoices = all_invoices.filtered(lambda move: move.state == "posted")
+        return posted_invoices
+
     def _get_computed_currency(self):
         """Helper method for returning the theoretical computed currency."""
         self.ensure_one()

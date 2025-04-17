@@ -291,6 +291,9 @@ class TestContract(TestContractBase):
         self.assertTrue(invoice_daily)
         self.assertEqual(self.acct_line.recurring_next_date, recurring_next_date)
         self.assertEqual(self.acct_line.last_date_invoiced, last_date_invoiced)
+        self.assertFalse(self.contract._get_posted_related_invoices())
+        invoice_daily[0].action_post()
+        self.assertTrue(self.contract._get_posted_related_invoices())
 
     def test_contract_invoice_followers(self):
         self.acct_line.recurring_next_date = "2018-02-23"
@@ -517,10 +520,208 @@ class TestContract(TestContractBase):
             self.acct_line.date_end = "2015-12-31"
 
     def test_check_recurring_next_date_start_date(self):
-        with self.assertRaises(ValidationError):
-            self.acct_line.write(
-                {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
+        self.acct_line.write(
+            {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
+        )
+        self.assertTrue(self.acct_line.recurring_next_date)
+        self.assertTrue(self.acct_line.date_start)
+        self.assertFalse(self.acct_line.contract_id._get_posted_related_invoices())
+        self.assertGreater(
+            self.acct_line.date_start, self.acct_line.recurring_next_date
+        )
+        self.acct_line.write(
+            {"date_start": "2017-01-01", "recurring_next_date": "2018-01-01"}
+        )
+        self.assertTrue(self.acct_line.recurring_next_date)
+        self.assertTrue(self.acct_line.date_start)
+        self.assertFalse(self.acct_line.contract_id._get_posted_related_invoices())
+        self.assertGreater(
+            self.acct_line.recurring_next_date, self.acct_line.date_start
+        )
+
+    def test_check_date_start_recurring_invoicing_offset_recurring_next_date(self):
+        self.contract.partner_id = self.partner.id
+        self.acct_line.price_unit = 100.0
+        self.acct_line.write(
+            {
+                "date_start": "2025-04-18",
+                "date_end": "2026-04-18",
+                "recurring_invoicing_offset": 0,
+            }
+        )
+        self.assertEqual(self.acct_line.recurring_next_date, self.acct_line.date_start)
+        inv = self.acct_line.contract_id._get_posted_related_invoices()
+        inv.action_post()
+        self.acct_line.recurring_invoicing_offset = -1095
+        self.assertEqual(self.acct_line.date_start, self.acct_line.recurring_next_date)
+        self.assertFalse(self.acct_line.contract_id._get_posted_related_invoices())
+
+    def test_constraint_recurring_next_date_before_start_date_with_posted_invoice(self):
+        """
+        Test ValidationError for _check_recurring_next_date_start_date:
+        Checks that the constraint prevents setting recurring_next_date before
+        date_start *only* when a posted invoice exists linked via account.move.line.
+        """
+        sale_journal = self.env["account.journal"].search(
+            [("type", "=", "sale"), ("company_id", "=", self.env.company.id)], limit=1
+        )
+        self.assertTrue(sale_journal, "Sales journal not found. Ensure CoA is loaded.")
+
+        test_start_date = self.today + timedelta(days=30)
+        test_invalid_next_date = self.today + timedelta(days=15)
+
+        self.acct_line.contract_id = self.contract
+        self.acct_line.write(
+            {
+                "date_start": test_start_date,
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "recurring_next_date": test_start_date,
+            }
+        )
+
+        product_income_account = self.acct_line.product_id.property_account_income_id
+        category_income_account = (
+            self.acct_line.product_id.categ_id.property_account_income_categ_id
+        )
+        journal_default_account = sale_journal.default_account_id
+
+        invoice_line_account_id = (
+            product_income_account.id
+            or category_income_account.id
+            or journal_default_account.id
+        )
+
+        self.assertTrue(
+            invoice_line_account_id,
+            "Could not determine an account for the invoice line.",
+        )
+
+        invoice = self.env["account.move"].create(
+            {
+                "partner_id": self.contract.partner_id.id,
+                "move_type": "out_invoice",
+                "journal_id": sale_journal.id,
+                "invoice_date": self.today - timedelta(days=10),
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product_1.id,
+                            "quantity": 1,
+                            "price_unit": 50,
+                            "contract_line_id": self.acct_line.id,
+                            "account_id": invoice_line_account_id,
+                        },
+                    )
+                ],
+            }
+        )
+
+        invoice.action_post()
+        self.assertEqual(invoice.state, "posted", "Invoice should be posted")
+
+        posted_invoices = self.contract._get_posted_related_invoices()
+        self.assertTrue(
+            posted_invoices, "Posted invoice should be found by the helper method"
+        )
+        self.assertIn(
+            invoice,
+            posted_invoices,
+            "The posted invoice should be among those found for the contract",
+        )
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            "You can't have a date of next invoice anterior to the start of the contract line",
+        ):
+            self.acct_line.write({"recurring_next_date": test_invalid_next_date})
+
+        invoice.button_draft()
+        self.assertEqual(invoice.state, "draft")
+        self.assertFalse(
+            self.contract._get_posted_related_invoices(),
+            "No posted invoices should be found now.",
+        )
+
+        try:
+            self.acct_line.write({"recurring_next_date": test_invalid_next_date})
+        except ValidationError:
+            self.fail(
+                "ValidationError raised unexpectedly when invoice was not posted."
             )
+
+        self.acct_line.write({"recurring_next_date": test_start_date})
+
+    def test_constraint_next_date_before_last_date_with_posted_invoice(self):
+        """
+        Test ValidationError for _check_last_date_invoiced:
+        Checks that constraint prevents setting recurring_next_date <= last_date_invoiced
+        *only* when a posted invoice exists.
+        """
+        sale_journal = self.env["account.journal"].search(
+            [("type", "=", "sale"), ("company_id", "=", self.env.company.id)], limit=1
+        )
+        self.assertTrue(sale_journal, "Sales journal not found.")
+        initial_start_date = self.today - timedelta(days=60)
+        self.acct_line.contract_id = self.contract
+        self.acct_line.write(
+            {
+                "date_start": initial_start_date,
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "recurring_invoicing_type": "pre-paid",
+                "date_end": self.today + timedelta(days=180),
+            }
+        )
+        self.acct_line._compute_recurring_next_date()
+        initial_next_date = self.acct_line.recurring_next_date
+        invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(invoice, "Failed to create the first invoice.")
+        invoice.action_post()
+        self.assertEqual(invoice.state, "posted", "First invoice should be posted")
+        self.acct_line.invalidate_recordset(
+            ["last_date_invoiced", "recurring_next_date"]
+        )
+        self.assertTrue(
+            self.acct_line.last_date_invoiced, "last_date_invoiced should be set."
+        )
+        last_date_invoiced = self.acct_line.last_date_invoiced
+        self.assertNotEqual(
+            self.acct_line.recurring_next_date,
+            initial_next_date,
+            "recurring_next_date should have updated.",
+        )
+        posted_invoices = self.contract._get_posted_related_invoices()
+        self.assertTrue(posted_invoices, "Posted invoice should be found.")
+        self.assertIn(invoice, posted_invoices)
+        invalid_next_date = last_date_invoiced - timedelta(days=5)
+        with self.assertRaisesRegex(
+            ValidationError,
+            "You can't have the next invoice date before the date of last invoice",
+        ):
+            self.acct_line.write({"recurring_next_date": invalid_next_date})
+        with self.assertRaisesRegex(
+            ValidationError,
+            "You can't have the next invoice date before the date of last invoice",
+        ):
+            self.acct_line.write({"recurring_next_date": last_date_invoiced})
+        invoice.button_draft()
+        self.assertEqual(invoice.state, "draft")
+        self.assertFalse(
+            self.contract._get_posted_related_invoices(),
+            "No posted invoices should be found after drafting.",
+        )
+        valid_next_date_after_last = self.acct_line.recurring_next_date
+        try:
+            self.acct_line.write({"recurring_next_date": invalid_next_date})
+            self.acct_line.write({"recurring_next_date": last_date_invoiced})
+        except ValidationError:
+            self.fail(
+                "ValidationError raised unexpectedly when invoice was not posted."
+            )
+        self.acct_line.write({"recurring_next_date": valid_next_date_after_last})
 
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
@@ -2276,15 +2477,28 @@ class TestContract(TestContractBase):
         self.assertFalse(self.acct_line.recurring_next_date)
 
     def test_check_last_date_invoiced_before_next_invoice_date(self):
-        with self.assertRaises(ValidationError):
-            self.acct_line.write(
-                {
-                    "date_start": "2019-01-01",
-                    "date_end": "2019-12-01",
-                    "recurring_next_date": "2019-01-01",
-                    "last_date_invoiced": "2019-06-01",
-                }
-            )
+        self.acct_line.write(
+            {
+                "date_start": "2019-01-01",
+                "date_end": "2019-12-01",
+                "recurring_next_date": "2019-02-01",
+                "last_date_invoiced": "2019-01-01",
+            }
+        )
+        self.assertGreater(
+            self.acct_line.recurring_next_date, self.acct_line.last_date_invoiced
+        )
+        self.acct_line.write(
+            {
+                "date_start": "2019-01-01",
+                "date_end": "2019-12-01",
+                "recurring_next_date": "2019-01-01",
+                "last_date_invoiced": "2019-02-01",
+            }
+        )
+        self.assertGreater(
+            self.acct_line.last_date_invoiced, self.acct_line.recurring_next_date
+        )
 
     def test_stop_and_update_recurring_invoice_date(self):
         self.acct_line.write(
@@ -2408,11 +2622,3 @@ class TestContract(TestContractBase):
         action = self.contract.action_preview()
         self.assertIn("/my/contracts/", action["url"])
         self.assertIn("access_token=", action["url"])
-
-    @freeze_time("2023-05-01")
-    def test_check_month_name_marker(self):
-        """Set fixed date to check test correctly."""
-        self.contract3.contract_line_ids.date_start = fields.Date.today()
-        self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
-        invoice_id = self.contract3.recurring_create_invoice()
-        self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
