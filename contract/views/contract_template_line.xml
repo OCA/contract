@@ -19,57 +19,80 @@
                         />
                     </group>
                     <group invisible="display_type">
-                        <group>
-                            <field name="automatic_price" />
-
-                            <field name="price_unit" readonly="automatic_price" />
-                            <field name="quantity" />
-                        </group>
-                        <group>
-                            <field
-                                name="uom_id"
-                                groups="uom.group_uom"
-                                required="not display_type"
-                            />
-                            <field name="discount" />
-                            <field name="price_subtotal" readonly="1" />
-                        </group>
+                        <field name="automatic_price" />
                     </group>
-                    <label for="name" string="Description" invisible="display_type" />
-                    <label
-                        for="name"
-                        string="Section"
-                        invisible="display_type != 'line_section'"
-                    />
-                    <label
-                        for="name"
-                        string="Note"
-                        invisible="display_type != 'line_note'"
-                    />
-                    <field name="name" nolabel="1" />
-                    <group
-                        name="note_invoicing_mode"
-                        invisible="display_type != 'line_note'"
-                    >
-                        <field name="note_invoicing_mode" widget="radio" />
-                    </group>
-
-                    <group
-                        name="recurrence_info"
-                        invisible="display_type == 'line_section' or (display_type == 'line_note' and note_invoicing_mode != 'custom')"
-                    >
+                    <group invisible="display_type">
                         <group>
-                            <label for="recurring_interval" />
-                            <div class="o_row">
-                                <field name="recurring_interval" />
-                                <field name="recurring_rule_type" />
+                            <label for="quantity" />
+                            <div class="o_row" name="ordered_qty">
+                                <field
+                                    context="{'partner_id':parent.partner_id, 'quantity':quantity, 'pricelist':parent.pricelist_id, 'uom':uom_id, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                    name="quantity"
+                                />
+                                <field
+                                    name="uom_id"
+                                    invisible="1"
+                                    groups="!uom.group_uom"
+                                />
+                                <field
+                                    name="uom_id"
+                                    force_save="1"
+                                    groups="uom.group_uom"
+                                    class="oe_no_button"
+                                    required="not display_type"
+                                />
                             </div>
+                            <field name="discount" />
                         </group>
                         <group>
-                            <field name="recurring_invoicing_type" />
-                            <field name="recurring_invoicing_offset" />
+                            <field name="price_unit" readonly="automatic_price" />
                         </group>
                     </group>
+
+                    <notebook>
+                        <page
+                            string="Recurrence"
+                            name="recurrence_info"
+                            invisible="display_type == 'line_section' or (display_type == 'line_note' and note_invoicing_mode != 'custom')"
+                        >
+                            <group name="recurrence_info">
+                                <group>
+                                    <label for="recurring_interval" />
+                                    <div class="o_row">
+                                        <field name="recurring_interval" />
+                                        <field name="recurring_rule_type" />
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="recurring_invoicing_type" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description">
+                            <label
+                                for="name"
+                                string="Description"
+                                invisible="display_type"
+                            />
+                            <label
+                                for="name"
+                                string="Section"
+                                invisible="display_type != 'line_section'"
+                            />
+                            <label
+                                for="name"
+                                string="Note"
+                                invisible="display_type != 'line_note'"
+                            />
+                            <field name="name" nolabel="1" />
+                            <group
+                                name="note_invoicing_mode"
+                                invisible="display_type != 'line_note'"
+                            >
+                                <field name="note_invoicing_mode" widget="radio" />
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

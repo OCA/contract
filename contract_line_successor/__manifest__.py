@@ -13,10 +13,10 @@
     "data": [
         "data/contract_renew_cron.xml",
         "security/ir.model.access.csv",
-        "views/contract_contract.xml",
-        "views/contract_line.xml",
         "views/contract_template.xml",
+        "views/contract_contract.xml",
         "views/contract_template_line.xml",
+        "views/contract_line.xml",
         "wizards/contract_line_wizard.xml",
         "views/res_config_settings.xml",
     ],

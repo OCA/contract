@@ -9,22 +9,30 @@
             <header position="inside">
                 <field name="state" widget="statusbar" />
             </header>
-            <xpath expr="//form" position="inside">
+            <xpath expr="//page[@name='renewal']" position="inside">
                 <group>
-                    <field name="manual_renew_needed" />
+                    <field
+                        name="termination_notice_date"
+                        readonly="True"
+                        invisible="not is_auto_renew"
+                    />
+                    <field name="manual_renew_needed" invisible="not is_auto_renew" />
                 </group>
-                <group>
-                    <field name="predecessor_contract_line_id" />
-                </group>
-                <group>
-                    <field name="successor_contract_line_id" />
-                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Predecessor &amp; Successor Lines"
+                    groups="base.group_no_one"
+                    invisible="display_type"
+                >
+                    <group>
+                        <field name="predecessor_contract_line_id" />
+                        <field name="successor_contract_line_id" />
+                    </group>
+                </page>
             </xpath>
             <xpath expr="//field[@name='date_end']" position="attributes">
                 <attribute name="required">is_auto_renew</attribute>
-            </xpath>
-            <xpath expr="//field[@name='last_date_invoiced']" position="after">
-                <field name="termination_notice_date" readonly="True" />
             </xpath>
         </field>
     </record>

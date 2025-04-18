@@ -14,6 +14,7 @@
         "security/ir.model.access.csv",
         "security/contract_terminate_reason.xml",
         "views/contract_contract.xml",
+        "views/contract_terminate_reason.xml",
         "wizards/contract_contract_terminate.xml",
     ],
     "demo": [],

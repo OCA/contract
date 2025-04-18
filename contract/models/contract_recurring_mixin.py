@@ -136,7 +136,14 @@ class ContractRecurringMixin(models.AbstractModel):
                 rec.recurring_invoicing_type, rec.recurring_rule_type
             )
 
-    @api.depends("next_period_date_start")
+    @api.depends(
+        "next_period_date_start",
+        "recurring_invoicing_type",
+        "recurring_invoicing_offset",
+        "recurring_rule_type",
+        "recurring_interval",
+        "date_end",
+    )
     def _compute_recurring_next_date(self):
         """Compute the next invoice date."""
         for rec in self:

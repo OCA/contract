@@ -61,8 +61,6 @@
                         <group>
                             <field name="commercial_partner_id" invisible="1" />
                             <field name="partner_id" required="1" />
-                            <field name="pricelist_id" />
-                            <field name="payment_term_id" />
                             <field name="user_id" />
                         </group>
                         <group>
@@ -71,9 +69,14 @@
                                 domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
                                 context="{'default_contract_type': contract_type}"
                             />
+                            <field name="pricelist_id" />
+
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
                             <field name="contract_type" invisible="1" required="1" />
-                            <field name="fiscal_position_id" />
-                            <field name="journal_id" required="1" />
                             <field
                                 name="tag_ids"
                                 widget="many2many_tags"
@@ -89,36 +92,17 @@
                                 readonly="line_recurrence and invoice_count != 0"
                             />
                         </group>
-                        <group invisible="line_recurrence">
-                            <label for="recurring_interval" />
-                            <div class="o_row">
-                                <field
-                                    name="recurring_interval"
-                                    required="not line_recurrence"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
-                                <field
-                                    name="recurring_rule_type"
-                                    required="not line_recurrence"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
-                            </div>
-                            <field
-                                name="recurring_invoicing_type"
-                                required="not line_recurrence"
-                            />
-                        </group>
-                        <group invisible="line_recurrence">
+                    </group>
+                    <group invisible="line_recurrence">
+                        <group>
                             <field name="date_start" required="not line_recurrence" />
+                        </group>
+                        <group>
                             <field name="date_end" />
                             <field name="recurring_next_date" />
                         </group>
                     </group>
-                    <group col="4" name="recurring_type" string="Recurring Type">
-                        <field name="generation_type" />
-                    </group>
+
                     <notebook>
                         <page name="recurring_invoice_line" string="Recurring Invoices">
                             <field
@@ -278,6 +262,44 @@
                             </field>
                             <field name="note" />
                         </page>
+                        <page name="invoicing" string="Invoicing">
+                            <group name="invoicing">
+                                <group invisible="line_recurrence">
+                                    <field
+                                        name="recurring_invoicing_type"
+                                        required="not line_recurrence"
+                                    />
+                                    <label for="recurring_interval" />
+                                    <div class="o_row">
+                                        <field
+                                            name="recurring_interval"
+                                            required="not line_recurrence"
+                                            class="oe_inline"
+                                            nolabel="1"
+                                        />
+                                        <field
+                                            name="recurring_rule_type"
+                                            required="not line_recurrence"
+                                            class="oe_inline"
+                                            nolabel="1"
+                                        />
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="invoice_partner_id" required="1" />
+                                    <field name="fiscal_position_id" />
+                                    <field name="journal_id" required="1" />
+                                    <field name="payment_term_id" />
+                                </group>
+                            </group>
+                            <group
+                                col="4"
+                                name="recurring_type"
+                                string="Recurring Type"
+                            >
+                                <field name="generation_type" />
+                            </group>
+                        </page>
                         <page name="modications" string="Modifications">
                             <field name="modification_ids">
                                 <list editable="bottom">
@@ -288,21 +310,17 @@
                             </field>
                         </page>
                         <page name="info" string="Other Information">
-                            <field name="create_invoice_visibility" invisible="1" />
                             <group>
                                 <field name="code" />
                                 <field name="group_id" />
                                 <field
-                                    name="company_id"
-                                    options="{'no_create': True}"
-                                    groups="base.group_multi_company"
-                                />
-                                <field
                                     name="currency_id"
                                     groups="base.group_multi_currency"
                                 />
-                                <field name="invoice_partner_id" required="1" />
                             </group>
+
+                            <field name="create_invoice_visibility" invisible="1" />
+
                             <group
                                 string="Legend (for the markers inside invoice lines description)"
                                 name="group_legend"
@@ -338,7 +356,8 @@
     </record>
     <!--Customer FORM view-->
     <record id="contract_contract_customer_form_view" model="ir.ui.view">
-        <field name="name">contract.contract customer form view (in contract)</field>
+        <field name="name">contract.contract customer form view (in contract)
+        </field>
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract_contract_form_view" />
         <field name="mode">primary</field>
@@ -348,7 +367,9 @@
                 <attribute name="string">Customer</attribute>
                 <attribute
                     name="context"
-                >{'default_customer_rank': 1, 'default_supplier_rank': 0, 'res_partner_search_mode': 'customer', 'show_vat': True}</attribute>
+                >{'default_customer_rank': 1, 'default_supplier_rank': 0,
+                    'res_partner_search_mode': 'customer', 'show_vat': True}
+                </attribute>
             </field>
             <field name="journal_id" position="attributes">
                 <attribute name="domain">[('type', '=', 'sale')]</attribute>
@@ -357,7 +378,8 @@
     </record>
     <!--Supplier FORM view-->
     <record id="contract_contract_supplier_form_view" model="ir.ui.view">
-        <field name="name">contract.contract supplier form view (in contract)</field>
+        <field name="name">contract.contract supplier form view (in contract)
+        </field>
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract_contract_form_view" />
         <field name="mode">primary</field>
@@ -367,10 +389,13 @@
                 <attribute name="string">Supplier</attribute>
                 <attribute
                     name="context"
-                >{'default_customer_rank': False, 'default_supplier_rank': 1, 'res_partner_search_mode': 'supplier', 'show_vat': True}</attribute>
+                >{'default_customer_rank': False, 'default_supplier_rank': 1,
+                    'res_partner_search_mode': 'supplier', 'show_vat': True}
+                </attribute>
             </field>
             <field name="journal_id" position="attributes">
-                <attribute name="domain">[('type', '=', 'purchase')]</attribute>
+                <attribute name="domain">[('type', '=', 'purchase')]
+                </attribute>
             </field>
         </field>
     </record>

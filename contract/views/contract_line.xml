@@ -6,43 +6,45 @@
         <field name="inherit_id" ref="contract_template_line_form_view" />
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <group name="recurrence_info" position="inside">
-                <group>
-                    <field name="date_start" required="1" />
+            <xpath expr="//group[@name='recurrence_info']" position="after">
+                <group string="Contract Start &amp; End Dates" name="contract_dates">
+                    <group>
+                        <field name="date_start" required="1" />
+                    </group>
+                    <group>
+                        <field name="date_end" />
+                    </group>
+                    <group />
                 </group>
-                <group>
-                    <field name="date_end" />
+                <group string="Next period to invoice" name="next_period_dates">
+                    <group>
+                        <field name="next_period_date_start" />
+                        <field
+                            name="last_date_invoiced"
+                            groups="base.group_no_one"
+                            readonly="True"
+                        />
+                    </group>
+                    <group>
+                        <field name="next_period_date_end" />
+                        <field name="recurring_next_date" />
+                    </group>
                 </group>
-                <group>
-                    <field name="next_period_date_start" />
-                    <field name="recurring_next_date" />
-                </group>
-                <group>
-                    <field name="date_end" required="is_auto_renew" />
-                    <field name="next_period_date_end" />
-                </group>
-                <group groups="base.group_no_one">
-                    <field name="last_date_invoiced" readonly="True" />
-                </group>
-            </group>
-            <group name="recurrence_info" position="after">
-                <group
-                    name="analytic"
+            </xpath>
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
                     groups="analytic.group_analytic_accounting"
                     invisible="display_type"
-                >
-                    <field
-                        name="analytic_distribution"
-                        widget="analytic_distribution"
-                        groups="analytic.group_analytic_accounting"
-                    />
-                </group>
-            </group>
+                />
+            </xpath>
         </field>
     </record>
     <!--Customer FORM view-->
     <record id="contract_line_customer_form_view" model="ir.ui.view">
-        <field name="name">contract.line customer form view (in contract)</field>
+        <field name="name">contract.line customer form view (in contract)
+        </field>
         <field name="model">contract.line</field>
         <field name="inherit_id" ref="contract_line_form_view" />
         <field name="mode">primary</field>
@@ -55,14 +57,16 @@
     </record>
     <!--Supplier FORM view-->
     <record id="contract_line_supplier_form_view" model="ir.ui.view">
-        <field name="name">contract.line supplier form view (in contract)</field>
+        <field name="name">contract.line supplier form view (in contract)
+        </field>
         <field name="model">contract.line</field>
         <field name="inherit_id" ref="contract_line_form_view" />
         <field name="mode">primary</field>
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
-                <attribute name="domain">[('purchase_ok', '=', True)]</attribute>
+                <attribute name="domain">[('purchase_ok', '=', True)]
+                </attribute>
             </field>
             <field name="automatic_price" position="attributes">
                 <attribute name="invisible">True</attribute>
@@ -104,7 +108,8 @@
     </record>
     <!--Supplier TREE view-->
     <record id="contract_line_supplier_tree_view" model="ir.ui.view">
-        <field name="name">contract.line supplier list view (in contract)</field>
+        <field name="name">contract.line supplier list view (in contract)
+        </field>
         <field name="model">contract.line</field>
         <field name="mode">primary</field>
         <field name="priority" eval="20" />
