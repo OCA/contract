@@ -10,8 +10,7 @@ export class ProductContractConfiguratorController extends formView.Controller {
         this.action = useService("action");
     }
 
-    async onRecordSaved(record) {
-        await super.onRecordSaved(...arguments);
+    _getProductContractConfiguration(record) {
         const {
             product_uom_qty,
             recurrence_number,
@@ -26,23 +25,29 @@ export class ProductContractConfiguratorController extends formView.Controller {
             auto_renew_interval,
             auto_renew_rule_type,
         } = record.data;
+        return {
+            product_uom_qty,
+            recurrence_number,
+            recurring_interval,
+            recurring_rule_type,
+            recurrence_interval,
+            contract_id,
+            date_start,
+            date_end,
+            contract_line_id,
+            is_auto_renew,
+            auto_renew_interval,
+            auto_renew_rule_type,
+        };
+    }
+
+    async onRecordSaved(record) {
+        await super.onRecordSaved(...arguments);
         return this.action.doAction({
             type: "ir.actions.act_window_close",
             infos: {
-                productContractConfiguration: {
-                    product_uom_qty,
-                    recurrence_number,
-                    recurring_interval,
-                    recurring_rule_type,
-                    recurrence_interval,
-                    contract_id,
-                    date_start,
-                    date_end,
-                    contract_line_id,
-                    is_auto_renew,
-                    auto_renew_interval,
-                    auto_renew_rule_type,
-                },
+                productContractConfiguration:
+                    this._getProductContractConfiguration(record),
             },
         });
     }
