@@ -3,19 +3,19 @@
 
 {
     "name": "Contract Forecast",
-    "summary": """
-    Contract forecast""",
-    "version": "12.0.1.2.0",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV," "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
-    "depends": ["base", "account", "contract", "queue_job"],
+    "depends": ["contract_line_successor", "queue_job"],
     "data": [
+        "data/queue_job_channel.xml",
+        "data/queue_job_functions.xml",
         "security/contract_line_forecast_period.xml",
         "views/res_config_settings.xml",
         "views/contract_line_forecast_period.xml",
         "views/contract.xml",
     ],
-    "external_dependencies": {"python": ["dateutil"]},
+    "maintainers": ["sbejaoui"],
     "post_init_hook": "post_init_hook",
 }

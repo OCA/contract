@@ -1,12 +1,12 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* contract_forecast
+# 	* contract_forecast
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: <>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,7 +15,8 @@ msgstr ""
 
 #. module: contract_forecast
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_contract_form_view
-msgid "<span class=\"o_stat_text\">Forecast\n"
+msgid ""
+"<span class=\"o_stat_text\">Forecast\n"
 "                        </span>"
 msgstr ""
 
@@ -47,12 +48,12 @@ msgid "Contract"
 msgstr ""
 
 #. module: contract_forecast
-#: code:addons/contract_forecast/models/contract.py:19
+#. odoo-python
+#: code:addons/contract_forecast/models/contract.py:0
 #: model:ir.actions.act_window,name:contract_forecast.action_contract_forecast
 #: model:ir.ui.menu,name:contract_forecast.menu_contract_forecast
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_graph_view
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_pivot_view
-#, python-format
 msgid "Contract Forecast"
 msgstr ""
 
@@ -84,6 +85,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: contract_forecast
+#: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__date_end
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_search_view
 msgid "Date End"
@@ -101,13 +107,20 @@ msgid "Date Start"
 msgstr ""
 
 #. module: contract_forecast
+#: model:ir.model.fields,help:contract_forecast.field_contract_line_forecast_period__sequence
+msgid "Defines line ordering in the contract."
+msgstr ""
+
+#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__discount
 msgid "Discount (%)"
 msgstr ""
 
 #. module: contract_forecast
 #: model:ir.model.fields,help:contract_forecast.field_contract_line_forecast_period__discount
-msgid "Discount that is applied in generated invoices. It should be less or equal to 100"
+msgid ""
+"Discount that is applied in generated invoices. It should be less or equal "
+"to 100"
 msgstr ""
 
 #. module: contract_forecast
@@ -152,11 +165,6 @@ msgid "Invoice Date"
 msgstr ""
 
 #. module: contract_forecast
-#: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -167,7 +175,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: contract_forecast
-#: selection:res.company,contract_forecast_rule_type:0
+#: model:ir.model.fields.selection,name:contract_forecast.selection__res_company__contract_forecast_rule_type__monthly
 msgid "Month(s)"
 msgstr ""
 
@@ -198,17 +206,11 @@ msgid "Sequence"
 msgstr ""
 
 #. module: contract_forecast
-#: model:ir.model.fields,help:contract_forecast.field_contract_line_forecast_period__sequence
-msgid "Sequence of the contract line when displaying contracts"
-msgstr ""
-
-#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__price_unit
 msgid "Unit Price"
 msgstr ""
 
 #. module: contract_forecast
-#: selection:res.company,contract_forecast_rule_type:0
+#: model:ir.model.fields.selection,name:contract_forecast.selection__res_company__contract_forecast_rule_type__yearly
 msgid "Year(s)"
 msgstr ""
-

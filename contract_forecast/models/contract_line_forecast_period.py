@@ -2,22 +2,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 
 class ContractLineForecastPeriod(models.Model):
-
     _name = "contract.line.forecast.period"
     _description = "Contract Line Forecast Period"
     _order = "date_invoice, sequence"
 
-    name = fields.Char(string="Name", required=True, readonly=True)
-    sequence = fields.Integer(
-        string="Sequence", related="contract_line_id.sequence", store=True
-    )
+    name = fields.Char(required=True, readonly=True)
+    sequence = fields.Integer(related="contract_line_id.sequence", store=True)
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
-        string="Contract",
         required=True,
         readonly=True,
         ondelete="cascade",
@@ -27,7 +22,6 @@ class ContractLineForecastPeriod(models.Model):
     )
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Contract Line",
         required=True,
         readonly=True,
         ondelete="cascade",
@@ -35,36 +29,32 @@ class ContractLineForecastPeriod(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        string="Product",
         required=True,
         readonly=True,
         related="contract_line_id.product_id",
         store=True,
         index=True,
     )
-    date_start = fields.Date(string="Date Start", required=True, readonly=True)
-    date_end = fields.Date(string="Date End", required=True, readonly=True)
-    date_invoice = fields.Date(
-        string="Invoice Date", required=True, readonly=True
-    )
+    date_start = fields.Date(required=True, readonly=True)
+    date_end = fields.Date(required=True, readonly=True)
+    date_invoice = fields.Date(string="Invoice Date", required=True, readonly=True)
     quantity = fields.Float(default=1.0, required=True)
-    price_unit = fields.Float(string='Unit Price')
-    price_subtotal = fields.Float(
-        digits=dp.get_precision("Account"),
+    price_unit = fields.Monetary(string="Unit Price")
+    price_subtotal = fields.Monetary(
         string="Amount Untaxed",
-        compute='_compute_price_subtotal',
-        store=True
+        compute="_compute_price_subtotal",
+        store=True,
     )
     discount = fields.Float(
-        string='Discount (%)',
-        digits=dp.get_precision('Discount'),
-        help='Discount that is applied in generated invoices.'
-        ' It should be less or equal to 100',
+        string="Discount (%)",
+        digits="Discount",
+        help="Discount that is applied in generated invoices."
+        " It should be less or equal to 100",
     )
     company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    currency_id = fields.Many2one(related="contract_id.currency_id", store=True)
 
-    @api.multi
-    @api.depends('quantity', 'price_unit', 'discount')
+    @api.depends("quantity", "price_unit", "discount")
     def _compute_price_subtotal(self):
         for line in self:
             subtotal = line.quantity * line.price_unit
