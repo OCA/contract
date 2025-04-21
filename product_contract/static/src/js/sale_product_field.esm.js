@@ -22,8 +22,8 @@ patch(SaleOrderLineProductField.prototype, {
         return super.isConfigurableLine || this.props.record.data.is_contract;
     },
 
-    async _openContractConfigurator(isNew = false) {
-        const actionContext = {
+    _getContractConfiguratorContext() {
+        return {
             active_model: this.props.record.resModel,
             active_id: this.props.record.resId,
             default_product_id: this.props.record.data.product_id[0],
@@ -41,6 +41,10 @@ patch(SaleOrderLineProductField.prototype, {
             default_auto_renew_interval: this.props.record.data.auto_renew_interval,
             default_auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
         };
+    },
+
+    async _openContractConfigurator(isNew = false) {
+        const actionContext = this._getContractConfiguratorContext();
         this.action.doAction("product_contract.product_contract_configurator_action", {
             additionalContext: actionContext,
             onClose: async (closeInfo) => {
