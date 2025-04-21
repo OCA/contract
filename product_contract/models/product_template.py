@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
         string="Contract Template",
         company_dependent=True,
     )
-    default_qty = fields.Integer(string="Recurrence Number", default=1)
+    recurrence_number = fields.Integer(default=1)
     recurrence_interval = fields.Selection(
         [
             ("monthly", "Month(s)"),
