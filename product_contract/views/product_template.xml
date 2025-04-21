@@ -23,36 +23,51 @@
                     invisible="is_contract == False"
                 >
                     <group>
-                        <field name="property_contract_template_id" />
+                        <field
+                            name="property_contract_template_id"
+                            required="is_contract"
+                        />
                     </group>
                     <group name="recurrence_info">
-                        <group>
-                            <field name="recurrence_interval" />
-                            <field name="recurring_rule_type" />
+                        <group string="Duration">
+                            <label for="recurrence_number" />
+                            <div class="o_row">
+                                <field
+                                    name="recurrence_number"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                                <field
+                                    name="recurrence_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                            </div>
                         </group>
-                        <group>
-                            <field name="recurrence_number" />
-                            <field name="recurring_invoicing_type" />
+                        <group string="Invoicing">
+                            <label for="recurring_interval" string="Invoice Every" />
+                            <div class="o_row">
+                                <field
+                                    name="recurring_interval"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                                <field
+                                    name="recurring_rule_type"
+                                    class="oe_inline"
+                                    nolabel="1"
+                                />
+                            </div>
                         </group>
                     </group>
-                    <group>
-                        <field name="is_auto_renew" />
-                        <field name="contract_start_date_method" required="True" />
-                        <field
-                            name="force_month_yearly"
-                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'yearly'"
-                        />
-                        <field
-                            name="force_month_quarterly"
-                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'quarterly'"
-                        />
-                        <field
-                            name="force_month_semesterly"
-                            invisible="contract_start_date_method == 'manual' or recurring_rule_type != 'semesterly'"
-                        />
-                    </group>
-                    <group>
-                        <group invisible="is_auto_renew == False">
+                    <group string="Renewal">
+                        <group colspan="2">
+                            <field name="is_auto_renew" />
+                        </group>
+                        <group
+                            invisible="is_auto_renew == False"
+                            string="Renewal Frequency"
+                        >
                             <label for="auto_renew_interval" />
                             <div>
                                 <field
@@ -69,7 +84,10 @@
                                 />
                             </div>
                         </group>
-                        <group invisible="is_auto_renew == False">
+                        <group
+                            invisible="is_auto_renew == False"
+                            string="Termination Notice"
+                        >
                             <label for="termination_notice_interval" />
                             <div>
                                 <field
@@ -85,6 +103,25 @@
                                     required="is_auto_renew == True"
                                 />
                             </div>
+                        </group>
+                    </group>
+                    <group string="Start Method">
+                        <group>
+                            <field name="contract_start_date_method" required="True" />
+                        </group>
+                        <group>
+                            <field
+                                name="force_month_yearly"
+                                invisible="contract_start_date_method == 'manual' or recurrence_interval != 'yearly'"
+                            />
+                            <field
+                                name="force_month_quarterly"
+                                invisible="contract_start_date_method == 'manual' or recurrence_interval != 'quarterly'"
+                            />
+                            <field
+                                name="force_month_semesterly"
+                                invisible="contract_start_date_method == 'manual' or recurrence_interval != 'semesterly'"
+                            />
                         </group>
                     </group>
                 </page>
