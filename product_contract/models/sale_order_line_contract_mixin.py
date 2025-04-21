@@ -190,7 +190,7 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             if rec.product_id.is_contract:
                 p = rec.product_id
                 vals = {
-                    "recurrence_number": p.default_qty,
+                    "recurrence_number": p.recurrence_number,
                     "recurring_interval": p.recurring_interval,
                     "recurring_rule_type": p.recurring_rule_type,
                     "recurring_invoicing_type": p.recurring_invoicing_type,
