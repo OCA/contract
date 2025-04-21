@@ -53,7 +53,7 @@ class TestSaleOrder(TransactionCase):
         cls.product1.with_company(cls.sale.company_id).write(
             {
                 "is_contract": True,
-                "default_qty": 12,
+                "recurrence_number": 12,
                 "recurring_rule_type": "monthlylastday",
                 "recurring_invoicing_type": "post-paid",
                 "property_contract_template_id": cls.contract_template1.id,
@@ -303,7 +303,7 @@ class TestSaleOrder(TransactionCase):
                 "recurring_rule_type": "monthly",
                 "recurring_invoicing_type": "pre-paid",
                 "is_auto_renew": True,
-                "default_qty": 12,
+                "recurrence_number": 12,
                 "termination_notice_interval": "6",
                 "termination_notice_rule_type": "weekly",
             }
