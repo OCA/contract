@@ -5,10 +5,9 @@ from odoo import models
 
 
 class ContractContract(models.Model):
-
     _inherit = "contract.contract"
 
-    def _finalize_and_create_invoices(self, invoices_values):
-        invoices = super()._finalize_and_create_invoices(invoices_values)
-        invoices.filtered("invoice_line_ids").action_invoice_open()
-        return invoices
+    def _recurring_create_invoice(self, date_ref=False):
+        moves = super()._recurring_create_invoice(date_ref=date_ref)
+        moves.filtered("invoice_line_ids").action_post()
+        return moves
