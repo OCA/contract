@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_invoice_queue_job_channel" model="queue.job.channel">
+        <field name="name">CONTRACT_INVOICE</field>
+        <field name="parent_id" ref="queue_job.channel_root" />
+    </record>
+    <record id="contract_line_renew_queue_job_channel" model="queue.job.channel">
+        <field name="name">CONTRACT_LINE_RENEW</field>
+        <field name="parent_id" ref="queue_job.channel_root" />
+    </record>
+</odoo>

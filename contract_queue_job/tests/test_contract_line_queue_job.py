@@ -13,8 +13,9 @@ class TestContractLineQueueJob(TestContractBase, JobMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", True)
+        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", "true")
         cls.contract3 = cls.contract2.copy()
+        cls.env.company.create_new_line_at_contract_line_renew = True
 
     def test_contract_renew_queue_job_1(self):
         """Only one line, task is run without delay"""
@@ -45,6 +46,5 @@ class TestContractLineQueueJob(TestContractBase, JobMixin):
             }
         )
         lines = self.acct_line | self.acct_line.copy()
-        job_counter = self.job_counter()
-        lines.renew()
-        self.assertEqual(job_counter.count_created(), 0)
+        with self.assertRaisesRegex(ValueError, "Use 0/1/yes/no/true/false/on/off"):
+            lines.renew()

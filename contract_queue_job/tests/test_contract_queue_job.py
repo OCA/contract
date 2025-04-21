@@ -9,7 +9,7 @@ class TestContractQueueJob(TestContractBase, JobMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", True)
+        cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", "true")
         cls.contract3 = cls.contract2.copy()
 
     def _get_related_invoices(self, contracts):
@@ -69,6 +69,5 @@ class TestContractQueueJob(TestContractBase, JobMixin):
             "contract.queue.job", "wronginput"
         )
         contracts = self.contract2 | self.contract3
-        job_counter = self.job_counter()
-        contracts._recurring_create_invoice()
-        self.assertEqual(job_counter.count_created(), 0)
+        with self.assertRaisesRegex(ValueError, "Use 0/1/yes/no/true/false/on/off"):
+            contracts._recurring_create_invoice()
