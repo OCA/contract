@@ -11,70 +11,88 @@
                     <group colspan="2">
                         <field name="product_uom_qty" />
                     </group>
-                    <separator colspan="4" string="Recurrence Invoicing" />
-                    <group>
+                </group>
+                <group name="recurrence_info">
+                    <group string="Duration">
                         <label for="recurrence_number" />
                         <div class="o_row">
-                            <field name="recurrence_number" />
-                            <field name="recurrence_interval" />
-                        </div>
-                        <field name="recurring_invoicing_type" />
-                    </group>
-                    <group>
-                        <label for="recurring_interval" />
-                        <div class="o_row">
-                            <field name="recurring_interval" />
-                            <field name="recurring_rule_type" />
+                            <field
+                                name="recurrence_number"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                            <field
+                                name="recurrence_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
                         </div>
                         <field name="contract_start_date_method" />
                     </group>
-                    <group>
-                        <field
-                            name="date_start"
-                            required="contract_start_date_method == 'manual'"
-                            invisible="contract_start_date_method != 'manual'"
-                        />
-                        <field name="is_auto_renew" invisible="not date_end" />
+                    <group string="Invoicing">
+                        <label for="recurring_interval" string="Invoice Every" />
+                        <div class="o_row">
+                            <field
+                                name="recurring_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                            <field
+                                name="recurring_rule_type"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                        </div>
+                        <field name="recurring_invoicing_type" />
                     </group>
-                    <group>
-                        <field
-                            name="date_end"
-                            invisible="contract_start_date_method != 'manual'"
-                        />
+                </group>
 
-                        <label
-                            for="auto_renew_interval"
-                            invisible="not is_auto_renew or contract_start_date_method != 'manual'"
-                        />
-                        <div
-                            invisible="not is_auto_renew or contract_start_date_method != 'manual'"
-                        >
+                <group string="Renewal">
+                    <group>
+                        <field name="is_auto_renew" />
+                    </group>
+                    <group invisible="is_auto_renew == False">
+                        <label for="auto_renew_interval" />
+                        <div>
                             <field
                                 name="auto_renew_interval"
                                 class="oe_inline"
                                 nolabel="1"
-                                required="is_auto_renew"
+                                required="is_auto_renew == True"
                             />
                             <field
                                 name="auto_renew_rule_type"
                                 class="oe_inline"
                                 nolabel="1"
-                                required="is_auto_renew"
+                                required="is_auto_renew == True"
                             />
                         </div>
                     </group>
-                    <separator
-                        colspan="4"
-                        string="Contract"
-                        name="contract_separator"
-                    />
-                    <group colspan="2">
+                </group>
+                <group
+                    string="Dates"
+                    invisible="contract_start_date_method != 'manual'"
+                >
+                    <group>
+                        <field
+                            name="date_start"
+                            required="contract_start_date_method == 'manual'"
+                        />
+                    </group>
+                    <group>
+                        <field name="date_end" />
+                    </group>
+                </group>
+                <group string="Contract">
+                    <group>
                         <field
                             name="contract_id"
                             options='{"no_create": True}'
                             domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id), ('is_terminated','=',False),
-                            ]"
+                        ]"
                         />
+                    </group>
+                    <group>
                         <field
                             name="contract_line_id"
                             domain="[('contract_id','=',contract_id)]"

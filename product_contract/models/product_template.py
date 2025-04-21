@@ -15,7 +15,11 @@ class ProductTemplate(models.Model):
         string="Contract Template",
         company_dependent=True,
     )
-    recurrence_number = fields.Integer(default=1)
+    recurrence_number = fields.Integer(
+        string="Number of Recurrences",
+        default=1,
+        help="Total number of recurrence periods for the contract.",
+    )
     recurrence_interval = fields.Selection(
         [
             ("monthly", "Month(s)"),
@@ -24,12 +28,14 @@ class ProductTemplate(models.Model):
             ("yearly", "Year(s)"),
         ],
         default="monthly",
-        help="Specify Interval for contract duration.",
+        help="Define the length of each recurrence period (e.g., every 1 month, every 3"
+        " months).",
     )
     recurring_interval = fields.Integer(
         default=1,
         string="Invoice Every",
-        help="Invoice every (Days/Week/Month/Year)",
+        help="Frequency at which invoices are generated (e.g., every 1 month, every 2"
+        " weeks).",
     )
     recurring_rule_type = fields.Selection(
         [
@@ -42,14 +48,16 @@ class ProductTemplate(models.Model):
             ("yearly", "Year(s)"),
         ],
         default="monthly",
-        string="Recurrence",
-        help="Specify Interval for automatic invoice generation.",
+        string="Invoicing Recurrence",
+        help="Specify the time unit for generating recurring invoices (days, weeks, "
+        "months, etc.).",
     )
     recurring_invoicing_type = fields.Selection(
         [("pre-paid", "Pre-paid"), ("post-paid", "Post-paid")],
         default="pre-paid",
         string="Invoicing type",
-        help="Specify if process date is 'from' or 'to' invoicing date",
+        help="Define whether invoices are issued before (prepaid) or after (postpaid) "
+        "the service period.",
     )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     termination_notice_interval = fields.Integer(
