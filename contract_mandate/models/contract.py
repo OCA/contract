@@ -15,6 +15,9 @@ class ContractContract(models.Model):
         "invoice takes the first valid mandate",
         index=True,
         check_company=True,
+        compute="_compute_mandate_id",
+        store=True,
+        readonly=False,
     )
     mandate_required = fields.Boolean(
         related="payment_mode_id.payment_method_id.mandate_required", readonly=True
@@ -25,11 +28,9 @@ class ContractContract(models.Model):
         string="Commercial Entity",
     )
 
-    @api.onchange("payment_mode_id")
-    def _onchange_payment_mode_id(self):
-        self.ensure_one()
-        if not self.mandate_required:
-            self.mandate_id = False
+    @api.depends("payment_mode_id")
+    def _compute_mandate_id(self):
+        self.filtered(lambda rec: not rec.mandate_required).mandate_id = False
 
     def _prepare_invoice(self, date_invoice, journal=None):
         invoice_vals = super()._prepare_invoice(date_invoice, journal=journal)

@@ -16,11 +16,28 @@ class TestContractMandate(TestContractBase):
                 "mandate_required": True,
             }
         )
+        cls.payment_method_mandate_not_required = cls.env[
+            "account.payment.method"
+        ].create(
+            {
+                "name": "Test",
+                "code": "test_code",
+                "payment_type": "inbound",
+                "mandate_required": False,
+            }
+        )
         cls.payment_mode = cls.env["account.payment.mode"].create(
             {
                 "name": "Test payment mode",
                 "bank_account_link": "variable",
                 "payment_method_id": cls.payment_method.id,
+            }
+        )
+        cls.payment_mode_mandate_not_required = cls.env["account.payment.mode"].create(
+            {
+                "name": "Test payment mode mandate not required",
+                "bank_account_link": "variable",
+                "payment_method_id": cls.payment_method_mandate_not_required.id,
             }
         )
         cls.partner = cls.env["res.partner"].create(
@@ -57,11 +74,12 @@ class TestContractMandate(TestContractBase):
         self.assertEqual(new_invoice.mandate_id, self.mandate2)
 
     def test_onchange_payment_mode_id(self):
-        self.contract_with_mandate.mandate_required = False
-        self.contract_with_mandate._onchange_payment_mode_id()
+        self.contract_with_mandate.payment_mode_id = (
+            self.payment_mode_mandate_not_required
+        )
         self.assertFalse(self.contract_with_mandate.mandate_id)
-        self.contract_with_mandate.mandate_required = True
-        self.contract_with_mandate._onchange_payment_mode_id()
+        self.payment_method.mandate_required = False
+        self.contract_with_mandate.payment_mode_id = self.payment_mode
         self.assertFalse(self.contract_with_mandate.mandate_id)
 
     def test_contract_mandate_default(self):

@@ -4,3 +4,4 @@
 - Helly kapatel \<<helly.kapatel@initos.com>\>
 - [Heliconia Solutions Pvt. Ltd.](https://www.heliconia.io)
   - Bhavesh Heliconia
+- Souheil Bejaoui \<<souheil.bejaoui@acsone.eu>\>
