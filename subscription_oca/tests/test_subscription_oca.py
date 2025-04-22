@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import exceptions, fields
 from odoo.tests import TransactionCase
+from odoo.tools import mute_logger
 
 
 class TestSubscriptionOCA(TransactionCase):
@@ -351,7 +352,7 @@ class TestSubscriptionOCA(TransactionCase):
         # Simulate something failing in generating an invoice,
         # we expect something being logged
         generate_invoice_patch.side_effect = exceptions.UserError("Error")
-        with self.assertLogs(level="ERROR"):
+        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
             with self.assertRaises(exceptions.UserError):
                 self.sub1.cron_subscription_management()
 
