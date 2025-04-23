@@ -1,7 +1,6 @@
 # Copyright 2017 LasLabs Inc.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from datetime import date
 
 import mock
 from odoo_test_helper import FakeModelLoader
@@ -10,11 +9,12 @@ from odoo import fields
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.contract.tests.test_contract import TestContractBase
 from odoo.addons.contract_payment_auto.models import contract
 
 
 @tagged("-at_install", "post_install")
-class TestContract(HttpCase):
+class TestContract(HttpCase, TestContractBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -26,19 +26,6 @@ class TestContract(HttpCase):
 
         cls.loader.update_registry((TransactionTest,))
 
-        cls.partner = cls.env.ref("base.res_partner_2")
-        cls.product = cls.env.ref("product.product_product_2")
-        cls.product.taxes_id += cls.env["account.tax"].search(
-            [("type_tax_use", "=", "sale")], limit=1
-        )
-        cls.product.description_sale = "Test description sale"
-        cls.template_vals = {
-            "name": "Test Contract Template",
-            "is_auto_pay": True,
-        }
-        cls.template = cls.env["contract.template"].create(
-            cls.template_vals,
-        )
         cls.provider = cls.env["payment.provider"].create(
             {
                 "name": "Test Acquirer",
@@ -64,30 +51,7 @@ class TestContract(HttpCase):
             }
         )
 
-        values = {
-            "name": "Test Contract",
-            "partner_id": cls.partner.id,
-            "pricelist_id": cls.partner.property_product_pricelist.id,
-            "payment_token_id": cls.payment_token.id,
-        }
-        cls.contract = cls.env["contract.contract"].create(values)
-        cls.contract_line = cls.env["contract.line"].create(
-            {
-                "contract_id": cls.contract.id,
-                "product_id": cls.product.id,
-                "name": "Services from #START# to #END#",
-                "quantity": 1,
-                "uom_id": cls.product.uom_id.id,
-                "price_unit": 100,
-                "discount": 50,
-                "is_auto_renew": True,
-                "date_start": "2019-02-15",
-                "date_end": "2029-02-15",
-                "recurring_rule_type": "yearly",
-                "recurring_interval": 1,
-                "recurring_next_date": date.today(),
-            }
-        )
+        cls.contract.payment_token_id = cls.payment_token
 
     @classmethod
     def tearDownClass(cls):
