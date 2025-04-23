@@ -33,7 +33,6 @@ class TestContract(HttpCase):
 
     def setUp(self):
         super(TestContract, self).setUp()
-        self.Model = self.env["contract.contract"]
         self.partner = self.env.ref("base.res_partner_2")
         self.product = self.env.ref("product.product_product_2")
         self.product.taxes_id += self.env["account.tax"].search(
@@ -81,7 +80,7 @@ class TestContract(HttpCase):
             "pricelist_id": self.partner.property_product_pricelist.id,
             "payment_token_id": self.payment_token.id,
         }
-        self.contract = self.Model.create(values)
+        self.contract = self.env["contract.contract"].create(values)
         self.contract_line = self.env["contract.line"].create(
             {
                 "contract_id": self.contract.id,
