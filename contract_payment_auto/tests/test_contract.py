@@ -26,68 +26,58 @@ class TestContract(HttpCase):
 
         cls.loader.update_registry((TransactionTest,))
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
-
-    def setUp(self):
-        super(TestContract, self).setUp()
-        self.partner = self.env.ref("base.res_partner_2")
-        self.product = self.env.ref("product.product_product_2")
-        self.product.taxes_id += self.env["account.tax"].search(
+        cls.partner = cls.env.ref("base.res_partner_2")
+        cls.product = cls.env.ref("product.product_product_2")
+        cls.product.taxes_id += cls.env["account.tax"].search(
             [("type_tax_use", "=", "sale")], limit=1
         )
-        self.product.description_sale = "Test description sale"
-        self.template_vals = {
+        cls.product.description_sale = "Test description sale"
+        cls.template_vals = {
             "name": "Test Contract Template",
             "is_auto_pay": True,
         }
-        self.template = self.env["contract.template"].create(
-            self.template_vals,
+        cls.template = cls.env["contract.template"].create(
+            cls.template_vals,
         )
-        self.provider = self.env["payment.provider"].create(
+        cls.provider = cls.env["payment.provider"].create(
             {
                 "name": "Test Acquirer",
-                "inline_form_view_id": self.env["ir.ui.view"].search([], limit=1).id,
+                "inline_form_view_id": cls.env["ir.ui.view"].search([], limit=1).id,
             }
         )
-        self.payment_token = self.env["payment.token"].create(
+        cls.payment_token = cls.env["payment.token"].create(
             {
                 "payment_details": "Test Token",
-                "partner_id": self.partner.id,
+                "partner_id": cls.partner.id,
                 "active": True,
-                "provider_id": self.provider.id,
+                "provider_id": cls.provider.id,
                 "provider_ref": "Test",
             }
         )
-        self.other_payment_token = self.env["payment.token"].create(
+        cls.other_payment_token = cls.env["payment.token"].create(
             {
                 "payment_details": "Test Other Token",
-                "partner_id": self.partner.id,
+                "partner_id": cls.partner.id,
                 "active": True,
-                "provider_id": self.provider.id,
+                "provider_id": cls.provider.id,
                 "provider_ref": "OtherTest",
             }
-        )
-        self.env["account.journal"].create(
-            {"name": "test journal", "code": "TST", "type": "sale"}
         )
 
         values = {
             "name": "Test Contract",
-            "partner_id": self.partner.id,
-            "pricelist_id": self.partner.property_product_pricelist.id,
-            "payment_token_id": self.payment_token.id,
+            "partner_id": cls.partner.id,
+            "pricelist_id": cls.partner.property_product_pricelist.id,
+            "payment_token_id": cls.payment_token.id,
         }
-        self.contract = self.env["contract.contract"].create(values)
-        self.contract_line = self.env["contract.line"].create(
+        cls.contract = cls.env["contract.contract"].create(values)
+        cls.contract_line = cls.env["contract.line"].create(
             {
-                "contract_id": self.contract.id,
-                "product_id": self.product.id,
+                "contract_id": cls.contract.id,
+                "product_id": cls.product.id,
                 "name": "Services from #START# to #END#",
                 "quantity": 1,
-                "uom_id": self.product.uom_id.id,
+                "uom_id": cls.product.uom_id.id,
                 "price_unit": 100,
                 "discount": 50,
                 "is_auto_renew": True,
@@ -98,6 +88,11 @@ class TestContract(HttpCase):
                 "recurring_next_date": date.today(),
             }
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.loader.restore_registry()
+        super().tearDownClass()
 
     def _validate_invoice(self, invoice):
         self.assertEqual(len(invoice), 1)
