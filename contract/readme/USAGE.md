@@ -31,8 +31,8 @@
 
 - Contracts appear in portal to following users in every contract:
 
-![image](../static/src/screenshots/portal-my.png)
+![portal-my](../static/src/screenshots/portal-my.png)
 
-![image](../static/src/screenshots/portal-list.png)
+![portal-list](../static/src/screenshots/portal-list.png)
 
-![image](../static/src/screenshots/portal-detail.png)
+![portal-detail](../static/src/screenshots/portal-detail.png)

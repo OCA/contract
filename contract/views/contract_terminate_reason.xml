@@ -18,16 +18,16 @@
     <record model="ir.ui.view" id="contract_terminate_reason_tree_view">
         <field name="model">contract.terminate.reason</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="terminate_comment_required" />
-            </tree>
+            </list>
         </field>
     </record>
     <record model="ir.actions.act_window" id="contract_terminate_reason_act_window">
         <field name="name">Contract Termination Reason</field>
         <field name="res_model">contract.terminate.reason</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <record model="ir.ui.menu" id="contract_terminate_reason_menu">
         <field name="name">Contract Termination Reason</field>
