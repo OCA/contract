@@ -197,6 +197,7 @@ class ContractContract(models.Model):
                     record.message_post_with_source(
                         template_id,
                         subtype_id=subtype_id,
+                        email_layout_xmlid="contract.template_contract_modification",
                     )
                 modification_ids_not_sent.write({"sent": True})
 

@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-17 13:50+0000\n"
-"PO-Revision-Date: 2022-04-07 14:05+0000\n"
-"Last-Translator: juliap98 <julia.paga@qubiq.es>\n"
+"PO-Revision-Date: 2025-05-27 08:13+0000\n"
+"Last-Translator: pere-aquarian <pere@aquarian.tech>\n"
 "Language-Team: Catalan (https://www.transifex.com/oca/teams/23907/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -98,6 +98,80 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Hola <t t-out=\"object.partner_id.name or '' \"></t>,</p>"
+"\n"
+"                <p>S'ha creat un nou contracte: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br>\n"
+"                    &amp;nbsp;&amp;nbsp;Contracte: <strong t-out="
+"\"object.name\"></strong><br>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Dia d'inici del contracte: <t "
+"t-out=\"object.date_start or ''\"></t><br>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;El seu contacte: <a t-att-"
+"href="
+"\"'mailto:%s?subject=Contracte %s' % (object.user_id.email, object.name)\" "
+"t-out=\"object.user_id.name\"></a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;El seu contacte: <t t-out="
+"\"object.user_id.name\"></t>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br>\n"
+"                <p>Contacteu amb nosaltres si teniu qualsevol dubte.</p>\n"
+"                <p>Gràcies per triar <t t-out="
+"\"object.company_id.name or '-nos'\"></t>!</p>\n"
+"                <br>\n"
+"                <br>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style="
+"\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out=\""
+"object.company_id.name\"></strong></h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style="
+"\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        <address t-field="
+"\"object.company_id.sudo().partner_id\" t-options='{\"widget\": \"contact\", "
+"\"fields\": [\"name\", \"address\"], \"no_marker\": True}'></address>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Telèfon: <t t-out=\"object.company_id.phone\""
+"></t>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"></a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
+" none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -122,6 +196,13 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
+"                                contracte a facturar\n"
+"                            </span>\n"
+"                            <span invisible="
+"\"contract_to_invoice_count &lt;= 1\">\n"
+"                                contractes a facturar\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -157,13 +238,17 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>\n"
+"                                    : Mes de la factura\n"
+"                                    del\n"
+"                                    període facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid ""
 "<strong>#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced "
 "period"
-msgstr ""
+msgstr "<strong>#INVOICEMONTHNAME#</strong>: Nom del mes del període facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -366,24 +451,24 @@ msgstr "Una línia amb auto-renovació ha de tenir una data de fi"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribució analítica"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Cerca de distribució analítica"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Precisió analítica"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -422,7 +507,7 @@ msgstr "Nombre d'adjunts"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "August"
-msgstr ""
+msgstr "Agost"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
@@ -492,7 +577,7 @@ msgstr "Categoria"
 #: model:ir.model.fields,help:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_template__generation_type
 msgid "Choose the document that will be automatically generated by cron."
-msgstr ""
+msgstr "Trieu el document que serà generat automàticament pel cron."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -513,7 +598,7 @@ msgstr "Tancat"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Índex de color"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
@@ -825,7 +910,7 @@ msgstr "Línies de contracte (fixes)"
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "Contract manually invoiced: %(invoice_link)s"
-msgstr ""
+msgstr "Contracte facturat manualment: %(invoice_link)s"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
@@ -955,12 +1040,12 @@ msgstr "Client"
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract_lines
 msgid "Customer Contract Lines"
-msgstr ""
+msgstr "Línies del contracte de client"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_customer_contract_line_report
 msgid "Customer Contract lines"
-msgstr ""
+msgstr "Línies del contracte de client"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract
@@ -1051,7 +1136,7 @@ msgstr "Dia(es)"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "December"
-msgstr ""
+msgstr "Desembre"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract_line__note_invoicing_mode
@@ -1130,7 +1215,7 @@ msgstr "Tipus de visualització"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Compte analític de la distribució"
 
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
@@ -1153,7 +1238,7 @@ msgstr ""
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "February"
-msgstr ""
+msgstr "Febrer"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1190,7 +1275,7 @@ msgstr "Generar Factures Recurrents des dels Contractes"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,field_description:contract.field_contract_template__generation_type
 msgid "Generation Type"
-msgstr ""
+msgstr "Tipus de generació"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__group_id
@@ -1396,7 +1481,7 @@ msgstr "És una suspensió sense data de fi"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "January"
-msgstr ""
+msgstr "Gener"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__journal_id
@@ -1421,14 +1506,14 @@ msgstr "Apunt"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "July"
-msgstr ""
+msgstr "Juliol"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "June"
-msgstr ""
+msgstr "Juny"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__last_date_invoiced
@@ -1501,7 +1586,7 @@ msgstr "Facturar manialment contractes de venda"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "Març"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_abstract_contract__line_recurrence
@@ -1519,7 +1604,7 @@ msgstr ""
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "May"
-msgstr ""
+msgstr "Maig"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
@@ -1649,7 +1734,7 @@ msgstr "Notes"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
@@ -1681,7 +1766,7 @@ msgstr "Nombre d'errors"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Número de missatges que requereixen una acció"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error_counter
@@ -1693,7 +1778,7 @@ msgstr "Nombre de missatges amb error d'entrega"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_bank_statement_line__old_contract_id
@@ -1838,7 +1923,7 @@ msgstr "Quatrimestre(s)"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Valoracions"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__recurring_rule_type
@@ -1873,7 +1958,7 @@ msgstr "Factures Recurrents"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Recurring Type"
-msgstr ""
+msgstr "Tipus de recurrència"
 
 #. module: contract
 #. odoo-python
@@ -1979,7 +2064,7 @@ msgstr "Enviat"
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "Setembre"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__sequence
@@ -2131,12 +2216,12 @@ msgstr "Proveïdor"
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract_lines
 msgid "Supplier Contract Lines"
-msgstr ""
+msgstr "Línies de contracte de proveïdor"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_supplier_contract_line_report
 msgid "Supplier Contract lines"
-msgstr ""
+msgstr "Línies de contracte de proveïdor"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
@@ -2183,7 +2268,7 @@ msgstr "Wizard finalitzar contracte"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract_terminate__terminate_with_last_date_invoiced
 msgid "Terminate lines with last date invoiced"
-msgstr ""
+msgstr "Finalitzar línies amb la darrera data de factura"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract_terminate__terminate_with_last_date_invoiced
@@ -2191,6 +2276,8 @@ msgid ""
 "Terminate the contract lines with the last invoiced date if they cannot be "
 "terminated with the date reported in the wizard."
 msgstr ""
+"Finalitzar línies amb la darrera data de facturació si no poden ser "
+"finalitzades a la data informada a l'assistent."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__is_terminated
@@ -2452,7 +2539,7 @@ msgstr "Has de posar una data de propera factura a la línia de contracte '%s'"
 #: code:addons/contract/models/contract.py:0
 #, python-format
 msgid "by contract"
-msgstr ""
+msgstr "per contracte"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
