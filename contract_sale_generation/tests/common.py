@@ -5,7 +5,7 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form, TransactionCase, tagged
 
 
 def to_date(date):
@@ -13,26 +13,25 @@ def to_date(date):
 
 
 @tagged("post_install", "-at_install")
-class ContractSaleCommon:
+class ContractSaleCommon(TransactionCase):
     # Use case : Prepare some data for current test case
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if not cls.env.company.chart_template_id:
-            # Load a CoA if there's none in current company
-            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
-            if not coa:
-                # Load the first available CoA
-                coa = cls.env["account.chart.template"].search(
-                    [("visible", "=", True)], limit=1
-                )
-            coa.try_loading(company=cls.env.company, install_demo=False)
+        chart_template = cls.env["account.chart.template"]._guess_chart_template(
+            cls.env.company.country_id
+        )
+        cls.env["account.chart.template"].try_loading(
+            chart_template, company=cls.env.company, install_demo=False
+        )
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        analytic_plan = cls.env["account.analytic.plan"].create({"name": "Test Plan"})
+
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
-                "plan_id": cls.env.ref("analytic.analytic_plan_internal").id,
+                "plan_id": analytic_plan.id,
             }
         )
         cls.payment_term_id = cls.env.ref(

@@ -1,18 +1,17 @@
 # Copyright 2022 ACSONE SA/NV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from freezegun.api import freeze_time
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon
 
 today = "2020-01-15"
 
 
-class TestContractSale(ContractSaleCommon, TransactionCase):
+class TestContractSaleRecurrency(ContractSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -29,6 +28,7 @@ class TestContractSale(ContractSaleCommon, TransactionCase):
         with Form(cls.contract) as contract_form:
             contract_form.partner_id = cls.partner
             contract_form.generation_type = "sale"
+            contract_form.line_recurrence = True
             contract_form.group_id = cls.analytic_account
         cls.contract = contract_form.save()
 
