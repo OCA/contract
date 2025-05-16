@@ -12,4 +12,5 @@ class ContractAbstractContract(models.AbstractModel):
 
     generation_type = fields.Selection(
         selection_add=[("sale", "Sale")],
+        ondelete={"sale": "cascade"},
     )

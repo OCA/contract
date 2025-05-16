@@ -68,16 +68,19 @@ class ContractContract(models.Model):
         This method triggers the creation of the next sale order of the
         contracts even if their next sale order date is in the future.
         """
-        sales = self._recurring_create_sale()
+        sales = self.filtered(
+            lambda c: c.generation_type == "sale"
+        )._recurring_create_sale()
         for sale_rec in sales:
             self.message_post(
+                body_is_html=True,
                 body=_(
                     "Contract manually sale order: "
                     '<a href="#" data-oe-model="%(model)s" data-oe-id="%(id)s">'
                     "Sale Order"
                     "</a>"
                 )
-                % {"model": sale_rec._name, "id": sale_rec.id}
+                % {"model": sale_rec._name, "id": sale_rec.id},
             )
         return sales
 
@@ -114,9 +117,7 @@ class ContractContract(models.Model):
     def _recurring_create_sale(self, date_ref=False):
         sales_values = self._prepare_recurring_sales_values(date_ref)
         sale_orders = self.env["sale.order"].create(sales_values)
-        sale_orders_to_confirm = sale_orders.filtered(
-            lambda sale: sale.contract_auto_confirm
-        )
+        sale_orders_to_confirm = sale_orders.filtered("contract_auto_confirm")
         sale_orders_to_confirm.action_confirm()
         self._compute_recurring_next_date()
         return sale_orders
@@ -131,3 +132,7 @@ class ContractContract(models.Model):
     @api.model
     def cron_recurring_create_sale(self, date_ref=None):
         return self._cron_recurring_create(date_ref, create_type="sale")
+
+    def recurring_create_invoice(self):
+        self = self.filtered(lambda c: c.generation_type == "invoice")
+        return super().recurring_create_invoice()

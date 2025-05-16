@@ -5,7 +5,7 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form, TransactionCase, tagged
 
 
 def to_date(date):
@@ -13,26 +13,25 @@ def to_date(date):
 
 
 @tagged("post_install", "-at_install")
-class ContractSaleCommon:
+class ContractSaleCommon(TransactionCase):
     # Use case : Prepare some data for current test case
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if not cls.env.company.chart_template_id:
-            # Load a CoA if there's none in current company
-            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
-            if not coa:
-                # Load the first available CoA
-                coa = cls.env["account.chart.template"].search(
-                    [("visible", "=", True)], limit=1
-                )
-            coa.try_loading(company=cls.env.company, install_demo=False)
+        chart_template = cls.env["account.chart.template"]._guess_chart_template(
+            cls.env.company.country_id
+        )
+        cls.env["account.chart.template"].try_loading(
+            chart_template, company=cls.env.company, install_demo=False
+        )
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        analytic_plan = cls.env["account.analytic.plan"].create({"name": "Test Plan"})
+
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
-                "plan_id": cls.env.ref("analytic.analytic_plan_internal").id,
+                "plan_id": analytic_plan.id,
             }
         )
         cls.payment_term_id = cls.env.ref(
@@ -74,6 +73,7 @@ class ContractSaleCommon:
         }
         cls.template_vals = {
             "name": "Test Contract Template",
+            "generation_type": "sale",
             "contract_type": "sale",
             "contract_line_ids": [
                 (0, 0, cls.line_template_vals),
@@ -116,7 +116,6 @@ class ContractSaleCommon:
         discount_line_group_id = cls.env.ref("product.group_discount_per_so_line")
         uom_group_id = cls.env.ref("uom.group_uom")
         cls.env.user.groups_id = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
-
         with Form(cls.contract) as contract_form, freeze_time(contract_date):
             contract_form.contract_template_id = cls.template
             contract_form.line_recurrence = True
@@ -130,8 +129,9 @@ class ContractSaleCommon:
                 line_form.recurring_interval = 1
                 line_form.date_start = "2020-01-15"
                 line_form.recurring_next_date = "2020-01-15"
+        # group_id computed, so we lost it when we create the contract with Form
+        cls.contract.group_id = cls.analytic_account.id
         cls.contract_line = cls.contract.contract_line_ids[1]
-
         cls.contract2 = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract 2",

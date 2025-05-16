@@ -4,12 +4,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon, to_date
 
 
-class TestContractSale(ContractSaleCommon, TransactionCase):
+class TestContractSale(ContractSaleCommon):
     def test_check_discount(self):
         with self.assertRaises(ValidationError):
             self.contract_line.write({"discount": 120})
@@ -50,6 +49,7 @@ class TestContractSale(ContractSaleCommon, TransactionCase):
         self.contract.contract_template_id = self.template
         self.contract._onchange_contract_template_id()
         res = {
+            "generation_type": "sale",
             "contract_type": "sale",
             "contract_line_ids": [
                 (
