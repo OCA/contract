@@ -1,2 +1,2 @@
-from . import contract_abstract
+from . import contract_template
 from . import contract_contract
