@@ -9,5 +9,7 @@ class ContractContract(models.Model):
 
     def _recurring_create_invoice(self, date_ref=False):
         moves = super()._recurring_create_invoice(date_ref=date_ref)
-        moves.filtered("invoice_line_ids").action_post()
+        for move in moves.filtered("invoice_line_ids"):
+            if move.company_id.auto_post_contract_invoice:
+                move.action_post()
         return moves
