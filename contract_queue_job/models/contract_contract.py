@@ -6,7 +6,6 @@ from odoo import models
 
 
 class ContractContract(models.Model):
-
     _inherit = "contract.contract"
 
     def _recurring_create_invoice(self, date_ref=False):
