@@ -6,10 +6,11 @@
     "summary": """
         This addon auto-validate invoices after its creation from a contract
         """,
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV," "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["contract"],
     "maintainers": ["sbejaoui"],
+    "data": ["views/res_config_settings.xml"],
 }
