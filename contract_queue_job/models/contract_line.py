@@ -6,7 +6,6 @@ from odoo import models
 
 
 class ContractLine(models.Model):
-
     _inherit = "contract.line"
 
     def renew(self):

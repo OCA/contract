@@ -8,7 +8,7 @@ from odoo.addons.queue_job.tests.common import JobMixin
 class TestContractQueueJob(TestContractBase, JobMixin):
     @classmethod
     def setUpClass(cls):
-        super(TestContractQueueJob, cls).setUpClass()
+        super().setUpClass()
         cls.env["ir.config_parameter"].sudo().set_param("contract.queue.job", True)
         cls.contract3 = cls.contract2.copy()
 

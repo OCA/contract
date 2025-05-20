@@ -5,7 +5,6 @@ from odoo import models
 
 
 class ContractManuallyCreateInvoice(models.TransientModel):
-
     _inherit = "contract.manually.create.invoice"
 
     def create_invoice_queued(self):
