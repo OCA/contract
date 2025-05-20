@@ -10,7 +10,7 @@
             <xpath expr="//button[@name='create_invoice']" position="after">
                 <button
                     name="create_invoice_queued"
-                    attrs="{'invisible': [('contract_to_invoice_count', '=', 0)]}"
+                    invisible="contract_to_invoice_count == 0"
                     string="Enqueue invoices creation"
                     class="btn-primary"
                     type="object"
