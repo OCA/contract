@@ -11,7 +11,7 @@
                     name="needs_review"
                     string="Needs my Review"
                     domain="[('reviewer_ids','in',uid), ('state', 'not in', ['active', 'inactive'])]"
-                    help="My Areements to review"
+                    help="My Agreements to review"
                 />
                 <filter
                     name="tier_validated"
@@ -20,6 +20,30 @@
                     help="Agreements validated and ready to be active"
                 />
             </filter>
+        </field>
+    </record>
+
+    <record id="partner_agreement_form_view" model="ir.ui.view">
+        <field name="name">agreement form</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="hide_active_button" invisible="1" />
+                <field name="need_validation" invisible="1" />
+                <field name="validated" invisible="1" />
+                <field name="rejected" invisible="1" />
+                <field name="can_review" invisible="1" />
+                <field name="next_review" invisible="1" />
+                <field name="review_ids" invisible="1" />
+                <button
+                    string="Make Active"
+                    type="object"
+                    name="make_active"
+                    class="oe_highlight"
+                    invisible="hide_active_button"
+                />
+            </header>
         </field>
     </record>
 </odoo>
