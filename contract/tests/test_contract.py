@@ -484,7 +484,9 @@ class TestContract(TestContractBase):
     def test_uom(self):
         uom_litre = self.env.ref("uom.product_uom_litre")
         self.acct_line.uom_id = uom_litre.id
-        self.acct_line._onchange_product_id()
+        product = self.acct_line.product_id
+        self.acct_line.product_id = False
+        self.acct_line.product_id = product
         self.assertEqual(self.acct_line.uom_id, self.acct_line.product_id.uom_id)
 
     def test_no_pricelist(self):
@@ -572,20 +574,11 @@ class TestContract(TestContractBase):
         result = self.contract.action_contract_send()
         self.assertEqual(result["res_model"], "mail.compose.message")
 
-    def test_contract_onchange_product_id_uom(self):
-        """It should update the UoM for the line."""
-        line = self._add_template_line(
-            {"uom_id": self.env.ref("uom.product_uom_litre").id}
-        )
-        line.product_id.uom_id = self.env.ref("uom.product_uom_day").id
-        line._onchange_product_id()
-        self.assertEqual(line.uom_id, line.product_id.uom_id)
-
     def test_contract_onchange_product_id_name(self):
         """It should update the name for the line."""
         line = self._add_template_line()
-        line.product_id.description_sale = "Test"
-        line._onchange_product_id()
+        self.product_2.description_sale = "Test Name Change"
+        line.product_id = self.product_2
         self.assertEqual(
             line.name, line.product_id.get_product_multiline_description_sale()
         )

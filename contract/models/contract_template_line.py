@@ -34,7 +34,13 @@ class ContractTemplateLine(models.Model):
     )
     # === Product & UOM ===
     product_id = fields.Many2one("product.product", string="Product")
-    name = fields.Text(string="Description", required=True)
+    name = fields.Text(
+        string="Description",
+        required=True,
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+    )
     quantity = fields.Float(default=1.0, required=True)
     product_uom_category_id = fields.Many2one(
         comodel_name="uom.category",
@@ -43,6 +49,9 @@ class ContractTemplateLine(models.Model):
     )
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
+        compute="_compute_uom_id",
+        store=True,
+        readonly=False,
         string="Unit of Measure",
         domain="[('category_id', '=', product_uom_category_id)]",
     )
@@ -133,6 +142,25 @@ class ContractTemplateLine(models.Model):
         copy=True,
     )
 
+    @api.depends("product_id")
+    def _compute_name(self):
+        for line in self:
+            if line.product_id:
+                partner = line.contract_id.partner_id or line.env.user.partner_id
+                product = line.product_id.with_context(
+                    lang=partner.lang,
+                    partner=partner.id,
+                )
+                line.name = product.get_product_multiline_description_sale()
+
+    @api.depends("product_id")
+    def _compute_uom_id(self):
+        for line in self:
+            if not line.uom_id or (
+                line.product_id.uom_id.category_id.id != line.uom_id.category_id.id
+            ):
+                line.uom_id = line.product_id.uom_id
+
     @api.depends("contract_id.contract_type")
     def _compute_automatic_price(self):
         """Reset automatic price if contract is switched to 'purchase'."""
@@ -170,6 +198,7 @@ class ContractTemplateLine(models.Model):
                     quantity=line.env.context.get("contract_line_qty", line.quantity),
                     pricelist=pricelist.id,
                     partner=line.contract_id.partner_id.id,
+                    uom=line.uom_id.id,
                     date=line.env.context.get(
                         "old_date", fields.Date.context_today(line)
                     ),
@@ -236,31 +265,3 @@ class ContractTemplateLine(models.Model):
         for line in self:
             if line.discount > 100:
                 raise ValidationError(_("Discount should be less or equal to 100"))
-
-    @api.onchange("product_id")
-    def _onchange_product_id(self):
-        """Update UOM and default description/price from product."""
-        vals = {}
-        if not self.uom_id or (
-            self.product_id.uom_id.category_id.id != self.uom_id.category_id.id
-        ):
-            vals["uom_id"] = self.product_id.uom_id
-
-        date = self.recurring_next_date or fields.Date.context_today(self)
-        partner = self.contract_id.partner_id or self.env.user.partner_id
-        if self.product_id:
-            product = self.product_id.with_context(
-                lang=partner.lang,
-                partner=partner.id,
-                quantity=self.quantity,
-                date=date,
-                pricelist=self.contract_id.pricelist_id.id,
-                uom=self.uom_id.id,
-            )
-            vals["name"] = self.product_id.get_product_multiline_description_sale()
-            vals["price_unit"] = (
-                self.contract_id.pricelist_id._get_product_price(product, quantity=1)
-                if self.contract_id.pricelist_id
-                else 0.0
-            )
-        self.update(vals)
