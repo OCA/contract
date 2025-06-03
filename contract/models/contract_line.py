@@ -8,7 +8,7 @@ import warnings
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -70,7 +70,7 @@ class ContractLine(models.Model):
             if line.date_start and line.recurring_next_date:
                 if line.date_start > line.recurring_next_date:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "You can't have a date of next invoice anterior "
                             "to the start of the contract line '%s'"
                         )
@@ -84,7 +84,7 @@ class ContractLine(models.Model):
         for rec in self.filtered("last_date_invoiced"):
             if rec.date_end and rec.date_end < rec.last_date_invoiced:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the end date before the date of last "
                         "invoice for the contract line '%s'"
                     )
@@ -94,7 +94,7 @@ class ContractLine(models.Model):
                 continue
             if rec.date_start and rec.date_start > rec.last_date_invoiced:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the start date after the date of last "
                         "invoice for the contract line '%s'"
                     )
@@ -105,7 +105,7 @@ class ContractLine(models.Model):
                 and rec.recurring_next_date <= rec.last_date_invoiced
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You can't have the next invoice date before the date "
                         "of last invoice for the contract line '%s'"
                     )
@@ -121,7 +121,7 @@ class ContractLine(models.Model):
                 or rec.last_date_invoiced < rec.date_end
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "You must supply a date of next invoice for contract "
                         "line '%s'"
                     )
@@ -134,7 +134,7 @@ class ContractLine(models.Model):
             if line.date_start and line.date_end:
                 if line.date_start > line.date_end:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Contract line '%s' start date can't be later than"
                             " end date"
                         )
@@ -207,18 +207,18 @@ class ContractLine(models.Model):
 
     def _translate_marker_month_name(self, month_name):
         months = {
-            "01": _("January"),
-            "02": _("February"),
-            "03": _("March"),
-            "04": _("April"),
-            "05": _("May"),
-            "06": _("June"),
-            "07": _("July"),
-            "08": _("August"),
-            "09": _("September"),
-            "10": _("October"),
-            "11": _("November"),
-            "12": _("December"),
+            "01": self.env._("January"),
+            "02": self.env._("February"),
+            "03": self.env._("March"),
+            "04": self.env._("April"),
+            "05": self.env._("May"),
+            "06": self.env._("June"),
+            "07": self.env._("July"),
+            "08": self.env._("August"),
+            "09": self.env._("September"),
+            "10": self.env._("October"),
+            "11": self.env._("November"),
+            "12": self.env._("December"),
         }
         return months[month_name]
 
