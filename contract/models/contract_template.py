@@ -89,11 +89,3 @@ class ContractTemplate(models.Model):
                 ("company_id", "=", contract.company_id.id),
             ]
             contract.journal_id = AccountJournal.search(domain, limit=1).id or None
-
-    @api.onchange("contract_type")
-    def _onchange_contract_type(self):
-        """Reset automatic price if contract is switched to 'purchase'."""
-        if self.contract_type == "purchase":
-            self.contract_line_ids.filtered("automatic_price").update(
-                {"automatic_price": False}
-            )
