@@ -51,6 +51,9 @@ class ContractTemplateLine(models.Model):
 
     automatic_price = fields.Boolean(
         string="Auto-price?",
+        compute="_compute_automatic_price",
+        store=True,
+        readonly=False,
         help=(
             "If checked, the price will be taken from the pricelist. "
             "Otherwise, it must be set manually."
@@ -129,6 +132,14 @@ class ContractTemplateLine(models.Model):
         readonly=False,
         copy=True,
     )
+
+    @api.depends("contract_id.contract_type")
+    def _compute_automatic_price(self):
+        """Reset automatic price if contract is switched to 'purchase'."""
+        self.filtered(
+            lambda line: line.contract_id.contract_type == "purchase"
+            and line.automatic_price
+        ).automatic_price = False
 
     @api.depends("display_type", "note_invoicing_mode")
     def _compute_is_recurring_note(self):
