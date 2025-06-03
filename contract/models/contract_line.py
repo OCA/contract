@@ -273,38 +273,3 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         return self.quantity if not self.display_type else 0.0
-
-    @api.depends(
-        "automatic_price",
-        "specific_price",
-        "product_id",
-        "quantity",
-        "contract_id.pricelist_id",
-        "contract_id.partner_id",
-    )
-    def _compute_price_unit(self):
-        """Get the specific price if no auto-price, and the price obtained
-        from the pricelist otherwise.
-        """
-        for line in self:
-            if line.automatic_price and line.product_id:
-                pricelist = (
-                    line.contract_id.pricelist_id
-                    or line.contract_id.partner_id.with_company(
-                        line.contract_id.company_id
-                    ).property_product_pricelist
-                )
-                product = line.product_id.with_context(
-                    quantity=line.env.context.get(
-                        "contract_line_qty",
-                        line.quantity,
-                    ),
-                    pricelist=pricelist.id,
-                    partner=line.contract_id.partner_id.id,
-                    date=line.env.context.get(
-                        "old_date", fields.Date.context_today(line)
-                    ),
-                )
-                line.price_unit = pricelist._get_product_price(product, quantity=1)
-            else:
-                line.price_unit = line.specific_price
