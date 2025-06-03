@@ -178,6 +178,7 @@ class ContractTemplateLine(models.Model):
             else:
                 line.price_unit = line.specific_price
 
+    # Tip in https://github.com/odoo/odoo/issues/23891#issuecomment-376910788
     @api.onchange("price_unit")
     def _inverse_price_unit(self):
         for line in self.filtered(lambda x: not x.automatic_price):
