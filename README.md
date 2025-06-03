@@ -22,15 +22,16 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [contract](contract/) | 17.0.1.4.5 |  | Recurring - Contracts Management
+[contract_invoice_auto_validate](contract_invoice_auto_validate/) | 17.0.1.0.0 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | This addon auto-validate invoices after its creation from a contract
 [contract_mandate](contract_mandate/) | 17.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 17.0.1.0.0 |  | Payment mode in contracts and their invoices
-[contract_price_revision](contract_price_revision/) | 17.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) | Easy revision of contract prices
+[contract_price_revision](contract_price_revision/) | 17.0.1.0.0 | <a href='https://github.com/carlosdauden'><img src='https://github.com/carlosdauden.png' width='32' height='32' style='border-radius:50%;' alt='carlosdauden'/></a> | Easy revision of contract prices
 [contract_sale](contract_sale/) | 17.0.1.0.0 |  | Contract from Sale
 [contract_sale_invoicing](contract_sale_invoicing/) | 17.0.1.0.0 |  | Include sales to invoice in contract invoice creation
-[contract_update_last_date_invoiced](contract_update_last_date_invoiced/) | 17.0.1.0.0 | [![rafaelbn](https://github.com/rafaelbn.png?size=30px)](https://github.com/rafaelbn) [![edlopen](https://github.com/edlopen.png?size=30px)](https://github.com/edlopen) | This module allows to update the last date invoiced if invoices are deleted.
-[contract_variable_qty_timesheet](contract_variable_qty_timesheet/) | 17.0.1.0.0 | [![carlosdauden](https://github.com/carlosdauden.png?size=30px)](https://github.com/carlosdauden) [![pedrobaeza](https://github.com/pedrobaeza.png?size=30px)](https://github.com/pedrobaeza) [![danypr92](https://github.com/danypr92.png?size=30px)](https://github.com/danypr92) | Add formula to invoice
+[contract_update_last_date_invoiced](contract_update_last_date_invoiced/) | 17.0.1.0.0 | <a href='https://github.com/rafaelbn'><img src='https://github.com/rafaelbn.png' width='32' height='32' style='border-radius:50%;' alt='rafaelbn'/></a> <a href='https://github.com/edlopen'><img src='https://github.com/edlopen.png' width='32' height='32' style='border-radius:50%;' alt='edlopen'/></a> | This module allows to update the last date invoiced if invoices are deleted.
+[contract_variable_qty_timesheet](contract_variable_qty_timesheet/) | 17.0.1.0.0 | <a href='https://github.com/carlosdauden'><img src='https://github.com/carlosdauden.png' width='32' height='32' style='border-radius:50%;' alt='carlosdauden'/></a> <a href='https://github.com/pedrobaeza'><img src='https://github.com/pedrobaeza.png' width='32' height='32' style='border-radius:50%;' alt='pedrobaeza'/></a> <a href='https://github.com/danypr92'><img src='https://github.com/danypr92.png' width='32' height='32' style='border-radius:50%;' alt='danypr92'/></a> | Add formula to invoice
 [contract_variable_quantity](contract_variable_quantity/) | 17.0.1.0.2 |  | Variable quantity in contract recurrent invoicing
-[product_contract](product_contract/) | 17.0.2.2.0 | [![sbejaoui](https://github.com/sbejaoui.png?size=30px)](https://github.com/sbejaoui) [![CarlosRoca13](https://github.com/CarlosRoca13.png?size=30px)](https://github.com/CarlosRoca13) | Recurring - Product Contract
+[product_contract](product_contract/) | 17.0.2.2.0 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> <a href='https://github.com/CarlosRoca13'><img src='https://github.com/CarlosRoca13.png' width='32' height='32' style='border-radius:50%;' alt='CarlosRoca13'/></a> | Recurring - Product Contract
 [subscription_oca](subscription_oca/) | 17.0.1.0.0 |  | Generate recurring invoices.
 
 [//]: # (end addons)
