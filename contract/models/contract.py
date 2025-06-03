@@ -14,7 +14,6 @@ from markupsafe import Markup
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -327,7 +326,7 @@ class ContractContract(models.Model):
             default_composition_mode="comment",
         )
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",
@@ -344,9 +343,9 @@ class ContractContract(models.Model):
         """
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
-            body = Markup(_("Contract manually invoiced: %(invoice_link)s")) % {
-                "invoice_link": invoice._get_html_link(title=invoice.name)
-            }
+            body = Markup(
+                self.env._("Contract manually invoiced: %(invoice_link)s")
+            ) % {"invoice_link": invoice._get_html_link(title=invoice.name)}
             self.message_post(body=body)
         return invoices
 
@@ -358,7 +357,6 @@ class ContractContract(models.Model):
         else:
             return self.env.ref("contract.contract_contract_supplier_form_view").id
 
-    @api.model
     def _set_start_contract_modification(self):
         subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
         for record in self:
@@ -373,13 +371,15 @@ class ContractContract(models.Model):
                 {
                     "modification_ids": [
                         Command.create(
-                            {"date": date_start, "description": _("Contract start")}
+                            {
+                                "date": date_start,
+                                "description": self.env._("Contract start"),
+                            }
                         )
                     ]
                 }
             )
 
-    @api.model
     def _modification_mail_send(self):
         for record in self:
             modification_ids_not_sent = record.modification_ids.filtered(
@@ -468,7 +468,7 @@ class ContractContract(models.Model):
             )
         if not journal:
             raise ValidationError(
-                _(
+                self.env._(
                     "Please define a %(contract_type)s journal "
                     "for the company '%(company)s'."
                 )
@@ -621,7 +621,7 @@ class ContractContract(models.Model):
     def _add_contract_origin(self, invoices):
         for item in self:
             for move in invoices & item._get_related_invoices():
-                translation = _("by contract")
+                translation = self.env._("by contract")
                 move.message_post(
                     body=Markup(
                         f"{move._creation_message()} {translation} "

@@ -6,7 +6,7 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -264,4 +264,6 @@ class ContractTemplateLine(models.Model):
     def _check_discount(self):
         for line in self:
             if line.discount > 100:
-                raise ValidationError(_("Discount should be less or equal to 100"))
+                raise ValidationError(
+                    self.env._("Discount should be less or equal to 100")
+                )
