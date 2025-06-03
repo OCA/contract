@@ -74,6 +74,13 @@ class ContractTemplate(models.Model):
         string="Contract template lines",
     )
 
+    def _get_valid_journal_type(self):
+        self.ensure_one()
+        if self.contract_type == "sale":
+            return ["sale"]
+        elif self.contract_type == "purchase":
+            return ["purchase"]
+
     @api.model
     def _default_generation_type(self):
         """Default generation type for the contract."""
@@ -84,8 +91,11 @@ class ContractTemplate(models.Model):
         """Auto-select a journal based on contract type and company."""
         AccountJournal = self.env["account.journal"]
         for contract in self:
+            # See Odoo account_move._search_default_journal()
+            company = contract.company_id or contract.env.company
             domain = [
-                ("type", "=", contract.contract_type),
-                ("company_id", "=", contract.company_id.id),
+                *self.env["account.journal"]._check_company_domain(company),
+                ("type", "in", contract._get_valid_journal_type()),
             ]
+
             contract.journal_id = AccountJournal.search(domain, limit=1).id or None
