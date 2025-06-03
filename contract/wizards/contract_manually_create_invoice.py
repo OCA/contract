@@ -1,7 +1,7 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import (
     AccessDenied,
     AccessError,
@@ -47,7 +47,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Contracts to invoice"),
+            "name": self.env._("Contracts to invoice"),
             "res_model": "contract.contract",
             "domain": [("id", "in", self.contract_to_invoice_ids.ids)],
             "view_mode": "list,form",
@@ -68,7 +68,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
                 ValidationError,
             ) as oe:
                 raise UserError(
-                    _(
+                    self.env._(
                         "Failed to process the contract %(name)s [id: %(id)s]:\n%(ue)s",
                         name=contract.name,
                         id=contract.id,
@@ -78,7 +78,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Invoices"),
+            "name": self.env._("Invoices"),
             "res_model": "account.move",
             "domain": [("id", "in", invoices.ids)],
             "view_mode": "list,form",
