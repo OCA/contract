@@ -16,6 +16,8 @@ def migrate(env, version):
     );
     """
     )
+    views_to_delete = ["contract.contract_template_line_form_view"]
+    openupgrade.delete_records_safely_by_xml_id(env, views_to_delete, True)
     all_moved_fields = {
         "contract_line_successor": {
             "contract.line": [
