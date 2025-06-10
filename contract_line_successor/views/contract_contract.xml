@@ -6,7 +6,7 @@
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='contract_line_ids']//list" position="inside">
+            <xpath expr="//field[@name='contract_line_ids']//tree" position="inside">
                 <field name="is_plan_successor_allowed" column_invisible="True" />
                 <field name="is_stop_plan_successor_allowed" column_invisible="True" />
                 <field name="is_stop_allowed" column_invisible="True" />
@@ -14,6 +14,7 @@
                 <field name="is_un_cancel_allowed" column_invisible="True" />
                 <field name="is_auto_renew" column_invisible="True" />
                 <field name="is_canceled" column_invisible="True" />
+                <field name="create_invoice_visibility" column_invisible="1" />
                 <button
                     name="action_plan_successor"
                     title="Plan Start"
@@ -60,7 +61,7 @@
                 />
             </xpath>
             <xpath
-                expr="//field[@name='contract_line_ids']//list"
+                expr="//field[@name='contract_line_ids']//tree"
                 position="attributes"
             >
                 <attribute name="decoration-muted">is_canceled</attribute>

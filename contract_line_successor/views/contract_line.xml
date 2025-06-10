@@ -40,7 +40,7 @@
         <field name="model">contract.line</field>
         <field name="inherit_id" ref="contract.contract_line_tree_view" />
         <field name="arch" type="xml">
-            <xpath expr="//list" position="inside">
+            <xpath expr="//tree" position="inside">
                 <field name="is_plan_successor_allowed" column_invisible="True" />
                 <field name="is_stop_plan_successor_allowed" column_invisible="True" />
                 <field name="is_stop_allowed" column_invisible="True" />
@@ -93,7 +93,7 @@
                     invisible="not is_auto_renew"
                 />
             </xpath>
-            <xpath expr="//list" position="attributes">
+            <xpath expr="//tree" position="attributes">
                 <attribute name="decoration-muted">is_canceled</attribute>
                 <attribute
                     name="decoration-info"
@@ -106,7 +106,7 @@
         <field name="model">contract.line</field>
         <field name="inherit_id" ref="contract.contract_line_report_tree_view" />
         <field name="arch" type="xml">
-            <xpath expr="//list" position="inside">
+            <xpath expr="//tree" position="inside">
                 <field name="is_auto_renew" />
                 <field name="is_canceled" />
                 <field name="state" />
