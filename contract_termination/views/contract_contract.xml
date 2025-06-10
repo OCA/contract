@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
+                <field name="is_terminated" column-invisible="1" />
                 <button
                     name="action_terminate_contract"
                     type="object"
