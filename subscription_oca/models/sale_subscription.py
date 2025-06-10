@@ -139,7 +139,8 @@ class SaleSubscription(models.Model):
 
     def cron_subscription_management(self):
         today = date.today()
-        for subscription in self.search([]):
+        for subscription in self.search([], order="recurring_next_date asc"):
+            subscription = subscription.with_company(subscription.company_id)
             if subscription.in_progress:
                 if (
                     subscription.recurring_next_date <= today

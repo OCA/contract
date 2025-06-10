@@ -371,11 +371,50 @@
         <field name="arch" type="xml">
             <search>
                 <field name="to_renew" />
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="template_id" />
+                <field name="user_id" />
+                <field name="date_start" />
+                <field name="recurring_next_date" />
+                <field name="stage_id" />
                 <filter
                     string="Pending subscriptions"
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
                 />
+                <separator />
+                <filter
+                    name="month_recurring_next_date"
+                    string="Next invoice date"
+                    date="recurring_next_date"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Partner"
+                        name="groupby_partner_id"
+                        domain="[]"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Next invoice date"
+                        name="groupby_recurring_next_date"
+                        domain="[]"
+                        context="{'group_by': 'recurring_next_date'}"
+                    />
+                    <filter
+                        string="Commercial agent"
+                        name="groupby_user_id"
+                        domain="[]"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        string="Stage"
+                        name="groupby_stage_id"
+                        domain="[]"
+                        context="{'group_by': 'stage_id'}"
+                    />
+                </group>
             </search>
         </field>
     </record>
