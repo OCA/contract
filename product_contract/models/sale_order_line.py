@@ -224,6 +224,8 @@ class SaleOrderLine(models.Model):
                 new_contract_line = contract_line_model.create(
                     rec._prepare_contract_line_values(contract)
                 )
+            if new_contract_line:
+                rec.contract_line_id = new_contract_line.id
             contract_line |= new_contract_line
         return contract_line
 
