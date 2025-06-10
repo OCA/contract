@@ -22,7 +22,10 @@
                             <field name="contract_type" />
                         </group>
                         <group name="group_main_right">
-                            <field name="journal_id" />
+                            <field
+                                name="journal_id"
+                                groups="base.group_multi_company"
+                            />
                             <field name="pricelist_id" />
                             <field
                                 name="company_id"
@@ -39,7 +42,7 @@
                                 nolabel="1"
                                 colspan="2"
                             >
-                                <list>
+                                <tree>
                                     <control>
                                         <create string="Add a line" />
                                         <create
@@ -86,7 +89,7 @@
                                         name="recurring_invoicing_type"
                                         column_invisible="True"
                                     />
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page name="info" string="Other Information">
@@ -99,9 +102,9 @@
                                         invoiced period
                                     </p>
                                     <p><strong
-                                    >#END#</strong>: End date of the invoiced period</p>
+                                        >#END#</strong>: End date of the invoiced period</p>
                                     <p> <strong
-                                    >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
+                                        >#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced period</p>
                                 </div>
                             </group>
                         </page>

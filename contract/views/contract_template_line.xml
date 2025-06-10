@@ -7,6 +7,7 @@
             <form>
                 <header invisible="display_type" />
                 <sheet>
+                    <field name="display_type" invisible="1" />
                     <group>
                         <field
                             name="product_id"
@@ -22,8 +23,9 @@
                             <field name="price_unit" readonly="automatic_price" />
                         </group>
                     </group>
-                    <group invisible="display_type">
+                    <group invisible="display_type" groups="uom.group_uom">
                         <group>
+                            <field name="product_uom_category_id" invisible="1" />
                             <label for="quantity" />
                             <div class="o_row" name="ordered_qty">
                                 <field

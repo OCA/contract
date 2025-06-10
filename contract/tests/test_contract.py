@@ -240,6 +240,14 @@ class TestContract(TestContractBase):
         self.acct_line.invalidate_model()
         self.assertEqual(self.acct_line.price_unit, 10)
 
+    def test_automatic_price_change(self):
+        self.acct_line.automatic_price = True
+        self.product_1.list_price = 1100
+        self.assertEqual(self.acct_line.price_unit, 1100)
+        # Change contract type
+        self.acct_line.contract_id.contract_type = "purchase"
+        self.assertFalse(self.acct_line.automatic_price)
+
     def test_contract(self):
         self.assertEqual(self.contract.recurring_next_date, to_date("2018-01-15"))
         self.assertAlmostEqual(self.acct_line.price_subtotal, 50.0)
@@ -476,7 +484,9 @@ class TestContract(TestContractBase):
     def test_uom(self):
         uom_litre = self.env.ref("uom.product_uom_litre")
         self.acct_line.uom_id = uom_litre.id
-        self.acct_line._onchange_product_id()
+        product = self.acct_line.product_id
+        self.acct_line.product_id = False
+        self.acct_line.product_id = product
         self.assertEqual(self.acct_line.uom_id, self.acct_line.product_id.uom_id)
 
     def test_no_pricelist(self):
@@ -564,28 +574,11 @@ class TestContract(TestContractBase):
         result = self.contract.action_contract_send()
         self.assertEqual(result["res_model"], "mail.compose.message")
 
-    def test_onchange_contract_type(self):
-        self.contract._onchange_contract_type()
-        self.assertEqual(self.contract.journal_id.type, "sale")
-        self.assertEqual(self.contract.journal_id.company_id, self.contract.company_id)
-        self.contract.contract_type = "purchase"
-        self.contract._onchange_contract_type()
-        self.assertFalse(any(self.contract.contract_line_ids.mapped("automatic_price")))
-
-    def test_contract_onchange_product_id_uom(self):
-        """It should update the UoM for the line."""
-        line = self._add_template_line(
-            {"uom_id": self.env.ref("uom.product_uom_litre").id}
-        )
-        line.product_id.uom_id = self.env.ref("uom.product_uom_day").id
-        line._onchange_product_id()
-        self.assertEqual(line.uom_id, line.product_id.uom_id)
-
     def test_contract_onchange_product_id_name(self):
         """It should update the name for the line."""
         line = self._add_template_line()
-        line.product_id.description_sale = "Test"
-        line._onchange_product_id()
+        self.product_2.description_sale = "Test Name Change"
+        line.product_id = self.product_2
         self.assertEqual(
             line.name, line.product_id.get_product_multiline_description_sale()
         )
@@ -1413,6 +1406,7 @@ class TestContract(TestContractBase):
         self.assertFalse(section.create_invoice_visibility)
 
     def test_invoice_contract_without_lines(self):
+        self.contract.contract_line_ids.cancel()
         self.contract.contract_line_ids.unlink()
         self.assertFalse(self.contract.recurring_create_invoice())
 

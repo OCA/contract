@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <field name="create_invoice_visibility" invisible="1" />
+                    <field name="active" invisible="1" />
                     <button
                         name="action_contract_send"
                         type="object"
@@ -108,10 +110,7 @@
                                 widget="section_and_note_one2many"
                                 context="{'default_contract_type': contract_type, 'default_recurring_rule_type': recurring_rule_type, 'default_recurring_invoicing_type': recurring_invoicing_type, 'default_recurring_interval': recurring_interval, 'default_date_start': date_start, 'default_recurring_next_date': recurring_next_date}"
                             >
-                                <list
-                                    decoration-info="create_invoice_visibility"
-                                    editable="bottom"
-                                >
+                                <tree editable="bottom">
                                     <control>
                                         <create string="Add a line" />
                                         <create
@@ -185,7 +184,7 @@
                                         name="create_invoice_visibility"
                                         column_invisible="True"
                                     />
-                                </list>
+                                </tree>
                             </field>
                             <field
                                 name="contract_line_ids"
@@ -193,7 +192,7 @@
                                 widget="section_and_note_one2many"
                                 context="{'default_contract_type': contract_type}"
                             >
-                                <tree decoration-info="create_invoice_visibility">
+                                <tree>
                                     <control>
                                         <create string="Add a line" />
                                         <create
@@ -248,6 +247,7 @@
                                     />
                                     <field name="date_start" required="1" />
                                     <field name="date_end" />
+                                    <field name="next_period_date_end" invisible="1" />
                                     <field
                                         name="recurring_next_date"
                                         required="next_period_date_end"
@@ -287,7 +287,11 @@
                                 <group>
                                     <field name="invoice_partner_id" required="1" />
                                     <field name="fiscal_position_id" />
-                                    <field name="journal_id" required="1" />
+                                    <field
+                                        name="journal_id"
+                                        groups="base.group_multi_company"
+                                        required="1"
+                                    />
                                     <field name="payment_term_id" />
                                 </group>
                             </group>
