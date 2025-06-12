@@ -3,8 +3,7 @@
 
 import logging
 
-from odoo import api
-from odoo.tools import SUPERUSER_ID
+from odoo import SUPERUSER_ID, api
 
 _logger = logging.getLogger(__name__)
 
@@ -17,14 +16,13 @@ def post_init_hook(cr, registry):
         "Post init hook for module post_init_hook: "
         "Generate contract line forecast periods"
     )
-    with api.Environment.manage():
-        env = api.Environment(cr, SUPERUSER_ID, {})
-        offset = 0
-        while True:
-            contract_lines = env["contract.line"].search(
-                [("is_canceled", "=", False)], limit=100, offset=offset
-            )
-            contract_lines.with_delay()._generate_forecast_periods()
-            if len(contract_lines) < 100:
-                break
-            offset += 100
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    offset = 0
+    while True:
+        contract_lines = env["contract.line"].search(
+            [("is_canceled", "=", False)], limit=100, offset=offset
+        )
+        contract_lines.with_delay()._generate_forecast_periods()
+        if len(contract_lines) < 100:
+            break
+        offset += 100

@@ -3,8 +3,6 @@
 
 from odoo import api, fields, models
 
-from odoo.addons import decimal_precision as dp
-
 
 class ContractLineForecastPeriod(models.Model):
 
@@ -49,20 +47,19 @@ class ContractLineForecastPeriod(models.Model):
     quantity = fields.Float(default=1.0, required=True)
     price_unit = fields.Float(string="Unit Price")
     price_subtotal = fields.Float(
-        digits=dp.get_precision("Account"),
+        digits="Account",
         string="Amount Untaxed",
         compute="_compute_price_subtotal",
         store=True,
     )
     discount = fields.Float(
         string="Discount (%)",
-        digits=dp.get_precision("Discount"),
+        digits="Discount",
         help="Discount that is applied in generated invoices."
         " It should be less or equal to 100",
     )
     company_id = fields.Many2one(comodel_name="res.company", string="Company")
 
-    @api.multi
     @api.depends("quantity", "price_unit", "discount")
     def _compute_price_subtotal(self):
         for line in self:

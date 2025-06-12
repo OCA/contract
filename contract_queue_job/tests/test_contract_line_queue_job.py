@@ -47,4 +47,8 @@ class TestContractLineQueueJob(TestContractBase, JobMixin):
         lines = self.acct_line | self.acct_line.copy()
         job_counter = self.job_counter()
         lines.renew()
-        self.assertEqual(job_counter.count_created(), 0)
+        self.assertFalse(
+            job_counter.search_created().filtered(
+                lambda j: j.name == "contract.line.renew"
+            )
+        )
