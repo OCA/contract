@@ -8,7 +8,7 @@
 # Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 
 
 class ContractContract(models.Model):
@@ -21,11 +21,10 @@ class ContractContract(models.Model):
         sale = self.env["sale.order"].new(
             {
                 "partner_id": self.partner_id,
-                "date_order": fields.Date.to_string(date_ref),
+                "date_order": date_ref,
                 "origin": self.name,
                 "company_id": self.company_id.id,
                 "user_id": self.partner_id.user_id.id,
-                "analytic_account_id": self.group_id.id,
             }
         )
         if self.payment_term_id:
@@ -56,11 +55,11 @@ class ContractContract(models.Model):
             "name": "Sales Orders",
             "res_model": "sale.order",
             "view_type": "form",
-            "view_mode": "tree,kanban,form,calendar,pivot,graph,activity",
+            "view_mode": "list,kanban,form,calendar,pivot,graph,activity",
             "domain": [("id", "in", self._get_related_sales().ids)],
         }
         if tree_view and form_view:
-            action["views"] = [(tree_view.id, "tree"), (form_view.id, "form")]
+            action["views"] = [(tree_view.id, "list"), (form_view.id, "form")]
         return action
 
     def recurring_create_sale(self):
@@ -70,7 +69,7 @@ class ContractContract(models.Model):
         """
         sales = self._recurring_create_sale()
         for sale_rec in sales:
-            self.message_post(
+            sale_rec.message_post(
                 body=_(
                     "Contract manually sale order: "
                     '<a href="#" data-oe-model="%(model)s" data-oe-id="%(id)s">'
@@ -106,9 +105,11 @@ class ContractContract(models.Model):
                     sale_values=sale_values,
                 )
                 if invoice_line_values:
-                    sale_values["order_line"].append((0, 0, invoice_line_values))
+                    sale_values["order_line"].append(
+                        Command.create(invoice_line_values)
+                    )
             sales_values.append(sale_values)
-            contract_lines._update_recurring_next_date()
+            contract_lines._update_last_date_invoiced()
         return sales_values
 
     def _recurring_create_sale(self, date_ref=False):
