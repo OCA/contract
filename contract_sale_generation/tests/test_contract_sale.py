@@ -3,6 +3,7 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from odoo import Command
 from odoo.exceptions import ValidationError
 
 from .common import ContractSaleCommon, to_date
@@ -51,9 +52,7 @@ class TestContractSale(ContractSaleCommon):
         res = {
             "contract_type": "sale",
             "contract_line_ids": [
-                (
-                    0,
-                    0,
+                Command.create(
                     {
                         "product_id": self.product_1.id,
                         "name": "Test Contract Template",
@@ -64,7 +63,7 @@ class TestContractSale(ContractSaleCommon):
                         "recurring_rule_type": "yearly",
                         "recurring_interval": 1,
                         "display_type": False,
-                    },
+                    }
                 )
             ],
         }
@@ -90,7 +89,6 @@ class TestContractSale(ContractSaleCommon):
         self.contract_line.date_start = "2020-01-01"
         self.contract_line.recurring_invoicing_type = "post-paid"
         self.contract_line.date_end = "2020-03-15"
-        self.contract_line._onchange_is_auto_renew()
         # If we do not recompute recurring_next_date
         # then it maintains it's 'old' value.
         # TODO: Research that
@@ -114,7 +112,6 @@ class TestContractSale(ContractSaleCommon):
         self.contract._onchange_partner_id()
         orders = self.env["sale.order"].browse()
         orders |= self.contract.recurring_create_sale()
-        self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
         self.assertEqual(self.payment_term_id, orders.mapped("payment_term_id"))
         self.assertEqual(self.fiscal_position_id, orders.mapped("fiscal_position_id"))
 

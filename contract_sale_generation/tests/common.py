@@ -55,7 +55,9 @@ class ContractSaleCommon(TransactionCase):
                 "user_id": cls.env.user.id,
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_1")
+        # Avoid error cause sale_timesheet overwriting demo product.product_product_2
+        # and making mandatory to link a project to that product or to the sale order
+        cls.product_1 = cls.env.ref("product.product_product_2")
         cls.product_1.taxes_id += cls.env["account.tax"].search(
             [("type_tax_use", "=", "sale")], limit=1
         )
@@ -112,7 +114,7 @@ class ContractSaleCommon(TransactionCase):
             "recurring_next_date": "2020-01-15",
             "display_type": False,
         }
-        discount_line_group_id = cls.env.ref("product.group_discount_per_so_line")
+        discount_line_group_id = cls.env.ref("sale.group_discount_per_so_line")
         uom_group_id = cls.env.ref("uom.group_uom")
         cls.env.user.groups_id = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
 

@@ -5,8 +5,8 @@
 from odoo import fields, models
 
 
-class ContractAbstractContract(models.AbstractModel):
-    _inherit = "contract.abstract.contract"
+class ContractTemplate(models.AbstractModel):
+    _inherit = "contract.template"
 
     sale_autoconfirm = fields.Boolean()
 
