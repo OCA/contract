@@ -11,7 +11,7 @@ class ContractContract(models.Model):
     @api.multi
     def action_show_contract_forecast(self):
         self.ensure_one()
-        context = {'search_default_groupby_date_invoice': True}
+        context = {"search_default_groupby_date_invoice": True}
         context.update(self.env.context)
 
         return {
@@ -31,10 +31,7 @@ class ContractContract(models.Model):
     def write(self, values):
         res = super(ContractContract, self).write(values)
         if any(
-                [
-                    field in values
-                    for field in self._get_forecast_update_trigger_fields()
-                ]
+            [field in values for field in self._get_forecast_update_trigger_fields()]
         ):
             for rec in self:
                 if rec.company_id.enable_contract_forecast:

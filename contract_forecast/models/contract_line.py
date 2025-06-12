@@ -2,7 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
+
 from odoo.addons.queue_job.job import job
 
 QUEUE_CHANNEL = "root.CONTRACT_FORECAST"
@@ -75,11 +77,8 @@ class ContractLine(models.Model):
                 period_date_end = rec.next_period_date_end
                 recurring_next_date = rec.recurring_next_date
                 max_date_end = rec.date_end if not rec.is_auto_renew else False
-                while (
+                while period_date_end and rec._get_generate_forecast_periods_criteria(
                     period_date_end
-                    and rec._get_generate_forecast_periods_criteria(
-                        period_date_end
-                    )
                 ):
                     if period_date_end and recurring_next_date:
                         new_vals = rec._prepare_contract_line_forecast_period(
@@ -138,10 +137,7 @@ class ContractLine(models.Model):
     def write(self, values):
         res = super(ContractLine, self).write(values)
         if any(
-            [
-                field in values
-                for field in self._get_forecast_update_trigger_fields()
-            ]
+            [field in values for field in self._get_forecast_update_trigger_fields()]
         ):
             for rec in self:
                 if rec.contract_id.company_id.enable_contract_forecast:

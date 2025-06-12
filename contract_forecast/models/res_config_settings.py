@@ -19,7 +19,6 @@ class ResConfigSettings(models.TransientModel):
         default=12,
         related="company_id.contract_forecast_interval",
         readonly=False,
-
     )
     contract_forecast_rule_type = fields.Selection(
         [("monthly", "Month(s)"), ("yearly", "Year(s)")],
