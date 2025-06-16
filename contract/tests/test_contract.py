@@ -1406,7 +1406,6 @@ class TestContract(TestContractBase):
         self.assertFalse(section.create_invoice_visibility)
 
     def test_invoice_contract_without_lines(self):
-        self.contract.contract_line_ids.cancel()
         self.contract.contract_line_ids.unlink()
         self.assertFalse(self.contract.recurring_create_invoice())
 

@@ -600,7 +600,10 @@ class ContractContract(models.Model):
                     )
             invoices_values.append(invoice_vals)
             # Force the recomputation of journal items
-            contract_lines._update_last_date_invoiced()
+            contract_lines._update_last_date_invoiced(
+                last_date_invoiced=date_ref,
+                recurring_next_date=contract.recurring_next_date,
+            )
         return invoices_values
 
     @api.model

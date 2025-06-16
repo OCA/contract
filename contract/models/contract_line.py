@@ -247,12 +247,12 @@ class ContractLine(models.Model):
         )
         return self._update_last_date_invoiced()
 
-    def _update_last_date_invoiced(self):
+    def _update_last_date_invoiced(self, last_date_invoiced, recurring_next_date):
         for rec in self:
-            last_date_invoiced = rec.next_period_date_end
             rec.write(
                 {
                     "last_date_invoiced": last_date_invoiced,
+                    "recurring_next_date": recurring_next_date,
                 }
             )
 
