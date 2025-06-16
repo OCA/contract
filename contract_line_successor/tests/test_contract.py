@@ -845,3 +845,17 @@ class TestContractSuccessor(TestContract):
         self.acct_line.stop(to_date("2019-05-31"))
         self.assertEqual(self.acct_line.date_end, to_date("2019-05-31"))
         self.assertEqual(self.acct_line.recurring_next_date, to_date("2019-06-01"))
+
+    def test_contract_template_is_auto_renew(self):
+        contract_template = self.env["contract.template"].create(
+            {
+                "name": "Template Auto Renew Test",
+                "contract_line_ids": [
+                    (0, 0, {"name": "Line 1", "is_auto_renew": True}),
+                    (0, 0, {"name": "Line 2", "is_auto_renew": True}),
+                ],
+            }
+        )
+        self.assertTrue(contract_template.is_auto_renew)
+        contract_template.contract_line_ids[1].write({"is_auto_renew": False})
+        self.assertFalse(contract_template.is_auto_renew)
