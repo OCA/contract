@@ -34,6 +34,7 @@
         "data/ir_ui_menu.xml",
         "wizards/contract_line_wizard.xml",
         "wizards/contract_manually_create_invoice.xml",
+        "wizards/contract_manually_single_invoice.xml",
         "wizards/contract_contract_terminate.xml",
         "views/contract_tag.xml",
         "views/abstract_contract_line.xml",
