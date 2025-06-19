@@ -168,6 +168,37 @@ class ContractContract(models.Model):
             if len(set(all_analytic_accounts)) == 1:
                 record.group_id = all_analytic_accounts[0]
 
+    def generate_invoices_manually(self, date=None):
+        if date is None:
+            date = fields.Date.today()
+        while (
+            self.recurring_next_date
+            and self.recurring_next_date <= date
+            and (not self.date_end or self.recurring_next_date <= self.date_end)
+        ):
+            _logger.info(
+                f"next date {self.recurring_next_date} <= {date}, "
+                f"date end {self.date_end} "
+            )
+            # We create the invoices for the contract lines
+            result = self.with_company(self.company_id.id)._cron_recurring_create(
+                self.recurring_next_date,
+                create_type=self.generation_type,
+                domain=[("id", "=", self.id)],
+            )
+            for record_list in result:
+                for record in record_list:
+                    self.message_post(
+                        body=_(
+                            "Contract manually generated: "
+                            f'<a href="#" data-oe-model="{record._name}"'
+                            f' data-oe-id="{record.id}">'
+                            f"{record.display_name}"
+                            "</a>"
+                        )
+                    )
+        return True
+
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
             return self.env.ref("contract.contract_contract_customer_form_view").id
@@ -193,6 +224,10 @@ class ContractContract(models.Model):
     @api.model
     def _set_start_contract_modification(self):
         subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
+        _logger.warning(
+            "recurring_create_invoice is deprecated in favor of "
+            "_recurring_create_invoice instead"
+        )
         for record in self:
             if record.contract_line_ids:
                 date_start = min(record.contract_line_ids.mapped("date_start"))
@@ -669,17 +704,24 @@ class ContractContract(models.Model):
             return self.__class__._recurring_create_invoice
 
     @api.model
-    def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
+    def _cron_recurring_create(
+        self, date_ref=False, create_type="invoice", domain=None
+    ):
         """
         The cron function in order to create recurrent documents
         from contracts.
+        The domain is used to add an extra filter
         """
+        if domain is None:
+            domain = []
         _recurring_create_func = self._get_recurring_create_func(
             create_type=create_type
         )
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain = self._get_contracts_to_invoice_domain(date_ref)
+        domain = expression.AND(
+            [domain, self._get_contracts_to_invoice_domain(date_ref)]
+        )
         domain = expression.AND(
             [
                 domain,
@@ -688,6 +730,7 @@ class ContractContract(models.Model):
         )
         contracts = self.search(domain)
         companies = set(contracts.mapped("company_id"))
+        result = []
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
             contracts_to_invoice = contracts.filtered(
@@ -697,8 +740,8 @@ class ContractContract(models.Model):
                     or contract.recurring_next_date <= contract.date_end
                 )
             ).with_company(company)
-            _recurring_create_func(contracts_to_invoice, date_ref)
-        return True
+            result.append(_recurring_create_func(contracts_to_invoice, date_ref))
+        return result
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
