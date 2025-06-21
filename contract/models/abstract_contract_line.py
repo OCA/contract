@@ -9,6 +9,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+from odoo.tools.float_utils import float_round
 
 
 class ContractAbstractContractLine(models.AbstractModel):
@@ -189,6 +190,7 @@ class ContractAbstractContractLine(models.AbstractModel):
         "quantity",
         "contract_id.pricelist_id",
         "contract_id.partner_id",
+        "uom_id",
     )
     def _compute_price_unit(self):
         """Get the specific price if no auto-price, and the price obtained
@@ -206,18 +208,20 @@ class ContractAbstractContractLine(models.AbstractModel):
                         line.contract_id.company_id
                     ).property_product_pricelist
                 )
+                quantity = line.env.context.get("contract_line_qty", line.quantity)
                 product = line.product_id.with_context(
-                    quantity=line.env.context.get(
-                        "contract_line_qty",
-                        line.quantity,
-                    ),
+                    quantity=quantity,
                     pricelist=pricelist.id,
                     partner=line.contract_id.partner_id.id,
                     date=line.env.context.get(
                         "old_date", fields.Date.context_today(line)
                     ),
                 )
-                line.price_unit = pricelist._get_product_price(product, quantity=1)
+                base_price = pricelist._get_product_price(product, quantity=quantity)
+                price = product.uom_id._compute_price(base_price, line.uom_id)
+                line.price_unit = float_round(
+                    price, precision_digits=line.currency_id.decimal_places or 2
+                )
             else:
                 line.price_unit = line.specific_price
 
