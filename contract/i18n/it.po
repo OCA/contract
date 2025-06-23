@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2025-06-05 13:26+0000\n"
+"PO-Revision-Date: 2025-06-23 11:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: Italian (https://www.transifex.com/oca/teams/23907/it/)\n"
 "Language: it\n"
@@ -98,6 +98,81 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Salve <t t-out=\"object.partner_id.name or '' \""
+"/></t>,</p>\n"
+"                <p>Un nuovo contratto è stato creato: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>RIFERIMENTI</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contratto: <strong t-out="
+"\"object.name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Data inizio contratto: <t t-out="
+"\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Vostro contratto: <a t-att-"
+"href="
+"\"'mailto:%s?subject=Contratto %s' % (object.user_id.email, object.name)\" "
+"t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Vostro contatto: <t t-out="
+"\"object.user_id.name\"/>\n"
+"\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Per qualsiasi domanda, non esitate a contattarci.</p>\n"
+"                <p>Grazie per aver scelto <t t-out="
+"\"object.company_id.name or 'us'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style="
+"\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-out=\""
+"object.company_id.name\"></strong>\n"
+"                        </h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style="
+"\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"                        <address t-field="
+"\"object.company_id.sudo().partner_id\" t-options='{\"widget\": \"contact\", "
+"\"fields\": [\"name\", \"address\"], \"no_marker\": True}'></address>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Phone: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
+" none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -199,6 +274,8 @@ msgid ""
 "<strong>#START#</strong>: Start date of the\n"
 "                                        invoiced period"
 msgstr ""
+"<strong>#INIZIO#</strong>: data inizio del\n"
+"                                        periodo fatturato"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -407,6 +484,8 @@ msgid ""
 "Check this if you want to control recurrence at the line level instead of "
 "for the whole contract."
 msgstr ""
+"Selezionare questa opzione se si vuole controllare la ricorrenza a livello "
+"di riga al posto dell'intero contratto."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -513,12 +592,12 @@ msgstr "Nome contratto"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_recurring_mixin
 msgid "Contract Recurring Mixin"
-msgstr ""
+msgstr "Mixin contratto ricorrente"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Contract Start & End Dates"
-msgstr ""
+msgstr "Stato contratto e date fine"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_tag
@@ -574,7 +653,7 @@ msgstr "Tipo contratto"
 #: model:ir.model.fields,help:contract.field_contract_template__date_start
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_start
 msgid "Contract activation date (first recurrence starts here)"
-msgstr ""
+msgstr "Data attivazione contratto (la prima ricorrenza inizia qui)"
 
 #. module: contract
 #. odoo-python
@@ -791,13 +870,13 @@ msgstr "Dicembre"
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Defines line ordering in the contract."
-msgstr ""
+msgstr "Definisce le righe nel contratto."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_template__generation_type
 msgid "Defines what document is automatically generated by the cron."
-msgstr ""
+msgstr "Definisce quale documento è generato automaticamente dal cron."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__name
@@ -827,7 +906,7 @@ msgstr "Lo sconto dovrebbe essere minore o uguale a 100"
 #: model:ir.model.fields,help:contract.field_contract_line__discount
 #: model:ir.model.fields,help:contract.field_contract_template_line__discount
 msgid "Discount to apply on generated invoices. Must be ≤ 100."
-msgstr ""
+msgstr "Sconto da applicare alle fatture generate. Deve essere ≤ 100."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
@@ -962,6 +1041,8 @@ msgid ""
 "If checked, the price will be taken from the pricelist. Otherwise, it must "
 "be set manually."
 msgstr ""
+"Se selezionata, il prezzo sarà preso dal listino. altrimenti, deve esse "
+"impostato manualmente."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1017,7 +1098,7 @@ msgstr "Fatture"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Invoicing"
-msgstr ""
+msgstr "Fatturazione"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
@@ -1123,7 +1204,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Lines"
-msgstr ""
+msgstr "Righe"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
@@ -1244,7 +1325,7 @@ msgstr "Inizio prossimo periodo"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Next period to invoice"
-msgstr ""
+msgstr "Prossimo periodo da fatturare"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_note
@@ -1322,7 +1403,7 @@ msgstr "Vecchio contratto"
 #: model:ir.model.fields,help:contract.field_contract_template__date_end
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_end
 msgid "Optional contract termination date (limits recurrence)"
-msgstr ""
+msgstr "Data conclusione contratto opzionale (limiti ricorrenza)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1445,7 +1526,7 @@ msgstr "Fatture ricorrenti"
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_recurring_note
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_recurring_note
 msgid "Recurring Note"
-msgstr ""
+msgstr "Nota ricorsione"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1556,7 +1637,7 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
 msgid "Specify interval for automatic invoice generation."
-msgstr ""
+msgstr "Specificare l'intervallo per la generazione automatica delle fatture."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
@@ -1611,7 +1692,7 @@ msgstr "Etichette"
 #: model:ir.model.fields,help:contract.field_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
 msgid "Technical field for UX purposes."
-msgstr ""
+msgstr "Campo tecnico per fini UX."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
@@ -1658,7 +1739,7 @@ msgstr "Settimana(e)"
 #: model:ir.model.fields,help:contract.field_contract_line__note_invoicing_mode
 #: model:ir.model.fields,help:contract.field_contract_template_line__note_invoicing_mode
 msgid "When to invoice this note line relative to others."
-msgstr ""
+msgstr "Quando fatturare questa riga di nota relativa ad altro."
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_next_line
