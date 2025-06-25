@@ -8,7 +8,7 @@ class Contract(models.Model):
     _inherit = ["contract.contract", "base.exception"]
     _name = "contract.contract"
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         record = super().create(vals)
         record._contract_check_exception(vals)
