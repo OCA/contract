@@ -1,5 +1,5 @@
 # Copyright 2017 Tecnativa - Luis M. Ontalba
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+# License LGPL-3 - See http://www.gnu.org/licenses/lgpl-3.0.html
 
 {
     "name": "Contract from Sale",
@@ -15,7 +15,7 @@
         "views/contract.xml",
         "views/res_partner_view.xml",
     ],
-    "license": "AGPL-3",
+    "license": "LGPL-3",
     "installable": True,
     "auto_install": False,
 }
