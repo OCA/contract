@@ -2,7 +2,7 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
 # Copyright 2018 ACSONE SA/NV
 # Copyright 2024 Tecnativa - Carolina Fernandez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import exceptions
 from odoo.tests import tagged
