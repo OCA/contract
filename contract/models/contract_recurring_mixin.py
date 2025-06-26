@@ -5,7 +5,7 @@
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV
 # Copyright 2021 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from dateutil.relativedelta import relativedelta
 

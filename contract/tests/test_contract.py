@@ -1,7 +1,7 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
 # Copyright 2018-2020 Tecnativa - Pedro M. Baeza
 # Copyright 2021 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import logging
 from collections import namedtuple

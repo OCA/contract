@@ -7,13 +7,13 @@
 # Copyright 2018-2019 ACSONE SA/NV
 # Copyright 2020-2021 Tecnativa - Pedro M. Baeza
 # Copyright 2020 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
     "name": "Recurring - Contracts Management",
     "version": "18.0.2.0.0",
     "category": "Contract Management",
-    "license": "AGPL-3",
+    "license": "LGPL-3",
     "author": "Tecnativa, ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["base", "account", "product", "portal"],

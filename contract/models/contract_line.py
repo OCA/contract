@@ -1,7 +1,7 @@
 # Copyright 2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV.
 # Copyright 2020 Tecnativa - Pedro M. Baeza
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 
 import warnings

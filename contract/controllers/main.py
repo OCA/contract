@@ -1,5 +1,5 @@
 # Copyright 2020-2022 Tecnativa - Víctor Martínez
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 from odoo import _, http
 from odoo.exceptions import AccessError, MissingError
