@@ -216,6 +216,8 @@ class ContractLine(models.Model):
                 ("date_end", ">=", today),
                 ("date_end", "=", False),
                 "|",
+                ("date_end", "=", False),
+                "|",
                 ("is_auto_renew", "=", True),
                 "&",
                 ("is_auto_renew", "=", False),
