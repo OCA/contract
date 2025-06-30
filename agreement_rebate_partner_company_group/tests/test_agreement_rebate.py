@@ -1,32 +1,24 @@
 # Copyright 2022 Tecnativa - Carlos Dauden
+# Copyright 2025 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo.addons.agreement_rebate.tests.test_agreement_rebate import TestAgreementRebate
+from odoo.tests import tagged
+
+from odoo.addons.agreement_rebate.tests.test_agreement_rebate import (
+    TestAgreementRebateBase,
+)
 
 
-class TestAgreementRebatePartnerCompanyGroup(TestAgreementRebate):
-    def setUp(self):
-        super().setUp()
-        self.Partner = self.env["res.partner"]
-        self.partner_group = self.Partner.create(
+@tagged("-at_install", "post_install")
+class TestAgreementRebatePartnerCompanyGroup(TestAgreementRebateBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner_group = cls.env["res.partner"].create(
             {"name": "partner test rebate group", "ref": "TST-G01"}
         )
-        self.partner_member_1 = self.Partner.create(
-            {
-                "name": "partner test rebate member 1",
-                "ref": "TST-M001",
-                "company_group_id": self.partner_group.id,
-            }
-        )
-        self.partner_member_2 = self.Partner.create(
-            {
-                "name": "partner test rebate  member 2",
-                "ref": "TST-M002",
-                "company_group_id": self.partner_group.id,
-            }
-        )
-        self.invoice_member_1 = self.create_invoice(self.partner_member_1)
-        self.invoice_member_2 = self.create_invoice(self.partner_member_2)
+        cls.partner_1.company_group_id = cls.partner_group
+        cls.partner_2.company_group_id = cls.partner_group
 
     def test_create_settlement_wo_filters_global_company_group(self):
         """Global rebate without filters apply to all company group members"""
