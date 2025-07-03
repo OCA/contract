@@ -31,6 +31,8 @@ patch(SaleOrderLineProductField.prototype, {
             default_recurring_interval: this.props.record.data.recurring_interval,
             default_recurring_rule_type: this.props.record.data.recurring_rule_type,
             default_recurrence_interval: this.props.record.data.recurrence_interval,
+            default_recurring_invoicing_type:
+                this.props.record.data.recurring_invoicing_type,
             default_product_uom_qty: this.props.record.data.product_uom_qty,
             default_contract_id: this.props.record.data.contract_id[0],
             default_date_start: this.props.record.data.date_start,
@@ -38,6 +40,8 @@ patch(SaleOrderLineProductField.prototype, {
             default_is_auto_renew: this.props.record.data.is_auto_renew,
             default_auto_renew_interval: this.props.record.data.auto_renew_interval,
             default_auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
+            default_contract_start_date_method:
+                this.props.record.data.contract_start_date_method,
         };
     },
 
