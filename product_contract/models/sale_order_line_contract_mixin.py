@@ -205,7 +205,7 @@ class SaleOrderLineContractMixin(models.AbstractModel):
     @api.depends("contract_start_date_method")
     def _compute_contract_line_date_start(self):
         for rec in self:
-            if rec.contract_start_date_method == "manual":
+            if rec.is_contract and rec.contract_start_date_method == "manual":
                 rec.date_start = rec.date_start or fields.Date.today()
 
     @api.depends("date_start", "recurrence_interval", "recurrence_number")
