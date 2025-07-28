@@ -1,5 +1,5 @@
 # Copyright 2025 ACSONE SA/NV
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from openupgradelib import openupgrade
 
 
@@ -72,11 +72,13 @@ def migrate(env, version):
                 env.cr, moved_model, "contract", new_module
             )
     all_moved_xml_ids = {
-        "contract_line_successor": ["contract_line_wizard"],
+        "contract_line_successor": [
+            "contract_line_wizard",
+            "contract_line_cron_for_renew",
+        ],
         "contract_termination": [
             "contract_terminate_reason_access_manager",
             "contract_terminate_reason_access_user",
-            "can_terminate_contract",
             "can_terminate_contract",
             "contract_contract_terminate_wizard",
         ],
