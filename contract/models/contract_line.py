@@ -42,6 +42,11 @@ class ContractLine(models.Model):
     )
     product_id = fields.Many2one(index=True)
 
+    @api.depends("name", "date_start")
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f"{rec.date_start} - {rec.name}"
+
     @api.model
     def _compute_first_recurring_next_date(
         self,
