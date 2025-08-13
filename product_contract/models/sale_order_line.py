@@ -241,6 +241,7 @@ class SaleOrderLine(models.Model):
                             line.product_id[f"force_month_{line.recurrence_interval}"]
                         )
                         date_text += f" ({force_month_label})"
+
                 field_info = dict(
                     self._fields["recurrence_interval"].get_description(self.env)
                 )
@@ -253,17 +254,27 @@ class SaleOrderLine(models.Model):
                 invoicing_type_label = field_selection.get(
                     line.recurring_invoicing_type
                 )
-                line.name = _(
-                    """{product}:
-    - Recurrency: {recurring_rule}
-    - Invoicing Type: {invoicing_type}
-    - Date: {date_text}
-                """
-                ).format(
-                    product=line.product_id.display_name,
-                    recurring_rule=recurring_rule_label,
-                    invoicing_type=invoicing_type_label,
-                    date_text=date_text,
+                line.name = line._get_contract_name(
+                    date_text, recurring_rule_label, invoicing_type_label
                 )
-
         return res
+
+    def _get_contract_name(self, date_text, recurring_rule_label, invoicing_type_label):
+        self.ensure_one()
+        name_format = self._get_contract_name_format()
+        return name_format.format(
+            product=self.product_id.display_name,
+            recurring_rule=recurring_rule_label,
+            invoicing_type=invoicing_type_label,
+            date_text=date_text,
+        )
+
+    def _get_contract_name_format(self):
+        self.ensure_one()
+        return _(
+            """{product}:
+            - Recurrency: {recurring_rule}
+            - Invoicing Type: {invoicing_type}
+            - Date: {date_text}
+            """
+        )
