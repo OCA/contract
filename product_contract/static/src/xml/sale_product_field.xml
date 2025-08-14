@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-inherit="sale.SaleProductField" t-inherit-mode="extension">
+        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
+            <t t-if="isConfigurableContract">
+                <button
+                    type="button"
+                    class="btn btn-secondary fa fa-pencil-square-o"
+                    tabindex="-1"
+                    draggable="false"
+                    aria-label="Configure contract"
+                    data-tooltip="Configure contract"
+                    t-on-click="onEditContractConfiguration"
+                />
+            </t>
+        </xpath>
+    </t>
+
+</templates>
