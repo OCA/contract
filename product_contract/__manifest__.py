@@ -22,5 +22,14 @@
     "application": False,
     "external_dependencies": {"python": ["python-dateutil"]},
     "maintainers": ["sbejaoui"],
-    "assets": {"web.assets_backend": ["product_contract/static/src/js/*"]},
+    "assets": {
+        "web.assets_backend": [
+            "product_contract/static/src/js/*",
+            (
+                "after",
+                "sale/static/src/xml/sale_product_field.xml",
+                "product_contract/static/src/xml/*",
+            ),
+        ]
+    },
 }
