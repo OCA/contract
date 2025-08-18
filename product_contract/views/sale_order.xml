@@ -84,6 +84,7 @@
                 </group>
                 <group invisible="not is_contract">
                     <field name="is_auto_renew" />
+                    <field name="automatic_price" />
                 </group>
                 <group invisible="not is_auto_renew">
                     <label for="auto_renew_interval" />
@@ -99,6 +100,15 @@
                             class="oe_inline"
                             nolabel="1"
                             required="is_auto_renew"
+                        />
+                    </div>
+                </group>
+                <group invisible="not is_auto_renew">
+                    <label for="manual_renew_needed" />
+                    <div>
+                        <field
+                            name="manual_renew_needed"
+                            class="oe_inline"
                         />
                     </div>
                 </group>
@@ -134,11 +144,17 @@
                 />
                 <field name="date_end" optional="hide" />
                 <field name="is_auto_renew" optional="hide" />
+                <field name="automatic_price" optional="hide" />
                 <field
                     name="auto_renew_interval"
                     class="oe_inline"
                     nolabel="1"
                     required="is_auto_renew"
+                    optional="hide"
+                />
+                <field
+                    name="manual_renew_needed"
+                    class="oe_inline"
                     optional="hide"
                 />
                 <field

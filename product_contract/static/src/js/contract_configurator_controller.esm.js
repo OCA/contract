@@ -21,7 +21,9 @@ export class ProductContractConfiguratorController extends formView.Controller {
             date_end,
             contract_line_id,
             is_auto_renew,
+            automatic_price,
             auto_renew_interval,
+            manual_renew_needed,
             auto_renew_rule_type,
             contract_start_date_method,
         } = record.data;
@@ -37,7 +39,9 @@ export class ProductContractConfiguratorController extends formView.Controller {
             date_end,
             contract_line_id,
             is_auto_renew,
+            automatic_price,
             auto_renew_interval,
+            manual_renew_needed,
             auto_renew_rule_type,
             contract_start_date_method,
         };

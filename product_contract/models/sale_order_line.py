@@ -76,11 +76,13 @@ class SaleOrderLine(models.Model):
             "auto_renew_interval": self.auto_renew_interval,
             "auto_renew_rule_type": self.auto_renew_rule_type,
             "termination_notice_interval": termination_notice_interval,
+            "manual_renew_needed": self.manual_renew_needed,
             "termination_notice_rule_type": termination_notice_rule_type,
             "contract_id": contract.id,
             "sale_order_line_id": self.id,
             "predecessor_contract_line_id": predecessor_contract_line_id,
             "analytic_distribution": self.analytic_distribution,
+            "automatic_price": self.automatic_price,
         }
 
     def create_contract_line(self, contract):

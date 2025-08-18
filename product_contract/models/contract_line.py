@@ -43,9 +43,13 @@ class ContractLine(models.Model):
                         "termination_notice_interval": (
                             rec.product_id.termination_notice_interval
                         ),
+                        "manual_renew_needed": (
+                            rec.product_id.manual_renew_needed
+                        ),
                         "termination_notice_rule_type": (
                             rec.product_id.termination_notice_rule_type
                         ),
+                        "automatic_price": rec.product_id.automatic_price,
                     }
                 )
 

@@ -66,7 +66,9 @@ patch(SaleOrderLineProductField.prototype, {
             default_date_start: this.props.record.data.date_start,
             default_date_end: this.props.record.data.date_end,
             default_is_auto_renew: this.props.record.data.is_auto_renew,
+            default_automatic_price: this.props.record.data.automatic_price,
             default_auto_renew_interval: this.props.record.data.auto_renew_interval,
+            default_manual_renew_needed: this.props.record.data.manual_renew_needed,
             default_auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
             default_contract_start_date_method:
                 this.props.record.data.contract_start_date_method,
@@ -82,7 +84,9 @@ patch(SaleOrderLineProductField.prototype, {
             date_start: this.props.record.data.date_start,
             date_end: this.props.record.data.date_end,
             is_auto_renew: this.props.record.data.is_auto_renew,
+            automatic_price: this.props.record.data.automatic_price,
             auto_renew_interval: this.props.record.data.auto_renew_interval,
+            manual_renew_needed: this.props.record.data.manual_renew_needed,
             auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
         };
     },
