@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ir_cron_update_contract_anniversary" model="ir.cron">
+        <field name="name">Partners: Update Contract Anniversaries</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="state">code</field>
+        <field name="code">model._cron_update_contract_anniversary()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">months</field>
+    </record>
+</odoo>
