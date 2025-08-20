@@ -118,19 +118,59 @@
                             string="Subscription lines"
                             name="subscription_lines_page"
                         >
-                            <field name="sale_subscription_line_ids">
+                            <field
+                                name="sale_subscription_line_ids"
+                                widget="section_and_note_one2many"
+                            >
                                 <tree editable="bottom">
-                                    <field name="product_id" required="True" />
+                                    <control>
+                                        <create string="Add a line" />
+                                        <create
+                                            string="Add a section"
+                                            context="{'default_display_type': 'line_section'}"
+                                        />
+                                        <create
+                                            string="Add a note"
+                                            context="{'default_display_type': 'line_note'}"
+                                        />
+                                    </control>
+
+                                    <field name="display_type" invisible="1" />
+                                    <field name="sequence" widget="handle" />
+
+                                    <!-- Optional product: only required when NOT section/note -->
+                                    <field
+                                        name="product_id"
+                                        attrs="{'required': [('display_type','=',False)], 'readonly': [('display_type','!=',False)]}"
+                                    />
+
                                     <field
                                         name="name"
-                                        required="True"
                                         widget="section_and_note_text"
+                                        attrs="{'required': [('display_type','=',False)]}"
                                     />
+
                                     <field name="currency_id" invisible="1" />
-                                    <field name="product_uom_qty" required="True" />
-                                    <field name="price_unit" required="True" />
-                                    <field name="discount" required="True" />
-                                    <field name="tax_ids" widget="many2many_tags" />
+
+                                    <field
+                                        name="product_uom_qty"
+                                        attrs="{'invisible': [('display_type','!=', False)]}"
+                                    />
+                                    <field
+                                        name="price_unit"
+                                        attrs="{'invisible': [('display_type','!=', False)]}"
+                                    />
+                                    <field
+                                        name="discount"
+                                        attrs="{'invisible': [('display_type','!=', False)]}"
+                                    />
+
+                                    <field
+                                        name="tax_ids"
+                                        widget="many2many_tags"
+                                        attrs="{'invisible': [('display_type','!=', False)]}"
+                                    />
+
                                     <field
                                         name="price_subtotal"
                                         options="{'currency_field': 'currency_id'}"
@@ -202,6 +242,43 @@
                     <field name="activity_ids" widget="mail_activity" />
                     <field name="message_ids" widget="mail_thread" />
                 </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_subscription_line_form" model="ir.ui.view">
+        <field name="name">sale.subscription.line.form</field>
+        <field name="model">sale.subscription.line</field>
+        <field name="arch" type="xml">
+            <form>
+            <sheet>
+                <field name="display_type" invisible="1" />
+                <group attrs="{'invisible': [('display_type','!=', False)]}">
+                <field name="product_id" required="1" />
+                <field name="product_uom_qty" />
+                <field name="price_unit" />
+                <field name="discount" />
+                <field name="tax_ids" widget="many2many_tags" />
+                </group>
+
+                <label
+                        for="name"
+                        string="Description"
+                        attrs="{'invisible': [('display_type','!=', False)]}"
+                    />
+                <label
+                        for="name"
+                        string="Section"
+                        attrs="{'invisible': [('display_type','!=','line_section')]}"
+                    />
+                <label
+                        for="name"
+                        string="Note"
+                        attrs="{'invisible': [('display_type','!=','line_note')]}"
+                    />
+                <field name="name" nolabel="1" />
+
+            </sheet>
             </form>
         </field>
     </record>
@@ -365,6 +442,71 @@
         </field>
     </record>
 
+    <!--SEARCH view-->
+    <record id="sale_subscription_search_view" model="ir.ui.view">
+        <field name="name">sale.subscription.search</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- searches by text -->
+                <field name="to_renew" />
+                <filter
+                    string="Pending subscriptions"
+                    name="pendingsubs"
+                    domain="[('to_renew','=', True)]"
+                />
+                <field name="name" filter_domain="[('name','ilike', self)]" />
+                <field
+                    name="partner_id"
+                    filter_domain="[('partner_id','ilike',self)]"
+                />
+
+                <separator />
+
+                <!-- STATES -->
+                <!-- In progress -->
+                <filter
+                    name="in_progress"
+                    string="In progress"
+                    domain="[('in_progress','=', True)]"
+                />
+
+                <!-- Expired (end date < today and not archived) -->
+                <filter
+                    name="expired"
+                    string="Expired"
+                    domain="[('active','=', True), ('date','!=', False), ('date','&lt;', context_today().strftime('%Y-%m-%d'))]"
+                />
+
+                <!-- Archived -->
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active','=', False)]"
+                />
+
+                <group expand="0" string="Group by...">
+                    <filter
+                        name="group_by_partner"
+                        string="Customer"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        name="group_by_stage"
+                        string="Stage"
+                        context="{'group_by': 'stage_id'}"
+                    />
+                    <filter
+                        name="group_by_next"
+                        string="Next invoice"
+                        domain="[('recurring_next_date','!=', False)]"
+                        context="{'group_by': 'recurring_next_date'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="view_sale_order_pending_filter" model="ir.ui.view">
         <field name="name">sale.order.pending.filter</field>
         <field name="model">sale.subscription</field>
@@ -415,6 +557,13 @@
         <field name="name">Subscriptions</field>
         <field name="res_model">sale.subscription</field>
         <field name="view_mode">tree,kanban,form</field>
+
+        <field name="search_view_id" ref="sale_subscription_search_view" />
+
+        <!-- Default filter: activate 'in_progress' -->
+        <field name="context">
+            {'search_default_in_progress': 1}
+        </field>
     </record>
 
     <record id="subscription_product_template_action" model="ir.actions.act_window">

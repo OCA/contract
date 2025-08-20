@@ -40,9 +40,33 @@ class SaleSubscriptionLine(models.Model):
         readonly=False,
     )
 
-    @api.depends("product_id", "price_unit", "product_uom_qty", "discount", "tax_ids")
+    sequence = fields.Integer(default=10, help="Display order on the subscription.")
+    display_type = fields.Selection(
+        selection=[("line_section", "Section"), ("line_note", "Note")],
+        default=False,
+        help="Technical field for UX purpose.",
+    )
+
+    @api.depends(
+        "product_id",
+        "price_unit",
+        "product_uom_qty",
+        "discount",
+        "tax_ids",
+        "display_type",
+    )
     def _compute_subtotal(self):
         for record in self:
+            if record.display_type:
+                record.update(
+                    {
+                        "amount_tax_line_amount": 0.0,
+                        "price_total": 0.0,
+                        "price_subtotal": 0.0,
+                    }
+                )
+                continue
+
             price = record.price_unit * (1 - (record.discount or 0.0) / 100.0)
             taxes = record.tax_ids.compute_all(
                 price,
@@ -80,9 +104,11 @@ class SaleSubscriptionLine(models.Model):
         index=True,
     )
 
-    @api.depends("product_id")
+    @api.depends("product_id", "display_type")
     def _compute_name(self):
         for record in self:
+            if record.display_type:
+                continue
             if not record.product_id:
                 record.name = False
             lang = get_lang(self.env, record.sale_subscription_id.partner_id.lang).code
@@ -91,9 +117,14 @@ class SaleSubscriptionLine(models.Model):
                 lang=lang
             ).get_product_multiline_description_sale()
 
-    @api.depends("product_id", "sale_subscription_id.fiscal_position_id")
+    @api.depends(
+        "product_id", "display_type", "sale_subscription_id.fiscal_position_id"
+    )
     def _compute_tax_ids(self):
         for line in self:
+            if line.display_type:
+                line.tax_ids = [(5, 0, 0)]
+                continue
             fpos = (
                 line.sale_subscription_id.fiscal_position_id
                 or line.sale_subscription_id.fiscal_position_id.get_fiscal_position(
@@ -110,9 +141,13 @@ class SaleSubscriptionLine(models.Model):
         "product_id",
         "sale_subscription_id.partner_id",
         "sale_subscription_id.pricelist_id",
+        "display_type",
     )
     def _compute_price_unit(self):
         for record in self:
+            if record.display_type:
+                record.price_unit = 0.0
+                continue
             if not record.product_id:
                 continue
             if (
@@ -143,9 +178,13 @@ class SaleSubscriptionLine(models.Model):
         "tax_ids",
         "sale_subscription_id.partner_id",
         "sale_subscription_id.pricelist_id",
+        "display_type",
     )
     def _compute_discount(self):
         for record in self:
+            if record.display_type:
+                record.discount = 0.0
+                continue
             if not (
                 record.product_id
                 and record.product_id.uom_id
@@ -292,6 +331,12 @@ class SaleSubscriptionLine(models.Model):
 
     def _prepare_sale_order_line(self):
         self.ensure_one()
+        if self.display_type:
+            return {
+                "display_type": self.display_type,
+                "name": self.name or "",
+                "sequence": self.sequence,
+            }
         return {
             "product_id": self.product_id.id,
             "name": self.name,
@@ -301,10 +346,17 @@ class SaleSubscriptionLine(models.Model):
             "price_subtotal": self.price_subtotal,
             "tax_id": self.tax_ids,
             "product_uom": self.product_id.uom_id.id,
+            "sequence": self.sequence,
         }
 
     def _prepare_account_move_line(self):
         self.ensure_one()
+        if self.display_type:
+            return {
+                "display_type": self.display_type,
+                "name": self.name or "",
+                "sequence": self.sequence,
+            }
         account = (
             self.product_id.property_account_income_id
             or self.product_id.categ_id.property_account_income_categ_id
@@ -319,4 +371,5 @@ class SaleSubscriptionLine(models.Model):
             "tax_ids": [(6, 0, self.tax_ids.ids)],
             "product_uom_id": self.product_id.uom_id.id,
             "account_id": account.id,
+            "sequence": self.sequence,
         }
