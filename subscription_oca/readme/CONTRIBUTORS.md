@@ -6,3 +6,5 @@
   - Harald Panten
   - Valentin Vinagre
   - Alberto Martínez
+- [Batista10](https://batista10.cat):
+  - Pol Comas i Romero \<<pol@batista10.cat>\>
