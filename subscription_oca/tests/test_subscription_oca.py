@@ -691,3 +691,121 @@ class TestSubscriptionOCA(TransactionCase):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_display_type_section_line_computes_and_prepares(self):
+        # Selection line
+        line = self.env["sale.subscription.line"].create(
+            {
+                "company_id": 1,
+                "sale_subscription_id": self.sub1.id,
+                "display_type": "line_section",
+                "name": "Plans and prices",
+                "sequence": 5,
+            }
+        )
+
+        # Comptes: must be all zero or empty
+        self.assertEqual(line.price_unit, 0.0)
+        self.assertEqual(line.discount, 0.0)
+        self.assertEqual(line.price_subtotal, 0.0)
+        self.assertEqual(line.price_total, 0.0)
+        self.assertEqual(line.amount_tax_line_amount, 0.0)
+        self.assertFalse(line.tax_ids, "tax_ids must be empty with display_type")
+
+        # The name should not be overwritten by the product (it keeps what we set)
+        self.assertEqual(line.name, "Plans and prices")
+
+        # Prepare values: only display fields
+        so_vals = line._prepare_sale_order_line()
+        self.assertEqual(so_vals.get("display_type"), "line_section")
+        self.assertEqual(so_vals.get("name"), "Plans and prices")
+        self.assertEqual(so_vals.get("sequence"), 5)
+
+        # It should not include product/price keys
+        self.assertNotIn("product_id", so_vals)
+        self.assertNotIn("price_unit", so_vals)
+        self.assertNotIn("discount", so_vals)
+        self.assertNotIn("tax_id", so_vals)
+
+        aml_vals = line._prepare_account_move_line()
+        self.assertEqual(aml_vals.get("display_type"), "line_section")
+        self.assertEqual(aml_vals.get("name"), "Plans and prices")
+        self.assertEqual(aml_vals.get("sequence"), 5)
+        self.assertNotIn("product_id", aml_vals)
+        self.assertNotIn("price_unit", aml_vals)
+        self.assertNotIn("discount", aml_vals)
+        self.assertNotIn("tax_ids", aml_vals)
+
+    def test_display_type_note_line_computes_and_prepares(self):
+        # Note line
+        line = self.env["sale.subscription.line"].create(
+            {
+                "company_id": 1,
+                "sale_subscription_id": self.sub1.id,
+                "display_type": "line_note",
+                "name": "Note: discount applicable from the 2nd year",
+                "sequence": 15,
+            }
+        )
+        # Computes: zero / empty
+        self.assertEqual(line.price_unit, 0.0)
+        self.assertEqual(line.discount, 0.0)
+        self.assertEqual(line.price_subtotal, 0.0)
+        self.assertEqual(line.price_total, 0.0)
+        self.assertEqual(line.amount_tax_line_amount, 0.0)
+        self.assertFalse(line.tax_ids)
+
+        # Prepare values: only display fields
+        so_vals = line._prepare_sale_order_line()
+        self.assertEqual(so_vals.get("display_type"), "line_note")
+        self.assertEqual(
+            so_vals.get("name"), "Note: discount applicable from the 2nd year"
+        )
+        self.assertEqual(so_vals.get("sequence"), 15)
+        self.assertNotIn("product_id", so_vals)
+        self.assertNotIn("price_unit", so_vals)
+        self.assertNotIn("discount", so_vals)
+        self.assertNotIn("tax_id", so_vals)
+
+        aml_vals = line._prepare_account_move_line()
+        self.assertEqual(aml_vals.get("display_type"), "line_note")
+        self.assertEqual(
+            aml_vals.get("name"), "Note: discount applicable from the 2nd year"
+        )
+        self.assertEqual(aml_vals.get("sequence"), 15)
+        self.assertNotIn("product_id", aml_vals)
+        self.assertNotIn("price_unit", aml_vals)
+        self.assertNotIn("discount", aml_vals)
+        self.assertNotIn("tax_ids", aml_vals)
+
+    def test_display_type_toggle_from_normal_line(self):
+        # Start with a normal line (with product) so that there are imports > 0
+        line = self.create_sub_line(self.sub1, self.product_1.id)
+        self.assertGreater(line.price_subtotal, 0.0)
+        self.assertTrue(line.tax_ids)
+
+        # Now we convert it to a display line (note or section)
+        line.display_type = "line_note"
+        # Computes must be all zero/empty
+        self.assertEqual(line.price_unit, 0.0)
+        self.assertEqual(line.discount, 0.0)
+        self.assertEqual(line.price_subtotal, 0.0)
+        self.assertEqual(line.price_total, 0.0)
+        self.assertEqual(line.amount_tax_line_amount, 0.0)
+        self.assertFalse(line.tax_ids)
+
+        # Prepare vals have to be display
+        so_vals = line._prepare_sale_order_line()
+        self.assertEqual(so_vals.get("display_type"), "line_note")
+        self.assertIn("name", so_vals)
+        self.assertNotIn("product_id", so_vals)
+        self.assertNotIn("price_unit", so_vals)
+        self.assertNotIn("discount", so_vals)
+
+        aml_vals = line._prepare_account_move_line()
+        self.assertEqual(aml_vals.get("display_type"), "line_note")
+        self.assertIn("name", aml_vals)
+        self.assertNotIn("product_id", aml_vals)
+        self.assertNotIn("price_unit", aml_vals)
+        self.assertNotIn("discount", aml_vals)
+        self.assertNotIn("tax_ids", aml_vals)
