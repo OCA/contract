@@ -6,7 +6,6 @@ patch(SaleOrderLineProductField.prototype, {
         super.setup(...arguments);
         this.lastContractData = false;
     },
-
     get extraLines() {
         var res = super.extraLines;
         if (
@@ -21,14 +20,12 @@ patch(SaleOrderLineProductField.prototype, {
         }
         return res;
     },
-
     async _onProductUpdate() {
         super._onProductUpdate(...arguments);
         if (this.props.record.data.is_contract) {
             this._openContractConfigurator(true);
         }
     },
-
     _editProductConfiguration() {
         if (
             this.props.record.data.is_configurable_product &&
@@ -38,17 +35,14 @@ patch(SaleOrderLineProductField.prototype, {
         }
         super._editProductConfiguration(...arguments);
     },
-
     onEditContractConfiguration() {
         if (this.props.record.data.is_contract) {
             this._openContractConfigurator();
         }
     },
-
     get isConfigurableContract() {
         return this.props.record.data.is_contract;
     },
-
     get contractContext() {
         return {
             active_model: this.props.record.resModel,
@@ -66,13 +60,18 @@ patch(SaleOrderLineProductField.prototype, {
             default_date_start: this.props.record.data.date_start,
             default_date_end: this.props.record.data.date_end,
             default_is_auto_renew: this.props.record.data.is_auto_renew,
+            default_termination_notice_interval:
+                this.props.record.data.termination_notice_interval,
+            default_termination_notice_rule_type:
+                this.props.record.data.termination_notice_rule_type,
+            default_automatic_price: this.props.record.data.automatic_price,
             default_auto_renew_interval: this.props.record.data.auto_renew_interval,
+            default_manual_renew_needed: this.props.record.data.manual_renew_needed,
             default_auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
             default_contract_start_date_method:
                 this.props.record.data.contract_start_date_method,
         };
     },
-
     get contractData() {
         return {
             product_id: this.props.record.data.product_id,
@@ -82,11 +81,16 @@ patch(SaleOrderLineProductField.prototype, {
             date_start: this.props.record.data.date_start,
             date_end: this.props.record.data.date_end,
             is_auto_renew: this.props.record.data.is_auto_renew,
+            termination_notice_interval:
+                this.props.record.data.termination_notice_interval,
+            termination_notice_rule_type:
+                this.props.record.data.termination_notice_rule_type,
+            automatic_price: this.props.record.data.automatic_price,
             auto_renew_interval: this.props.record.data.auto_renew_interval,
+            manual_renew_needed: this.props.record.data.manual_renew_needed,
             auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
         };
     },
-
     async _openContractConfigurator(isNew = false) {
         if (this.lastContractData) {
             const changes = Object.assign({}, this.lastContractData);

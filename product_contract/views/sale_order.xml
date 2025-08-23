@@ -42,7 +42,7 @@
                     name="contract_id"
                     options='{"no_create": True}'
                     invisible="not is_contract"
-                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id),
                        ]"
                 />
                 <field
@@ -84,7 +84,6 @@
                 </group>
                 <group invisible="not is_contract">
                     <field name="is_auto_renew" />
-                    <field name="automatic_price" />
                 </group>
                 <group invisible="not is_auto_renew">
                     <label for="auto_renew_interval" />
@@ -103,15 +102,6 @@
                         />
                     </div>
                 </group>
-                <group invisible="not is_auto_renew">
-                    <label for="manual_renew_needed" />
-                    <div>
-                        <field
-                            name="manual_renew_needed"
-                            class="oe_inline"
-                        />
-                    </div>
-                </group>
             </xpath>
             <xpath
                 expr="//field[@name='order_line']/list//field[@name='price_total']"
@@ -122,7 +112,7 @@
                 <field
                     name="contract_id"
                     options='{"no_create": True}'
-                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id),
                     ]"
                     optional="hide"
                 />
@@ -144,17 +134,11 @@
                 />
                 <field name="date_end" optional="hide" />
                 <field name="is_auto_renew" optional="hide" />
-                <field name="automatic_price" optional="hide" />
                 <field
                     name="auto_renew_interval"
                     class="oe_inline"
                     nolabel="1"
                     required="is_auto_renew"
-                    optional="hide"
-                />
-                <field
-                    name="manual_renew_needed"
-                    class="oe_inline"
                     optional="hide"
                 />
                 <field

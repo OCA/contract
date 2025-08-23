@@ -265,15 +265,11 @@ class TestSaleOrder(TransactionCase):
         self.order_line1.contract_line_id = self.contract_line
         self.contract_line.date_end = Date.today() + relativedelta(months=4)
         self.contract_line.is_auto_renew = True
-        self.contract_line.automatic_price = True
-        self.contract_line.manual_renew_needed = True
         self.order_line1.date_start = "2018-06-01"
 
         self.sale.action_confirm()
         self.assertEqual(self.contract_line.date_end, Date.to_date("2018-05-31"))
         self.assertFalse(self.contract_line.is_auto_renew)
-        self.assertFalse(self.contract_line.automatic_price)
-        self.assertFalse(self.contract_line.manual_renew_needed)
         new_contract_line = self.env["contract.line"].search(
             [("sale_order_line_id", "=", self.order_line1.id)]
         )
@@ -307,11 +303,7 @@ class TestSaleOrder(TransactionCase):
                 "recurring_rule_type": "monthly",
                 "recurring_invoicing_type": "pre-paid",
                 "is_auto_renew": True,
-                "automatic_price": True,
-                "manual_renew_needed": True,
                 "recurrence_number": 12,
-                "termination_notice_interval": "6",
-                "termination_notice_rule_type": "weekly",
             }
         )
         self.contract_line.write(
@@ -327,12 +319,8 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(self.contract_line.recurring_invoicing_type, "pre-paid")
         self.assertEqual(self.contract_line.recurring_interval, 1)
         self.assertEqual(self.contract_line.is_auto_renew, True)
-        self.assertEqual(self.contract_line.automatic_price, True)
-        self.assertEqual(self.contract_line.manual_renew_needed, True)
         self.assertEqual(self.contract_line.auto_renew_interval, 1)
         self.assertEqual(self.contract_line.auto_renew_rule_type, "yearly")
-        self.assertEqual(self.contract_line.termination_notice_interval, 6)
-        self.assertEqual(self.contract_line.termination_notice_rule_type, "weekly")
 
     def test_action_show_contracts(self):
         self.sale.action_confirm()
@@ -341,21 +329,6 @@ class TestSaleOrder(TransactionCase):
             self.env["contract.contract"].search(action["domain"]),
             self.sale.order_line.mapped("contract_id"),
         )
-
-    def test_check_contact_is_not_terminated(self):
-        self.contract.is_terminated = True
-        with self.assertRaises(ValidationError):
-            self.order_line1.contract_id = self.contract
-
-    def test_check_contact_is_not_terminated_1(self):
-        self.order_line1.contract_id = self.contract
-        self.sale.action_confirm()
-        self.contract.is_terminated = True
-        self.sale._action_cancel()
-        with self.assertRaises(ValidationError):
-            self.sale.action_draft()
-        self.contract.is_terminated = False
-        self.sale.action_draft()
 
     def test_order_lines_with_the_same_contract_template(self):
         """It should create one contract with two lines grouped by contract

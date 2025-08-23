@@ -68,20 +68,6 @@
                             />
                         </div>
                     </group>
-                    <group invisible="is_auto_renew == False">
-                        <label for="manual_renew_needed" />
-                        <div>
-                            <field
-                                name="manual_renew_needed"
-                                class="oe_inline"
-                            />
-                        </div>
-                    </group>
-                </group>
-                <group string="Auto Price">
-                    <group>
-                        <field name="automatic_price" />
-                    </group>
                 </group>
                 <group
                     string="Dates"
@@ -102,7 +88,7 @@
                         <field
                             name="contract_id"
                             options='{"no_create": True}'
-                            domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id), ('is_terminated','=',False),
+                            domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id),
                         ]"
                         />
                     </group>

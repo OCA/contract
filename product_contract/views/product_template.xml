@@ -60,29 +60,10 @@
                             </div>
                         </group>
                     </group>
-                    <group>
-                        <group string="Renewal">
-                            <label for="is_auto_renew" string="Auto Renew" />
-                            <div class="o_row">
-                                <field
-                                    name="is_auto_renew"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
-                            </div>
+                    <group string="Renewal">
+                        <group colspan="2">
+                            <field name="is_auto_renew" />
                         </group>
-                        <group string="Auto Price">
-                            <label for="automatic_price" string="Auto Price" />
-                            <div class="o_row">
-                                <field
-                                    name="automatic_price"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                />
-                            </div>
-                        </group>
-                    </group>
-                    <group>
                         <group
                             invisible="is_auto_renew == False"
                             string="Renewal Frequency"
@@ -100,37 +81,6 @@
                                     class="oe_inline"
                                     nolabel="1"
                                     required="is_auto_renew == True"
-                                />
-                            </div>
-                        </group>
-                        <group
-                            invisible="is_auto_renew == False"
-                            string="Termination Notice"
-                        >
-                            <label for="termination_notice_interval" />
-                            <div>
-                                <field
-                                    name="termination_notice_interval"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                    required="is_auto_renew == True"
-                                />
-                                <field
-                                    name="termination_notice_rule_type"
-                                    class="oe_inline"
-                                    nolabel="1"
-                                    required="is_auto_renew == True"
-                                />
-                            </div>
-                        </group>
-                        <group
-                            invisible="is_auto_renew == False"
-                        >
-                            <label for="manual_renew_needed" />
-                            <div>
-                                <field
-                                    name="manual_renew_needed"
-                                    class="oe_inline"
                                 />
                             </div>
                         </group>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2025 Eska Yazılım ve Danışmanlık A.Ş (www.eskayazilim.com.tr)
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="product_template_form_contract_view" model="ir.ui.view">
+        <field name="name">account.invoice.select.contract.termination</field>
+        <field name="model">product.contract.configurator</field>
+        <field
+            name="inherit_id"
+            ref="product_contract.product_contract_configurator_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_id']" position="attributes">
+                <attribute
+                    name="domain"
+                >['|', ('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id), ('is_terminated','=',False), ]</attribute>
+            </xpath>
+            <xpath
+                expr="//label[@for='auto_renew_interval']/parent::group"
+                position="after"
+            >
+                <group invisible="not is_auto_renew">
+                    <label for="manual_renew_needed" />
+                    <div>
+                        <field name="manual_renew_needed" class="oe_inline" />
+                    </div>
+                </group>
+            </xpath>
+            <xpath
+                expr="//label[@for='auto_renew_interval']/parent::group/parent::group"
+                position="after"
+            >
+                <group invisible="not is_auto_renew" string="Termination Notice">
+                    <label for="termination_notice_interval" />
+                    <div class="o_row">
+                        <field
+                            name="termination_notice_interval"
+                            class="oe_inline"
+                            required="is_auto_renew"
+                        />
+                        <field
+                            name="termination_notice_rule_type"
+                            class="oe_inline"
+                            required="is_auto_renew"
+                        />
+                    </div>
+                </group>
+                <group string="Auto Price">
+                    <group>
+                        <field name="automatic_price" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

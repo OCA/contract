@@ -13,18 +13,6 @@ class SaleOrder(models.Model):
     contract_count = fields.Integer(compute="_compute_contract_count")
     need_contract_creation = fields.Boolean(compute="_compute_need_contract_creation")
 
-    @api.constrains("state")
-    def _check_contact_is_not_terminated(self):
-        for rec in self:
-            if rec.state not in (
-                "sale",
-                "done",
-                "cancel",
-            ) and rec.order_line.filtered("contract_id.is_terminated"):
-                raise ValidationError(
-                    _("You can't upsell or downsell a terminated contract")
-                )
-
     @api.depends("order_line.contract_id", "state")
     def _compute_need_contract_creation(self):
         self.update({"need_contract_creation": False})

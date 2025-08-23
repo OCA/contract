@@ -108,14 +108,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         store=True,
         readonly=False,
     )
-    automatic_price = fields.Boolean(
-        string="Auto Price",
-        compute="_compute_product_contract_data",
-        precompute=True,
-        default=False,
-        store=True,
-        readonly=False,
-    )
     auto_renew_interval = fields.Integer(
         default=1,
         string="Renew Every",
@@ -124,12 +116,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         store=True,
         readonly=False,
         help="Renew every (Days/Week/Month/Year)",
-    )
-    manual_renew_needed = fields.Boolean(
-        string="Manual Renenew Needed",
-        help="This flag is used to make a difference between a definitive stop"
-             "and temporary one for which a user is not able to plan a"
-             "successor in advance",
     )
     auto_renew_rule_type = fields.Selection(
         [
@@ -200,8 +186,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                 "auto_renew_interval": False,
                 "auto_renew_rule_type": False,
                 "contract_start_date_method": False,
-                "automatic_price": False,
-                "manual_renew_needed": False,
             }
             if rec.product_id.is_contract:
                 p = rec.product_id
@@ -215,8 +199,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                     "auto_renew_interval": p.auto_renew_interval,
                     "auto_renew_rule_type": p.auto_renew_rule_type,
                     "contract_start_date_method": p.contract_start_date_method,
-                    "automatic_price": p.automatic_price,
-                    "manual_renew_needed": p.manual_renew_needed,
                 }
             rec.update(vals)
 

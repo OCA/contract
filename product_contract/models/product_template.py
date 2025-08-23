@@ -60,29 +60,6 @@ class ProductTemplate(models.Model):
         "the service period.",
     )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
-    automatic_price = fields.Boolean(
-        string="Auto-price?",
-        default=False,
-        help=(
-            "If checked, the price will be taken from the pricelist. "
-            "Otherwise, it must be set manually."
-        ),
-    )
-    termination_notice_interval = fields.Integer(
-        default=1, string="Termination Notice Before"
-    )
-    manual_renew_needed = fields.Boolean(
-        string="Manual Renenew Needed",
-        default=False,
-        help="This flag is used to make a difference between a definitive stop"
-             "and temporary one for which a user is not able to plan a"
-             "successor in advance",
-    )
-    termination_notice_rule_type = fields.Selection(
-        [("daily", "Day(s)"), ("weekly", "Week(s)"), ("monthly", "Month(s)")],
-        default="monthly",
-        string="Termination Notice type",
-    )
     auto_renew_interval = fields.Integer(
         default=1,
         string="Renew Every",

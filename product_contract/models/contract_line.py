@@ -40,16 +40,6 @@ class ContractLine(models.Model):
                         "is_auto_renew": rec.product_id.is_auto_renew,
                         "auto_renew_interval": rec.product_id.auto_renew_interval,
                         "auto_renew_rule_type": rec.product_id.auto_renew_rule_type,
-                        "termination_notice_interval": (
-                            rec.product_id.termination_notice_interval
-                        ),
-                        "manual_renew_needed": (
-                            rec.product_id.manual_renew_needed
-                        ),
-                        "termination_notice_rule_type": (
-                            rec.product_id.termination_notice_rule_type
-                        ),
-                        "automatic_price": rec.product_id.automatic_price,
                     }
                 )
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2025 Eska Yazılım ve Danışmanlık A.Ş (www.eskayazilim.com.tr)
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="product_template_form_contract_termination_view" model="ir.ui.view">
+        <field name="name">product.template.contract.termination</field>
+        <field name="model">product.template</field>
+        <field
+            name="inherit_id"
+            ref="product_contract.product_template_form_contract_view"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//label[@for='auto_renew_interval']/parent::group"
+                position="after"
+            >
+                <group invisible="is_auto_renew == False" string="Termination Notice">
+                    <label for="termination_notice_interval" />
+                    <div>
+                        <field
+                            name="termination_notice_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="is_auto_renew == True"
+                        />
+                        <field
+                            name="termination_notice_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="is_auto_renew == True"
+                        />
+                    </div>
+                </group>
+                <group invisible="is_auto_renew == False">
+                    <label for="manual_renew_needed" />
+                    <div>
+                        <field name="manual_renew_needed" class="oe_inline" />
+                    </div>
+                </group>
+            </xpath>
+            <xpath
+                expr="//label[@for='auto_renew_interval']/parent::group/parent::group"
+                position="after"
+            >
+                <group string="Auto Price">
+                    <field name="automatic_price" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

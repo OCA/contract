@@ -19,17 +19,6 @@ class SaleOrderLine(models.Model):
     _name = "sale.order.line"
     _inherit = ["sale.order.line", "sale.order.line.contract.mixin"]
 
-    @api.constrains("contract_id")
-    def _check_contact_is_not_terminated(self):
-        for rec in self:
-            if (
-                rec.order_id.state not in ("sale", "done", "cancel")
-                and rec.contract_id.is_terminated
-            ):
-                raise ValidationError(
-                    _("You can't upsell or downsell a terminated contract")
-                )
-
     def _get_contract_line_qty(self):
         """Returns the amount that will be placed in new contract lines."""
         self.ensure_one()
@@ -56,8 +45,6 @@ class SaleOrderLine(models.Model):
             self.recurring_rule_type,
             1,
         )
-        termination_notice_interval = self.product_id.termination_notice_interval
-        termination_notice_rule_type = self.product_id.termination_notice_rule_type
         return {
             "sequence": self.sequence,
             "product_id": self.product_id.id,
@@ -75,14 +62,10 @@ class SaleOrderLine(models.Model):
             "is_auto_renew": self.is_auto_renew,
             "auto_renew_interval": self.auto_renew_interval,
             "auto_renew_rule_type": self.auto_renew_rule_type,
-            "termination_notice_interval": termination_notice_interval,
-            "manual_renew_needed": self.manual_renew_needed,
-            "termination_notice_rule_type": termination_notice_rule_type,
             "contract_id": contract.id,
             "sale_order_line_id": self.id,
             "predecessor_contract_line_id": predecessor_contract_line_id,
             "analytic_distribution": self.analytic_distribution,
-            "automatic_price": self.automatic_price,
         }
 
     def create_contract_line(self, contract):
