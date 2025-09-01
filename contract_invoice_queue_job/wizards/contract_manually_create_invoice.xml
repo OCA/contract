@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_manually_create_invoice_form_view">
+        <field name="model">contract.manually.create.invoice</field>
+        <field
+            name="inherit_id"
+            ref="contract.contract_manually_create_invoice_form_view"
+        />
+        <field name="arch" type="xml">
+            <button name="create_invoice" position="after">
+                <button
+                    name="create_invoice_batch"
+                    invisible="contract_to_invoice_count == 0"
+                    string="Batch Create Invoices"
+                    class="btn-secondary"
+                    type="object"
+                />
+            </button>
+        </field>
+    </record>
+</odoo>
