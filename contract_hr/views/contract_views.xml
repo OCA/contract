@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record id="contract_contract_form_view_inherit" model="ir.ui.view">
+            <field name="name">contract.contract.form.inherit.contract_hr</field>
+            <field name="model">contract.contract</field>
+            <field
+            name="inherit_id"
+            ref="contract.contract_contract_supplier_form_view"
+        />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='modications']" position="after">
+                    <page name="employee" string="Contractor/Freelancer">
+                        <group>s
+                            <field name="employee_id" />
+                            <field name="employee_type" />
+                            <field name="department_id" />
+                            <field name="job_id" />
+                            <field name="employee_name" />
+                            <field name="employee_work_email" />
+                            <field name="employee_work_phone" />
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
