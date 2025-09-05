@@ -12,7 +12,8 @@ class HrEmployee(models.Model):
         comodel_name="contract.contract",
         inverse_name="employee_id",
         string="Freelancer/Contractor Contracts",
-        domain="[('employee_id', '=', id), ('employee_type', 'in', ['freelance', 'contractor'])]",
+        domain="[('employee_id', '=', id), "
+        "('employee_type', 'in', ['freelance', 'contractor'])]",
     )
 
     contract_contract_count = fields.Integer(
@@ -24,7 +25,9 @@ class HrEmployee(models.Model):
         comodel_name="contract.contract",
         inverse_name="employee_id",
         string="Active Freelancer/Contractor Contracts",
-        domain="[('employee_id', '=', id), ('employee_type', 'in', ['freelance', 'contractor']), ('state', '=', 'open')]",
+        domain="[('employee_id', '=', id), "
+        "('employee_type', 'in', ['freelance', 'contractor']), "
+        "('state', '=', 'open')]",
     )
 
     active_contract_contract_count = fields.Integer(
