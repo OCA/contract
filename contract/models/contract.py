@@ -338,9 +338,11 @@ class ContractContract(models.Model):
 
     def recurring_create_invoice(self):
         """
+        Button action
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
+        self.ensure_one()
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
             body = Markup(
