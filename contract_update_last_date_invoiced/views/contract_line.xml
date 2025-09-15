@@ -9,15 +9,30 @@
         >contract.line.form (in contract_update_last_date_invoiced)</field>
         <field name="inherit_id" ref="contract.contract_line_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button
-                    name="action_update_last_date_invoiced"
-                    type="object"
-                    string="Update Last Date Invoiced"
-                    invisible="display_type"
-                    groups="contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced"
-                    class="oe_highlight"
-                />
+            <xpath expr="//field[@name='last_date_invoiced']" position="before">
+                <div class="o_row">
+                    <div class="last_date_invoiced_wrapper">
+                        <label for="last_date_invoiced" />
+                    </div>
+                    <button
+                        name="action_update_last_date_invoiced"
+                        type="object"
+                        string="Update Invoice Dates"
+                        invisible="display_type"
+                        groups="contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced"
+                        class="oe_inline btn-secondary"
+                        icon="fa-refresh"
+                    />
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='last_date_invoiced']" position="attributes">
+                <attribute name="class" add="oe_inline" separator=" " />
+            </xpath>
+            <xpath
+                expr="//div[hasclass('last_date_invoiced_wrapper')]"
+                position="inside"
+            >
+                <xpath expr="//field[@name='last_date_invoiced']" position="move" />
             </xpath>
         </field>
     </record>

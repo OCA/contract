@@ -43,7 +43,9 @@ class TestContractLine(BaseCommon):
     def test_update_last_date_invoiced(self):
         new_last_date = date(2024, 2, 15)  # Convert to date
         new_next_date = date(2024, 3, 15)
-        self.contract_line._update_last_date_invoiced(new_last_date, new_next_date)
+        self.contract_line._update_contract_last_date_invoiced(
+            new_last_date, new_next_date
+        )
         self.assertEqual(self.contract_line.last_date_invoiced, new_last_date)
         self.assertEqual(self.contract_line.recurring_next_date, new_next_date)
 

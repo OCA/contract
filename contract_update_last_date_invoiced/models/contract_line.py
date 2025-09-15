@@ -17,7 +17,7 @@ class ContractLine(models.Model):
         context.update(self.env.context)
         return {
             "type": "ir.actions.act_window",
-            "name": _("Update Last Date Invoiced"),
+            "name": _("Update Invoice Dates"),
             "res_model": "contract.update.last.date.invoiced",
             "view_type": "form",
             "view_mode": "form",
@@ -25,7 +25,9 @@ class ContractLine(models.Model):
             "context": context,
         }
 
-    def _update_last_date_invoiced(self, last_date_invoiced, recurring_next_date):
+    def _update_contract_last_date_invoiced(
+        self, last_date_invoiced, recurring_next_date
+    ):
         self.write(
             {
                 "last_date_invoiced": last_date_invoiced,
