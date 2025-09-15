@@ -13,6 +13,7 @@ setuptools.setup(
         'odoo-addon-contract_analytic_tag>=16.0dev,<16.1dev',
         'odoo-addon-contract_invoice_start_end_dates>=16.0dev,<16.1dev',
         'odoo-addon-contract_mandate>=16.0dev,<16.1dev',
+        'odoo-addon-contract_payment_auto>=16.0dev,<16.1dev',
         'odoo-addon-contract_payment_mode>=16.0dev,<16.1dev',
         'odoo-addon-contract_queue_job>=16.0dev,<16.1dev',
         'odoo-addon-contract_sale>=16.0dev,<16.1dev',
