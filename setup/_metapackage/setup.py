@@ -18,6 +18,7 @@ setuptools.setup(
         'odoo-addon-contract_queue_job>=16.0dev,<16.1dev',
         'odoo-addon-contract_sale>=16.0dev,<16.1dev',
         'odoo-addon-contract_sale_generation>=16.0dev,<16.1dev',
+        'odoo-addon-contract_sale_invoicing_pricelist>=16.0dev,<16.1dev',
         'odoo-addon-contract_update_last_date_invoiced>=16.0dev,<16.1dev',
         'odoo-addon-contract_variable_qty_timesheet>=16.0dev,<16.1dev',
         'odoo-addon-contract_variable_quantity>=16.0dev,<16.1dev',
