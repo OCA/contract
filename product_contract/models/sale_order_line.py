@@ -241,6 +241,7 @@ class SaleOrderLine(models.Model):
                             line.product_id[f"force_month_{line.recurrence_interval}"]
                         )
                         date_text += f" ({force_month_label})"
+
                 field_info = dict(
                     self._fields["recurrence_interval"].get_description(self.env)
                 )

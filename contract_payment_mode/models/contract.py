@@ -17,6 +17,8 @@ class ContractContract(models.Model):
     @api.depends("partner_id", "contract_type")
     def _compute_payment_mode_id(self):
         for rec in self:
+            if rec.payment_mode_id:
+                continue
             partner = rec.with_company(rec.company_id).partner_id
             if rec.contract_type == "purchase":
                 rec.payment_mode_id = partner.supplier_payment_mode_id.id
