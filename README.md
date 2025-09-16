@@ -24,6 +24,7 @@ addon | version | maintainers | summary
 [agreement_rebate_partner_company_group](agreement_rebate_partner_company_group/) | 16.0.1.0.0 |  | Rebate agreements applied to all company group members
 [contract](contract/) | 16.0.2.14.3 |  | Recurring - Contracts Management
 [contract_analytic_tag](contract_analytic_tag/) | 16.0.1.0.0 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Contract Analytic Tag
+[contract_forecast](contract_forecast/) | 16.0.1.0.0 |  | Contract forecast
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 16.0.1.0.0 | <a href='https://github.com/florian-dacosta'><img src='https://github.com/florian-dacosta.png' width='32' height='32' style='border-radius:50%;' alt='florian-dacosta'/></a> | Contract Invoice Start End Dates
 [contract_mandate](contract_mandate/) | 16.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_auto](contract_payment_auto/) | 16.0.1.0.0 |  | Adds automatic payments to contracts.
