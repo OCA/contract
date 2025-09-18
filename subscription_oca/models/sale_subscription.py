@@ -339,6 +339,7 @@ class SaleSubscription(models.Model):
                         composition_mode="comment",
                         email_layout_xmlid="mail.mail_notification_paynow",
                     )
+                    invoice.write({"is_move_sent": True})
                 invoice_number = invoice.name
                 message_body = (
                     "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"

@@ -506,6 +506,7 @@ class TestSubscriptionOCA(TransactionCase):
         subscription.generate_invoice()
         subscription.template_id.invoicing_mode = "invoice_send"
         subscription.generate_invoice()
+        self.assertEqual(1, len(subscription.invoice_ids.filtered("is_move_sent")))
         subscription.template_id.invoicing_mode = "sale_and_invoice"
         order = subscription.create_sale_order()
         order.with_context(uid=1).action_confirm()
