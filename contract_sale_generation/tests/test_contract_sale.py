@@ -4,11 +4,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon, to_date
 
 
+@tagged("post_install", "-at_install")
 class TestContractSale(ContractSaleCommon, TransactionCase):
     def test_check_discount(self):
         with self.assertRaises(ValidationError):

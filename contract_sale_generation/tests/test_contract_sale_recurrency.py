@@ -4,7 +4,7 @@
 from freezegun.api import freeze_time
 
 from odoo import fields
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 from .common import ContractSaleCommon
@@ -12,6 +12,7 @@ from .common import ContractSaleCommon
 today = "2020-01-15"
 
 
+@tagged("post_install", "-at_install")
 class TestContractSale(ContractSaleCommon, TransactionCase):
     @classmethod
     def setUpClass(cls):

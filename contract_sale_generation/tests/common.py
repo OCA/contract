@@ -5,14 +5,13 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
-@tagged("post_install", "-at_install")
 class ContractSaleCommon:
     # Use case : Prepare some data for current test case
 
