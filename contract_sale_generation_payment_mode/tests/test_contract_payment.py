@@ -1,8 +1,14 @@
+# SPDX-FileCopyrightText: 2025 Coop IT Easy SC
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.contract_sale_generation.tests.common import ContractSaleCommon
 
 
+@tagged("post_install", "-at_install")
 class TestContractSaleGenerationPaymentMode(ContractSaleCommon, TransactionCase):
     @classmethod
     def setUpClass(cls):
