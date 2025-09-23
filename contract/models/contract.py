@@ -243,7 +243,10 @@ class ContractContract(models.Model):
                     field.name in self.NO_SYNC,
                 )
             ):
-                if self.contract_template_id[field_name]:
+                if (
+                    self.contract_template_id[field_name]
+                    and self.contract_template_id[field_name] != self[field_name]
+                ):
                     self[field_name] = self.contract_template_id[field_name]
 
     @api.onchange("partner_id", "company_id")
