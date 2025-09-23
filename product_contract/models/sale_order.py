@@ -58,6 +58,7 @@ class SaleOrder(models.Model):
             "fiscal_position_id": self.fiscal_position_id.id,
             "invoice_partner_id": self.partner_invoice_id.id,
             "line_recurrence": True,
+            "contract_type": "sale",
         }
 
     def action_create_contract(self):
