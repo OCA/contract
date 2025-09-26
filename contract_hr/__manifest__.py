@@ -11,8 +11,10 @@
     "depends": ["contract", "hr_contract"],
     "development_status": "Alpha",
     "data": [
+        "security/ir.model.access.csv",
         "views/contract_views.xml",
         "views/hr_employee_views.xml",
+        "wizards/contract_invoice_period_wizard.xml",
     ],
     "installable": True,
     "auto_install": False,

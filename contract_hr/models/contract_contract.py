@@ -46,6 +46,11 @@ class ContractContract(models.Model):
         readonly=True,
     )
 
+    recurring_invoicing_type = fields.Selection(
+        selection_add=[("timesheet", "Based on Timesheet")],
+        ondelete={"timesheet": "set default"},
+    )
+
     @api.onchange("employee_id")
     def _onchange_employee_id(self):
         """Update department and job when employee changes"""
@@ -55,3 +60,45 @@ class ContractContract(models.Model):
         else:
             self.department_id = False
             self.job_id = False
+
+    def calculate_total_hours(self, date_start, date_end):
+        if self.recurring_invoicing_type != "timesheet":
+            return
+        product = self.env.ref("sale_timesheet.time_product")
+        for contract in self:
+            timesheet_contract_line = contract.contract_line_ids.filtered(
+                lambda l: l.product_id == product
+            )
+            if timesheet_contract_line:
+                hours = self.env["account.analytic.line"].search(
+                    [
+                        ("employee_id", "=", contract.employee_id.id),
+                        ("date_time", ">=", date_start),
+                        ("date_time", "<=", date_end),
+                    ]
+                )
+                total_hours = sum(hours.mapped("unit_amount"))
+                timesheet_contract_line.write({"quantity": total_hours})
+
+    def recurring_create_invoice(self):
+        if self.recurring_invoicing_type == "timesheet":
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Generate Invoice by Period",
+                "res_model": "contract.invoice.period.wizard",
+                "view_mode": "form",
+                "target": "new",
+                "context": {"default_contract_id": self.id},
+            }
+        return super().recurring_create_invoice()
+
+    def _recurring_create_invoice_super(self):
+        return super().recurring_create_invoice()
+
+    class ContractLine(models.Model):
+        _inherit = "contract.line"
+
+        recurring_invoicing_type = fields.Selection(
+            selection_add=[("timesheet", "Based on Timesheet")],
+            ondelete={"timesheet": "set default"},
+        )
