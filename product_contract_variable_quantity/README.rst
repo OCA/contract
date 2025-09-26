@@ -57,7 +57,7 @@ Authors
 Contributors
 ------------
 
-- Souheil Bejaoui souheil.bejaoui@acsone.eu
+-  Souheil Bejaoui souheil.bejaoui@acsone.eu
 
 Maintainers
 -----------
