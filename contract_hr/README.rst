@@ -56,10 +56,13 @@ Prerequisites:
 * Your user should have HR Contract Manager permissions to access contract management features
 
 Configuration Steps:
+
 #. Install the module from Apps menu
 #. Ensure you have proper user permissions:
+
    * HR Contract Manager group for full contract management access
    * HR User group for basic employee management
+
 #. Configure employee types in HR settings if needed
 #. Set up departments and job positions for proper contract organization
 
