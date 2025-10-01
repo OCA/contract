@@ -709,16 +709,9 @@ class TestContract(TestContractBase):
             max_date_end,
         ):
             return (
-                "Error in %s-%d every %d %s case, "
-                "start with %s (max_date_end=%s)"
-                % (
-                    recurring_invoicing_type,
-                    recurring_invoicing_offset,
-                    recurring_interval,
-                    recurring_rule_type,
-                    date_start,
-                    max_date_end,
-                )
+                f"Error in {recurring_invoicing_type}-{recurring_invoicing_offset} "
+                f"every {recurring_interval} {recurring_rule_type} case, "
+                f"start with {date_start} (max_date_end={max_date_end})"
             )
 
         combinations = [
