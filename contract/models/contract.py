@@ -501,12 +501,10 @@ class ContractContract(models.Model):
             raise ValidationError(
                 self.env._(
                     "Please define a %(contract_type)s journal "
-                    "for the company '%(company)s'."
+                    "for the company '%(company)s'.",
+                    contract_type=self.contract_type,
+                    company=self.company_id.name or "",
                 )
-                % {
-                    "contract_type": self.contract_type,
-                    "company": self.company_id.name or "",
-                }
             )
         invoice_type = (
             "in_invoice" if self.contract_type == "purchase" else "out_invoice"
