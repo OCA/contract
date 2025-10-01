@@ -6,6 +6,8 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import json
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -42,10 +44,8 @@ class ContractTemplateLine(models.Model):
         readonly=False,
     )
     quantity = fields.Float(default=1.0, required=True)
-    product_uom_category_id = fields.Many2one(
-        comodel_name="uom.category",
-        related="product_id.uom_id.category_id",
-        readonly=True,
+    uom_id_domain = fields.Binary(
+        compute="_compute_uom_id_domain",
     )
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -53,7 +53,7 @@ class ContractTemplateLine(models.Model):
         store=True,
         readonly=False,
         string="Unit of Measure",
-        domain="[('category_id', '=', product_uom_category_id)]",
+        domain="uom_id_domain",
     )
 
     # === Pricing ===
@@ -153,12 +153,40 @@ class ContractTemplateLine(models.Model):
                 )
                 line.name = product.get_product_multiline_description_sale()
 
-    @api.depends("product_id")
+    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids")
+    def _compute_uom_id_domain(self):
+        for record in self:
+            if record.product_id:
+                allowed_uoms = record.product_id.uom_id | record.product_id.uom_ids
+                allowed_ids = allowed_uoms.ids
+                if allowed_ids:
+                    record.uom_id_domain = json.dumps([("id", "in", allowed_ids)])
+                else:
+                    record.uom_id_domain = json.dumps([("id", "=", False)])
+            else:
+                record.uom_id_domain = json.dumps([("id", "=", False)])
+
+    @api.depends("product_id", "product_id.uom_id")
     def _compute_uom_id(self):
         for line in self:
-            if not line.uom_id or (
-                line.product_id.uom_id.category_id.id != line.uom_id.category_id.id
-            ):
+            if not line.product_id:
+                line.uom_id = False
+                continue
+            if line.uom_id_domain:
+                domain = json.loads(line.uom_id_domain)
+                allowed_ids = []
+                for clause in domain:
+                    if isinstance(clause, (list, tuple)) and len(clause) == 3:
+                        if clause[0] == "id" and clause[1] == "in":
+                            allowed_ids = clause[2]
+                            break
+                if allowed_ids and line.product_id.uom_id.id in allowed_ids:
+                    line.uom_id = line.product_id.uom_id
+                elif allowed_ids:
+                    line.uom_id = allowed_ids[0]
+                else:
+                    line.uom_id = False
+            else:
                 line.uom_id = line.product_id.uom_id
 
     @api.depends("contract_id.contract_type")

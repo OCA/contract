@@ -50,6 +50,7 @@ class TestContractManuallyCreateInvoice(TestContractBase):
 
         accounts = self.product_1.product_tmpl_id.get_product_accounts()
         accounts["income"].account_type = "off_balance"
+        accounts["income"].active = False  # To trigger a UserError
 
         for _i in range(3):
             contracts |= self.contract.copy()

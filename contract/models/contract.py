@@ -13,7 +13,6 @@ from markupsafe import Markup
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -266,7 +265,6 @@ class ContractContract(models.Model):
                 (
                     field.compute,
                     field.related,
-                    field.automatic,
                     field.readonly,
                     field.company_dependent,
                     field.name in self.NO_SYNC,
@@ -452,7 +450,9 @@ class ContractContract(models.Model):
         )
         # we are forced to always search for this for not losing possible <=v11
         # generated invoices
-        invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
+        invoices |= self.env["account.move"].search(
+            [("old_contract_id", "=", self.ids)]
+        )
         return invoices
 
     def _get_computed_currency(self):
@@ -549,12 +549,11 @@ class ContractContract(models.Model):
         This method builds the domain to use to find all
         contracts (contract.contract) to invoice.
         :param date_ref: optional reference date to use instead of today
-        :return: list (domain) usable on contract.contract
+        :return: Domain object usable on contract.contract
         """
-        domain = []
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain.extend([("recurring_next_date", "<=", date_ref)])
+        domain = fields.Domain([("recurring_next_date", "<=", date_ref)])
         return domain
 
     def _get_lines_to_invoice(self, date_ref):
@@ -682,7 +681,7 @@ class ContractContract(models.Model):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain = expression.AND(
+        domain = fields.Domain.AND(
             [
                 domain,
                 [("generation_type", "=", create_type)],
