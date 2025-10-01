@@ -16,7 +16,8 @@
                 <a
                     t-if="contract"
                     t-attf-href="/my/contracts?{{ keep_query() }}"
-                >Contracts</a>
+                >Contracts
+                </a>
                 <t t-else="">Contracts</t>
             </li>
             <li t-if="contract" class="breadcrumb-item active">
@@ -87,7 +88,7 @@
     </template>
     <template id="portal_contract_page" name="My Contract">
         <t t-call="portal.portal_layout">
-            <t groups="account.group_account_invoice">
+            <t t-set="o_portal_fullwidth_alert" groups="account.group_account_invoice">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t
                         t-set="backend_url"
@@ -97,8 +98,9 @@
             </t>
             <h5 class="mb-0">
                 <span>
-                            Contract - <span t-field="contract.name" />
-                        </span>
+                    Contract -
+                    <span t-field="contract.name" />
+                </span>
             </h5>
             <div id="general_information">
                 <div class="row mt4">
@@ -203,26 +205,25 @@
                             <tr>
                                 <th name="th_name" class="text-left">Description</th>
                                 <th name="th_quantity" class="text-right">Quantity</th>
-                                <th
-                                    name="th_price_unit"
-                                    class="text-right"
-                                >Price unit</th>
-                                <th
-                                    name="th_discount"
-                                    class="text-right"
-                                >Discount (%)</th>
+                                <th name="th_price_unit" class="text-right">Price unit
+                                </th>
+                                <th name="th_discount" class="text-right">Discount (%)
+                                </th>
                                 <th
                                     name="th_price_subtotal"
                                     class="text-right"
-                                >Sub Total</th>
+                                >Sub Total
+                                </th>
                                 <th
                                     name="th_recurring_interval"
                                     class="text-right"
-                                >Recurrence</th>
+                                >Recurrence
+                                </th>
                                 <th
                                     name="th_recurring_next_date"
                                     class="text-right"
-                                >Date of next invoice</th>
+                                >Date of next invoice
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="contract_tbody">
