@@ -146,7 +146,7 @@ class SaleSubscription(models.Model):
                         logger.exception("Error on subscription invoice generate")
                 if not subscription.recurring_rule_boundary:
                     if subscription.date == today:
-                        subscription.action_close_subscription()
+                        subscription.close_subscription()
 
             else:
                 if subscription.date_start == today:
@@ -232,6 +232,14 @@ class SaleSubscription(models.Model):
             [("type", "=", "in_progress")], limit=1
         )
         self.stage_id = in_progress_stage
+
+    def close_subscription(self):
+        self.recurring_next_date = False
+        context = dict(self.env.context)
+        context.update({"active_id": self.id})
+        self.env["close.reason.wizard"].with_context(**context).create(
+            {}
+        ).button_confirm()
 
     def action_close_subscription(self):
         self.recurring_next_date = False
