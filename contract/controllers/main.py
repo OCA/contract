@@ -1,7 +1,7 @@
 # Copyright 2020-2022 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 
@@ -50,12 +50,15 @@ class PortalContract(CustomerPortal):
             return request.redirect("/my")
         domain = self._get_filter_domain(kw)
         searchbar_sortings = {
-            "date": {"label": _("Date"), "order": "recurring_next_date desc"},
-            "name": {"label": _("Name"), "order": "name desc"},
-            "code": {"label": _("Reference"), "order": "code desc"},
+            "date": {
+                "label": request.env._("Date"),
+                "order": "recurring_next_date desc",
+            },
+            "name": {"label": request.env._("Name"), "order": "name desc"},
+            "code": {"label": request.env._("Reference"), "order": "code desc"},
         }
         # default sort by order
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = "date"
         order = searchbar_sortings[sortby]["order"]
         # count for pager

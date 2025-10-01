@@ -38,12 +38,12 @@ class ContractLine(models.Model):
         string="Contract",
         required=True,
         index=True,
-        auto_join=True,
+        bypass_search_access=True,
         ondelete="cascade",
     )
     # replace from abstract to add the store=True
     partner_id = fields.Many2one(store=True)
-    currency_id = fields.Many2one(related="contract_id.currency_id")
+    currency_id = fields.Many2one(related="contract_id.currency_id", store=True)
     create_invoice_visibility = fields.Boolean(
         compute="_compute_create_invoice_visibility"
     )
@@ -321,6 +321,7 @@ class ContractLine(models.Model):
         compute="_compute_monthly_recurring",
         store=True,
         currency_field="currency_id",
+        aggregator="sum",
     )
 
     @api.depends(

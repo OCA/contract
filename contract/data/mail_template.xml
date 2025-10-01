@@ -2,9 +2,7 @@
 <odoo noupdate="1">
     <record id="email_contract_template" model="mail.template">
         <field name="name">Email Contract Template</field>
-        <field
-            name="email_from"
-        >{{ (object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '') }}</field>
+        <field name="email_from">{{ object.user_id.email_formatted or '' }}</field>
         <field
             name="subject"
         >{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})</field>
@@ -102,9 +100,7 @@
     </record>
     <record id="mail_template_contract_modification" model="mail.template">
         <field name="name">Contract Modification Template</field>
-        <field
-            name="email_from"
-        >{{ (object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '') }}</field>
+        <field name="email_from">{{ object.user_id.email_formatted or '' }}</field>
         <field
             name="subject"
         >{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - Modifications</field>

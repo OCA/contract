@@ -13,7 +13,6 @@ from markupsafe import Markup
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -258,6 +257,7 @@ class ContractContract(models.Model):
         contract_template_id = self.contract_template_id
         if not contract_template_id:
             return
+        self.line_recurrence = True
         for field_name, field in contract_template_id._fields.items():
             if field.name == "contract_line_ids":
                 lines = self._convert_contract_lines(contract_template_id)
@@ -266,7 +266,6 @@ class ContractContract(models.Model):
                 (
                     field.compute,
                     field.related,
-                    field.automatic,
                     field.readonly,
                     field.company_dependent,
                     field.name in self.NO_SYNC,
@@ -286,9 +285,10 @@ class ContractContract(models.Model):
             else self.partner_id.with_company(self.company_id)
         )
         self.pricelist_id = partner.property_product_pricelist.id
+        fiscal_partner = partner.commercial_partner_id or partner
         self.fiscal_position_id = partner.env[
             "account.fiscal.position"
-        ]._get_fiscal_position(partner)
+        ]._get_fiscal_position(fiscal_partner)
         if self.contract_type == "purchase":
             self.payment_term_id = partner.property_supplier_payment_term_id
         else:
@@ -546,12 +546,11 @@ class ContractContract(models.Model):
         This method builds the domain to use to find all
         contracts (contract.contract) to invoice.
         :param date_ref: optional reference date to use instead of today
-        :return: list (domain) usable on contract.contract
+        :return: Domain object usable on contract.contract
         """
-        domain = []
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain.extend([("recurring_next_date", "<=", date_ref)])
+        domain = fields.Domain([("recurring_next_date", "<=", date_ref)])
         return domain
 
     def _get_lines_to_invoice(self, date_ref):
@@ -679,7 +678,7 @@ class ContractContract(models.Model):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain = expression.AND(
+        domain = fields.Domain.AND(
             [
                 domain,
                 [("generation_type", "=", create_type)],

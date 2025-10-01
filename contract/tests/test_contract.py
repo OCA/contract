@@ -11,14 +11,16 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, common
+from odoo.tests import Form, new_test_user
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractBase(common.TransactionCase):
+class TestContractBase(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -33,8 +35,26 @@ class TestContractBase(common.TransactionCase):
                 "email": "demo@demo.com",
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_1")
-        cls.product_2 = cls.env.ref("product.product_product_2")
+        cls.product_1 = cls.env["product.product"].create(
+            {
+                "name": "Virtual Interior Design",
+                "categ_id": cls.env.ref("product.product_category_services").id,
+                "standard_price": 20.5,
+                "list_price": 30.75,
+                "type": "service",
+            }
+        )
+        cls.product_2 = cls.env["product.product"].create(
+            {
+                "name": "Virtual Home Staging",
+                "categ_id": cls.env.ref(
+                    "product.product_category_services", raise_if_not_found=False
+                ).id,
+                "standard_price": 25.5,
+                "list_price": 38.25,
+                "type": "service",
+            }
+        )
         cls.product_1.taxes_id += cls.env["account.tax"].search(
             [
                 ("type_tax_use", "=", "sale"),
@@ -1376,13 +1396,13 @@ class TestContract(TestContractBase):
     def test_multicompany_partner_edited(self):
         """Editing a partner with contracts in several companies works."""
         company2 = self.env["res.company"].create({"name": "Company 2"})
-        unprivileged_user = self.env["res.users"].create(
-            {
-                "name": "unprivileged test user",
-                "login": "test",
-                "company_id": company2.id,
-                "company_ids": [(4, company2.id, False)],
-            }
+        unprivileged_user = new_test_user(
+            self.env,
+            login="test",
+            groups="base.group_user,base.group_partner_manager",
+            company_id=company2.id,
+            company_ids=[(4, company2.id, False)],
+            name="unprivileged test user",
         )
         parent_partner = self.env["res.partner"].create(
             {"name": "parent partner", "is_company": True}
