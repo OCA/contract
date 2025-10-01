@@ -42,10 +42,9 @@ class ContractTemplateLine(models.Model):
         readonly=False,
     )
     quantity = fields.Float(default=1.0, required=True)
-    product_uom_category_id = fields.Many2one(
-        comodel_name="uom.category",
-        related="product_id.uom_id.category_id",
-        readonly=True,
+    allowed_uom_ids = fields.Many2many(
+        comodel_name="uom.uom",
+        compute="_compute_allowed_uom_ids",
     )
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -53,7 +52,7 @@ class ContractTemplateLine(models.Model):
         store=True,
         readonly=False,
         string="Unit of Measure",
-        domain="[('category_id', '=', product_uom_category_id)]",
+        domain="[('id', 'in', allowed_uom_ids)]",
     )
 
     # === Pricing ===
@@ -153,12 +152,19 @@ class ContractTemplateLine(models.Model):
                 )
                 line.name = product.get_product_multiline_description_sale()
 
-    @api.depends("product_id")
+    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids")
+    def _compute_allowed_uom_ids(self):
+        for record in self:
+            record.allowed_uom_ids = (
+                record.product_id.uom_id | record.product_id.uom_ids
+            )
+
+    @api.depends("product_id", "product_id.uom_id")
     def _compute_uom_id(self):
         for line in self:
-            if not line.uom_id or (
-                line.product_id.uom_id.category_id.id != line.uom_id.category_id.id
-            ):
+            if not line.product_id:
+                line.uom_id = False
+            elif not line.uom_id or line.uom_id not in line.allowed_uom_ids:
                 line.uom_id = line.product_id.uom_id
 
     @api.depends("contract_id.contract_type")
