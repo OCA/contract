@@ -28,23 +28,24 @@ class ResPartner(models.Model):
 
     def _compute_contract_count(self):
         contract_model = self.env["contract.contract"]
-        fetch_data = contract_model.read_group(
-            self._get_partner_contract_domain(),
-            ["partner_id", "contract_type"],
-            ["partner_id", "contract_type"],
-            lazy=False,
+        fetch_data = contract_model.formatted_read_group(
+            domain=[("partner_id", "in", self.ids)],
+            groupby=["partner_id", "contract_type"],
+            aggregates=["__count"],
         )
-        result = [
-            [data["partner_id"][0], data["contract_type"], data["__count"]]
-            for data in fetch_data
-        ]
         for partner in self:
             partner_child_ids = partner.child_ids.ids + partner.ids
             partner.sale_contract_count = sum(
-                r[2] for r in result if r[0] in partner_child_ids and r[1] == "sale"
+                d["__count"]
+                for d in fetch_data
+                if d["partner_id"][0] in partner_child_ids
+                and d["contract_type"] == "sale"
             )
             partner.purchase_contract_count = sum(
-                r[2] for r in result if r[0] in partner_child_ids and r[1] == "purchase"
+                d["__count"]
+                for d in fetch_data
+                if d["partner_id"][0] in partner_child_ids
+                and d["contract_type"] == "purchase"
             )
 
     def act_show_contract(self):
@@ -52,7 +53,7 @@ class ResPartner(models.Model):
         @return: the contract view
         """
         self.ensure_one()
-        contract_type = self._context.get("contract_type")
+        contract_type = self.env.context.get("contract_type")
 
         res = self._get_act_window_contract_xml(contract_type)
         action_context = {k: v for k, v in self.env.context.items() if k != "group_by"}
