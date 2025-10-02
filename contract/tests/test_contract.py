@@ -1557,3 +1557,39 @@ class TestContract(TestContractBase):
         self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
         invoice_id = self.contract3.recurring_create_invoice()
         self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
+
+    def test_analytic_account(self):
+        """Tests the automatic setting of the analytic account on the contract
+        depending on the analytic accounts set on the contract lines.
+        # Case 1: only one contract line with one analytic account
+            => the analytic account is set on the contract
+        # Case 2: only one contract line with two analytic accounts
+            => the analytic account is not set on the contract
+        # Case 3: two contract lines, with the same analytic account
+            => the analytic account is set on the contract
+        # Case 4: two contract lines, each one with one analytic account
+            => the analytic account is not set on the contract
+        """
+        plan = self.env["account.analytic.plan"].create({"name": "Test plan contract"})
+        self.analytic_account_1 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 1", "plan_id": plan.id}
+        )
+        self.analytic_account_2 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 2", "plan_id": plan.id}
+        )
+        # Case 1: only one contract line with one analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 2: only one contract line with two analytic accounts
+        self.acct_line.analytic_distribution = {
+            self.analytic_account_1.id: 50,
+            self.analytic_account_2.id: 50,
+        }
+        self.assertFalse(self.contract.group_id)
+        # Case 3: two contract lines, with the same analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        new_contract_line = self.acct_line.copy()
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 4: two contract lines, each one with one analytic account
+        new_contract_line.analytic_distribution = {self.analytic_account_2.id: 100}
+        self.assertFalse(self.contract.group_id)
