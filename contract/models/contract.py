@@ -39,6 +39,9 @@ class ContractContract(models.Model):
     group_id = fields.Many2one(
         string="Group",
         comodel_name="account.analytic.account",
+        compute="_compute_group_id",
+        store=True,
+        readonly=False,
         ondelete="restrict",
     )
     currency_id = fields.Many2one(
@@ -138,6 +141,32 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         string="Modifications",
     )
+
+    @api.depends(
+        "contract_line_ids",
+        "contract_line_ids.analytic_distribution",
+        "contract_line_fixed_ids",
+        "contract_line_fixed_ids.analytic_distribution",
+    )
+    def _compute_group_id(self):
+        """Compute the group_id based on the analytic_distribution
+        in the contract lines.
+        If all contract lines have the same analytic account, set it as group_id.
+        Otherwise, set group_id to False.
+        """
+        for record in self:
+            record.group_id = False
+            all_analytic_accounts = []
+            contract_lines = record.contract_line_ids | record.contract_line_fixed_ids
+            for line in contract_lines:
+                if line.analytic_distribution:
+                    all_analytic_accounts.extend(
+                        int(acc_id)
+                        for account_ids in line.analytic_distribution.keys()
+                        for acc_id in account_ids.split(",")
+                    )
+            if len(set(all_analytic_accounts)) == 1:
+                record.group_id = all_analytic_accounts[0]
 
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
