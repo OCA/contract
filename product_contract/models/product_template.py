@@ -167,3 +167,55 @@ class ProductTemplate(models.Model):
         """
         if any([product.is_contract and product.type != "service" for product in self]):
             raise ValidationError(_("Contract product should be service type"))
+
+    @api.constrains("recurrence_number")
+    def _check_recurrence_number_is_strictly_positive(self):
+        for product in self:
+            if not product.is_contract:
+                return
+            if product.recurrence_number <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        product._fields["recurrence_number"].string,
+                    )
+                )
+
+    @api.constrains("recurring_interval")
+    def _check_recurring_interval_is_strictly_positive(self):
+        for product in self:
+            if not product.is_contract:
+                return
+            if product.recurring_interval <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        product._fields["recurring_interval"].string,
+                    )
+                )
+
+    @api.constrains("auto_renew_interval")
+    def _check_auto_renew_interval_is_strictly_positive(self):
+        for product in self:
+            if not product.is_contract or not product.is_auto_renew:
+                return
+            if product.auto_renew_interval <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        product._fields["auto_renew_interval"].string,
+                    )
+                )
+
+    @api.constrains("termination_notice_interval")
+    def _check_termination_notice_interval_is_positive(self):
+        for product in self:
+            if not product.is_contract or not product.is_auto_renew:
+                return
+            if product.termination_notice_interval < 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be positive",
+                        product._fields["termination_notice_interval"].string,
+                    )
+                )

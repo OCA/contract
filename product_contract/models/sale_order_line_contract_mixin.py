@@ -3,7 +3,8 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrderLineContractMixin(models.AbstractModel):
@@ -224,3 +225,42 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             - relativedelta(days=1)
         )
         return date_end
+
+    @api.constrains("recurrence_number")
+    def _check_recurrence_number_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract:
+                return
+            if line.recurrence_number <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        line._fields["recurrence_number"].string,
+                    )
+                )
+
+    @api.constrains("recurring_interval")
+    def _check_recurring_interval_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract:
+                return
+            if line.recurring_interval <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        line._fields["recurring_interval"].string,
+                    )
+                )
+
+    @api.constrains("auto_renew_interval")
+    def _check_auto_renew_interval_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract or not line.is_auto_renew:
+                return
+            if line.auto_renew_interval <= 0:
+                raise ValidationError(
+                    _(
+                        "Value of %r should be strictly positive",
+                        line._fields["auto_renew_interval"].string,
+                    )
+                )
