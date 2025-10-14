@@ -4,6 +4,6 @@ To use this module, you need to:
     contract.
 2.  Check *Generate recurring invoices automatically*.
 3.  Mark the check "Invoice Pending Sales Orders".
-4.  On each invoicing, system will check if there's any pending sales
-    orders with same analyitic account and will append the lines to the
+4.  On each invoicing, the system will check if there are any pending Sales
+    Orders with the same Analytic Account on the lines and will append it to the
     invoice being generated.

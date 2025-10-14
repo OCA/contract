@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ==========================================
 Contract Invoicing of Pending Sales Orders
 ==========================================
@@ -17,7 +13,7 @@ Contract Invoicing of Pending Sales Orders
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -50,9 +46,9 @@ To use this module, you need to:
    create a new contract.
 2. Check *Generate recurring invoices automatically*.
 3. Mark the check "Invoice Pending Sales Orders".
-4. On each invoicing, system will check if there's any pending sales
-   orders with same analyitic account and will append the lines to the
-   invoice being generated.
+4. On each invoicing, the system will check if there are any pending
+   Sales Orders with the same Analytic Account on the lines and will
+   append it to the invoice being generated.
 
 Bug Tracker
 ===========
@@ -82,7 +78,10 @@ Contributors
   - Pedro M. Baeza
   - Juan José Seguí
 
-- Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+- `Acsone <https://www.acsone.eu>`__
+
+  - Souheil Bejaoui
+  - Tobias Zehntner
 
 Maintainers
 -----------
