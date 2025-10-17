@@ -8,6 +8,7 @@ from odoo import api, fields, models
 class SaleSubscriptionTemplate(models.Model):
     _name = "sale.subscription.template"
     _description = "Subscription templates"
+    _inherit = ["subscription.generic.field.mixin"]
 
     name = fields.Char(required=True)
     description = fields.Text(string="Terms and conditions")

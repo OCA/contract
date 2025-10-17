@@ -1,16 +1,16 @@
 # Copyright 2023 Domatix - Carlos Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class SaleSubscriptionStage(models.Model):
     _name = "sale.subscription.stage"
+    _inherit = ["subscription.generic.field.mixin"]
     _description = "Subscription stage"
     _order = "sequence, name, id"
 
-    name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer()
     display_name = fields.Char(string="Display name", compute="_compute_display_name")
     in_progress = fields.Boolean(string="In progress", default=False)
     fold = fields.Boolean(string="Kanban folded")

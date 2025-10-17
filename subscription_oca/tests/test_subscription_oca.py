@@ -692,3 +692,29 @@ class TestSubscriptionOCA(TransactionCase):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_subscription_generic_field_mixin_copy(self):
+        """Test that copying a record adds '(copy)' suffix to name."""
+        # Create a test model that uses the mixin
+        TestModel = self.env["sale.subscription.template"]
+
+        # Create original record
+        original = TestModel.create(
+            {
+                "name": "Original Template",
+                "code": "test_copy_template",
+            }
+        )
+
+        # Test copy without default
+        copied = original.copy()
+        self.assertIn("(copy)", copied.name)
+        self.assertIn("Original Template", copied.name)
+
+        # Test copy with custom name in default
+        custom_name = "Custom Name"
+        copied_custom = original.copy({"name": custom_name})
+        self.assertEqual(copied_custom.name, custom_name)
+
+        # Test that original name wasn't changed
+        self.assertEqual(original.name, "Original Template")
