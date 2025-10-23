@@ -3,6 +3,7 @@
 # Copyright 2020 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import math
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -99,6 +100,10 @@ class ContractLine(models.Model):
         related="contract_id.active",
         store=True,
         readonly=True,
+    )
+    recurring_subtotal = fields.Monetary(
+        compute="_compute_recurring_subtotal",
+        currency_field="currency_id",
     )
 
     @api.depends(
@@ -1119,3 +1124,23 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         return self.quantity if not self.display_type else 0.0
+
+    @api.depends(
+        "price_unit", "quantity", "state", "recurring_rule_type", "recurring_interval"
+    )
+    def _compute_recurring_subtotal(self):
+        rule_type_dict = {
+            "daily": 365,
+            "weekly": 52,
+            "monthly": 12,
+            "monthlylastday": 12,
+            "quarterly": 4,
+            "semesterly": 2,
+        }
+        for line in self.filtered(lambda cl: cl.state != "canceled"):
+            rule_type = rule_type_dict.get(line.recurring_rule_type, 1)
+            interval = line.recurring_interval or 1
+            annual_frequency = math.floor(rule_type / interval)
+            line.recurring_subtotal = (
+                line.price_unit * annual_frequency
+            ) * line.quantity

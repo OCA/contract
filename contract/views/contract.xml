@@ -393,6 +393,20 @@
                                     />
                                 </tree>
                             </field>
+                            <group class="oe_right" colspan="2" name="recurring_total">
+                                <div
+                                    class="oe_subtotal_footer_separator oe_inline o_td_label"
+                                >
+                                    <label for="recurring_total" />
+                                </div>
+                                <field
+                                    name="recurring_total"
+                                    nolabel="1"
+                                    class="oe_subtotal_footer_separator"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                            </group>
                             <field name="note" />
                         </page>
                         <page name="modications" string="Modifications">
@@ -524,6 +538,7 @@
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
                 />
+                <field name="recurring_total" optional="hide" />
                 <field name="active" invisible="1" />
                 <field name="company_id" groups="base.group_multi_company" />
             </tree>

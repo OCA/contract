@@ -17,3 +17,6 @@
 * `[APSL] <https://www.apsl.tech>`_:
 
     * Antoni Marroig <amarroig@apsl.net>
+
+* `Trey <https://www.trey.es>`__:
+    * Alejandro Bermudez <alex@trey.es>

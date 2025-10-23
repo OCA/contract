@@ -136,6 +136,11 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         string="Modifications",
     )
+    recurring_total = fields.Monetary(
+        compute="_compute_recurring_total",
+        currency_field="currency_id",
+        store=True,
+    )
 
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
@@ -717,3 +722,10 @@ class ContractContract(models.Model):
                 "terminate_date": False,
             }
         )
+
+    @api.depends("contract_line_ids.recurring_subtotal")
+    def _compute_recurring_total(self):
+        for contract in self:
+            contract.recurring_total = sum(
+                contract.contract_line_ids.mapped("recurring_subtotal")
+            )
