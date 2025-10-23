@@ -36,7 +36,11 @@ class TestContractBase(common.TransactionCase):
         cls.product_1 = cls.env.ref("product.product_product_1")
         cls.product_2 = cls.env.ref("product.product_product_2")
         cls.product_1.taxes_id += cls.env["account.tax"].search(
-            [("type_tax_use", "=", "sale")], limit=1
+            [
+                ("type_tax_use", "=", "sale"),
+                ("company_id", "=", cls.env.company.id),
+            ],
+            limit=1,
         )
         cls.product_1.description_sale = "Test description sale"
         cls.line_template_vals = {
