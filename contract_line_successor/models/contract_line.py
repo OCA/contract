@@ -24,7 +24,7 @@ class ContractLine(models.Model):
         comodel_name="contract.line",
         string="Successor Contract Line",
         required=False,
-        readonly=True,
+        readonly=False,
         index=True,
         copy=False,
         help="In case of restart after suspension, this field contain the new "
@@ -34,7 +34,7 @@ class ContractLine(models.Model):
         comodel_name="contract.line",
         string="Predecessor Contract Line",
         required=False,
-        readonly=True,
+        readonly=False,
         index=True,
         copy=False,
         help="Contract Line origin of this one.",
