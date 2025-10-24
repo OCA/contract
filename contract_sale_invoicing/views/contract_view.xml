@@ -11,6 +11,10 @@
                     name="invoicing_sales"
                     invisible="contract_type != 'sale' or generation_type != 'invoice'"
                 />
+                <field
+                    name="invoicing_sales_into_contract"
+                    invisible="contract_type != 'sale' or generation_type != 'invoice' or not invoicing_sales"
+                />
             </field>
         </field>
     </record>
