@@ -243,7 +243,10 @@ class ContractContract(models.Model):
                     field.name in self.NO_SYNC,
                 )
             ):
-                if self.contract_template_id[field_name]:
+                if (
+                    self.contract_template_id[field_name]
+                    and self.contract_template_id[field_name] != self[field_name]
+                ):
                     self[field_name] = self.contract_template_id[field_name]
 
     @api.onchange("partner_id", "company_id")
@@ -587,27 +590,23 @@ class ContractContract(models.Model):
             if not contract_lines:
                 continue
             invoice_vals = contract._prepare_invoice(date_ref)
-            invoice_line_vals = self._prepare_invoice_line_values(contract_lines)
-            invoice_vals["invoice_line_ids"] = [
-                Command.create(line_vals) for line_vals in invoice_line_vals
-            ]
+            invoice_vals["invoice_line_ids"] = []
+            for line in contract_lines:
+                invoice_line_vals = line._prepare_invoice_line()
+                if invoice_line_vals:
+                    # Allow extension modules to return an empty dictionary for
+                    # nullifying line. We should then cleanup certain values.
+                    if "company_id" in invoice_line_vals:
+                        del invoice_line_vals["company_id"]
+                    if "company_currency_id" in invoice_line_vals:
+                        del invoice_line_vals["company_currency_id"]
+                    invoice_vals["invoice_line_ids"].append(
+                        Command.create(invoice_line_vals)
+                    )
+            invoices_values.append(invoice_vals)
             # Force the recomputation of journal items
             contract_lines._update_last_date_invoiced()
         return invoices_values
-
-    def _prepare_invoice_line_values(self, contract_lines):
-        invoice_lines_vals = []
-        for line in contract_lines:
-            invoice_line_vals = line._prepare_invoice_line()
-            if invoice_line_vals:
-                # Allow extension modules to return an empty dictionary for
-                # nullifying line. We should then cleanup certain values.
-                if "company_id" in invoice_line_vals:
-                    del invoice_line_vals["company_id"]
-                if "company_currency_id" in invoice_line_vals:
-                    del invoice_line_vals["company_currency_id"]
-                invoice_lines_vals.append(invoice_line_vals)
-        return invoice_lines_vals
 
     @api.model
     def _invoice_followers(self, invoices):

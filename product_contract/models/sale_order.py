@@ -61,54 +61,87 @@ class SaleOrder(models.Model):
         }
 
     def action_create_contract(self):
+        """Create contracts for sale order lines that are contract products.
+
+        Uses hooks _compute_contract_groups and _get_order_lines_for_group
+        so that modules can extend the behavior without replacing the whole method.
+        """
         contract_model = self.env["contract.contract"]
         contracts = []
+
         for rec in self.filtered("is_contract"):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
             )
             line_to_create_contract._set_contract_line_start_date()
+
             line_to_update_contract = rec.order_line.filtered(
                 lambda r: r.contract_id
                 and r.product_id.is_contract
                 and r
                 not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
             )
-            contract_templates = self.env["contract.template"]
-            for order_line in line_to_create_contract:
-                contract_template = order_line.product_id.with_company(
-                    rec.company_id
-                ).property_contract_template_id
-                if not contract_template:
-                    raise ValidationError(
-                        _(
-                            "You must specify a contract "
-                            "template for '%(product_name)s' product "
-                            "in '%(company_name)s' company."
-                        )
-                        % {
-                            "product_name": order_line.product_id.name,
-                            "company_name": rec.company_id.name,
-                        }
-                    )
-                contract_templates |= contract_template
-            for contract_template in contract_templates:
-                order_lines = line_to_create_contract.filtered(
-                    lambda r, template=contract_template: r.product_id.with_company(
-                        r.order_id.company_id
-                    ).property_contract_template_id
-                    == template
+            contract_groups = self._compute_contract_groups(line_to_create_contract)
+
+            for group in contract_groups:
+                main_line, template = (
+                    group if isinstance(group, tuple) else (None, group)
                 )
-                contract = contract_model.create(
-                    rec._prepare_contract_value(contract_template)
+                order_lines = self._get_order_lines_for_group(
+                    line_to_create_contract, template, main_line
                 )
+                contract = contract_model.create(rec._prepare_contract_value(template))
                 contracts.append(contract.id)
                 contract._onchange_contract_template_id()
                 order_lines.create_contract_line(contract)
                 order_lines.write({"contract_id": contract.id})
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
+
         return contract_model.browse(contracts)
+
+    def _compute_contract_groups(self, line_to_create_contract):
+        """Compute contract templates or groups to create."""
+        contract_templates = self.env["contract.template"]
+        for order_line in line_to_create_contract:
+            template = order_line.product_id.with_company(
+                order_line.order_id.company_id
+            ).property_contract_template_id
+            if not template:
+                raise ValidationError(
+                    _(
+                        "You must specify a contract "
+                        "template for '{product_name}' product "
+                        "in '{company_name}' company."
+                    ).format(
+                        product_name=order_line.product_id.name,
+                        company_name=order_line.order_id.company_id.name,
+                    )
+                )
+            contract_templates |= template
+        return contract_templates
+
+    def _get_order_lines_for_group(
+        self, line_to_create_contract, template, main_line=None
+    ):
+        """Return the lines to include for a given template / group."""
+        return line_to_create_contract.filtered(
+            lambda r: r.product_id.with_company(
+                r.order_id.company_id
+            ).property_contract_template_id
+            == template
+        )
+
+    def _get_filtered_children(self, line, template):
+        """Return all child lines recursively that are contract products
+        with the same contract template"""
+        valid_children = line.child_ids.filtered(
+            lambda sol: sol.product_id.is_contract
+            and sol.product_id.property_contract_template_id == template
+        )
+        for child in valid_children:
+            valid_children |= self._get_filtered_children(child, template)
+        return valid_children
 
     def action_confirm(self):
         """If we have a contract in the order, set it up"""
