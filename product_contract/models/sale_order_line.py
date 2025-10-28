@@ -281,3 +281,38 @@ class SaleOrderLine(models.Model):
             - Date: {date_text}
             """
         )
+
+    def _get_related_contract_templates(self):
+        """
+        Return a recordset of contract templates based on sale order line's products.
+        """
+        contract_templates = self.env["contract.template"]
+        for order_line in self:
+            contract_template = order_line.product_id.with_company(
+                order_line.company_id
+            ).property_contract_template_id
+            if not contract_template:
+                raise ValidationError(
+                    _(
+                        "You must specify a contract "
+                        "template for '%(product_name)s' product "
+                        "in '%(company_name)s' company."
+                    )
+                    % {
+                        "product_name": order_line.product_id.name,
+                        "company_name": order_line.company_id.name,
+                    }
+                )
+            contract_templates |= contract_template
+        return contract_templates
+
+    def _filter_order_lines_from_contract_template(self, contract_template):
+        """
+        Filter order lines to keep only those that fit with 'contract_template'
+        """
+        return self.filtered(
+            lambda sol, template=contract_template: sol.product_id.with_company(
+                sol.company_id
+            ).property_contract_template_id
+            == template
+        )
