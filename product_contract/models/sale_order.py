@@ -62,6 +62,7 @@ class SaleOrder(models.Model):
         }
 
     def action_create_contract(self):
+        """Create contracts from sale orders that contain contract products."""
         contract_model = self.env["contract.contract"]
         contracts = []
         for rec in self.filtered("is_contract"):
@@ -75,41 +76,29 @@ class SaleOrder(models.Model):
                 and r
                 not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
             )
-            contract_templates = self.env["contract.template"]
-            for order_line in line_to_create_contract:
-                contract_template = order_line.product_id.with_company(
-                    rec.company_id
-                ).property_contract_template_id
-                if not contract_template:
-                    raise ValidationError(
-                        _(
-                            "You must specify a contract "
-                            "template for '%(product_name)s' product "
-                            "in '%(company_name)s' company."
-                        )
-                        % {
-                            "product_name": order_line.product_id.name,
-                            "company_name": rec.company_id.name,
-                        }
-                    )
-                contract_templates |= contract_template
-            for contract_template in contract_templates:
-                order_lines = line_to_create_contract.filtered(
-                    lambda r, template=contract_template: r.product_id.with_company(
-                        r.order_id.company_id
-                    ).property_contract_template_id
-                    == template
-                )
-                contract = contract_model.create(
-                    rec._prepare_contract_value(contract_template)
-                )
-                contracts.append(contract.id)
-                contract._onchange_contract_template_id()
-                order_lines.create_contract_line(contract)
-                order_lines.write({"contract_id": contract.id})
+            contracts += rec._create_contracts_from_order_lines(line_to_create_contract)
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
         return contract_model.browse(contracts)
+
+    def _create_contracts_from_order_lines(self, lines):
+        contract_model = self.env["contract.contract"]
+        contracts = []
+
+        contract_templates = lines._get_related_contract_templates()
+        for contract_template in contract_templates:
+            order_lines = lines._filter_order_lines_from_contract_template(
+                contract_template
+            )
+            contract = contract_model.create(
+                self._prepare_contract_value(contract_template)
+            )
+            contracts.append(contract.id)
+            contract._onchange_contract_template_id()
+            order_lines.create_contract_line(contract)
+            order_lines.write({"contract_id": contract.id})
+
+        return contracts
 
     def action_confirm(self):
         """If we have a contract in the order, set it up"""
