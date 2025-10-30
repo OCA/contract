@@ -450,9 +450,6 @@ class ContractContract(models.Model):
             )
             .mapped("move_id")
         )
-        # we are forced to always search for this for not losing possible <=v11
-        # generated invoices
-        invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
         return invoices
 
     def _get_computed_currency(self):
