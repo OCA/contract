@@ -6,13 +6,6 @@
 from odoo import fields, models
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
-
-    # We keep this field for migration purpose
-    old_contract_id = fields.Many2one("contract.contract")
-
-
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
