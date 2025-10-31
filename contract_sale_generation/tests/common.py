@@ -5,7 +5,7 @@
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form, TransactionCase, tagged
 
 
 def to_date(date):
@@ -13,26 +13,25 @@ def to_date(date):
 
 
 @tagged("post_install", "-at_install")
-class ContractSaleCommon:
+class ContractSaleCommon(TransactionCase):
     # Use case : Prepare some data for current test case
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if not cls.env.company.chart_template_id:
-            # Load a CoA if there's none in current company
-            coa = cls.env.ref("l10n_generic_coa.configurable_chart_template", False)
-            if not coa:
-                # Load the first available CoA
-                coa = cls.env["account.chart.template"].search(
-                    [("visible", "=", True)], limit=1
-                )
-            coa.try_loading(company=cls.env.company, install_demo=False)
+        chart_template = cls.env["account.chart.template"]._guess_chart_template(
+            cls.env.company.country_id
+        )
+        cls.env["account.chart.template"].try_loading(
+            chart_template, company=cls.env.company, install_demo=False
+        )
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        analytic_plan = cls.env["account.analytic.plan"].create({"name": "Test Plan"})
+
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
-                "plan_id": cls.env.ref("analytic.analytic_plan_internal").id,
+                "plan_id": analytic_plan.id,
             }
         )
         cls.payment_term_id = cls.env.ref(
@@ -56,7 +55,9 @@ class ContractSaleCommon:
                 "user_id": cls.env.user.id,
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_1")
+        # Avoid error cause sale_timesheet overwriting demo product.product_product_2
+        # and making mandatory to link a project to that product or to the sale order
+        cls.product_1 = cls.env.ref("product.product_product_2")
         cls.product_1.taxes_id += cls.env["account.tax"].search(
             [("type_tax_use", "=", "sale")], limit=1
         )
@@ -113,9 +114,9 @@ class ContractSaleCommon:
             "recurring_next_date": "2020-01-15",
             "display_type": False,
         }
-        discount_line_group_id = cls.env.ref("product.group_discount_per_so_line")
+        discount_line_group_id = cls.env.ref("sale.group_discount_per_so_line")
         uom_group_id = cls.env.ref("uom.group_uom")
-        cls.env.user.groups_id = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
+        cls.env.user.group_ids = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
 
         with Form(cls.contract) as contract_form, freeze_time(contract_date):
             contract_form.contract_template_id = cls.template

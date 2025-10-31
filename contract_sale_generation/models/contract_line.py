@@ -40,7 +40,7 @@ class ContractLine(models.Model):
             )
             order_line.order_id = sale
         # Get other order line values from product onchange
-        order_line._onchange_product_id_warning()
+        order_line._onchange_product_id()
         sale_line_vals = order_line._convert_to_write(order_line._cache)
         # Insert markers
         name = self._insert_markers(dates[0], dates[1])
