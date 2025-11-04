@@ -142,17 +142,14 @@ class ContractLine(models.Model):
             if rec.is_auto_renew:
                 if rec.successor_contract_line_id:
                     raise ValidationError(
-                        _(
-                            "A contract line with a successor "
-                            "can't be set to auto-renew"
-                        )
+                        _("A contract line with a successor can't be set to auto-renew")
                     )
                 if not rec.date_end:
                     raise ValidationError(_("An auto-renew line must have a end date"))
             else:
                 if not rec.date_end and rec.successor_contract_line_id:
                     raise ValidationError(
-                        _("A contract line with a successor " "must have a end date")
+                        _("A contract line with a successor must have a end date")
                     )
 
     @api.constrains("successor_contract_line_id", "date_end")
@@ -376,7 +373,7 @@ class ContractLine(models.Model):
         for rec in self:
             if rec.last_date_invoiced:
                 raise ValidationError(
-                    _("You can't delay a contract line " "invoiced at least one time.")
+                    _("You can't delay a contract line invoiced at least one time.")
                 )
             new_date_start = rec.date_start + delay_delta
             if rec.date_end:
