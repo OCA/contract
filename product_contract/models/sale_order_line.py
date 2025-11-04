@@ -4,7 +4,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 MONTH_NB_MAPPING = {
@@ -27,7 +27,7 @@ class SaleOrderLine(models.Model):
                 and rec.contract_id.is_terminated
             ):
                 raise ValidationError(
-                    _("You can't upsell or downsell a terminated contract")
+                    self.env._("You can't upsell or downsell a terminated contract")
                 )
 
     def _get_contract_line_qty(self):
@@ -63,7 +63,7 @@ class SaleOrderLine(models.Model):
             "product_id": self.product_id.id,
             "name": self.name.split(":\n")[0],
             "quantity": self._get_contract_line_qty(),
-            "uom_id": self.product_uom.id,
+            "uom_id": self.product_uom_id.id,
             "price_unit": self.price_unit,
             "discount": self.discount,
             "date_end": self.date_end,
@@ -123,7 +123,7 @@ class SaleOrderLine(models.Model):
             if rec.contract_id:
                 if rec.order_id.partner_id != rec.contract_id.partner_id:
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "Sale Order and contract should be "
                             "linked to the same partner"
                         )
@@ -138,7 +138,7 @@ class SaleOrderLine(models.Model):
                     and rec.contract_template_id != rec.contract_id.contract_template_id
                 ):
                     raise ValidationError(
-                        _("Contract product has different contract template")
+                        self.env._("Contract product has different contract template")
                     )
 
     def _compute_invoice_status(self):
@@ -271,7 +271,7 @@ class SaleOrderLine(models.Model):
 
     def _get_contract_name_format(self):
         self.ensure_one()
-        return _(
+        return self.env._(
             """{product}:
             - Recurrency: {recurring_rule}
             - Invoicing Type: {invoicing_type}

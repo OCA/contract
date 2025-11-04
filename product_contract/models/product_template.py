@@ -2,7 +2,7 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -154,7 +154,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if "is_contract" in vals and vals["is_contract"] is False:
-            for company in self.env["res.company"].search([]):
+            for company in self.env.companies:
                 self.with_company(company).write(
                     {"property_contract_template_id": False}
                 )
@@ -166,4 +166,4 @@ class ProductTemplate(models.Model):
         Contract product should be service type
         """
         if any([product.is_contract and product.type != "service" for product in self]):
-            raise ValidationError(_("Contract product should be service type"))
+            raise ValidationError(self.env._("Contract product should be service type"))

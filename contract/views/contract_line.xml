@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_template_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='recurrence_info']" position="after">
+                <group string="Contract Start &amp; End Dates" name="contract_dates">
+                    <group>
+                        <field name="date_start" required="1" />
+                    </group>
+                    <group>
+                        <field name="date_end" />
+                    </group>
+                    <group />
+                </group>
+                <group string="Next period to invoice" name="next_period_dates">
+                    <group>
+                        <field name="next_period_date_start" />
+                        <field
+                            name="last_date_invoiced"
+                            groups="base.group_no_one"
+                            readonly="True"
+                        />
+                    </group>
+                    <group>
+                        <field name="next_period_date_end" />
+                        <field name="recurring_next_date" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
+                    invisible="display_type"
+                />
+            </xpath>
+        </field>
+    </record>
+    <!--Customer FORM view-->
+    <record id="contract_line_customer_form_view" model="ir.ui.view">
+        <field name="name">contract.line customer form view (in contract)
+        </field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+            </field>
+        </field>
+    </record>
+    <!--Supplier FORM view-->
+    <record id="contract_line_supplier_form_view" model="ir.ui.view">
+        <field name="name">contract.line supplier form view (in contract)
+        </field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract_line_form_view" />
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('purchase_ok', '=', True)]
+                </attribute>
+            </field>
+            <field name="automatic_price" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!--TREE view-->
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="name">contract.line list view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="product_id" />
+                <field name="name" />
+                <field
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field name="quantity" />
+                <field name="uom_id" />
+                <field name="automatic_price" />
+                <field name="price_unit" readonly="automatic_price" />
+                <field name="specific_price" column_invisible="True" />
+                <field name="discount" />
+                <field name="price_subtotal" />
+                <field name="recurring_interval" column_invisible="True" />
+                <field name="recurring_rule_type" column_invisible="True" />
+                <field name="recurring_invoicing_type" column_invisible="True" />
+                <field name="date_start" column_invisible="True" />
+                <field name="date_end" />
+                <field name="recurring_next_date" column_invisible="True" />
+                <field name="last_date_invoiced" groups="base.group_no_one" />
+                <field name="create_invoice_visibility" column_invisible="True" />
+            </list>
+        </field>
+    </record>
+    <!--Supplier TREE view-->
+    <record id="contract_line_supplier_tree_view" model="ir.ui.view">
+        <field name="name">contract.line supplier list view (in contract)
+        </field>
+        <field name="model">contract.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="inherit_id" ref="contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <field name="automatic_price" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!--TREE view - reporting -->
+    <record id="contract_line_report_tree_view" model="ir.ui.view">
+        <field name="name">contract.line report tree view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="contract_id" />
+                <field name="partner_id" />
+                <field name="product_id" />
+                <field
+                    name="analytic_distribution"
+                    widget="analytic_distribution"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field name="quantity" />
+                <field name="uom_id" />
+                <field name="price_unit" />
+                <field name="discount" groups="base.group_no_one" />
+                <field name="price_subtotal" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="recurring_interval" />
+                <field name="recurring_rule_type" />
+                <field name="recurring_next_date" />
+                <field name="last_date_invoiced" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Contract lines search view - reporting -->
+    <record id="contract_line_search_view" model="ir.ui.view">
+        <field name="name">contract.line search view (in contract)</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id" />
+                <field name="product_id" />
+                <field name="name" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="recurring_next_date" />
+                <field name="last_date_invoiced" />
+                <separator />
+                <group>
+                    <filter
+                        string="Contract"
+                        name="group_by_contract"
+                        domain="[]"
+                        context="{'group_by':'contract_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Add action for contract lines -->
+    <record id="action_supplier_contract_lines" model="ir.actions.act_window">
+        <field name="name">Supplier Contract Lines</field>
+        <field name="res_model">contract.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('contract_id.contract_type', '=', 'purchase')]</field>
+        <field name="context">
+            {'search_default_group_by_contract': 1}
+        </field>
+        <field name="search_view_id" ref="contract_line_search_view" />
+        <field name="view_id" ref="contract_line_report_tree_view" />
+    </record>
+
+    <record id="action_customer_contract_lines" model="ir.actions.act_window">
+        <field name="name">Customer Contract Lines</field>
+        <field name="res_model">contract.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('contract_id.contract_type', '=', 'sale')]</field>
+        <field name="context">
+            {'search_default_group_by_contract': 1}
+        </field>
+        <field name="search_view_id" ref="contract_line_search_view" />
+        <field name="view_id" ref="contract_line_report_tree_view" />
+    </record>
+
+    <record model="ir.ui.menu" id="menu_customer_contract_line_report">
+        <field name="name">Customer Contract lines</field>
+        <field name="parent_id" ref="contract.menu_contract_reporting" />
+        <field name="action" ref="contract.action_customer_contract_lines" />
+        <field name="sequence" eval="10" />
+    </record>
+    <record model="ir.ui.menu" id="menu_supplier_contract_line_report">
+        <field name="name">Supplier Contract lines</field>
+        <field name="parent_id" ref="contract.menu_contract_reporting" />
+        <field name="action" ref="contract.action_supplier_contract_lines" />
+        <field name="sequence" eval="11" />
+    </record>
+</odoo>

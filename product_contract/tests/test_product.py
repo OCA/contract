@@ -17,8 +17,20 @@ class TestProductTemplate(TransactionCase):
                 no_reset_password=True,
             )
         )
-        cls.service_product = cls.env.ref("product.product_product_1")
-        cls.consu_product = cls.env.ref("product.product_product_5")
+        cls.service_product = cls.env["product.product"].create(
+            {
+                "name": "Service Product",
+                "type": "service",
+                "lst_price": 100.0,
+            }
+        )
+        cls.consu_product = cls.env["product.product"].create(
+            {
+                "name": "Consu Product",
+                "type": "consu",
+                "lst_price": 50.0,
+            }
+        )
         cls.contract = cls.env["contract.template"].create({"name": "Test"})
 
     def test_change_is_contract(self):

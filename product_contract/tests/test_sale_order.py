@@ -22,16 +22,70 @@ class TestSaleOrder(TransactionCase):
                 no_reset_password=True,
             )
         )
-        cls.partner = cls.env["res.partner"].create({"name": "Test partner"})
-        cls.product1 = cls.env.ref("product.product_product_1")
-        cls.product2 = cls.env.ref("product.product_product_2")
-        cls.sale = cls.env.ref("sale.sale_order_2")
+        cls.partner = cls.env["res.partner"].create(
+            {
+                "name": "Test partner",
+            }
+        )
+        cls.product1 = cls.env["product.product"].create(
+            {
+                "name": "Contract Product 1",
+                "type": "service",
+                "lst_price": 100.0,
+            }
+        )
+        cls.product2 = cls.env["product.product"].create(
+            {
+                "name": "Contract Product 2",
+                "type": "service",
+                "lst_price": 50.0,
+            }
+        )
+        cls.sale = cls.env["sale.order"].create(
+            {
+                "partner_id": cls.partner.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product1.id,
+                            "product_uom_qty": 1,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product2.id,
+                            "product_uom_qty": 1,
+                        },
+                    ),
+                ],
+            }
+        )
+        cls.account = cls.env["account.account"].create(
+            {
+                "name": "Contract Account",
+                "code": "4000",
+                "account_type": "asset_current",
+                "reconcile": True,
+            }
+        )
+        cls.journal = cls.env["account.journal"].create(
+            {
+                "name": "Contract Journal",
+                "type": "sale",
+                "default_account_id": cls.account.id,
+            }
+        )
         cls.contract_template1 = cls.env["contract.template"].create(
             {"name": "Template 1"}
         )
         cls.contract_template2 = cls.env["contract.template"].create(
             {
                 "name": "Template 2",
+                "journal_id": cls.journal.id,
                 "contract_line_ids": [
                     (
                         0,

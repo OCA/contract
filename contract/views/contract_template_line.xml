@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--FORM view-->
+    <record id="contract_template_line_form_view" model="ir.ui.view">
+        <field name="model">contract.template.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header invisible="display_type" />
+                <sheet>
+                    <group>
+                        <field
+                            name="product_id"
+                            required="display_type == 'product'"
+                            invisible="display_type"
+                        />
+                    </group>
+                    <group invisible="display_type">
+                        <group>
+                            <field name="automatic_price" />
+                        </group>
+                        <group>
+                            <field name="price_unit" readonly="automatic_price" />
+                        </group>
+                    </group>
+                    <group invisible="display_type">
+                        <group>
+                            <label for="quantity" />
+                            <div class="o_row" name="ordered_qty">
+                                <field
+                                    context="{'partner_id':parent.partner_id, 'quantity':quantity, 'pricelist':parent.pricelist_id, 'uom':uom_id, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                    name="quantity"
+                                />
+                                <field
+                                    name="uom_id"
+                                    force_save="1"
+                                    groups="uom.group_uom"
+                                    class="oe_no_button"
+                                    required="not display_type"
+                                />
+                            </div>
+                            <field name="discount" />
+                        </group>
+                    </group>
+                    <label for="name" string="Description" invisible="display_type" />
+                    <label
+                        for="name"
+                        string="Section"
+                        invisible="display_type != 'line_section'"
+                    />
+                    <label
+                        for="name"
+                        string="Note"
+                        invisible="display_type != 'line_note'"
+                    />
+                    <field name="name" nolabel="1" />
+                    <group
+                        name="note_invoicing_mode"
+                        invisible="display_type != 'line_note'"
+                    >
+                        <field name="note_invoicing_mode" widget="radio" />
+                    </group>
+                    <notebook>
+                        <page
+                            string="Recurrence"
+                            name="recurrence_info"
+                            invisible="display_type == 'line_section' or (display_type == 'line_note' and note_invoicing_mode != 'custom')"
+                        >
+                            <group name="recurrence_info">
+                                <group>
+                                    <label for="recurring_interval" />
+                                    <div class="o_row">
+                                        <field name="recurring_interval" />
+                                        <field name="recurring_rule_type" />
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="recurring_invoicing_type" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

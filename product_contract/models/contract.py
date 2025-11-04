@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
-from odoo.tools.translate import _
 
 
 class ContractContract(models.Model):
@@ -26,7 +25,7 @@ class ContractContract(models.Model):
         self.ensure_one()
         orders = self.contract_line_ids.mapped("sale_order_line_id.order_id")
         action = {
-            "name": _("Sales Orders"),
+            "name": self.env.self.env._("Sales Orders"),
             "view_mode": "list,form",
             "res_model": "sale.order",
             "type": "ir.actions.act_window",
