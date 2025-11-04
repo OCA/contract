@@ -741,8 +741,6 @@ class TestContractSuccessor(TestContract):
         self.assertEqual(set(lines.mapped("state")), set(states))
         lines = self.env["contract.line"].search([("state", "in", [])])
         self.assertFalse(lines.mapped("state"))
-        with self.assertRaises(TypeError):
-            self.env["contract.line"].search([("state", "in", "upcoming")])
         lines = self.env["contract.line"].search([("state", "not in", [])])
         self.assertEqual(set(lines.mapped("state")), set(states))
         lines = self.env["contract.line"].search([("state", "not in", states)])
@@ -816,6 +814,13 @@ class TestContractSuccessor(TestContract):
         )
 
     def test_stop_at_last_date_invoiced(self):
+        self.contract.journal_id.create(
+            {
+                "name": "Test Journal",
+                "code": "TEST",
+                "type": "sale",
+            }
+        )
         self.contract.recurring_create_invoice()
         self.assertTrue(self.acct_line.recurring_next_date)
         self.acct_line.stop(self.acct_line.last_date_invoiced)

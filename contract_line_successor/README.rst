@@ -21,13 +21,13 @@ Contract Line Successor
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/18.0/contract_line_successor
+    :target: https://github.com/OCA/contract/tree/19.0/contract_line_successor
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-18-0/contract-18-0-contract_line_successor
+    :target: https://translation.odoo-community.org/projects/contract-19-0/contract-19-0-contract_line_successor
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=18.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=19.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -41,47 +41,48 @@ Contract Line Successor
 Features
 --------
 
-- **Successor and Predecessor Management**
+-  **Successor and Predecessor Management**
 
-  - Link contract lines with successor and predecessor lines.
-  - Plan successors automatically or manually after a stop or
-    suspension.
+   -  Link contract lines with successor and predecessor lines.
+   -  Plan successors automatically or manually after a stop or
+      suspension.
 
-- **Contract Line Lifecycle States**
+-  **Contract Line Lifecycle States**
 
-  - Manage contract lines with the following computed states:
+   -  Manage contract lines with the following computed states:
 
-    - ``Upcoming``
-    - ``In-Progress``
-    - ``To Renew``
-    - ``Upcoming Close``
-    - ``Closed``
-    - ``Canceled``
+      -  ``Upcoming``
+      -  ``In-Progress``
+      -  ``To Renew``
+      -  ``Upcoming Close``
+      -  ``Closed``
+      -  ``Canceled``
 
-- **Lifecycle Operations**
+-  **Lifecycle Operations**
 
-  - Stop a contract line.
-  - Plan a successor for a contract line.
-  - Stop and plan a successor in one operation (useful for suspensions).
-  - Cancel and un-cancel contract lines.
-  - Renew contract lines automatically (new line or extension).
+   -  Stop a contract line.
+   -  Plan a successor for a contract line.
+   -  Stop and plan a successor in one operation (useful for
+      suspensions).
+   -  Cancel and un-cancel contract lines.
+   -  Renew contract lines automatically (new line or extension).
 
-- **Auto-Renewal Handling**
+-  **Auto-Renewal Handling**
 
-  - Auto-renewal based on company settings (extend existing line or
-    create a new one).
-  - Cron job to automate renewal of eligible contract lines.
+   -  Auto-renewal based on company settings (extend existing line or
+      create a new one).
+   -  Cron job to automate renewal of eligible contract lines.
 
-- **Data Integrity and Validation**
+-  **Data Integrity and Validation**
 
-  - Prevent invalid successor or predecessor configurations.
-  - Validate state transitions and date overlaps.
-  - Ensure clean renewal and cancellation workflows.
+   -  Prevent invalid successor or predecessor configurations.
+   -  Validate state transitions and date overlaps.
+   -  Ensure clean renewal and cancellation workflows.
 
-- **Audit Trail**
+-  **Audit Trail**
 
-  - Automatic posting of chatter messages for lifecycle events like
-    stops, renewals, suspensions, cancellations, etc.
+   -  Automatic posting of chatter messages for lifecycle events like
+      stops, renewals, suspensions, cancellations, etc.
 
 **Table of contents**
 
@@ -91,18 +92,19 @@ Features
 Configuration
 =============
 
-- | **Auto-Renewal Strategy**
-  | In the company settings, define whether renewing a contract line:
+-  | **Auto-Renewal Strategy**
+   | In the company settings, define whether renewing a contract line:
 
-  - Extends the current line (updates ``date_end``),
-  - or creates a new successor contract line.
+   -  Extends the current line (updates ``date_end``),
+   -  or creates a new successor contract line.
 
-  | Field:
-  | ``Company > Configuration > Contracts > Create new contract line at renewal``
+   | Field:
+   | ``Company > Configuration > Contracts > Create new contract line at renewal``
 
-- | **Scheduled Actions**
-  | Ensure the scheduled action ``Contract Line: Auto Renew`` is
-    activated if you want automatic renewal without manual intervention.
+-  | **Scheduled Actions**
+   | Ensure the scheduled action ``Contract Line: Auto Renew`` is
+     activated if you want automatic renewal without manual
+     intervention.
 
 Usage
 =====
@@ -112,12 +114,12 @@ Usage
 2. Once enabled, you will have access to several actions at the contract
    line level:
 
-   - **Stop** a contract line and optionally **plan a successor**.
-   - **Handle temporary suspensions** and **resume** the contract line
-     after the suspension period.
-   - **Cancel** and **un-cancel** contract lines if necessary.
-   - **Renew** contract lines either by **extending** the current line
-     or by **creating a new successor line** automatically.
+   -  **Stop** a contract line and optionally **plan a successor**.
+   -  **Handle temporary suspensions** and **resume** the contract line
+      after the suspension period.
+   -  **Cancel** and **un-cancel** contract lines if necessary.
+   -  **Renew** contract lines either by **extending** the current line
+      or by **creating a new successor line** automatically.
 
 Bug Tracker
 ===========
@@ -125,7 +127,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_line_successor%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_line_successor%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -140,7 +142,7 @@ Authors
 Contributors
 ------------
 
-- Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
+-  Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
 
 Maintainers
 -----------
@@ -163,6 +165,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-sbejaoui| 
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/18.0/contract_line_successor>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/19.0/contract_line_successor>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
