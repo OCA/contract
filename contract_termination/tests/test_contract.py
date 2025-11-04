@@ -37,7 +37,7 @@ class TestContractTermination(TestContractSuccessor):
         group_can_terminate_contract = self.env.ref(
             "contract_termination.can_terminate_contract"
         )
-        group_can_terminate_contract.users |= self.env.user
+        group_can_terminate_contract.user_ids |= self.env.user
         wizard.terminate_contract()
         self.assertTrue(self.contract.is_terminated)
         self.assertEqual(self.contract.terminate_date, to_date("2018-03-01"))
@@ -49,12 +49,19 @@ class TestContractTermination(TestContractSuccessor):
         self.assertFalse(self.contract.terminate_comment)
 
     def test_terminate_date_before_last_date_invoiced(self):
+        self.contract.journal_id.create(
+            {
+                "name": "Test Sales Journal",
+                "code": "TEST",
+                "type": "sale",
+            }
+        )
         self.contract.recurring_create_invoice()
         self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-02-14"))
         group_can_terminate_contract = self.env.ref(
             "contract_termination.can_terminate_contract"
         )
-        group_can_terminate_contract.users |= self.env.user
+        group_can_terminate_contract.user_ids |= self.env.user
         with self.assertRaises(ValidationError):
             self.contract._terminate_contract(
                 self.terminate_reason,
