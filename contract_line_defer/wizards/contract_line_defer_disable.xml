@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_line_defer_disable_form_view">
+        <field name="model">contract.line.defer.disable</field>
+        <field name="arch" type="xml">
+            <form string="Activate Line">
+                <group>
+                    <field name="date_start" />
+                    <field name="date_end" />
+                </group>
+                <footer>
+                    <button
+                        name="activate_line"
+                        string="Activate Line"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="contract_line_defer_disable_act_window">
+        <field name="name">Activate Line</field>
+        <!-- TODO -->
+        <field name="res_model">contract.line.defer.disable</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
