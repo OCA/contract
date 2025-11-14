@@ -2,10 +2,10 @@
 <!-- Copyright 2025 ACSONE SA/NV
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ir.ui.view" id="contract_line_defer_disable_form_view">
-        <field name="model">contract.line.defer.disable</field>
+    <record model="ir.ui.view" id="contract_line_activate_wizard_form_view">
+        <field name="model">contract.line.activate.wizard</field>
         <field name="arch" type="xml">
-            <form string="Activate Line">
+            <form string="Activate Invoicing">
                 <group>
                     <field name="date_start" />
                     <field name="date_end" />
@@ -13,7 +13,7 @@
                 <footer>
                     <button
                         name="activate_line"
-                        string="Activate Line"
+                        string="Activate"
                         class="btn-primary"
                         type="object"
                     />
@@ -23,10 +23,9 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="contract_line_defer_disable_act_window">
-        <field name="name">Activate Line</field>
-        <!-- TODO -->
-        <field name="res_model">contract.line.defer.disable</field>
+    <record model="ir.actions.act_window" id="contract_line_activate_wizard_act_window">
+        <field name="name">Activate Invoicing</field>
+        <field name="res_model">contract.line.activate.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

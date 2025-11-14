@@ -1,2 +1,1 @@
-- Firstname Lastname <email.address@example.org> (optional company website url)
-- Second Person <second.person@example.org> (optional company website url)
+- Tobias Zehntner <tobias.zehntner@acsone.eu> (ACSONE SA/NV)

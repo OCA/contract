@@ -4,13 +4,15 @@
 from odoo import fields, models
 
 
-class ContractLineDeferDisable(models.TransientModel):
-    _name = "contract.line.defer.disable"
+class ContractLineActivateWizard(models.TransientModel):
+    _name = "contract.line.activate.wizard"
+    _description = "Contract Line Activate Wizard"
 
     contract_line_id = fields.Many2one(
         "contract.line", required=True, ondelete="cascade"
     )
     date_start = fields.Date(
+        required=True,
         default=lambda self: fields.Date.context_today(self),
         help="Contract activation date (first recurrence starts here)",
     )

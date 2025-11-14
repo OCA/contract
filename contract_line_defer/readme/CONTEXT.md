@@ -1,16 +1,11 @@
-[ This file is optional but strongly suggested to allow end-users to evaluate the
-module's usefulness in their context. ]
-
-BUSINESS NEED: 
-It should explain the “why” of the module: 
-- what is the business requirement that generated the need to develop this module
-- in which context or use cases this module can be useful (practical examples are welcome!). 
+BUSINESS NEED:
+- Your company sells contracts which start dates are not known at the conclusion of the sale.
+- Lines which start dates are not confirmed should not be invoiced
 
 APPROACH:
-It could also explain the approach to address the mentioned need.
+- This module adds a "deferred" flag on the contract line, that can be enabled and disabled via a button
+- A deferred line is not invoiced until manually activated
+- A company setting allows deferring all contract lines by default
 
 USEFUL INFORMATION:
-It can also inform on related modules:
-- modules it depends on and their features
-- other modules that can work well together with this one
-- suggested setups where the module is useful (eg: multicompany, multi-website)
+- Use the module **contract_line_defer_product** when also using contract products (module **product_contract**)

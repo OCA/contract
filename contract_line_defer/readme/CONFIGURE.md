@@ -1,10 +1,5 @@
-[ This file is not always required; it should explain **how to configure the module before using it**; it is aimed at users with administration privileges. 
-
-Please be detailed on the path to configuration (eg: do you need to activate developer mode?), describe step by step configurations and the use of screenshots is strongly recommended.]
-
-
 To configure this module, you need to:
 
-- Go to *App* > Menu > Menu item
-- Activate boolean… > save
-- …
+1. Go to *Invoicing/Accounting* > Configuration > Settings > Contract
+1. Select **Defer contract line start** if you want to defer contract lines by default. Use this setting if you sell contracts which start dates are unknown at the conclusion of the sale.
+

@@ -1,21 +1,28 @@
-[ This file is required and contains the instructions on **“how”** to use the module for end-users. 
 
-If the module does not have a visible impact on the user interface, just add the following sentence: 
+Optional Settings
+-----------------
 
-> This module does not impact the user interface.
+1. Go to *Invoicing/Accounting* > Configuration > Settings > Contract
+1. Select **Defer contract line start** if you want to defer contract lines by default. Use this setting if you sell contracts which start dates are unknown at the conclusion of the sale.
 
-If that’s not the case, please make sure that every usage step is covered and remember that images speak more than words!]
+![Company Settings](../static/src/company_settings.png)
 
-To use this module, you need to:
+Add a contract line
+-------------------
 
-- Go to *App* > Menu > Menu item
+When adding a contract line, you can select **Deferred** instead of a start date
 
-  *insert screenshot!*
+![New Contract Line](../static/src/contract_line_new.png)
 
-- In “Contact” form, add a value to field *xyz* > save
+Modify a contract line
+----------------------
 
-  *insert screenshot!*
+An existing contract line can be deferred and activated via a button on the line
 
-- The value of *xyz* is now displayed in the list view.
+![Edit Contract Line](../static/src/contract_line_edit.png)
 
-  *insert screenshot!*
+Activate a contract line
+------------------------
+
+When activating a line, a new start (and optionally end) date can be chosen.
+

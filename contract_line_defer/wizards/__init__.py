@@ -1,1 +1,1 @@
-from . import contract_line_defer_disable
+from . import contract_line_activate_wizard

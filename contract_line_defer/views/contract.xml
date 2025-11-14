@@ -18,17 +18,17 @@
                 <field name="is_deferred" column_invisible="True" />
                 <button
                     string="Activate"
-                    name="%(contract_line_defer_disable_act_window)d"
+                    name="%(contract_line_activate_wizard_act_window)d"
                     title="Activate"
                     type="action"
-                    icon="fa-clock-o"
+                    icon="fa-usd"
                     invisible="not parent.line_recurrence or not is_deferred"
                     context="{'default_contract_line_id': id, 'default_date_end': date_end}"
                 />
                 <button
                     string="Defer"
                     name="enable_deferred"
-                    confirm="Defer invoicing of this line until manually activated?"
+                    confirm="Defer invoicing of this line until manually re-enabled?"
                     title="Defer"
                     type="object"
                     icon="fa-clock-o"

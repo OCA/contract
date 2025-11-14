@@ -28,15 +28,9 @@ Contract Line Defer
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-[ This file must be max 2-3 paragraphs, and is required.
-
-The goal of this document is to explain quickly the features of this
-module: “what” this module does and “what” it is for. ]
-
-Example:
-
-This module extends the functionality of ... to support ... and to allow
-users to ...
+Enable to defer contract line's invoicing. If a contract line start date
+is not known, it can be deferred. It will not be invoiced until manually
+activated.
 
 **Table of contents**
 
@@ -46,116 +40,72 @@ users to ...
 Use Cases / Context
 ===================
 
-[ This file is optional but strongly suggested to allow end-users to
-evaluate the module's usefulness in their context. ]
+BUSINESS NEED:
 
-BUSINESS NEED: It should explain the “why” of the module:
+- Your company sells contracts which start dates are not known at the
+  conclusion of the sale.
+- Lines which start dates are not confirmed should not be invoiced
 
-- what is the business requirement that generated the need to develop
-  this module
-- in which context or use cases this module can be useful (practical
-  examples are welcome!).
+APPROACH:
 
-APPROACH: It could also explain the approach to address the mentioned
-need.
+- This module adds a "deferred" flag on the contract line, that can be
+  enabled and disabled via a button
+- A deferred line is not invoiced until manually activated
+- A company setting allows deferring all contract lines by default
 
-USEFUL INFORMATION: It can also inform on related modules:
+USEFUL INFORMATION:
 
-- modules it depends on and their features
-- other modules that can work well together with this one
-- suggested setups where the module is useful (eg: multicompany,
-  multi-website)
-
-Installation
-============
-
-[ This file must only be present if there are very specific installation
-instructions, such as installing non-python dependencies. The audience
-is systems administrators. ]
-
-To install this module, you need to:
-
-1. Do this ...
+- Use the module **contract_line_defer_product** when also using
+  contract products (module **product_contract**)
 
 Configuration
 =============
 
-[ This file is not always required; it should explain **how to configure
-the module before using it**; it is aimed at users with administration
-privileges.
-
-Please be detailed on the path to configuration (eg: do you need to
-activate developer mode?), describe step by step configurations and the
-use of screenshots is strongly recommended.]
-
 To configure this module, you need to:
 
-- Go to *App* > Menu > Menu item
-- Activate boolean… > save
-- …
+1. Go to *Invoicing/Accounting* > Configuration > Settings > Contract
+2. Select **Defer contract line start** if you want to defer contract
+   lines by default. Use this setting if you sell contracts which start
+   dates are unknown at the conclusion of the sale.
 
 Usage
 =====
 
-[ This file is required and contains the instructions on **“how”** to
-use the module for end-users.
+Optional Settings
+-----------------
 
-If the module does not have a visible impact on the user interface, just
-add the following sentence:
+1. Go to *Invoicing/Accounting* > Configuration > Settings > Contract
+2. Select **Defer contract line start** if you want to defer contract
+   lines by default. Use this setting if you sell contracts which start
+   dates are unknown at the conclusion of the sale.
 
-   This module does not impact the user interface.
+|Company Settings|
 
-If that’s not the case, please make sure that every usage step is
-covered and remember that images speak more than words!]
+Add a contract line
+-------------------
 
-To use this module, you need to:
+When adding a contract line, you can select **Deferred** instead of a
+start date
 
-- Go to *App* > Menu > Menu item
+|New Contract Line|
 
-  *insert screenshot!*
+Modify a contract line
+----------------------
 
-- In “Contact” form, add a value to field *xyz* > save
+An existing contract line can be deferred and activated via a button on
+the line
 
-  *insert screenshot!*
+|Edit Contract Line|
 
-- The value of *xyz* is now displayed in the list view.
+Activate a contract line
+------------------------
 
-  *insert screenshot!*
+When activating a line, a new start (and optionally end) date can be
+chosen.
 
-Known issues / Roadmap
-======================
-
-[ Enumerate known caveats and future potential improvements. It is
-mostly intended for end-users, and can also help potential new
-contributors discovering new features to implement. ]
-
-- ...
-
-Changelog
-=========
-
-[ The change log. The goal of this file is to help readers understand
-changes between version. The primary audience is end users and
-integrators. Purely technical changes such as code refactoring must not
-be mentioned here.
-
-This file may contain ONE level of section titles, underlined with the ~
-(tilde) character. Other section markers are forbidden and will likely
-break the structure of the README.rst or other documents where this
-fragment is included. ]
-
-11.0.x.y.z (YYYY-MM-DD)
------------------------
-
-- [BREAKING] Breaking changes come first.
-  (`#70 <https://github.com/OCA/repo/issues/70>`__)
-- [ADD] New feature. (`#74 <https://github.com/OCA/repo/issues/74>`__)
-- [FIX] Correct this. (`#71 <https://github.com/OCA/repo/issues/71>`__)
-
-11.0.x.y.z (YYYY-MM-DD)
------------------------
-
-- ...
+.. |Company Settings| image:: https://raw.githubusercontent.com/OCA/contract/18.0/contract_line_defer/static/src/company_settings.png
+.. |New Contract Line| image:: https://raw.githubusercontent.com/OCA/contract/18.0/contract_line_defer/static/src/contract_line_new.png
+.. |Edit Contract Line| image:: https://raw.githubusercontent.com/OCA/contract/18.0/contract_line_defer/static/src/contract_line_edit.png
 
 Bug Tracker
 ===========
@@ -178,20 +128,7 @@ Authors
 Contributors
 ------------
 
-- Firstname Lastname email.address@example.org (optional company website
-  url)
-- Second Person second.person@example.org (optional company website url)
-
-Other credits
--------------
-
-[ This file is optional and contains additional credits, other than
-authors, contributors, and maintainers. ]
-
-The development of this module has been financially supported by:
-
-- Company 1 name
-- Company 2 name
+- Tobias Zehntner tobias.zehntner@acsone.eu (ACSONE SA/NV)
 
 Maintainers
 -----------

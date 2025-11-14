@@ -12,8 +12,8 @@
         "contract",
     ],
     "data": [
-        "security/contract_line_defer_disable.xml",
-        "wizards/contract_line_defer_disable.xml",
+        "security/contract_line_activate_wizard.xml",
+        "wizards/contract_line_activate_wizard.xml",
         "views/contract.xml",
         "views/contract_line.xml",
         "views/res_config_settings.xml",
