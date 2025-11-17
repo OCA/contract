@@ -13,6 +13,7 @@
         "contract_line_defer",
     ],
     "data": [
+        "views/contract_line.xml",
         "views/product_template.xml",
         "views/sale_order.xml",
         "wizards/product_contract_configurator.xml",

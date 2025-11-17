@@ -28,11 +28,13 @@ class ContractRecurringMixin(models.AbstractModel):
         self.ensure_one()
         self.is_deferred = True
 
-    @api.depends(
-        "is_deferred",
-    )
+    @api.depends("is_deferred")
     def _compute_recurring_next_date(self):
         """No next invoice date for deferred lines"""
         res = super()._compute_recurring_next_date()
         self.filtered(lambda r: r.is_deferred).update({"recurring_next_date": False})
         return res
+
+    @api.depends("is_deferred")
+    def _compute_next_period_date_start(self):
+        return super()._compute_next_period_date_start()

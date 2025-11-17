@@ -6,6 +6,17 @@
         <field name="model">contract.contract</field>
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']/list"
+                position="attributes"
+            >
+                <attribute name="decoration-muted">is_deferred</attribute>
+                <attribute
+                    name="decoration-info"
+                    add="not is_deferred"
+                    separator="and"
+                />
+            </xpath>
             <xpath expr="//field[@name='contract_line_ids']/list" position="attributes">
                 <attribute name="decoration-muted">is_deferred</attribute>
                 <attribute

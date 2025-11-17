@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import models
+from odoo import api, models
 
 
 class ContractLine(models.Model):
@@ -12,4 +12,21 @@ class ContractLine(models.Model):
         res = super()._onchange_product_id_recurring_info()
         if self.product_id.is_contract and self.product_id.is_deferred:
             self.is_deferred = True
+        return res
+
+    # TODO move to bridge module with contrat_line_successor
+    @api.depends("is_deferred")
+    def _compute_allowed(self):
+        res = super()._compute_allowed()
+        for line in self:
+            if line.is_deferred:
+                line.update(
+                    {
+                        "is_plan_successor_allowed": False,
+                        "is_stop_plan_successor_allowed": False,
+                        "is_stop_allowed": False,
+                        "is_cancel_allowed": False,
+                        "is_un_cancel_allowed": False,
+                    }
+                )
         return res
