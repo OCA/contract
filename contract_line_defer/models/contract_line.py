@@ -32,3 +32,6 @@ class ContractLine(models.Model):
                 self.date_start = today
             if self.date_end and self.date_end < today:
                 self.date_end = False
+
+    def _can_be_invoiced(self, date_ref):
+        return not self.is_deferred and super()._can_be_invoiced(date_ref)
