@@ -12,7 +12,7 @@
                 expr="//field[@name='order_line']/form//field[@name='date_start']"
                 position="before"
             >
-                <field name="is_deferred" />
+                <field name="is_deferred" invisible="state != 'draft'" />
             </xpath>
             <xpath
                 expr="//field[@name='order_line']/form//field[@name='date_start']"
@@ -24,7 +24,11 @@
                 expr="//field[@name='order_line']/list//field[@name='date_start']"
                 position="before"
             >
-                <field name="is_deferred" optional="hide" />
+                <field
+                    name="is_deferred"
+                    optional="hide"
+                    column_invisible="parent.state != 'draft'"
+                />
             </xpath>
             <xpath
                 expr="//field[@name='order_line']/list//field[@name='date_start']"

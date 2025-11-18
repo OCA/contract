@@ -29,5 +29,21 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         res = super()._compute_product_contract_data()
         for rec in self:
             if rec.product_id.is_contract and rec.product_id.is_deferred:
-                rec.is_deferred = True
+                rec.update({"is_deferred": True})
         return res
+
+    @api.depends(
+        "product_id",
+        "contract_start_date_method",
+        "date_start",
+        "date_end",
+        "recurring_rule_type",
+        "recurrence_interval",
+        "recurring_invoicing_type",
+        "is_deferred",
+    )
+    def _compute_name(self):
+        """
+        Trigger _compute_name if changes are done in product configurator
+        """
+        return super()._compute_name()
