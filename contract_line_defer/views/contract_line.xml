@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_line_form_view_defer" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <field name="date_start" position="before">
+                <field name="is_deferred" />
+            </field>
+            <field name="date_start" position="attributes">
+                <attribute name="invisible">is_deferred</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="contract_line_tree_view_defer" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-muted">is_deferred</attribute>
+            </xpath>
+            <field name="date_start" position="before">
+                <field name="is_deferred" />
+            </field>
+        </field>
+    </record>
+</odoo>
