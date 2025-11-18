@@ -261,6 +261,15 @@ class ContractLine(models.Model):
                 }
             )
 
+    def _can_be_invoiced(self, date_ref):
+        self.ensure_one()
+        return (
+            not self.is_canceled
+            and self.recurring_next_date
+            and self.recurring_next_date <= date_ref
+            and self.next_period_date_start
+        )
+
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
         default_contract_type = self.env.context.get("default_contract_type")
