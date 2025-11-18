@@ -568,14 +568,6 @@ class ContractContract(models.Model):
         """
         self.ensure_one()
 
-        def can_be_invoiced(contract_line):
-            return (
-                not contract_line.is_canceled
-                and contract_line.recurring_next_date
-                and contract_line.recurring_next_date <= date_ref
-                and contract_line.next_period_date_start
-            )
-
         lines2invoice = previous = self.env["contract.line"]
         current_section = current_note = False
         for line in self.contract_line_ids:
@@ -589,7 +581,7 @@ class ContractContract(models.Model):
                 elif line.note_invoicing_mode == "with_next_line":
                     current_note = line
             elif line.is_recurring_note or not line.display_type:
-                if can_be_invoiced(line):
+                if line._can_be_invoiced(date_ref):
                     if current_section:
                         lines2invoice |= current_section
                         current_section = False
