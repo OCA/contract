@@ -194,8 +194,9 @@ class ContractTemplateLine(models.Model):
                         line.contract_id.company_id
                     ).property_product_pricelist
                 )
+                qty = line.env.context.get("contract_line_qty", line.quantity)
                 product = line.product_id.with_context(
-                    quantity=line.env.context.get("contract_line_qty", line.quantity),
+                    quantity=qty,
                     pricelist=pricelist.id,
                     partner=line.contract_id.partner_id.id,
                     uom=line.uom_id.id,
@@ -203,7 +204,7 @@ class ContractTemplateLine(models.Model):
                         "old_date", fields.Date.context_today(line)
                     ),
                 )
-                line.price_unit = pricelist._get_product_price(product, quantity=1)
+                line.price_unit = pricelist._get_product_price(product, quantity=qty)
             else:
                 line.price_unit = line.specific_price
 
