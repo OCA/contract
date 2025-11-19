@@ -74,6 +74,24 @@ class TestContractBase(common.TransactionCase):
                 "base": "list_price",
             }
         )
+        cls.env["product.pricelist.item"].create(
+            {
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "product_id": cls.product_2.id,
+                "compute_price": "fixed",
+                "fixed_price": 100,
+                "min_quantity": 1,
+            }
+        )
+        cls.env["product.pricelist.item"].create(
+            {
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "product_id": cls.product_2.id,
+                "compute_price": "fixed",
+                "fixed_price": 50,
+                "min_quantity": 10,
+            }
+        )
         cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract",
@@ -243,6 +261,23 @@ class TestContract(TestContractBase):
         self.acct_line.price_unit = 10
         self.acct_line.invalidate_model()
         self.assertEqual(self.acct_line.price_unit, 10)
+
+    def test_automatic_price_min_quantity(self):
+        """Test that automatic pricing respects pricelist quantity-based rules."""
+        self.acct_line.product_id = self.product_2.id
+        self.acct_line.automatic_price = True
+        self.acct_line.quantity = 1
+        self.assertEqual(
+            self.acct_line.price_unit,
+            100,
+            "Price should be 100 for quantity 1 based on pricelist rule",
+        )
+        self.acct_line.quantity = 10
+        self.assertEqual(
+            self.acct_line.price_unit,
+            50,
+            "Price should be 50 for quantity 10 based on pricelist rule",
+        )
 
     def test_automatic_price_change(self):
         self.acct_line.automatic_price = True
