@@ -48,8 +48,11 @@ class SaleOrder(models.Model):
 
     def _prepare_contract_value(self, contract_template):
         self.ensure_one()
+        name = (
+            f"{contract_template.name}: {self.name}" if contract_template else self.name
+        )
         return {
-            "name": f"{contract_template.name}: {self.name}",
+            "name": name,
             "partner_id": self.partner_id.id,
             "company_id": self.company_id.id,
             "contract_template_id": contract_template.id,
@@ -64,6 +67,7 @@ class SaleOrder(models.Model):
     def action_create_contract(self):
         contract_model = self.env["contract.contract"]
         contracts = []
+        lines_without_contract = self.env["sale.order.line"].browse()
         for rec in self.filtered("is_contract"):
             line_to_create_contract = rec.order_line.filtered(
                 lambda r: not r.contract_id and r.product_id.is_contract
@@ -81,17 +85,8 @@ class SaleOrder(models.Model):
                     rec.company_id
                 ).property_contract_template_id
                 if not contract_template:
-                    raise ValidationError(
-                        _(
-                            "You must specify a contract "
-                            "template for '%(product_name)s' product "
-                            "in '%(company_name)s' company."
-                        )
-                        % {
-                            "product_name": order_line.product_id.name,
-                            "company_name": rec.company_id.name,
-                        }
-                    )
+                    lines_without_contract |= order_line
+                    continue
                 contract_templates |= contract_template
             for contract_template in contract_templates:
                 order_lines = line_to_create_contract.filtered(
@@ -109,6 +104,13 @@ class SaleOrder(models.Model):
                 order_lines.write({"contract_id": contract.id})
             for line in line_to_update_contract:
                 line.create_contract_line(line.contract_id)
+            if lines_without_contract:
+                contract = contract_model.create(
+                    rec._prepare_contract_value(self.env["contract.template"])
+                )
+                contracts.append(contract.id)
+                lines_without_contract.create_contract_line(contract)
+                lines_without_contract.write({"contract_id": contract.id})
         return contract_model.browse(contracts)
 
     def action_confirm(self):

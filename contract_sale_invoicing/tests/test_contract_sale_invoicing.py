@@ -15,11 +15,23 @@ class TestContractSaleInvoicing(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.product_contract = cls.env["product.product"].create(
+            {"name": "Contract Product"}
+        )
         cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract",
                 "partner_id": cls.partner.id,
                 "company_id": cls.env.company.id,
+                "contract_line_ids": [
+                    Command.create(
+                        {
+                            "name": "Test Contract Line",
+                            "product_id": cls.product_contract.id,
+                            "quantity": 1.0,
+                        }
+                    )
+                ],
             }
         )
         cls.contract.group_id = cls.env["account.analytic.account"].search([], limit=1)
@@ -77,11 +89,32 @@ class TestContractSaleInvoicing(BaseCommon):
     def test_sale_invoicing(self):
         """
         Do invoice Sale Order that matches on analytic account
+        this must create a new invoice in the sale order
         """
         self.contract.invoicing_sales = True
+        self.contract.invoicing_sales_into_contract = False
         self.sale_order.action_confirm()
         self.contract.recurring_create_invoice()
         self.assertEqual(self.sale_order.invoice_status, "invoiced")
+        contract_invoices = self.contract._get_related_invoices()
+        self.assertEqual(len(contract_invoices), 1)
+        self.assertEqual(len(self.sale_order.invoice_ids), 1)
+        self.assertNotEqual(self.sale_order.invoice_ids, contract_invoices)
+
+    def test_sale_invoicing_same_contract(self):
+        """
+        Do invoice Sale Order that matches on analytic account
+        this must add the sale order lines into the contract invoice
+        """
+        self.contract.invoicing_sales = True
+        self.contract.invoicing_sales_into_contract = True
+        self.sale_order.action_confirm()
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.sale_order.invoice_status, "invoiced")
+        contract_invoices = self.contract._get_related_invoices()
+        self.assertEqual(len(contract_invoices), 1)
+        self.assertEqual(len(self.sale_order.invoice_ids), 1)
+        self.assertEqual(self.sale_order.invoice_ids, contract_invoices)
 
     def test_contract_sale_invoicing_without(self):
         """

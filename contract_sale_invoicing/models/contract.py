@@ -12,9 +12,17 @@ class ContractContract(models.Model):
         help="If checked include sales with same analytic account to invoice "
         "in contract invoice creation.",
     )
+    invoicing_sales_into_contract = fields.Boolean(
+        help="If checked, include the sales order lines "
+        "in the contract invoice instead of creating separate invoices.",
+    )
 
     def _recurring_create_invoice(self, date_ref=False):
         invoices = super()._recurring_create_invoice(date_ref)
+        invoice_by_contract = {}
+        for invoice in invoices:
+            contract = invoice.invoice_line_ids.contract_line_id.contract_id
+            invoice_by_contract[contract.id] = invoice
         for contract in self:
             if not contract.invoicing_sales or not contract.recurring_next_date:
                 continue
@@ -41,6 +49,29 @@ class ContractContract(models.Model):
             sales = sales.with_context(
                 filter_on_analytic_account=contract.group_id.id
             ).filtered(lambda s: s._get_invoiceable_lines())
-            if sales:
+            if not sales:
+                continue
+            # Add sales lines to existing invoice
+            if contract.invoicing_sales_into_contract and invoice_by_contract.get(
+                contract.id
+            ):
+                invoice = invoice_by_contract[contract.id]
+                sale_lines_to_invoice = sales.with_context(
+                    filter_on_analytic_account=contract.group_id.id
+                )._get_invoiceable_lines()
+                next_sequence = (
+                    max(invoice.invoice_line_ids.mapped("sequence") or [0]) + 1
+                )
+                invoice_line_vals_list = []
+                for sale_line in sale_lines_to_invoice:
+                    invoice_line_vals = sale_line._prepare_invoice_line(
+                        sequence=next_sequence
+                    )
+                    next_sequence += 1
+                    invoice_line_vals["move_id"] = invoice.id
+                    invoice_line_vals_list.append(invoice_line_vals)
+                self.env["account.move.line"].create(invoice_line_vals_list)
+            else:
+                # Create separate invoices for sales
                 invoices |= sales._create_invoices()
         return invoices

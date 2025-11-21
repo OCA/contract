@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
 
@@ -127,9 +127,8 @@ class TestSaleOrder(TransactionCase):
         other_company = self.env["res.company"].create(
             {"name": "other company", "parent_id": self.sale.company_id.id}
         )
-        with self.assertRaises(UserError):
-            self.sale.company_id = other_company
-            self.sale.action_confirm()
+        self.sale.company_id = other_company
+        self.assertFalse(self.sale.order_line.mapped("contract_template_id"))
 
     def test_change_sale_company_2(self):
         """Contract company must be the sale order company."""
@@ -368,6 +367,61 @@ class TestSaleOrder(TransactionCase):
             .mapped("contract_id")
         )
         self.assertEqual(len(contracts), 1)
+
+    def test_order_lines_without_contract_template(self):
+        """It should create one contract with lines without contract
+        template"""
+        self.product1.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        self.product2.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        self.assertFalse(self.sale.order_line.mapped("contract_template_id"))
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 1)
+        self.assertEqual(len(contracts.contract_line_ids), 2)
+        self.assertEqual(contracts.name, self.sale.name)
+        contracts = (
+            self.env["contract.line"]
+            .search([("sale_order_line_id", "in", self.sale.order_line.ids)])
+            .mapped("contract_id")
+        )
+        self.assertEqual(len(contracts), 1)
+
+    def test_order_lines_without_contract_template2(self):
+        """It should create two contracts
+        product1 with contract template
+        product2 without contract template
+        """
+        self.product2.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        line_product_1 = self.sale.order_line.filtered(
+            lambda line: line.product_id == self.product1
+        )
+        line_product_2 = self.sale.order_line.filtered(
+            lambda line: line.product_id == self.product2
+        )
+        self.assertEqual(line_product_1.contract_template_id, self.contract_template1)
+        self.assertFalse(line_product_2.contract_template_id)
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 2)
+        self.assertEqual(len(line_product_1.contract_id.contract_line_ids), 1)
+        self.assertEqual(len(line_product_2.contract_id.contract_line_ids), 1)
+        self.assertEqual(
+            line_product_1.contract_id.name,
+            f"{self.contract_template1.name}: {self.sale.name}",
+        )
+        self.assertEqual(line_product_2.contract_id.name, self.sale.name)
+        contracts = (
+            self.env["contract.line"]
+            .search([("sale_order_line_id", "in", self.sale.order_line.ids)])
+            .mapped("contract_id")
+        )
+        self.assertEqual(len(contracts), 2)
 
     def _create_contract_product(
         self, recurrence_interval, contract_start_date_method, force_month=False

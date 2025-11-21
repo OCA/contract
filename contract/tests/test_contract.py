@@ -74,6 +74,24 @@ class TestContractBase(common.TransactionCase):
                 "base": "list_price",
             }
         )
+        cls.env["product.pricelist.item"].create(
+            {
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "product_id": cls.product_2.id,
+                "compute_price": "fixed",
+                "fixed_price": 100,
+                "min_quantity": 1,
+            }
+        )
+        cls.env["product.pricelist.item"].create(
+            {
+                "pricelist_id": cls.partner.property_product_pricelist.id,
+                "product_id": cls.product_2.id,
+                "compute_price": "fixed",
+                "fixed_price": 50,
+                "min_quantity": 10,
+            }
+        )
         cls.contract = cls.env["contract.contract"].create(
             {
                 "name": "Test Contract",
@@ -243,6 +261,23 @@ class TestContract(TestContractBase):
         self.acct_line.price_unit = 10
         self.acct_line.invalidate_model()
         self.assertEqual(self.acct_line.price_unit, 10)
+
+    def test_automatic_price_min_quantity(self):
+        """Test that automatic pricing respects pricelist quantity-based rules."""
+        self.acct_line.product_id = self.product_2.id
+        self.acct_line.automatic_price = True
+        self.acct_line.quantity = 1
+        self.assertEqual(
+            self.acct_line.price_unit,
+            100,
+            "Price should be 100 for quantity 1 based on pricelist rule",
+        )
+        self.acct_line.quantity = 10
+        self.assertEqual(
+            self.acct_line.price_unit,
+            50,
+            "Price should be 50 for quantity 10 based on pricelist rule",
+        )
 
     def test_automatic_price_change(self):
         self.acct_line.automatic_price = True
@@ -1522,3 +1557,39 @@ class TestContract(TestContractBase):
         self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
         invoice_id = self.contract3.recurring_create_invoice()
         self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
+
+    def test_analytic_account(self):
+        """Tests the automatic setting of the analytic account on the contract
+        depending on the analytic accounts set on the contract lines.
+        # Case 1: only one contract line with one analytic account
+            => the analytic account is set on the contract
+        # Case 2: only one contract line with two analytic accounts
+            => the analytic account is not set on the contract
+        # Case 3: two contract lines, with the same analytic account
+            => the analytic account is set on the contract
+        # Case 4: two contract lines, each one with one analytic account
+            => the analytic account is not set on the contract
+        """
+        plan = self.env["account.analytic.plan"].create({"name": "Test plan contract"})
+        self.analytic_account_1 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 1", "plan_id": plan.id}
+        )
+        self.analytic_account_2 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 2", "plan_id": plan.id}
+        )
+        # Case 1: only one contract line with one analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 2: only one contract line with two analytic accounts
+        self.acct_line.analytic_distribution = {
+            self.analytic_account_1.id: 50,
+            self.analytic_account_2.id: 50,
+        }
+        self.assertFalse(self.contract.group_id)
+        # Case 3: two contract lines, with the same analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        new_contract_line = self.acct_line.copy()
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 4: two contract lines, each one with one analytic account
+        new_contract_line.analytic_distribution = {self.analytic_account_2.id: 100}
+        self.assertFalse(self.contract.group_id)
