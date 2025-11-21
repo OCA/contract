@@ -166,6 +166,8 @@ class SaleSubscription(models.Model):
         for record in self:
             recurring_total = amount_tax = 0.0
             for order_line in record.sale_subscription_line_ids:
+                if order_line.display_type:
+                    continue
                 recurring_total += order_line.price_subtotal
                 amount_tax += order_line.amount_tax_line_amount
             record.update(

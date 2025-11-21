@@ -15,7 +15,9 @@ To make a subscription:
     invoice even if the subscription template has the *Sale Order &
     Invoice* option selected, because the *Invoicing mode* option is
     triggered through the cron job.
-5.  The cron job will also end the subscription if its end date has been
+5.  You can create sections and notes in the subscription invoice, they will 
+    be passed to the generated invoices retaining the format.
+6.  The cron job will also end the subscription if its end date has been
     reached.
 
 To create subscriptions with the sale of a product:

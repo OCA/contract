@@ -40,6 +40,12 @@ class SaleSubscriptionLine(models.Model):
         store=True,
         readonly=False,
     )
+    display_type = fields.Selection(
+        selection=[
+            ("line_section", "Section"), 
+            ("line_note", "Note"),
+        ],
+        default=False)
     price_subtotal = fields.Monetary(
         string="Subtotal", readonly=True, compute="_compute_subtotal", store=True
     )
@@ -58,10 +64,20 @@ class SaleSubscriptionLine(models.Model):
         store=True,
         index=True,
     )
-
+    sequence = fields.Integer(
+        string="Sequence",
+        default=10,
+    )
     @api.depends("product_id", "price_unit", "product_uom_qty", "discount", "tax_ids")
     def _compute_subtotal(self):
         for record in self:
+            if record.display_type:
+                record.update({
+                    "amount_tax_line_amount": 0.0,
+                    "price_total": 0.0,
+                    "price_subtotal": 0.0,
+                })
+                continue
             price = record.price_unit * (1 - (record.discount or 0.0) / 100.0)
             taxes = record.tax_ids.compute_all(
                 price,
@@ -83,6 +99,8 @@ class SaleSubscriptionLine(models.Model):
     @api.depends("product_id")
     def _compute_name(self):
         for record in self:
+            if record.display_type:
+                continue
             if not record.product_id:
                 record.name = False
             lang = get_lang(self.env, record.sale_subscription_id.partner_id.lang).code
@@ -94,6 +112,9 @@ class SaleSubscriptionLine(models.Model):
     @api.depends("product_id", "sale_subscription_id.fiscal_position_id")
     def _compute_tax_ids(self):
         for line in self:
+            if line.display_type:
+                line.tax_ids = False
+                continue
             fpos = (
                 line.sale_subscription_id.fiscal_position_id
                 or line.sale_subscription_id.fiscal_position_id._get_fiscal_position(
@@ -113,6 +134,9 @@ class SaleSubscriptionLine(models.Model):
     )
     def _compute_price_unit(self):
         for record in self:
+            if record.display_type:
+                record.price_unit = 0.0
+                continue
             if not record.product_id:
                 continue
             if (
@@ -146,6 +170,9 @@ class SaleSubscriptionLine(models.Model):
     )
     def _compute_discount(self):
         for record in self:
+            if record.display_type:
+                record.discount = 0.0
+                continue
             if not (
                 record.product_id
                 and record.product_id.uom_id
@@ -281,8 +308,14 @@ class SaleSubscriptionLine(models.Model):
             )
         return max(base_price, final_price)
 
+
     def _prepare_sale_order_line(self):
         self.ensure_one()
+        if self.display_type:
+            return {
+                'display_type': self.display_type,
+                'name': self.name,
+            }
         return {
             "product_id": self.product_id.id,
             "name": self.name,
@@ -294,13 +327,18 @@ class SaleSubscriptionLine(models.Model):
             "product_uom": self.product_id.uom_id.id,
             "analytic_distribution": self.analytic_distribution,
         }
-
+        
     def _prepare_account_move_line(self):
         self.ensure_one()
         account = (
             self.product_id.property_account_income_id
             or self.product_id.categ_id.property_account_income_categ_id
         )
+        if self.display_type:
+            return {
+                'display_type': self.display_type,
+                'name': self.name,
+            }
         return {
             "product_id": self.product_id.id,
             "name": self.name,
