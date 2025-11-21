@@ -1,5 +1,7 @@
 # Copyright 2023 Domatix - Carlos Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from dateutil.relativedelta import relativedelta
+
 from odoo import Command, api, fields, models
 from odoo.tools.misc import get_lang
 
@@ -301,7 +303,8 @@ class SaleSubscriptionLine(models.Model):
             self.product_id.property_account_income_id
             or self.product_id.categ_id.property_account_income_categ_id
         )
-        return {
+
+        vals = {
             "product_id": self.product_id.id,
             "name": self.name,
             "quantity": self.product_uom_qty,
@@ -313,3 +316,33 @@ class SaleSubscriptionLine(models.Model):
             "account_id": account.id,
             "analytic_distribution": self.analytic_distribution,
         }
+
+        if (
+            self.sale_subscription_id
+            and self.sale_subscription_id.recurring_next_date
+            and vals.get("name")
+            and ("#START#" in vals["name"] or "#END#" in vals["name"])
+        ):
+            start_date = self.sale_subscription_id.recurring_next_date
+            end_date = self.get_next_recurring_date(start_date)
+            vals["name"] = self._insert_markers(start_date, end_date)
+
+        return vals
+
+    def get_next_recurring_date(self, date):
+        template = self.sale_subscription_id.template_id
+        type_interval = template.recurring_rule_type
+        interval = int(template.recurring_interval)
+        return date + relativedelta(**{type_interval: interval})
+
+    def _insert_markers(self, first_date_invoiced, last_date_invoiced):
+        self.ensure_one()
+        lang_obj = self.env["res.lang"]
+        lang = lang_obj.search(
+            [("code", "=", self.sale_subscription_id.partner_id.lang)]
+        )
+        date_format = lang.date_format or "%m/%d/%Y"
+        name = self.name
+        name = name.replace("#START#", first_date_invoiced.strftime(date_format))
+        name = name.replace("#END#", last_date_invoiced.strftime(date_format))
+        return name

@@ -5,8 +5,10 @@ To make a subscription:
     daily, monthly... and the method of creating the invoice and/or
     order.
 3.  Go to *Subscription \> Subscriptions*.
-4.  Create a subscription and indicate the start date. When the
-    *Subscriptions Management* cron job is executed, the subscription
+4.  Create a subscription and indicate the start date.You are able to pass 
+    the start and end dates to generated invoices by inserting #START# and 
+    #END# markers to the descriptions of the subscription invoce's products, 
+    When the *Subscriptions Management* cron job is executed, the subscription
     will begin and the first invoice will be created if the execution
     date matches the start date. The invoice will also be created when
     the execution date matches the next invoice date. Additionally, you
