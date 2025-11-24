@@ -30,6 +30,8 @@ class ContractLine(models.Model):
         auto_join=True,
         ondelete="cascade",
     )
+    # replace from abstract to add the store=True
+    partner_id = fields.Many2one(store=True)
     currency_id = fields.Many2one(related="contract_id.currency_id")
     create_invoice_visibility = fields.Boolean(
         compute="_compute_create_invoice_visibility"
