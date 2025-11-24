@@ -230,8 +230,16 @@
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
                 <separator />
-                <filter name="is_canceled" domain="[('is_canceled', '=', True)]" />
-                <filter name="is_auto_renew" domain="[('is_auto_renew', '=', True)]" />
+                <filter
+                    name="is_canceled"
+                    string="Canceled"
+                    domain="[('is_canceled', '=', True)]"
+                />
+                <filter
+                    name="is_auto_renew"
+                    string="Auto Renew"
+                    domain="[('is_auto_renew', '=', True)]"
+                />
                 <group expand="0" string="Group By...">
                     <filter
                         string="Contract"
@@ -239,8 +247,52 @@
                         domain="[]"
                         context="{'group_by':'contract_id'}"
                     />
-                    </group>
+                    <filter
+                        string="Partner"
+                        name="group_by_partner"
+                        domain="[]"
+                        context="{'group_by':'partner_id'}"
+                    />
+                    <filter
+                        string="Product"
+                        name="group_by_product"
+                        domain="[]"
+                        context="{'group_by':'product_id'}"
+                    />
+                    <separator />
+                    <filter
+                        string="Date start"
+                        name="group_by_date_start"
+                        domain="[]"
+                        context="{'group_by':'date_start'}"
+                    />
+                    <filter
+                        string="Date end"
+                        name="group_by_date_end"
+                        domain="[]"
+                        context="{'group_by':'date_end'}"
+                    />
+                    <filter
+                        string="Next invoice date"
+                        name="group_by_recurring_next_date"
+                        domain="[]"
+                        context="{'group_by':'recurring_next_date'}"
+                    />
+                </group>
             </search>
+        </field>
+    </record>
+
+    <record id="contract_line_view_pivot" model="ir.ui.view">
+        <field name="name">contract.line.view.pivot</field>
+        <field name="model">contract.line</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="contract_id" type="row" />
+                <field name="date_start" interval="month" type="col" />
+                <field name="quantity" type="measure" />
+                <field name="specific_price" type="measure" />
+            </pivot>
         </field>
     </record>
 
@@ -248,7 +300,7 @@
     <record id="action_supplier_contract_lines" model="ir.actions.act_window">
         <field name="name">Supplier Contract Lines</field>
         <field name="res_model">contract.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,pivot,form</field>
         <field name="domain">[('contract_id.contract_type', '=', 'purchase')]</field>
         <field name="context">
             {'search_default_group_by_contract': 1}
@@ -260,7 +312,7 @@
     <record id="action_customer_contract_lines" model="ir.actions.act_window">
         <field name="name">Customer Contract Lines</field>
         <field name="res_model">contract.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,pivot,form</field>
         <field name="domain">[('contract_id.contract_type', '=', 'sale')]</field>
         <field name="context">
             {'search_default_group_by_contract': 1}
