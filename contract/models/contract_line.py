@@ -32,6 +32,8 @@ class ContractLine(models.Model):
         auto_join=True,
         ondelete="cascade",
     )
+    # replace from abstract to add the store=True
+    partner_id = fields.Many2one(store=True)
     currency_id = fields.Many2one(related="contract_id.currency_id")
     date_start = fields.Date(required=True)
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
