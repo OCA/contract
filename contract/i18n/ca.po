@@ -106,23 +106,22 @@ msgstr ""
 "                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
 "\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>REFERÈNCIES</strong><br/>\n"
-"                    &amp;nbsp;&amp;nbsp;Contracte: <strong t-out="
-"\"object.name\"/><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contracte: <strong t-out=\"object."
+"name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Data d'inici del contracte: <t "
-"t-out=\"object.date_start or ''\"/><br/>\n"
+"                        &amp;nbsp;&amp;nbsp;Data d'inici del contracte: <t t-"
+"out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
 "                    <t t-if=\"object.user_id\">\n"
 "                    <t t-if=\"object.user_id.email\">\n"
 "                            &amp;nbsp;&amp;nbsp;Et teu contracte: <a t-att-"
-"href="
-"\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)\" "
-"t-out=\"object.user_id.name\"/>\n"
+"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
+"name)\" t-out=\"object.user_id.name\"/>\n"
 "                        </t>\n"
 "                    <t t-else=\"\">\n"
-"                            &amp;nbsp;&amp;nbsp;El teu contacte: <t t-out="
-"\"object.user_id.name\"/>\n"
+"                            &amp;nbsp;&amp;nbsp;El teu contacte: <t t-"
+"out=\"object.user_id.name\"/>\n"
 "                        </t>\n"
 "                </t>\n"
 "                </p>\n"
@@ -130,27 +129,27 @@ msgstr ""
 "                <br/>\n"
 "                <p>Si tens alguna pregunta, no dubtis a posar-te en contacte "
 "amb nosaltres.</p>\n"
-"                <p>Gràcies per triar  <t t-out="
-"\"object.company_id.name or 'us'\"/>!</p>\n"
+"                <p>Gràcies per triar  <t t-out=\"object.company_id.name or "
+"'us'\"/>!</p>\n"
 "                <br/>\n"
 "                <br/>\n"
 "                <div style=\"width: 375px; margin: 0px; padding: 0px; "
 "background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
 "radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"                    <h3 style="
-"\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"                        <strong style=\"text-transform:uppercase;\" t-out=\""
-"object.company_id.name\"/>\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-"
+"out=\"object.company_id.name\"/>\n"
 "                    </h3>\n"
 "                </div>\n"
 "                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
 "line-height: 16px; background-color: #F2F2F2;\">\n"
-"                    <span style="
-"\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"                        <address t-field="
-"\"object.company_id.sudo().partner_id\" t-options=\"{&quot;widget&quot;: "
-"&quot;contact&quot;, &quot;fields&quot;: "
-"[&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}\"/>\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()."
+"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
+"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
+"no_marker&quot;: True}\"/>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -169,8 +168,9 @@ msgstr ""
 "                <br/>\n"
 "                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
 "(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
-"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-decoration:"
-" none; color: #fff; border-radius: 5px; font-size:13px;\">View contract</a>\n"
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">View "
+"contract</a>\n"
 "            </div>\n"
 "        "
 
@@ -273,8 +273,8 @@ msgid ""
 "                                        invoiced period"
 msgstr ""
 "<strong>#START#</strong>: Data d'inici \n"
-"                                                                                  "
-"del període facturat"
+"                                                                                  del "
+"període facturat"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -828,6 +828,7 @@ msgid "Date Start"
 msgstr "Data Inici"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
 msgstr "Data de fi"
@@ -845,6 +846,11 @@ msgstr "Data de Propera Factura"
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
 msgstr "Data de la propera factura"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
+msgid "Date start"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__daily
@@ -1317,6 +1323,11 @@ msgid "Next Period Start"
 msgstr "Inici del proper període"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
+msgid "Next invoice date"
+msgstr ""
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Next period to invoice"
 msgstr "Següent període a facturar"
@@ -1411,6 +1422,7 @@ msgstr "Altra informació"
 #: model:ir.model.fields,field_description:contract.field_contract_line__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__partner_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Partner"
 msgstr "Empresa"
 
@@ -1470,6 +1482,7 @@ msgstr "Llista de preus"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Product"
 msgstr "Producte"
 
