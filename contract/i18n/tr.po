@@ -126,8 +126,8 @@ msgstr ""
 "<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                faturalanacak abonelik\n"
 "                            </span>\n"
-"                            <span invisible="
-"\"contract_to_invoice_count &lt;= 1\">\n"
+"                            <span invisible=\"contract_to_invoice_count &lt;"
+"= 1\">\n"
 "                                faturalanacak abonelikler\n"
 "                            </span>"
 
@@ -444,6 +444,7 @@ msgstr "Ağustos"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_auto_renew
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_auto_renew
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Auto Renew"
 msgstr "Otomatik Yenile"
 
@@ -493,6 +494,7 @@ msgstr "Bu satır için iptale izin verilmiyor"
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_canceled
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__state__canceled
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Canceled"
 msgstr "İptal Edildi"
 
@@ -812,8 +814,8 @@ msgid ""
 msgstr ""
 "<strong>%(product)s</strong> ürününün abonelik satırı\n"
 "                    askıya alınmış: <br/>\n"
-"                    - <strong>Askılama Başlangıç</strong>: %(new_date_start)"
-"s\n"
+"                    - <strong>Askılama Başlangıç</strong>: "
+"%(new_date_start)s\n"
 "                    <br/>\n"
 "                    - <strong>Askılama Bitiş</strong>: %(new_date_end)s\n"
 "                "
@@ -1022,6 +1024,7 @@ msgid "Date Start"
 msgstr "Başlama Tarihi"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
 msgstr "Bitiş Tarihi"
@@ -1042,6 +1045,11 @@ msgstr "Sonraki Fatura Tarihi"
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
 msgstr "Sonraki faturanın tarihi"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
+msgid "Date start"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract__recurring_rule_type__daily
@@ -1638,6 +1646,11 @@ msgid "Next Period Start"
 msgstr "Sonraki Dönem Başlangıcı"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
+msgid "Next invoice date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__display_type__line_note
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_note
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__display_type__line_note
@@ -1726,6 +1739,7 @@ msgstr "Diğer Bilgiler"
 #: model:ir.model.fields,field_description:contract.field_contract_line__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__partner_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Partner"
 msgstr "İş Ortağı"
 
@@ -1817,6 +1831,7 @@ msgstr "Fiyat Listesi"
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Product"
 msgstr "Ürün"
 
@@ -2056,8 +2071,8 @@ msgid ""
 "Specify if the invoice must be generated at the beginning (pre-paid) or end "
 "(post-paid) of the period."
 msgstr ""
-"Faturanın dönemin başında mı (ön ödemeli) yoksa sonunda mı (sonradan ödemeli)"
-" oluşturulması gerektiğini belirtin."
+"Faturanın dönemin başında mı (ön ödemeli) yoksa sonunda mı (sonradan "
+"ödemeli) oluşturulması gerektiğini belirtin."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__state
@@ -2407,7 +2422,8 @@ msgstr "Abonelikleri feshetmenize izin verilmez."
 #: code:addons/contract/models/contract_line.py:0
 #, python-format
 msgid "You can't delay a contract line invoiced at least one time."
-msgstr "En az bir kez faturalandırılan bir abonelik satırını geciktiremezsiniz."
+msgstr ""
+"En az bir kez faturalandırılan bir abonelik satırını geciktiremezsiniz."
 
 #. module: contract
 #. odoo-python
