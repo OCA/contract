@@ -13,7 +13,7 @@ from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.product.tests.common import ProductCommon
 
 
-class TestSubscriptionOCA(BaseCommon, ProductCommon):
+class TestSubscriptionOCA(ProductCommon, BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
