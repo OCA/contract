@@ -291,7 +291,7 @@ class SaleSubscriptionLine(models.Model):
             "discount": self.discount,
             "price_subtotal": self.price_subtotal,
             "tax_ids": self.tax_ids,
-            "product_uom": self.product_id.uom_id.id,
+            "product_uom_id": self.product_id.uom_id.id,
             "analytic_distribution": self.analytic_distribution,
         }
 
