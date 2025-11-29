@@ -271,6 +271,7 @@ class SaleSubscription(models.Model):
         self.ensure_one()
         return {
             "partner_id": self.partner_id.id,
+            "pricelist_id": self.pricelist_id.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "date_order": datetime.now(),
             "payment_term_id": self.partner_id.property_payment_term_id.id,
