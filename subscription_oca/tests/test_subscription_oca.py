@@ -10,9 +10,10 @@ from odoo import Command, exceptions, fields
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.product.tests.common import ProductCommon
 
 
-class TestSubscriptionOCA(BaseCommon):
+class TestSubscriptionOCA(BaseCommon, ProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
