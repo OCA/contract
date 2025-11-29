@@ -17,7 +17,7 @@ class TestSubscriptionOCA(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
-        cls.portal_user = cls.env.ref("base.demo_user0")
+        cls.portal_user = cls._create_new_portal_user()
         cls.cash_journal = cls.env["account.journal"].search(
             [
                 ("type", "=", "cash"),
