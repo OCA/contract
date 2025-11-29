@@ -290,7 +290,7 @@ class SaleSubscriptionLine(models.Model):
             "price_unit": self.price_unit,
             "discount": self.discount,
             "price_subtotal": self.price_subtotal,
-            "tax_id": self.tax_ids,
+            "tax_ids": self.tax_ids,
             "product_uom": self.product_id.uom_id.id,
             "analytic_distribution": self.analytic_distribution,
         }
