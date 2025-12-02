@@ -374,21 +374,6 @@
         </field>
     </record>
 
-    <record id="view_product_suscribable_filter" model="ir.ui.view">
-        <field name="name">product.suscribable.filter</field>
-        <field name="model">product.template</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="subscribable" />
-                <filter
-                    string="Suscribable products"
-                    name="subsproducts"
-                    domain="[('subscribable','=', True)]"
-                />
-            </search>
-        </field>
-    </record>
-
     <record id="view_subscription_close_reason_tree" model="ir.ui.view">
         <field name="name">view.subscription.close.reason.tree</field>
         <field name="model">sale.subscription.close.reason</field>
