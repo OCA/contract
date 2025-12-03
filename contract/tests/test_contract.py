@@ -1593,3 +1593,20 @@ class TestContract(TestContractBase):
         # Case 4: two contract lines, each one with one analytic account
         new_contract_line.analytic_distribution = {self.analytic_account_2.id: 100}
         self.assertFalse(self.contract.group_id)
+
+    def test_analytic_distribution(self):
+        # Create an analytic distribution model for product 1
+        analytic_plan = self.env["account.analytic.plan"].create({"name": "Plan"})
+        analytic_account = self.env["account.analytic.account"].create(
+            {"name": "Test", "plan_id": analytic_plan.id}
+        )
+        self.env["account.analytic.distribution.model"].create(
+            {
+                "product_id": self.product_1.id,
+                "analytic_distribution": {str(analytic_account.id): 100},
+            }
+        )
+        new_contract_line = self.env["contract.line"].create(self.line_vals)
+        self.assertEqual(
+            new_contract_line.analytic_distribution, {str(analytic_account.id): 100}
+        )
