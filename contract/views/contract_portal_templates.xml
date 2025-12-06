@@ -228,7 +228,7 @@
                         <tbody class="contract_tbody">
                             <t t-foreach="contract.contract_line_ids" t-as="line">
                                 <tr
-                                    t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''"
+                                    t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else 'text-muted' if line.is_canceled else ''"
                                 >
                                     <t t-if="not line.display_type">
                                         <td name="td_name">
@@ -263,7 +263,10 @@
                                             name="td_recurring_next_date"
                                             class="text-right"
                                         >
-                                            <span t-field="line.recurring_next_date" />
+                                            <span
+                                                t-field="line.recurring_next_date"
+                                                t-if="not line.is_canceled"
+                                            />
                                         </td>
                                     </t>
                                     <t t-if="line.display_type == 'line_section'">
