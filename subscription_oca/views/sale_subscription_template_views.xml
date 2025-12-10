@@ -80,7 +80,7 @@
                                     <field name="invoicing_mode" widget="radio" />
                                     <field
                                         name="invoice_mail_template_id"
-                                        invisible="invoicing_mode != 'invoice_send'"
+                                        invisible="invoicing_mode not in ['invoice_send', 'invoice_and_payment']"
                                         required="invoicing_mode == 'invoice_send'"
                                     />
                                 </group>
@@ -97,12 +97,9 @@
                             />
                         </page>
                     </notebook>
-
                 </sheet>
-
             </form>
         </field>
-
     </record>
 
     <record id="sale_subscription_template_tree" model="ir.ui.view">

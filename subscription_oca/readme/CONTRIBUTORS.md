@@ -6,3 +6,6 @@
   - Harald Panten
   - Valentin Vinagre
   - Alberto Martínez
+- [Binhex](https://www.binhex.cloud):
+  - Adasat Torres de León \<<a.torres@binhex.cloud>\>
+- Chris Mann <chrisandrewmann>

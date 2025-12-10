@@ -70,9 +70,9 @@ To create subscriptions with the sale of a product:
 Known issues / Roadmap
 ======================
 
--  Refactor all the onchanges that have business logic to computed
-   write-able fields when possible. Keep onchanges only for UI purposes.
--  Add tests.
+- Refactor all the onchanges that have business logic to computed
+  write-able fields when possible. Keep onchanges only for UI purposes.
+- Add tests.
 
 Bug Tracker
 ===========
@@ -95,17 +95,23 @@ Authors
 Contributors
 ------------
 
--  Carlos Martínez <carlos@domatix.com>
--  Carolina Ferrer <carolina@domatix.com>
--  `Ooops404 <https://www.ooops404.com>`__:
+- Carlos Martínez <carlos@domatix.com>
+- Carolina Ferrer <carolina@domatix.com>
+- `Ooops404 <https://www.ooops404.com>`__:
 
-   -  Ilyas <irazor147@gmail.com>
+  - Ilyas <irazor147@gmail.com>
 
--  `Sygel <https://www.sygel.es>`__:
+- `Sygel <https://www.sygel.es>`__:
 
-   -  Harald Panten
-   -  Valentin Vinagre
-   -  Alberto Martínez
+  - Harald Panten
+  - Valentin Vinagre
+  - Alberto Martínez
+
+- `Binhex <https://www.binhex.cloud>`__:
+
+  - Adasat Torres de León <a.torres@binhex.cloud>
+
+- Chris Mann
 
 Maintainers
 -----------
