@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 =======================
 Subscription management
 =======================
@@ -17,7 +13,7 @@ Subscription management
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -112,7 +108,11 @@ Contributors
   - Valentin Vinagre
   - Alberto Martínez
 
-- Dennis Sluijk <d.sluijk@onestein.nl>
+- `Binhex <https://www.binhex.cloud>`__:
+
+  - Adasat Torres de León <a.torres@binhex.cloud>
+
+- Chris Mann
 
 Maintainers
 -----------

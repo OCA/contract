@@ -35,6 +35,7 @@ class SaleSubscriptionTemplate(models.Model):
             ("invoice", "Invoice"),
             ("invoice_send", "Invoice & send"),
             ("sale_and_invoice", "Sale order & Invoice"),
+            ("invoice_and_payment", "Invoice & Recurring Payment"),
         ],
     )
     code = fields.Char()

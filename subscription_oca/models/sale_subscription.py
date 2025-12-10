@@ -105,6 +105,37 @@ class SaleSubscription(models.Model):
         ondelete="restrict",
     )
 
+    payment_token_id = fields.Many2one(
+        comodel_name="payment.token",
+        string="Payment Token",
+        store=True,
+        compute="_compute_payment_token_id",
+        domain="[('partner_id', '=', partner_id)]",
+    )
+    invoicing_mode = fields.Selection(related="template_id.invoicing_mode")
+
+    @api.depends("partner_id", "template_id")
+    def _compute_payment_token_id(self):
+        for record in self:
+            if record.template_id.invoicing_mode not in [
+                "invoice_and_payment",
+            ]:
+                record.payment_token_id = False
+                continue
+            payment_token = (
+                self.env["payment.token"]
+                .sudo()
+                .with_company(record.company_id)
+                .search(
+                    [
+                        ("partner_id", "=", record.partner_id.id),
+                    ],
+                    limit=1,
+                    order="write_date desc",
+                )
+            )
+            record.payment_token_id = payment_token.id if payment_token else False
+
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         stage_ids = stages.search([], order=stages._order)
@@ -328,12 +359,18 @@ class SaleSubscription(models.Model):
 
     def generate_invoice(self):
         invoice_number = ""
-        message_body = ""
         msg_static = self.env._("Created invoice with reference")
-        if self.template_id.invoicing_mode in ["draft", "invoice", "invoice_send"]:
+        if self.template_id.invoicing_mode in [
+            "draft",
+            "invoice",
+            "invoice_send",
+            "invoice_and_payment",
+        ]:
             invoice = self.create_invoice()
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
+                if self.template_id.invoicing_mode == "invoice_and_payment":
+                    self.create_payment(invoice)
                 mail_template = self.template_id.invoice_mail_template_id
                 self.env["account.move.send"]._generate_and_send_invoices(
                     invoice, mail_template=mail_template, sending_methods=["email"]
@@ -487,3 +524,50 @@ class SaleSubscription(models.Model):
                     .id
                 )
         return super().create(vals_list)
+
+    def create_payment(self, invoice):
+        invoice.ensure_one()
+        if not self.payment_token_id:
+            self.message_post(
+                body=self.env._(
+                    f"No payment token found for partner {invoice.partner_id.name}"
+                )
+            )
+            return
+        provider = self.payment_token_id.provider_id
+        method_line = self.env["account.payment.method.line"].search(
+            [
+                ("payment_method_id.code", "=", provider.code),
+                ("company_id", "=", invoice.company_id.id),
+            ],
+            limit=1,
+        )
+
+        if not method_line:
+            self.message_post(
+                body=self.env._(
+                    f"No payment method line found for payment provider {provider.name}"
+                )
+            )
+            return
+        payment_register = self.env["account.payment.register"]
+        payment_vals = {
+            "currency_id": invoice.currency_id.id,
+            "journal_id": provider.journal_id.id,
+            "company_id": invoice.company_id.id,
+            "partner_id": invoice.partner_id.id,
+            "communication": invoice.name,
+            "payment_type": "inbound",
+            "partner_type": "customer",
+            "payment_difference_handling": "open",
+            "writeoff_label": "Write-Off",
+            "payment_date": fields.Date.today(),
+            "amount": invoice.amount_total,
+            "payment_method_line_id": method_line.id,
+            "payment_token_id": self.payment_token_id.id,
+        }
+        payment_register.with_context(
+            active_model="account.move",
+            active_ids=invoice.ids,
+            active_id=invoice.id,
+        ).create(payment_vals).action_create_payments()
