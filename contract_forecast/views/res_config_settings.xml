@@ -25,13 +25,26 @@
                     class="row mt16 o_settings_container"
                     attrs="{'invisible': [('enable_contract_forecast', '=', False)]}"
                 >
-                    <label
-                        for="contract_forecast_interval"
-                        string="Forecast Interval"
-                        class="oe_inline"
-                    />
-                    <field name="contract_forecast_interval" class="oe_inline" />
-                    <field name="contract_forecast_rule_type" class="oe_inline" />
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <label
+                                for="contract_forecast_interval"
+                                string="Forecast Interval"
+                                class="oe_inline"
+                            />
+                            <div>
+                                <field
+                                    name="contract_forecast_interval"
+                                    class="oe_inline"
+                                />
+                                <field
+                                    name="contract_forecast_rule_type"
+                                    class="oe_inline"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
         </field>
