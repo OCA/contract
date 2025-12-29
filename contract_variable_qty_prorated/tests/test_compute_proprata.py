@@ -2,10 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import Command
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestProductTemplate(TransactionCase):
+@tagged("post_install", "-at_install")
+class TestProductTemplate(BaseCommon):
     """
     These tests verify that prorated invoice amounts are correctly computed
     based on recurrence type, interval, invoicing type (pre-paid/post-paid),
@@ -21,8 +24,19 @@ class TestProductTemplate(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner = cls.env.ref("base.res_partner_2")
-        cls.product = cls.env.ref("product.product_product_1")
+        # Create partner and product instead of using references that may not exist
+        cls.partner = cls.env["res.partner"].create(
+            {
+                "name": "Test Partner",
+                "email": "test.partner@example.com",
+            }
+        )
+        cls.product = cls.env["product.product"].create(
+            {
+                "name": "Test Service",
+                "type": "service",
+            }
+        )
         cls.contract = cls.env["contract.contract"].create(
             [
                 {
