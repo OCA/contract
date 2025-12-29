@@ -1,7 +1,7 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, models
+from odoo import models
 
 
 class ContractLine(models.Model):
@@ -17,9 +17,8 @@ class ContractLine(models.Model):
         context.update(self.env.context)
         return {
             "type": "ir.actions.act_window",
-            "name": _("Update Invoice Dates"),
+            "name": self.env._("Update Invoice Dates"),
             "res_model": "contract.update.last.date.invoiced",
-            "view_type": "form",
             "view_mode": "form",
             "target": "new",
             "context": context,

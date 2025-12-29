@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2022 ACSONE SA/NV
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+       License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record model="ir.ui.view" id="contract_line_form_view">
         <field name="model">contract.line</field>
@@ -9,30 +9,28 @@
         >contract.line.form (in contract_update_last_date_invoiced)</field>
         <field name="inherit_id" ref="contract.contract_line_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='last_date_invoiced']" position="before">
-                <div class="o_row">
-                    <div class="last_date_invoiced_wrapper">
-                        <label for="last_date_invoiced" />
-                    </div>
-                    <button
-                        name="action_update_last_date_invoiced"
-                        type="object"
-                        string="Update Invoice Dates"
-                        invisible="display_type"
-                        groups="contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced"
-                        class="oe_inline btn-secondary"
-                        icon="fa-refresh"
-                    />
-                </div>
-            </xpath>
-            <xpath expr="//field[@name='last_date_invoiced']" position="attributes">
-                <attribute name="class" add="oe_inline" separator=" " />
-            </xpath>
+            <!-- Remove groups restriction to make field visible to all users -->
             <xpath
-                expr="//div[hasclass('last_date_invoiced_wrapper')]"
-                position="inside"
+                expr="//group[@name='next_period_dates']//field[@name='last_date_invoiced']"
+                position="attributes"
             >
-                <xpath expr="//field[@name='last_date_invoiced']" position="move" />
+                <attribute name="groups" />
+                <attribute name="class">oe_inline</attribute>
+            </xpath>
+            <!-- Add refresh button after the field -->
+            <xpath
+                expr="//group[@name='next_period_dates']//field[@name='last_date_invoiced']"
+                position="after"
+            >
+                <button
+                    name="action_update_last_date_invoiced"
+                    type="object"
+                    title="Update Last Date Invoiced"
+                    invisible="display_type"
+                    groups="contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced"
+                    class="btn btn-link p-0"
+                    icon="fa-refresh"
+                />
             </xpath>
         </field>
     </record>
