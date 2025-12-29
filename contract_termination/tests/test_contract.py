@@ -37,7 +37,7 @@ class TestContractTermination(TestContractSuccessor):
         group_can_terminate_contract = self.env.ref(
             "contract_termination.can_terminate_contract"
         )
-        group_can_terminate_contract.users |= self.env.user
+        group_can_terminate_contract.write({"user_ids": [(4, self.env.user.id, False)]})
         wizard.terminate_contract()
         self.assertTrue(self.contract.is_terminated)
         self.assertEqual(self.contract.terminate_date, to_date("2018-03-01"))
@@ -54,7 +54,7 @@ class TestContractTermination(TestContractSuccessor):
         group_can_terminate_contract = self.env.ref(
             "contract_termination.can_terminate_contract"
         )
-        group_can_terminate_contract.users |= self.env.user
+        group_can_terminate_contract.write({"user_ids": [(4, self.env.user.id, False)]})
         with self.assertRaises(ValidationError):
             self.contract._terminate_contract(
                 self.terminate_reason,
