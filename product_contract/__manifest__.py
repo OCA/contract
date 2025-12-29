@@ -7,7 +7,7 @@
     "version": "18.0.1.1.2",
     "category": "Contract Management",
     "license": "AGPL-3",
-    "author": "LasLabs, " "ACSONE SA/NV, " "Odoo Community Association (OCA)",
+    "author": "LasLabs, ACSONE SA/NV, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
     "depends": ["product", "contract_termination", "sale"],
     "data": [
