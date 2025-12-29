@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, models
+from odoo import Command, models
 
 
 class ContractLine(models.Model):
@@ -64,13 +64,10 @@ class ContractLine(models.Model):
             [("code", "=", self.contract_id.partner_id.lang)]
         )
         date_format = lang.date_format or "%m/%d/%Y"
-        return _(
-            "Refund for period %(to_refund_start_date)s %(to_refund_end_date)s"
-        ) % (
-            dict(
-                to_refund_start_date=to_refund_start_date.strftime(date_format),
-                to_refund_end_date=to_refund_end_date.strftime(date_format),
-            )
+        return self.env._(
+            "Refund for period %(to_refund_start_date)s %(to_refund_end_date)s",
+            to_refund_start_date=to_refund_start_date.strftime(date_format),
+            to_refund_end_date=to_refund_end_date.strftime(date_format),
         )
 
     def _get_refund_on_stop_quantity(self, to_refund_start_date, to_refund_end_date):

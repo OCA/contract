@@ -21,13 +21,13 @@ Contract Refund On Stop
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/18.0/contract_refund_on_stop
+    :target: https://github.com/OCA/contract/tree/19.0/contract_refund_on_stop
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-18-0/contract-18-0-contract_refund_on_stop
+    :target: https://translation.odoo-community.org/projects/contract-19-0/contract-19-0-contract_refund_on_stop
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=18.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=19.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -38,11 +38,11 @@ invoiced.
 When the stop date is earlier than the last invoiced date, the system
 will:
 
-- Automatically create a refund invoice for the period between the stop
-  date and the last invoiced date.
-- Adjust the ``last_date_invoiced`` of the contract line to match the
-  stop date.
-- Proceed with the normal stop process.
+-  Automatically create a refund invoice for the period between the stop
+   date and the last invoiced date.
+-  Adjust the ``last_date_invoiced`` of the contract line to match the
+   stop date.
+-  Proceed with the normal stop process.
 
 To accurately compute the refund amount, the module depends on
 **``contract_variable_qty_prorated``**, which provides the prorating
@@ -98,8 +98,8 @@ Usage
    period.
 4. The system will:
 
-   - Create a **refund invoice** covering the over-invoiced period.
-   - Update the contract line to end on the chosen stop date.
+   -  Create a **refund invoice** covering the over-invoiced period.
+   -  Update the contract line to end on the chosen stop date.
 
 Bug Tracker
 ===========
@@ -107,7 +107,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_refund_on_stop%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_refund_on_stop%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -122,7 +122,7 @@ Authors
 Contributors
 ------------
 
-- Souheil Bejaoui souheil.bejaoui@acsone.eu
+-  Souheil Bejaoui souheil.bejaoui@acsone.eu
 
 Maintainers
 -----------
@@ -145,6 +145,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-sbejaoui| 
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/18.0/contract_refund_on_stop>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/19.0/contract_refund_on_stop>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
