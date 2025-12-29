@@ -3,7 +3,7 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, exceptions, fields, models
+from odoo import api, exceptions, fields, models
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -29,10 +29,10 @@ class ContractLineFormula(models.Model):
             "invoice_date": False,
         }
         try:
-            safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)
+            safe_eval(self.code.strip(), eval_context, mode="exec")
         except Exception as e:
             raise exceptions.ValidationError(
-                _("Error evaluating code.\nDetails: %s") % e
+                self.env._("Error evaluating code.\nDetails: %s", e)
             ) from e
         if "result" not in eval_context:
-            raise exceptions.ValidationError(_("No valid result returned."))
+            raise exceptions.ValidationError(self.env._("No valid result returned."))
