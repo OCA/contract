@@ -2,7 +2,7 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -154,10 +154,21 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if "is_contract" in vals and vals["is_contract"] is False:
-            for company in self.env["res.company"].search([]):
-                self.with_company(company).write(
-                    {"property_contract_template_id": False}
+            # Get only the IDs to avoid loading all company records into memory
+            # Use a reasonable batch size to avoid performance issues
+            offset = 0
+            batch_size = 100
+            while True:
+                company_batch = self.env["res.company"].search_read(
+                    [], ["id"], offset=offset, limit=batch_size, order="id"
                 )
+                if not company_batch:
+                    break
+                for company_data in company_batch:
+                    self.with_company(company_data["id"]).write(
+                        {"property_contract_template_id": False}
+                    )
+                offset += batch_size
         return super().write(vals)
 
     @api.constrains("is_contract", "type")
@@ -166,4 +177,4 @@ class ProductTemplate(models.Model):
         Contract product should be service type
         """
         if any([product.is_contract and product.type != "service" for product in self]):
-            raise ValidationError(_("Contract product should be service type"))
+            raise ValidationError(self.env._("Contract product should be service type"))

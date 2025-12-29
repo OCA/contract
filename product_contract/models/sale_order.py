@@ -2,7 +2,7 @@
 # Copyright 2018 ACSONE SA/NV.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
                 "cancel",
             ) and rec.order_line.filtered("contract_id.is_terminated"):
                 raise ValidationError(
-                    _("You can't upsell or downsell a terminated contract")
+                    self.env._("You can't upsell or downsell a terminated contract")
                 )
 
     @api.depends("order_line.contract_id", "state")
