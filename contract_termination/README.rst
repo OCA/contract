@@ -21,13 +21,13 @@ Contract Termination
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/18.0/contract_termination
+    :target: https://github.com/OCA/contract/tree/19.0/contract_termination
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-18-0/contract-18-0-contract_termination
+    :target: https://translation.odoo-community.org/projects/contract-19-0/contract-19-0-contract_termination
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=18.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=19.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -41,28 +41,28 @@ Contract Termination
 Features
 --------
 
-- **Terminate Contracts**
+-  **Terminate Contracts**
 
-  - Users with the appropriate rights can terminate active contracts.
-  - Capture a termination reason, comment, and termination date.
+   -  Users with the appropriate rights can terminate active contracts.
+   -  Capture a termination reason, comment, and termination date.
 
-- **Update or Cancel Termination**
+-  **Update or Cancel Termination**
 
-  - Update termination details if needed.
-  - Cancel (reactivate) a terminated contract.
+   -  Update termination details if needed.
+   -  Cancel (reactivate) a terminated contract.
 
-- **Contract Form Enhancements**
+-  **Contract Form Enhancements**
 
-  - Display an alert on terminated contracts with the reason and
-    comment.
-  - Hide or disable contract actions (e.g., Send) and fields on
-    terminated contracts.
-  - Set contract fields as read-only after termination.
+   -  Display an alert on terminated contracts with the reason and
+      comment.
+   -  Hide or disable contract actions (e.g., Send) and fields on
+      terminated contracts.
+   -  Set contract fields as read-only after termination.
 
-- **Permissions**
+-  **Permissions**
 
-  - Only users with the group ``Contract: Can Terminate Contracts`` can
-    terminate or cancel termination of contracts.
+   -  Only users with the group ``Contract: Can Terminate Contracts``
+      can terminate or cancel termination of contracts.
 
 **Table of contents**
 
@@ -72,20 +72,21 @@ Features
 Configuration
 =============
 
-- **Define Termination Reasons**
+-  **Define Termination Reasons**
 
-  - Go to **Contracts > Configuration > Termination Reasons**.
-  - Create reasons for contract termination (e.g., Customer decision,
-    End of service).
+   -  Go to **Contracts > Configuration > Termination Reasons**.
+   -  Create reasons for contract termination (e.g., Customer decision,
+      End of service).
 
-- **Assign Rights**
+-  **Assign Rights**
 
-  - Assign the group ``Can terminate contracts`` to users who should be
-    allowed to terminate contracts.
+   -  Assign the group ``Can terminate contracts`` to users who should
+      be allowed to terminate contracts.
 
-- **Optional**
+-  **Optional**
 
-  - Define whether a termination comment should be required per reason.
+   -  Define whether a termination comment should be required per
+      reason.
 
 Usage
 =====
@@ -95,8 +96,8 @@ Usage
 3. Provide the termination reason, comment, and date.
 4. After termination:
 
-   - The contract becomes read-only.
-   - An alert banner shows the termination details.
+   -  The contract becomes read-only.
+   -  An alert banner shows the termination details.
 
 5. If necessary, you can **Update Termination Details** or **Cancel
    Contract Termination** to reactivate the contract.
@@ -107,7 +108,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_termination%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract_termination%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -122,7 +123,7 @@ Authors
 Contributors
 ------------
 
-- Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
+-  Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
 
 Maintainers
 -----------
@@ -137,6 +138,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/18.0/contract_termination>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/19.0/contract_termination>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
