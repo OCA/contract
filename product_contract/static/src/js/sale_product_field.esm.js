@@ -1,10 +1,12 @@
 import {patch} from "@web/core/utils/patch";
+import {useService} from "@web/core/utils/hooks";
 import {SaleOrderLineProductField} from "@sale/js/sale_product_field";
 
 patch(SaleOrderLineProductField.prototype, {
     setup() {
         super.setup(...arguments);
         this.lastContractData = false;
+        this.action = useService("action");
     },
 
     get extraLines() {
