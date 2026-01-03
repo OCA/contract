@@ -34,6 +34,12 @@ class ContractContract(models.Model):
     code = fields.Char(
         string="Reference",
     )
+    date = fields.Date(
+        required=True,
+        default=lambda self: fields.Date.today(),
+        help="This is the date the contract is taken into account \
+        (e.g.: signature date)",
+    )
     group_id = fields.Many2one(
         string="Group",
         comodel_name="account.analytic.account",
