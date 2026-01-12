@@ -49,7 +49,7 @@ class TestContractManuallyCreateInvoice(TestContractBase):
         contracts = self.contract
 
         accounts = self.product_1.product_tmpl_id.get_product_accounts()
-        accounts["income"].deprecated = True  # To trigger a UserError
+        accounts["income"].account_type = "off_balance"
 
         for _i in range(3):
             contracts |= self.contract.copy()
