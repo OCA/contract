@@ -64,6 +64,7 @@ patch(SaleOrderLineProductField.prototype, {
             default_is_auto_renew: this.props.record.data.is_auto_renew,
             default_auto_renew_interval: this.props.record.data.auto_renew_interval,
             default_auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
+            default_avoid_create_contract: this.props.record.data.avoid_create_contract,
         };
     },
 
@@ -78,6 +79,7 @@ patch(SaleOrderLineProductField.prototype, {
             is_auto_renew: this.props.record.data.is_auto_renew,
             auto_renew_interval: this.props.record.data.auto_renew_interval,
             auto_renew_rule_type: this.props.record.data.auto_renew_rule_type,
+            avoid_create_contract: this.props.record.data.avoid_create_contract,
         };
     },
 

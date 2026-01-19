@@ -122,6 +122,15 @@ class TestSaleOrder(TransactionCase):
         self.assertEqual(contract_line.date_end, Date.to_date("2018-12-31"))
         self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-01-31"))
 
+    def test_action_confirm_avoiding_create_contract(self):
+        """It shouldn't create a contract for lines marked as avoid_create_contract"""
+        self.order_line1.is_auto_renew = True
+        self.order_line1.avoid_create_contract = True
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 1)
+        self.assertFalse(self.order_line1.contract_id)
+
     def test_change_sale_company(self):
         self.assertTrue(self.sale.company_id)
         other_company = self.env["res.company"].create(

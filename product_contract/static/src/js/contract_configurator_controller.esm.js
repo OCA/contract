@@ -22,6 +22,7 @@ export class ProductContractConfiguratorController extends formView.Controller {
             auto_renew_interval,
             auto_renew_rule_type,
             recurring_interval,
+            avoid_create_contract,
         } = record.data;
         return this.action.doAction({
             type: "ir.actions.act_window_close",
@@ -36,6 +37,7 @@ export class ProductContractConfiguratorController extends formView.Controller {
                     auto_renew_interval,
                     auto_renew_rule_type,
                     recurring_interval,
+                    avoid_create_contract,
                 },
             },
         });
