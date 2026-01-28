@@ -88,7 +88,7 @@ class SaleOrderLine(models.Model):
         contract_line = self.env["contract.line"]
         for rec in self:
             rec.contract_line_id.stop(rec.date_start - relativedelta(days=1))
-            if rec.contract_line_id.state == "closed":
+            if rec.contract_line_id._check_set_successor():
                 new_contract_line = contract_line_model.create(
                     rec._prepare_contract_line_values(contract, rec.contract_line_id.id)
                 )
