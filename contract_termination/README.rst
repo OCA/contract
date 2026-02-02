@@ -41,28 +41,28 @@ Contract Termination
 Features
 --------
 
--  **Terminate Contracts**
+- **Terminate Contracts**
 
-   -  Users with the appropriate rights can terminate active contracts.
-   -  Capture a termination reason, comment, and termination date.
+  - Users with the appropriate rights can terminate active contracts.
+  - Capture a termination reason, comment, and termination date.
 
--  **Update or Cancel Termination**
+- **Update or Cancel Termination**
 
-   -  Update termination details if needed.
-   -  Cancel (reactivate) a terminated contract.
+  - Update termination details if needed.
+  - Cancel (reactivate) a terminated contract.
 
--  **Contract Form Enhancements**
+- **Contract Form Enhancements**
 
-   -  Display an alert on terminated contracts with the reason and
-      comment.
-   -  Hide or disable contract actions (e.g., Send) and fields on
-      terminated contracts.
-   -  Set contract fields as read-only after termination.
+  - Display an alert on terminated contracts with the reason and
+    comment.
+  - Hide or disable contract actions (e.g., Send) and fields on
+    terminated contracts.
+  - Set contract fields as read-only after termination.
 
--  **Permissions**
+- **Permissions**
 
-   -  Only users with the group ``Contract: Can Terminate Contracts``
-      can terminate or cancel termination of contracts.
+  - Only users with the group ``Contract: Can Terminate Contracts`` can
+    terminate or cancel termination of contracts.
 
 **Table of contents**
 
@@ -72,21 +72,20 @@ Features
 Configuration
 =============
 
--  **Define Termination Reasons**
+- **Define Termination Reasons**
 
-   -  Go to **Contracts > Configuration > Termination Reasons**.
-   -  Create reasons for contract termination (e.g., Customer decision,
-      End of service).
+  - Go to **Contracts > Configuration > Termination Reasons**.
+  - Create reasons for contract termination (e.g., Customer decision,
+    End of service).
 
--  **Assign Rights**
+- **Assign Rights**
 
-   -  Assign the group ``Can terminate contracts`` to users who should
-      be allowed to terminate contracts.
+  - Assign the group ``Can terminate contracts`` to users who should be
+    allowed to terminate contracts.
 
--  **Optional**
+- **Optional**
 
-   -  Define whether a termination comment should be required per
-      reason.
+  - Define whether a termination comment should be required per reason.
 
 Usage
 =====
@@ -96,8 +95,8 @@ Usage
 3. Provide the termination reason, comment, and date.
 4. After termination:
 
-   -  The contract becomes read-only.
-   -  An alert banner shows the termination details.
+   - The contract becomes read-only.
+   - An alert banner shows the termination details.
 
 5. If necessary, you can **Update Termination Details** or **Cancel
    Contract Termination** to reactivate the contract.
@@ -123,7 +122,7 @@ Authors
 Contributors
 ------------
 
--  Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
+- Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
 
 Maintainers
 -----------
