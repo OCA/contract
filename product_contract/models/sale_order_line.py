@@ -163,7 +163,10 @@ class SaleOrderLine(models.Model):
     def _set_contract_line_start_date(self):
         """Set date start of lines using it's method and the confirmation date."""
         for line in self:
-            if not line.contract_start_date_method or line.contract_start_date_method == "manual":
+            if (
+                not line.contract_start_date_method
+                or line.contract_start_date_method == "manual"
+            ):
                 continue
             is_end = "end_" in line.contract_start_date_method
             today = fields.Date.today()
