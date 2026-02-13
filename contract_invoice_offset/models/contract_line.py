@@ -179,8 +179,9 @@ class ContractLine(models.Model):
             )
 
             # If date_end clamped the period end before the start,
-            # the contract has ended — nothing left to invoice.
-            if last_date_invoiced and last_date_invoiced < first_date_invoiced:
+            # or get_next_period_date_end returned False (period start
+            # past date_end), the contract has ended — nothing left to invoice.
+            if not last_date_invoiced or last_date_invoiced < first_date_invoiced:
                 return False, False, False
         else:
             # Standard billing: use base logic with reverse-offset
