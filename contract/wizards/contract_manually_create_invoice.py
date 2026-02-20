@@ -54,8 +54,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
             "context": self.env.context,
         }
 
-    def create_invoice(self):
-        self.ensure_one()
+    def _create_invoices(self):
         invoices = self.env["account.move"]
         for contract in self.contract_to_invoice_ids:
             try:
@@ -75,7 +74,11 @@ class ContractManuallyCreateInvoice(models.TransientModel):
                         ue=repr(oe),
                     )
                 ) from oe
+        return invoices
 
+    def create_invoice(self):
+        self.ensure_one()
+        invoices = self._create_invoices()
         return {
             "type": "ir.actions.act_window",
             "name": self.env._("Invoices"),
