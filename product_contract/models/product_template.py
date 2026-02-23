@@ -172,7 +172,7 @@ class ProductTemplate(models.Model):
     def _check_recurrence_number_is_strictly_positive(self):
         for product in self:
             if not product.is_contract:
-                return
+                continue
             if product.recurrence_number <= 0:
                 raise ValidationError(
                     _(
@@ -185,7 +185,7 @@ class ProductTemplate(models.Model):
     def _check_recurring_interval_is_strictly_positive(self):
         for product in self:
             if not product.is_contract:
-                return
+                continue
             if product.recurring_interval <= 0:
                 raise ValidationError(
                     _(
@@ -198,7 +198,7 @@ class ProductTemplate(models.Model):
     def _check_auto_renew_interval_is_strictly_positive(self):
         for product in self:
             if not product.is_contract or not product.is_auto_renew:
-                return
+                continue
             if product.auto_renew_interval <= 0:
                 raise ValidationError(
                     _(
@@ -211,7 +211,7 @@ class ProductTemplate(models.Model):
     def _check_termination_notice_interval_is_positive(self):
         for product in self:
             if not product.is_contract or not product.is_auto_renew:
-                return
+                continue
             if product.termination_notice_interval < 0:
                 raise ValidationError(
                     _(
