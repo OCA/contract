@@ -5,7 +5,7 @@
 
 {
     "name": "Contracts Management - Recurring Sales",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV, PESOL, Odoo Community Association (OCA)",
