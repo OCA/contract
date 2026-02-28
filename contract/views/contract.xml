@@ -16,7 +16,7 @@
                     <button
                         name="recurring_create_invoice"
                         type="object"
-                        invisible="not create_invoice_visibility and generation_type != 'invoice'"
+                        invisible="not create_invoice_visibility or generation_type != 'invoice'"
                         string="Create invoices"
                         groups="base.group_no_one"
                     />
@@ -304,11 +304,7 @@
                                     <field name="payment_term_id" />
                                 </group>
                             </group>
-                            <group
-                                col="4"
-                                name="recurring_type"
-                                string="Recurring Type"
-                            >
+                            <group name="recurring_type" string="Recurring Type">
                                 <field name="generation_type" />
                             </group>
                         </page>
