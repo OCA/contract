@@ -28,12 +28,18 @@ Recurring - Contracts Management
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module enables contracts management with recurring
-invoicing functions. Also you can print and send by email contract report.
+This module enables contracts management with recurring invoicing
+functions.
 
 It works for customer contract and supplier contracts.
 
-Contracts are shown in portal.
+A rich set of reccurence patterns are available.
+
+You can print and send contracts by email. Contracts are shown in
+portal.
+
+A lot of additional features are available in the ``contract``
+repository.
 
 **Table of contents**
 
@@ -43,51 +49,153 @@ Contracts are shown in portal.
 Configuration
 =============
 
-To view discount field in contract line, you need to set *Discount on lines* in
-user access rights.
+To view discount field in contract line, you need to set *Discount on
+lines* in user access rights.
 
-Contracts can be viewed on the portal (list and detail) if the user logged into the portal is a follower of the contract.
+Contract templates can be created from the *Configuration > Contracts >
+Contract Templates* menu. They allow to define default **Journal**,
+**Pricelist** and **Contract lines** when creating a contract.
+
+To use it, just select the template on the contract and fields will be
+filled automatically.
 
 Usage
 =====
 
-#. Contracts are in Invoicing -> Customers -> Customer and Invoicing -> Vendors -> Supplier Contracts
-#. When creating a contract, fill fields for selecting the invoicing parameters:
+Contracts are available in *Invoicing > Customers > Customer Contracts*
+and *Invoicing > Vendors > Supplier Contracts*.
 
-   * a journal
-   * a price list (optional)
+Click on **New** to create a new contact. Here is an overview:
 
-#. And add the lines to be invoiced with:
+.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/contract-overview.png
+   :alt: contract-overview
 
-   * the product with a description, a quantity and a price
-   * the recurrence parameters: interval (days, weeks, months, months last day or years),
-     start date, date of next invoice (automatically computed, can be modified) and end date (optional)
-   * auto-price, for having a price automatically obtained from the price list
-   * #START# - #END# or #INVOICEMONTHNAME# in the description field to display
-     the start/end date or the start month of the invoiced period in the invoice line description
-   * pre-paid (invoice at period start) or post-paid (invoice at start of next period)
+Invoicing parameters :
+----------------------
 
-#. The "Generate Recurring Invoices from Contracts" cron runs daily to generate the invoices.
-   If you are in debug mode, you can click on the invoice creation button.
-#. The *Show recurring invoices* shortcut on contracts shows all invoices created from the
-   contract.
-#. The contract report can be printed from the Print menu
-#. The contract can be sent by email with the *Send by Email* button
-#. Contract templates can be created from the Configuration -> Contracts -> Contract Templates menu.
-   They allow to define default journal, price list and lines when creating a contract.
-   To use it, just select the template on the contract and fields will be filled automatically.
+-  the partner (customer or supplier depending on the type of contract)
+-  the **Journal** is filled with the default customer/supplier journal
+   (first in sequence in *Configuration > Journals*)
+-  **Pricelist**, **Payment terms** and **Fiscal position** are filled
+   in from the partner information, if available
 
-* Contracts appear in portal to following users in every contract:
+Recurrence parameters :
+-----------------------
 
-.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/portal-my.png
-.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/portal-list.png
-.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/portal-detail.png
+-  **Invoice every** : Invoicing interval, in terms of days, weeks,
+   months, months last day, semesters or years
+-  **Start Date** of the contract, from which the invoicing period will
+   start
+-  **End Date** of the contract is optional. If not filled the invoice
+   generation will never stop.
+-  The **Date of Next Invoice** is automatically computed, but can be
+   can be modified manually
+-  **Invoicing type** : pre-paid or post-paid. A pre-paid contract
+   generates the invoice at the beginning of the invoicing period, a
+   post paid contract generates it at the end.
+-  **Generation Type** has only one option "Invoice". Other options are
+   added in separate modules.
+-  **Recurrence at lines level** : see below
+
+Contract lines
+--------------
+
+These lines will be used to generate the invoice lines. You can fill in
+the product with a description, a quantity and a price.
+
+The **Description** can include the markers ``#START#``, ``#END#`` and
+``#INVOICEMONTHNAME#`` in the description field. This will display the
+start/end date or the start month of the invoiced period in the invoice
+line description.
+
+Check **Auto-price** for having the price automatically obtained and
+updated from the price list.
+
+Reccurence at lines level
+-------------------------
+
+**Recurrence at lines level** is a different "mode", where each contract
+line has it's own recurrence properties. For instance, one line starts
+on 02/02/2026 and is invoiced every 2 weeks, and another line starts on
+04/04/2026 and is invoiced yearly.
+
+However, this mode and offers more reccurrence features, besides those
+already presented.
+
+Contract lines are now opened in a form view.
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/reccurence-line-level-overview.png
+   :alt: reccurence-line-level-overview
+
+**Auto-renew** : contract lines will be automatically renewed when the
+**End Date** is reached. The End Date will be postponed by the duration
+set in the **Renew Every** field.
+
+The field **Termination Notice before** will set the duration before the
+**End Date** when the contract line state will change from *In Progress*
+to *Upocoming close*. By default, the state changes one month before the
+**End Date**.
+
+Lines can also be manually renewed in advance using the green **Renew**
+button.
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/contract-line-renew-button.png
+   :alt: contract-line-renew-button
+
+You can **Stop** a contract line using the red button at the right.
+
+A pop up will open asking for an **Stop Date**. In a pre-paid contract,
+this date must be after the end of the period already invoiced. For
+instance, if the last invoice covers the period from 01/01/2026 to
+31/01/2026, the stop date must be equal or after 31/01/2026.
+
+You can also **Stop and plan a successor**. A popup will ask for a new
+Start and End date. The contract line will be stopped and a new one will
+be created with the given Start and End dates.
+
+Invoice generation
+------------------
+
+The **Generate Recurring Invoices from Contracts** cron, available in
+Settings > Technical > Automation > Scheduled Action, runs daily to
+generate the invoices. Execution time and frequency can be configured in
+the cron settings.
+
+If you are in `debug
+mode <https://www.odoo.com/documentation/16.0/fr/applications/general/developer_mode.html>`__,
+you can click on the **Create Invoices** button.
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/create-invoice-debug-mode.png
+   :alt: create-invoice-debug-mode
+
+Reporting
+---------
+
+The **Show recurring invoices** shortcut on contracts shows all invoices
+created from the contract.
+
+The menu *Invoicing > Reporting > Contracts > Customer Contract
+Lines/Supplier Contract Lines* allows to view all contract lines in a
+list view. Lines can be edited from there. Note : pivot view is not
+available in this report.
+
+Printing, sending by email and portal access
+--------------------------------------------
+
+The contract pdf report can be printed from the **Print** menu.
+
+The contract can be sent by email with the **Send by Email** button
+
+Contracts appear in portal to following users:
+
+.. image:: https://raw.githubusercontent.com/OCA/contract/16.0/contract/static/src/screenshots/contract-portal-view.png
+   :alt: contract-portal-view
 
 Known issues / Roadmap
 ======================
 
-* Recover states and others functional fields in Contracts.
-* Add recurrence flag at template level.
+-  Recover states and others functional fields in Contracts.
+-  Add recurrence flag at template level.
 
 Bug Tracker
 ===========
@@ -103,36 +211,44 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Tecnativa
 * ACSONE SA/NV
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Angel Moya <angel.moya@domatix.com>
-* Dave Lasley <dave@laslabs.com>
-* Miquel Raïch <miquel.raich@eficent.com>
-* Souheil Bejaoui <souheil.bejaoui@acsone.eu>
-* Thomas Binsfeld <thomas.binsfeld@acsone.eu>
-* Guillaume Vandamme <guillaume.vandamme@acsone.eu>
-* Raphaël Reverdy <raphael.reverdy@akretion.com>
+-  Angel Moya <angel.moya@domatix.com>
 
-* `Tecnativa <https://www.tecnativa.com>`_:
+-  Dave Lasley <dave@laslabs.com>
 
-    * Pedro M. Baeza
-    * Carlos Dauden
-    * Vicent Cubells
-    * Rafael Blasco
-    * Víctor Martínez
-* Iván Antón <ozono@ozonomultimedia.com>
-* `[APSL] <https://www.apsl.tech>`_:
+-  Miquel Raïch <miquel.raich@eficent.com>
 
-    * Antoni Marroig <amarroig@apsl.net>
+-  Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+
+-  Thomas Binsfeld <thomas.binsfeld@acsone.eu>
+
+-  Guillaume Vandamme <guillaume.vandamme@acsone.eu>
+
+-  Raphaël Reverdy <raphael.reverdy@akretion.com>
+
+-  `Tecnativa <https://www.tecnativa.com>`__:
+
+   -  Pedro M. Baeza
+   -  Carlos Dauden
+   -  Vicent Cubells
+   -  Rafael Blasco
+   -  Víctor Martínez
+
+-  Iván Antón <ozono@ozonomultimedia.com>
+
+-  `[APSL] <https://www.apsl.tech>`__:
+
+   -  Antoni Marroig <amarroig@apsl.net>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
