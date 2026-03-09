@@ -608,7 +608,6 @@ class ContractContract(models.Model):
             if not contract_lines:
                 continue
             invoice_vals = contract._prepare_invoice(date_ref)
-            invoice_vals["invoice_line_ids"] = []
             for line in contract_lines:
                 invoice_line_vals = line._prepare_invoice_line()
                 if invoice_line_vals:
