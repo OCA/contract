@@ -118,6 +118,11 @@ class TestSubscriptionOCA(BaseCommon):
                 "recurring_rule_type": "days",
             }
         )
+        # Product with subscription
+        cls.product_3 = cls.env.ref("product.product_product_7")
+        cls.product_3.list_price = 100.0
+        cls.product_3.subscribable = True
+        cls.product_3.subscription_template_id = cls.tmpl5
 
         cls.stage = cls.env["sale.subscription.stage"].create(
             {
@@ -330,6 +335,53 @@ class TestSubscriptionOCA(BaseCommon):
         action = so.action_view_subscriptions()
         self.assertIsInstance(action, dict)
         so.with_context(uid=1).action_confirm()  # without subs.
+
+    def test_subscription_oca_sale_order_no_autostart(self):
+        so = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "partner_invoice_id": self.partner.id,
+                "partner_shipping_id": self.partner.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "name": self.product_3.name,
+                            "product_id": self.product_3.id,
+                            "product_uom_qty": 2,
+                            "product_uom": self.product_3.uom_id.id,
+                            "price_unit": self.product_3.list_price,
+                        },
+                    )
+                ],
+            }
+        )
+        so.with_context(uid=1).action_confirm()
+        so._compute_subscriptions_count()
+        self.assertEqual(so.subscription_ids.stage_id.name, False)
+
+    def test_subscription_oca_sale_order_autostart(self):
+        self.env.company.automatic_subscription_start = True
+        so = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "partner_invoice_id": self.partner.id,
+                "partner_shipping_id": self.partner.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "name": self.product_3.name,
+                            "product_id": self.product_3.id,
+                            "product_uom_qty": 2,
+                            "product_uom": self.product_3.uom_id.id,
+                            "price_unit": self.product_3.list_price,
+                        },
+                    )
+                ],
+            }
+        )
+        so.with_context(uid=1).action_confirm()
+        so._compute_subscriptions_count()
+        self.assertEqual(so.subscription_ids.stage_id.type, "in_progress")
 
     def test_subscription_oca_sub_lines(self):
         # sale.subscription.line
