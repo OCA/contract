@@ -350,13 +350,13 @@ class ContractContract(models.Model):
         self.ensure_one()
         template = self.env.ref("contract.email_contract_template", False)
         compose_form = self.env.ref("mail.email_compose_message_wizard_form")
-        ctx = dict(
-            default_model="contract.contract",
-            default_res_ids=self.ids,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            default_composition_mode="comment",
-        )
+        ctx = {
+            "default_model": "contract.contract",
+            "default_res_ids": self.ids,
+            "default_use_template": bool(template),
+            "default_template_id": template and template.id or False,
+            "default_composition_mode": "comment",
+        }
         return {
             "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
