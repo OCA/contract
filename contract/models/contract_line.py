@@ -54,6 +54,17 @@ class ContractLine(models.Model):
         readonly=True,
     )
     product_id = fields.Many2one(index=True)
+    translated_product_name = fields.Text(
+        compute="_compute_translated_product_name",
+    )
+
+    @api.depends("product_id")
+    def _compute_translated_product_name(self):
+        for line in self:
+            lang = line.contract_id.partner_id.lang or self.env.lang
+            line.translated_product_name = line.product_id.with_context(
+                lang=lang
+            ).display_name
 
     @api.depends("name", "date_start")
     def _compute_display_name(self):
