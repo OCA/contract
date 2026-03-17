@@ -1,1 +1,2 @@
 - Tobias Zehntner <tobias.zehntner@acsone.eu> (https://www.acsone.eu)
+- Jacques-Etienne Baudoux (BCIM) <je@bcim.be>

@@ -1,14 +1,18 @@
 # Copyright 2026 ACSONE SA/NV
+# Copyright 2026 Jacques-Etienne Baudoux (BCIM) <je@bcim.be>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
 from odoo import api, fields, models
-from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 
 class ContractManuallyCreateInvoice(models.TransientModel):
     _inherit = "contract.manually.create.invoice"
+
+    manually_invoiced = fields.Boolean(
+        default=lambda self: self.env.company.enable_contract_invoice_manually
+    )
 
     filter_domain = fields.Char(
         string="Domain",
@@ -18,7 +22,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
         help="Filter/Domain to apply on contracts to invoice",
     )
 
-    @api.depends("invoice_date", "contract_type")
+    @api.depends("invoice_date", "contract_type", "manually_invoiced")
     def _compute_filter_domain(self):
         for wizard in self:
             domain = [
@@ -28,9 +32,8 @@ class ContractManuallyCreateInvoice(models.TransientModel):
                     fields.Datetime.to_string(wizard.invoice_date),
                 ),
                 ("contract_type", "=", wizard.contract_type),
+                ("is_manually_invoiced", "=", wizard.manually_invoiced),
             ]
-            if self.env.company.enable_contract_invoice_manually:
-                domain = expression.AND([domain, [("is_manually_invoiced", "=", True)]])
             wizard.filter_domain = str(domain)
 
     @api.depends("invoice_date", "filter_domain")
