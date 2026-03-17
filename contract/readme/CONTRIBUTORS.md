@@ -25,3 +25,5 @@
 - [APSL](https://www.apsl.tech):
 
   > - Antoni Marroig \<<amarroig@apsl.net>\>
+
+- Jacques-Etienne Baudoux (BCIM) \<<je@bcim.be>\>

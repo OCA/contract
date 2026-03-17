@@ -5,6 +5,7 @@
 # Copyright 2016-2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV
 # Copyright 2021 Tecnativa - Víctor Martínez
+# Copyright 2026 Jacques-Etienne Baudoux (BCIM) <je@bcim.be>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -115,6 +116,9 @@ class ContractContract(models.Model):
         inverse_name="contract_id",
         context={"active_test": False},
     )
+    recurring_next_date = fields.Date(
+        inverse="_inverse_recurring_next_date",
+    )
 
     # === Modification tracking ===
     modification_ids = fields.One2many(
@@ -195,6 +199,17 @@ class ContractContract(models.Model):
                 )
             else:
                 contract.recurring_next_date = min(recurring_next_date)
+
+    def _inverse_recurring_next_date(self):
+        for contract in self:
+            lines = contract.contract_line_ids.filtered(
+                lambda line: (
+                    line.recurring_next_date
+                    and not line.is_canceled
+                    and (not line.display_type or line.is_recurring_note)
+                )
+            )
+            lines.recurring_next_date = contract.recurring_next_date
 
     @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):
