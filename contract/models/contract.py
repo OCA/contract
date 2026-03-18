@@ -598,16 +598,17 @@ class ContractContract(models.Model):
         """
         invoices_values = []
         for contract in self:
-            if not date_ref:
-                date_ref = contract.recurring_next_date
-            if not date_ref:
+            contract_date_ref = date_ref
+            if not contract_date_ref:
+                contract_date_ref = contract.recurring_next_date
+            if not contract_date_ref:
                 # this use case is possible when recurring_create_invoice is
                 # called for a finished contract
                 continue
-            contract_lines = contract._get_lines_to_invoice(date_ref)
+            contract_lines = contract._get_lines_to_invoice(contract_date_ref)
             if not contract_lines:
                 continue
-            invoice_vals = contract._prepare_invoice(date_ref)
+            invoice_vals = contract._prepare_invoice(contract_date_ref)
             for line in contract_lines:
                 invoice_line_vals = line._prepare_invoice_line()
                 if invoice_line_vals:
