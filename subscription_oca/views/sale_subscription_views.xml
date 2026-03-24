@@ -93,6 +93,14 @@
                                 attrs="{'invisible': [('active', '=', True)]}"
                             />
                             <field name="recurring_rule_boundary" invisible="1" />
+                            <field name="invoicing_mode" invisible="1" />
+                            <field
+                                name="payment_token_id"
+                                attrs="{'invisible':['|', ('partner_id', '=', False),
+                            ('invoicing_mode', '!=', 'invoice_and_payment')],
+                            'readonly': [('in_progress', '=', True)]
+                            }"
+                            />
 
                         </group>
                         <group name="right_group">

@@ -7,11 +7,12 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 
 from odoo import exceptions, fields
-from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
+from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
-class TestSubscriptionOCA(TransactionCase):
+
+class TestSubscriptionOCA(PaymentDemoCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -30,14 +31,37 @@ class TestSubscriptionOCA(TransactionCase):
             [
                 ("type", "=", "cash"),
                 ("company_id", "=", cls.env.ref("base.main_company").id),
-            ]
-        )[0]
+            ],
+            limit=1,
+        )
+        if not cls.cash_journal:
+            cls.cash_journal = cls.env["account.journal"].create(
+                {
+                    "name": "Test Cash Journal",
+                    "type": "cash",
+                    "company_id": cls.env.ref("base.main_company").id,
+                    "code": "CASH",
+                }
+            )
+
         cls.sale_journal = cls.env["account.journal"].search(
             [
                 ("type", "=", "sale"),
                 ("company_id", "=", cls.env.ref("base.main_company").id),
-            ]
-        )[0]
+            ],
+            limit=1,
+        )
+
+        if not cls.sale_journal:
+            cls.sale_journal = cls.env["account.journal"].create(
+                {
+                    "name": "Test Sale Journal",
+                    "type": "sale",
+                    "company_id": cls.env.ref("base.main_company").id,
+                    "code": "SALE",
+                }
+            )
+
         cls.pricelist1 = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test",
@@ -113,6 +137,14 @@ class TestSubscriptionOCA(TransactionCase):
                 "recurring_rule_boundary": "unlimited",
                 "invoicing_mode": "invoice",
                 "recurring_rule_type": "days",
+            }
+        )
+
+        cls.tmpl6 = cls.create_sub_template(
+            {
+                "recurring_rule_boundary": "unlimited",
+                "invoicing_mode": "invoice_and_payment",
+                "recurring_rule_type": "years",
             }
         )
 
@@ -193,6 +225,14 @@ class TestSubscriptionOCA(TransactionCase):
             }
         )
 
+        cls.sub10 = cls.create_sub(
+            {
+                "template_id": cls.tmpl6.id,
+                "recurring_rule_boundary": False,
+                "date_start": fields.Date.today(),
+            }
+        )
+
         cls.sub_line = cls.create_sub_line(cls.sub1)
         cls.sub_line2 = cls.env["sale.subscription.line"].create(
             {
@@ -210,6 +250,7 @@ class TestSubscriptionOCA(TransactionCase):
         cls.sub_line52 = cls.create_sub_line(cls.sub5, cls.product_2.id)
         cls.sub_line71 = cls.create_sub_line(cls.sub7)
         cls.sub_line72 = cls.create_sub_line(cls.sub7, cls.product_2.id)
+        cls.sub_line102 = cls.create_sub_line(cls.sub10, cls.product_2.id)
 
         cls.close_reason = cls.env["sale.subscription.close.reason"].create(
             {
@@ -541,7 +582,7 @@ class TestSubscriptionOCA(TransactionCase):
 
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
-        self.assertEqual(res[0]["subscription_count"], 9)
+        self.assertEqual(res[0]["subscription_count"], 10)
         res = self.partner.action_view_subscription_ids()
         self.assertIsInstance(res, dict)
         sale_order = self.sub1.create_sale_order()
@@ -692,3 +733,80 @@ class TestSubscriptionOCA(TransactionCase):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_subscription_invoice_and_payment(self):
+        subscription = self.sub10
+        subscription.generate_invoice()
+        error_count = len(
+            self.sub10.message_ids.filtered(
+                lambda msg: "No payment token found for partner" in msg.body
+            )
+        )
+        self.assertEqual(error_count, 1)
+        self.assertEqual(len(subscription.invoice_ids), 1)
+        self.assertEqual(subscription.invoice_ids.state, "posted")
+
+        token = self.env["payment.token"].create(
+            {
+                "payment_details": "1234",
+                "provider_id": self.provider.id,
+                "partner_id": self.partner.id,
+                "provider_ref": "provider Ref (TEST)",
+                "active": True,
+                "demo_simulated_state": "done",
+            }
+        )
+        subscription.generate_invoice()
+        self.assertEqual(len(subscription.invoice_ids), 2)
+        last_invoice = subscription.invoice_ids[0]
+        self.assertEqual(last_invoice.state, "posted")
+        error_count = len(
+            self.sub10.message_ids.filtered(
+                lambda msg: "No payment method line found for payment provider"
+                in msg.body
+            )
+        )
+
+        subscription._compute_payment_token_id()
+        self.assertEqual(
+            subscription.payment_token_id.provider_ref, "provider Ref (TEST)"
+        )
+        self.assertEqual(subscription.payment_token_id.id, token.id)
+        subscription.generate_invoice()
+        self.assertEqual(len(subscription.invoice_ids), 3)
+        last_invoice = subscription.invoice_ids[0]
+        self.assertEqual(last_invoice.state, "posted")
+        self.assertEqual(last_invoice.payment_state, "paid")
+        token.write({"demo_simulated_state": "pending"})
+        subscription._compute_payment_token_id()
+        self.assertEqual(
+            subscription.payment_token_id.provider_ref, "provider Ref (TEST)"
+        )
+        self.assertEqual(subscription.payment_token_id.id, token.id)
+        subscription.generate_invoice()
+        self.assertEqual(len(subscription.invoice_ids), 4)
+        last_invoice = subscription.invoice_ids[0]
+        self.assertEqual(last_invoice.state, "posted")
+        self.assertEqual(last_invoice.payment_state, "not_paid")
+        token.write({"demo_simulated_state": "cancel"})
+        subscription._compute_payment_token_id()
+        self.assertEqual(
+            subscription.payment_token_id.provider_ref, "provider Ref (TEST)"
+        )
+        self.assertEqual(subscription.payment_token_id.id, token.id)
+        subscription.generate_invoice()
+        self.assertEqual(len(subscription.invoice_ids), 5)
+        last_invoice = subscription.invoice_ids[0]
+        self.assertEqual(last_invoice.state, "posted")
+        self.assertEqual(last_invoice.payment_state, "not_paid")
+        token.write({"demo_simulated_state": "error"})
+        subscription._compute_payment_token_id()
+        self.assertEqual(
+            subscription.payment_token_id.provider_ref, "provider Ref (TEST)"
+        )
+        self.assertEqual(subscription.payment_token_id.id, token.id)
+        subscription.generate_invoice()
+        self.assertEqual(len(subscription.invoice_ids), 6)
+        last_invoice = subscription.invoice_ids[0]
+        self.assertEqual(last_invoice.state, "posted")
+        self.assertEqual(last_invoice.payment_state, "not_paid")
