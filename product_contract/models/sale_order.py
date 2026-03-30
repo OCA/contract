@@ -44,7 +44,11 @@ class SaleOrder(models.Model):
 
     @api.depends("order_line")
     def _compute_is_contract(self):
-        self.is_contract = any(self.order_line.mapped("is_contract"))
+        self.is_contract = any(
+            self.order_line.filtered(lambda ol: not ol.avoid_create_contract).mapped(
+                "is_contract"
+            )
+        )
 
     def _prepare_contract_value(self, contract_template):
         self.ensure_one()
@@ -69,12 +73,15 @@ class SaleOrder(models.Model):
         lines_without_contract = self.env["sale.order.line"].browse()
         for rec in self.filtered("is_contract"):
             line_to_create_contract = rec.order_line.filtered(
-                lambda r: not r.contract_id and r.product_id.is_contract
+                lambda r: not r.contract_id
+                and r.product_id.is_contract
+                and not r.avoid_create_contract
             )
             line_to_create_contract._set_contract_line_start_date()
             line_to_update_contract = rec.order_line.filtered(
                 lambda r: r.contract_id
                 and r.product_id.is_contract
+                and not r.avoid_create_contract
                 and r
                 not in r.contract_id.contract_line_ids.mapped("sale_order_line_id")
             )

@@ -67,6 +67,7 @@ class ProductContractConfigurator(models.TransientModel):
     contract_start_date_method = fields.Selection(
         related="product_id.contract_start_date_method"
     )
+    avoid_create_contract = fields.Boolean()
 
     @api.depends("product_id", "company_id")
     def _compute_contract_template_id(self):

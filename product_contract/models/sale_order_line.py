@@ -86,6 +86,7 @@ class SaleOrderLine(models.Model):
     product_contract_description = fields.Text(
         compute="_compute_product_contract_description"
     )
+    avoid_create_contract = fields.Boolean()
 
     @api.constrains("contract_id")
     def _check_contact_is_not_terminated(self):
@@ -227,6 +228,8 @@ class SaleOrderLine(models.Model):
         contract_line = self.env["contract.line"]
         predecessor_contract_line = False
         for rec in self:
+            if rec.avoid_create_contract:
+                continue
             if rec.contract_line_id:
                 # If the upsell/downsell line start at the same date or before
                 # the contract line to replace supposed to start, we cancel
