@@ -14,7 +14,7 @@
                     groups="account.group_account_invoice"
                     icon="fa-book"
                     context="{'default_contract_type': 'sale', 'contract_type': 'sale'}"
-                    invisible="customer_rank == 0"
+                    invisible="sale_contract_count == 0"
                     help="Show the sale contracts for this partner"
                 >
                     <field
@@ -35,7 +35,7 @@
                     groups="account.group_account_invoice"
                     icon="fa-book"
                     context="{'default_contract_type': 'purchase', 'contract_type': 'purchase'}"
-                    invisible="supplier_rank == 0"
+                    invisible="purchase_contract_count == 0"
                     help="Show the purchase contracts for this partner"
                 >
                     <field
