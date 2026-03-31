@@ -30,10 +30,13 @@ class ContractContract(models.Model):
                     (
                         "date_order",
                         "<=",
-                        "{} 23:59:59".format(contract.recurring_next_date),
+                        f"{contract.recurring_next_date} 23:59:59",
                     ),
                 ]
             )
             if sales:
-                invoices |= sales._create_invoices()
+                sale_invoices = sales._create_invoices()
+                sale_invoices._compute_journal_id()
+                sale_invoices.flush_recordset(["journal_id"])
+                invoices |= sale_invoices
         return invoices
