@@ -152,8 +152,7 @@ class ContractLine(models.Model):
             ):
                 raise ValidationError(
                     self.env._(
-                        "You must supply a date of next invoice for contract "
-                        "line '%s'"
+                        "You must supply a date of next invoice for contract line '%s'"
                     )
                     % rec.name
                 )
@@ -165,8 +164,7 @@ class ContractLine(models.Model):
                 if line.date_start > line.date_end:
                     raise ValidationError(
                         self.env._(
-                            "Contract line '%s' start date can't be later than"
-                            " end date"
+                            "Contract line '%s' start date can't be later than end date"
                         )
                         % line.name
                     )
