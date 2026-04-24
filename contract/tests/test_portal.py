@@ -16,7 +16,15 @@ class TestContractPortal(HttpCase):
         contract = self.env["contract.contract"].create(
             {"name": "Test Contract", "partner_id": partner.id}
         )
-        user_portal = self.env.ref("base.demo_user0")
+        user_portal = self.env["res.users"].create(
+            {
+                "name": "Portal User",
+                "login": "portal",
+                "password": "portal",
+                "email": "portal_user@example.com",
+                "group_ids": [(6, 0, [self.env.ref("base.group_portal").id])],
+            }
+        )
         contract.message_subscribe(partner_ids=user_portal.partner_id.ids)
         self.start_tour("/", "contract_portal_tour", login="portal")
         # Contract access

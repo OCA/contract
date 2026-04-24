@@ -139,11 +139,6 @@
                                         optional="show"
                                     />
                                     <field
-                                        name="product_uom_category_id"
-                                        column_invisible="True"
-                                    />
-
-                                    <field
                                         name="analytic_distribution"
                                         widget="analytic_distribution"
                                         groups="analytic.group_analytic_accounting"
@@ -441,7 +436,13 @@
                 <filter
                     name="not_finished"
                     string="In progress"
-                    domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
+                    domain="[
+                        '|',
+                             ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                        '&amp;',
+                            ('date_end', '=', False),
+                            ('recurring_next_date', '!=', False)
+                    ]"
                 />
                 <filter
                     name="finished"
@@ -455,7 +456,7 @@
                     domain="[('active', '=', False)]"
                     name="inactive"
                 />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         string="Associated Partner"
                         name="group_by_partner"

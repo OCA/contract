@@ -33,8 +33,22 @@ class TestContractBase(common.TransactionCase):
                 "email": "demo@demo.com",
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_1")
-        cls.product_2 = cls.env.ref("product.product_product_2")
+        cls.product_1 = cls.env["product.product"].create(
+            {
+                "name": "Product_1",
+                "type": "service",
+                "standard_price": 20.5,
+                "list_price": 30.75,
+            }
+        )
+        cls.product_2 = cls.env["product.product"].create(
+            {
+                "name": "Product_2",
+                "type": "service",
+                "standard_price": 25.5,
+                "list_price": 38.25,
+            }
+        )
         cls.product_1.taxes_id += cls.env["account.tax"].search(
             [
                 ("type_tax_use", "=", "sale"),
@@ -709,16 +723,9 @@ class TestContract(TestContractBase):
             max_date_end,
         ):
             return (
-                "Error in %s-%d every %d %s case, "
-                "start with %s (max_date_end=%s)"
-                % (
-                    recurring_invoicing_type,
-                    recurring_invoicing_offset,
-                    recurring_interval,
-                    recurring_rule_type,
-                    date_start,
-                    max_date_end,
-                )
+                f"Error in {recurring_invoicing_type}-f{recurring_invoicing_offset}"
+                f"every {recurring_interval} {recurring_rule_type} case, "
+                f"start with {date_start} (max_date_end={max_date_end})"
             )
 
         combinations = [
@@ -1389,6 +1396,7 @@ class TestContract(TestContractBase):
                 "login": "test",
                 "company_id": company2.id,
                 "company_ids": [(4, company2.id, False)],
+                "group_ids": [(4, self.env.ref("base.group_partner_manager").id)],
             }
         )
         parent_partner = self.env["res.partner"].create(

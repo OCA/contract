@@ -13,7 +13,7 @@ from markupsafe import Markup
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -266,7 +266,6 @@ class ContractContract(models.Model):
                 (
                     field.compute,
                     field.related,
-                    field.automatic,
                     field.readonly,
                     field.company_dependent,
                     field.name in self.NO_SYNC,
@@ -680,13 +679,8 @@ class ContractContract(models.Model):
         )
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain = expression.AND(
-            [
-                domain,
-                [("generation_type", "=", create_type)],
-            ]
-        )
+        domain = Domain(self._get_contracts_to_invoice_domain(date_ref))
+        domain = Domain("generation_type", "=", create_type) & domain
         contracts = self.search(domain)
         companies = set(contracts.mapped("company_id"))
         # Invoice by companies, so assignation emails get correct context

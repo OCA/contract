@@ -3,7 +3,6 @@ import {registry} from "@web/core/registry";
 
 registry.category("web_tour.tours").add("contract_portal_tour", {
     url: "/my",
-    wait_for: Promise.resolve(odoo.__TipTemplateDef),
     steps: () => [
         {
             content: "Go /my/contracts url",
@@ -11,6 +10,7 @@ registry.category("web_tour.tours").add("contract_portal_tour", {
             run: function () {
                 redirect("/my/contracts");
             },
+            expectUnloadPage: true,
         },
         {
             content: "Go to Contract item",

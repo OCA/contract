@@ -27,7 +27,7 @@ class ContractLine(models.Model):
         string="Contract",
         required=True,
         index=True,
-        auto_join=True,
+        bypass_search_access=True,
         ondelete="cascade",
     )
     # replace from abstract to add the store=True

@@ -28,15 +28,14 @@ class ResPartner(models.Model):
 
     def _compute_contract_count(self):
         contract_model = self.env["contract.contract"]
-        fetch_data = contract_model.read_group(
+        fetch_data = contract_model._read_group(
             self._get_partner_contract_domain(),
             ["partner_id", "contract_type"],
-            ["partner_id", "contract_type"],
-            lazy=False,
+            ["__count"],
         )
         result = [
-            [data["partner_id"][0], data["contract_type"], data["__count"]]
-            for data in fetch_data
+            (partner.id, contract_type, count)
+            for partner, contract_type, count in fetch_data
         ]
         for partner in self:
             partner_child_ids = partner.child_ids.ids + partner.ids
@@ -52,7 +51,7 @@ class ResPartner(models.Model):
         @return: the contract view
         """
         self.ensure_one()
-        contract_type = self._context.get("contract_type")
+        contract_type = self.env.context.get("contract_type")
 
         res = self._get_act_window_contract_xml(contract_type)
         action_context = {k: v for k, v in self.env.context.items() if k != "group_by"}
