@@ -111,14 +111,14 @@ class TestContract(HttpCase, TestContractBase):
     def test_do_auto_pay_open_invoice(self):
         """It should open the invoice."""
         invoice = self._create_invoice()
-        self.contract._do_auto_pay(invoice)
+        self.contract.with_context(test_target_state="done")._do_auto_pay(invoice)
         self.assertEqual(invoice.state, "posted")
 
     def test_do_auto_pay_sends_message(self):
         """It should call the send message method with the invoice."""
         with mock.patch.object(contract.Contract, "_send_invoice_message") as m:
             invoice = self._create_invoice()
-            self.contract._do_auto_pay(invoice)
+            self.contract.with_context(test_target_state="done")._do_auto_pay(invoice)
             m.assert_called_once_with(invoice)
 
     def test_do_auto_pay_does_pay(self):
@@ -136,8 +136,8 @@ class TestContract(HttpCase, TestContractBase):
 
     def test_pay_invoice_no_residual(self):
         """It should return None if no residual on the invoice."""
-        invoice = self._create_invoice()
-        invoice.state = "posted"
+        invoice = self._create_invoice(True)
+        invoice.amount_residual = 0.0
         res = self.contract._pay_invoice(invoice)
         self.assertIs(res, None)
 
