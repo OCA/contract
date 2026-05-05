@@ -4,8 +4,9 @@ import logging
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError
 
 logger = logging.getLogger(__name__)
@@ -105,8 +106,8 @@ class SaleSubscription(models.Model):
     )
 
     @api.model
-    def _read_group_stage_ids(self, stages, domain, order):
-        stage_ids = stages.search([], order=order)
+    def _read_group_stage_ids(self, stages, domain):
+        stage_ids = stages.search(domain, order=stages._order)
         return stage_ids
 
     stage_id = fields.Many2one(
@@ -115,6 +116,9 @@ class SaleSubscription(models.Model):
         tracking=True,
         group_expand="_read_group_stage_ids",
         store=True,
+    )
+    stage_type = fields.Selection(
+        related="stage_id.type",
     )
     sale_subscription_line_ids = fields.One2many(
         comodel_name="sale.subscription.line",
@@ -132,26 +136,33 @@ class SaleSubscription(models.Model):
     crm_team_id = fields.Many2one(comodel_name="crm.team", string="Sale team")
     to_renew = fields.Boolean(default=False, string="To renew")
 
+    @api.model
     def cron_subscription_management(self):
         today = date.today()
-        for subscription in self.search([]):
+        subscription_count = self.search_count([])
+        for subscription in self.search(
+            [], order="recurring_next_date asc", limit=subscription_count
+        ):
+            subscription = subscription.with_company(subscription.company_id)
             if subscription.in_progress:
                 if (
-                    subscription.recurring_next_date == today
+                    subscription.recurring_next_date <= today
                     and subscription.sale_subscription_line_ids
                 ):
                     try:
                         subscription.generate_invoice()
                     except Exception:
                         logger.exception("Error on subscription invoice generate")
-                if not subscription.recurring_rule_boundary:
-                    if subscription.date == today:
-                        subscription.action_close_subscription()
-
-            else:
-                if subscription.date_start == today:
-                    subscription.action_start_subscription()
-                    subscription.generate_invoice()
+                if (
+                    not subscription.recurring_rule_boundary
+                    and subscription.date <= today
+                ):
+                    subscription.close_subscription()
+            elif (
+                subscription.date_start <= today and subscription.stage_id.type == "pre"
+            ):
+                subscription.action_start_subscription()
+                subscription.generate_invoice()
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):
@@ -234,7 +245,6 @@ class SaleSubscription(models.Model):
         self.stage_id = in_progress_stage
 
     def action_close_subscription(self):
-        self.recurring_next_date = False
         return {
             "view_type": "form",
             "view_mode": "form",
@@ -244,10 +254,24 @@ class SaleSubscription(models.Model):
             "res_id": False,
         }
 
+    def close_subscription(self, close_reason_id=False):
+        self.ensure_one()
+        self.recurring_next_date = False
+        closed_stage = self.env["sale.subscription.stage"].search(
+            [("type", "=", "post")], limit=1
+        )
+        self.write(
+            {
+                "close_reason_id": close_reason_id,
+                "stage_id": closed_stage,
+            }
+        )
+
     def _prepare_sale_order(self, line_ids=False):
         self.ensure_one()
         return {
             "partner_id": self.partner_id.id,
+            "pricelist_id": self.pricelist_id.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "date_order": datetime.now(),
             "payment_term_id": self.partner_id.property_payment_term_id.id,
@@ -266,22 +290,22 @@ class SaleSubscription(models.Model):
             "invoice_user_id": self.user_id.id,
             "partner_bank_id": self.company_id.partner_id.bank_ids[:1].id,
             "invoice_line_ids": line_ids,
+            "subscription_id": self.id,
         }
         if self.journal_id:
             values["journal_id"] = self.journal_id.id
         return values
 
     def create_invoice(self):
-        if not self.env["account.move"].check_access_rights("create", False):
+        if not self.env["account.move"].has_access("create"):
             try:
-                self.check_access_rights("write")
-                self.check_access_rule("write")
+                self.check_access("write")
             except AccessError:
                 return self.env["account.move"]
         line_ids = []
         for line in self.sale_subscription_line_ids:
             line_values = line._prepare_account_move_line()
-            line_ids.append((0, 0, line_values))
+            line_ids.append(Command.create(line_values))
         invoice_values = self._prepare_account_move(line_ids)
         invoice_id = (
             self.env["account.move"]
@@ -289,35 +313,34 @@ class SaleSubscription(models.Model):
             .with_context(default_move_type="out_invoice", journal_type="sale")
             .create(invoice_values)
         )
-        self.write({"invoice_ids": [(4, invoice_id.id)]})
         return invoice_id
 
     def create_sale_order(self):
-        if not self.env["sale.order"].check_access_rights("create", False):
+        if not self.env["sale.order"].has_access("create"):
             try:
-                self.check_access_rights("write")
-                self.check_access_rule("write")
+                self.check_access("write")
             except AccessError:
                 return self.env["sale.order"]
         line_ids = []
         for line in self.sale_subscription_line_ids:
             line_values = line._prepare_sale_order_line()
-            line_ids.append((0, 0, line_values))
+            line_ids.append(Command.create(line_values))
         values = self._prepare_sale_order(line_ids)
         order_id = self.env["sale.order"].sudo().create(values)
-        self.write({"sale_order_ids": [(4, order_id.id)]})
+        self.write({"sale_order_ids": [Command.link(order_id.id)]})
         return order_id
 
     def generate_invoice(self):
         invoice_number = ""
-        msg_static = _("Created invoice with reference")
+        message_body = ""
+        msg_static = self.env._("Created invoice with reference")
         if self.template_id.invoicing_mode in ["draft", "invoice", "invoice_send"]:
             invoice = self.create_invoice()
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
                 mail_template = self.template_id.invoice_mail_template_id
-                invoice.with_context(force_send=True)._generate_pdf_and_send_invoice(
-                    mail_template
+                self.env["account.move.send"]._generate_and_send_invoices(
+                    invoice, mail_template=mail_template, sending_methods=["email"]
                 )
                 invoice_number = invoice.name
                 message_body = (
@@ -335,15 +358,15 @@ class SaleSubscription(models.Model):
             new_invoice.action_post()
             new_invoice.invoice_origin = order_id.name + ", " + self.name
             invoice_number = new_invoice.name
-            message_body = (
-                "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
-                % (msg_static, new_invoice.id, invoice_number)
-            )
+            message_body = f"<b>{msg_static}</b> \
+<a href=# data-oe-model=account.move data-oe-id={new_invoice.id}>\
+{invoice_number}</a>"
+
         if not invoice_number:
-            invoice_number = _("To validate")
+            invoice_number = self.env._("To validate")
             message_body = f"<b>{msg_static}</b> {invoice_number}"
         self.calculate_recurring_next_date(self.recurring_next_date)
-        self.message_post(body=message_body)
+        self.message_post(body=Markup(message_body))
 
     def manual_invoice(self):
         invoice_id = self.create_invoice()
@@ -354,7 +377,7 @@ class SaleSubscription(models.Model):
             "name": self.name,
             "views": [
                 (self.env.ref("account.view_move_form").id, "form"),
-                (self.env.ref("account.view_move_tree").id, "tree"),
+                (self.env.ref("account.view_move_tree").id, "list"),
             ],
             "view_type": "form",
             "view_mode": "form",
@@ -367,19 +390,19 @@ class SaleSubscription(models.Model):
     @api.depends("invoice_ids", "sale_order_ids.invoice_ids")
     def _compute_account_invoice_ids_count(self):
         for record in self:
-            record.account_invoice_ids_count = len(self.invoice_ids) + len(
-                self.sale_order_ids.invoice_ids
+            record.account_invoice_ids_count = len(record.invoice_ids) + len(
+                record.sale_order_ids.invoice_ids
             )
 
     def action_view_account_invoice_ids(self):
         return {
             "name": self.name,
             "views": [
-                (self.env.ref("account.view_move_tree").id, "tree"),
+                (self.env.ref("account.view_move_tree").id, "list"),
                 (self.env.ref("account.view_move_form").id, "form"),
             ],
             "view_type": "form",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "account.move",
             "type": "ir.actions.act_window",
             "domain": [
@@ -389,14 +412,13 @@ class SaleSubscription(models.Model):
         }
 
     def _compute_sale_order_ids_count(self):
-        data = self.env["sale.order"].read_group(
+        data = self.env["sale.order"]._read_group(
             domain=[("order_subscription_id", "in", self.ids)],
-            fields=["order_subscription_id"],
             groupby=["order_subscription_id"],
+            aggregates=["__count"],
         )
         count_dict = {
-            item["order_subscription_id"][0]: item["order_subscription_id_count"]
-            for item in data
+            subscription.id: count for subscription, count in data if subscription
         }
         for record in self:
             record.sale_order_ids_count = count_dict.get(record.id, 0)
@@ -406,7 +428,7 @@ class SaleSubscription(models.Model):
         return {
             "name": self.name,
             "view_type": "form",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "sale.order",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", active_ids)],
@@ -433,9 +455,11 @@ class SaleSubscription(models.Model):
                 if record.stage_id:
                     if record.stage_id.type == "in_progress":
                         record.in_progress = True
-                        record.date_start = date.today()
+                        today = date.today()
+                        record.date_start = today
+                        record.calculate_recurring_next_date(today)
                     elif record.stage_id.type == "post":
-                        record.close_reason_id = False
+                        record.close_reason_id = values.get("close_reason_id", False)
                         record.in_progress = False
                     else:
                         record.in_progress = False
@@ -462,7 +486,7 @@ class SaleSubscription(models.Model):
                     values["date_start"] = values["recurring_next_date"]
                 values["stage_id"] = (
                     self.env["sale.subscription.stage"]
-                    .search([("type", "=", "pre")], order="sequence desc", limit=1)
+                    .search([("type", "=", "draft")], order="sequence desc", limit=1)
                     .id
                 )
         return super().create(vals_list)

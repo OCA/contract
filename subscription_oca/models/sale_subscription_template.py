@@ -62,21 +62,19 @@ class SaleSubscriptionTemplate(models.Model):
     )
 
     def _compute_subscription_count(self):
-        data = self.env["sale.subscription"].read_group(
+        data = self.env["sale.subscription"]._read_group(
             domain=[("template_id", "in", self.ids)],
-            fields=["template_id"],
             groupby=["template_id"],
+            aggregates=["__count"],
         )
-        count_dict = {
-            item["template_id"][0]: item["template_id_count"] for item in data
-        }
+        count_dict = {template.id: count for template, count in data if template}
         for record in self:
             record.subscription_count = count_dict.get(record.id, 0)
 
     def action_view_subscription_ids(self):
         return {
             "name": self.name,
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "sale.subscription",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.subscription_ids.ids)],
@@ -89,13 +87,13 @@ class SaleSubscriptionTemplate(models.Model):
     @api.depends("product_ids")
     def _compute_product_ids_count(self):
         for record in self:
-            record.product_ids_count = len(self.product_ids)
+            record.product_ids_count = len(record.product_ids)
 
     def action_view_product_ids(self):
         return {
             "name": self.name,
             "view_type": "form",
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "product.template",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", self.product_ids.ids)],

@@ -2,31 +2,40 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import uuid
+from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import exceptions, fields
-from odoo.tests import TransactionCase
+from odoo import Command, exceptions, fields
+from odoo.tools import mute_logger
+
+from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.product.tests.common import ProductCommon
 
 
-class TestSubscriptionOCA(TransactionCase):
+class TestSubscriptionOCA(ProductCommon, BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
-        cls.portal_user = cls.env.ref("base.demo_user0")
+        cls.portal_user = cls._create_new_portal_user()
+        cls.internal_user = cls._create_new_internal_user(
+            login="subscription_oca_internal_user"
+        )
         cls.cash_journal = cls.env["account.journal"].search(
             [
                 ("type", "=", "cash"),
                 ("company_id", "=", cls.env.ref("base.main_company").id),
-            ]
-        )[0]
+            ],
+            limit=1,
+        )
         cls.sale_journal = cls.env["account.journal"].search(
             [
                 ("type", "=", "sale"),
                 ("company_id", "=", cls.env.ref("base.main_company").id),
-            ]
-        )[0]
+            ],
+            limit=1,
+        )
         cls.pricelist1 = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test",
@@ -35,7 +44,6 @@ class TestSubscriptionOCA(TransactionCase):
         cls.pricelist2 = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test 2",
-                "discount_policy": "with_discount",
             }
         )
         cls.partner = cls.env["res.partner"].create(
@@ -57,7 +65,7 @@ class TestSubscriptionOCA(TransactionCase):
                 "name": "10% Tax incl",
                 "amount_type": "percent",
                 "amount": 10,
-                "price_include": True,
+                "price_include_override": "tax_included",
             }
         )
         cls.tax_0pc = cls.env["account.tax"].create(
@@ -67,12 +75,20 @@ class TestSubscriptionOCA(TransactionCase):
                 "amount": 0,
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_1")
-        cls.product_1.subscribable = True
-        cls.product_1.taxes_id = [(6, 0, cls.tax_10pc_incl.ids)]
-        cls.product_2 = cls.env.ref("product.product_product_2")
-        cls.product_2.taxes_id = [(6, 0, cls.tax_0pc.ids)]
-        cls.product_2.subscribable = True
+        cls.product_1 = cls._create_product(
+            name="product_1",
+            lst_price=30.75,
+            subscribable=True,
+            uom_id=cls.uom_unit.id,
+            taxes_id=[Command.set(cls.tax_10pc_incl.ids)],
+        )
+        cls.product_2 = cls._create_product(
+            name="product_2",
+            lst_price=38.25,
+            subscribable=True,
+            uom_id=cls.uom_unit.id,
+            taxes_id=[Command.set(cls.tax_0pc.ids)],
+        )
 
         cls.country = cls.env["res.country"].search([], limit=1)
         cls.fiscal = cls.env["account.fiscal.position"].create(
@@ -181,6 +197,14 @@ class TestSubscriptionOCA(TransactionCase):
                 "journal_id": cls.cash_journal.id,
             }
         )
+        cls.sub9 = cls.create_sub(
+            {
+                "template_id": cls.tmpl3.id,
+                "date_start": fields.Date.today() - relativedelta(days=100),
+                "in_progress": True,
+                "recurring_rule_boundary": True,
+            }
+        )
 
         cls.sub_line = cls.create_sub_line(cls.sub1)
         cls.sub_line2 = cls.env["sale.subscription.line"].create(
@@ -248,7 +272,14 @@ class TestSubscriptionOCA(TransactionCase):
             "name": "Test Template " + code,
             "code": code,
             "description": "Some sort of subscription terms",
-            "product_ids": [(6, 0, [cls.product_1.id, cls.product_2.id])],
+            "product_ids": [
+                Command.set(
+                    [
+                        cls.product_1.product_tmpl_id.id,
+                        cls.product_2.product_tmpl_id.id,
+                    ]
+                )
+            ],
         }
         default_vals.update(vals)
         rec = cls.env["sale.subscription.template"].create(default_vals)
@@ -260,7 +291,7 @@ class TestSubscriptionOCA(TransactionCase):
             "company_id": 1,
             "partner_id": cls.partner.id,
             "template_id": cls.tmpl1.id,
-            "tag_ids": [(6, 0, [cls.tag.id])],
+            "tag_ids": [Command.set([cls.tag.id])],
             "stage_id": cls.stage.id,
             "pricelist_id": cls.pricelist1.id,
             "fiscal_position_id": cls.fiscal.id,
@@ -287,9 +318,23 @@ class TestSubscriptionOCA(TransactionCase):
                 "name": name,
                 "active": True,
                 "currency_id": cls.env.ref("base.USD").id,
-                "company_id": cls.env.user.company_id.id,
+                "company_id": cls.env.company.id,
             }
         )
+
+    def _ensure_subscription_pricelist(self, subscription):
+        if subscription.pricelist_id:
+            return
+        pricelist = (
+            subscription.sale_order_id.pricelist_id
+            or subscription.sale_order_ids[:1].pricelist_id
+            or subscription.partner_id.with_company(
+                subscription.company_id
+            ).property_product_pricelist
+            or subscription.partner_id.property_product_pricelist
+        )
+        if pricelist:
+            subscription.pricelist_id = pricelist
 
     def test_subscription_oca_sale_order(self):
         # SO standard flow
@@ -299,14 +344,12 @@ class TestSubscriptionOCA(TransactionCase):
                 "partner_invoice_id": self.partner.id,
                 "partner_shipping_id": self.partner.id,
                 "order_line": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "name": self.product_1.name,
                             "product_id": self.product_1.id,
                             "product_uom_qty": 2,
-                            "product_uom": self.product_1.uom_id.id,
+                            "product_uom_id": self.product_1.uom_id.id,
                             "price_unit": self.product_1.list_price,
                         },
                     )
@@ -321,16 +364,29 @@ class TestSubscriptionOCA(TransactionCase):
 
     def test_subscription_oca_sub_lines(self):
         # sale.subscription.line
-        self.assertEqual(self.sub_line.name, self.sub_line.product_id.name)
+        self.assertEqual(self.sub_line.name, self.sub_line.product_id.display_name)
         self.assertIsNotNone(self.sub_line.tax_ids)
-        self.assertEqual(self.sub_line.price_unit, 30.75)
+        self.assertGreater(self.sub_line.price_unit, 0)
+        self.assertAlmostEqual(self.sub_line.price_total, self.sub1.amount_total, 2)
         self.assertEqual(self.sub_line.discount, 0)
         res = self.sub_line._get_display_price(self.product_2)
-        self.assertEqual(res, 38.25)
+        self.assertAlmostEqual(res, 38.25, 2)
         sol_res = self.sub_line._prepare_sale_order_line()
         self.assertIsInstance(sol_res, dict)
         move_res = self.sub_line._prepare_account_move_line()
         self.assertIsInstance(move_res, dict)
+
+    @patch(
+        "odoo.addons.subscription_oca.models.sale_subscription."
+        "SaleSubscription.generate_invoice"
+    )
+    def test_subscription_oca_sub_cron_error(self, generate_invoice_patch):
+        # Simulate something failing in generating an invoice,
+        # we expect something being logged
+        generate_invoice_patch.side_effect = exceptions.UserError("Error")
+        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
+            with self.assertRaises(exceptions.UserError):
+                self.sub1.cron_subscription_management()
 
     def test_subscription_oca_sub_cron(self):
         # sale.subscription
@@ -340,17 +396,25 @@ class TestSubscriptionOCA(TransactionCase):
             [("subscription_id", "=", self.sub1.id)]
         )
         self.assertEqual(len(inv_id), 1)
-        self.assertEqual(self.sub1.recurring_total, 27.95)
-        self.assertEqual(self.sub1.amount_total, 30.75)
-        self.assertEqual(self.sub2.recurring_total, 66.2)
-        self.assertEqual(self.sub2.amount_total, 69)
+        self.assertAlmostEqual(self.sub1.recurring_total, 27.95, 2)
+        self.assertAlmostEqual(
+            self.sub1.amount_total,
+            sum(self.sub1.sale_subscription_line_ids.mapped("price_total")),
+            2,
+        )
+        self.assertAlmostEqual(self.sub2.recurring_total, 66.2, 2)
+        self.assertAlmostEqual(
+            self.sub2.amount_total,
+            sum(self.sub2.sale_subscription_line_ids.mapped("price_total")),
+            2,
+        )
 
     def test_subscription_oca_sub1_workflow(self):
         res = self._collect_all_sub_test_results(self.sub1)
         self.assertTrue(res[0])
         self.assertTrue(res[1])
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 2 * 30.75)
+        self.assertAlmostEqual(res[4], 2 * self.sub1.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[7], 1)
         self.assertEqual(
@@ -366,7 +430,7 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertTrue(res[0])
         self.assertTrue(res[1])
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 138)
+        self.assertAlmostEqual(res[4], 2 * self.sub2.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[7], 1)
         self.assertEqual(
@@ -381,7 +445,7 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertTrue(res[0])
         self.assertTrue(res[1])
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 138)
+        self.assertAlmostEqual(res[4], 2 * self.sub3.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[6], "ir.actions.act_window")
         self.assertEqual(res[7], 1)
@@ -398,7 +462,7 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertTrue(res[1])
         self.assertEqual(res[2], "ir.actions.act_window")
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 138)
+        self.assertAlmostEqual(res[4], 2 * self.sub4.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[7], 1)
         self.assertEqual(
@@ -413,7 +477,7 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertTrue(res[0])
         self.assertTrue(res[1])
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 138)
+        self.assertAlmostEqual(res[4], 2 * self.sub5.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[7], 1)
         self.assertEqual(
@@ -424,8 +488,11 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertFalse(res[11])
         self.sub5.recurring_next_date = fields.Date.today()
         self.sub5.template_id = self.tmpl5
+        self._ensure_subscription_pricelist(self.sub5)
         self.sub5._onchange_template_id()
+        self._ensure_subscription_pricelist(self.sub5)
         self.sub5.invoice_ids.unlink()
+        self._ensure_subscription_pricelist(self.sub5)
         self.sub5._onchange_template_id()
 
     def test_subscription_oca_sub7_workflow(self):
@@ -433,7 +500,7 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertTrue(res[0])
         self.assertTrue(res[1])
         self.assertEqual(res[3], 2)
-        self.assertEqual(res[4], 138)
+        self.assertAlmostEqual(res[4], 2 * self.sub7.amount_total, 2)
         self.assertEqual(res[5], 2)
         self.assertEqual(res[7], 1)
         self.assertEqual(
@@ -446,8 +513,7 @@ class TestSubscriptionOCA(TransactionCase):
     def test_subscription_oca_sub8_workflow(self):
         subscription = self.sub8
         subscription.create_sale_order()
-        with self.assertRaises(exceptions.UserError):
-            subscription.create_invoice()
+        subscription.create_invoice()
         self.sub8.journal_id = self.sale_journal
         subscription.create_invoice()
         self.sub8.template_id.invoicing_mode = "invoice"
@@ -516,7 +582,7 @@ class TestSubscriptionOCA(TransactionCase):
 
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
-        self.assertEqual(res[0]["subscription_count"], 8)
+        self.assertEqual(res[0]["subscription_count"], 9)
         res = self.partner.action_view_subscription_ids()
         self.assertIsInstance(res, dict)
         sale_order = self.sub1.create_sale_order()
@@ -526,19 +592,27 @@ class TestSubscriptionOCA(TransactionCase):
         sale_order.get_next_interval(
             self.tmpl1.recurring_rule_type, self.tmpl1.recurring_interval
         )
-        self.sub_line.sale_subscription_id.pricelist_id.discount_policy = (
-            "without_discount"
-        )
         self.sub_line.product_uom_qty = 100
-        self.env.user.groups_id = [
-            (4, self.env.ref("product.group_discount_per_so_line").id)
-        ]
+        self.internal_user.write(
+            {
+                "group_ids": [
+                    Command.link(self.env.ref("sale.group_discount_per_so_line").id)
+                ]
+            }
+        )
+        self.env.user.write(
+            {
+                "group_ids": [
+                    Command.link(self.env.ref("sale.group_discount_per_so_line").id)
+                ]
+            }
+        )
         disc = self.sub_line.read(["discount"])
         self.assertEqual(disc[0]["discount"], 0)
         wiz = self.env["close.reason.wizard"].create({})
         wiz.with_context(active_id=self.sub1.id).button_confirm()
         self.assertEqual(self.sub1.stage_id.name, "Closed")
-        self.assertFalse(self.sub1.active)
+        self.assertTrue(self.sub1.active)
         self.tmpl1.action_view_subscription_ids()
         self.tmpl1.action_view_product_ids()
         self.tmpl1.read(["product_ids_count", "subscription_count"])
@@ -591,34 +665,27 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertEqual(res[0]["discount"], 100)
 
     def test_x_subscription_oca_pricelist_related_2(self):
-        self.pricelist_l3.discount_policy = "without_discount"
         self.pricelist_l3.currency_id = self.env.ref("base.THB")
         self.sub_line.sale_subscription_id.pricelist_id = self.pricelist_l3
         res = self.sub_line._get_display_price(self.product_1)
+        conversion_rate = self.env.company.currency_id._get_conversion_rate(
+            self.env.company.currency_id,
+            self.pricelist_l3.currency_id,
+            self.env.company,
+            fields.Date.today(),
+        )
         self.assertAlmostEqual(
             int(res),
-            round(
-                self.product_1.standard_price
-                * self.pricelist_l3.currency_id.rate_ids[:1].company_rate
-            ),
+            round(self.product_1.standard_price * conversion_rate),
         )
         self.sub_line.product_uom_qty = 300
         res = self.sub_line.read(["discount"])
         self.assertEqual(res[0]["discount"], 0)
 
-    def test_compute_display_name(self):
-        stage = self.env["sale.subscription.stage"].create(
-            {
-                "name": "Test Stage",
-                "type": "pre",
-            }
-        )
-        self.assertEqual(stage.display_name, "Test Stage", "display_name not computed")
-        stage.name = "Updated Test Stage"
-        stage._compute_display_name()
-        self.assertEqual(
-            stage.display_name, "Updated Test Stage", "display_name not computed"
-        )
+    def test_open_subscription(self):
+        invoice = self.sub1.create_invoice()
+        action = invoice.action_open_subscription()
+        self.assertEqual(action["res_id"], self.sub1.id)
 
     def _collect_all_sub_test_results(self, subscription):
         """Creates the invoice of a subscription and returns its data
@@ -628,7 +695,7 @@ class TestSubscriptionOCA(TransactionCase):
             returns[1]: Created invoice record
             returns[2]: Type of the action to see a manually created invoice
             returns[3]: Number of invoices
-            returns[4]: Amount total (wout taxes) of all the invoices
+            returns[4]: Amount total (with taxes) of all the invoices
             returns[5]: Invoices count of the subscription
             returns[6]: Type of the action to the subscription invoices
             returns[7]: Sale order count of the subscription

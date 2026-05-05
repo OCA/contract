@@ -6,3 +6,6 @@
   - Harald Panten
   - Valentin Vinagre
   - Alberto Martínez
+- Dennis Sluijk \<<d.sluijk@onestein.nl>\>
+- [IKU Solutions](https://www.iku.solutions):
+  - Yan Chirino  \<<yan.chirino@iku.solutions>\>

@@ -10,3 +10,7 @@ class AccountMove(models.Model):
     subscription_id = fields.Many2one(
         comodel_name="sale.subscription", string="Subscription"
     )
+
+    def action_open_subscription(self):
+        self.ensure_one()
+        return self.subscription_id.get_formview_action()
