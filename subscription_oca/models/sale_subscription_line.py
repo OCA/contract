@@ -146,14 +146,15 @@ class SaleSubscriptionLine(models.Model):
     )
     def _compute_discount(self):
         for record in self:
+            if record.discount and not self.env.context.get("force_pricelist_discount"):
+                continue
+
             if not (
                 record.product_id
                 and record.product_id.uom_id
                 and record.sale_subscription_id.partner_id
                 and record.sale_subscription_id.pricelist_id
-                and record.sale_subscription_id.pricelist_id.discount_policy
-                == "without_discount"
-                and self.env.user.has_group("product.group_discount_per_so_line")
+                and self.env.user.has_group("sale.group_discount_per_so_line")
             ):
                 record.discount = 0.0
                 continue

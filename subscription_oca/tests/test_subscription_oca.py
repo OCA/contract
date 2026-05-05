@@ -716,40 +716,61 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         inv_ids = self.env["account.move"].search(
             [("subscription_id", "=", subscription.id)]
         )
-        # self.assertEqual(len(inv_ids), 2)
-        # self.assertEqual(sum(inv_ids.mapped("amount_total")), 2 * 30.75)
-        # self.assertEqual(subscription.account_invoice_ids_count, 2)
         test_res.append(len(inv_ids))
         test_res.append(sum(inv_ids.mapped("amount_total")))
         test_res.append(subscription.account_invoice_ids_count)
         res = subscription.action_view_account_invoice_ids()
-        # self.assertEqual(res["type"], "ir.actions.act_window")
-        # self.assertEqual(subscription.sale_order_ids_count, 1)
         test_res.append(res["type"])
         test_res.append(subscription.sale_order_ids_count)
         subscription.action_view_sale_order_ids()
-        # self.assertIn(str(subscription.sale_order_ids.id), str(res["domain"]))
         test_res.append(subscription.sale_order_ids.id)
         subscription.calculate_recurring_next_date(fields.Datetime.now())
-        # self.assertEqual(
-        #     subscription.recurring_next_date,
-        #     fields.Date.today() + relativedelta(months=1),
-        # )
         test_res.append(subscription.recurring_next_date)
         subscription.partner_id = self.partner_2
         subscription.onchange_partner_id()
-        # self.assertEqual(
-        #     subscription.pricelist_id.id, self.partner_2.property_product_pricelist.id
-        # )
         test_res.append(subscription.pricelist_id.id)
         subscription.onchange_partner_id_fpos()
-        # self.assertFalse(subscription.fiscal_position_id)
         test_res.append(subscription.fiscal_position_id)
         res = subscription.action_close_subscription()
         self.assertEqual(res["type"], "ir.actions.act_window")
         test_res.append(res["type"])
         group_stage_ids = subscription._read_group_stage_ids(
-            stages=self.env["sale.subscription.stage"].search([]), domain=[], order="id"
+            stages=self.env["sale.subscription.stage"].search([]), domain=[]
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_manual_discount_persistence(self):
+        """Verify manual discount is preserved when changing quantity (Fix #1320)"""
+        # 1. Grant discount permissions for the test user
+        self.env.user.write(
+            {
+                "group_ids": [
+                    Command.link(self.env.ref("sale.group_discount_per_so_line").id)
+                ]
+            }
+        )
+
+        # 2. Create subscription line with standard pricelist (initial 0% discount)
+        sub = self.create_sub({"pricelist_id": self.pricelist1.id})
+        line = self.env["sale.subscription.line"].create(
+            {
+                "sale_subscription_id": sub.id,
+                "product_id": self.product_1.id,
+                "product_uom_qty": 1.0,
+            }
+        )
+
+        # 3. Simulate a manual 10% discount input
+        line.discount = 10.0
+
+        # 4. Change quantity (this used to trigger the bug that reset the discount)
+        line.product_uom_qty = 5.0
+        line._compute_discount()
+
+        # 5. Final verification
+        self.assertEqual(
+            line.discount,
+            10.0,
+            "Manual discount was lost after changing the quantity (Bug #1320)",
+        )
