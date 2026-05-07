@@ -55,16 +55,37 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Detect addons
+        id: detect_addons
+        run: |
+          if [ -n "$(find . -mindepth 2 -maxdepth 2 -name __manifest__.py -print -quit)" ]; then
+            echo "has_addons=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_addons=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No addons found in repository, test steps will be skipped."
+          fi
       - name: Install addons and dependencies
+        if: steps.detect_addons.outputs.has_addons == 'true'
         run: oca_install_addons
       - name: Check licenses
+        if: steps.detect_addons.outputs.has_addons == 'true'
         run: manifestoo -d . check-licenses
       - name: Check development status
+        if: steps.detect_addons.outputs.has_addons == 'true'
         run: manifestoo -d . check-dev-status --default-dev-status=Beta
       - name: Initialize test db
+        if: steps.detect_addons.outputs.has_addons == 'true'
         run: oca_init_test_database
       - name: Run tests
+        if: steps.detect_addons.outputs.has_addons == 'true'
         run: oca_run_tests
+      - name: Upload screenshots from JS tests
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() && steps.detect_addons.outputs.has_addons == 'true' }}
+        with:
+          name: Screenshots of failed JS tests - ${{ matrix.name }}${{ join(matrix.include) }}
+          path: /tmp/odoo_tests/${{ env.PGDATABASE }}
+          if-no-files-found: ignore
       - uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
