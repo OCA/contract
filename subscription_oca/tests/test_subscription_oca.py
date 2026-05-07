@@ -495,6 +495,23 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         self._ensure_subscription_pricelist(self.sub5)
         self.sub5._onchange_template_id()
 
+    def test_subscription_oca_next_invoice_date_respects_future_start_onchange(self):
+        subscription = self.create_sub({"template_id": self.tmpl3.id})
+        future_start = fields.Date.today() + relativedelta(days=10)
+
+        subscription.date_start = future_start
+        subscription._onchange_template_id()
+
+        self.assertEqual(subscription.recurring_next_date, future_start)
+
+    def test_subscription_oca_next_invoice_date_respects_start_without_invoices(self):
+        subscription = self.create_sub({"template_id": self.tmpl1.id})
+        future_start = fields.Date.today() + relativedelta(days=15)
+
+        subscription.calculate_recurring_next_date(future_start)
+
+        self.assertEqual(subscription.recurring_next_date, future_start)
+
     def test_subscription_oca_sub7_workflow(self):
         res = self._collect_all_sub_test_results(self.sub7.with_context(uom=2))
         self.assertTrue(res[0])

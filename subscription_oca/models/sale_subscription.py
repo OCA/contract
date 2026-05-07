@@ -217,7 +217,13 @@ class SaleSubscription(models.Model):
 
     def calculate_recurring_next_date(self, start_date):
         if self.account_invoice_ids_count == 0:
-            self.recurring_next_date = date.today()
+            if not start_date:
+                start_date = self.date_start or date.today()
+            if isinstance(start_date, datetime):
+                start_date = start_date.date()
+            elif not isinstance(start_date, date):
+                start_date = fields.Date.to_date(start_date)
+            self.recurring_next_date = start_date
         else:
             type_interval = self.template_id.recurring_rule_type
             interval = int(self.template_id.recurring_interval)
