@@ -38,6 +38,10 @@ class TestSubscriptionOCA(TransactionCase):
                 ("company_id", "=", cls.env.ref("base.main_company").id),
             ]
         )[0]
+        # Allow paying from no matter what company acct used for refunds etc.
+        cls.env.ref("base.main_company").partner_id.bank_ids.update(
+            {"allow_out_payment": True}
+        )
         cls.pricelist1 = cls.env["product.pricelist"].create(
             {
                 "name": "pricelist for contract test",
