@@ -2577,3 +2577,61 @@ class TestContract(TestContractBase):
         self.assertEqual(
             new_contract_line.analytic_distribution, {str(analytic_account.id): 100}
         )
+
+    def test_get_contract_line_total_value_basic(self):
+        """Total value = quantity × price_unit over the full period."""
+        self.acct_line.write(
+            {
+                "quantity": 3,
+                "price_unit": 400.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_next_date": "2026-01-01",
+            }
+        )
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 3 * 400.0)
+
+    def test_get_contract_line_total_value_single_unit(self):
+        self.acct_line.write(
+            {
+                "quantity": 1,
+                "price_unit": 1200.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_next_date": "2026-01-01",
+            }
+        )
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 1200.0)
+
+    def test_get_contract_line_total_value_zero_price(self):
+        self.acct_line.write(
+            {
+                "quantity": 5,
+                "price_unit": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-06-30",
+                "recurring_next_date": "2026-01-01",
+            }
+        )
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 0.0)
+
+    def test_get_contract_line_total_value_no_date_end_raises(self):
+        """A line without date_end cannot compute a total: UserError expected."""
+        line = self.env["contract.line"].new(
+            {
+                "contract_id": self.contract.id,
+                "product_id": self.product_1.id,
+                "name": "Test",
+                "quantity": 1,
+                "price_unit": 1000.0,
+                "date_start": to_date("2026-01-01"),
+                "recurring_next_date": to_date("2026-01-01"),
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+                "uom_id": self.product_1.uom_id.id,
+            }
+        )
+        line.date_end = False
+        with self.assertRaises(UserError):
+            line._get_contract_line_total_value()
