@@ -1,0 +1,957 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* subscription_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-08-13 14:58+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"Language-Team: none\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
+msgid ""
+"\n"
+"        As an 'In progress'-type of stage, it will trigger the recurring "
+"invoicing process if applicable. If this stage is the first - sequence order "
+"- of the available 'In progress' types and there's a stage change from any "
+"other non-'In progress' types to this one, an invoice will be created "
+"automatically if the start date is the present day.\n"
+"      "
+msgstr ""
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
+msgid ""
+"\n"
+"        Draft equivalent, a subscription is ready to start when is not "
+"marked as in progress but it can be at any moment. If there's no 'Closed'-"
+"type stage defined, when a subscription comes to an end by automatic means, "
+"it will be marked with this stage.\n"
+"      "
+msgstr ""
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
+msgid ""
+"\n"
+"        The final stage of a subscription. There are two ways to mark a "
+"subscription as closed. The easiest one is using the kanban card-moving "
+"capabilities, pressing the 'Close subscription' button (only available if a "
+"subscription is in progress).\n"
+"      "
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"every\">Every</span>"
+msgstr "<span class=\"every\">Jokainen</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"mr-1\">For</span>"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Subscriptions</span>"
+msgstr "<span class=\"o_stat_text\">Toistuvaistilaukset</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid ""
+"A given subscription can be marked as closed when, for example, renewal is "
+"not desired."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction
+msgid "Action Needed"
+msgstr "Vaadittu toiminto"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_ids
+msgid "Activities"
+msgstr "Aktiviteetit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_state
+msgid "Activity State"
+msgstr "Aktiviteetin tila"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktiviteettityypin ikoni"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Add new description..."
+msgstr "Lisää uusi kuvaus..."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
+msgid "Amount Tax"
+msgstr "Veron määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_total
+msgid "Amount Total"
+msgstr "Kokonaissumma"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_rule_boundary
+msgid "Boundary"
+msgstr "Rajaus"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Cancel"
+msgstr "Peru"
+
+#. module: subscription_oca
+#: model_terms:ir.actions.act_window,help:subscription_oca.subscription_stage_action
+msgid "Click to create a new subscription stage."
+msgstr "Klikkaa luodaksesi uuden toistuvaistilauksen vaiheen."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__close_reason_id
+msgid "Close Reason"
+msgstr "Sulkemisen syy"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.close_reason_wizard_act_window
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Close reason"
+msgstr "Sulkemisen syy"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_close_reason
+msgid "Close reason model"
+msgstr "Sulkemisen syy -malli"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_close_reason_wizard
+msgid "Close reason wizard"
+msgstr "Ohjattu sulkemissyytoiminto"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_close_reason_action
+#: model:ir.ui.menu,name:subscription_oca.subscription_close_reason_menu
+msgid "Close reasons"
+msgstr "Sulkemissyyt"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Close subscription"
+msgstr "Sulje toistuvaistilaus"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__post
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_closed
+msgid "Closed"
+msgstr "Suljettu"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__code
+msgid "Code"
+msgstr "Koodi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__color
+msgid "Color Index"
+msgstr "Väri-indeksi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__user_id
+msgid "Commercial agent"
+msgstr "Vastuuhenkilö"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__company_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_configuration_menu
+msgid "Configuration"
+msgstr "Konfigurointi"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Confirm"
+msgstr "Hyväksy"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Create Invoice"
+msgstr "Luo lasku"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "Created invoice with reference"
+msgstr "Lasku luotiin viitteellä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__currency_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__currency_id
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__days
+msgid "Day(s)"
+msgstr "Päivä(ä)"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Delete"
+msgstr "Poista"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__description
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__discount
+msgid "Discount (%)"
+msgstr "Alennus (%)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__display_name
+msgid "Display name"
+msgstr "Näyttönimi"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__draft
+msgid "Draft"
+msgstr "Luonnos"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_boundary
+msgid "Duration"
+msgstr "Kesto"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Edit"
+msgstr "Muokkaa"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date
+msgid "Finish date"
+msgstr "Päättymispäivä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__fiscal_position_id
+msgid "Fiscal Position"
+msgstr "Verokanta"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__limited
+msgid "Fixed"
+msgstr "Kiinteä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (Kumppanit)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome -ikoni, kuten fa-tasks"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__unlimited
+msgid "Forever"
+msgstr "Jatkuva"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon"
+msgstr "Ikoni"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikoni joka kertoo poikkeustoiminnosta."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos merkattu, uudet viestit vaativat huomiointia."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos merkattu, joissain viesteissä on toimitusvirhe."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__image
+msgid "Image"
+msgstr "Kuva"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__in_progress
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__in_progress
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__in_progress
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_in_progress
+msgid "In progress"
+msgstr "Käynnissä"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoice"
+msgstr "Lasku"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice_send
+msgid "Invoice & send"
+msgstr "Laskuta ja lähetä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__account_invoice_ids_count
+msgid "Invoice Count"
+msgstr "Laskujen määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoice_mail_template_id
+msgid "Invoice Email"
+msgstr "Laskusähköposti"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__invoice_ids
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Invoices"
+msgstr "Laskut"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoicing"
+msgstr "Laskutus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoicing_mode
+msgid "Invoicing mode"
+msgstr "Laskutustapa"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_is_follower
+msgid "Is Follower"
+msgstr "Seuraajana"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__journal_id
+msgid "Journal"
+msgstr "Päiväkirja"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_account_move
+msgid "Journal Entry"
+msgstr "Päiväkirjan merkintä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__fold
+msgid "Kanban folded"
+msgstr "Suljettu kanban"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_uid
+msgid "Last Updated by"
+msgstr "Päivittänyt"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_date
+msgid "Last Updated on"
+msgstr "Päivitetty"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Menú desplegable"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error
+msgid "Message Delivery error"
+msgstr "Viestin toimituksen virhe"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Misc"
+msgstr "Muut"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__months
+msgid "Month(s)"
+msgstr "Kuukautta"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Omien aktiviteettien määräaika"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "New subscription"
+msgstr "Uusi toistuvaistilaus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Seuraavan aktiviteetin määräaika"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_summary
+msgid "Next Activity Summary"
+msgstr "Seuraavan aktiviteetin yhteenveto"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_id
+msgid "Next Activity Type"
+msgstr "Seuraavan aktiviteetin tyyppi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_next_date
+msgid "Next invoice date"
+msgstr "Seuraava laskutuspäivä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimintojen määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimintoja vaatievien viestien määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheessä olevien viestien määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
+msgid "Orders"
+msgstr "Tilaukset"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_id
+msgid "Origin sale order"
+msgstr "Alkuperäinen myynti"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Other info"
+msgstr "Muut tiedot"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_id
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Pending subscriptions"
+msgstr "Odottavat toistuvaistilaukset"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__pricelist_id
+msgid "Pricelist"
+msgstr "Hinnasto"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_product_template
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_id
+msgid "Product"
+msgstr "Tuote"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_product_template_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids
+#: model:ir.ui.menu,name:subscription_oca.product_subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Products"
+msgstr "Tuotteet"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_uom_qty
+msgid "Quantity"
+msgstr "Määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__pre
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
+msgid "Ready to start"
+msgstr "Valmiina alkamaan"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__close_reason_id
+msgid "Reason"
+msgstr "Syy"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_type
+msgid "Recurrence"
+msgstr "Toistuvuus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_total
+msgid "Recurring price"
+msgstr "Toistuvuuden hinta"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__code
+msgid "Reference"
+msgstr "Viite"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_interval
+msgid "Repeat every"
+msgstr "Toista joka"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_user_id
+msgid "Responsible User"
+msgstr "Vastuuhenkilö"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_count
+msgid "Rule count"
+msgstr "Sääntöjen määrä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_subscription_line_ids
+msgid "Sale Subscription Line"
+msgstr "Myynnin toistuvaistilauksen rivi"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
+msgid "Sale order & Invoice"
+msgstr "Myyntitilaus ja lasku"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids_count
+msgid "Sale orders"
+msgstr "Myyntitilaukset"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__crm_team_id
+msgid "Sale team"
+msgstr "Myyntitiimi"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Sales"
+msgstr "Myynnit"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sequence
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__stage_id
+msgid "Stage"
+msgstr "Vaihe"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"Stages define the life-cycle of a given subscription; this "
+"is,                 a subscription can be a 'Ready to start', 'In progress' "
+"or 'Closed' type of stage.                 Bear in mind that there can only "
+"be one 'Closed'-type stage."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date_start
+msgid "Start date"
+msgstr "Aloituspäivä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscribable
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscribable
+msgid "Subscribable product"
+msgstr "Toistuvaistilauksen tuote"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription
+#: model:ir.model.fields,field_description:subscription_oca.field_account_bank_statement_line__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_move__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_payment__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__order_subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__sale_subscription_id
+msgid "Subscription"
+msgstr "Toistuvaistilaus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_count
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_count
+msgid "Subscription Count"
+msgstr "Toistuvaistilausten määrä"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Subscription lines"
+msgstr "Toistuvaistilauksen rivit"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_line
+msgid "Subscription lines added to a given subscription"
+msgstr "Toistuvaistilauksen rivit lisätty annettuun toistuvaistilaukseen"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_stage
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Subscription stage"
+msgstr "Toistuvaistilauksen vaihe"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_stage_menu
+msgid "Subscription stages"
+msgstr "Toistuvaistilauksen vaiheet"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_tag_menu
+msgid "Subscription tags"
+msgstr "Toistuvaistilauksen tunnisteet"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__template_id
+msgid "Subscription template"
+msgstr "Toistuvaistilausmalli"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_template_act_window
+#: model:ir.model,name:subscription_oca.model_sale_subscription_template
+#: model:ir.ui.menu,name:subscription_oca.sale_template_subscription_menu
+msgid "Subscription templates"
+msgstr "Toistuvaistilausmallit"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_action
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_ids
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_menu
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_root
+#: model:ir.ui.menu,name:subscription_oca.subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_form
+msgid "Subscriptions"
+msgstr "Toistuvaistilaukset"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscriptions_count
+msgid "Subscriptions Count"
+msgstr "Toistuvaistilausten määrä"
+
+#. module: subscription_oca
+#: model:ir.actions.server,name:subscription_oca.ir_cron_subscription_management_ir_actions_server
+msgid "Subscriptions management"
+msgstr "Toistuvaistilausten hallinta"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_subtotal
+msgid "Subtotal"
+msgstr "Välisumma"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_stage_action
+msgid "Susbcription stages"
+msgstr "Toistuvaistilauksen vaiheet"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_product_suscribable_filter
+msgid "Suscribable products"
+msgstr "Toistuvaistilattavat tuotteet"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__name
+msgid "Tag name"
+msgstr "Tunnisteen nimi"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_tag_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__tag_ids
+msgid "Tags"
+msgstr "Tunnisteet"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_tag
+msgid "Tags for sale subscription"
+msgstr "Tunnisteet toistuvaistilaukselle"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__tax_ids
+msgid "Taxes"
+msgstr "Verot"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__amount_tax_line_amount
+msgid "Taxes Amount"
+msgstr "Verojen summa"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Terms and Conditions"
+msgstr "Ehdot"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__terms
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__description
+msgid "Terms and conditions"
+msgstr "Ehdot"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription_stage.py:0
+#, python-format
+msgid "There is already a Closed-type stage declared"
+msgstr "Suljettu-vaihe on jo olemassa"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid ""
+"This bar allows to filter the opportunities based on scheduled activities."
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"This field dictates the stages' visual order on the Kanban and form view. "
+"Although is purely visual, mind that if the order isn't                 "
+"consequent with your needs, you could have a 'Closed'-type stage before a "
+"'Ready to start' one."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__to_renew
+msgid "To renew"
+msgstr "Uusittavana"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "To validate"
+msgstr "Hyväksyttävänä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_total
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total"
+msgstr "Yhteensä"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total Tax"
+msgstr "Vero yhteensä"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total subtotal"
+msgstr "Välisumma yhteensä"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__type
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_unit
+msgid "Unit price"
+msgstr "Yksikköhinta"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun viestit"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun kommunikointihistoria"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__weeks
+msgid "Week(s)"
+msgstr "Viikkoa"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__years
+msgid "Year(s)"
+msgstr "Vuotta"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "e.g. Monthly Subscription"
+msgstr "Esim. kuukausitilaus"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "month(s)"
+msgstr "kuukautta"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids_count
+msgid "product_ids"
+msgstr "product_ids"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_count
+msgid "subscription_ids"
+msgstr "subscription_ids"

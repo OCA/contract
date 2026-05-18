@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_form" model="ir.ui.view">
+        <field name="name">sale.subscription.form</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <form string="New subscription">
+                <header>
+                    <button
+                        string="Create Invoice"
+                        name="manual_invoice"
+                        type="object"
+                        class="btn-primary"
+                    />
+
+                    <button
+                        string="Close subscription"
+                        class="btn-danger"
+                        name="action_close_subscription"
+                        type="object"
+                        help="A given subscription can be marked as closed when, for example, renewal is not desired."
+                        invisible="not in_progress"
+                    />
+
+                    <field
+                        name="stage_id"
+                        widget="statusbar"
+                        options="{'fold_field': 'fold', 'clickable': '1'}"
+                    />
+                    <field name="stage_type" invisible="1" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_sale_order_ids"
+                            type="object"
+                            invisible="sale_order_ids_count == 0"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                        >
+                            <field
+                                name="sale_order_ids_count"
+                                widget="statinfo"
+                                string="Sales"
+                            />
+                        </button>
+                        <button
+                            name="action_view_account_invoice_ids"
+                            invisible="account_invoice_ids_count == 0"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                        >
+                            <field
+                                name="account_invoice_ids_count"
+                                widget="statinfo"
+                                string="Invoices"
+                            />
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        text="Archived"
+                        bg_color="bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <h1 class="flex-fill d-flex flex-row">
+                            <field name="name" force_save="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="left_group">
+                            <field name="partner_id" />
+                            <field name="pricelist_id" />
+                            <field
+                                name="date_start"
+                                readonly="not active or in_progress"
+                            />
+                            <field name="date" invisible="recurring_rule_boundary" />
+                            <field
+                                name="close_reason_id"
+                                invisible="stage_type != 'post'"
+                            />
+                        </group>
+                        <group name="right_group">
+                            <field name="template_id" />
+                            <field name="crm_team_id" />
+                            <field
+                                name="recurring_next_date"
+                                invisible="not recurring_next_date or not in_progress"
+                            />
+                            <field name="company_id" invisible="1" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                            string="Subscription lines"
+                            name="subscription_lines_page"
+                        >
+                            <field name="sale_subscription_line_ids">
+                                <list editable="bottom">
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="product_id" required="True" />
+                                    <field
+                                        name="name"
+                                        required="True"
+                                        widget="section_and_note_text"
+                                    />
+                                    <field
+                                        name="analytic_distribution"
+                                        widget="analytic_distribution"
+                                        optional="hide"
+                                        groups="analytic.group_analytic_accounting"
+                                        options="{'product_field': 'product_id', 'business_domain': 'sale_order'}"
+                                    />
+                                    <field name="product_uom_qty" required="True" />
+                                    <field name="price_unit" required="True" />
+                                    <field name="discount" required="True" />
+                                    <field name="tax_ids" widget="many2many_tags" />
+                                    <field
+                                        name="price_subtotal"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+                                    <field
+                                        name="price_total"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+                                </list>
+                            </field>
+                            <group
+                                class="oe_subtotal_footer oe_right"
+                                colspan="2"
+                                name="subscription_total"
+                            >
+                                <field name="currency_id" invisible="1" />
+                                <field
+                                    name="recurring_total"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                                <field
+                                    name="amount_tax"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                                <div
+                                    class="oe_subtotal_footer_separator oe_inline o_td_label"
+                                >
+                                    <label for="amount_total" />
+                                </div>
+                                <field
+                                    name="amount_total"
+                                    nolabel="1"
+                                    class="oe_subtotal_footer_separator"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                            </group>
+                        </page>
+                        <page string="Misc" name="misc_page">
+                            <group>
+                                <field name="description" />
+                                <field name="terms" />
+                            </group>
+                        </page>
+                        <page string="Other info" name="other_info_page">
+                            <group>
+                                <group>
+                                    <field name="code" />
+                                    <field name="tag_ids" widget="many2many_tags" />
+                                    <field name="sale_order_id" />
+                                </group>
+                                <group>
+                                    <field
+                                        name="journal_id"
+                                        domain="[('type', '=', 'sale')]"
+                                    />
+                                    <field name="fiscal_position_id" />
+                                    <field name="user_id" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_subscription_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.list</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="currency_id" column_invisible="True" />
+                <field name="name" optional="show" />
+                <field name="partner_id" optional="show" />
+                <field name="recurring_next_date" optional="show" />
+                <field name="code" optional="show" />
+                <field name="user_id" optional="show" />
+                <field name="recurring_total" sum="Total subtotal" optional="show" />
+                <field name="amount_tax" sum="Total Tax" optional="show" />
+                <field name="amount_total" sum="Total" optional="show" />
+                <field name="template_id" optional="show" />
+                <field name="stage_id" optional="show" />
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_subscription_kanban" model="ir.ui.view">
+        <field name="name">sale.subscription.kanban</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <kanban
+                default_group_by="stage_id"
+                default_order="write_date,sequence"
+                class="o_kanban_small_column o_opportunity_kanban"
+                highlight_color="color"
+            >
+                <field name="stage_id" />
+                <field name="code" />
+                <field name="write_date" />
+                <field name="sequence" invisible="1" />
+                <field name="partner_id" />
+                <field name="user_id" />
+                <field name="recurring_total" />
+                <field name="currency_id" />
+                <field name="activity_state" />
+                <field name="tag_ids" />
+                <field name="amount_total" />
+                <field name="activity_ids" />
+                <field name="image" />
+                <field name="color" />
+                <progressbar
+                    field="activity_state"
+                    colors="{&quot;planned&quot;: &quot;success&quot;, &quot;today&quot;: &quot;warning&quot;, &quot;overdue&quot;: &quot;danger&quot;}"
+                    sum_field="recurring_total"
+                    help="This bar allows to filter the opportunities based on scheduled activities."
+                />
+                <templates>
+                    <t t-name="menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div role="menuitem">
+                                        <a role="menuitem" type="open">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a role="menuitem" type="delete">
+                                            Delete
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <field
+                                            name="color"
+                                            widget="kanban_color_picker"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_global_click_edit">
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <field name="name" />
+                                    <strong>
+                                        <div>
+                                            <field
+                                                name="recurring_total"
+                                                widget="monetary"
+                                                options="{'currency_field': 'currency_id'}"
+                                            />
+                                        </div>
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <field name="tag_ids" widget="many2many_tags" />
+                                </div>
+
+                                <div class="text-muted o_kanban_record_subtitle">
+                                    <t t-if="record.amount_total.raw_value">
+                                        <field
+                                            name="amount_total"
+                                            widget="monetary"
+                                            options="{'currency_field': 'company_currency'}"
+                                        />
+                                        <span t-if="record.partner_id.value">,</span>
+                                    </t>
+                                    <span t-if="record.partner_id.value">
+                                        <t t-esc="record.partner_id.value" />
+                                    </span>
+                                </div>
+
+                                <footer
+                                    class="mt-auto pt-0 ms-1 d-flex justify-content-between"
+                                >
+                                    <div>
+                                        <field
+                                            name="activity_ids"
+                                            widget="kanban_activity"
+                                        />
+                                    </div>
+                                    <div>
+                                        <field
+                                            name="user_id"
+                                            widget="many2one_avatar_user"
+                                        />
+                                    </div>
+                                </footer>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_sale_order_pending_filter" model="ir.ui.view">
+        <field name="name">sale.order.pending.filter</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="to_renew" />
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="template_id" />
+                <field name="user_id" />
+                <field name="date_start" />
+                <field name="recurring_next_date" />
+                <field name="stage_id" />
+                <filter
+                    string="Pending subscriptions"
+                    name="pendingsubs"
+                    domain="[('to_renew','=', True)]"
+                />
+                <separator />
+                <filter
+                    name="month_recurring_next_date"
+                    string="Next invoice date"
+                    date="recurring_next_date"
+                />
+                <group>
+                    <filter
+                        string="Partner"
+                        name="groupby_partner_id"
+                        domain="[]"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Next invoice date"
+                        name="groupby_recurring_next_date"
+                        domain="[]"
+                        context="{'group_by': 'recurring_next_date'}"
+                    />
+                    <filter
+                        string="Commercial agent"
+                        name="groupby_user_id"
+                        domain="[]"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        string="Stage"
+                        name="groupby_stage_id"
+                        domain="[]"
+                        context="{'group_by': 'stage_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_product_suscribable_filter" model="ir.ui.view">
+        <field name="name">product.suscribable.filter</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subscribable" />
+                <filter
+                    string="Suscribable products"
+                    name="subsproducts"
+                    domain="[('subscribable','=', True)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="view_subscription_close_reason_tree" model="ir.ui.view">
+        <field name="name">view.subscription.close.reason.list</field>
+        <field name="model">sale.subscription.close.reason</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+
+    <record id="subscription_close_reason_action" model="ir.actions.act_window">
+        <field name="name">Close reasons</field>
+        <field name="res_model">sale.subscription.close.reason</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="sale_subscription_action" model="ir.actions.act_window">
+        <field name="name">Subscriptions</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+
+    <record id="subscription_product_template_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
+            {'search_default_subsproducts': True, "default_type": "service", "default_subscribable": True}
+        </field>
+    </record>
+
+    <menuitem
+        id="sale_subscription_root"
+        groups="sales_team.group_sale_salesman_all_leads"
+        name="Subscriptions"
+        web_icon="subscription_oca,static/img/icon.png"
+        sequence="7"
+    />
+
+    <menuitem
+        id="sale_subscription_configuration_menu"
+        parent="sale_subscription_root"
+        sequence="20"
+        name="Configuration"
+    />
+
+    <menuitem
+        id="subscription_menu"
+        parent="sale_subscription_root"
+        name="Subscriptions"
+        sequence="1"
+    />
+
+    <menuitem
+        id="sale_subscription_menu"
+        parent="subscription_menu"
+        action="sale_subscription_action"
+        sequence="1"
+    />
+
+    <menuitem
+        id="product_subscription_menu"
+        parent="subscription_menu"
+        action="subscription_product_template_action"
+        sequence="3"
+    />
+
+    <menuitem
+        id="subscription_close_reason_menu"
+        parent="sale_subscription_configuration_menu"
+        action="subscription_close_reason_action"
+        sequence="30"
+        name="Close reasons"
+    />
+</odoo>

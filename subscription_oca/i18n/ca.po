@@ -1,0 +1,983 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* subscription_oca
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-04-05 11:06+0000\n"
+"Last-Translator: mtbochaca <mtbochaca@gmail.com>\n"
+"Language-Team: none\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.2\n"
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
+msgid ""
+"\n"
+"        As an 'In progress'-type of stage, it will trigger the recurring invoicing process if applicable. If this stage is the first - sequence order - of the available 'In progress' types and there's a stage change from any other non-'In progress' types to this one, an invoice will be created automatically if the start date is the present day.\n"
+"      "
+msgstr ""
+"\n"
+"        Com un tipus d'etapa en \"En progrés\", activarà el procès de "
+"facturació recurrent si es aplicable. Si aquesta etapa és la primera -en "
+"ordre seqüencial- del tipus \"En progrés\" disponibles i hi ha un canvi "
+"d'etapa de qualsevol altre tipus no \"En progrés\" a aquest, es crearà una "
+"factura automàticament si la data d'inici és el dia d'avui.\n"
+"      "
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
+msgid ""
+"\n"
+"        Draft equivalent, a subscription is ready to start when is not marked as in progress but it can be at any moment. If there's no 'Closed'-type stage defined, when a subscription comes to an end by automatic means, it will be marked with this stage.\n"
+"      "
+msgstr ""
+"\n"
+"        Esborrany equivalent, una subscripció està llesta per començar quan "
+"no està marcada com en progrés, però pot ser-ho en qualsevol moment. Si no "
+"hi ha una etapa de tipus 'Tancada' definida, quan una subscripció arriba a "
+"la seva fi per mitjans automàtics, es marcarà amb aquesta etapa.\n"
+"      "
+
+#. module: subscription_oca
+#: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
+msgid ""
+"\n"
+"        The final stage of a subscription. There are two ways to mark a subscription as closed. The easiest one is using the kanban card-moving capabilities, pressing the 'Close subscription' button (only available if a subscription is in progress).\n"
+"      "
+msgstr ""
+"\n"
+"        L'etapa final d'una subscripció. Hi han dues maneres de marcar una "
+"subscripció com a tancada. La més senzilla és utilitzar les funcions de "
+"moviment de targetes Kanban, pitjant el botó \"Tancar subscripció\" (només "
+"disponible si una subscripció està en curs).\n"
+"      "
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"every\">Every</span>"
+msgstr "<span class=\"every\">Cada</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "<span class=\"mr-1\">For</span>"
+msgstr "<span class=\"mr-1\">Per</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Subscriptions</span>"
+msgstr "<span class=\"o_stat_text\">Subscripcions</span>"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid ""
+"A given subscription can be marked as closed when, for example, renewal is "
+"not desired."
+msgstr ""
+"Una subscripció determinada pot marcar-se com a tancada quan, per exemple, "
+"no es desitja renovar-la."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction
+msgid "Action Needed"
+msgstr "Acció necessària"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__active
+msgid "Active"
+msgstr "Actiu"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_ids
+msgid "Activities"
+msgstr "Activitats"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoració d'excepcions d'activitat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_state
+msgid "Activity State"
+msgstr "Estat de l'activitat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Tipus d'Icona de l'Activitat"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Add new description..."
+msgstr "Afegir una nova descripció..."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
+msgid "Amount Tax"
+msgstr "Import del Impost"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_total
+msgid "Amount Total"
+msgstr "Import Total"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
+msgid "Attachment Count"
+msgstr "Recompte d'adjunts"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_rule_boundary
+msgid "Boundary"
+msgstr "Límit"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Cancel"
+msgstr "Cancel·lar"
+
+#. module: subscription_oca
+#: model_terms:ir.actions.act_window,help:subscription_oca.subscription_stage_action
+msgid "Click to create a new subscription stage."
+msgstr "Clic per crear una nova etapa de subscripció."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__close_reason_id
+msgid "Close Reason"
+msgstr "Raó del Tancament"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.close_reason_wizard_act_window
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Close reason"
+msgstr "Raó del tancament"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_close_reason
+msgid "Close reason model"
+msgstr "Tancar model de la raó"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_close_reason_wizard
+msgid "Close reason wizard"
+msgstr "Tancar l'assistent de raons"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_close_reason_action
+#: model:ir.ui.menu,name:subscription_oca.subscription_close_reason_menu
+msgid "Close reasons"
+msgstr "Raó del Tancament"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Close subscription"
+msgstr "Tancar subscripció"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__post
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_closed
+msgid "Closed"
+msgstr "Tancat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__code
+msgid "Code"
+msgstr "Codi"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__color
+msgid "Color Index"
+msgstr "Índex de Color"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__user_id
+msgid "Commercial agent"
+msgstr "Agent comercial"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__company_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__company_id
+msgid "Company"
+msgstr "Companyia"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_configuration_menu
+msgid "Configuration"
+msgstr "Configuració"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_res_partner
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Create Invoice"
+msgstr "Crear Factura"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "Created invoice with reference"
+msgstr "Factura creada amb referència"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__currency_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__days
+msgid "Day(s)"
+msgstr "Dia(es)"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Delete"
+msgstr "Esborrar"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__description
+msgid "Description"
+msgstr "Descripció"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__discount
+msgid "Discount (%)"
+msgstr "Descompte (%)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__display_name
+msgid "Display Name"
+msgstr "Mostrar nom"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__display_name
+msgid "Display name"
+msgstr "Mostrar nom"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__draft
+msgid "Draft"
+msgstr "Esborrany"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_boundary
+msgid "Duration"
+msgstr "Durada"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Edit"
+msgstr "Editar"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date
+msgid "Finish date"
+msgstr "Data de finalització"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__fiscal_position_id
+msgid "Fiscal Position"
+msgstr "Posició Fiscal"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__limited
+msgid "Fixed"
+msgstr "Fixat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_follower_ids
+msgid "Followers"
+msgstr "Seguidors"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidors/es (Empreses)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icona de la font impresa ex. fa-tasks"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__unlimited
+msgid "Forever"
+msgstr "Permanentment"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__has_message
+msgid "Has Message"
+msgstr "Teniu un Missatge"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon"
+msgstr "Icona"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icona per indicar l'excepció de l'activitat."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si està marcat, els nous missatges requereixen la vostra atenció."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__image
+msgid "Image"
+msgstr "Imatge"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__in_progress
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__in_progress
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__in_progress
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_in_progress
+msgid "In progress"
+msgstr "En progrés"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice_send
+msgid "Invoice & send"
+msgstr "Facturar i enviar"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__account_invoice_ids_count
+msgid "Invoice Count"
+msgstr "Comptador de Factures"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoice_mail_template_id
+msgid "Invoice Email"
+msgstr "Correu Electrònic de Facturació"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__invoice_ids
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoicing_mode
+msgid "Invoicing mode"
+msgstr "Mode de facturació"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_is_follower
+msgid "Is Follower"
+msgstr "Es Seguidor"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__journal_id
+msgid "Journal"
+msgstr "Diari"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_account_move
+msgid "Journal Entry"
+msgstr "Entrada del diari"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__fold
+msgid "Kanban folded"
+msgstr "Kanban plegat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_uid
+msgid "Last Updated by"
+msgstr "Última modificació per"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_date
+msgid "Last Updated on"
+msgstr "Última actualització el"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid "Menú desplegable"
+msgstr "Menú desplegable"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error
+msgid "Message Delivery error"
+msgstr "Error en l'entrega del missatge"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_ids
+msgid "Messages"
+msgstr "Missatges"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Misc"
+msgstr "Misc"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__months
+msgid "Month(s)"
+msgstr "Mes(os)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Data límit de la meva activitat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "New subscription"
+msgstr "Nova subscripció"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Data límit de l'activitat següent"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resum de l'activitat següent"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipus de següent activitat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_next_date
+msgid "Next invoice date"
+msgstr "Data de la següent factura"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'accions"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número d'errors"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Nombre de missatges que requerixen una acció"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de missatges amb error d'entrega"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
+msgid "Orders"
+msgstr "Comandes"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_id
+msgid "Origin sale order"
+msgstr "Origen de la comanda de venda"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Other info"
+msgstr "Altra informació"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_id
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Pending subscriptions"
+msgstr "Subscripcions pendents"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__pricelist_id
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_product_template
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_id
+msgid "Product"
+msgstr "Producte"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_product_template_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids
+#: model:ir.ui.menu,name:subscription_oca.product_subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Products"
+msgstr "Productes"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__product_uom_qty
+msgid "Quantity"
+msgstr "Quantitat"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__rating_ids
+msgid "Ratings"
+msgstr "Valoracions"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__pre
+#: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
+msgid "Ready to start"
+msgstr "Llest per començar"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__close_reason_id
+msgid "Reason"
+msgstr "Raó"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_type
+msgid "Recurrence"
+msgstr "Recurrència"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__recurring_total
+msgid "Recurring price"
+msgstr "Preu recurrent"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__code
+msgid "Reference"
+msgstr "Referència"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_interval
+msgid "Repeat every"
+msgstr "Repetir cada"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_user_id
+msgid "Responsible User"
+msgstr "Usuari Responsable"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_count
+msgid "Rule count"
+msgstr "Comptador de regles"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_subscription_line_ids
+msgid "Sale Subscription Line"
+msgstr "Línia de subscripcions de Venda"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
+msgid "Sale order & Invoice"
+msgstr "Comanda de venda i Factura"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids_count
+msgid "Sale orders"
+msgstr "Comanda de venda"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__crm_team_id
+msgid "Sale team"
+msgstr "Equip de venda"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Sales"
+msgstr "Vendes"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order
+msgid "Sales Order"
+msgstr "Comanda de Venda"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línia de Comanda de Venda"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sequence
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__sequence
+msgid "Sequence"
+msgstr "Seqüència"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__stage_id
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"Stages define the life-cycle of a given subscription; this is,"
+"                 a subscription can be a 'Ready to start', 'In progress' or "
+"'Closed' type of stage.                 Bear in mind that there can only be "
+"one 'Closed'-type stage."
+msgstr ""
+"Les etapes defineixen el cicle de vida d'una subscripció determinada; és a "
+"dir,                                  una subscripció pot ser del tipus "
+"\"A punt per començar\", \"En progrés\" o \"Tancada\".                 Heu "
+"de tenir en compte que només pot haver-hi una etapa del tipus \"Tancada\"."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date_start
+msgid "Start date"
+msgstr "Data d'inici"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estats basats en activitats\n"
+"Retardada: La data límit s'ha superat\n"
+"Avui: La data límit de l'activitat és avui\n"
+"Futures: Activitats futures."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscribable
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscribable
+msgid "Subscribable product"
+msgstr "Producte de subscripció"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription
+#: model:ir.model.fields,field_description:subscription_oca.field_account_bank_statement_line__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_move__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_account_payment__subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__order_subscription_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__sale_subscription_id
+msgid "Subscription"
+msgstr "Subscripció"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_count
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_count
+msgid "Subscription Count"
+msgstr "Comptador de subscripcions"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Subscription lines"
+msgstr "Línies de subscripció"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_line
+msgid "Subscription lines added to a given subscription"
+msgstr "Línies de subscripció afegides a una subscripció determinada"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_stage
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid "Subscription stage"
+msgstr "Etapa de la subscripció"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_stage_menu
+msgid "Subscription stages"
+msgstr "Etapes de subscripció"
+
+#. module: subscription_oca
+#: model:ir.ui.menu,name:subscription_oca.subscription_tag_menu
+msgid "Subscription tags"
+msgstr "Etiquetes de subscripció"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_product_product__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_product_template__subscription_template_id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__template_id
+msgid "Subscription template"
+msgstr "Plantilla de subscripció"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_template_act_window
+#: model:ir.model,name:subscription_oca.model_sale_subscription_template
+#: model:ir.ui.menu,name:subscription_oca.sale_template_subscription_menu
+msgid "Subscription templates"
+msgstr "Plantilles de subscripció"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.sale_subscription_action
+#: model:ir.model.fields,field_description:subscription_oca.field_res_partner__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_res_users__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscription_ids
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_ids
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_menu
+#: model:ir.ui.menu,name:subscription_oca.sale_subscription_root
+#: model:ir.ui.menu,name:subscription_oca.subscription_menu
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_form
+msgid "Subscriptions"
+msgstr "Subscripcions"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_order__subscriptions_count
+msgid "Subscriptions Count"
+msgstr "Comptador de subscripcions"
+
+#. module: subscription_oca
+#: model:ir.actions.server,name:subscription_oca.ir_cron_subscription_management_ir_actions_server
+msgid "Subscriptions management"
+msgstr "Gestió de subscripcions"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_subtotal
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_stage_action
+msgid "Susbcription stages"
+msgstr "Etapes de subscripció"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_product_suscribable_filter
+msgid "Suscribable products"
+msgstr "Producte per subscriuries"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__name
+msgid "Tag name"
+msgstr "Nom d'etiqueta"
+
+#. module: subscription_oca
+#: model:ir.actions.act_window,name:subscription_oca.subscription_tag_action
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__tag_ids
+msgid "Tags"
+msgstr "Etiquetes"
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_tag
+msgid "Tags for sale subscription"
+msgstr "Etiquetes per a la venda de subscripcions"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__tax_ids
+msgid "Taxes"
+msgstr "Impostos"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__amount_tax_line_amount
+msgid "Taxes Amount"
+msgstr "Import dels impostos"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "Terms and Conditions"
+msgstr "Termes i Condicions"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__terms
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__description
+msgid "Terms and conditions"
+msgstr "Termes i condicions"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription_stage.py:0
+#, python-format
+msgid "There is already a Closed-type stage declared"
+msgstr "Ja s'ha declarat una etapa del tipus Tancat"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_kanban
+msgid ""
+"This bar allows to filter the opportunities based on scheduled activities."
+msgstr ""
+"Aquesta barra permet filtrar les oportunitats en funció de les activitats "
+"programades."
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
+msgid ""
+"This field dictates the stages' visual order on the Kanban and form view. "
+"Although is purely visual, mind that if the order isn't                 "
+"consequent with your needs, you could have a 'Closed'-type stage before a "
+"'Ready to start' one."
+msgstr ""
+"Aquest camp dicta l'ordre visual de les etapes a les vistes Kanban i "
+"Formulari. Encara que sigui purament visual, heu de tenir en compte que si "
+"l'ordre no és                                  conseqüent amb les vostres "
+"necessitats, podríeu tenir una etapa de tipus 'Tancada' abans d'una 'A punt "
+"de començar'."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__to_renew
+msgid "To renew"
+msgstr "Per renovar"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#, python-format
+msgid "To validate"
+msgstr "Per validar"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_total
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total"
+msgstr "Total"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total Tax"
+msgstr "Total Impostos"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_tree
+msgid "Total subtotal"
+msgstr "Total subtotal"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__type
+msgid "Type"
+msgstr "Tipus"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipus de l'activitat d'excepció registrada."
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__price_unit
+msgid "Unit price"
+msgstr "Preu unitari"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website Messages"
+msgstr "Missatges del lloc Web"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicacions amb el lloc Web"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__weeks
+msgid "Week(s)"
+msgstr "Setmana(es)"
+
+#. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__years
+msgid "Year(s)"
+msgstr "Any(s)"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "e.g. Monthly Subscription"
+msgstr "p. ex. Subscripció Mensual"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid "month(s)"
+msgstr "mes(os)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__product_ids_count
+msgid "product_ids"
+msgstr "product_ids"
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__subscription_count
+msgid "subscription_ids"
+msgstr "subscription_ids"

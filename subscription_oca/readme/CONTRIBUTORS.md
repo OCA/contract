@@ -1,0 +1,11 @@
+- Carlos Martínez \<<carlos@domatix.com>\>
+- Carolina Ferrer \<<carolina@domatix.com>\>
+- [Ooops404](https://www.ooops404.com):
+  - Ilyas \<<irazor147@gmail.com>\>
+- [Sygel](https://www.sygel.es):
+  - Harald Panten
+  - Valentin Vinagre
+  - Alberto Martínez
+- Dennis Sluijk \<<d.sluijk@onestein.nl>\>
+- [IKU Solutions](https://www.iku.solutions):
+  - Yan Chirino  \<<yan.chirino@iku.solutions>\>
