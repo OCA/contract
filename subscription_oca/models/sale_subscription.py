@@ -374,6 +374,7 @@ class SaleSubscription(models.Model):
         }
         if self.journal_id:
             values["journal_id"] = self.journal_id.id
+        values["currency_id"] = self.pricelist_id.currency_id.id
         return values
 
     def create_invoice(self):
@@ -382,6 +383,7 @@ class SaleSubscription(models.Model):
                 self.check_access("write")
             except AccessError:
                 return self.env["account.move"]
+        self = self.with_company(self.company_id)
         line_ids = []
         for line in self.sale_subscription_line_ids:
             line_values = line._prepare_account_move_line()
