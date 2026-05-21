@@ -11,6 +11,17 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+# Months equivalent per recurrence unit (to normalise amounts to monthly)
+_MONTHS_PER_RULE = {
+    "daily": 1.0 / 30.0,
+    "weekly": 7.0 / 30.0,
+    "monthly": 1.0,
+    "monthlylastday": 1.0,
+    "quarterly": 3.0,
+    "semesterly": 6.0,
+    "yearly": 12.0,
+}
+
 
 class ContractLine(models.Model):
     _name = "contract.line"
@@ -306,6 +317,28 @@ class ContractLine(models.Model):
             elif default_contract_type == "sale":
                 view_id = self.env.ref("contract.contract_line_customer_form_view").id
         return super().get_view(view_id, view_type, **options)
+
+    monthly_recurring = fields.Monetary(
+        compute="_compute_monthly_recurring",
+        store=True,
+        currency_field="currency_id",
+    )
+
+    @api.depends(
+        "display_type",
+        "price_subtotal",
+        "recurring_rule_type",
+        "recurring_interval",
+    )
+    def _compute_monthly_recurring(self):
+        for line in self:
+            if line.display_type:
+                line.monthly_recurring = 0.0
+                continue
+            months = _MONTHS_PER_RULE.get(line.recurring_rule_type, 1.0) * (
+                line.recurring_interval or 1
+            )
+            line.monthly_recurring = line.price_subtotal / months if months else 0.0
 
     def _get_quantity_to_invoice(
         self, period_first_date, period_last_date, invoice_date
