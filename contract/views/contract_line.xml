@@ -246,6 +246,17 @@
                 <field name="date_end" />
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
+                <filter
+                    string="In progress"
+                    name="in_progress"
+                    domain="[
+                        ('is_canceled', '=', False),
+                        ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        '|',
+                        ('date_end', '=', False),
+                        ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                    ]"
+                />
                 <separator />
                 <filter
                     string="In progress"
@@ -309,9 +320,7 @@
         <field name="arch" type="xml">
             <pivot>
                 <field name="contract_id" type="row" />
-                <field name="date_start" interval="month" type="col" />
-                <field name="quantity" type="measure" />
-                <field name="specific_price" type="measure" />
+                <field name="monthly_recurring" type="measure" />
             </pivot>
         </field>
     </record>
