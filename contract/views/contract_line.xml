@@ -95,6 +95,11 @@
                 <field name="specific_price" column_invisible="True" />
                 <field name="discount" />
                 <field name="price_subtotal" />
+                <field
+                    name="monthly_recurring"
+                    optional="hide"
+                    sum="Total Monthly Recurring"
+                />
                 <field name="recurring_interval" column_invisible="True" />
                 <field name="recurring_rule_type" column_invisible="True" />
                 <field name="recurring_invoicing_type" column_invisible="True" />
@@ -127,6 +132,7 @@
         <field name="model">contract.line</field>
         <field name="arch" type="xml">
             <list>
+                <field name="currency_id" column_invisible="True" />
                 <field name="contract_id" />
                 <field name="partner_id" />
                 <field name="product_id" />
@@ -140,6 +146,11 @@
                 <field name="price_unit" />
                 <field name="discount" groups="base.group_no_one" />
                 <field name="price_subtotal" />
+                <field
+                    name="monthly_recurring"
+                    optional="hide"
+                    sum="Total Monthly Recurring"
+                />
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="recurring_interval" />
@@ -163,6 +174,17 @@
                 <field name="date_end" />
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
+                <filter
+                    string="In progress"
+                    name="in_progress"
+                    domain="[
+                        ('is_canceled', '=', False),
+                        ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        '|',
+                        ('date_end', '=', False),
+                        ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                    ]"
+                />
                 <separator />
                 <group expand="0" string="Group By...">
                     <filter
@@ -213,9 +235,7 @@
         <field name="arch" type="xml">
             <pivot>
                 <field name="contract_id" type="row" />
-                <field name="date_start" interval="month" type="col" />
-                <field name="quantity" type="measure" />
-                <field name="specific_price" type="measure" />
+                <field name="monthly_recurring" type="measure" />
             </pivot>
         </field>
     </record>
@@ -228,7 +248,7 @@
         <field name="path">supplier-contract-lines</field>
         <field name="domain">[('contract_id.contract_type', '=', 'purchase')]</field>
         <field name="context">
-            {'search_default_group_by_contract': 1}
+            {'search_default_group_by_contract': 1, 'search_default_in_progress': 1}
         </field>
         <field name="search_view_id" ref="contract_line_search_view" />
         <field name="view_id" ref="contract_line_report_tree_view" />
@@ -241,7 +261,7 @@
         <field name="path">customer-contract-lines</field>
         <field name="domain">[('contract_id.contract_type', '=', 'sale')]</field>
         <field name="context">
-            {'search_default_group_by_contract': 1}
+            {'search_default_group_by_contract': 1, 'search_default_in_progress': 1}
         </field>
         <field name="search_view_id" ref="contract_line_search_view" />
         <field name="view_id" ref="contract_line_report_tree_view" />
