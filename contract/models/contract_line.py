@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError
 
 from .contract_line_constraints import get_allowed
 
+# Months equivalent per recurrence unit (to normalise amounts to monthly)
 _MONTHS_PER_RULE = {
     "daily": 1.0 / 30.0,
     "weekly": 7.0 / 30.0,
