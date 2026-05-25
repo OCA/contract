@@ -11,7 +11,7 @@ def post_init_hook(env):
     m_contract = env["contract.contract"]
     contracts = m_contract.search([("payment_mode_id", "=", False)])
     if contracts:
-        _logger.info("Setting payment mode: %d contracts" % len(contracts))
+        _logger.info("Setting payment mode: %s contracts", len(contracts))
     for contract in contracts:
         payment_mode = contract.partner_id.customer_payment_mode_id
         if payment_mode:
