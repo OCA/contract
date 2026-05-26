@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Copyright 2025 Patryk Pyczko (APSL-Nagarro)<ppyczko@apsl.net>
+         License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
+    <record id="contract_contract_form_view_recurring_sale_merge" model="ir.ui.view">
+        <field name="name">contract.contract.form.recurring.sale.merge</field>
+        <field name="model">contract.contract</field>
+        <field
+            name="inherit_id"
+            ref="contract_sale_generation.contract_contract_form_view_recurring_sale_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_autoconfirm']" position="after">
+                <field
+                    name="merge_sales_orders"
+                    attrs="{'invisible': [('generation_type', '!=', 'sale')]}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
