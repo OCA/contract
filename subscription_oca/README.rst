@@ -71,12 +71,25 @@ To create subscriptions with the sale of a product:
    *Subscribable product* and *Subscription template*
 3. Create a sales order with the product and confirm it.
 
+Recurring revenue (MRR / ARR):
+
+-  Each subscription exposes its *Monthly recurring revenue* (MRR) and
+   *Annual recurring revenue* (ARR). The line subtotals (net of
+   discount, excluding taxes) are normalised to a monthly amount
+   according to the template recurrence and then **converted to the
+   company currency** using the rate at the subscription start date.
+   This keeps totals comparable when subscriptions use pricelists in
+   different currencies.
+-  Use the *Active recurring revenue* filter to restrict the figures to
+   in-progress subscriptions, which reflects live recurring revenue
+   rather than the theoretical value of draft or closed subscriptions.
+
 Known issues / Roadmap
 ======================
 
-- Refactor all the onchanges that have business logic to computed
-  write-able fields when possible. Keep onchanges only for UI purposes.
-- Add tests.
+-  Refactor all the onchanges that have business logic to computed
+   write-able fields when possible. Keep onchanges only for UI purposes.
+-  Add tests.
 
 Bug Tracker
 ===========
@@ -100,22 +113,22 @@ Authors
 Contributors
 ------------
 
-- Carlos Martínez <carlos@domatix.com>
-- Carolina Ferrer <carolina@domatix.com>
-- `Ooops404 <https://www.ooops404.com>`__:
+-  Carlos Martínez <carlos@domatix.com>
+-  Carolina Ferrer <carolina@domatix.com>
+-  `Ooops404 <https://www.ooops404.com>`__:
 
-  - Ilyas <irazor147@gmail.com>
+   -  Ilyas <irazor147@gmail.com>
 
-- `Sygel <https://www.sygel.es>`__:
+-  `Sygel <https://www.sygel.es>`__:
 
-  - Harald Panten
-  - Valentin Vinagre
-  - Alberto Martínez
+   -  Harald Panten
+   -  Valentin Vinagre
+   -  Alberto Martínez
 
-- Dennis Sluijk <d.sluijk@onestein.nl>
-- `IKU Solutions <https://www.iku.solutions>`__:
+-  Dennis Sluijk <d.sluijk@onestein.nl>
+-  `IKU Solutions <https://www.iku.solutions>`__:
 
-  - Yan Chirino <yan.chirino@iku.solutions>
+   -  Yan Chirino <yan.chirino@iku.solutions>
 
 Maintainers
 -----------
