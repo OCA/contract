@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +153,36 @@ class SaleSubscription(models.Model):
     )
     crm_team_id = fields.Many2one(comodel_name="crm.team", string="Sale team")
     to_renew = fields.Boolean(default=False, string="To renew")
+    parent_subscription_id = fields.Many2one(
+        comodel_name="sale.subscription",
+        string="Parent contract",
+        index=True,
+        ondelete="restrict",
+        copy=False,
+    )
+    origin_subscription_id = fields.Many2one(
+        comodel_name="sale.subscription",
+        string="Original contract",
+        compute="_compute_origin_subscription_id",
+        store=True,
+        recursive=True,
+        index=True,
+    )
+    child_subscription_ids = fields.One2many(
+        comodel_name="sale.subscription",
+        inverse_name="parent_subscription_id",
+        string="Renewals",
+    )
+    renewal_count = fields.Integer(
+        compute="_compute_renewal_count", string="Renewal count"
+    )
+    is_renewed = fields.Boolean(
+        compute="_compute_is_renewed",
+        store=True,
+        index="btree_not_null",
+        help="True when this subscription has at least one child that is "
+        "not closed yet — its renewal is active or pending.",
+    )
 
     @api.model
     def cron_subscription_management(self):
@@ -314,6 +344,131 @@ class SaleSubscription(models.Model):
             [("type", "=", "in_progress")], limit=1
         )
         self.stage_id = in_progress_stage
+        for subscription in self:
+            parent = subscription.parent_subscription_id
+            if parent:
+                parent.with_company(parent.company_id)._handle_renewal_activation(
+                    child=subscription
+                )
+
+    def _handle_renewal_activation(self, child):
+        self.ensure_one()
+        if self.stage_id.type == "post":
+            return
+        close_reason_id = self.env.context.get("default_close_reason_id", False)
+        self.close_subscription(close_reason_id=close_reason_id)
+        link = Markup(
+            '<a href=# data-oe-model=sale.subscription data-oe-id="{cid}">{cname}</a>'
+        ).format(cid=child.id, cname=child.display_name or "")
+        self.message_post(
+            body=self.env._("Renewal %(link)s has been activated.", link=link)
+        )
+
+    def _prepare_renewal_lines(self):
+        self.ensure_one()
+        commands = []
+        for line in self.sale_subscription_line_ids:
+            commands.append(
+                Command.create(
+                    {
+                        "product_id": line.product_id.id,
+                        "name": line.name,
+                        "product_uom_qty": line.product_uom_qty,
+                        "price_unit": line.price_unit,
+                        "discount": line.discount,
+                        "tax_ids": [Command.set(line.tax_ids.ids)],
+                        "analytic_distribution": line.analytic_distribution,
+                    }
+                )
+            )
+        return commands
+
+    def _prepare_renewal_values(self):
+        self.ensure_one()
+        renewal_start = self.date or self.recurring_next_date or fields.Date.today()
+        pre_stage = self.env["sale.subscription.stage"].search(
+            [("type", "=", "pre")], order="sequence", limit=1
+        )
+        if not pre_stage:
+            raise UserError(
+                self.env._(
+                    "Cannot prepare a renewal: there is no subscription "
+                    "stage of type 'pre' configured."
+                )
+            )
+        return {
+            "parent_subscription_id": self.id,
+            "partner_id": self.partner_id.id,
+            "template_id": self.template_id.id,
+            "pricelist_id": self.pricelist_id.id,
+            "fiscal_position_id": self.fiscal_position_id.id,
+            "journal_id": self.journal_id.id,
+            "user_id": self.user_id.id,
+            "crm_team_id": self.crm_team_id.id,
+            "company_id": self.company_id.id,
+            "date_start": renewal_start,
+            "recurring_next_date": renewal_start,
+            "stage_id": pre_stage.id,
+            "tag_ids": [Command.set(self.tag_ids.ids)],
+            "sale_subscription_line_ids": self._prepare_renewal_lines(),
+        }
+
+    def action_prepare_renewal(self):
+        self.ensure_one()
+        if self.stage_id.type == "post":
+            raise UserError(self.env._("Cannot renew a closed subscription."))
+        active_child = self.child_subscription_ids.filtered(
+            lambda c: c.stage_id.type != "post"
+        )
+        if active_child:
+            raise UserError(
+                self.env._(
+                    "This subscription already has an active renewal "
+                    "(%(names)s). Close or cancel it before creating a new one.",
+                    names=", ".join(active_child.mapped("display_name")),
+                )
+            )
+        values = self._prepare_renewal_values()
+        # `create()` forces the initial stage to 'draft' when both
+        # date_start and recurring_next_date are given. We need the
+        # renewal to start in a 'pre' stage so it can be picked up by
+        # the cron and so the renewal-activation hook fires.
+        target_stage_id = values.pop("stage_id")
+        renewal = self.create(values)
+        renewal.stage_id = target_stage_id
+        link = Markup(
+            '<a href=# data-oe-model=sale.subscription data-oe-id="{rid}">{rname}</a>'
+        ).format(rid=renewal.id, rname=renewal.display_name or "")
+        self.message_post(
+            body=self.env._("Renewal quote created: %(link)s.", link=link)
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.subscription",
+            "res_id": renewal.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_view_parent_subscription(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.subscription",
+            "res_id": self.parent_subscription_id.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_view_child_subscriptions(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.display_name,
+            "res_model": "sale.subscription",
+            "view_mode": "list,form",
+            "domain": [("id", "in", self.child_subscription_ids.ids)],
+        }
 
     def action_close_subscription(self):
         return {
@@ -466,6 +621,29 @@ class SaleSubscription(models.Model):
             "type": "ir.actions.act_window",
             "context": context,
         }
+
+    @api.depends(
+        "parent_subscription_id", "parent_subscription_id.origin_subscription_id"
+    )
+    def _compute_origin_subscription_id(self):
+        for record in self:
+            parent = record.parent_subscription_id
+            if not parent:
+                record.origin_subscription_id = False
+            else:
+                record.origin_subscription_id = parent.origin_subscription_id or parent
+
+    @api.depends("child_subscription_ids")
+    def _compute_renewal_count(self):
+        for record in self:
+            record.renewal_count = len(record.child_subscription_ids)
+
+    @api.depends("child_subscription_ids.stage_id.type")
+    def _compute_is_renewed(self):
+        for record in self:
+            record.is_renewed = any(
+                child.stage_id.type != "post" for child in record.child_subscription_ids
+            )
 
     @api.depends("invoice_ids", "sale_order_ids.invoice_ids")
     def _compute_account_invoice_ids_count(self):
