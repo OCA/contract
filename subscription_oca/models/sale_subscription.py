@@ -376,15 +376,29 @@ class SaleSubscription(models.Model):
             values["journal_id"] = self.journal_id.id
         return values
 
+    def _get_invoice_period(self):
+        self.ensure_one()
+        period_start = self.recurring_next_date or fields.Date.today()
+        type_interval = self.template_id.recurring_rule_type
+        interval = int(self.template_id.recurring_interval or 0) or 1
+        period_end = (
+            period_start
+            + relativedelta(**{type_interval: interval})
+            - relativedelta(days=1)
+        )
+        return period_start, period_end
+
     def create_invoice(self):
         if not self.env["account.move"].has_access("create"):
             try:
                 self.check_access("write")
             except AccessError:
                 return self.env["account.move"]
+        period_start, period_end = self._get_invoice_period()
         line_ids = []
         for line in self.sale_subscription_line_ids:
             line_values = line._prepare_account_move_line()
+            line._apply_invoice_period(line_values, period_start, period_end)
             line_ids.append(Command.create(line_values))
         invoice_values = self._prepare_account_move(line_ids)
         invoice_id = (
