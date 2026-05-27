@@ -57,6 +57,43 @@
                                 string="Invoices"
                             />
                         </button>
+                        <button
+                            name="action_view_recurring_revenue"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-line-chart"
+                            invisible="not recurring_monthly"
+                        >
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="company_currency_id" invisible="1" />
+                                    <field
+                                        name="recurring_monthly"
+                                        widget="monetary"
+                                        options="{'currency_field': 'company_currency_id'}"
+                                    />
+                                </span>
+                                <span class="o_stat_text">MRR</span>
+                            </div>
+                        </button>
+                        <button
+                            name="action_view_recurring_revenue"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-line-chart"
+                            invisible="not recurring_yearly"
+                        >
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field
+                                        name="recurring_yearly"
+                                        widget="monetary"
+                                        options="{'currency_field': 'company_currency_id'}"
+                                    />
+                                </span>
+                                <span class="o_stat_text">ARR</span>
+                            </div>
+                        </button>
                     </div>
                     <widget
                         name="web_ribbon"
@@ -202,6 +239,24 @@
         </field>
     </record>
 
+    <record id="sale_subscription_line_recurring_revenue_list" model="ir.ui.view">
+        <field name="name">sale.subscription.line.recurring.revenue.list</field>
+        <field name="model">sale.subscription.line</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="currency_id" column_invisible="True" />
+                <field name="company_currency_id" column_invisible="True" />
+                <field name="product_id" />
+                <field name="name" optional="hide" />
+                <field name="product_uom_qty" />
+                <field name="price_unit" optional="show" />
+                <field name="discount" optional="hide" />
+                <field name="price_subtotal" sum="Total subtotal" />
+                <field name="recurring_monthly" sum="Total MRR" />
+            </list>
+        </field>
+    </record>
+
     <record id="sale_subscription_tree" model="ir.ui.view">
         <field name="name">sale.subscription.list</field>
         <field name="model">sale.subscription</field>
@@ -216,6 +271,8 @@
                 <field name="recurring_total" sum="Total subtotal" optional="show" />
                 <field name="amount_tax" sum="Total Tax" optional="show" />
                 <field name="amount_total" sum="Total" optional="show" />
+                <field name="company_currency_id" column_invisible="1" />
+                <field name="recurring_monthly" sum="Total MRR" optional="show" />
                 <field name="template_id" optional="show" />
                 <field name="stage_id" optional="show" />
             </list>
@@ -352,6 +409,16 @@
                     string="Pending subscriptions"
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
+                />
+                <filter
+                    string="With recurring revenue"
+                    name="with_mrr"
+                    domain="[('recurring_monthly','&gt;', 0)]"
+                />
+                <filter
+                    string="Active recurring revenue"
+                    name="active_mrr"
+                    domain="['&amp;', ('recurring_monthly','&gt;', 0), ('stage_id.type','=','in_progress')]"
                 />
                 <separator />
                 <filter
