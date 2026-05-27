@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_form_rating" model="ir.ui.view">
+        <field name="name">sale.subscription.form.rating</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_form" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath
+                    expr="//button[@name='action_close_subscription']"
+                    position="after"
+                >
+                    <button
+                        string="Send rating request"
+                        name="action_send_rating_request"
+                        type="object"
+                        help="Email the customer asking for a rating of this subscription."
+                    />
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button
+                        type="action"
+                        name="%(rating.rating_rating_action)d"
+                        class="oe_stat_button"
+                        icon="fa-smile-o"
+                        invisible="rating_count == 0"
+                        context="{'default_res_model': 'sale.subscription', 'default_res_id': id}"
+                        domain="[('res_model', '=', 'sale.subscription'), ('res_id', '=', id)]"
+                    >
+                        <field name="rating_count" widget="statinfo" string="Ratings" />
+                    </button>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="sale_subscription_search_rating" model="ir.ui.view">
+        <field name="name">sale.subscription.search.rating</field>
+        <field name="model">sale.subscription</field>
+        <field
+            name="inherit_id"
+            ref="subscription_oca.view_sale_order_pending_filter"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='pendingsubs']" position="after">
+                <filter
+                    string="With ratings"
+                    name="with_ratings"
+                    domain="[('rating_ids', '!=', False)]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

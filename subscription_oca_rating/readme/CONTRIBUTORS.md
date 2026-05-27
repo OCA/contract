@@ -1,0 +1,2 @@
+- Domatix:
+  - Álvaro López \<<alvaro@domatix.com>\>
