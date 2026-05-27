@@ -3,6 +3,14 @@
 from odoo import Command, api, fields, models
 from odoo.tools.misc import get_lang
 
+_AVG_DAYS_PER_MONTH = 30.4375
+_PERIOD_LENGTH_IN_MONTHS = {
+    "days": 1 / _AVG_DAYS_PER_MONTH,
+    "weeks": 7 / _AVG_DAYS_PER_MONTH,
+    "months": 1.0,
+    "years": 12.0,
+}
+
 
 class SaleSubscriptionLine(models.Model):
     _name = "sale.subscription.line"
@@ -49,6 +57,13 @@ class SaleSubscriptionLine(models.Model):
     amount_tax_line_amount = fields.Float(
         string="Taxes Amount", compute="_compute_subtotal", store=True
     )
+    recurring_monthly = fields.Monetary(
+        string="Monthly recurring revenue",
+        compute="_compute_recurring_monthly",
+        store=True,
+        help="Subtotal of this line normalised to a monthly amount, "
+        "based on the template recurrence.",
+    )
     sale_subscription_id = fields.Many2one(
         comodel_name="sale.subscription", string="Subscription"
     )
@@ -78,6 +93,26 @@ class SaleSubscriptionLine(models.Model):
                     "price_total": taxes["total_included"],
                     "price_subtotal": taxes["total_excluded"],
                 }
+            )
+
+    @api.depends(
+        "price_subtotal",
+        "sale_subscription_id.template_id.recurring_rule_type",
+        "sale_subscription_id.template_id.recurring_interval",
+    )
+    def _compute_recurring_monthly(self):
+        for record in self:
+            template = record.sale_subscription_id.template_id
+            if not template:
+                record.recurring_monthly = 0.0
+                continue
+            interval = max(template.recurring_interval or 1, 1)
+            period_months = (
+                _PERIOD_LENGTH_IN_MONTHS.get(template.recurring_rule_type, 1.0)
+                * interval
+            )
+            record.recurring_monthly = (
+                record.price_subtotal / period_months if period_months else 0.0
             )
 
     @api.depends("product_id")

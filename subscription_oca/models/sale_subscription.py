@@ -95,6 +95,18 @@ class SaleSubscription(models.Model):
     )
     amount_tax = fields.Monetary(compute="_compute_total", store=True)
     amount_total = fields.Monetary(compute="_compute_total", store=True)
+    recurring_monthly = fields.Monetary(
+        string="Monthly recurring revenue",
+        compute="_compute_mrr",
+        store=True,
+        help="Sum of the subscription lines normalised to a monthly amount.",
+    )
+    recurring_yearly = fields.Monetary(
+        string="Annual recurring revenue",
+        compute="_compute_mrr",
+        store=True,
+        help="Twelve times the monthly recurring revenue.",
+    )
     tag_ids = fields.Many2many(comodel_name="sale.subscription.tag", string="Tags")
     image = fields.Binary("Image", related="user_id.image_512", store=True)
     journal_id = fields.Many2one(comodel_name="account.journal", string="Journal")
@@ -178,6 +190,13 @@ class SaleSubscription(models.Model):
                     "amount_total": recurring_total + amount_tax,
                 }
             )
+
+    @api.depends("sale_subscription_line_ids.recurring_monthly")
+    def _compute_mrr(self):
+        for record in self:
+            monthly = sum(record.sale_subscription_line_ids.mapped("recurring_monthly"))
+            record.recurring_monthly = monthly
+            record.recurring_yearly = monthly * 12.0
 
     @api.depends("template_id", "code")
     def _compute_name(self):
