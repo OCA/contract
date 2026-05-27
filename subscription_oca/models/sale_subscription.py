@@ -300,13 +300,23 @@ class SaleSubscription(models.Model):
     def onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist
 
-    @api.onchange("partner_id", "company_id")
-    def onchange_partner_id_fpos(self):
-        self.fiscal_position_id = (
+    def _get_fiscal_position_from_partner(self, partner=None):
+        """Return the fiscal position computed from a partner and the
+        subscription company. Plain method so it can be reused outside the
+        onchange UI flow (e.g. the change-customer wizard) without relying on
+        onchange side effects for persistence. Defaults to the current
+        partner when none is provided."""
+        self.ensure_one()
+        partner = partner or self.partner_id
+        return (
             self.env["account.fiscal.position"]
             .with_company(self.company_id)
-            ._get_fiscal_position(self.partner_id)
+            ._get_fiscal_position(partner)
         )
+
+    @api.onchange("partner_id", "company_id")
+    def onchange_partner_id_fpos(self):
+        self.fiscal_position_id = self._get_fiscal_position_from_partner()
 
     def action_start_subscription(self):
         self.close_reason_id = False
