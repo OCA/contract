@@ -22,14 +22,47 @@
                         invisible="not in_progress"
                     />
 
+                    <button
+                        string="Pause"
+                        name="action_open_pause_wizard"
+                        type="object"
+                        help="Pause the subscription so the cron skips it until resumed."
+                        invisible="stage_type != 'in_progress' or is_paused"
+                    />
+
+                    <button
+                        string="Resume"
+                        name="action_resume"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not is_paused"
+                    />
+
                     <field
                         name="stage_id"
                         widget="statusbar"
                         options="{'fold_field': 'fold', 'clickable': '1'}"
                     />
                     <field name="stage_type" invisible="1" />
+                    <field name="is_paused" invisible="1" />
                 </header>
                 <sheet>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="not is_paused"
+                    >
+                        <span>This subscription is paused.</span>
+                        <span invisible="not paused_until">
+                            Resume scheduled on
+                            <field
+                            name="paused_until"
+                            readonly="1"
+                            nolabel="1"
+                            class="oe_inline"
+                        />.
+                        </span>
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <button
                             name="action_view_sale_order_ids"
@@ -352,6 +385,16 @@
                     string="Pending subscriptions"
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
+                />
+                <filter
+                    string="Paused"
+                    name="paused"
+                    domain="[('is_paused', '=', True)]"
+                />
+                <filter
+                    string="Active and not paused"
+                    name="active_not_paused"
+                    domain="[('is_paused', '=', False), ('in_progress', '=', True)]"
                 />
                 <separator />
                 <filter
