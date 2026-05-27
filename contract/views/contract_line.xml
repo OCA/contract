@@ -113,6 +113,11 @@
                 <field name="specific_price" invisible="1" />
                 <field name="discount" groups="product.group_discount_per_so_line" />
                 <field name="price_subtotal" />
+                <field
+                    name="monthly_recurring"
+                    optional="hide"
+                    sum="Total Monthly Recurring"
+                />
                 <field name="recurring_interval" invisible="1" />
                 <field name="recurring_rule_type" invisible="1" />
                 <field name="recurring_invoicing_type" invisible="1" />
@@ -195,6 +200,7 @@
         <field name="model">contract.line</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="currency_id" invisible="1" />
                 <field name="contract_id" />
                 <field name="partner_id" />
                 <field name="product_id" />
@@ -208,6 +214,11 @@
                 <field name="price_unit" />
                 <field name="discount" groups="base.group_no_one" />
                 <field name="price_subtotal" />
+                <field
+                    name="monthly_recurring"
+                    optional="hide"
+                    sum="Total Monthly Recurring"
+                />
                 <field name="date_start" />
                 <field name="date_end" />
                 <field name="recurring_interval" />
@@ -236,6 +247,17 @@
                 <field name="recurring_next_date" />
                 <field name="last_date_invoiced" />
                 <separator />
+                <filter
+                    string="In progress"
+                    name="in_progress"
+                    domain="[
+                        ('is_canceled', '=', False),
+                        ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        '|',
+                        ('date_end', '=', False),
+                        ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                    ]"
+                />
                 <filter name="is_canceled" domain="[('is_canceled', '=', True)]" />
                 <filter name="is_auto_renew" domain="[('is_auto_renew', '=', True)]" />
                 <group expand="0" string="Group By...">
@@ -257,7 +279,7 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_id.contract_type', '=', 'purchase')]</field>
         <field name="context">
-            {'search_default_group_by_contract': 1}
+            {'search_default_group_by_contract': 1, 'search_default_in_progress': 1}
         </field>
         <field name="search_view_id" ref="contract_line_search_view" />
         <field name="view_id" ref="contract_line_report_tree_view" />
@@ -269,7 +291,7 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('contract_id.contract_type', '=', 'sale')]</field>
         <field name="context">
-            {'search_default_group_by_contract': 1}
+            {'search_default_group_by_contract': 1, 'search_default_in_progress': 1}
         </field>
         <field name="search_view_id" ref="contract_line_search_view" />
         <field name="view_id" ref="contract_line_report_tree_view" />
