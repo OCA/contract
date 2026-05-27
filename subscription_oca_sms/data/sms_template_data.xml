@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sms_template_payment_reminder" model="sms.template">
+        <field name="name">Subscription: Payment reminder</field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field
+            name="body"
+        >Hi {{ object.partner_id.name }}, your subscription {{ object.name }} renews on {{ format_date(object.recurring_next_date) }}.</field>
+    </record>
+
+    <record id="sms_template_payment_failure" model="sms.template">
+        <field name="name">Subscription: Payment failure</field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field
+            name="body"
+        >Hi {{ object.partner_id.name }}, the payment for {{ object.name }} failed. Please update your payment method.</field>
+    </record>
+</odoo>

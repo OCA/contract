@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_form_sms" model="ir.ui.view">
+        <field name="name">sale.subscription.form.sms</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_close_subscription']" position="after">
+                <field name="can_send_sms" invisible="1" />
+                <button
+                    string="SMS payment reminder"
+                    name="action_send_sms_payment_reminder"
+                    type="object"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not can_send_sms"
+                    help="Send a payment reminder SMS to the customer."
+                />
+                <button
+                    string="SMS payment failure"
+                    name="action_send_sms_payment_failure"
+                    type="object"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not can_send_sms"
+                    help="Notify the customer by SMS that a payment failed."
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
