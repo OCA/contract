@@ -113,7 +113,7 @@ class ProductTemplate(models.Model):
             ("2", "Second month"),
             ("3", "Third month"),
         ],
-        "Force Month",
+        "Force Month inside quarter",
         help="Force the month to be used inside the quarter",
     )
     force_month_semesterly = fields.Selection(
@@ -125,7 +125,7 @@ class ProductTemplate(models.Model):
             ("5", "Fifth month"),
             ("6", "Sixth month"),
         ],
-        "Force Month",
+        "Force Month inside semester",
         help="Force the month to be used inside the semester",
     )
 
