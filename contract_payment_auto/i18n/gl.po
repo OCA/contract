@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 01:41+0000\n"
-"PO-Revision-Date: 2017-11-30 01:41+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"PO-Revision-Date: 2026-06-01 10:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
 "Language-Team: Galician (https://www.transifex.com/oca/teams/23907/gl/)\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: contract_payment_auto
 #: model:mail.template,body_html:contract_payment_auto.mail_template_auto_pay_fail
@@ -58,19 +59,53 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"\n"
+"<p>\n"
+"    Ola ${object.partner_id.name}\n"
+"    % set access_action = object.get_access_action()\n"
+"    % set access_url = access_action['type'] == 'ir.actions.act_url' and "
+"access_action['url'] or '/report/pdf/account.report_invoice/' + str"
+"(object.id)\n"
+"    % if object.partner_id.parent_id:\n"
+"        (<i>${object.partner_id.parent_id.name}</i>)\n"
+"    % endif\n"
+"    ,\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"    O pago automático da túa factura\n"
+"    <a href=\"${access_url}\">\n"
+"        <strong>\n"
+"            ${object.number}\n"
+"        </strong>\n"
+"        % if object.origin:\n"
+"            (con referencia: ${object.origin} )\n"
+"        % endif\n"
+"    </a>\n"
+"    fallou.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"    Por favor verifica que a información do teu pago é correcta, e que hai "
+"fondos dispoñibles na conta.\n"
+"</p>\n"
+"\n"
+"\n"
+"        "
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_auto_pay_retry_hours
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_contract_auto_pay_retry_hours
 msgid "Amount of hours that should lapse until a failed automatic is retried."
-msgstr ""
+msgstr "Cantidade de horas de lapso ata o reintento en caso de erro"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_auto_pay_retries
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_contract_auto_pay_retries
 msgid ""
 "Amount times to retry failed/declined automatic payment before giving up."
-msgstr ""
+msgstr "Cantidade de veces de reintento do pago automático antes de abandonar."
 
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_account_analytic_account
@@ -81,35 +116,35 @@ msgstr "Conta analítica"
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_is_auto_pay
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_is_auto_pay
 msgid "Auto Pay?"
-msgstr ""
+msgstr "Pagamento automático?"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_invoice_auto_pay_attempts
 msgid "Auto pay attempts"
-msgstr ""
+msgstr "Intentos de pagamento automático"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_invoice_auto_pay_failed
 msgid "Auto pay failed"
-msgstr ""
+msgstr "Erro no pagamento automático"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_auto_pay_retries
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_auto_pay_retries
 msgid "Auto pay retries"
-msgstr ""
+msgstr "Reintentos de pagamento automático"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_auto_pay_retry_hours
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_auto_pay_retry_hours
 msgid "Auto pay retry hours"
-msgstr ""
+msgstr "Horas de reintento de pagamento automático"
 
 #. module: contract_payment_auto
 #: model:mail.template,subject:contract_payment_auto.mail_template_auto_pay_fail
 #: model:mail.template,subject:contract_payment_auto.mail_template_auto_pay_retry
 msgid "Automatic Payment Failure (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "Erro de pagamento automático (Ref ${object.number or 'n/a'})"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_is_auto_pay
@@ -118,6 +153,8 @@ msgid ""
 "Check this to enable automatic payment for invoices that are created for "
 "this contract."
 msgstr ""
+"Selecciona esta opción para activar o pagamento automático de facturas que "
+"foron creadas para este contrato."
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_invoice_mail_template_id
@@ -127,6 +164,9 @@ msgid ""
 "validated. If this template is selected, it will automatically be sent to "
 "the customer during this process using the defined template."
 msgstr ""
+"Durante o proceso de pagamento automático, unha factura será creada e "
+"validada. Se este modelo é seleccionado, será automaticamente enviado ao "
+"cliente durante este proceso usando o modelo definido."
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_pay_retry_mail_template_id
@@ -135,6 +175,8 @@ msgid ""
 "If automatic payment fails for some reason, but will be re-attempted later, "
 "this message  will be sent to the billed partner."
 msgstr ""
+"Se o pagamento automático falla por algunha razón, reintentarase máis "
+"adiante, esta mensaxe será reenviada ao contacto."
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_pay_fail_mail_template_id
@@ -143,23 +185,25 @@ msgid ""
 "If automatic payment fails for some reason, this message will be sent to the "
 "billed partner."
 msgstr ""
+"Se o pagamento automático falla por algunha razón, reintentarase máis "
+"adiante, esta mensaxe será reenviada ao contacto."
 
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_invoice_mail_template_id
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_invoice_mail_template_id
 msgid "Invoice Message"
-msgstr ""
+msgstr "Mensaxe de factura"
 
 #. module: contract_payment_auto
 #: code:addons/contract_payment_auto/models/account_analytic_account.py:172
 #, python-format
 msgid "Invoice sent"
-msgstr ""
+msgstr "Factura enviada"
 
 #. module: contract_payment_auto
 #: model:mail.template,report_name:contract_payment_auto.mail_template_auto_pay_fail
@@ -168,30 +212,32 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Empresa"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_pay_fail_mail_template_id
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_pay_fail_mail_template_id
 msgid "Payment Failed Message"
-msgstr ""
+msgstr "Mensaxe de erro no pagamento"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_pay_retry_mail_template_id
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_contract_pay_retry_mail_template_id
 msgid "Payment Retry Message"
-msgstr ""
+msgstr "Mensaxe de reintento de pagamento"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,field_description:contract_payment_auto.field_account_analytic_account_payment_token_id
 #: model:ir.model.fields,field_description:contract_payment_auto.field_res_partner_payment_token_id
 #: model:ir.model.fields,field_description:contract_payment_auto.field_res_users_payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Token de pagamento"
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_account_analytic_account_payment_token_id
@@ -200,6 +246,9 @@ msgid ""
 "against this account. If none is set, the bill to partner's default token "
 "will be used."
 msgstr ""
+"Este é o token de pagamento que será usado para reconciliar automaticamente "
+"débedas contra esta conta. Se non hai ningún configurado usarase o token por "
+"defecto para este contacto."
 
 #. module: contract_payment_auto
 #: model:ir.model.fields,help:contract_payment_auto.field_res_partner_payment_token_id
@@ -208,8 +257,10 @@ msgid ""
 "This is the payment token that will be used to automatically reconcile debts "
 "for this partner, if there is not one already set on the analytic account."
 msgstr ""
+"Este é o token de pagamento que será usado para reconciliar automaticamente "
+"débedas para este contacto, se aínda non está configurado na conta analítica."
 
 #. module: contract_payment_auto
 #: model:ir.model,name:contract_payment_auto.model_account_analytic_contract
 msgid "account.analytic.contract"
-msgstr ""
+msgstr "account.analytic.contract"
