@@ -82,7 +82,9 @@ class SaleSubscriptionTemplate(models.Model):
 
     def _get_date(self, date_start):
         self.ensure_one()
-        return relativedelta(months=+self.recurring_rule_count) + date_start
+        delta_type = self.recurring_rule_type or "months"
+        interval = (self.recurring_interval or 1) * self.recurring_rule_count
+        return date_start + relativedelta(**{delta_type: interval})
 
     @api.depends("product_ids")
     def _compute_product_ids_count(self):
