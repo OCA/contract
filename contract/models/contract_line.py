@@ -9,7 +9,7 @@ import warnings
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 # Months equivalent per recurrence unit (to normalise amounts to monthly)
 _MONTHS_PER_RULE = {
@@ -345,3 +345,48 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         return self.quantity if not self.display_type else 0.0
+
+    def _get_contract_line_total_value(self):
+        """Return the total value of this contract line over its full period.
+
+        Raises UserError if the line has no date_end, since a
+        total cannot be computed without a known end date.
+        """
+        self.ensure_one()
+        if not self.date_end:
+            raise UserError(
+                self.env._(
+                    "Cannot compute total value for contract line '%s': "
+                    "no end date is set.",
+                    self.display_name,
+                )
+            )
+
+        period_length = self.get_relative_delta(
+            self.recurring_rule_type, self.recurring_interval
+        )
+        currency = (
+            self.contract_id.pricelist_id.currency_id
+            if self.contract_id.pricelist_id
+            else self.currency_id
+        )
+
+        current_period_start = self.date_start
+        total_amount = 0.0
+        while current_period_start <= self.date_end:
+            current_period_end = (
+                current_period_start + period_length - relativedelta(days=1)
+            )
+            if current_period_end > self.date_end:
+                current_period_end = self.date_end
+            qty = self._get_quantity_to_invoice(
+                current_period_start,
+                current_period_end,
+                current_period_start,  # Mock an invoice date at period start
+            )
+            subtotal = qty * self.price_unit * (1 - (self.discount / 100.0))
+            if currency:
+                subtotal = currency.round(subtotal)
+            total_amount += subtotal
+            current_period_start += period_length
+        return total_amount
