@@ -11,6 +11,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Date
 from odoo.tests import Form, common
 
 
@@ -1617,33 +1618,41 @@ class TestContract(TestContractBase):
             {
                 "quantity": 3,
                 "price_unit": 400.0,
+                "discount": 0.0,
                 "date_start": "2026-01-01",
                 "date_end": "2026-12-31",
-                "recurring_next_date": "2026-01-01",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
             }
         )
-        self.assertEqual(self.acct_line._get_contract_line_total_value(), 3 * 400.0)
+        # 12 months * (3 * 400.0) = 14,400.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 14400.0)
 
     def test_get_contract_line_total_value_single_unit(self):
         self.acct_line.write(
             {
                 "quantity": 1,
                 "price_unit": 1200.0,
+                "discount": 0.0,
                 "date_start": "2026-01-01",
                 "date_end": "2026-12-31",
-                "recurring_next_date": "2026-01-01",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
             }
         )
-        self.assertEqual(self.acct_line._get_contract_line_total_value(), 1200.0)
+        # 12 months * 1200.0 = 14,400.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 14400.0)
 
     def test_get_contract_line_total_value_zero_price(self):
         self.acct_line.write(
             {
                 "quantity": 5,
                 "price_unit": 0.0,
+                "discount": 0.0,
                 "date_start": "2026-01-01",
                 "date_end": "2026-06-30",
-                "recurring_next_date": "2026-01-01",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
             }
         )
         self.assertEqual(self.acct_line._get_contract_line_total_value(), 0.0)
@@ -1657,8 +1666,8 @@ class TestContract(TestContractBase):
                 "name": "Test",
                 "quantity": 1,
                 "price_unit": 1000.0,
+                "discount": 0.0,
                 "date_start": to_date("2026-01-01"),
-                "recurring_next_date": to_date("2026-01-01"),
                 "recurring_interval": 1,
                 "recurring_rule_type": "monthly",
                 "recurring_invoicing_type": "pre-paid",
@@ -1668,3 +1677,49 @@ class TestContract(TestContractBase):
         line.date_end = False
         with self.assertRaises(UserError):
             line._get_contract_line_total_value()
+
+    def test_get_contract_line_total_value_with_discount(self):
+        self.acct_line.write(
+            {
+                "quantity": 2,
+                "price_unit": 100.0,
+                "discount": 10.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+        # Per period: 2 * 100 * 0.90 = 180.0
+        # Total (12 periods): 2160.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 2160.0)
+
+    def test_contract_line_total_value_period_prorata(self):
+        """Test a contract that terminates mid-way through an invoicing period."""
+        self.acct_line.write(
+            {
+                "quantity": 1,
+                "price_unit": 100.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-02-15",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+
+        expected_qty_period_1 = self.acct_line._get_quantity_to_invoice(
+            Date.to_date("2026-01-01"),
+            Date.to_date("2026-01-31"),
+            Date.to_date("2026-01-01"),
+        )
+        expected_qty_period_2 = self.acct_line._get_quantity_to_invoice(
+            Date.to_date("2026-02-01"),
+            Date.to_date("2026-02-15"),
+            Date.to_date("2026-02-01"),
+        )
+
+        expected_total = (expected_qty_period_1 + expected_qty_period_2) * 100.0
+        self.assertEqual(
+            self.acct_line._get_contract_line_total_value(), expected_total
+        )
