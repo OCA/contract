@@ -276,6 +276,85 @@ class TestContract(TestContractBase):
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.invoice_monthly.user_id)
 
+    def test_preserve_manual_recurring_next_date(self):
+        """When a user manually modifies recurring_next_date on a line with
+        line_recurrence=True and a set last_date_invoiced, the value must
+        not be reset to the computed next_period_date_start by the
+        cross-dependency recomputation chain."""
+        self.acct_line.write(
+            {
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+                "date_start": "2018-01-01",
+                "date_end": False,
+                "last_date_invoiced": "2018-01-31",
+            }
+        )
+        self.acct_line.flush_recordset()
+        self.assertEqual(self.acct_line.recurring_next_date, to_date("2018-02-01"))
+        manual_date = to_date("2018-03-15")
+        # Simulate the One2many modal edit: attribute assignment dirties
+        # the field but preserves _origin (the parent form's cached value
+        # from load time).  Flush writes the dirty value and triggers the
+        # cross-dependency cascade: contract.rnd changes → line.rnd is
+        # invalidated → _compute_recurring_next_date runs.  The guard
+        # sees _origin.rnd (2018-02-01) != current value (2018-03-15)
+        # and skips recomputation.
+        self.acct_line.recurring_next_date = manual_date
+        self.acct_line.flush_recordset()
+        # contract.rnd was invalidated by the line write above; flush it
+        # to cascade back.
+        self.contract.flush_recordset()
+        self.assertEqual(self.acct_line.recurring_next_date, manual_date)
+
+    def test_preserve_manual_rnd_with_stale_other_line(self):
+        """A contract with multiple lines where editing one line's
+        recurring_next_date causes contract.recurring_next_date to change
+        (the other line becomes the new min). The manual edit must survive
+        the subsequent recomputation cascade."""
+        # Line A: the one the user edits — make it the current contract min.
+        self.acct_line.write(
+            {
+                "recurring_rule_type": "monthlylastday",
+                "recurring_invoicing_type": "pre-paid",
+                "date_start": "2023-01-01",
+                "date_end": "2026-09-30",
+                "last_date_invoiced": "2023-12-31",
+            }
+        )
+        # Line B: higher rnd than line A, lower than the user's new value.
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "product_id": self.product_2.id,
+                "name": "Line B",
+                "quantity": 1,
+                "uom_id": self.product_2.uom_id.id,
+                "price_unit": 50,
+                "discount": 0,
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "recurring_invoicing_type": "pre-paid",
+                "date_start": "2023-01-01",
+                "date_end": False,
+                "last_date_invoiced": "2024-12-31",
+                "recurring_next_date": "2025-01-01",
+            }
+        )
+        self.acct_line.flush_recordset()
+        self.contract.flush_recordset()
+        # contract.rnd = min(2024-01-01, 2025-01-01) = 2024-01-01 (line A)
+        self.assertEqual(self.contract.recurring_next_date, to_date("2024-01-01"))
+        # User edits line A's recurring_next_date past line B's, so line B
+        # becomes the new contract min. This changes contract.rnd, which
+        # triggers _compute_recurring_next_date back onto line A.
+        manual_date = to_date("2026-06-30")
+        self.acct_line.write({"recurring_next_date": manual_date})
+        # contract.rnd = min(2025-01-01, 2026-06-30) = 2025-01-01
+        self.assertEqual(self.contract.recurring_next_date, to_date("2025-01-01"))
+        # The cross-dependency must not overwrite the manual edit.
+        self.assertEqual(self.acct_line.recurring_next_date, manual_date)
+
     def test_contract_level_recurrence(self):
         self.contract3.recurring_create_invoice()
         self.contract3.flush_recordset()

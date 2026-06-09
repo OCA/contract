@@ -171,7 +171,24 @@ class ContractAbstractContractLine(models.AbstractModel):
     # pylint: disable=missing-return
     @api.depends("contract_id.recurring_next_date", "contract_id.line_recurrence")
     def _compute_recurring_next_date(self):
-        super()._compute_recurring_next_date()
+        # Preserve manually set recurring_next_date when line_recurrence is enabled.
+        # The cross-dependency chain (contract depends on line's recurring_next_date,
+        # and line depends on contract's recurring_next_date) would otherwise
+        # overwrite user-modified values with the computed value from
+        # next_period_date_start. We detect manual modifications by comparing
+        # with _origin and skip recomputation for those records.
+        to_compute = self.filtered(
+            lambda r: not (
+                r.contract_id.line_recurrence
+                and r._origin
+                and r._origin.recurring_next_date
+                and r._origin.recurring_next_date != r.recurring_next_date
+            )
+        )
+        if to_compute:
+            super(
+                ContractAbstractContractLine, to_compute
+            )._compute_recurring_next_date()
         self._set_recurrence_field("recurring_next_date")
 
     @api.depends("display_type", "note_invoicing_mode")
