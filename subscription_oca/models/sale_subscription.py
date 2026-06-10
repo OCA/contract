@@ -253,14 +253,14 @@ class SaleSubscription(models.Model):
 
     def close_subscription(self, close_reason_id=False):
         self.ensure_one()
-        self.recurring_next_date = False
         closed_stage = self.env["sale.subscription.stage"].search(
             [("type", "=", "post")], limit=1
         )
         self.write(
             {
+                "recurring_next_date": False,
                 "close_reason_id": close_reason_id,
-                "stage_id": closed_stage,
+                "stage_id": closed_stage.id,
             }
         )
 
