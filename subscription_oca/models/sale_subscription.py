@@ -139,27 +139,35 @@ class SaleSubscription(models.Model):
     @api.model
     def cron_subscription_management(self):
         today = date.today()
-        for subscription in self.search([], order="recurring_next_date asc"):
+        domain = [("stage_id.type", "in", ["pre", "in_progress"])]
+        for subscription in self.search(domain, order="recurring_next_date asc"):
             subscription = subscription.with_company(subscription.company_id)
-            if subscription.in_progress:
-                if (
-                    subscription.recurring_next_date <= today
-                    and subscription.sale_subscription_line_ids
-                ):
-                    try:
+            try:
+                with self.env.cr.savepoint():
+                    if subscription.in_progress:
+                        if (
+                            subscription.recurring_next_date
+                            and subscription.recurring_next_date <= today
+                            and subscription.sale_subscription_line_ids
+                        ):
+                            subscription.generate_invoice()
+                        if (
+                            not subscription.recurring_rule_boundary
+                            and subscription.date
+                            and subscription.date <= today
+                        ):
+                            subscription.close_subscription()
+                    elif (
+                        subscription.date_start <= today
+                        and subscription.stage_id.type == "pre"
+                    ):
+                        subscription.action_start_subscription()
                         subscription.generate_invoice()
-                    except Exception:
-                        logger.exception("Error on subscription invoice generate")
-                if (
-                    not subscription.recurring_rule_boundary
-                    and subscription.date <= today
-                ):
-                    subscription.close_subscription()
-            elif (
-                subscription.date_start <= today and subscription.stage_id.type == "pre"
-            ):
-                subscription.action_start_subscription()
-                subscription.generate_invoice()
+            except Exception:
+                logger.exception(
+                    "Error on subscription management for subscription %s",
+                    subscription.display_name,
+                )
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):
