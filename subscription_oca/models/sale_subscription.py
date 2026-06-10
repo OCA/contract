@@ -287,6 +287,7 @@ class SaleSubscription(models.Model):
         )
         self.write(
             {
+                "in_progress": False,
                 "recurring_next_date": False,
                 "close_reason_id": close_reason_id,
                 "stage_id": closed_stage.id,
