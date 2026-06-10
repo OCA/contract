@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -196,6 +196,27 @@ class SaleSubscription(models.Model):
                     + record.date_start
                 )
                 record.recurring_rule_boundary = False
+
+    @api.constrains("in_progress", "stage_id", "recurring_next_date")
+    def _check_in_progress_consistency(self):
+        for record in self:
+            if record.in_progress and record.stage_id.type != "in_progress":
+                raise ValidationError(
+                    self.env._(
+                        "Subscription '%s': in_progress=True requires a stage of "
+                        "type 'in_progress' (current stage type: '%s')."
+                    )
+                    % (record.display_name, record.stage_id.type)
+                )
+            if record.in_progress and not record.recurring_next_date:
+                raise ValidationError(
+                    self.env._(
+                        "Subscription '%s' is marked as in-progress but has no "
+                        "next invoice date. Set a recurring next date before "
+                        "activating the subscription."
+                    )
+                    % record.display_name
+                )
 
     @api.depends("template_id")
     def _compute_terms(self):
