@@ -476,6 +476,12 @@ class SaleSubscription(models.Model):
         return False
 
     def write(self, values):
+        if "stage_id" in values and "in_progress" not in values:
+            stage = values["stage_id"]
+            if isinstance(stage, int):
+                stage = self.env["sale.subscription.stage"].browse(stage)
+            if stage.type != "in_progress":
+                values["in_progress"] = False
         res = super().write(values)
         if "stage_id" in values:
             for record in self:
