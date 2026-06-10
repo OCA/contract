@@ -36,3 +36,16 @@ Recurring revenue (MRR / ARR):
 -   Use the *Active recurring revenue* filter to restrict the figures to
     in-progress subscriptions, which reflects live recurring revenue rather
     than the theoretical value of draft or closed subscriptions.
+
+Reporting:
+
+-   Go to *Subscriptions > Reporting* to analyse your recurring revenue
+    with pivot and graph views:
+    -   *Subscriptions Analysis*: recurring revenue per line, groupable
+        by customer, template, product, salesperson or start month.
+    -   *MRR Breakdown*: monthly recurring revenue of the running
+        subscriptions by template and product.
+    -   *Churn Analysis*: closed subscriptions and the revenue lost,
+        grouped by close reason.
+-   All amounts are expressed in the company currency, so figures remain
+    comparable when subscriptions use pricelists in other currencies.
