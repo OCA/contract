@@ -33,7 +33,11 @@ class ContractTemplateLine(models.Model):
         comodel_name="res.partner", related="contract_id.partner_id"
     )
     # === Product & UOM ===
-    product_id = fields.Many2one("product.product", string="Product")
+    product_id = fields.Many2one(
+        "product.product",
+        string="Product",
+        domain=[("active", "=", True)],
+    )
     name = fields.Text(
         string="Description",
         required=True,
