@@ -39,15 +39,23 @@ class ContractContract(models.Model):
         default=lambda self: self.env.user,
     )
     group_id = fields.Many2one(
-        string="Group",
+        string="Analytic Account",
         comodel_name="account.analytic.account",
         compute="_compute_group_id",
         store=True,
         readonly=False,
         ondelete="restrict",
+        help=(
+            "Analytic account shared by every line of this contract. "
+            "Computed from the lines' analytic distribution when all lines "
+            "point at the same account; left empty when the lines use "
+            "different accounts. Stored compute, editable: clearing or "
+            "setting it manually overrides the computed value."
+        ),
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
-    note = fields.Text(string="Notes")
+    color = fields.Integer(string="Color Index")
+    note = fields.Html(string="Notes", sanitize=True)
 
     # === Partner and Commercial Info ===
     partner_id = fields.Many2one(

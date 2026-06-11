@@ -17,7 +17,7 @@
                         name="recurring_create_invoice"
                         type="object"
                         invisible="not create_invoice_visibility or generation_type != 'invoice'"
-                        string="Create invoices"
+                        string="Create Invoice"
                         groups="base.group_no_one"
                     />
 
@@ -28,7 +28,7 @@
                         <button
                             name="action_show_invoices"
                             type="object"
-                            icon="fa-list"
+                            icon="fa-pencil-square-o"
                             class="oe_stat_button"
                             invisible="generation_type != 'invoice'"
                         >
@@ -47,18 +47,22 @@
                     />
                     <div class="oe_title">
                         <label for="name" string="Contract Name" class="oe_edit_only" />
-                        <h3>
+                        <h1>
                             <field
                                 name="name"
                                 class="oe_inline"
                                 placeholder="e.g. Contract XYZ"
                             />
-                        </h3>
+                        </h1>
                     </div>
                     <group name="main">
                         <group>
-                            <field name="partner_id" required="1" />
-                            <field name="user_id" />
+                            <field
+                                name="partner_id"
+                                required="1"
+                                widget="res_partner_many2one"
+                                context="{'show_address': 1}"
+                            />
                         </group>
                         <group>
                             <field
@@ -67,12 +71,6 @@
                                 context="{'default_contract_type': contract_type}"
                             />
                             <field name="pricelist_id" />
-
-                            <field
-                                name="company_id"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company"
-                            />
                             <field name="contract_type" invisible="1" required="1" />
                             <field
                                 name="tag_ids"
@@ -323,12 +321,28 @@
                         </page>
                         <page name="info" string="Other Information">
                             <group>
-                                <field name="code" />
-                                <field name="group_id" />
-                                <field
-                                    name="currency_id"
-                                    groups="base.group_multi_currency"
-                                />
+                                <group string="Sales" name="group_sales">
+                                    <field
+                                        name="user_id"
+                                        widget="many2one_avatar_user"
+                                    />
+                                    <field
+                                        name="company_id"
+                                        options="{'no_create': True}"
+                                        groups="base.group_multi_company"
+                                    />
+                                </group>
+                                <group
+                                    string="Administration"
+                                    name="group_administration"
+                                >
+                                    <field name="code" />
+                                    <field name="group_id" />
+                                    <field
+                                        name="currency_id"
+                                        groups="base.group_multi_currency"
+                                    />
+                                </group>
                             </group>
 
                             <group
@@ -375,10 +389,12 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Customer</attribute>
+                <attribute name="placeholder">Type to find a customer...</attribute>
                 <attribute
                     name="context"
                 >{'default_customer_rank': 1, 'default_supplier_rank': 0,
-                    'res_partner_search_mode': 'customer', 'show_vat': True}
+                    'res_partner_search_mode': 'customer', 'show_vat': True,
+                    'show_address': 1}
                 </attribute>
             </field>
             <field name="journal_id" position="attributes">
@@ -397,10 +413,12 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
                 <attribute name="string">Supplier</attribute>
+                <attribute name="placeholder">Type to find a supplier...</attribute>
                 <attribute
                     name="context"
                 >{'default_customer_rank': False, 'default_supplier_rank': 1,
-                    'res_partner_search_mode': 'supplier', 'show_vat': True}
+                    'res_partner_search_mode': 'supplier', 'show_vat': True,
+                    'show_address': 1}
                 </attribute>
             </field>
             <field name="journal_id" position="attributes">
@@ -409,22 +427,78 @@
             </field>
         </field>
     </record>
+    <!--KANBAN view-->
+    <record id="contract_contract_kanban_view" model="ir.ui.view">
+        <field name="name">contract.contract kanban view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" highlight_color="color">
+                <templates>
+                    <t t-name="menu">
+                        <field name="color" widget="kanban_color_picker" />
+                        <a role="menuitem" type="open">Open</a>
+                        <a role="menuitem" type="object" name="copy">Duplicate</a>
+                        <a role="menuitem" type="archive">Archive</a>
+                        <a role="menuitem" type="unarchive">Restore</a>
+                        <a role="menuitem" type="delete">Delete</a>
+                    </t>
+                    <t t-name="card">
+                        <div class="d-flex align-items-baseline">
+                            <field name="partner_id" class="fw-bold fs-5" />
+                            <field
+                                name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color'}"
+                                class="ms-auto"
+                            />
+                        </div>
+                        <field name="name" />
+                        <div class="d-flex justify-content-between text-muted mt-2">
+                            <field name="code" />
+                            <field name="recurring_next_date" widget="remaining_days" />
+                        </div>
+                        <footer>
+                            <field name="activity_ids" widget="kanban_activity" />
+                            <field
+                                name="user_id"
+                                widget="many2one_avatar_user"
+                                class="ms-auto"
+                            />
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <!--TREE view-->
     <record id="contract_contract_tree_view" model="ir.ui.view">
         <field name="name">contract.contract list view (in contract)</field>
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="name" string="Name" />
+            <list
+                decoration-muted="date_end and date_end &lt; current_date"
+                decoration-info="date_start and date_start &gt; current_date"
+            >
+                <field name="name" string="Name" decoration-bf="1" />
                 <field name="code" />
-                <field name="journal_id" groups="account.group_account_user" />
+                <field
+                    name="journal_id"
+                    groups="account.group_account_user"
+                    optional="hide"
+                />
                 <field name="partner_id" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="contract_template_id" optional="hide" />
                 <field
                     name="tag_ids"
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
                 />
+                <field name="date_start" optional="hide" />
+                <field name="date_end" widget="remaining_days" optional="show" />
+                <field name="recurring_next_date" optional="show" />
                 <field name="last_date_invoiced" optional="hide" />
+                <field name="activity_ids" widget="list_activity" optional="show" />
                 <field name="company_id" groups="base.group_multi_company" />
             </list>
         </field>
@@ -439,22 +513,34 @@
                     name="name"
                     filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]"
                 />
+                <field name="partner_id" />
+                <field name="commercial_partner_id" />
+                <field name="user_id" />
                 <field name="journal_id" />
                 <field name="pricelist_id" />
                 <separator />
+                <filter
+                    name="my_contracts"
+                    string="My Contracts"
+                    domain="[('user_id', '=', uid)]"
+                />
                 <separator />
+                <filter
+                    name="upcoming"
+                    string="Upcoming"
+                    domain="[('date_start', '&gt;', context_today().strftime('%Y-%m-%d'))]"
+                />
                 <filter
                     name="not_finished"
                     string="In progress"
-                    domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
+                    domain="['&amp;', '|', ('date_start', '=', False), ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')), '|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
                 />
                 <filter
                     name="finished"
                     string="Finished"
                     domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('recurring_next_date', '=', False)]"
                 />
-                <field name="partner_id" />
-                <field name="commercial_partner_id" />
+                <separator />
                 <filter
                     string="Archived"
                     domain="[('active', '=', False)]"
@@ -462,15 +548,25 @@
                 />
                 <group>
                     <filter
-                        string="Associated Partner"
+                        string="Contact"
                         name="group_by_partner"
                         domain="[]"
                         context="{'group_by':'partner_id'}"
                     />
                     <filter
                         name="commercial_partner_groupby"
-                        string="Commercial Entity"
+                        string="Company"
                         context="{'group_by': 'commercial_partner_id'}"
+                    />
+                    <filter
+                        name="group_by_user"
+                        string="Responsible"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        name="group_by_journal"
+                        string="Journal"
+                        context="{'group_by': 'journal_id'}"
                     />
                     <filter
                         name="group_by_next_invoice"
@@ -498,7 +594,7 @@
     <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,activity,form</field>
         <field name="path">customer-contracts</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">
@@ -535,7 +631,7 @@
     <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,activity,form</field>
         <field name="path">supplier-contracts</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">
