@@ -424,6 +424,7 @@
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
                 />
+                <field name="last_date_invoiced" optional="hide" />
                 <field name="company_id" groups="base.group_multi_company" />
             </list>
         </field>
@@ -476,6 +477,12 @@
                         string="Next Invoice"
                         domain="[('recurring_next_date', '!=', False)]"
                         context="{'group_by':'recurring_next_date'}"
+                    />
+                    <filter
+                        name="group_by_last_invoice"
+                        string="Last Invoice"
+                        domain="[('last_date_invoiced', '!=', False)]"
+                        context="{'group_by':'last_date_invoiced'}"
                     />
                     <filter
                         name="group_by_date_end"

@@ -533,6 +533,33 @@ class TestContract(TestContractBase):
             "Should not create a new invoice after the last one",
         )
 
+    def test_contract_last_date_invoiced(self):
+        """contract.contract.last_date_invoiced aggregates max of line values,
+        excluding cancelled lines and pure section/note rows."""
+        self.assertFalse(self.acct_line.last_date_invoiced)
+        self.assertFalse(self.contract.last_date_invoiced)
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-01-31"))
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        line2 = self.env["contract.line"].create(
+            dict(self.line_vals, recurring_next_date="2018-04-15")
+        )
+        line2.last_date_invoiced = "2018-03-31"
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-03-31"))
+        line2.is_canceled = True
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "display_type": "line_section",
+                "name": "Header",
+            }
+        )
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
