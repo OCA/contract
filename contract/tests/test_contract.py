@@ -610,6 +610,70 @@ class TestContract(TestContractBase):
                 {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
             )
 
+    def test_check_contract_start_end_dates(self):
+        """Setting date_end earlier than date_start on the contract record
+        itself must raise a validation error."""
+        contract = self.env["contract.contract"].create(
+            {"name": "Date check", "partner_id": self.partner.id}
+        )
+        with self.assertRaises(ValidationError):
+            contract.write({"date_start": "2025-01-01", "date_end": "2024-12-31"})
+
+    def test_check_contract_start_end_dates_with_lines(self):
+        """With contract-level recurrence, an end date before the start date
+        reports the date order, not a missing next invoice date."""
+        with self.assertRaisesRegex(ValidationError, "end date must be after"):
+            self.env["contract.contract"].create(
+                {
+                    "name": "Date check with lines",
+                    "partner_id": self.partner.id,
+                    "line_recurrence": False,
+                    "date_start": "2025-01-01",
+                    "date_end": "2024-12-31",
+                    "contract_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_1.id,
+                                "name": "Services",
+                                "quantity": 1,
+                                "price_unit": 100,
+                            }
+                        )
+                    ],
+                }
+            )
+
+    def test_check_recurring_next_date_required(self):
+        """A line still to invoice needs a date of next invoice."""
+        with self.assertRaisesRegex(ValidationError, "date of next invoice"):
+            self.acct_line.recurring_next_date = False
+
+    def test_check_recurring_next_date_reports_date_order(self):
+        """When the next date is empty because the contract ends before it
+        starts (as the form sends it), the line check reports the date
+        order instead of asking for a next date."""
+        with self.assertRaisesRegex(ValidationError, "end date must be after"):
+            self.env["contract.contract"].create(
+                {
+                    "name": "Date check from the form",
+                    "partner_id": self.partner.id,
+                    "line_recurrence": False,
+                    "date_start": "2025-01-01",
+                    "date_end": "2024-12-31",
+                    "contract_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_1.id,
+                                "name": "Services",
+                                "quantity": 1,
+                                "price_unit": 100,
+                                "recurring_next_date": False,
+                            }
+                        )
+                    ],
+                }
+            )
+
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
         self.contract.contract_template_id = False
@@ -1312,7 +1376,14 @@ class TestContract(TestContractBase):
         """
         Contract = self.env["contract.contract"]
         contracts = Contract.search(Contract._get_contracts_to_invoice_domain())
-        contracts.write({"date_end": "2015-01-01"})
+        # Set the end date in SQL: it is earlier than some start dates, which
+        # the ORM refuses, and the next invoice dates must stay as they are so
+        # the domain keeps selecting these contracts.
+        self.env.cr.execute(
+            "UPDATE contract_contract SET date_end = %s WHERE id IN %s",
+            ("2015-01-01", tuple(contracts.ids)),
+        )
+        contracts.invalidate_recordset(["date_end"])
         self.assertTrue(
             contracts,
             "The fixture must offer the cron something to skip",
