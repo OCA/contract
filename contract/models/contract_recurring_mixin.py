@@ -70,6 +70,7 @@ class ContractRecurringMixin(models.AbstractModel):
     # Define when and how invoices should be issued within the recurrence.
 
     last_date_invoiced = fields.Date(
+        string="Date of Last Invoice",
         readonly=True,
         copy=False,
     )
