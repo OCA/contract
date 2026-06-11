@@ -15,7 +15,7 @@ class TestSaleContract(BaseCommon):
             {
                 "name": "user rights all documents ",
                 "login": "test1",
-                "groups_id": [
+                "group_ids": [
                     Command.set(
                         cls.env.ref("sales_team.group_sale_salesman_all_leads").ids
                     )
@@ -26,7 +26,7 @@ class TestSaleContract(BaseCommon):
             {
                 "name": "user rights own documents ",
                 "login": "test2",
-                "groups_id": [
+                "group_ids": [
                     Command.set(cls.env.ref("sales_team.group_sale_salesman").ids)
                 ],
             }
