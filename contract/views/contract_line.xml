@@ -51,7 +51,9 @@
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
-                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+                <attribute
+                    name="domain"
+                >[('sale_ok', '=', True), ('active', '=', True)]</attribute>
             </field>
         </field>
     </record>
@@ -65,8 +67,9 @@
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <field name="product_id" position="attributes">
-                <attribute name="domain">[('purchase_ok', '=', True)]
-                </attribute>
+                <attribute
+                    name="domain"
+                >[('purchase_ok', '=', True), ('active', '=', True)]</attribute>
             </field>
             <field name="automatic_price" position="attributes">
                 <attribute name="invisible">True</attribute>
