@@ -596,6 +596,15 @@ class TestContract(TestContractBase):
                 {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
             )
 
+    def test_check_contract_start_end_dates(self):
+        """Setting date_end earlier than date_start on the contract record
+        itself must raise a validation error."""
+        contract = self.env["contract.contract"].create(
+            {"name": "Date check", "partner_id": self.partner.id}
+        )
+        with self.assertRaises(ValidationError):
+            contract.write({"date_start": "2025-01-01", "date_end": "2024-12-31"})
+
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
         self.contract.contract_template_id = False

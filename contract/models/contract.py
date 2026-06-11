@@ -225,6 +225,22 @@ class ContractContract(models.Model):
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
+    @api.constrains("date_start", "date_end")
+    def _check_contract_start_end_dates(self):
+        # When lines are present, the line-level _check_start_end_dates
+        # constraint covers per-line validation, and contract.date_end is
+        # computed from the lines while contract.date_start may legitimately
+        # default to today even for an existing-line contract — so the
+        # contract-level pair is not strictly comparable. An empty date_end
+        # (open-ended contract) is also allowed.
+        for rec in self:
+            if rec.contract_line_ids:
+                continue
+            if rec.date_start and rec.date_end and rec.date_start > rec.date_end:
+                raise ValidationError(
+                    self.env._("Contract end date must be after the start date.")
+                )
+
     @api.depends(
         "contract_line_ids.last_date_invoiced",
         "contract_line_ids.is_canceled",
