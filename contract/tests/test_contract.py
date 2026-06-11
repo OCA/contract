@@ -5,6 +5,7 @@
 
 import logging
 from collections import namedtuple
+from unittest import mock
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -12,6 +13,7 @@ from freezegun import freeze_time
 from odoo import Command, fields
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, new_test_user
+from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -1144,6 +1146,176 @@ class TestContract(TestContractBase):
             len(contracts.mapped("contract_line_ids")),
             len(invoice_lines),
         )
+
+    def test_cron_isolates_failing_contract(self):
+        """A contract that raises during invoicing must not block the others."""
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        good_a = self.contract2
+        good_b = self.contract.copy()
+        bad = self.contract.copy()
+        boom = RuntimeError("boom: bad data")
+        original = self.env[
+            "contract.contract"
+        ].__class__._prepare_recurring_invoices_values
+
+        def patched(self, date_ref=False):
+            if bad.id in self.ids:
+                raise boom
+            return original(self, date_ref)
+
+        Contract = self.env["contract.contract"]
+        with mock.patch.object(
+            Contract.__class__,
+            "_prepare_recurring_invoices_values",
+            patched,
+        ):
+            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
+                Contract.cron_recurring_create_invoice()
+
+        # The two healthy contracts still got their invoice lines.
+        good_lines = self.env["account.move.line"].search(
+            [
+                (
+                    "contract_line_id",
+                    "in",
+                    (good_a | good_b).mapped("contract_line_ids").ids,
+                )
+            ]
+        )
+        self.assertEqual(
+            len(good_lines),
+            len((good_a | good_b).mapped("contract_line_ids")),
+        )
+        # The failing contract is flagged, with chatter and an activity.
+        self.assertTrue(bad.has_invoice_generation_error)
+        self.assertIn("boom", bad.invoice_generation_error)
+        self.assertTrue(bad.invoice_generation_error_date)
+        self.assertEqual(
+            len(
+                bad.activity_ids.filtered(
+                    lambda a: a.summary == "Recurring invoice failed"
+                )
+            ),
+            1,
+        )
+        # The healthy ones are not flagged.
+        self.assertFalse(good_a.has_invoice_generation_error)
+        self.assertFalse(good_b.has_invoice_generation_error)
+
+    def test_cron_clears_error_on_recovery(self):
+        """A successful run clears the error flag and resolves the activity."""
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        bad = self.contract2
+        # Simulate a previous failure so the contract is flagged. Mute the
+        # expected ERROR log -- ``checklog-odoo`` would otherwise fail CI.
+        with mute_logger("odoo.addons.contract.models.contract"):
+            bad._record_invoice_generation_error(
+                RuntimeError("earlier failure"), "invoice"
+            )
+        self.assertTrue(bad.has_invoice_generation_error)
+        open_activities = bad.activity_ids.filtered(
+            lambda a: a.summary == "Recurring invoice failed"
+        )
+        self.assertEqual(len(open_activities), 1)
+        # A clean cron run later should clear the flag.
+        self.env["contract.contract"].cron_recurring_create_invoice()
+        self.assertFalse(bad.has_invoice_generation_error)
+        self.assertFalse(bad.invoice_generation_error)
+        self.assertFalse(
+            bad.activity_ids.filtered(lambda a: a.summary == "Recurring invoice failed")
+        )
+
+    def test_cron_does_not_duplicate_activity_or_chatter(self):
+        """Re-running the cron with the same broken data does not spam."""
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        bad = self.contract.copy()
+        boom = RuntimeError("boom: persistent bad data")
+        original = self.env[
+            "contract.contract"
+        ].__class__._prepare_recurring_invoices_values
+
+        def patched(self, date_ref=False):
+            if bad.id in self.ids:
+                raise boom
+            return original(self, date_ref)
+
+        Contract = self.env["contract.contract"]
+        with mock.patch.object(
+            Contract.__class__,
+            "_prepare_recurring_invoices_values",
+            patched,
+        ):
+            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
+                Contract.cron_recurring_create_invoice()
+                Contract.cron_recurring_create_invoice()
+
+        open_activities = bad.activity_ids.filtered(
+            lambda a: a.summary == "Recurring invoice failed"
+        )
+        self.assertEqual(len(open_activities), 1, "Activity must not duplicate")
+        relevant_chatter = bad.message_ids.filtered(
+            lambda m: m.body and "Recurring invoice generation failed" in m.body
+        )
+        self.assertEqual(len(relevant_chatter), 1, "Chatter must not duplicate")
+
+    def test_cron_uses_batch_fast_path_when_all_succeed(self):
+        """Healthy contracts should hit the single-batched create path:
+        ``_recurring_create_invoice`` is invoked once per company with the
+        whole batch, not once per contract.
+        """
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        contracts = self.contract2
+        for _i in range(3):
+            contracts |= self.contract.copy()
+        original = self.env["contract.contract"].__class__._recurring_create_invoice
+        call_recordset_sizes = []
+
+        def spy(self, date_ref=False):
+            call_recordset_sizes.append(len(self))
+            return original(self, date_ref)
+
+        Contract = self.env["contract.contract"]
+        with mock.patch.object(Contract.__class__, "_recurring_create_invoice", spy):
+            Contract.cron_recurring_create_invoice()
+
+        # The batch path should be entered once per company (one company in
+        # this test), with a recordset large enough to cover our contracts.
+        self.assertEqual(
+            len(call_recordset_sizes),
+            1,
+            "Batch path must be called once per company, not per contract",
+        )
+        self.assertGreaterEqual(
+            call_recordset_sizes[0],
+            len(contracts),
+            "Batch should include all healthy contracts",
+        )
+
+    def test_action_clear_invoice_generation_error(self):
+        """The dismiss button clears the flag without running the cron."""
+        bad = self.contract
+        with mute_logger("odoo.addons.contract.models.contract"):
+            bad._record_invoice_generation_error(RuntimeError("oops"), "invoice")
+        self.assertTrue(bad.has_invoice_generation_error)
+        bad.action_clear_invoice_generation_error()
+        self.assertFalse(bad.has_invoice_generation_error)
+        self.assertFalse(bad.invoice_generation_error)
+
+    def test_action_view_invoice_generation_error(self):
+        """The error smart-action opens the contract form view."""
+        action = self.contract.action_view_invoice_generation_error()
+        self.assertEqual(action["type"], "ir.actions.act_window")
+        self.assertEqual(action["res_model"], "contract.contract")
+        self.assertEqual(action["res_id"], self.contract.id)
+        self.assertEqual(action["view_mode"], "form")
 
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = "2018-01-05"
