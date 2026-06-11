@@ -125,6 +125,22 @@ class ContractContract(models.Model):
     # === Dates ===
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
 
+    # === Cron status ===
+    invoice_generation_error = fields.Text(
+        readonly=True,
+        copy=False,
+        help="Error message from the most recent failed scheduled invoicing run.",
+    )
+    invoice_generation_error_date = fields.Datetime(
+        readonly=True,
+        copy=False,
+    )
+    has_invoice_generation_error = fields.Boolean(
+        compute="_compute_has_invoice_generation_error",
+        store=True,
+        help="Set when the last scheduled invoicing run failed for this contract.",
+    )
+
     # === Compute Methods ===
 
     def _compute_access_url(self):
@@ -209,6 +225,11 @@ class ContractContract(models.Model):
             date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
+
+    @api.depends("invoice_generation_error")
+    def _compute_has_invoice_generation_error(self):
+        for rec in self:
+            rec.has_invoice_generation_error = bool(rec.invoice_generation_error)
 
     def _inverse_partner_id(self):
         for rec in self:
@@ -668,9 +689,22 @@ class ContractContract(models.Model):
 
     @api.model
     def _cron_recurring_create(self, date_ref=False, create_type="invoice"):
-        """
-        The cron function in order to create recurrent documents
-        from contracts.
+        """Create recurrent documents from contracts.
+
+        Strategy:
+
+        * Fast path - the company's contracts are processed in one batched
+          ``create()`` call, matching the upstream behaviour and
+          performance.
+        * On failure - fall back to per-contract processing inside
+          savepoints, so a single contract with bad data does not block
+          its whole company batch and SQL-level errors do not poison the
+          transaction for the remaining contracts.
+
+        Failed contracts are flagged via
+        :attr:`has_invoice_generation_error`, notified via chatter and a
+        TODO activity, and cleared automatically on the next successful
+        run.
         """
         _recurring_create_func = self._get_recurring_create_func(
             create_type=create_type
@@ -695,8 +729,122 @@ class ContractContract(models.Model):
                     or contract.recurring_next_date <= contract.date_end
                 )
             ).with_company(company)
-            _recurring_create_func(contracts_to_invoice, date_ref)
+            if not contracts_to_invoice:
+                continue
+            # Fast path: one batched call for the whole company.
+            try:
+                with self.env.cr.savepoint():
+                    _recurring_create_func(contracts_to_invoice, date_ref)
+                contracts_to_invoice._clear_invoice_generation_error()
+            except Exception:
+                _logger.warning(
+                    "Batched %s generation failed for %d contract(s) in %s; "
+                    "retrying contracts individually",
+                    create_type,
+                    len(contracts_to_invoice),
+                    company.display_name,
+                )
+                # Slow path: isolate each contract behind its own savepoint
+                # so a failing one does not affect the rest.
+                for contract in contracts_to_invoice:
+                    try:
+                        with self.env.cr.savepoint():
+                            _recurring_create_func(contract, date_ref)
+                        contract._clear_invoice_generation_error()
+                    except Exception as exc:
+                        contract._record_invoice_generation_error(exc, create_type)
         return True
+
+    def _record_invoice_generation_error(self, exc, create_type):
+        """Flag the contract, log, post chatter, and schedule a TODO activity.
+
+        Chatter and activity creation are de-duplicated so that a contract
+        whose data is broken for several consecutive cron runs does not
+        spam its responsible user.
+        """
+        self.ensure_one()
+        message = f"{type(exc).__name__}: {exc}"
+        self.write(
+            {
+                "invoice_generation_error": message,
+                "invoice_generation_error_date": fields.Datetime.now(),
+            }
+        )
+        # Use ``exc_info=exc`` rather than ``_logger.exception`` so the
+        # traceback is logged when available (real cron failure) and a
+        # clean line is logged when not (e.g. when this helper is invoked
+        # directly to seed a flag in tests).
+        _logger.error(
+            "Failed to create recurring %s for contract %s (id=%s): %s",
+            create_type,
+            self.name,
+            self.id,
+            message,
+            exc_info=exc,
+        )
+        # Avoid posting the same error message repeatedly.
+        last_body = self.message_ids[:1].body or ""
+        if message not in last_body:
+            self.message_post(
+                body=Markup(
+                    "<b>⚠ Recurring invoice generation failed</b><br/><pre>%s</pre>"
+                )
+                % message,
+            )
+        # One open todo per failure; do not duplicate while it is pending.
+        activity_type = self.env.ref(
+            "mail.mail_activity_data_todo", raise_if_not_found=False
+        )
+        if activity_type and not self.activity_ids.filtered(
+            lambda a, t=activity_type: a.activity_type_id == t
+            and a.summary == "Recurring invoice failed"
+        ):
+            self.activity_schedule(
+                "mail.mail_activity_data_todo",
+                summary="Recurring invoice failed",
+                note=Markup("<pre>%s</pre>") % message,
+                user_id=(self.user_id or self.env.user).id,
+            )
+
+    def _clear_invoice_generation_error(self):
+        """Clear the error flag and resolve the related activity."""
+        had_error = self.filtered("has_invoice_generation_error")
+        if not had_error:
+            return
+        had_error.write(
+            {
+                "invoice_generation_error": False,
+                "invoice_generation_error_date": False,
+            }
+        )
+        activity_type = self.env.ref(
+            "mail.mail_activity_data_todo", raise_if_not_found=False
+        )
+        if activity_type:
+            stale = had_error.activity_ids.filtered(
+                lambda a, t=activity_type: a.activity_type_id == t
+                and a.summary == "Recurring invoice failed"
+            )
+            if stale:
+                stale.action_feedback(
+                    feedback="Recurring invoice generated successfully."
+                )
+
+    def action_clear_invoice_generation_error(self):
+        """Manually dismiss the invoice-generation error flag."""
+        self._clear_invoice_generation_error()
+        return True
+
+    def action_view_invoice_generation_error(self):
+        """Open the contract form so the user can inspect the error."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
+        }
 
     @api.model
     def cron_recurring_create_invoice(self, date_ref=None):
