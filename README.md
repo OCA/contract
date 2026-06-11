@@ -22,6 +22,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[contract](contract/) | 19.0.1.0.0 |  | Recurring - Contracts Management
 [subscription_oca](subscription_oca/) | 19.0.1.0.0 |  | Generate recurring invoices.
 
 [//]: # (end addons)
