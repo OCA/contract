@@ -126,6 +126,13 @@ class ContractContract(models.Model):
 
     # === Dates ===
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
+    last_date_invoiced = fields.Date(
+        string="Date of Last Invoice",
+        compute="_compute_last_date_invoiced",
+        store=True,
+        readonly=True,
+        copy=False,
+    )
 
     # === Cron status ===
     invoice_generation_error = fields.Text(
@@ -221,6 +228,23 @@ class ContractContract(models.Model):
             date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
+
+    @api.depends(
+        "contract_line_ids.last_date_invoiced",
+        "contract_line_ids.is_canceled",
+        "contract_line_ids.display_type",
+        "contract_line_ids.is_recurring_note",
+    )
+    def _compute_last_date_invoiced(self):
+        for contract in self:
+            dates = contract.contract_line_ids.filtered(
+                lambda line: (
+                    line.last_date_invoiced
+                    and not line.is_canceled
+                    and (not line.display_type or line.is_recurring_note)
+                )
+            ).mapped("last_date_invoiced")
+            contract.last_date_invoiced = max(dates) if dates else False
 
     def _inverse_partner_id(self):
         for rec in self:
