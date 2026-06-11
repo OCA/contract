@@ -20,6 +20,7 @@ class ContractTemplate(models.Model):
 
     # === Basic Info ===
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
