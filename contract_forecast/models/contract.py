@@ -1,7 +1,7 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, models
+from odoo import api, models
 
 
 class ContractContract(models.Model):
@@ -14,7 +14,7 @@ class ContractContract(models.Model):
 
         return {
             "type": "ir.actions.act_window",
-            "name": _("Contract Forecast"),
+            "name": self.env._("Contract Forecast"),
             "res_model": "contract.line.forecast.period",
             "domain": [("contract_id", "=", self.id)],
             "view_mode": "pivot,list",
