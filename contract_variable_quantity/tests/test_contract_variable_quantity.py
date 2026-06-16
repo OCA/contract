@@ -79,3 +79,24 @@ class TestContractVariableQuantity(BaseCommon):
         self.contract.skip_zero_qty = False
         invoice = self.contract.recurring_create_invoice()
         self.assertAlmostEqual(invoice.invoice_line_ids[0].quantity, 0.0)
+
+    def test_skip_zero_qty_keeps_sections_and_notes(self):
+        """Sections and notes have no quantity, so they must stay on the
+        invoice even when zero-quantity lines are skipped."""
+        self.formula.code = "result=0"
+        self.contract.skip_zero_qty = True
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "display_type": "line_section",
+                "name": "Section header",
+                "sequence": self.contract_line.sequence - 1,
+            }
+        )
+        invoice = self.contract.recurring_create_invoice()
+        self.assertTrue(
+            invoice.invoice_line_ids.filtered(
+                lambda line: line.display_type == "line_section"
+            ),
+            "The section line must be kept on the invoice",
+        )

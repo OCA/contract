@@ -44,6 +44,7 @@ class ContractLine(models.Model):
         vals = super()._prepare_invoice_line()
         if (
             "quantity" in vals
+            and not self.display_type
             and self.contract_id.skip_zero_qty
             and float_is_zero(
                 vals["quantity"],
