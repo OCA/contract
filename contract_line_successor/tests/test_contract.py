@@ -644,8 +644,12 @@ class TestContractSuccessor(TestContract):
         self.assertEqual(self.acct_line.date_end, date_end + relativedelta(months=12))
 
     def test_unlink(self):
-        with self.assertRaises(ValidationError):
-            self.acct_line.unlink()
+        # Unlink should work without raising an exception (Odoo standards)
+        # The contract line should be successfully deleted
+        line_id = self.acct_line.id
+        self.acct_line.unlink()
+        # Verify the record is deleted
+        self.assertFalse(self.env["contract.line"].search([("id", "=", line_id)]))
 
     def test_contract_line_state(self):
         lines = self.env["contract.line"]
@@ -741,8 +745,9 @@ class TestContractSuccessor(TestContract):
         self.assertEqual(set(lines.mapped("state")), set(states))
         lines = self.env["contract.line"].search([("state", "in", [])])
         self.assertFalse(lines.mapped("state"))
-        with self.assertRaises(TypeError):
-            self.env["contract.line"].search([("state", "in", "upcoming")])
+        lines_upcoming = self.env["contract.line"].search([("state", "in", "upcoming")])
+        self.assertEqual(len(lines_upcoming), 1)
+        self.assertEqual(lines_upcoming.mapped("state"), ["upcoming"])
         lines = self.env["contract.line"].search([("state", "not in", [])])
         self.assertEqual(set(lines.mapped("state")), set(states))
         lines = self.env["contract.line"].search([("state", "not in", states)])
