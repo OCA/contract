@@ -75,11 +75,33 @@
                                     />
                                         month(s)
                                     </div>
-                                    <field name="invoicing_mode" widget="radio" />
+                                    <field
+                                        name="create_sale_order"
+                                        widget="boolean_toggle"
+                                    />
+                                    <div
+                                        class="alert alert-warning"
+                                        role="alert"
+                                        colspan="2"
+                                        invisible="create_sale_order"
+                                    >
+                                        Subscriptions using this template will not
+                                        generate a sale order, so they will not appear
+                                        in Sales analysis reports.
+                                    </div>
+                                    <field
+                                        name="invoice_state"
+                                        widget="radio"
+                                        options="{'horizontal': true}"
+                                    />
+                                    <field
+                                        name="send_invoice"
+                                        invisible="invoice_state != 'posted'"
+                                    />
                                     <field
                                         name="invoice_mail_template_id"
-                                        invisible="invoicing_mode != 'invoice_send'"
-                                        required="invoicing_mode == 'invoice_send'"
+                                        invisible="not send_invoice"
+                                        required="send_invoice"
                                     />
                                 </group>
                                 <group name="right_group">

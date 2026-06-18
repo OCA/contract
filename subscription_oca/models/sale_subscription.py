@@ -414,33 +414,30 @@ class SaleSubscription(models.Model):
         invoice_number = ""
         message_body = ""
         msg_static = self.env._("Created invoice with reference")
-        if self.template_id.invoicing_mode in ["draft", "invoice", "invoice_send"]:
-            invoice = self.create_invoice()
-            if self.template_id.invoicing_mode != "draft":
-                invoice.action_post()
-                mail_template = self.template_id.invoice_mail_template_id
-                self.env["account.move.send"]._generate_and_send_invoices(
-                    invoice, mail_template=mail_template, sending_methods=["email"]
-                )
-                invoice_number = invoice.name
-                message_body = (
-                    f"<b>{msg_static}</b> "
-                    f"<a href=# data-oe-model=account.move data-oe-id={invoice.id}>"
-                    f"{invoice_number}"
-                    "</a>"
-                )
-
-        if self.template_id.invoicing_mode == "sale_and_invoice":
+        template = self.template_id
+        if template.create_sale_order:
             order_id = self.create_sale_order()
             order_id.action_confirm()
             order_id.action_lock()
-            new_invoice = order_id._create_invoices()
-            new_invoice.action_post()
-            new_invoice.invoice_origin = order_id.name + ", " + self.name
-            invoice_number = new_invoice.name
-            message_body = f"<b>{msg_static}</b> \
-<a href=# data-oe-model=account.move data-oe-id={new_invoice.id}>\
-{invoice_number}</a>"
+            invoice = order_id._create_invoices()
+            invoice.invoice_origin = order_id.name + ", " + self.name
+        else:
+            invoice = self.create_invoice()
+        if invoice and template.invoice_state == "posted":
+            invoice.action_post()
+            if template.send_invoice:
+                self.env["account.move.send"]._generate_and_send_invoices(
+                    invoice,
+                    mail_template=template.invoice_mail_template_id,
+                    sending_methods=["email"],
+                )
+            invoice_number = invoice.name
+            message_body = (
+                f"<b>{msg_static}</b> "
+                f"<a href=# data-oe-model=account.move data-oe-id={invoice.id}>"
+                f"{invoice_number}"
+                "</a>"
+            )
 
         if not invoice_number:
             invoice_number = self.env._("To validate")

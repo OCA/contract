@@ -397,9 +397,21 @@ subscriptions.</p>
 <p>To make a subscription:</p>
 <ol class="arabic simple">
 <li>Go to <em>Subscriptions &gt; Configuration &gt; Subscription templates</em>.</li>
-<li>Create the templates you consider, choosing the billing frequency:
-daily, monthly… and the method of creating the invoice and/or
-order.</li>
+<li>Create the templates you consider, choosing the billing frequency
+(daily, monthly…) and how the recurring document is generated. The
+invoicing behaviour is configured through three independent options:<ul>
+<li><em>Create sale order</em>: when enabled, a confirmed sale order is
+generated before the invoice (required for the subscription to
+show up in Sales analysis reports); when disabled, the invoice is
+created directly and a warning reminds you that it will not appear
+there.</li>
+<li><em>Invoice status</em>: leave the generated invoice in <em>Draft</em> or post
+it automatically (<em>Posted</em>).</li>
+<li><em>Send invoice by email</em>: only available for posted invoices; when
+enabled, the selected <em>Invoice Email</em> template is sent
+automatically.</li>
+</ul>
+</li>
 <li>Go to <em>Subscription &gt; Subscriptions</em>.</li>
 <li>Create a subscription and indicate the start date. When the
 <em>Subscriptions Management</em> cron job is executed, the subscription
@@ -408,9 +420,9 @@ date matches the start date. The invoice will also be created when
 the execution date matches the next invoice date. Additionally, you
 can manually change the subscription status and create an invoice by
 using the <em>Create Invoice</em> button. This action creates just an
-invoice even if the subscription template has the <em>Sale Order &amp;
-Invoice</em> option selected, because the <em>Invoicing mode</em> option is
-triggered through the cron job.</li>
+invoice even if the subscription template has <em>Create sale order</em>
+enabled, because the configured invoicing options are only applied by
+the cron job.</li>
 <li>The cron job will also end the subscription if its end date has been
 reached. The end date honours the template recurrence (days, weeks,
 months or years) and the interval, instead of always assuming months.</li>
