@@ -19,12 +19,11 @@ class TestContractPortal(HttpCase, BaseCommon):
             {"name": "Test Contract", "partner_id": partner.id}
         )
         user_portal = self._create_new_portal_user(
-            partner_id=partner.id,
-            login="portal",
+            partner_id=partner.id, login="portal_contract", password="portal_contract"
         )
-        self.start_tour("/", "contract_portal_tour", login="portal")
+        self.start_tour("/", "contract_portal_tour", login="portal_contract")
         # Contract access
-        self.authenticate("portal", "portal")
+        self.authenticate("portal_contract", "portal_contract")
         http.root.session_store.save(self.session)
         url_contract = (
             f"/my/contracts/{contract.id}?access_token={contract.access_token}"
