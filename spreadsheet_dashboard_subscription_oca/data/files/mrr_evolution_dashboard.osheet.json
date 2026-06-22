@@ -1,0 +1,703 @@
+{
+  "version": "18.5.10",
+  "sheets": [
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "colNumber": 22,
+      "rowNumber": 80,
+      "rows": {},
+      "cols": {
+        "0": {
+          "size": 50
+        },
+        "1": {
+          "size": 50
+        },
+        "2": {
+          "size": 50
+        },
+        "3": {
+          "size": 50
+        },
+        "4": {
+          "size": 50
+        },
+        "5": {
+          "size": 50
+        },
+        "6": {
+          "size": 50
+        },
+        "7": {
+          "size": 50
+        },
+        "8": {
+          "size": 50
+        },
+        "9": {
+          "size": 50
+        },
+        "10": {
+          "size": 50
+        },
+        "11": {
+          "size": 50
+        },
+        "12": {
+          "size": 50
+        },
+        "13": {
+          "size": 50
+        },
+        "14": {
+          "size": 50
+        },
+        "15": {
+          "size": 50
+        },
+        "16": {
+          "size": 50
+        },
+        "17": {
+          "size": 50
+        },
+        "18": {
+          "size": 50
+        },
+        "19": {
+          "size": 50
+        },
+        "20": {
+          "size": 50
+        },
+        "21": {
+          "size": 50
+        }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "cccccccc-0000-0000-0000-000000000001",
+          "width": 345,
+          "height": 132,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "title": {
+              "text": "Net MRR",
+              "color": "#1f2937",
+              "bold": true
+            },
+            "background": "#EFF6FF",
+            "baselineColorUp": "#00A04A",
+            "baselineColorDown": "#DC6965",
+            "baselineMode": "text",
+            "baseline": "",
+            "humanize": false,
+            "keyValue": "Data!C1",
+            "chartId": "cccccccc-0000-0000-0000-000000000001"
+          },
+          "offset": {
+            "x": 16,
+            "y": 16
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000002",
+          "width": 345,
+          "height": 132,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "title": {
+              "text": "New MRR (all time)",
+              "color": "#1f2937",
+              "bold": true
+            },
+            "background": "#F0FDF4",
+            "baselineColorUp": "#00A04A",
+            "baselineColorDown": "#DC6965",
+            "baselineMode": "text",
+            "baseline": "",
+            "humanize": false,
+            "keyValue": "Data!C2",
+            "chartId": "cccccccc-0000-0000-0000-000000000002"
+          },
+          "offset": {
+            "x": 377,
+            "y": 16
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000003",
+          "width": 345,
+          "height": 132,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "title": {
+              "text": "Churned MRR (all time)",
+              "color": "#1f2937",
+              "bold": true
+            },
+            "background": "#FEF2F2",
+            "baselineColorUp": "#00A04A",
+            "baselineColorDown": "#DC6965",
+            "baselineMode": "text",
+            "baseline": "",
+            "humanize": false,
+            "keyValue": "Data!C3",
+            "chartId": "cccccccc-0000-0000-0000-000000000003"
+          },
+          "offset": {
+            "x": 738,
+            "y": 16
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000010",
+          "width": 1068,
+          "height": 360,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "Net MRR Over Time"
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["event_date:month"],
+              "measure": "mrr_change",
+              "order": null,
+              "resModel": "sale.subscription.mrr.report",
+              "mode": "line",
+              "cumulatedStart": true
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["event_date:month"],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "dataSets": [{}],
+            "chartId": "cccccccc-0000-0000-0000-000000000010",
+            "actionXmlId": "spreadsheet_dashboard_subscription_oca.action_sale_subscription_mrr_report",
+            "fieldMatching": {
+              "11111111-1111-1111-1111-111111111111": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "22222222-2222-2222-2222-222222222222": {
+                "chain": "crm_team_id",
+                "type": "many2one"
+              },
+              "33333333-3333-3333-3333-333333333333": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "44444444-4444-4444-4444-444444444444": {
+                "chain": "template_id",
+                "type": "many2one"
+              },
+              "55555555-5555-5555-5555-555555555555": {
+                "chain": "event_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            },
+            "cumulative": true,
+            "cumulatedStart": true
+          },
+          "offset": {
+            "x": 16,
+            "y": 172
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000011",
+          "width": 1068,
+          "height": 360,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "MRR Change by Month & Type"
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["event_date:month", "event_type"],
+              "measure": "mrr_change",
+              "order": null,
+              "resModel": "sale.subscription.mrr.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["event_date:month", "event_type"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [{}],
+            "chartId": "cccccccc-0000-0000-0000-000000000011",
+            "actionXmlId": "spreadsheet_dashboard_subscription_oca.action_sale_subscription_mrr_report",
+            "fieldMatching": {
+              "11111111-1111-1111-1111-111111111111": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "22222222-2222-2222-2222-222222222222": {
+                "chain": "crm_team_id",
+                "type": "many2one"
+              },
+              "33333333-3333-3333-3333-333333333333": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "44444444-4444-4444-4444-444444444444": {
+                "chain": "template_id",
+                "type": "many2one"
+              },
+              "55555555-5555-5555-5555-555555555555": {
+                "chain": "event_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            },
+            "stacked": true
+          },
+          "offset": {
+            "x": 16,
+            "y": 552
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000012",
+          "width": 526,
+          "height": 360,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "MRR Change by Type"
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["event_type"],
+              "measure": "mrr_change",
+              "order": null,
+              "resModel": "sale.subscription.mrr.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["event_type"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [{}],
+            "chartId": "cccccccc-0000-0000-0000-000000000012",
+            "actionXmlId": "spreadsheet_dashboard_subscription_oca.action_sale_subscription_mrr_report",
+            "fieldMatching": {
+              "11111111-1111-1111-1111-111111111111": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "22222222-2222-2222-2222-222222222222": {
+                "chain": "crm_team_id",
+                "type": "many2one"
+              },
+              "33333333-3333-3333-3333-333333333333": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "44444444-4444-4444-4444-444444444444": {
+                "chain": "template_id",
+                "type": "many2one"
+              },
+              "55555555-5555-5555-5555-555555555555": {
+                "chain": "event_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            },
+            "stacked": false
+          },
+          "offset": {
+            "x": 16,
+            "y": 932
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000013",
+          "width": 526,
+          "height": 360,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "New MRR by Template"
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["template_id"],
+              "measure": "mrr_change",
+              "order": null,
+              "resModel": "sale.subscription.mrr.report",
+              "mode": "pie"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [["event_type", "=", "new"]],
+              "groupBy": ["template_id"],
+              "orderBy": []
+            },
+            "type": "odoo_pie",
+            "dataSets": [{}],
+            "chartId": "cccccccc-0000-0000-0000-000000000013",
+            "actionXmlId": "spreadsheet_dashboard_subscription_oca.action_sale_subscription_mrr_report",
+            "fieldMatching": {
+              "11111111-1111-1111-1111-111111111111": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "22222222-2222-2222-2222-222222222222": {
+                "chain": "crm_team_id",
+                "type": "many2one"
+              },
+              "33333333-3333-3333-3333-333333333333": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "44444444-4444-4444-4444-444444444444": {
+                "chain": "template_id",
+                "type": "many2one"
+              },
+              "55555555-5555-5555-5555-555555555555": {
+                "chain": "event_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            }
+          },
+          "offset": {
+            "x": 558,
+            "y": 932
+          },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "cccccccc-0000-0000-0000-000000000014",
+          "width": 526,
+          "height": 360,
+          "tag": "chart",
+          "data": {
+            "title": {
+              "text": "New MRR by Salesperson"
+            },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["user_id"],
+              "measure": "mrr_change",
+              "order": null,
+              "resModel": "sale.subscription.mrr.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [["event_type", "=", "new"]],
+              "groupBy": ["user_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [{}],
+            "chartId": "cccccccc-0000-0000-0000-000000000014",
+            "actionXmlId": "spreadsheet_dashboard_subscription_oca.action_sale_subscription_mrr_report",
+            "fieldMatching": {
+              "11111111-1111-1111-1111-111111111111": {
+                "chain": "user_id",
+                "type": "many2one"
+              },
+              "22222222-2222-2222-2222-222222222222": {
+                "chain": "crm_team_id",
+                "type": "many2one"
+              },
+              "33333333-3333-3333-3333-333333333333": {
+                "chain": "partner_id",
+                "type": "many2one"
+              },
+              "44444444-4444-4444-4444-444444444444": {
+                "chain": "template_id",
+                "type": "many2one"
+              },
+              "55555555-5555-5555-5555-555555555555": {
+                "chain": "event_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            },
+            "stacked": false
+          },
+          "offset": {
+            "x": 16,
+            "y": 1312
+          },
+          "col": 0,
+          "row": 0
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": false,
+      "isVisible": true,
+      "headerGroups": [],
+      "comments": {}
+    },
+    {
+      "id": "data",
+      "name": "Data",
+      "colNumber": 8,
+      "rowNumber": 30,
+      "rows": {},
+      "cols": {},
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"MRR KPIs\")",
+        "B1": "=PIVOT.VALUE(1,\"mrr_change:sum\")",
+        "B2": "=PIVOT.VALUE(2,\"mrr_change:sum\")",
+        "B3": "=PIVOT.VALUE(3,\"mrr_change:sum\")",
+        "C1": "=IFERROR(FORMAT.LARGE.NUMBER(B1))",
+        "C2": "=IFERROR(FORMAT.LARGE.NUMBER(B2))",
+        "C3": "=IFERROR(FORMAT.LARGE.NUMBER(B3))"
+      },
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": false,
+      "headerGroups": [],
+      "comments": {}
+    }
+  ],
+  "styles": {},
+  "formats": {},
+  "borders": {},
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "m/d/yyyy",
+      "timeFormat": "hh:mm:ss a",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "11111111-1111-1111-1111-111111111111": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "22222222-2222-2222-2222-222222222222": {
+          "chain": "crm_team_id",
+          "type": "many2one"
+        },
+        "33333333-3333-3333-3333-333333333333": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "44444444-4444-4444-4444-444444444444": {
+          "chain": "template_id",
+          "type": "many2one"
+        },
+        "55555555-5555-5555-5555-555555555555": {
+          "chain": "event_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [],
+      "id": "1",
+      "measures": [
+        {
+          "id": "mrr_change:sum",
+          "fieldName": "mrr_change",
+          "aggregator": "sum"
+        },
+        {
+          "id": "__count",
+          "fieldName": "__count"
+        }
+      ],
+      "model": "sale.subscription.mrr.report",
+      "name": "KPIs 1",
+      "sortedColumn": null,
+      "formulaId": "1",
+      "columns": [],
+      "rows": []
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "11111111-1111-1111-1111-111111111111": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "22222222-2222-2222-2222-222222222222": {
+          "chain": "crm_team_id",
+          "type": "many2one"
+        },
+        "33333333-3333-3333-3333-333333333333": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "44444444-4444-4444-4444-444444444444": {
+          "chain": "template_id",
+          "type": "many2one"
+        },
+        "55555555-5555-5555-5555-555555555555": {
+          "chain": "event_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [["event_type", "=", "new"]],
+      "id": "2",
+      "measures": [
+        {
+          "id": "mrr_change:sum",
+          "fieldName": "mrr_change",
+          "aggregator": "sum"
+        }
+      ],
+      "model": "sale.subscription.mrr.report",
+      "name": "KPIs 2",
+      "sortedColumn": null,
+      "formulaId": "2",
+      "columns": [],
+      "rows": []
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "11111111-1111-1111-1111-111111111111": {
+          "chain": "user_id",
+          "type": "many2one"
+        },
+        "22222222-2222-2222-2222-222222222222": {
+          "chain": "crm_team_id",
+          "type": "many2one"
+        },
+        "33333333-3333-3333-3333-333333333333": {
+          "chain": "partner_id",
+          "type": "many2one"
+        },
+        "44444444-4444-4444-4444-444444444444": {
+          "chain": "template_id",
+          "type": "many2one"
+        },
+        "55555555-5555-5555-5555-555555555555": {
+          "chain": "event_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [["event_type", "=", "churn"]],
+      "id": "3",
+      "measures": [
+        {
+          "id": "mrr_change:sum",
+          "fieldName": "mrr_change",
+          "aggregator": "sum"
+        }
+      ],
+      "model": "sale.subscription.mrr.report",
+      "name": "KPIs 3",
+      "sortedColumn": null,
+      "formulaId": "3",
+      "columns": [],
+      "rows": []
+    }
+  },
+  "pivotNextId": 4,
+  "customTableStyles": {},
+  "globalFilters": [
+    {
+      "id": "55555555-5555-5555-5555-555555555555",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_90_days"
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "type": "relation",
+      "label": "Salesperson",
+      "defaultValueDisplayNames": [],
+      "modelName": "res.users"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "type": "relation",
+      "label": "Sales Team",
+      "defaultValueDisplayNames": [],
+      "modelName": "crm.team"
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "type": "relation",
+      "label": "Customer",
+      "defaultValueDisplayNames": [],
+      "modelName": "res.partner"
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "type": "relation",
+      "label": "Template",
+      "defaultValueDisplayNames": [],
+      "modelName": "sale.subscription.template"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {}
+}

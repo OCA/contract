@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record
+        id="spreadsheet_dashboard_group_subscription_oca"
+        model="spreadsheet.dashboard.group"
+    >
+        <field name="name">Subscriptions</field>
+        <field name="sequence">150</field>
+    </record>
+
+    <record
+        id="spreadsheet_dashboard_subscription_oca_subscriptions"
+        model="spreadsheet.dashboard"
+    >
+        <field name="name">Subscriptions</field>
+        <field
+            name="spreadsheet_binary_data"
+            type="base64"
+            file="spreadsheet_dashboard_subscription_oca/data/files/subscriptions_dashboard.osheet.json"
+        />
+        <field
+            name="main_data_model_ids"
+            eval="[(4, ref('subscription_oca.model_sale_subscription_report'))]"
+        />
+        <field
+            name="dashboard_group_id"
+            ref="spreadsheet_dashboard_group_subscription_oca"
+        />
+        <field
+            name="group_ids"
+            eval="[Command.link(ref('sales_team.group_sale_salesman'))]"
+        />
+        <field name="sequence">10</field>
+        <field name="is_published">True</field>
+    </record>
+
+    <record
+        id="spreadsheet_dashboard_subscription_oca_salesperson"
+        model="spreadsheet.dashboard"
+    >
+        <field name="name">Salesperson</field>
+        <field
+            name="spreadsheet_binary_data"
+            type="base64"
+            file="spreadsheet_dashboard_subscription_oca/data/files/salesperson_dashboard.osheet.json"
+        />
+        <field
+            name="main_data_model_ids"
+            eval="[(4, ref('subscription_oca.model_sale_subscription_report'))]"
+        />
+        <field
+            name="dashboard_group_id"
+            ref="spreadsheet_dashboard_group_subscription_oca"
+        />
+        <field
+            name="group_ids"
+            eval="[Command.link(ref('sales_team.group_sale_salesman'))]"
+        />
+        <field name="sequence">20</field>
+        <field name="is_published">True</field>
+    </record>
+
+    <record
+        id="spreadsheet_dashboard_subscription_oca_mrr_evolution"
+        model="spreadsheet.dashboard"
+    >
+        <field name="name">MRR Evolution</field>
+        <field
+            name="spreadsheet_binary_data"
+            type="base64"
+            file="spreadsheet_dashboard_subscription_oca/data/files/mrr_evolution_dashboard.osheet.json"
+        />
+        <field
+            name="main_data_model_ids"
+            eval="[(4, ref('spreadsheet_dashboard_subscription_oca.model_sale_subscription_mrr_report'))]"
+        />
+        <field
+            name="dashboard_group_id"
+            ref="spreadsheet_dashboard_group_subscription_oca"
+        />
+        <field
+            name="group_ids"
+            eval="[Command.link(ref('sales_team.group_sale_salesman'))]"
+        />
+        <field name="sequence">30</field>
+        <field name="is_published">True</field>
+    </record>
+
+    <record
+        id="spreadsheet_dashboard_subscription_oca_retention"
+        model="spreadsheet.dashboard"
+    >
+        <field name="name">Retention</field>
+        <field
+            name="spreadsheet_binary_data"
+            type="base64"
+            file="spreadsheet_dashboard_subscription_oca/data/files/retention_dashboard.osheet.json"
+        />
+        <field
+            name="main_data_model_ids"
+            eval="[(4, ref('spreadsheet_dashboard_subscription_oca.model_sale_subscription_retention_report'))]"
+        />
+        <field
+            name="dashboard_group_id"
+            ref="spreadsheet_dashboard_group_subscription_oca"
+        />
+        <field
+            name="group_ids"
+            eval="[Command.link(ref('sales_team.group_sale_salesman'))]"
+        />
+        <field name="sequence">40</field>
+        <field name="is_published">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- sale.subscription.mrr.report : MRR change events reconstructed from subscriptions.
+         Backs the "MRR Evolution" dashboard and is also browsable from Reporting. -->
+    <record id="mrr_report_view_search" model="ir.ui.view">
+        <field name="name">sale.subscription.mrr.report.search</field>
+        <field name="model">sale.subscription.mrr.report</field>
+        <field name="arch" type="xml">
+            <search string="MRR Evolution">
+                <field name="subscription_id" />
+                <field name="partner_id" />
+                <field name="template_id" />
+                <separator />
+                <filter
+                    string="New"
+                    name="filter_new"
+                    domain="[('event_type', '=', 'new')]"
+                />
+                <filter
+                    string="Churn"
+                    name="filter_churn"
+                    domain="[('event_type', '=', 'churn')]"
+                />
+                <separator />
+                <filter
+                    string="Event date"
+                    name="filter_event_date"
+                    date="event_date"
+                />
+                <group>
+                    <filter
+                        string="Event type"
+                        name="groupby_event_type"
+                        context="{'group_by': 'event_type'}"
+                    />
+                    <filter
+                        string="Subscription template"
+                        name="groupby_template_id"
+                        context="{'group_by': 'template_id'}"
+                    />
+                    <filter
+                        string="Commercial agent"
+                        name="groupby_user_id"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        string="Customer"
+                        name="groupby_partner_id"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Event month"
+                        name="groupby_event_date"
+                        context="{'group_by': 'event_date:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mrr_report_view_graph" model="ir.ui.view">
+        <field name="name">sale.subscription.mrr.report.graph</field>
+        <field name="model">sale.subscription.mrr.report</field>
+        <field name="arch" type="xml">
+            <graph string="MRR Evolution" type="line" sample="1">
+                <field name="event_date" interval="month" />
+                <field name="mrr_change" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="mrr_report_view_pivot" model="ir.ui.view">
+        <field name="name">sale.subscription.mrr.report.pivot</field>
+        <field name="model">sale.subscription.mrr.report</field>
+        <field name="arch" type="xml">
+            <pivot string="MRR Evolution" sample="1">
+                <field name="event_date" interval="month" type="row" />
+                <field name="event_type" type="col" />
+                <field name="mrr_change" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="mrr_report_view_list" model="ir.ui.view">
+        <field name="name">sale.subscription.mrr.report.list</field>
+        <field name="model">sale.subscription.mrr.report</field>
+        <field name="arch" type="xml">
+            <list string="MRR Evolution" create="0" delete="0">
+                <field name="event_date" />
+                <field name="event_type" />
+                <field name="subscription_id" />
+                <field name="partner_id" optional="show" />
+                <field name="template_id" optional="show" />
+                <field name="user_id" optional="hide" />
+                <field name="crm_team_id" optional="hide" />
+                <field name="mrr_change" optional="show" sum="Net MRR change" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company"
+                />
+                <field name="company_currency_id" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sale_subscription_mrr_report" model="ir.actions.act_window">
+        <field name="name">MRR Evolution</field>
+        <field name="res_model">sale.subscription.mrr.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="mrr_report_view_search" />
+        <field name="context">{"search_default_groupby_event_date": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No MRR events yet
+            </p>
+            <p>
+                Reconstruction of the monthly recurring revenue changes over
+                time: a "new" event when a subscription starts and a "churn"
+                event when one is closed. Cumulate it to see the net active MRR.
+            </p>
+        </field>
+    </record>
+
+    <!-- sale.subscription.retention.report : retention cohorts.
+         Backs the "Retention" dashboard and is also browsable from Reporting. -->
+    <record id="retention_report_view_search" model="ir.ui.view">
+        <field name="name">sale.subscription.retention.report.search</field>
+        <field name="model">sale.subscription.retention.report</field>
+        <field name="arch" type="xml">
+            <search string="Retention">
+                <field name="subscription_id" />
+                <field name="partner_id" />
+                <field name="template_id" />
+                <separator />
+                <filter string="Cohort" name="filter_cohort_date" date="cohort_date" />
+                <group>
+                    <filter
+                        string="Cohort (start month)"
+                        name="groupby_cohort_date"
+                        context="{'group_by': 'cohort_date:month'}"
+                    />
+                    <filter
+                        string="Subscription template"
+                        name="groupby_template_id"
+                        context="{'group_by': 'template_id'}"
+                    />
+                    <filter
+                        string="Commercial agent"
+                        name="groupby_user_id"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        string="Customer"
+                        name="groupby_partner_id"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="retention_report_view_graph" model="ir.ui.view">
+        <field name="name">sale.subscription.retention.report.graph</field>
+        <field name="model">sale.subscription.retention.report</field>
+        <field name="arch" type="xml">
+            <graph string="Retention" type="line" sample="1">
+                <field name="period_index" />
+                <field name="recurring_monthly" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="retention_report_view_pivot" model="ir.ui.view">
+        <field name="name">sale.subscription.retention.report.pivot</field>
+        <field name="model">sale.subscription.retention.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Retention" sample="1">
+                <field name="cohort_date" interval="month" type="row" />
+                <field name="period_index" type="col" />
+                <field name="recurring_monthly" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="retention_report_view_list" model="ir.ui.view">
+        <field name="name">sale.subscription.retention.report.list</field>
+        <field name="model">sale.subscription.retention.report</field>
+        <field name="arch" type="xml">
+            <list string="Retention" create="0" delete="0">
+                <field name="cohort_date" />
+                <field name="period_index" />
+                <field name="subscription_id" />
+                <field name="partner_id" optional="show" />
+                <field name="template_id" optional="show" />
+                <field name="user_id" optional="hide" />
+                <field name="crm_team_id" optional="hide" />
+                <field
+                    name="recurring_monthly"
+                    optional="show"
+                    sum="Sum of Monthly Recurring"
+                />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company"
+                />
+                <field name="company_currency_id" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <record
+        id="action_sale_subscription_retention_report"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Retention Analysis</field>
+        <field name="res_model">sale.subscription.retention.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="retention_report_view_search" />
+        <field name="context">{"search_default_groupby_cohort_date": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No cohorts yet
+            </p>
+            <p>
+                Retention cohorts built from the current subscriptions. Each
+                cohort groups the subscriptions that started the same month and
+                tracks the still-active recurring revenue over the following
+                months.
+            </p>
+        </field>
+    </record>
+
+    <!-- Make both analyses reachable from the subscription Reporting menu. -->
+    <menuitem
+        id="menu_sale_subscription_mrr_report"
+        parent="subscription_oca.sale_subscription_reporting_menu"
+        action="action_sale_subscription_mrr_report"
+        sequence="5"
+    />
+
+    <menuitem
+        id="menu_sale_subscription_retention_report"
+        parent="subscription_oca.sale_subscription_reporting_menu"
+        action="action_sale_subscription_retention_report"
+        sequence="6"
+    />
+</odoo>
