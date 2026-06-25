@@ -137,32 +137,80 @@ class SaleSubscription(models.Model):
     to_renew = fields.Boolean(default=False, string="To renew")
 
     @api.model
-    def cron_subscription_management(self):
+    def cron_subscription_management(self, limit=None):
+        """Run the three subscription lifecycle phases in order: start due
+        subscriptions, invoice due ones, then close ended ones.
+
+        ``limit`` caps the number of records processed **per phase**, not for
+        the whole run, so a value of N may process up to 3*N records. It is
+        meant to bound a single batch on large databases; leave it as ``None``
+        to process every due record.
+        """
+        self._cron_start_due_subscriptions(limit=limit)
+        self._cron_invoice_due_subscriptions(limit=limit)
+        self._cron_close_ended_subscriptions(limit=limit)
+
+    @api.model
+    def _cron_start_due_subscriptions(self, limit=None):
+        """Start subscriptions whose start date is reached. ``limit`` caps the
+        number of records handled in this phase. Errors are caught per record
+        so one failure does not abort the batch."""
         today = date.today()
-        subscription_count = self.search_count([])
-        for subscription in self.search(
-            [], order="recurring_next_date asc", limit=subscription_count
-        ):
-            subscription = subscription.with_company(subscription.company_id)
-            if subscription.in_progress:
-                if (
-                    subscription.recurring_next_date <= today
-                    and subscription.sale_subscription_line_ids
-                ):
-                    try:
-                        subscription.generate_invoice()
-                    except Exception:
-                        logger.exception("Error on subscription invoice generate")
-                if (
-                    not subscription.recurring_rule_boundary
-                    and subscription.date <= today
-                ):
-                    subscription.close_subscription()
-            elif (
-                subscription.date_start <= today and subscription.stage_id.type == "pre"
-            ):
+        domain = [
+            ("in_progress", "=", False),
+            ("date_start", "<=", today),
+            ("stage_id.type", "=", "pre"),
+        ]
+        subscriptions = self.search(domain, limit=limit)
+        for subscription in subscriptions:
+            try:
+                subscription = subscription.with_company(subscription.company_id)
                 subscription.action_start_subscription()
                 subscription.generate_invoice()
+            except Exception:
+                logger.exception("Error starting subscription %s", subscription.id)
+
+    @api.model
+    def _cron_invoice_due_subscriptions(self, limit=None):
+        """Invoice in-progress subscriptions whose next invoice date is reached,
+        oldest first. ``limit`` caps the number of records handled in this
+        phase. Errors are caught per record."""
+        today = date.today()
+        domain = [
+            ("in_progress", "=", True),
+            ("recurring_next_date", "<=", today),
+            ("sale_subscription_line_ids", "!=", False),
+        ]
+        subscriptions = self.search(
+            domain, order="recurring_next_date asc", limit=limit
+        )
+        for subscription in subscriptions:
+            try:
+                subscription.with_company(subscription.company_id).generate_invoice()
+            except Exception:
+                logger.exception(
+                    "Error on subscription invoice generate (id=%s)",
+                    subscription.id,
+                )
+
+    @api.model
+    def _cron_close_ended_subscriptions(self, limit=None):
+        """Close in-progress subscriptions whose end date is reached. ``limit``
+        caps the number of records handled in this phase. Errors are caught per
+        record."""
+        today = date.today()
+        domain = [
+            ("in_progress", "=", True),
+            ("recurring_rule_boundary", "=", False),
+            ("date", "!=", False),
+            ("date", "<=", today),
+        ]
+        subscriptions = self.search(domain, limit=limit)
+        for subscription in subscriptions:
+            try:
+                subscription.with_company(subscription.company_id).close_subscription()
+            except Exception:
+                logger.exception("Error closing subscription %s", subscription.id)
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):

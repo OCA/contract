@@ -7,7 +7,6 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, exceptions, fields
-from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.product.tests.common import ProductCommon
@@ -381,12 +380,20 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         "SaleSubscription.generate_invoice"
     )
     def test_subscription_oca_sub_cron_error(self, generate_invoice_patch):
-        # Simulate something failing in generating an invoice,
-        # we expect something being logged
-        generate_invoice_patch.side_effect = exceptions.UserError("Error")
-        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
-            with self.assertRaises(exceptions.UserError):
-                self.sub1.cron_subscription_management()
+        # Simulate something failing while generating an invoice. The cron must
+        # log the error per record and finish WITHOUT propagating the
+        # exception (the call below would raise otherwise).
+        generate_invoice_patch.side_effect = exceptions.UserError("Boom")
+        with self.assertLogs(
+            "odoo.addons.subscription_oca.models.sale_subscription", level="ERROR"
+        ) as log_catcher:
+            self.sub1.cron_subscription_management()
+        self.assertTrue(generate_invoice_patch.called)
+        # The failure is swallowed and logged, not raised.
+        self.assertTrue(
+            any("Error" in line for line in log_catcher.output),
+            "Expected the cron to log the per-record error",
+        )
 
     def test_subscription_oca_sub_cron(self):
         # sale.subscription
