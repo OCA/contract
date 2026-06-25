@@ -2,3 +2,4 @@
 
 from . import test_subscription_oca
 from . import test_subscription_security
+from . import test_subscription_recurrence_dates

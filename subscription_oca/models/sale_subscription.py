@@ -190,14 +190,16 @@ class SaleSubscription(models.Model):
     @api.depends("template_id", "date_start")
     def _compute_rule_boundary(self):
         for record in self:
-            if record.template_id.recurring_rule_boundary == "unlimited":
+            # No template yet (e.g. a new record in the form view) or an
+            # unlimited one: there is no end date to compute.
+            if (
+                not record.template_id
+                or record.template_id.recurring_rule_boundary == "unlimited"
+            ):
                 record.date = False
                 record.recurring_rule_boundary = True
             else:
-                record.date = (
-                    relativedelta(months=+record.template_id.recurring_rule_count)
-                    + record.date_start
-                )
+                record.date = record.template_id._get_date(record.date_start)
                 record.recurring_rule_boundary = False
 
     @api.depends("template_id")
@@ -215,21 +217,51 @@ class SaleSubscription(models.Model):
         else:
             self.calculate_recurring_next_date(today)
 
+    def _get_recurrence_delta(self):
+        self.ensure_one()
+        type_interval = self.template_id.recurring_rule_type
+        interval = int(self.template_id.recurring_interval or 0) or 1
+        return relativedelta(**{type_interval: interval})
+
+    def _get_first_invoice_date(self):
+        self.ensure_one()
+        return self.date_start or fields.Date.today()
+
+    def _get_next_invoice_date(self, previous_date):
+        self.ensure_one()
+        if isinstance(previous_date, datetime):
+            previous_date = previous_date.date()
+        elif not isinstance(previous_date, date):
+            previous_date = fields.Date.to_date(previous_date)
+        return previous_date + self._get_recurrence_delta()
+
+    def _set_next_invoice_date_after_invoice(self, invoice_date=None):
+        self.ensure_one()
+        # A subscription without a scheduled next date (e.g. closed, or not
+        # started yet) can still be invoiced manually: advance from its first
+        # invoice date instead of crashing on a False date.
+        previous_date = (
+            invoice_date or self.recurring_next_date or self._get_first_invoice_date()
+        )
+        self.recurring_next_date = self._get_next_invoice_date(previous_date)
+
+    def _get_contract_end_date(self):
+        self.ensure_one()
+        if self.template_id.recurring_rule_boundary == "unlimited":
+            return False
+        return self.template_id._get_date(self._get_first_invoice_date())
+
     def calculate_recurring_next_date(self, start_date):
         if self.account_invoice_ids_count == 0:
             if not start_date:
-                start_date = self.date_start or date.today()
+                start_date = self._get_first_invoice_date()
             if isinstance(start_date, datetime):
                 start_date = start_date.date()
             elif not isinstance(start_date, date):
                 start_date = fields.Date.to_date(start_date)
             self.recurring_next_date = start_date
         else:
-            type_interval = self.template_id.recurring_rule_type
-            interval = int(self.template_id.recurring_interval)
-            self.recurring_next_date = start_date + relativedelta(
-                **{type_interval: interval}
-            )
+            self.recurring_next_date = self._get_next_invoice_date(start_date)
 
     @api.onchange("partner_id")
     def onchange_partner_id(self):
@@ -371,12 +403,12 @@ class SaleSubscription(models.Model):
         if not invoice_number:
             invoice_number = self.env._("To validate")
             message_body = f"<b>{msg_static}</b> {invoice_number}"
-        self.calculate_recurring_next_date(self.recurring_next_date)
+        self._set_next_invoice_date_after_invoice()
         self.message_post(body=Markup(message_body))
 
     def manual_invoice(self):
         invoice_id = self.create_invoice()
-        self.calculate_recurring_next_date(self.recurring_next_date)
+        self._set_next_invoice_date_after_invoice()
         context = dict(self.env.context)
         context["form_view_initial_mode"] = "edit"
         return {

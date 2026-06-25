@@ -412,7 +412,8 @@ invoice even if the subscription template has the <em>Sale Order &amp;
 Invoice</em> option selected, because the <em>Invoicing mode</em> option is
 triggered through the cron job.</li>
 <li>The cron job will also end the subscription if its end date has been
-reached.</li>
+reached. The end date honours the template recurrence (days, weeks,
+months or years) and the interval, instead of always assuming months.</li>
 </ol>
 <p>To create subscriptions with the sale of a product:</p>
 <ol class="arabic simple">
