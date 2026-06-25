@@ -34,6 +34,24 @@ class SaleSubscription(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner", required=True, string="Partner", index=True
     )
+    partner_invoice_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Invoice address",
+        compute="_compute_partner_address_ids",
+        store=True,
+        readonly=False,
+        help="Address the recurring invoices are addressed to. "
+        "Defaults to the customer's invoice address.",
+    )
+    partner_shipping_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Delivery address",
+        compute="_compute_partner_address_ids",
+        store=True,
+        readonly=False,
+        help="Delivery address used on the recurring invoices and orders. "
+        "Defaults to the customer's delivery address.",
+    )
     fiscal_position_id = fields.Many2one(
         "account.fiscal.position",
         string="Fiscal Position",
@@ -263,6 +281,21 @@ class SaleSubscription(models.Model):
         else:
             self.recurring_next_date = self._get_next_invoice_date(start_date)
 
+    @api.depends("partner_id")
+    def _compute_partner_address_ids(self):
+        for subscription in self:
+            if not subscription.partner_id:
+                subscription.partner_invoice_id = False
+                subscription.partner_shipping_id = False
+                continue
+            addresses = subscription.partner_id.address_get(["invoice", "delivery"])
+            subscription.partner_invoice_id = addresses.get(
+                "invoice", subscription.partner_id.id
+            )
+            subscription.partner_shipping_id = addresses.get(
+                "delivery", subscription.partner_id.id
+            )
+
     @api.onchange("partner_id")
     def onchange_partner_id(self):
         self.pricelist_id = self.partner_id.property_product_pricelist
@@ -309,6 +342,8 @@ class SaleSubscription(models.Model):
         self.ensure_one()
         return {
             "partner_id": self.partner_id.id,
+            "partner_invoice_id": (self.partner_invoice_id.id or self.partner_id.id),
+            "partner_shipping_id": (self.partner_shipping_id.id or self.partner_id.id),
             "pricelist_id": self.pricelist_id.id,
             "fiscal_position_id": self.fiscal_position_id.id,
             "date_order": datetime.now(),
@@ -320,10 +355,17 @@ class SaleSubscription(models.Model):
 
     def _prepare_account_move(self, line_ids):
         self.ensure_one()
+        # The invoice is addressed to the invoice address, like a sale order
+        # invoice is created on ``partner_invoice_id``. ``commercial_partner_id``
+        # still rolls up to the contracting company, so the receivable is kept
+        # on the parent. ``partner_shipping_id`` is passed explicitly so it is
+        # not re-derived from the (invoice) partner_id.
+        invoice_partner = self.partner_invoice_id or self.partner_id
         values = {
-            "partner_id": self.partner_id.id,
+            "partner_id": invoice_partner.id,
+            "partner_shipping_id": (self.partner_shipping_id.id or self.partner_id.id),
             "invoice_date": self.recurring_next_date,
-            "invoice_payment_term_id": self.partner_id.property_payment_term_id.id,
+            "invoice_payment_term_id": invoice_partner.property_payment_term_id.id,
             "invoice_origin": self.name,
             "invoice_user_id": self.user_id.id,
             "partner_bank_id": self.company_id.partner_id.bank_ids[:1].id,
