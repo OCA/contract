@@ -25,7 +25,7 @@ addon | version | maintainers | summary
 [contract](contract/) | 19.0.1.0.1 |  | Recurring - Contracts Management
 [contract_analytic_tag](contract_analytic_tag/) | 19.0.1.0.0 | <a href='https://github.com/victoralmau'><img src='https://github.com/victoralmau.png' width='32' height='32' style='border-radius:50%;' alt='victoralmau'/></a> | Contract Analytic Tag
 [contract_variable_quantity](contract_variable_quantity/) | 19.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
-[subscription_oca](subscription_oca/) | 19.0.1.1.2 |  | Generate recurring invoices.
+[subscription_oca](subscription_oca/) | 19.0.1.1.3 |  | Generate recurring invoices.
 
 [//]: # (end addons)
 
