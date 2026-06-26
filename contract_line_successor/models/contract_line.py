@@ -405,14 +405,6 @@ class ContractLine(models.Model):
             "date_end": date_end,
             "is_auto_renew": False,
             "manual_renew_needed": manual_renew_needed,
-            "recurring_next_date": self.get_next_invoice_date(
-                self.next_period_date_start,
-                self.recurring_invoicing_type,
-                self.recurring_invoicing_offset,
-                self.recurring_rule_type,
-                self.recurring_interval,
-                max_date_end=date_end,
-            ),
         }
 
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
