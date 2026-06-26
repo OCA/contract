@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-21 18:22+0000\n"
-"PO-Revision-Date: 2026-06-16 19:20+0000\n"
+"PO-Revision-Date: 2026-06-26 09:04+0000\n"
 "Last-Translator: Matjaz Mozetic <matjaz@luxim.si>\n"
 "Language-Team: Slovenian (https://www.transifex.com/oca/teams/23907/sl/)\n"
 "Language: sl\n"
@@ -99,6 +99,82 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Pozdravljeni <t t-out=\"object.partner_id.name or '' \"/>"
+",</p>\n"
+"                <p>Nova pogodba je bila ustvarjena: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: "
+"30px;\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENCE</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Pogodba: <strong t-"
+"out=\"object.name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Datum začetka pogodbe: <t t-"
+"out=\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                    <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Vaša kontaktna oseba: <a t-"
+"att-href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, "
+"object.name)\" t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Vaša kontaktna oseba: <t t-"
+"out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Če imate kakršna koli vprašanja, nas brez zadržkov "
+"kontaktirajte.</p>\n"
+"                <p>Hvala, da ste izbrali <t t-out=\"object.company_id.name "
+"or 'us'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-"
+"out=\"object.company_id.name\"/>\n"
+"                    </h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()"
+".partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, "
+"&quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], "
+"&quot;no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Telefon: <t t-out=\"object.company_id.phone\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Splet: <a t-att-"
+"href=\"object.company_id.website\" t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">Ogled "
+"pogodbe</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -108,6 +184,10 @@ msgid ""
 "you.</p>\n"
 "        "
 msgstr ""
+"<p>Pozdravljeni</p>\n"
+"            <p>Na pogodbi imamo spremembe, o katerih vas želimo obvestiti.</"
+"p>\n"
+"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -120,11 +200,18 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
+"                                pogodba za obračun\n"
+"                            </span>\n"
+"                            <span invisible=\"contract_to_invoice_count "
+"&lt;= 1\">\n"
+"                                pogodbe za obračun\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">Vmesni seštevek</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -135,11 +222,16 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#END#</strong>\n"
+"                                    : Datum \n"
+"                                    konca\n"
+"                                    obračunskega\n"
+"                                    obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "<strong>#END#</strong>: End date of the invoiced period"
-msgstr ""
+msgstr "<strong>#END#</strong>: Datum konca obračunskega obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -150,6 +242,11 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>\n"
+"                                    : Naziv meseca \n"
+"                                    obračunskega\n"
+"                                    obdobja\n"
+"                                    na računu"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -157,6 +254,7 @@ msgid ""
 "<strong>#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced "
 "period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>: Ime meseca računa obračunskega obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -167,6 +265,11 @@ msgid ""
 "                                    of the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#START#</strong>\n"
+"                                    : Datum \n"
+"                                    začetka\n"
+"                                    obračunskega\n"
+"                                    obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -174,206 +277,208 @@ msgid ""
 "<strong>#START#</strong>: Start date of the\n"
 "                                        invoiced period"
 msgstr ""
+"<strong>#START#</strong>: Datum začetka\n"
+"                                        obračunskega obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Contract: </strong>"
-msgstr ""
+msgstr "<strong>Pogodba: </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>Stranka:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Date Start</strong>"
-msgstr ""
+msgstr "<strong>Datum začetka</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
-msgstr ""
+msgstr "<strong>Datum konca</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date of Next Invoice</strong>"
-msgstr ""
+msgstr "<strong>Datum naslednjega računa</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Opis</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Modifications</strong>"
-msgstr ""
+msgstr "<strong>Spremembe</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Notes: </strong>"
-msgstr ""
+msgstr "<strong>Opombe: </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Partner:</strong>"
-msgstr ""
+msgstr "<strong>Partner:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
-msgstr ""
+msgstr "<strong>Cena</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Količina</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
-msgstr ""
+msgstr "<strong>Ponavljajoče postavke</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>Sklic</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Responsible: </strong>"
-msgstr ""
+msgstr "<strong>Odgovorni: </strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Odgovorni:</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Skupaj</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Cena na enoto</strong>"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Opozorilo ob dostopu"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potrebno ukrepanje"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__active
 #: model:ir.model.fields,field_description:contract.field_contract_line__active
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija izjeme"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stanje aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a line"
-msgstr ""
+msgstr "Dodaj vrstico"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj opombo"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a section"
-msgstr ""
+msgstr "Dodaj sekcijo"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analitična porazdelitev"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analitična natančnost"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Associated Partner"
-msgstr ""
+msgstr "Povezani partner"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Št. priponk"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "August"
-msgstr ""
+msgstr "Avgust"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__automatic_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__automatic_price
 msgid "Auto-price?"
-msgstr ""
+msgstr "Samodejna cena?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Prekliči"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_canceled
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 msgid "Canceled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__line_recurrence
@@ -382,22 +487,24 @@ msgid ""
 "Check this if you want to control recurrence at the line level instead of "
 "for the whole contract."
 msgstr ""
+"Označite, če želite nadzorovati ponavljanje na ravni postavke namesto za "
+"celotno pogodbo."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
 msgid "Click to create a new contract template."
-msgstr ""
+msgstr "Kliknite za ustvarjanje nove predloge pogodbe."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.action_customer_contract
 #: model_terms:ir.actions.act_window,help:contract.action_supplier_contract
 msgid "Click to create a new contract."
-msgstr ""
+msgstr "Kliknite za ustvarjanje nove pogodbe."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Barvni indeks"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
@@ -408,7 +515,7 @@ msgstr "Poslovni subjekt"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Communication"
-msgstr ""
+msgstr "Komunikacija"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__company_id
@@ -417,19 +524,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__company_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__company_id
 msgid "Company"
-msgstr ""
+msgstr "Družba"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "Compose Email"
-msgstr ""
+msgstr "Sestavi e-pošto"
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: contract
 #: model:ir.actions.report,name:contract.report_contract
@@ -441,65 +548,65 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.res_config_settings_form_view
 msgid "Contract"
-msgstr ""
+msgstr "Pogodba"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
-msgstr ""
+msgstr "Št. pogodb"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Contract -"
-msgstr ""
+msgstr "Pogodba -"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
 #: model:ir.model.fields,field_description:contract.field_account_move_line__contract_line_id
 msgid "Contract Line"
-msgstr ""
+msgstr "Postavka pogodbe"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
 msgid "Contract Manually Create Invoice"
-msgstr ""
+msgstr "Ročno ustvarjanje računa za pogodbo"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_manually_create_invoice
 msgid "Contract Manually Create Invoice Wizard"
-msgstr ""
+msgstr "Čarovnik za ročno ustvarjanje računa za pogodbo"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_modification
 msgid "Contract Modification"
-msgstr ""
+msgstr "Sprememba pogodbe"
 
 #. module: contract
 #: model:mail.template,name:contract.mail_template_contract_modification
 msgid "Contract Modification Template"
-msgstr ""
+msgstr "Predloga spremembe pogodbe"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Contract Name"
-msgstr ""
+msgstr "Naziv pogodbe"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_recurring_mixin
 msgid "Contract Recurring Mixin"
-msgstr ""
+msgstr "Mixin ponavljanja pogodbe"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Contract Start & End Dates"
-msgstr ""
+msgstr "Datumi začetka in konca pogodbe"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_tag
 #: model:ir.ui.menu,name:contract.contract_tag_menu
 msgid "Contract Tag"
-msgstr ""
+msgstr "Oznaka pogodbe"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.contract_tag_act_window
@@ -511,28 +618,28 @@ msgstr "Pogodbene oznake"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_template_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Contract Template"
-msgstr ""
+msgstr "Predloga pogodbe"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_template_line
 msgid "Contract Template Line"
-msgstr ""
+msgstr "Postavka predloge pogodbe"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.contract_template_action
 #: model:ir.ui.menu,name:contract.contract_template_menu
 msgid "Contract Templates"
-msgstr ""
+msgstr "Predloge pogodb"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_ids
 msgid "Contract To Invoice"
-msgstr ""
+msgstr "Pogodba za obračun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__contract_to_invoice_count
 msgid "Contract To Invoice Count"
-msgstr ""
+msgstr "Število pogodb za obračun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_type
@@ -540,7 +647,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_type
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Contract Type"
-msgstr ""
+msgstr "Vrsta pogodbe"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__date_start
@@ -549,45 +656,46 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__date_start
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_start
 msgid "Contract activation date (first recurrence starts here)"
-msgstr ""
+msgstr "Datum aktivacije pogodbe (prvo ponavljanje se začne tukaj)"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "Contract line '%s' start date can't be later than end date"
 msgstr ""
+"Datum začetka postavke pogodbe '%s' ne more biti kasnejši od datuma konca"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_ids
 msgid "Contract lines"
-msgstr ""
+msgstr "Postavke pogodbe"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__contract_line_fixed_ids
 msgid "Contract lines (fixed)"
-msgstr ""
+msgstr "Postavke pogodbe (fiksne)"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "Contract manually invoiced: %(invoice_link)s"
-msgstr ""
+msgstr "Pogodba ročno fakturirana: %(invoice_link)s"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
 msgid "Contract modifications"
-msgstr ""
+msgstr "Spremembe pogodb"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "Contract start"
-msgstr ""
+msgstr "Začetek pogodbe"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_template__contract_line_ids
 msgid "Contract template lines"
-msgstr ""
+msgstr "Postavke predloge pogodbe"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__contract_ids
@@ -598,13 +706,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_home_menu_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Pogodbe"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 msgid "Contracts to invoice"
-msgstr ""
+msgstr "Pogodbe za obračun"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__product_uom_category_id
@@ -613,12 +721,14 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Pretvorba med merskimi enotami je možna le, če pripadajo isti kategoriji. "
+"Pretvorba bo izvedena na podlagi razmerij."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
 #: model:ir.model.fields,field_description:contract.field_contract_line__create_invoice_visibility
 msgid "Create Invoice Visibility"
-msgstr ""
+msgstr "Vidnost ustvarjanja računa"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
@@ -628,7 +738,7 @@ msgstr "Ustvari račune"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Create invoices"
-msgstr ""
+msgstr "Ustvari račune"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_uid
@@ -657,13 +767,13 @@ msgstr "Ustvarjeno"
 #: model:ir.model.fields,field_description:contract.field_contract_line__currency_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__custom
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__custom
 msgid "Custom"
-msgstr ""
+msgstr "Po meri"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__contract_type__sale
@@ -671,28 +781,28 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__contract_type__sale
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_customer_form_view
 msgid "Customer"
-msgstr ""
+msgstr "Kupec"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract_lines
 msgid "Customer Contract Lines"
-msgstr ""
+msgstr "Postavke pogodb stranke"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_customer_contract_line_report
 msgid "Customer Contract lines"
-msgstr ""
+msgstr "Postavke pogodb stranke"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_customer
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Pogodbe strank"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL portala strank"
 
 #. module: contract
 #. odoo-python
@@ -702,7 +812,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
@@ -712,7 +822,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Date End"
-msgstr ""
+msgstr "Končni datum"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
@@ -721,13 +831,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__date_start
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
 msgid "Date Start"
-msgstr ""
+msgstr "Začetni datum"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
-msgstr ""
+msgstr "Končni datum"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_next_date
@@ -736,17 +846,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__recurring_next_date
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_next_date
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Datum naslednjega računa"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Date of next invoice"
-msgstr ""
+msgstr "Datum naslednjega računa"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Date start"
-msgstr ""
+msgstr "Datum začetka"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__daily
@@ -755,25 +865,25 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__daily
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__daily
 msgid "Day(s)"
-msgstr ""
+msgstr "Dan(i)"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Defines line ordering in the contract."
-msgstr ""
+msgstr "Določa vrstni red postavk v pogodbi."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_template__generation_type
 msgid "Defines what document is automatically generated by the cron."
-msgstr ""
+msgstr "Določa, kateri dokument se samodejno ustvari po cron opravilu."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__name
@@ -791,19 +901,19 @@ msgstr "Opis"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__discount
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Discount (%)"
-msgstr ""
+msgstr "Popust (%)"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_template_line.py:0
 msgid "Discount should be less or equal to 100"
-msgstr ""
+msgstr "Popust mora biti manjši ali enak 100"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__discount
 #: model:ir.model.fields,help:contract.field_contract_template_line__discount
 msgid "Discount to apply on generated invoices. Must be ≤ 100."
-msgstr ""
+msgstr "Popust za uporabo na ustvarjenih računih. Mora biti ≤ 100."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
@@ -825,12 +935,12 @@ msgstr "Prikazani naziv"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Distribucijski analitični konto"
 
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
-msgstr ""
+msgstr "E-poštna predloga pogodbe"
 
 #. module: contract
 #. odoo-python
@@ -839,48 +949,50 @@ msgid ""
 "Failed to process the contract %(name)s [id: %(id)s]:\n"
 "%(ue)s"
 msgstr ""
+"Neuspešna obdelava pogodbe %(name)s [id: %(id)s]:\n"
+"%(ue)s"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Finished"
-msgstr ""
+msgstr "Zaključeno"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__fiscal_position_id
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Fiskalni položaj"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Sledilci"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledilci (partnerji)"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona, npr. fa-tasks"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 msgid "Generate Recurring Invoices from Contracts"
-msgstr ""
+msgstr "Ustvari ponavljajoče račune iz pogodb"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,field_description:contract.field_contract_template__generation_type
 msgid "Generation Type"
-msgstr ""
+msgstr "Vrsta generiranja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__group_id
@@ -896,7 +1008,7 @@ msgstr "Združi po..."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Vsebuje sporočilo"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
@@ -912,22 +1024,24 @@ msgstr "ID"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Ikona"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz izjem pri aktivnostih."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Če je označeno, nova sporočila zahtevajo vašo pozornost."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Kadar je označeno, pomeni, da je pri nekaterih sporočilih prišlo do napake "
+"pri dostavi."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__automatic_price
@@ -936,27 +1050,29 @@ msgid ""
 "If checked, the price will be taken from the pricelist. Otherwise, it must "
 "be set manually."
 msgstr ""
+"Če je označeno, bo cena vzeta iz cenika. V nasprotnem primeru jo je treba "
+"nastaviti ročno."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "In progress"
-msgstr ""
+msgstr "V teku"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__generation_type__invoice
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__generation_type__invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Število računov"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__invoice_date
 msgid "Invoice Date"
-msgstr ""
+msgstr "Datum računa"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_interval
@@ -965,12 +1081,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__recurring_interval
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_interval
 msgid "Invoice Every"
-msgstr ""
+msgstr "Račun vsak"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_invoice_created
 msgid "Invoice created"
-msgstr ""
+msgstr "Račun ustvarjen"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__recurring_interval
@@ -979,24 +1095,24 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__recurring_interval
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_interval
 msgid "Invoice every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Račun vsak (dni/teden/mesec/leto)"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Invoices"
-msgstr ""
+msgstr "Računi"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Invoicing"
-msgstr ""
+msgstr "Obračun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
 msgid "Invoicing contact"
-msgstr ""
+msgstr "Kontakt za izstavitev računov"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_invoicing_offset
@@ -1005,7 +1121,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__recurring_invoicing_offset
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_offset
 msgid "Invoicing offset"
-msgstr ""
+msgstr "Odmik izstavitve računa"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_invoicing_type
@@ -1014,42 +1130,42 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__recurring_invoicing_type
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__recurring_invoicing_type
 msgid "Invoicing type"
-msgstr ""
+msgstr "Tip obračuna"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__journal_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__journal_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Journal"
-msgstr ""
+msgstr "Dnevnik"
 
 #. module: contract
 #: model:ir.model,name:contract.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Dnevniška postavka"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "July"
-msgstr ""
+msgstr "Julij"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "June"
-msgstr ""
+msgstr "Junij"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__last_date_invoiced
@@ -1086,57 +1202,57 @@ msgstr "Zadnjič posodobljeno"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Legend (for the markers inside invoice lines description)"
-msgstr ""
+msgstr "Legenda (za označevalnike v opisu postavk računa)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Lines"
-msgstr ""
+msgstr "Postavke"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
 msgid "Manual Currency"
-msgstr ""
+msgstr "Ročno valuta"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
 #: model:ir.ui.menu,name:contract.purchase_contract_manually_create_invoice_menu
 msgid "Manually Invoice Purchase Contracts"
-msgstr ""
+msgstr "Ročno izstavi račune za nabavne pogodbe"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.sale_contract_manually_create_invoice_act_window
 #: model:ir.ui.menu,name:contract.sale_contract_manually_create_invoice_menu
 msgid "Manually Invoice Sale Contracts"
-msgstr ""
+msgstr "Ročno izstavi račune za prodajne pogodbe"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "March"
-msgstr ""
+msgstr "Marec"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "May"
-msgstr ""
+msgstr "Maj"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Napaka ob dostavi sporočila"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Sporočila"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__modification_ids
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Modifications"
-msgstr ""
+msgstr "Spremembe"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__monthly
@@ -1145,7 +1261,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthly
 msgid "Month(s)"
-msgstr ""
+msgstr "Mesec(i)"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__monthlylastday
@@ -1154,12 +1270,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthlylastday
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
-msgstr ""
+msgstr "Zadnji dan meseca(cev)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Rok mojih aktivnosti"
 
 #. module: contract
 #. odoo-python
@@ -1174,22 +1290,22 @@ msgstr "Naziv"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Rok naslednje aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Povzetek naslednje aktivnosti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip naslednje aktivnosti"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Next Invoice"
-msgstr ""
+msgstr "Naslednji račun"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__next_period_date_end
@@ -1198,7 +1314,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__next_period_date_end
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__next_period_date_end
 msgid "Next Period End"
-msgstr ""
+msgstr "Konec naslednjega obdobja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__next_period_date_start
@@ -1207,46 +1323,46 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template__next_period_date_start
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__next_period_date_start
 msgid "Next Period Start"
-msgstr ""
+msgstr "Začetek naslednjega obdobja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Next invoice date"
-msgstr ""
+msgstr "Datum naslednjega računa"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Next period to invoice"
-msgstr ""
+msgstr "Naslednje obdobje za obračun"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_note
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_line_form_view
 msgid "Note"
-msgstr ""
+msgstr "Opomba"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__note_invoicing_mode
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__note_invoicing_mode
 msgid "Note Invoicing Mode"
-msgstr ""
+msgstr "Način obračunavanja opombe"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__note
 msgid "Notes"
-msgstr ""
+msgstr "Opombe"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Število ukrepov"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__recurring_invoicing_offset
@@ -1258,27 +1374,29 @@ msgid ""
 "Number of days to offset the invoice from the period end date (in post-paid "
 "mode) or start date (in pre-paid mode)."
 msgstr ""
+"Število dni odmika računa od datuma konca obdobja (v načinu po plačilu) ali "
+"od začetka (v načinu predplačila)."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Število napak"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Število sporočil, ki zahtevajo ukrepanje"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Število sporočil, ki niso bila pravilno dostavljena"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__date_end
@@ -1287,13 +1405,13 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__date_end
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_end
 msgid "Optional contract termination date (limits recurrence)"
-msgstr ""
+msgstr "Neobvezen datum prenehanja pogodbe (omeji ponavljanje)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Other Information"
-msgstr ""
+msgstr "Druge informacije"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
@@ -1302,24 +1420,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__partner_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__payment_term_id
 msgid "Payment Terms"
-msgstr ""
+msgstr "Plačilni pogoji"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid ""
 "Please define a %(contract_type)s journal for the company '%(company)s'."
-msgstr ""
+msgstr "Določite dnevnik za %(contract_type)s za podjetje '%(company)s'."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL dostopa do portala"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_invoicing_type__post-paid
@@ -1328,7 +1446,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_invoicing_type__post-paid
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_invoicing_type__post-paid
 msgid "Post-paid"
-msgstr ""
+msgstr "Naknadno plačilo"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_invoicing_type__pre-paid
@@ -1337,24 +1455,24 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_invoicing_type__pre-paid
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_invoicing_type__pre-paid
 msgid "Pre-paid"
-msgstr ""
+msgstr "Predplačilo"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Preview"
-msgstr ""
+msgstr "Predogled"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Price unit"
-msgstr ""
+msgstr "Cena na enoto"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Pricelist"
-msgstr ""
+msgstr "Cenik"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
@@ -1368,19 +1486,19 @@ msgstr "Proizvod"
 #: model:ir.model.fields,field_description:contract.field_res_users__purchase_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Purchase Contracts"
-msgstr ""
+msgstr "Nabavne pogodbe"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Put some note here..."
-msgstr ""
+msgstr "Vnesite opombo tukaj..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__quantity
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__quantity
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Quantity"
-msgstr ""
+msgstr "Količina"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__quarterly
@@ -1389,12 +1507,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__quarterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__quarterly
 msgid "Quarter(s)"
-msgstr ""
+msgstr "Četrtletje(i)"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Ocene"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_rule_type
@@ -1405,29 +1523,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_line_form_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Recurrence"
-msgstr ""
+msgstr "Ponavljanje"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__line_recurrence
 #: model:ir.model.fields,field_description:contract.field_contract_template__line_recurrence
 msgid "Recurrence at line level?"
-msgstr ""
+msgstr "Ponavljanje na ravni postavke?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Ponavljajoči računi"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_recurring_note
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_recurring_note
 msgid "Recurring Note"
-msgstr ""
+msgstr "Ponavljajoča opomba"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Recurring Type"
-msgstr ""
+msgstr "Vrsta ponavljanja"
 
 #. module: contract
 #. odoo-python
@@ -1435,24 +1553,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_contract__code
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Reference"
-msgstr ""
+msgstr "Sklic"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Odgovorni"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Odgovorni uporabnik"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Sale Contracts"
-msgstr ""
+msgstr "Prodajne pogodbe"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_section
@@ -1464,7 +1582,7 @@ msgstr "Sekcija"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Varnostni žeton"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__semesterly
@@ -1473,45 +1591,45 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__semesterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__semesterly
 msgid "Semester(s)"
-msgstr ""
+msgstr "Polletje(a)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Send by Email"
-msgstr ""
+msgstr "Pošlji po e-pošti"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_modification__sent
 msgid "Sent"
-msgstr ""
+msgstr "Poslano"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__sequence
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Zaporedje"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the purchase contracts for this partner"
-msgstr ""
+msgstr "Prikaži nabavne pogodbe za tega partnerja"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
 msgid "Show the sale contracts for this partner"
-msgstr ""
+msgstr "Prikaži prodajne pogodbe za tega partnerja"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__specific_price
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__specific_price
 msgid "Specific Price"
-msgstr ""
+msgstr "Specifična cena"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__recurring_invoicing_type
@@ -1523,6 +1641,8 @@ msgid ""
 "Specify if the invoice must be generated at the beginning (pre-paid) or end "
 "(post-paid) of the period."
 msgstr ""
+"Določite, ali je treba račun ustvariti na začetku (predplačilo) ali na koncu "
+"(po plačilu) obdobja."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__recurring_rule_type
@@ -1531,7 +1651,7 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
 msgid "Specify interval for automatic invoice generation."
-msgstr ""
+msgstr "Določite interval za samodejno ustvarjanje računov."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
@@ -1541,13 +1661,17 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status glede na aktivnosti\n"
+"Prekoračeno: rok izvedbe je že prekoračen\n"
+"Danes: Datum aktivnosti je današnji dan\n"
+"Planirano: Bodoče aktivnosti."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_subtotal
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_subtotal
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "Sub Total"
-msgstr ""
+msgstr "Vmesni seštevek"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__contract_type__purchase
@@ -1555,66 +1679,66 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__contract_type__purchase
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_supplier_form_view
 msgid "Supplier"
-msgstr ""
+msgstr "Dobavitelj"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract_lines
 msgid "Supplier Contract Lines"
-msgstr ""
+msgstr "Postavke pogodb dobavitelja"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_supplier_contract_line_report
 msgid "Supplier Contract lines"
-msgstr ""
+msgstr "Postavke pogodb dobavitelja"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
 #: model:ir.ui.menu,name:contract.menu_contract_contract_supplier
 msgid "Supplier Contracts"
-msgstr ""
+msgstr "Pogodbe dobaviteljev"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Oznake"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
 msgid "Technical field for UX purposes."
-msgstr ""
+msgstr "Tehnično polje za namene UX."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tip izjeme pri aktivnosti na zapisu."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_unit
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Cena enote"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__uom_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Enota mere"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
-msgstr ""
+msgstr "DDV:"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Sporočila spletne strani"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Kronologija komunikacij spletne strani"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__weekly
@@ -1623,30 +1747,30 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__weekly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__weekly
 msgid "Week(s)"
-msgstr ""
+msgstr "Teden(i)"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__note_invoicing_mode
 #: model:ir.model.fields,help:contract.field_contract_template_line__note_invoicing_mode
 msgid "When to invoice this note line relative to others."
-msgstr ""
+msgstr "Kdaj obračunati to opombno postavko glede na druge."
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_next_line
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__with_next_line
 msgid "With next line"
-msgstr ""
+msgstr "Z naslednjo postavko"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_previous_line
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__with_previous_line
 msgid "With previous line"
-msgstr ""
+msgstr "S prejšnjo postavko"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.view_res_partner_filter
 msgid "With running contracts"
-msgstr ""
+msgstr "S tekočimi pogodbami"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__yearly
@@ -1655,7 +1779,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__yearly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__yearly
 msgid "Year(s)"
-msgstr ""
+msgstr "Leto(a)"
 
 #. module: contract
 #. odoo-python
@@ -1664,6 +1788,7 @@ msgid ""
 "You can't have a date of next invoice anterior to the start of the contract "
 "line '%s'"
 msgstr ""
+"Datum naslednjega računa ne more biti pred začetkom postavke pogodbe '%s'"
 
 #. module: contract
 #. odoo-python
@@ -1672,6 +1797,8 @@ msgid ""
 "You can't have the end date before the date of last invoice for the contract "
 "line '%s'"
 msgstr ""
+"Datum konca ne more biti pred datumom zadnjega računa za postavko pogodbe "
+"'%s'"
 
 #. module: contract
 #. odoo-python
@@ -1680,6 +1807,8 @@ msgid ""
 "You can't have the next invoice date before the date of last invoice for the "
 "contract line '%s'"
 msgstr ""
+"Datum naslednjega računa ne more biti pred datumom zadnjega računa za "
+"postavko pogodbe '%s'"
 
 #. module: contract
 #. odoo-python
@@ -1688,29 +1817,30 @@ msgid ""
 "You can't have the start date after the date of last invoice for the "
 "contract line '%s'"
 msgstr ""
+"Datum začetka ne more biti po datumu zadnjega računa za postavko pogodbe '%s'"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "You must supply a date of next invoice for contract line '%s'"
-msgstr ""
+msgstr "Navesti morate datum naslednjega računa za postavko pogodbe '%s'"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "by contract"
-msgstr ""
+msgstr "po pogodbi"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "e.g. Contract XYZ"
-msgstr ""
+msgstr "npr. Pogodba XYZ"
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Pogodba (Sklic {{ object.name or 'n/a' }})"
 
 #. module: contract
 #: model:mail.template,subject:contract.mail_template_contract_modification
@@ -1718,6 +1848,8 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+"{{ object.company_id.name }} Pogodba (Sklic {{ object.name or 'n/a' }}) - "
+"Spremembe"
 
 #~ msgid "Last Modified on"
 #~ msgstr "Zadnjič spremenjeno"
