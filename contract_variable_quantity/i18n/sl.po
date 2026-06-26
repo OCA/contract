@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-11 02:47+0000\n"
-"PO-Revision-Date: 2026-06-21 07:46+0000\n"
+"PO-Revision-Date: 2026-06-26 09:04+0000\n"
 "Last-Translator: Matjaz Mozetic <matjaz@luxim.si>\n"
 "Language-Team: Slovenian (https://www.transifex.com/oca/teams/23907/sl/)\n"
 "Language: sl\n"
@@ -31,11 +31,17 @@ msgid ""
 "                                    '=', True)])\n"
 "                                </code>"
 msgstr ""
+"<code>\n"
+"                                    result =\n"
+"                                    env['product.product'].search_count(["
+"('sale_ok',\n"
+"                                    '=', True)])\n"
+"                                </code>"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "<i>context</i>: Current context dictionary."
-msgstr ""
+msgstr "<i>context</i>: Trenuten kontekstni slovar."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -43,6 +49,8 @@ msgid ""
 "<i>contract</i>: Contract whose line\n"
 "                                    belongs to."
 msgstr ""
+"<i>contract</i>: Pogodba \n"
+"                                    kateri pripadajo postavke."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -50,6 +58,8 @@ msgid ""
 "<i>env</i>: Environment variable for\n"
 "                                    getting other models."
 msgstr ""
+"<i>env</i>: Okoljska spremenljivka za\n"
+"                                    pridobivanje drugih modelov."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -57,6 +67,8 @@ msgid ""
 "<i>invoice</i>: Invoice (header) being\n"
 "                                    created."
 msgstr ""
+"<i>invoice</i>: Račun (glava)\n"
+"                                    ustvarjen."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -64,21 +76,23 @@ msgid ""
 "<i>line</i>: Contract recurring invoice\n"
 "                                    line that triggers this formula."
 msgstr ""
+"<i>line</i>: Postavka ponavljajočega se\n"
+"                                    računa, ki zažene to formulo."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "<i>user</i>: Current user."
-msgstr ""
+msgstr "<i>user</i>: Trenutni uporabnik."
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Abstraktna postavka ponavljajoče se pogodbe"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.actions.act_window,help:contract_variable_quantity.action_contract_quantity_formula
 msgid "Click to create a new formula for variable quantities."
-msgstr ""
+msgstr "Kliknite za ustvarjanje nove formule za spremenljive količine."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__code
@@ -89,17 +103,17 @@ msgstr "Koda"
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_contract
 msgid "Contract"
-msgstr ""
+msgstr "Pogodba"
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_line
 msgid "Contract Line"
-msgstr ""
+msgstr "Postavka pogodbe"
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_line_qty_formula
 msgid "Contract Line Formula"
-msgstr ""
+msgstr "Formula postavke pogodbe"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__create_uid
@@ -124,29 +138,31 @@ msgid ""
 "Error evaluating code.\n"
 "Details: %s"
 msgstr ""
+"Napaka pri vrednotenju kode.\n"
+"Podrobnosti: %s"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "Example of Python code"
-msgstr ""
+msgstr "Primer kode v Pythonu"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__fixed
 msgid "Fixed quantity"
-msgstr ""
+msgstr "Fiksna količina"
 
 #. module: contract_variable_quantity
 #: model:ir.actions.act_window,name:contract_variable_quantity.action_contract_quantity_formula
 #: model:ir.ui.menu,name:contract_variable_quantity.menu_contract_quantity_formula
 msgid "Formulas (quantity)"
-msgstr ""
+msgstr "Formule (količina)"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "Help with Python expressions."
-msgstr ""
+msgstr "Pomoč pri izrazih v Pythonu."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__id
@@ -157,6 +173,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:contract_variable_quantity.field_contract_contract__skip_zero_qty
 msgid "If checked, contract lines with 0 qty don't create invoice line"
 msgstr ""
+"Če je označeno, postavke pogodbe s količino 0 ne ustvarijo postavke računa"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__write_uid
@@ -179,38 +196,38 @@ msgstr "Naziv"
 #: code:addons/contract_variable_quantity/models/contract_line_formula.py:0
 #, python-format
 msgid "No valid result returned."
-msgstr ""
+msgstr "Ni vrnjenega veljavnega rezultata."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_formula_id
 msgid "Qty. formula"
-msgstr ""
+msgstr "Formula količine"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_type
 msgid "Qty. type"
-msgstr ""
+msgstr "Vrsta količine"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_contract__skip_zero_qty
 msgid "Skip Zero Qty Lines"
-msgstr ""
+msgstr "Preskoči postavke z ničelno količino"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.portal_contract_page
 msgid "Variable"
-msgstr ""
+msgstr "Spremenljiva"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__variable
 msgid "Variable quantity"
-msgstr ""
+msgstr "Spremenljiva količina"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -218,6 +235,8 @@ msgid ""
 "You can use these variables to compute your\n"
 "                                formula:"
 msgstr ""
+"Te spremenljivke lahko uporabite za izračun\n"
+"                                svoje formule:"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -228,6 +247,11 @@ msgid ""
 "                                the quantity to invoice in the variable\n"
 "                                'result'."
 msgstr ""
+"Vstaviti morate veljaven blok kode Python, ki\n"
+"                                v nekem trenutku shrani decimalno/"
+"celoštevilsko vrednost\n"
+"                                količine za obračun v spremenljivko\n"
+"                                'result'."
 
 #~ msgid "Last Modified on"
 #~ msgstr "Zadnjič spremenjeno"
