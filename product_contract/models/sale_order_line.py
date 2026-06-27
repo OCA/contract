@@ -212,6 +212,9 @@ class SaleOrderLine(models.Model):
         res = super()._compute_name()
         for line in self:
             if line.is_contract:
+                lang = line.order_id._get_lang()
+                if lang != self.env.lang:
+                    line = line.with_context(lang=lang)
                 if line.contract_start_date_method == "manual":
                     date_text = f"{line.date_start}"
                     if line.date_end:
