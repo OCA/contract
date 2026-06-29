@@ -397,6 +397,7 @@ class ContractContract(models.Model):
             if record.contract_line_ids:
                 date_start = min(record.contract_line_ids.mapped("date_start"))
             else:
+                record.flush_recordset(["create_date"])
                 date_start = record.create_date
             record.message_subscribe(
                 partner_ids=[record.partner_id.id], subtype_ids=[subtype_id.id]
