@@ -1,7 +1,7 @@
 import {registry} from "@web/core/registry";
 
 registry.category("web_tour.tours").add("contract_portal_tour", {
-    url: "/",
+    url: "/my",
     steps: () => [
         {
             content: "Go to Contracts menu",
