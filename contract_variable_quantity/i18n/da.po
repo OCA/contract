@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-11 02:47+0000\n"
-"PO-Revision-Date: 2016-09-11 02:47+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"PO-Revision-Date: 2026-07-01 14:46+0000\n"
+"Last-Translator: Laura V <laura.valls@forgeflow.com>\n"
 "Language-Team: Danish (https://www.transifex.com/oca/teams/23907/da/)\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -28,11 +29,17 @@ msgid ""
 "                                    '=', True)])\n"
 "                                </code>"
 msgstr ""
+"<code>\n"
+"                                    result =\n"
+"                                    env['product.product'].search_count(["
+"('sale_ok',\n"
+"                                    '=', True)])\n"
+"                                </code>"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "<i>context</i>: Current context dictionary."
-msgstr ""
+msgstr "<i>context</i>: Aktuel kontekstordbog."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -40,6 +47,8 @@ msgid ""
 "<i>contract</i>: Contract whose line\n"
 "                                    belongs to."
 msgstr ""
+"<i>contract</i>: Kontrakt som linjen\n"
+"                                    tilhører."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -47,6 +56,8 @@ msgid ""
 "<i>env</i>: Environment variable for\n"
 "                                    getting other models."
 msgstr ""
+"<i>env</i>: Miljøvariabel til\n"
+"                                    adgang til andre modeller."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -54,6 +65,8 @@ msgid ""
 "<i>invoice</i>: Invoice (header) being\n"
 "                                    created."
 msgstr ""
+"<i>invoice</i>: Faktura (hoved) der\n"
+"                                    oprettes."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -61,42 +74,44 @@ msgid ""
 "<i>line</i>: Contract recurring invoice\n"
 "                                    line that triggers this formula."
 msgstr ""
+"<i>line</i>: Kontraktens tilbagevendende fakturalinjen\n"
+"                                    der udløser denne formel."
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "<i>user</i>: Current user."
-msgstr ""
+msgstr "<i>user</i>: Aktuel bruger."
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_abstract_contract_line
 msgid "Abstract Recurring Contract Line"
-msgstr ""
+msgstr "Abstrakt tilbagevendende kontraktlinje"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.actions.act_window,help:contract_variable_quantity.action_contract_quantity_formula
 msgid "Click to create a new formula for variable quantities."
-msgstr ""
+msgstr "Klik for at oprette en ny formel for variable antal."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__code
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_contract
 msgid "Contract"
-msgstr ""
+msgstr "Kontrakt"
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_line
 msgid "Contract Line"
-msgstr ""
+msgstr "Kontraktlinje"
 
 #. module: contract_variable_quantity
 #: model:ir.model,name:contract_variable_quantity.model_contract_line_qty_formula
 msgid "Contract Line Formula"
-msgstr ""
+msgstr "Kontraktlinje-formel"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__create_uid
@@ -111,7 +126,7 @@ msgstr "Oprettet den"
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Vist navn"
 
 #. module: contract_variable_quantity
 #. odoo-python
@@ -121,29 +136,31 @@ msgid ""
 "Error evaluating code.\n"
 "Details: %s"
 msgstr ""
+"Fejl ved evaluering af kode.\n"
+"Detaljer: %s"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "Example of Python code"
-msgstr ""
+msgstr "Eksempel på Python-kode"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__fixed
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__fixed
 msgid "Fixed quantity"
-msgstr ""
+msgstr "Fast antal"
 
 #. module: contract_variable_quantity
 #: model:ir.actions.act_window,name:contract_variable_quantity.action_contract_quantity_formula
 #: model:ir.ui.menu,name:contract_variable_quantity.menu_contract_quantity_formula
 msgid "Formulas (quantity)"
-msgstr ""
+msgstr "Formler (antal)"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
 msgid "Help with Python expressions."
-msgstr ""
+msgstr "Hjælp til Python-udtryk."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__id
@@ -153,7 +170,7 @@ msgstr "Id"
 #. module: contract_variable_quantity
 #: model:ir.model.fields,help:contract_variable_quantity.field_contract_contract__skip_zero_qty
 msgid "If checked, contract lines with 0 qty don't create invoice line"
-msgstr ""
+msgstr "Hvis markeret, opretter kontraktlinjer med antal 0 ikke en fakturalinje"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line_qty_formula__write_uid
@@ -176,38 +193,38 @@ msgstr "Navn"
 #: code:addons/contract_variable_quantity/models/contract_line_formula.py:0
 #, python-format
 msgid "No valid result returned."
-msgstr ""
+msgstr "Intet gyldigt resultat returneret."
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_formula_id
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_formula_id
 msgid "Qty. formula"
-msgstr ""
+msgstr "Antal-formel"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_abstract_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_line__qty_type
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_template_line__qty_type
 msgid "Qty. type"
-msgstr ""
+msgstr "Antal-type"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields,field_description:contract_variable_quantity.field_contract_contract__skip_zero_qty
 msgid "Skip Zero Qty Lines"
-msgstr ""
+msgstr "Spring linjer med antal 0 over"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.portal_contract_page
 msgid "Variable"
-msgstr ""
+msgstr "Variabel"
 
 #. module: contract_variable_quantity
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_abstract_contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_line__qty_type__variable
 #: model:ir.model.fields.selection,name:contract_variable_quantity.selection__contract_template_line__qty_type__variable
 msgid "Variable quantity"
-msgstr ""
+msgstr "Variabelt antal"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -215,6 +232,8 @@ msgid ""
 "You can use these variables to compute your\n"
 "                                formula:"
 msgstr ""
+"Du kan bruge disse variabler til at beregne din\n"
+"                                formel:"
 
 #. module: contract_variable_quantity
 #: model_terms:ir.ui.view,arch_db:contract_variable_quantity.view_contract_line_qty_formula_form
@@ -225,3 +244,8 @@ msgid ""
 "                                the quantity to invoice in the variable\n"
 "                                'result'."
 msgstr ""
+"Du skal indsætte et gyldigt Python-kodeblok, der\n"
+"                                på et tidspunkt gemmer en flydende/"
+"heltalsværdi\n"
+"                                for antal til fakturering i variablen\n"
+"                                'result'."
