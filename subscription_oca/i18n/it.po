@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-26 09:06+0000\n"
+"PO-Revision-Date: 2026-07-01 11:46+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_ready
@@ -26,6 +26,12 @@ msgid ""
 "marked with this stage.\n"
 "            "
 msgstr ""
+"\n"
+"                Un abbonamento è pronto per iniziare quando non è "
+"contrassegnato come in corso, ma può esserlo in qualsiasi momento. Se non è "
+"definita alcuna fase di tipo \"Chiuso\", quando un abbonamento giunge al "
+"termine in modo automatico, verrà contrassegnato con questa fase..\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
@@ -38,6 +44,14 @@ msgid ""
 "be created automatically if the start date is the present day.\n"
 "            "
 msgstr ""
+"\n"
+"                Essendo una fase di tipo 'In corso', sarà attivato il "
+"processo di fatturazione ricorrente se applicabile. Se questa fase è la "
+"prima in ordine di sequenza, tra quelle di tipo 'In corso' e si verifica un "
+"cambio di fase da qualsiasi altro tipo a questa, verrà creata "
+"automaticamente una fattura se la data di inizio coincide con il giorno "
+"corrente.\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
@@ -46,6 +60,9 @@ msgid ""
 "                Draft, still working on the specifics.\n"
 "            "
 msgstr ""
+"\n"
+"                Bozza, ancora in lavoro sulle specifiche.\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
@@ -57,6 +74,12 @@ msgid ""
 "available if a subscription is in progress).\n"
 "            "
 msgstr ""
+"\n"
+"                La fase finale di una sottoscrizione. Si può indicare una "
+"sottoscrizione come chiusa in due modi: la più semplice è spostare la card "
+"nella kanban, premendo il pulsante \"Chiudi sottoscrizione\" (disponibile "
+"solo se la sottoscrizione è in corso).\n"
+"            "
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
@@ -123,6 +146,8 @@ msgid ""
 "Address the recurring invoices are addressed to. Defaults to the customer's "
 "invoice address."
 msgstr ""
+"Indirizzo a cui vengono indirizzate le fatture ricorrenti. Il valore "
+"predefinito è l'indirizzo di fatturazione del cliente."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
@@ -137,12 +162,12 @@ msgstr "Importo totale"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribuzione analitica"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Precisione analitica"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
@@ -291,7 +316,7 @@ msgstr "Cancella"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_shipping_id
 msgid "Delivery address"
-msgstr ""
+msgstr "Indirizzo di consegna"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__partner_shipping_id
@@ -299,6 +324,8 @@ msgid ""
 "Delivery address used on the recurring invoices and orders. Defaults to the "
 "customer's delivery address."
 msgstr ""
+"Indirizzo di consegna utilizzato per fatture e ordini ricorrenti. Il valore "
+"predefinito è l'indirizzo di consegna del cliente."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
@@ -331,7 +358,7 @@ msgstr "Nome visualizzato"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Conto distribuzione analitica"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__draft
@@ -463,7 +490,7 @@ msgstr "E-mail fattura"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_invoice_id
 msgid "Invoice address"
-msgstr ""
+msgstr "Indirizzo di fatturazione"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__invoice_ids
@@ -586,7 +613,7 @@ msgstr "Data prossima fattura"
 #. odoo-python
 #: code:addons/subscription_oca/models/sale_order.py:0
 msgid "No pricelist found to create subscription."
-msgstr ""
+msgstr "Nessun listino trovato per creare l'iscrizione."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
