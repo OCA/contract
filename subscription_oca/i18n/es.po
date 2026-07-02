@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-02 17:34+0000\n"
+"PO-Revision-Date: 2026-07-02 17:45+0000\n"
 "Last-Translator: Gerardo Alí Ferraro Schelijasch <gerferr83@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -26,6 +26,12 @@ msgid ""
 "marked with this stage.\n"
 "            "
 msgstr ""
+"\n"
+"                Una suscripción está lista para comenzar cuando no está "
+"marcada como en progreso, pero puede estarlo en cualquier momento. Si no hay "
+"una etapa de tipo 'Cerrada' definida, cuando una Si la suscripción finaliza "
+"automáticamente, se marcará con esta etapa.\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_in_progress
@@ -38,6 +44,14 @@ msgid ""
 "be created automatically if the start date is the present day.\n"
 "            "
 msgstr ""
+"\n"
+"                Al tratarse de una etapa de tipo \"En curso\", esta activará "
+"el proceso de facturación recurrente, si corresponde. Si esta etapa es la "
+"primera (según el orden de la secuencia) de entre los tipos \"En curso\" "
+"disponibles y se produce un cambio hacia ella desde cualquier etapa que no "
+"sea de tipo \"En curso\", se generará una factura automáticamente siempre "
+"que la fecha de inicio sea la actual.\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_draft
@@ -46,6 +60,9 @@ msgid ""
 "                Draft, still working on the specifics.\n"
 "            "
 msgstr ""
+"\n"
+"                Borrador; todavía estoy trabajando en los detalles.\n"
+"            "
 
 #. module: subscription_oca
 #: model:sale.subscription.stage,description:subscription_oca.subscription_stage_closed
@@ -57,6 +74,13 @@ msgid ""
 "available if a subscription is in progress).\n"
 "            "
 msgstr ""
+"\n"
+"                La etapa final de una suscripción. Existen dos formas de "
+"marcar una suscripción como cerrada. La más sencilla consiste en utilizar "
+"las funciones de movimiento de tarjetas del tablero Kanban y pulsar el botón "
+"«Cerrar suscripción» (disponible únicamente si la suscripción está en curso)"
+".\n"
+"            "
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
@@ -123,6 +147,8 @@ msgid ""
 "Address the recurring invoices are addressed to. Defaults to the customer's "
 "invoice address."
 msgstr ""
+"La dirección a la que se envían las facturas recurrentes. Por defecto, se "
+"utiliza la dirección de facturación del cliente."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_tax
@@ -137,12 +163,12 @@ msgstr "Importe Total"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribución analítica"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Precisión Analítica"
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
@@ -291,7 +317,7 @@ msgstr "Borrar"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__partner_shipping_id
 msgid "Delivery address"
-msgstr ""
+msgstr "Dirección de entrega"
 
 #. module: subscription_oca
 #: model:ir.model.fields,help:subscription_oca.field_sale_subscription__partner_shipping_id
@@ -299,6 +325,8 @@ msgid ""
 "Delivery address used on the recurring invoices and orders. Defaults to the "
 "customer's delivery address."
 msgstr ""
+"Dirección de entrega utilizada en las facturas y los pedidos recurrentes. "
+"Por defecto, utiliza la dirección de entrega del cliente."
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
@@ -331,7 +359,7 @@ msgstr "Mostrar Nombre"
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Cuenta de Distribución Analítica"
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__draft
