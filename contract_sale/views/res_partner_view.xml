@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="inherit_id" ref="contract.view_partner_form" />
+        <field name="model">res.partner</field>
+        <field type="xml" name="arch">
+            <xpath expr="//button[@name='act_show_contract']" position="attributes">
+                <attribute name="groups" add="sales_team.group_sale_salesman" />
+            </xpath>
+            <field name="supplier_rank" position="attributes">
+                <attribute name="groups" add="sales_team.group_sale_salesman" />
+            </field>
+        </field>
+    </record>
+</odoo>
