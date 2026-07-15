@@ -11,7 +11,7 @@ class ContractLine(models.Model):
         sale_line_vals = {
             "product_id": self.product_id.id,
             "product_uom_qty": self._get_quantity_to_invoice(*dates),
-            "product_uom": self.uom_id.id,
+            "product_uom_id": self.uom_id.id,
             "discount": self.discount,
             "contract_line_id": self.id,
             "display_type": self.display_type,
@@ -26,23 +26,8 @@ class ContractLine(models.Model):
             self.last_date_invoiced, self.recurring_next_date
         )
         sale_line_vals = self._prepare_sale_line_vals(dates, order_id=order_id)
-
-        order_line = (
-            self.env["sale.order.line"]
-            .with_company(self.contract_id.company_id.id)
-            .new(sale_line_vals)
-        )
-        if sale_values and not order_id:
-            sale = (
-                self.env["sale.order"]
-                .with_company(self.contract_id.company_id.id)
-                .new(sale_values)
-            )
-            order_line.order_id = sale
-        # Get other order line values from product onchange
-        order_line._onchange_product_id_warning()
-        sale_line_vals = order_line._convert_to_write(order_line._cache)
-        # Insert markers
+        # Insert markers. The remaining values (taxes, ...) are computed by the
+        # sale order line when the sale order is created.
         name = self._insert_markers(dates[0], dates[1])
         sale_line_vals.update(
             {
