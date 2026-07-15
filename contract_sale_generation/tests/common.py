@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form, TransactionCase, tagged
 
 
@@ -19,12 +19,6 @@ class ContractSaleCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        chart_template = cls.env["account.chart.template"]._guess_chart_template(
-            cls.env.company.country_id
-        )
-        cls.env["account.chart.template"].try_loading(
-            chart_template, company=cls.env.company, install_demo=False
-        )
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         analytic_plan = cls.env["account.analytic.plan"].create({"name": "Test Plan"})
 
@@ -37,8 +31,21 @@ class ContractSaleCommon(TransactionCase):
         cls.payment_term_id = cls.env.ref(
             "account.account_payment_term_end_following_month"
         )
+        cls.sale_tax = cls.env["account.tax"].search(
+            [
+                ("type_tax_use", "=", "sale"),
+                ("company_id", "=", cls.env.company.id),
+            ],
+            limit=1,
+        )
+        # Since Odoo 19.0 an empty fiscal position removes all taxes, so keep the
+        # sale tax in the fiscal position to preserve the taxes on the generated
+        # sale order lines.
         cls.fiscal_position_id = cls.env["account.fiscal.position"].create(
-            {"name": "Contracts"}
+            {
+                "name": "Contracts",
+                "tax_ids": [Command.set(cls.sale_tax.ids)],
+            }
         )
         contract_date = "2020-01-15"
         cls.pricelist = cls.env["product.pricelist"].create(
@@ -55,12 +62,15 @@ class ContractSaleCommon(TransactionCase):
                 "user_id": cls.env.user.id,
             }
         )
-        # Avoid error cause sale_timesheet overwriting demo product.product_product_2
-        # and making mandatory to link a project to that product or to the sale order
-        cls.product_1 = cls.env.ref("product.product_product_2")
-        cls.product_1.taxes_id += cls.env["account.tax"].search(
-            [("type_tax_use", "=", "sale")], limit=1
+        cls.product_1 = cls.env["product.product"].create(
+            {
+                "name": "Test Service Product",
+                "type": "service",
+                "categ_id": cls.env.ref("product.product_category_services").id,
+                "list_price": 100.0,
+            }
         )
+        cls.product_1.taxes_id += cls.sale_tax
         cls.product_1.description_sale = "Test description sale"
         cls.line_template_vals = {
             "product_id": cls.product_1.id,
@@ -116,7 +126,7 @@ class ContractSaleCommon(TransactionCase):
         }
         discount_line_group_id = cls.env.ref("sale.group_discount_per_so_line")
         uom_group_id = cls.env.ref("uom.group_uom")
-        cls.env.user.groups_id = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
+        cls.env.user.group_ids = [(4, discount_line_group_id.id), (4, uom_group_id.id)]
 
         with Form(cls.contract) as contract_form, freeze_time(contract_date):
             contract_form.contract_template_id = cls.template
