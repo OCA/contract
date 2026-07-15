@@ -24,7 +24,7 @@ class TestContractSale(ContractSaleCommon):
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
         self.order_line = self.sale_monthly.order_line[0]
-        self.assertTrue(self.order_line.tax_id)
+        self.assertTrue(self.order_line.tax_ids)
         self.assertAlmostEqual(self.order_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.sale_monthly.user_id)
 
@@ -39,7 +39,7 @@ class TestContractSale(ContractSaleCommon):
         self.assertTrue(self.sale_monthly)
         self.assertEqual(self.contract_line.recurring_next_date, recurring_next_date)
         self.order_line = self.sale_monthly.order_line[0]
-        self.assertTrue(self.order_line.tax_id)
+        self.assertTrue(self.order_line.tax_ids)
         self.assertAlmostEqual(self.order_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.sale_monthly.user_id)
 

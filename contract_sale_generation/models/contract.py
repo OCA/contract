@@ -8,7 +8,7 @@
 # Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 
 
 class ContractContract(models.Model):
@@ -70,13 +70,14 @@ class ContractContract(models.Model):
         sales = self._recurring_create_sale()
         for sale_rec in sales:
             sale_rec.message_post(
-                body=_(
+                body=self.env._(
                     "Contract manually sale order: "
                     '<a href="#" data-oe-model="%(model)s" data-oe-id="%(id)s">'
                     "Sale Order"
-                    "</a>"
+                    "</a>",
+                    model=sale_rec._name,
+                    id=sale_rec.id,
                 )
-                % {"model": sale_rec._name, "id": sale_rec.id}
             )
         return sales
 
