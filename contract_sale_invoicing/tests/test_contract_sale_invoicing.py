@@ -34,14 +34,29 @@ class TestContractSaleInvoicing(BaseCommon):
                 ],
             }
         )
-        cls.contract.group_id = cls.env["account.analytic.account"].search([], limit=1)
-        cls.other_analytic_account = cls.env["account.analytic.account"].search(
-            [("id", "!=", cls.contract.group_id.id)], limit=1
+        cls.analytic_plan = cls.env["account.analytic.plan"].create(
+            {"name": "Test Plan"}
         )
-        cls.product_so_1 = cls.env.ref("product.product_product_1")
-        cls.product_so_2 = cls.env.ref("product.product_product_2")
-        cls.product_so_1.invoice_policy = "order"
-        cls.product_so_2.invoice_policy = "order"
+        cls.contract.group_id = cls.env["account.analytic.account"].create(
+            {"name": "Test Analytic Account 1", "plan_id": cls.analytic_plan.id}
+        )
+        cls.other_analytic_account = cls.env["account.analytic.account"].create(
+            {"name": "Test Analytic Account 2", "plan_id": cls.analytic_plan.id}
+        )
+        cls.product_so_1 = cls.env["product.product"].create(
+            {
+                "name": "SO Product 1",
+                "invoice_policy": "order",
+                "list_price": 750.0,
+            }
+        )
+        cls.product_so_2 = cls.env["product.product"].create(
+            {
+                "name": "SO Product 2",
+                "invoice_policy": "order",
+                "list_price": 150.0,
+            }
+        )
         cls.sale_order = cls.env["sale.order"].create(
             {
                 "partner_id": cls.partner.id,
@@ -53,7 +68,7 @@ class TestContractSaleInvoicing(BaseCommon):
                             "name": cls.product_so_1.name,
                             "product_id": cls.product_so_1.id,
                             "product_uom_qty": 2,
-                            "product_uom": cls.product_so_1.uom_id.id,
+                            "product_uom_id": cls.product_so_1.uom_id.id,
                             "price_unit": cls.product_so_1.list_price,
                             "analytic_distribution": {
                                 cls.contract.group_id.id: 100.0,
@@ -65,7 +80,7 @@ class TestContractSaleInvoicing(BaseCommon):
                             "name": cls.product_so_2.name,
                             "product_id": cls.product_so_2.id,
                             "product_uom_qty": 5,
-                            "product_uom": cls.product_so_2.uom_id.id,
+                            "product_uom_id": cls.product_so_2.uom_id.id,
                             "price_unit": cls.product_so_2.list_price,
                             "analytic_distribution": {
                                 cls.contract.group_id.id: 100.0,
