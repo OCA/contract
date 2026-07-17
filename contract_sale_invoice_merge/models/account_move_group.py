@@ -49,6 +49,14 @@ class AccountMoveGroup(models.TransientModel):
 
         return groups
 
+    def _set_move_line_origins(self, invoices_values):
+        for invoice_values in invoices_values:
+            invoice_origin = invoice_values.get("invoice_origin")
+            for inv_line in invoice_values.get("invoice_line_ids", []):
+                # Fill in origin into every invoice line.
+                inv_line[2]["origin"] = f"{invoice_origin}" if invoice_origin else ""
+        return invoices_values
+
     @api.model
     def _merge_invoices_values(self, invoices_values, date_ref=False):
         """
@@ -83,7 +91,9 @@ class AccountMoveGroup(models.TransientModel):
         for model in group_records.values():
             invoices_vals += model._prepare_group_invoices_values(date_ref)
 
-        final_invoice_vals = self._merge_invoices_values(invoices_vals, date_ref)
+        invoice_vals_origin = self._set_move_line_origins(invoices_vals)
+
+        final_invoice_vals = self._merge_invoices_values(invoice_vals_origin, date_ref)
         return final_invoice_vals
 
     def _post_create_group_invoices(

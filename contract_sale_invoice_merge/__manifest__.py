@@ -18,6 +18,7 @@
         "data/contract_sale_invoice_merge_cron.xml",
         "data/queue_job_channel.xml",
         "data/queue_job_function.xml",
+        "views/account_move.xml",
         "views/contract_contract.xml",
         "views/res_config_settings.xml",
     ],

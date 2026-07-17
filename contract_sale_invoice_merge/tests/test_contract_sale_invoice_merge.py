@@ -62,7 +62,7 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         )
         cls.order = cls.env["sale.order"].create(
             {
-                "name": "Sale Order",
+                "name": "SO1",
                 "partner_id": cls.partner.id,
                 "partner_invoice_id": cls.partner.id,
                 "journal_id": cls.journal.id,
@@ -70,7 +70,7 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         )
         cls.order2 = cls.env["sale.order"].create(
             {
-                "name": "Sale Order 2",
+                "name": "SO2",
                 "partner_id": cls.partner.id,
                 "partner_invoice_id": cls.partner.id,
                 "journal_id": cls.journal.id,
@@ -116,6 +116,7 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         self.assertEqual(len(move_line), 1)
         self.assertAlmostEqual(move_line.price_unit, 50)
         self.assertEqual(move_line.sale_line_ids, self.order_lines[0])
+        self.assertEqual(move_line.origin, "SO1")
 
     def test_cron_invoices_multi_order_grouped(self):
         self.order.action_confirm()
@@ -127,11 +128,12 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         self.assertEqual(self.order2.invoice_status, "invoiced")
         self.assertEqual(len(move), 1)
         self.assertAlmostEqual(move.amount_untaxed, 225)
-        self.assertIn("Sale Order", move.invoice_origin)
-        self.assertIn("Sale Order 2", move.invoice_origin)
+        self.assertIn("SO1", move.invoice_origin)
+        self.assertIn("SO2", move.invoice_origin)
         move_lines = move.invoice_line_ids
         self.assertEqual(len(move_lines), 3)
         self.assertEqual(move_lines.sale_line_ids, self.order_lines)
+        self.assertCountEqual(move_lines.mapped("origin"), ["SO1", "SO2", "SO2"])
 
     def test_cron_invoices_multi_order_not_grouped(self):
         # Cron should create 2 separate moves
@@ -181,7 +183,7 @@ class TestContractSaleInvoiceMerge(TransactionCase):
     def test_cron_invoices_single_contract(self):
         contract = self.env["contract.contract"].create(
             {
-                "name": "Contract",
+                "name": "C1",
                 "partner_id": self.partner.id,
             }
         )
@@ -194,18 +196,20 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         )
         move = self._trigger_cron()
         self.assertEqual(len(move), 1)
-        self.assertEqual(move.invoice_line_ids.contract_line_id, contract_line)
+        move_line = move.invoice_line_ids
+        self.assertEqual(move_line.contract_line_id, contract_line)
+        self.assertEqual(move_line.origin, "C1")
 
     def test_cron_invoices_single_contract_recurring(self):
         contract = self.env["contract.contract"].create(
             {
-                "name": "Contract",
+                "name": "C1",
                 "partner_id": self.partner.id,
             }
         )
         contract_line = self.env["contract.line"].create(
             {
-                "name": "Contract Line",
+                "name": "C1L1",
                 "contract_id": contract.id,
                 "product_id": self.product4.id,
                 "date_start": self.today - relativedelta(months=2),
@@ -219,11 +223,11 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         contracts = self.env["contract.contract"].create(
             [
                 {
-                    "name": "Contract",
+                    "name": "C1",
                     "partner_id": self.partner.id,
                 },
                 {
-                    "name": "Contract 2",
+                    "name": "C2",
                     "partner_id": self.partner.id,
                 },
             ]
@@ -231,18 +235,18 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         contract_lines = self.env["contract.line"].create(
             [
                 {
-                    "name": "Contract Line",
+                    "name": "C1L1",
                     "contract_id": contracts[0].id,
                     "product_id": self.product4.id,
                 },
                 {
-                    "name": "Contract Line 2",
+                    "name": "C1L2",
                     "contract_id": contracts[0].id,
                     "product_id": self.product4.id,
                     "date_start": self.today - relativedelta(months=2),
                 },
                 {
-                    "name": "Contract 2 Line",
+                    "name": "C2L1",
                     "contract_id": contracts[1].id,
                     "product_id": self.product4.id,
                     "date_start": self.today - relativedelta(months=1),
@@ -286,7 +290,7 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         self.assertEqual(self.order.invoice_status, "no")
         self.assertEqual(len(move), 1)
         self.assertAlmostEqual(move.amount_untaxed, 70)
-        self.assertIn("Sale Order", move.invoice_origin)
+        self.assertIn("SO1", move.invoice_origin)
         self.assertIn(contract.name, move.invoice_origin)
         move_lines = move.invoice_line_ids
         self.assertEqual(len(move_lines), 2)
@@ -294,6 +298,8 @@ class TestContractSaleInvoiceMerge(TransactionCase):
         self.assertEqual(len(contract_move_line), 1)
         self.assertAlmostEqual(contract_move_line.price_unit, 20)
         self.assertEqual(contract_move_line.sale_line_ids, order_line_contract)
+        self.assertEqual(contract_move_line.origin, contract.name)
         order_move_line = move_lines - contract_move_line
         self.assertAlmostEqual(order_move_line.price_unit, 50)
         self.assertEqual(order_move_line.sale_line_ids, self.order_lines[0])
+        self.assertEqual(order_move_line.origin, "SO1")
