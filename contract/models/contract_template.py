@@ -118,14 +118,16 @@ class ContractTemplate(models.Model):
 
             contract.journal_id = AccountJournal.search(domain, limit=1).id or None
 
-    @api.depends("journal_id")
+    @api.depends("journal_id", "company_id")
     def _compute_pricelist_id_domain(self):
         for rec in self:
-            rec.pricelist_id_domain = (
-                [("currency_id", "=", rec.journal_id.currency_id.id)]
-                if rec.journal_id.currency_id
-                else []
-            )
+            domain = []
+            if rec.journal_id.currency_id:
+                domain.append(("currency_id", "=", rec.journal_id.currency_id.id))
+            # A pricelist of another company cannot be used on this contract,
+            # so do not offer it. Pricelists without a company are shared.
+            domain.append(("company_id", "in", (rec.company_id.id, False)))
+            rec.pricelist_id_domain = domain
 
     @api.onchange("journal_id")
     def _onchange_journal_id(self):
