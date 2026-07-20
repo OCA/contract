@@ -10,14 +10,15 @@
 {
     "name": "Contract Payment Mode",
     "summary": "Payment mode in contracts and their invoices",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "author": "Domatix, Tecnativa, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
-    "depends": ["contract", "account_payment_partner"],
+    "depends": ["contract", "account_payment_mode"],
+    "external_dependencies": {"python": ["openupgradelib"]},
     "category": "Sales Management",
     "license": "AGPL-3",
+    "pre_init_hook": "pre_init_hook",
     "data": ["views/contract_view.xml"],
-    "post_init_hook": "post_init_hook",
     "installable": True,
     "auto_install": True,
 }
