@@ -12,6 +12,7 @@
                             name="product_id"
                             required="display_type == 'product'"
                             invisible="display_type"
+                            context="{'active_test': True}"
                         />
                     </group>
                     <group invisible="display_type">
@@ -36,6 +37,7 @@
                                     groups="uom.group_uom"
                                     class="oe_no_button"
                                     required="not display_type"
+                                    context="{'active_test': True}"
                                 />
                             </div>
                             <field name="discount" />
