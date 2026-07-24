@@ -30,8 +30,8 @@ msgid ""
 "                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
 "\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
-"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object."
-"name\"/><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+"out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
 "                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
@@ -40,8 +40,8 @@ msgid ""
 "                    <t t-if=\"object.user_id\">\n"
 "                    <t t-if=\"object.user_id.email\">\n"
 "                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-"
-"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
-"name)\" t-out=\"object.user_id.name\"/>\n"
+"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
+"\" t-out=\"object.user_id.name\"/>\n"
 "                        </t>\n"
 "                    <t t-else=\"\">\n"
 "                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-"
@@ -70,10 +70,10 @@ msgid ""
 "line-height: 16px; background-color: #F2F2F2;\">\n"
 "                    <span style=\"color: #222; margin-bottom: 5px; display: "
 "block; \">\n"
-"                        <address t-field=\"object.company_id.sudo()."
-"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
-"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
-"no_marker&quot;: True}\"/>\n"
+"                        <address t-"
+"field=\"object.company_id.sudo().partner_id\" t-"
+"options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: "
+"[&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}\"/>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -100,6 +100,11 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<i class=\"fa fa-print me-1\"/>View Details"
+msgstr ""
+
+#. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
 msgid ""
 "<p>Hello</p>\n"
@@ -118,18 +123,23 @@ msgid ""
 "<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                contract to invoice\n"
 "                            </span>\n"
-"                            <span invisible=\"contract_to_invoice_count &lt;"
-"= 1\">\n"
+"                            <span invisible=\"contract_to_invoice_count "
+"&lt;= 1\">\n"
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
 "<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                contrato a facturar\n"
 "                            </span>\n"
-"                            <span invisible=\"contract_to_invoice_count &lt;"
-"= 1\">\n"
+"                            <span invisible=\"contract_to_invoice_count "
+"&lt;= 1\">\n"
 "                                contrato a facturar\n"
 "                            </span>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<span>Contract </span>"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -247,6 +257,11 @@ msgid "<strong>Partner:</strong>"
 msgstr "<strong>Empresa:</strong>"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Payment Terms</strong>"
+msgstr ""
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
 msgstr "<strong>Precio</strong>"
@@ -341,6 +356,12 @@ msgid "Add a section"
 msgstr "Añadir una sección"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Distribución Analítica"
@@ -394,12 +415,6 @@ msgstr "Cancelar"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 msgid "Canceled"
 msgstr "Cancelado"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
-msgid "Category"
-msgstr "Categoría"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__line_recurrence
@@ -473,11 +488,6 @@ msgstr "Contrato"
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
 msgstr "Contrato #"
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
-msgid "Contract -"
-msgstr "Contrato -"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
@@ -633,17 +643,6 @@ msgstr "Contratos"
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 msgid "Contracts to invoice"
 msgstr "Contratos a facturar"
-
-#. module: contract
-#: model:ir.model.fields,help:contract.field_contract_line__product_uom_category_id
-#: model:ir.model.fields,help:contract.field_contract_template_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversión entre Unidades de Medida sólo puede producirse si pertenecen a "
-"la misma categoría. La conversión se realizará en función de las "
-"proporciones."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_invoice_visibility
@@ -837,13 +836,16 @@ msgid "Discount to apply on generated invoices. Must be ≤ 100."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_modification__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_tag__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
+#: model:ir.model.fields,field_description:contract.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
 
@@ -921,24 +923,21 @@ msgid "Group"
 msgstr "Agrupar"
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
-msgid "Group By..."
-msgstr "Agrupar por..."
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
 msgid "Has Message"
 msgstr "Tiene mensaje"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
 #: model:ir.model.fields,field_description:contract.field_contract_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__id
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__id
 #: model:ir.model.fields,field_description:contract.field_contract_tag__id
 #: model:ir.model.fields,field_description:contract.field_contract_template__id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__id
+#: model:ir.model.fields,field_description:contract.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -972,6 +971,7 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "In progress"
 msgstr "En progreso"
 
@@ -1189,6 +1189,11 @@ msgstr "Mes(es)"
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
 msgstr "Mes(es) último día"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__monthly_recurring
+msgid "Monthly Recurring"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
@@ -1429,11 +1434,6 @@ msgid "Quarter(s)"
 msgstr "Trimestre/s"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__rating_ids
-msgid "Ratings"
-msgstr ""
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__recurring_rule_type
@@ -1628,6 +1628,12 @@ msgid "Technical field for UX purposes."
 msgstr ""
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_report_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Total Monthly Recurring"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción en registro."
@@ -1648,6 +1654,11 @@ msgstr "Unidad de medida"
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
 msgstr "NIF:"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "View Details"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
@@ -1761,6 +1772,12 @@ msgid "e.g. Contract XYZ"
 msgstr "ejemplo Contrato XYZ"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+msgid "id"
+msgstr ""
+
+#. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }})"
@@ -1773,6 +1790,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }}) - "
 "Modificaciones"
+
+#~ msgid "Category"
+#~ msgstr "Categoría"
+
+#~ msgid "Contract -"
+#~ msgstr "Contrato -"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "La conversión entre Unidades de Medida sólo puede producirse si "
+#~ "pertenecen a la misma categoría. La conversión se realizará en función de "
+#~ "las proporciones."
+
+#~ msgid "Group By..."
+#~ msgstr "Agrupar por..."
 
 #~ msgid "Journal Entry"
 #~ msgstr "Asiento contable"
@@ -1791,8 +1825,8 @@ msgstr ""
 #~ "                <p style=\"border-left: 1px solid #8e0000; margin-left: "
 #~ "30px;\">\n"
 #~ "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br>\n"
-#~ "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object."
-#~ "name\"></strong><br>\n"
+#~ "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+#~ "out=\"object.name\"></strong><br>\n"
 #~ "                    <t t-if=\"object.date_start\">\n"
 #~ "                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
 #~ "out=\"object.date_start or ''\"></t><br>\n"
@@ -1801,8 +1835,8 @@ msgstr ""
 #~ "                    <t t-if=\"object.user_id\">\n"
 #~ "                        <t t-if=\"object.user_id.email\">\n"
 #~ "                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-"
-#~ "href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
-#~ "name)\" t-out=\"object.user_id.name\"></a>\n"
+#~ "href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, "
+#~ "object.name)\" t-out=\"object.user_id.name\"></a>\n"
 #~ "                        </t>\n"
 #~ "                        <t t-else=\"\">\n"
 #~ "                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-"
@@ -1814,8 +1848,8 @@ msgstr ""
 #~ "                <br>\n"
 #~ "                <p>If you have any questions, do not hesitate to contact "
 #~ "us.</p>\n"
-#~ "                <p>Thank you for choosing <t t-out=\"object.company_id."
-#~ "name or 'us'\"></t>!</p>\n"
+#~ "                <p>Thank you for choosing <t t-"
+#~ "out=\"object.company_id.name or 'us'\"></t>!</p>\n"
 #~ "                <br>\n"
 #~ "                <br>\n"
 #~ "                <div style=\"width: 375px; margin: 0px; padding: 0px; "
@@ -1830,9 +1864,10 @@ msgstr ""
 #~ "14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 #~ "                    <span style=\"color: #222; margin-bottom: 5px; "
 #~ "display: block; \">\n"
-#~ "                        <address t-field=\"object.company_id.sudo()."
-#~ "partner_id\" t-options='{\"widget\": \"contact\", \"fields\": [\"name\", "
-#~ "\"address\"], \"no_marker\": True}'></address>\n"
+#~ "                        <address t-"
+#~ "field=\"object.company_id.sudo().partner_id\" t-options='{\"widget\": "
+#~ "\"contact\", \"fields\": [\"name\", \"address\"], \"no_marker\": True}'></"
+#~ "address>\n"
 #~ "                    </span>\n"
 #~ "                    <t t-if=\"object.company_id.phone\">\n"
 #~ "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -1844,8 +1879,9 @@ msgstr ""
 #~ "                    </t>\n"
 #~ "                    <t t-if=\"object.company_id.website\">\n"
 #~ "                        <div>\n"
-#~ "                            Web: <a t-att-href=\"object.company_id."
-#~ "website\" t-out=\"object.company_id.website\"></a>\n"
+#~ "                            Web: <a t-att-"
+#~ "href=\"object.company_id.website\" t-out=\"object.company_id.website\"></"
+#~ "a>\n"
 #~ "                        </div>\n"
 #~ "                    </t>\n"
 #~ "                </div>\n"
@@ -1868,8 +1904,8 @@ msgstr ""
 #~ "                <p style=\"border-left: 1px solid #8e0000; margin-left: "
 #~ "30px;\">\n"
 #~ "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br>\n"
-#~ "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object."
-#~ "name\"></strong><br>\n"
+#~ "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+#~ "out=\"object.name\"></strong><br>\n"
 #~ "                    <t t-if=\"object.date_start\">\n"
 #~ "                        &amp;nbsp;&amp;nbsp;Fecha de inicio del "
 #~ "contratot: <t t-out=\"object.date_start or ''\"></t><br>\n"
@@ -1878,8 +1914,8 @@ msgstr ""
 #~ "                    <t t-if=\"object.user_id\">\n"
 #~ "                        <t t-if=\"object.user_id.email\">\n"
 #~ "                            &amp;nbsp;&amp;nbsp;Your contract: <a t-att-"
-#~ "href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
-#~ "name)\" t-out=\"object.user_id.name\"></a>\n"
+#~ "href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, "
+#~ "object.name)\" t-out=\"object.user_id.name\"></a>\n"
 #~ "                        </t>\n"
 #~ "                        <t t-else=\"\">\n"
 #~ "                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-"
@@ -1891,8 +1927,8 @@ msgstr ""
 #~ "                <br>\n"
 #~ "                <p>Si tiene alguna pregunta, no dude en contactarnos.</"
 #~ "p>\n"
-#~ "                <p>Gracias por su elección<t t-out=\"object.company_id."
-#~ "name or 'us'\"></t>!</p>\n"
+#~ "                <p>Gracias por su elección<t t-"
+#~ "out=\"object.company_id.name or 'us'\"></t>!</p>\n"
 #~ "                <br>\n"
 #~ "                <br>\n"
 #~ "                <div style=\"width: 375px; margin: 0px; padding: 0px; "
@@ -1907,9 +1943,10 @@ msgstr ""
 #~ "14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 #~ "                    <span style=\"color: #222; margin-bottom: 5px; "
 #~ "display: block; \">\n"
-#~ "                        <address t-field=\"object.company_id.sudo()."
-#~ "partner_id\" t-options='{\"widget\": \"contact\", \"fields\": [\"name\", "
-#~ "\"address\"], \"no_marker\": True}'></address>\n"
+#~ "                        <address t-"
+#~ "field=\"object.company_id.sudo().partner_id\" t-options='{\"widget\": "
+#~ "\"contact\", \"fields\": [\"name\", \"address\"], \"no_marker\": True}'></"
+#~ "address>\n"
 #~ "                    </span>\n"
 #~ "                    <t t-if=\"object.company_id.phone\">\n"
 #~ "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -1921,8 +1958,9 @@ msgstr ""
 #~ "                    </t>\n"
 #~ "                    <t t-if=\"object.company_id.website\">\n"
 #~ "                        <div>\n"
-#~ "                            Web: <a t-att-href=\"object.company_id."
-#~ "website\" t-out=\"object.company_id.website\"></a>\n"
+#~ "                            Web: <a t-att-"
+#~ "href=\"object.company_id.website\" t-out=\"object.company_id.website\"></"
+#~ "a>\n"
 #~ "                        </div>\n"
 #~ "                    </t>\n"
 #~ "                </div>\n"
