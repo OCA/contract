@@ -103,12 +103,19 @@ class AccountMoveGroup(models.TransientModel):
     def _cron_group_recurring_create_invoice(self, date_ref=None):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        invoices = True
-        while invoices:
-            invoices = self.env["account.move"]
-            groups = self._get_groups_by_recordset(date_ref)
-            for group_records in groups.values():
-                invoices |= self._create_grouped_invoice(group_records, date_ref)
+        groups = self._get_groups_by_recordset(date_ref)
+        for _grouping_key, group_records in groups.items():
+            self.with_delay()._job_create_grouped_invoice(group_records, date_ref)
+
+    @api.model
+    def _job_create_grouped_invoice(self, group_records, date_ref):
+        invoices = self.env["account.move"]
+        while True:
+            created_invoice = self._create_grouped_invoice(group_records, date_ref)
+            if not created_invoice:
+                break
+            invoices |= created_invoice
+        return invoices
 
     @api.model
     def cron_group_recurring_create_invoice(self):

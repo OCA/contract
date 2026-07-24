@@ -13,4 +13,13 @@
         <field name="method">cron_group_recurring_create_invoice</field>
         <field name="channel_id" ref="contract_invoice_merge_queue_job_channel" />
     </record>
+
+    <record id="job_function_job_create_grouped_invoice" model="queue.job.function">
+        <field
+            name="model_id"
+            ref="contract_sale_invoice_merge.model_account_move_group"
+        />
+        <field name="method">_job_create_grouped_invoice</field>
+        <field name="channel_id" ref="contract_invoice_merge_queue_job_channel" />
+    </record>
 </odoo>
