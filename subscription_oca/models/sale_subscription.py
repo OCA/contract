@@ -218,6 +218,8 @@ class SaleSubscription(models.Model):
         else:
             type_interval = self.template_id.recurring_rule_type
             interval = int(self.template_id.recurring_interval)
+            inv_posted = self.invoice_ids.filtered(lambda ss: ss.state == "posted")
+            start_date = max(inv_posted.mapped("invoice_date"))
             self.recurring_next_date = start_date + relativedelta(
                 **{type_interval: interval}
             )
