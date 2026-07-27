@@ -1,11 +1,35 @@
 # Copyright (C) 2020 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models
+from odoo import _, api, exceptions, models
 
 
 class ContractLine(models.Model):
     _inherit = "contract.line"
+
+    @api.constrains(
+        "display_type",
+        "product_id",
+    )
+    def _constrain_sale_product_display(self):
+        """If the contract generates a sale, its lines must comply with sale order lines."""
+        sale_contract_lines = self.filtered(
+            lambda line: line.contract_id.generation_type == "sale"
+        )
+        for line in sale_contract_lines:
+            # Stay aligned with accountable_required_fields SQL constraint:
+            # CHECK(
+            #   display_type IS NOT NULL
+            #   OR (product_id IS NOT NULL AND product_uom IS NOT NULL)
+            # )
+            if not (line.display_type or (line.product_id and line.uom_id)):
+                raise exceptions.ValidationError(
+                    _(
+                        "The line %(name)s must set a Product/UoM "
+                        "or have a different display type",
+                        name=line.name,
+                    )
+                )
 
     def _prepare_sale_line_vals(self, dates, order_id=False):
         sale_line_vals = {
