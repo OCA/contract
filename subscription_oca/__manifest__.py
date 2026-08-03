@@ -3,7 +3,7 @@
 {
     "name": "Subscription management",
     "summary": "Generate recurring invoices.",
-    "version": "19.0.1.1.3",
+    "version": "19.0.1.1.4",
     "development_status": "Beta",
     "category": "Subscription Management",
     "website": "https://github.com/OCA/contract",
@@ -24,6 +24,7 @@
         "wizard/close_subscription_wizard.xml",
         "security/subscription_security.xml",
         "security/ir.model.access.csv",
+        "security/security.xml",
     ],
     "installable": True,
     "application": True,

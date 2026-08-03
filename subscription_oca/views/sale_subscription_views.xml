@@ -343,6 +343,7 @@
                 <field name="to_renew" />
                 <field name="name" />
                 <field name="partner_id" />
+                <field name="code" />
                 <field name="template_id" />
                 <field name="user_id" />
                 <field name="date_start" />
@@ -353,11 +354,31 @@
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
                 />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
+                <filter
+                    name="inactive"
+                    string="Inactive"
+                    domain="[('active', '=', False)]"
+                />
+                <filter
+                    name="in_progress"
+                    string="In Progress"
+                    domain="[('in_progress', '=', True)]"
+                />
                 <separator />
                 <filter
                     name="month_recurring_next_date"
                     string="Next invoice date"
                     date="recurring_next_date"
+                />
+                <filter
+                    name="filter_date_start"
+                    string="Start Date"
+                    date="date_start"
                 />
                 <group>
                     <filter
