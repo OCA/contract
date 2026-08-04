@@ -76,14 +76,9 @@ class ContractLine(models.Model):
         and returns 1.0 regardless of the theoretical calculation.
         """
         if not period_first_date or not period_last_date:
-            return super()._compute_prorated(
-                period_first_date,
-                period_last_date,
-                invoice_date,
-                recurring_rule_type,
-                recurring_interval,
-                recurring_invoicing_type,
-            )
+            # Without a period there is nothing to prorate. The base method
+            # would raise on the missing dates instead.
+            return 1.0
 
         # Check if this is a full calendar month for monthly recurring
         if recurring_rule_type in ("monthly", "monthlylastday"):
