@@ -560,6 +560,18 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
 
+    def test_contract_tag_default_color(self):
+        """A tag created without a color gets a random one from the palette."""
+        tag = self.env["contract.tag"].create({"name": "Test tag"})
+        self.assertIn(tag.color, range(1, 12))
+
+    def test_contract_line_display_name(self):
+        """The line display name is prefixed with its start date."""
+        self.assertEqual(
+            self.acct_line.display_name,
+            f"{self.acct_line.date_start} - {self.acct_line.name}",
+        )
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
