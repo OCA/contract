@@ -18,8 +18,10 @@ class ContractContract(models.Model):
         "contract_line_ids.is_canceled",
         "invoicing_offset_type",
         "invoicing_offset_value",
+        "align_billing_cycle",
     )
     def _compute_recurring_next_date(self):
+        """Overwrite to pass the offset settings down to the helper method."""
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
                 lambda line: (
@@ -34,13 +36,6 @@ class ContractContract(models.Model):
                 and contract._origin.date_start != contract.date_start
                 or not recurring_next_date
             ):
-                kwargs = {
-                    "invoicing_offset_type": contract.invoicing_offset_type,
-                    "invoicing_offset_value": contract.invoicing_offset_value,
-                }
-                if hasattr(contract, "align_billing_cycle"):
-                    kwargs["align_billing_cycle"] = contract.align_billing_cycle
-
                 contract.recurring_next_date = self.get_next_invoice_date(
                     contract.next_period_date_start,
                     contract.recurring_invoicing_type,
@@ -48,7 +43,7 @@ class ContractContract(models.Model):
                     contract.recurring_rule_type,
                     contract.recurring_interval,
                     max_date_end=contract.date_end,
-                    **kwargs,
+                    **contract._get_offset_kwargs(),
                 )
             else:
                 contract.recurring_next_date = min(recurring_next_date)
@@ -63,18 +58,11 @@ class ContractContract(models.Model):
         "recurring_next_date",
         "invoicing_offset_type",
         "invoicing_offset_value",
+        "align_billing_cycle",
     )
     def _compute_next_period_date_end(self):
-        """Compute the end date of the next billing period."""
-        # Override to pass offset settings
+        """Overwrite to pass the offset settings down to the helper method."""
         for rec in self:
-            kwargs = {
-                "invoicing_offset_type": rec.invoicing_offset_type,
-                "invoicing_offset_value": rec.invoicing_offset_value,
-            }
-            if hasattr(rec, "align_billing_cycle"):
-                kwargs["align_billing_cycle"] = rec.align_billing_cycle
-
             rec.next_period_date_end = self.get_next_period_date_end(
                 rec.next_period_date_start,
                 rec.recurring_rule_type,
@@ -83,5 +71,5 @@ class ContractContract(models.Model):
                 next_invoice_date=rec.recurring_next_date,
                 recurring_invoicing_type=rec.recurring_invoicing_type,
                 recurring_invoicing_offset=rec.recurring_invoicing_offset,
-                **kwargs,
+                **rec._get_offset_kwargs(),
             )

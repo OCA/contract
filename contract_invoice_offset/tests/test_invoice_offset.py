@@ -39,13 +39,28 @@ class TestContractInvoiceOffset(common.TransactionCase):
             }
         )
 
+    def _create_contract_without_lines(self, offset_type, offset_value):
+        """Contract without lines, so the header level offset is used."""
+        return self.env["contract.contract"].create(
+            {
+                "name": "Header Offset Contract",
+                "partner_id": self.partner.id,
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+                "date_start": "2025-01-01",
+                "invoicing_offset_type": offset_type,
+                "invoicing_offset_value": offset_value,
+            }
+        )
+
     def test_prepaid_advance_one_month(self):
         """Test Pre-paid + 1 month advance (offset -1 month)."""
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
                 "recurring_invoicing_offset": 0,
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
             }
         )
@@ -62,7 +77,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
             {
                 "recurring_invoicing_type": "post-paid",
                 "recurring_invoicing_offset": 1,
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": 1,
             }
         )
@@ -84,7 +99,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
             {
                 "recurring_invoicing_type": "post-paid",
                 "recurring_invoicing_offset": 1,
-                "invoicing_offset_type": "days",
+                "invoicing_offset_type": "daily",
                 "invoicing_offset_value": 5,
             }
         )
@@ -107,7 +122,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
             }
         )
@@ -150,7 +165,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
             }
         )
@@ -217,7 +232,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
             }
         )
@@ -248,7 +263,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
             }
         )
@@ -312,7 +327,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": 1,
             }
         )
@@ -340,7 +355,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
                 "date_end": "2025-02-10",
             }
@@ -377,7 +392,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
                 "date_end": "2025-02-28",
             }
@@ -409,7 +424,7 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.contract.write(
             {
                 "recurring_invoicing_type": "pre-paid",
-                "invoicing_offset_type": "months",
+                "invoicing_offset_type": "monthly",
                 "invoicing_offset_value": -1,
                 "date_end": "2025-02-15",
             }
@@ -435,4 +450,94 @@ class TestContractInvoiceOffset(common.TransactionCase):
             dates[1],
             fields.Date.to_date("2025-02-15"),
             "Partial period end should be clamped to date_end (Feb 15)",
+        )
+
+    def test_header_offset_weekly(self):
+        """The weekly unit shifts the invoice date by whole weeks."""
+        contract = self._create_contract_without_lines("weekly", -2)
+        # Pre-paid period starts on 2025-01-01, two weeks earlier is Dec 18th.
+        self.assertEqual(
+            contract.recurring_next_date,
+            fields.Date.to_date("2024-12-18"),
+        )
+
+    def test_header_offset_yearly(self):
+        """The yearly unit shifts the invoice date by whole years."""
+        contract = self._create_contract_without_lines("yearly", -1)
+        self.assertEqual(
+            contract.recurring_next_date,
+            fields.Date.to_date("2024-01-01"),
+        )
+
+    def test_header_offset_next_period_date_end(self):
+        """The period end is back-calculated by reversing the offset."""
+        contract = self._create_contract_without_lines("monthly", -1)
+        self.assertEqual(
+            contract.recurring_next_date,
+            fields.Date.to_date("2024-12-01"),
+        )
+        self.assertEqual(
+            contract.next_period_date_end,
+            fields.Date.to_date("2025-01-31"),
+            "The offset must not leak into the invoiced period",
+        )
+
+    def test_no_period_gives_no_invoice_date(self):
+        """No period to invoice means no next invoice date, offset or not."""
+        self.assertFalse(
+            self.env["contract.contract"].get_next_invoice_date(
+                False,
+                "pre-paid",
+                0,
+                "monthly",
+                1,
+                max_date_end=False,
+                invoicing_offset_type="monthly",
+                invoicing_offset_value=-1,
+            )
+        )
+
+    def test_line_offset_takes_precedence(self):
+        """A line with its own offset ignores the contract level one."""
+        self.contract.write(
+            {
+                "recurring_invoicing_type": "pre-paid",
+                "invoicing_offset_type": "monthly",
+                "invoicing_offset_value": -1,
+            }
+        )
+        line = self.contract.contract_line_ids[0]
+        line.write(
+            {
+                "invoicing_offset_type": "daily",
+                "invoicing_offset_value": 5,
+            }
+        )
+        self.assertEqual(
+            line.recurring_next_date,
+            fields.Date.to_date("2025-01-06"),
+            "The line level offset of 5 days must win over the contract one",
+        )
+
+    def test_period_to_invoice_without_next_date(self):
+        """No next invoice date means there is no period to invoice."""
+        line = self.contract.contract_line_ids[0]
+        self.assertEqual(
+            line._get_period_to_invoice(line.last_date_invoiced, False),
+            (False, False, False),
+        )
+
+    def test_align_billing_cycle_with_offset(self):
+        """The offset applies on top of the aligned first period."""
+        contract = self._create_contract_without_lines("monthly", -1)
+        contract.write({"date_start": "2025-01-15", "align_billing_cycle": True})
+        self.assertEqual(
+            contract.next_period_date_end,
+            fields.Date.to_date("2025-01-31"),
+            "The first period must still be shortened to the end of the month",
+        )
+        self.assertEqual(
+            contract.recurring_next_date,
+            fields.Date.to_date("2024-12-15"),
+            "The invoice date is one month before the aligned period start",
         )
