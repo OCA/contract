@@ -10,7 +10,7 @@ class TestContractTagsSale(ContractSaleTagsCommon, SavepointCase):
         self.contract.recurring_create_sale()
 
         sale = self.contract._get_related_sales()
-        self.assertEquals(
+        self.assertEqual(
             self.contract.tag_ids,
             sale.contract_tag_ids,
         )
