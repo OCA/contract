@@ -1,7 +1,7 @@
 # Copyright 2022 ACSONE SA/NV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import models
+from odoo import Command, models
 
 
 class ContractContract(models.Model):
@@ -13,5 +13,5 @@ class ContractContract(models.Model):
         """
         res = super()._prepare_sale(date_ref=date_ref)
         if self.tag_ids:
-            res.update({"contract_tag_ids": [(6, 0, self.tag_ids.ids)]})
+            res.update({"contract_tag_ids": [Command.set(self.tag_ids.ids)]})
         return res
