@@ -4,23 +4,30 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
+from odoo.tools import html2plaintext
 
 
 def to_date(date):
     return fields.Date.to_date(date)
 
 
-class TestContractSalePikcingNote(SavepointCase):
+class TestContractSalePikcingNote(TransactionCase):
     # Use case : Prepare some data for current test case
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        analytic_plan = cls.env["account.analytic.plan"].create(
+            {
+                "name": "Default Plan",
+            }
+        )
         cls.analytic_account = cls.env["account.analytic.account"].create(
             {
                 "name": "Contracts",
+                "plan_id": analytic_plan.id,
             }
         )
         contract_date = "2020-01-15"
@@ -35,7 +42,14 @@ class TestContractSalePikcingNote(SavepointCase):
                 "property_product_pricelist": cls.pricelist.id,
             }
         )
-        cls.product_1 = cls.env.ref("product.product_product_10")
+        cls.product_1 = cls.env["product.product"].create(
+            {
+                "name": "Test Service Product",
+                "type": "service",
+                "categ_id": cls.env.ref("product.product_category_services").id,
+                "list_price": 100.0,
+            }
+        )
         cls.product_1.taxes_id += cls.env["account.tax"].search(
             [("type_tax_use", "=", "sale")], limit=1
         )
@@ -94,10 +108,9 @@ class TestContractSalePikcingNote(SavepointCase):
 
     def test_contract_delivery(self):
         self.assertAlmostEqual(self.contract_line.price_subtotal, 50.0)
-        self.contract_line._onchange_product_id()
         self.contract_line.price_unit = 100.0
         self.contract.partner_id = self.partner.id
         self.contract.recurring_create_sale()
         self.sale = self.contract._get_related_sales()
-        self.assertEqual(self.sale.picking_note, "Careful with boxes")
+        self.assertEqual(html2plaintext(self.sale.picking_note), "Careful with boxes")
         self.assertEqual(self.sale.picking_customer_note, "Deliver at door")
