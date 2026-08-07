@@ -5,7 +5,7 @@
     "name": "Contract Sale Picking Note",
     "summary": """
         Allows to define picking notes on contract that will generate sale order""",
-    "version": "14.0.1.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",

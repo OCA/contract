@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class ContractContract(models.Model):
-
     _inherit = "contract.contract"
 
     picking_note = fields.Text(string="Picking Internal Note")
