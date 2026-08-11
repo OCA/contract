@@ -125,6 +125,7 @@ class AccountMoveGroup(models.TransientModel):
             if not created_invoice:
                 break
             invoices |= created_invoice
+        invoices.action_post()
         return invoices
 
     @api.model
