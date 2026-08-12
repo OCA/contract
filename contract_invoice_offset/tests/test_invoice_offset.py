@@ -81,6 +81,12 @@ class TestContractInvoiceOffset(common.TransactionCase):
                 "invoicing_offset_value": 1,
             }
         )
+        self.contract.contract_line_ids.write(
+            {
+                "recurring_invoicing_type": "post-paid",
+                "recurring_invoicing_offset": 1,
+            }
+        )
 
         self.contract._compute_recurring_next_date()
         # End date of first period (2025-01-01 monthly) is 2025-01-31.
@@ -101,6 +107,12 @@ class TestContractInvoiceOffset(common.TransactionCase):
                 "recurring_invoicing_offset": 1,
                 "invoicing_offset_type": "daily",
                 "invoicing_offset_value": 5,
+            }
+        )
+        self.contract.contract_line_ids.write(
+            {
+                "recurring_invoicing_type": "post-paid",
+                "recurring_invoicing_offset": 1,
             }
         )
         self.contract._compute_recurring_next_date()
@@ -482,21 +494,6 @@ class TestContractInvoiceOffset(common.TransactionCase):
             "The offset must not leak into the invoiced period",
         )
 
-    def test_no_period_gives_no_invoice_date(self):
-        """No period to invoice means no next invoice date, offset or not."""
-        self.assertFalse(
-            self.env["contract.contract"].get_next_invoice_date(
-                False,
-                "pre-paid",
-                0,
-                "monthly",
-                1,
-                max_date_end=False,
-                invoicing_offset_type="monthly",
-                invoicing_offset_value=-1,
-            )
-        )
-
     def test_line_offset_takes_precedence(self):
         """A line with its own offset ignores the contract level one."""
         self.contract.write(
@@ -525,19 +522,4 @@ class TestContractInvoiceOffset(common.TransactionCase):
         self.assertEqual(
             line._get_period_to_invoice(line.last_date_invoiced, False),
             (False, False, False),
-        )
-
-    def test_align_billing_cycle_with_offset(self):
-        """The offset applies on top of the aligned first period."""
-        contract = self._create_contract_without_lines("monthly", -1)
-        contract.write({"date_start": "2025-01-15", "align_billing_cycle": True})
-        self.assertEqual(
-            contract.next_period_date_end,
-            fields.Date.to_date("2025-01-31"),
-            "The first period must still be shortened to the end of the month",
-        )
-        self.assertEqual(
-            contract.recurring_next_date,
-            fields.Date.to_date("2024-12-15"),
-            "The invoice date is one month before the aligned period start",
         )

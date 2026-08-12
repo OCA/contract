@@ -9,73 +9,29 @@ from odoo import api, models
 class ContractLine(models.Model):
     _inherit = "contract.line"
 
-    def _get_offset_kwargs(self):
-        """Prefer the line level offset over the contract level one.
-
-        The line level offset takes precedence as soon as it differs from the
-        field defaults, otherwise the contract level offset applies.
-        """
-        self.ensure_one()
-        line_has_offset = (
-            self.invoicing_offset_value != 0 or self.invoicing_offset_type != "daily"
-        )
-        if line_has_offset:
-            kwargs = super()._get_offset_kwargs()
-        else:
-            kwargs = self.contract_id._get_offset_kwargs()
-        return kwargs
-
     @api.depends(
-        "next_period_date_start",
-        "recurring_invoicing_type",
-        "recurring_invoicing_offset",
-        "recurring_rule_type",
-        "recurring_interval",
-        "date_end",
         "contract_id.invoicing_offset_type",
         "contract_id.invoicing_offset_value",
         "invoicing_offset_type",
         "invoicing_offset_value",
-        "recurring_next_date",
     )
     def _compute_next_period_date_end(self):
-        """Overwrite to pass the offset settings down to the helper method."""
-        for rec in self:
-            rec.next_period_date_end = self.get_next_period_date_end(
-                rec.next_period_date_start,
-                rec.recurring_rule_type,
-                rec.recurring_interval,
-                max_date_end=rec.date_end,
-                next_invoice_date=rec.recurring_next_date,
-                recurring_invoicing_type=rec.recurring_invoicing_type,
-                recurring_invoicing_offset=rec.recurring_invoicing_offset,
-                **rec._get_offset_kwargs(),
-            )
+        return super()._compute_next_period_date_end()
 
     @api.depends(
-        "next_period_date_start",
-        "recurring_invoicing_type",
-        "recurring_invoicing_offset",
-        "recurring_rule_type",
-        "recurring_interval",
-        "date_end",
         "contract_id.invoicing_offset_type",
         "contract_id.invoicing_offset_value",
         "invoicing_offset_type",
         "invoicing_offset_value",
     )
     def _compute_recurring_next_date(self):
-        """Overwrite to pass the offset settings down to the helper method."""
-        for rec in self:
-            rec.recurring_next_date = self.get_next_invoice_date(
-                rec.next_period_date_start,
-                rec.recurring_invoicing_type,
-                rec.recurring_invoicing_offset,
-                rec.recurring_rule_type,
-                rec.recurring_interval,
-                max_date_end=rec.date_end,
-                **rec._get_offset_kwargs(),
-            )
+        return super()._compute_recurring_next_date()
+
+    def _get_invoicing_offset_relative_delta(self):
+        res = super()._get_invoicing_offset_relative_delta()
+        if not res and self.contract_id:
+            return self.contract_id._get_invoicing_offset_relative_delta()
+        return res
 
     def _is_advance_billed(self):
         """Return the lines invoiced ahead of the period they cover."""
@@ -104,7 +60,7 @@ class ContractLine(models.Model):
         )._check_last_date_invoiced()
 
     def _get_period_to_invoice(
-        self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
+        self, last_date_invoiced=None, recurring_next_date=None, stop_at_date_end=True
     ):
         """Get the period dates for invoicing.
 
@@ -124,17 +80,19 @@ class ContractLine(models.Model):
         already reflected the shifted period, so shifting again skipped months.
         """
         self.ensure_one()
+        if last_date_invoiced is None:
+            last_date_invoiced = self.last_date_invoiced
+        if recurring_next_date is None:
+            recurring_next_date = self.recurring_next_date
         if not recurring_next_date:
             return False, False, False
-        kwargs = self._get_offset_kwargs()
 
-        if kwargs["invoicing_offset_value"] < 0:
+        invoicing_offset_delta = self._get_invoicing_offset_relative_delta()
+        if invoicing_offset_delta:
             # get_next_invoice_date computes
             # ``invoice_date = period_start + days_offset + flexible_offset``,
             # so reverse both offsets to get back to the period start.
-            first_date_invoiced = recurring_next_date - self.get_relative_delta(
-                kwargs["invoicing_offset_type"], kwargs["invoicing_offset_value"]
-            )
+            first_date_invoiced = recurring_next_date - invoicing_offset_delta
             first_date_invoiced -= relativedelta(days=self.recurring_invoicing_offset)
 
             # Period end: simple forward calculation from the derived start
@@ -152,21 +110,8 @@ class ContractLine(models.Model):
                 return False, False, False
             return first_date_invoiced, last_date_invoiced, recurring_next_date
 
-        # Standard billing: base logic, reversing the flexible offset when
-        # back-calculating the period end from the forced invoice date.
-        first_date_invoiced = (
-            last_date_invoiced + relativedelta(days=1)
-            if last_date_invoiced
-            else self.date_start
+        return super()._get_period_to_invoice(
+            last_date_invoiced=last_date_invoiced,
+            recurring_next_date=recurring_next_date,
+            stop_at_date_end=stop_at_date_end,
         )
-        last_date_invoiced = self.get_next_period_date_end(
-            first_date_invoiced,
-            self.recurring_rule_type,
-            self.recurring_interval,
-            max_date_end=(self.date_end if stop_at_date_end else False),
-            next_invoice_date=recurring_next_date,
-            recurring_invoicing_type=self.recurring_invoicing_type,
-            recurring_invoicing_offset=self.recurring_invoicing_offset,
-            **kwargs,
-        )
-        return first_date_invoiced, last_date_invoiced, recurring_next_date
