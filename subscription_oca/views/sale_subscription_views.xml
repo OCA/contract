@@ -82,6 +82,16 @@
                                 name="close_reason_id"
                                 invisible="stage_type != 'post'"
                             />
+                            <field name="invoicing_mode" invisible="1" />
+                            <field name="auto_create_payment" invisible="1" />
+                            <field
+                                name="payment_token_id"
+                                invisible="not auto_create_payment or not partner_id"
+                            />
+                            <field
+                                name="payment_exception"
+                                invisible="not auto_create_payment"
+                            />
                         </group>
                         <group name="right_group">
                             <field name="template_id" />

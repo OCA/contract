@@ -70,6 +70,24 @@ class SaleOrder(models.Model):
                 subscription_tmpl.recurring_rule_type,
                 subscription_tmpl.recurring_interval,
             )
+            if subscription_tmpl.auto_create_payment:
+                self._assign_subscription_payment_token(rec)
+            return rec
+        return self.env["sale.subscription"]
+
+    def _assign_subscription_payment_token(self, subscription):
+        """Carry the token saved during the order's online payment over to the
+        subscription, so recurring charges work without manual setup."""
+        self.ensure_one()
+        token = (
+            self.transaction_ids.filtered(
+                lambda tx: tx.state in ("done", "authorized") and tx.token_id
+            )
+            .sorted("last_state_change", reverse=True)[:1]
+            .token_id
+        )
+        if token:
+            subscription.payment_token_id = token
 
     def group_subscription_lines(self):
         """
