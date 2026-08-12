@@ -185,14 +185,7 @@ class ContractContract(models.Model):
                 and contract._origin.date_start != contract.date_start
                 or not recurring_next_date
             ):
-                contract.recurring_next_date = self.get_next_invoice_date(
-                    contract.next_period_date_start,
-                    contract.recurring_invoicing_type,
-                    contract.recurring_invoicing_offset,
-                    contract.recurring_rule_type,
-                    contract.recurring_interval,
-                    max_date_end=contract.date_end,
-                )
+                contract.recurring_next_date = contract.get_next_invoice_date()
             else:
                 contract.recurring_next_date = min(recurring_next_date)
 
