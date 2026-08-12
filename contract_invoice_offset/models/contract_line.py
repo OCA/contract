@@ -23,8 +23,6 @@ class ContractLine(models.Model):
             kwargs = super()._get_offset_kwargs()
         else:
             kwargs = self.contract_id._get_offset_kwargs()
-        # The billing cycle alignment is always a contract level setting.
-        kwargs["align_billing_cycle"] = self.contract_id.align_billing_cycle
         return kwargs
 
     @api.depends(
@@ -38,7 +36,6 @@ class ContractLine(models.Model):
         "contract_id.invoicing_offset_value",
         "invoicing_offset_type",
         "invoicing_offset_value",
-        "contract_id.align_billing_cycle",
         "recurring_next_date",
     )
     def _compute_next_period_date_end(self):
@@ -66,7 +63,6 @@ class ContractLine(models.Model):
         "contract_id.invoicing_offset_value",
         "invoicing_offset_type",
         "invoicing_offset_value",
-        "contract_id.align_billing_cycle",
     )
     def _compute_recurring_next_date(self):
         """Overwrite to pass the offset settings down to the helper method."""

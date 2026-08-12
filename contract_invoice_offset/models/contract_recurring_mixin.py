@@ -38,7 +38,6 @@ class ContractRecurringMixin(models.AbstractModel):
         return {
             "invoicing_offset_type": self.invoicing_offset_type,
             "invoicing_offset_value": self.invoicing_offset_value,
-            "align_billing_cycle": self.align_billing_cycle,
         }
 
     @api.model

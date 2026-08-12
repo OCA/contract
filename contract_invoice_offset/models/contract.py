@@ -18,7 +18,6 @@ class ContractContract(models.Model):
         "contract_line_ids.is_canceled",
         "invoicing_offset_type",
         "invoicing_offset_value",
-        "align_billing_cycle",
     )
     def _compute_recurring_next_date(self):
         """Overwrite to pass the offset settings down to the helper method."""
@@ -58,7 +57,6 @@ class ContractContract(models.Model):
         "recurring_next_date",
         "invoicing_offset_type",
         "invoicing_offset_value",
-        "align_billing_cycle",
     )
     def _compute_next_period_date_end(self):
         """Overwrite to pass the offset settings down to the helper method."""

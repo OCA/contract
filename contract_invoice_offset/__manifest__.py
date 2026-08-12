@@ -8,7 +8,6 @@
     "license": "AGPL-3",
     "depends": [
         "contract",
-        "contract_invoice_align_start",
     ],
     "data": [
         "views/contract_view.xml",
