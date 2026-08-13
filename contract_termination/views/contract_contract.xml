@@ -107,4 +107,25 @@
             </xpath>
         </field>
     </record>
+    <record model="ir.ui.view" id="contract_contract_search_view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='not_finished']" position="attributes">
+                <!-- A terminated contract is not in progress, whatever its end
+                     date is: terminating a contract that was already invoiced
+                     ahead leaves date_end in the future. -->
+                <attribute
+                    name="domain"
+                >['&amp;', ('is_terminated', '=', False), '|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='finished']" position="after">
+                <filter
+                    name="terminated"
+                    string="Terminated"
+                    domain="[('is_terminated', '=', True)]"
+                />
+            </xpath>
+        </field>
+    </record>
 </odoo>
