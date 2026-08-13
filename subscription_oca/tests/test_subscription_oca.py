@@ -254,6 +254,9 @@ class TestSubscriptionOCA(BaseCommon):
                 "fixed_price": 1000,
             }
         )
+        # Required to post out invoices
+        for bank in cls.env.company.partner_id.bank_ids:
+            bank.allow_out_payment = True
 
     @classmethod
     def create_sub_template(cls, vals):
