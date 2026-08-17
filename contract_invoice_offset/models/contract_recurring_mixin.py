@@ -15,13 +15,12 @@ class ContractRecurringMixin(models.AbstractModel):
             ("yearly", "Year(s)"),
         ],
         default="daily",
-        string="Invoicing offset unit",
         required=True,
         help="Unit the invoicing offset value is expressed in.",
     )
     invoicing_offset_value = fields.Integer(
         default=0,
-        string="Invoicing offset value",
+        string="Invoicing Offset",
         help="Positive value delays the invoice, negative value invoices in "
         "advance. E.g. -1 combined with the Month(s) unit invoices one month "
         "in advance.",
