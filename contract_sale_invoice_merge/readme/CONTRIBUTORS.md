@@ -1,0 +1,2 @@
+- [Acsone SA/NV](https://www.acsone.eu):
+  - Alexis Anthonissen \<<alexis.anthonissen@acsone.eu>\>
