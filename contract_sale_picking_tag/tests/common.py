@@ -10,6 +10,13 @@ class ContractSalePickingTagsCommon(ContractSaleTagsCommon):
     def setUpClass(cls):
         super().setUpClass()
         # We replace the product used by a stockable one
-        cls.product_10 = cls.env.ref("product.product_product_10")
+        cls.product_10 = cls.env["product.product"].create(
+            {
+                "name": "Test Product 10",
+                "type": "consu",
+                "list_price": 140.0,
+                "standard_price": 120.50,
+            }
+        )
         with Form(cls.contract.contract_line_ids[0]) as line_form:
             line_form.product_id = cls.product_10
