@@ -5,7 +5,6 @@ from odoo import fields, models
 
 
 class StockPicking(models.Model):
-
     _inherit = "stock.picking"
 
     contract_tag_ids = fields.Many2many(

@@ -5,7 +5,7 @@
     "name": "Contract Sale Picking Tag",
     "summary": """
         Allows to use contract tags that were put to sales on stock pickings""",
-    "version": "14.0.1.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "maintainers": ["rousseldenis"],
