@@ -427,33 +427,31 @@ class ContractLine(models.Model):
         for rec in self:
             if date_end < rec.date_start:
                 rec.cancel()
-            else:
-                if not rec.date_end or rec.date_end > date_end:
-                    old_date_end = rec.date_end
-                    rec.write(
-                        rec._prepare_value_for_stop(date_end, manual_renew_needed)
+                continue
+
+            old_date_end = rec.date_end
+            effective_date_end = date_end
+            if rec.date_end and rec.date_end <= date_end:
+                effective_date_end = rec.date_end
+
+            rec.write(
+                rec._prepare_value_for_stop(effective_date_end, manual_renew_needed)
+            )
+
+            if post_message and effective_date_end != old_date_end:
+                msg = Markup(
+                    _(
+                        """Contract line for <strong>%(product)s</strong>
+                    stopped: <br/>
+                    - <strong>End</strong>: %(old_end)s -- %(new_end)s
+                    """
                     )
-                    if post_message:
-                        msg = Markup(
-                            _(
-                                """Contract line for <strong>%(product)s</strong>
-                            stopped: <br/>
-                            - <strong>End</strong>: %(old_end)s -- %(new_end)s
-                            """
-                            )
-                        ) % {
-                            "product": rec.name,
-                            "old_end": old_date_end,
-                            "new_end": rec.date_end,
-                        }
-                        rec.contract_id.message_post(body=msg)
-                else:
-                    rec.write(
-                        {
-                            "is_auto_renew": False,
-                            "manual_renew_needed": manual_renew_needed,
-                        }
-                    )
+                ) % {
+                    "product": rec.name,
+                    "old_end": old_date_end,
+                    "new_end": rec.date_end,
+                }
+                rec.contract_id.message_post(body=msg)
         return True
 
     def _prepare_value_for_plan_successor(

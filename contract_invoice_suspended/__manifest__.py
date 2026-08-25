@@ -7,9 +7,9 @@
         Contract automatic invoicing suspension""",
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
-    "author": "ACSONE SA/NV",
+    "author": "Odoo Community Association (OCA),ACSONE SA/NV",
     "category": "contract",
-    "website": "https://acsone.eu",
+    "website": "https://github.com/OCA/contract",
     "depends": [
         # OCA
         "contract_line_successor",
