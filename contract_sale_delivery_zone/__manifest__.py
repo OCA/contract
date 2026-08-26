@@ -5,7 +5,7 @@
     "name": "Contract Sale Delivery Zone",
     "summary": """
         This module allows to ensure the delivery zone comes from the contract.""",
-    "version": "14.0.1.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/contract",
