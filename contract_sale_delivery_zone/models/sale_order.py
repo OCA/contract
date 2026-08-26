@@ -6,7 +6,6 @@ from odoo.fields import first
 
 
 class SaleOrder(models.Model):
-
     _inherit = "sale.order"
 
     @api.depends("partner_shipping_id", "order_line.contract_line_id")
