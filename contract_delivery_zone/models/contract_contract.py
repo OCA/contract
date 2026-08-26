@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class ContractContract(models.Model):
-
     _inherit = "contract.contract"
 
     partner_delivery_zone_id = fields.Many2one(
