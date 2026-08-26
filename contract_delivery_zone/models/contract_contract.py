@@ -10,8 +10,8 @@ class ContractContract(models.Model):
     partner_delivery_zone_id = fields.Many2one(
         comodel_name="partner.delivery.zone",
         index=True,
-        help="This is the partner delivery zone. If you modify this here, it"
-        "will be modified on partner too.",
+        help="This is the partner delivery zone. If empty, the partner's "
+        "delivery zone will be used on the contract.",
     )
 
     @api.onchange("partner_id")
