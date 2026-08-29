@@ -9,22 +9,21 @@
             ref="contract.contract_manually_create_invoice_form_view"
         />
         <field name="arch" type="xml">
-            <xpath expr="//form/group[last()]" position="after">
-                <notebook invisible="not invoice_date">
-                    <page name="contracts" string="Contracts">
-                        <button
-                            name="action_show_contract_to_invoice"
-                            position="move"
-                        />
-                    </page>
-                    <page name="domain" string="Contract Filter">
-                        <field
-                            name="filter_domain"
-                            widget="domain"
-                            options="{'model': 'contract.contract'}"
-                        />
-                    </page>
-                </notebook>
+            <field name="invoice_date" position="after">
+                <field name="manually_invoiced" />
+            </field>
+            <xpath expr="//form/group" position="after">
+                <group
+                    string="Contract Filter"
+                    invisible="not invoice_date"
+                    groups="base.group_no_one"
+                >
+                    <field
+                        name="filter_domain"
+                        widget="domain"
+                        options="{'model': 'contract.contract'}"
+                    />
+                </group>
             </xpath>
         </field>
     </record>
