@@ -605,25 +605,28 @@ class ContractContract(models.Model):
                 # this use case is possible when recurring_create_invoice is
                 # called for a finished contract
                 continue
-            contract_lines = contract._get_lines_to_invoice(contract_date_ref)
-            if not contract_lines:
-                continue
+
             invoice_vals = contract._prepare_invoice(contract_date_ref)
-            for line in contract_lines:
-                invoice_line_vals = line._prepare_invoice_line()
-                if invoice_line_vals:
-                    # Allow extension modules to return an empty dictionary for
-                    # nullifying line. We should then cleanup certain values.
-                    if "company_id" in invoice_line_vals:
-                        del invoice_line_vals["company_id"]
-                    if "company_currency_id" in invoice_line_vals:
-                        del invoice_line_vals["company_currency_id"]
-                    invoice_vals["invoice_line_ids"].append(
-                        Command.create(invoice_line_vals)
-                    )
-            invoices_values.append(invoice_vals)
-            # Force the recomputation of journal items
-            contract_lines._update_last_date_invoiced()
+
+            while contract_lines := contract._get_lines_to_invoice(contract_date_ref):
+                for line in contract_lines:
+                    invoice_line_vals = line._prepare_invoice_line()
+                    if invoice_line_vals:
+                        # Allow extension modules to return an empty dictionary for
+                        # nullifying line. We should then cleanup certain values.
+                        if "company_id" in invoice_line_vals:
+                            del invoice_line_vals["company_id"]
+                        if "company_currency_id" in invoice_line_vals:
+                            del invoice_line_vals["company_currency_id"]
+                        invoice_vals["invoice_line_ids"].append(
+                            Command.create(invoice_line_vals)
+                        )
+                # Force the recomputation of journal items
+                contract_lines._update_last_date_invoiced()
+
+            if invoice_vals.get("invoice_line_ids"):
+                invoices_values.append(invoice_vals)
+
         return invoices_values
 
     @api.model
