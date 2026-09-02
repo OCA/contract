@@ -1461,6 +1461,24 @@ class TestContract(TestContractBase):
         self.contract.contract_line_ids.unlink()
         self.assertFalse(self.contract.recurring_create_invoice())
 
+    def test_action_recurring_create_invoice(self):
+        """The created invoices are returned, without any notification."""
+        invoices = self.contract.action_recurring_create_invoice()
+        self.assertEqual(invoices._name, "account.move")
+        self.assertEqual(len(invoices), 1)
+
+    def test_action_recurring_create_invoice_nothing_to_invoice(self):
+        """The user is warned when the button doesn't create any invoice."""
+        self.acct_line.is_canceled = True
+        # The button is still displayed although there's nothing left to invoice
+        self.assertTrue(self.contract.create_invoice_visibility)
+        action = self.contract.action_recurring_create_invoice()
+        self.assertEqual(action["type"], "ir.actions.client")
+        self.assertEqual(action["tag"], "display_notification")
+        self.assertEqual(action["params"]["type"], "warning")
+        self.assertIn(self.contract.display_name, action["params"]["message"])
+        self.assertEqual(self.contract.invoice_count, 0)
+
     def test_check_last_date_invoiced_before_next_invoice_date(self):
         with self.assertRaises(ValidationError):
             self.acct_line.write(
