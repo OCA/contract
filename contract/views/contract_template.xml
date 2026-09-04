@@ -23,7 +23,10 @@
                         </group>
                         <group name="group_main_right">
                             <field name="journal_id" />
-                            <field name="pricelist_id" />
+                            <field
+                                name="pricelist_id"
+                                domain="[('company_id', 'in', (company_id, False))]"
+                            />
                             <field
                                 name="company_id"
                                 options="{'no_create': True}"

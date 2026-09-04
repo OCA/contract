@@ -66,7 +66,10 @@
                                 domain="['|', ('contract_type', '=', contract_type), ('contract_type', '=', False)]"
                                 context="{'default_contract_type': contract_type}"
                             />
-                            <field name="pricelist_id" />
+                            <field
+                                name="pricelist_id"
+                                domain="[('company_id', 'in', (company_id, False))]"
+                            />
 
                             <field
                                 name="company_id"
