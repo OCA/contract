@@ -146,11 +146,6 @@ class SaleOrderLine(models.Model):
         self.filtered("contract_id").update({"invoice_status": "no"})
         return res
 
-    def invoice_line_create(self, invoice_id, qty):
-        return super(
-            SaleOrderLine, self.filtered(lambda line: not line.contract_id)
-        ).invoice_line_create(invoice_id, qty)
-
     @api.depends("qty_invoiced", "qty_delivered", "product_uom_qty", "state")
     def _compute_qty_to_invoice(self):
         """
