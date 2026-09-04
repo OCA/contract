@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_template_form_view">
+        <field name="model">contract.template</field>
+        <field name="inherit_id" ref="contract.contract_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_ids']//list//field[@name='automatic_price']"
+                position="attributes"
+            >
+                <attribute
+                    name="column_invisible"
+                >parent.contract_type == 'purchase' and not parent.is_auto_renew</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
