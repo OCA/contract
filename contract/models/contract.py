@@ -383,7 +383,37 @@ class ContractContract(models.Model):
             self.message_post(body=body)
         return invoices
 
+    def action_recurring_create_invoice(self):
+        """
+        Button action
+        Same as `recurring_create_invoice`, but warning the user when there is
+        nothing to invoice, as no feedback at all is confusing.
+        """
+        self.ensure_one()
+        invoices = self.recurring_create_invoice()
+        if not invoices:
+            return self._get_nothing_to_invoice_notification()
+        return invoices
+
     # === Helpers and Utilities ===
+
+    def _get_nothing_to_invoice_notification(self):
+        """Notification shown when a manual invoicing created no invoice."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": "warning",
+                "title": self.env._("Nothing to invoice"),
+                "message": self.env._(
+                    "No invoice has been created for %(contract)s because there "
+                    "is nothing to invoice.",
+                    contract=self.display_name,
+                ),
+                "sticky": False,
+            },
+        }
 
     def get_formview_id(self, access_uid=None):
         if self.contract_type == "sale":
