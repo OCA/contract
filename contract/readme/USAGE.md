@@ -14,6 +14,9 @@
     - \#START# - \#END# or \#INVOICEMONTHNAME# in the description field
       to display the start/end date or the start month of the invoiced
       period in the invoice line description
+    - \#START-NEXT-MONTH\# or \#END-NEXT-MONTH\# to display next month's
+     dates based on the invoice period start, useful when invoicing the
+     next month's services
     - pre-paid (invoice at period start) or post-paid (invoice at start
       of next period)
 4.  The "Generate Recurring Invoices from Contracts" cron runs daily to
