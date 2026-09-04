@@ -166,6 +166,14 @@ class TestContractBase(common.TransactionCase):
                             "price_unit": 120,
                         },
                     ),
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "#START-NEXT-MONTH# - #END-NEXT-MONTH#",
+                            "display_type": "line_note",
+                        },
+                    ),
                 ],
             }
         )
@@ -2403,6 +2411,7 @@ class TestContract(TestContractBase):
         self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
         invoice_id = self.contract3.recurring_create_invoice()
         self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
+        self.assertEqual(invoice_id.invoice_line_ids[3].name, "06/01/2023 - 06/30/2023")
 
     def test_analytic_account(self):
         """Tests the automatic setting of the analytic account on the contract

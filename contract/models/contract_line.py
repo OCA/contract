@@ -624,6 +624,18 @@ class ContractLine(models.Model):
         name = name.replace("#START#", first_date_invoiced.strftime(date_format))
         name = name.replace("#END#", last_date_invoiced.strftime(date_format))
         name = name.replace(
+            "#START-NEXT-MONTH#",
+            (first_date_invoiced + relativedelta(months=1, day=1)).strftime(
+                date_format
+            ),
+        )
+        name = name.replace(
+            "#END-NEXT-MONTH#",
+            (first_date_invoiced + relativedelta(months=1, day=31)).strftime(
+                date_format
+            ),
+        )
+        name = name.replace(
             "#INVOICEMONTHNAME#",
             self.with_context(lang=lang.code)._translate_marker_month_name(
                 first_date_invoiced.strftime("%m")
