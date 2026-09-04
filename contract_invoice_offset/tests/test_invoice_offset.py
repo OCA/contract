@@ -18,6 +18,11 @@ class TestContractInvoiceOffset(common.TransactionCase):
             {
                 "name": "Test Offset Contract",
                 "partner_id": cls.partner.id,
+                # Drive the recurrence from the contract header, so the offset
+                # set on the contract reaches its lines. Modules such as
+                # `contract_line_successor` default this to True, which would
+                # otherwise leave the line recurrence untouched.
+                "line_recurrence": False,
                 "recurring_interval": 1,
                 "recurring_rule_type": "monthly",
                 "date_start": "2025-01-01",
