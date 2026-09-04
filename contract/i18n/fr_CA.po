@@ -30,8 +30,8 @@ msgid ""
 "                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
 "\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
-"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-out=\"object."
-"name\"/><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+"out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
 "                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
@@ -40,8 +40,8 @@ msgid ""
 "                    <t t-if=\"object.user_id\">\n"
 "                    <t t-if=\"object.user_id.email\">\n"
 "                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-"
-"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object."
-"name)\" t-out=\"object.user_id.name\"/>\n"
+"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
+"\" t-out=\"object.user_id.name\"/>\n"
 "                        </t>\n"
 "                    <t t-else=\"\">\n"
 "                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-"
@@ -70,10 +70,10 @@ msgid ""
 "line-height: 16px; background-color: #F2F2F2;\">\n"
 "                    <span style=\"color: #222; margin-bottom: 5px; display: "
 "block; \">\n"
-"                        <address t-field=\"object.company_id.sudo()."
-"partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;"
-"fields&quot;: [&quot;name&quot;, &quot;address&quot;], &quot;"
-"no_marker&quot;: True}\"/>\n"
+"                        <address t-"
+"field=\"object.company_id.sudo().partner_id\" t-"
+"options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: "
+"[&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}\"/>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -100,6 +100,11 @@ msgid ""
 msgstr ""
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<i class=\"fa fa-print me-1\"/>View Details"
+msgstr ""
+
+#. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
 msgid ""
 "<p>Hello</p>\n"
@@ -114,10 +119,15 @@ msgid ""
 "<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
 "                                contract to invoice\n"
 "                            </span>\n"
-"                            <span invisible=\"contract_to_invoice_count &lt;"
-"= 1\">\n"
+"                            <span invisible=\"contract_to_invoice_count "
+"&lt;= 1\">\n"
 "                                contracts to invoice\n"
 "                            </span>"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<span>Contract </span>"
 msgstr ""
 
 #. module: contract
@@ -220,6 +230,11 @@ msgid "<strong>Partner:</strong>"
 msgstr ""
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "<strong>Payment Terms</strong>"
+msgstr ""
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Price</strong>"
 msgstr ""
@@ -314,6 +329,12 @@ msgid "Add a section"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic Distribution"
 msgstr ""
@@ -366,12 +387,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_canceled
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_canceled
 msgid "Canceled"
-msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_line__product_uom_category_id
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__product_uom_category_id
-msgid "Category"
 msgstr ""
 
 #. module: contract
@@ -445,11 +460,6 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
-msgstr ""
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
-msgid "Contract -"
 msgstr ""
 
 #. module: contract
@@ -603,14 +613,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 msgid "Contracts to invoice"
-msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,help:contract.field_contract_line__product_uom_category_id
-#: model:ir.model.fields,help:contract.field_contract_template_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
 msgstr ""
 
 #. module: contract
@@ -806,13 +808,16 @@ msgid "Discount to apply on generated invoices. Must be ≤ 100."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_modification__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_tag__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__display_name
+#: model:ir.model.fields,field_description:contract.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Afficher le nom"
 
@@ -889,24 +894,21 @@ msgid "Group"
 msgstr ""
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
-msgid "Group By..."
-msgstr ""
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__has_message
 msgid "Has Message"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_account_move_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
 #: model:ir.model.fields,field_description:contract.field_contract_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__id
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__id
 #: model:ir.model.fields,field_description:contract.field_contract_tag__id
 #: model:ir.model.fields,field_description:contract.field_contract_template__id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__id
+#: model:ir.model.fields,field_description:contract.field_res_partner__id
 msgid "ID"
 msgstr "Identifiant"
 
@@ -940,6 +942,7 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "In progress"
 msgstr ""
 
@@ -1156,6 +1159,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__monthlylastday
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__monthlylastday
 msgid "Month(s) last day"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_line__monthly_recurring
+msgid "Monthly Recurring"
 msgstr ""
 
 #. module: contract
@@ -1394,11 +1402,6 @@ msgid "Quarter(s)"
 msgstr ""
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__rating_ids
-msgid "Ratings"
-msgstr ""
-
-#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__recurring_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_line__recurring_rule_type
 #: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__recurring_rule_type
@@ -1587,6 +1590,12 @@ msgid "Technical field for UX purposes."
 msgstr ""
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_report_tree_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
+msgid "Total Monthly Recurring"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
@@ -1606,6 +1615,11 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "VAT:"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
+msgid "View Details"
 msgstr ""
 
 #. module: contract
@@ -1707,6 +1721,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "e.g. Contract XYZ"
+msgstr ""
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/wizards/contract_manually_create_invoice.py:0
+msgid "id"
 msgstr ""
 
 #. module: contract
