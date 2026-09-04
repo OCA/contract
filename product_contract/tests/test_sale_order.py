@@ -5,7 +5,7 @@
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
@@ -722,3 +722,93 @@ class TestSaleOrder(TransactionCase):
             sale.order_line.contract_id.contract_line_ids.date_start,
             fields.Date.to_date("2025-02-28"),
         )
+
+    def _create_contract_sale_order(self, date_start):
+        """Return a confirmable sale order feeding ``self.contract``."""
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    (0, 0, {"product_id": self.product1.id, "product_uom_qty": 1})
+                ],
+            }
+        )
+        order.order_line._compute_product_contract_data()
+        order.order_line.write(
+            {"date_start": date_start, "contract_id": self.contract.id}
+        )
+        return order
+
+    def test_contract_sale_order_count(self):
+        """The contract counts the sale orders its lines come from."""
+        self.assertEqual(self.contract.sale_order_count, 0)
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        self.contract.invalidate_recordset(["sale_order_count"])
+        self.assertEqual(self.contract.sale_order_count, 1)
+
+    def test_action_view_sales_orders_single(self):
+        """A contract fed by a single sale order opens that order directly."""
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        action = self.contract.action_view_sales_orders()
+        self.assertEqual(action["res_model"], "sale.order")
+        self.assertEqual(action["view_mode"], "form")
+        self.assertEqual(action["res_id"], self.sale.id)
+
+    def test_action_view_sales_orders_multi(self):
+        """A contract fed by several sale orders opens the list."""
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        upsell = self._create_contract_sale_order("2019-01-01")
+        upsell.action_confirm()
+        action = self.contract.action_view_sales_orders()
+        self.assertEqual(action["view_mode"], "list,form")
+        self.assertNotIn("res_id", action)
+        self.assertEqual(
+            self.env["sale.order"].search(action["domain"]),
+            self.sale | upsell,
+        )
+
+    def test_get_auto_renew_rule_type(self):
+        """`monthlylastday` makes no sense to renew on, monthly is used."""
+        self.contract_line.recurring_rule_type = "monthlylastday"
+        self.assertEqual(self.contract_line._get_auto_renew_rule_type(), "monthly")
+        self.contract_line.recurring_rule_type = "yearly"
+        self.assertEqual(self.contract_line._get_auto_renew_rule_type(), "yearly")
+
+    def test_prepare_invoice_line_links_sale_order_line(self):
+        """The invoice line points back at the sale order line, when there is one."""
+        self.assertNotIn("sale_line_ids", self.contract_line._prepare_invoice_line())
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        contract_line = self.env["contract.line"].search(
+            [("sale_order_line_id", "=", self.order_line1.id)]
+        )
+        self.assertEqual(
+            contract_line._prepare_invoice_line()["sale_line_ids"],
+            [Command.set([self.order_line1.id])],
+        )
+
+    def test_action_show_contracts_single(self):
+        """A sale order behind a single contract opens that contract's form."""
+        self.product2.is_contract = False
+        self.sale.action_confirm()
+        action = self.sale.action_show_contracts()
+        self.assertEqual(action["view_mode"], "form")
+        self.assertEqual(action["res_id"], self.order_line1.contract_id.id)
+        self.assertTrue(all(view[1] == "form" for view in action["views"]))
+
+    def test_need_contract_creation_on_draft_order(self):
+        """A draft order has nothing to create yet."""
+        self.assertEqual(self.sale.state, "draft")
+        self.assertFalse(self.sale.need_contract_creation)
+
+    def test_onchange_product_id_recurring_info_non_contract(self):
+        """A non contract product only gets the start date, no renewal info."""
+        self.contract_line.is_auto_renew = False
+        self.product2.is_contract = False
+        self.contract_line.product_id = self.product2
+        self.contract_line._onchange_product_id_recurring_info()
+        self.assertEqual(self.contract_line.date_start, fields.Date.today())
+        self.assertFalse(self.contract_line.is_auto_renew)
