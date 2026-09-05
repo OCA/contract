@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 logger = logging.getLogger(__name__)
 
@@ -153,15 +153,33 @@ class SaleSubscription(models.Model):
     )
     crm_team_id = fields.Many2one(comodel_name="crm.team", string="Sale team")
     to_renew = fields.Boolean(default=False, string="To renew")
+    is_paused = fields.Boolean(
+        string="Paused",
+        tracking=True,
+        index="btree_not_null",
+        copy=False,
+        help="When ticked, the recurring cron will skip this subscription "
+        "until it is resumed manually or until `paused_until` is reached.",
+    )
+    paused_until = fields.Date(
+        string="Resume on",
+        tracking=True,
+        copy=False,
+        help="If set, the cron will automatically resume this subscription "
+        "on or after this date.",
+    )
 
     @api.model
     def cron_subscription_management(self):
+        self._cron_resume_due_subscriptions()
         today = date.today()
         subscription_count = self.search_count([])
         for subscription in self.search(
             [], order="recurring_next_date asc", limit=subscription_count
         ):
             subscription = subscription.with_company(subscription.company_id)
+            if subscription.is_paused:
+                continue
             if subscription.in_progress:
                 if (
                     subscription.recurring_next_date <= today
@@ -181,6 +199,24 @@ class SaleSubscription(models.Model):
             ):
                 subscription.action_start_subscription()
                 subscription.generate_invoice()
+
+    @api.model
+    def _cron_resume_due_subscriptions(self, limit=None):
+        today = fields.Date.context_today(self)
+        domain = [
+            ("is_paused", "=", True),
+            ("paused_until", "!=", False),
+            ("paused_until", "<=", today),
+        ]
+        for subscription in self.search(domain, limit=limit):
+            try:
+                subscription.with_company(subscription.company_id).action_resume(
+                    automatic=True
+                )
+            except Exception:
+                logger.exception(
+                    "Error resuming paused subscription %s", subscription.id
+                )
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):
@@ -314,6 +350,40 @@ class SaleSubscription(models.Model):
             [("type", "=", "in_progress")], limit=1
         )
         self.stage_id = in_progress_stage
+
+    def action_open_pause_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.env._("Pause subscription"),
+            "res_model": "sale.subscription.pause.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
+
+    def action_pause(self, paused_until=None):
+        self.ensure_one()
+        if self.stage_id.type == "post":
+            raise UserError(self.env._("Cannot pause a closed subscription."))
+        if self.is_paused:
+            raise UserError(self.env._("This subscription is already paused."))
+        self.write({"is_paused": True, "paused_until": paused_until or False})
+        if paused_until:
+            body = self.env._("Subscription paused until %(date)s.", date=paused_until)
+        else:
+            body = self.env._("Subscription paused.")
+        self.message_post(body=body)
+
+    def action_resume(self, automatic=False):
+        self.ensure_one()
+        if not self.is_paused:
+            raise UserError(self.env._("This subscription is not paused."))
+        self.write({"is_paused": False, "paused_until": False})
+        if automatic:
+            body = self.env._("Subscription resumed automatically.")
+        else:
+            body = self.env._("Subscription resumed.")
+        self.message_post(body=body)
 
     def action_close_subscription(self):
         return {
