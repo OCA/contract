@@ -3,6 +3,15 @@
 from odoo import Command, api, fields, models
 from odoo.tools.misc import get_lang
 
+# Average length of a calendar month: 365.25 days / 12 months.
+_AVG_DAYS_PER_MONTH = 365.25 / 12  # 30.4375
+_PERIOD_LENGTH_IN_MONTHS = {
+    "days": 1 / _AVG_DAYS_PER_MONTH,
+    "weeks": 7 / _AVG_DAYS_PER_MONTH,
+    "months": 1.0,
+    "years": 12.0,
+}
+
 
 class SaleSubscriptionLine(models.Model):
     _name = "sale.subscription.line"
@@ -17,6 +26,13 @@ class SaleSubscriptionLine(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         related="sale_subscription_id.currency_id",
+        store=True,
+        readonly=True,
+    )
+    company_currency_id = fields.Many2one(
+        "res.currency",
+        string="Company Currency",
+        related="sale_subscription_id.company_id.currency_id",
         store=True,
         readonly=True,
     )
@@ -49,6 +65,14 @@ class SaleSubscriptionLine(models.Model):
     amount_tax_line_amount = fields.Float(
         string="Taxes Amount", compute="_compute_subtotal", store=True
     )
+    recurring_monthly = fields.Monetary(
+        string="Monthly recurring revenue",
+        compute="_compute_recurring_monthly",
+        store=True,
+        currency_field="company_currency_id",
+        help="Subtotal of this line normalised to a monthly amount and "
+        "converted to the company currency, based on the template recurrence.",
+    )
     sale_subscription_id = fields.Many2one(
         comodel_name="sale.subscription", string="Subscription"
     )
@@ -79,6 +103,41 @@ class SaleSubscriptionLine(models.Model):
                     "price_subtotal": taxes["total_excluded"],
                 }
             )
+
+    @api.depends(
+        "price_subtotal",
+        "currency_id",
+        "company_currency_id",
+        "sale_subscription_id.company_id",
+        "sale_subscription_id.date_start",
+        "sale_subscription_id.template_id.recurring_rule_type",
+        "sale_subscription_id.template_id.recurring_interval",
+    )
+    def _compute_recurring_monthly(self):
+        for record in self:
+            template = record.sale_subscription_id.template_id
+            if not template:
+                record.recurring_monthly = 0.0
+                continue
+            interval = max(template.recurring_interval or 1, 1)
+            period_months = (
+                _PERIOD_LENGTH_IN_MONTHS.get(template.recurring_rule_type, 1.0)
+                * interval
+            )
+            monthly = record.price_subtotal / period_months if period_months else 0.0
+            record.recurring_monthly = record._convert_to_company_currency(monthly)
+
+    def _convert_to_company_currency(self, amount):
+        """Normalise a line amount to the company currency so aggregated
+        MRR/ARR figures stay comparable across pricelist currencies."""
+        self.ensure_one()
+        source = self.currency_id
+        target = self.company_currency_id
+        if not amount or not source or not target or source == target:
+            return amount
+        company = self.sale_subscription_id.company_id or self.env.company
+        date = self.sale_subscription_id.date_start or fields.Date.context_today(self)
+        return source._convert(amount, target, company, date)
 
     @api.depends("product_id")
     def _compute_name(self):
