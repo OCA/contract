@@ -93,11 +93,59 @@
                     invisible="not is_auto_renew"
                 />
             </xpath>
+            <!-- Colour the contract lines by lifecycle state, mirroring the
+                 contract list and Odoo's own draft/expired conventions:
+                 upcoming -> info (blue, like a draft order), to renew / about to
+                 close -> primary (purple: needs attention, but not an error),
+                 closed / canceled -> muted. An in-progress line keeps the normal
+                 colour. Warning (orange) is deliberately left free so it keeps
+                 meaning a genuine problem, as it does on the contract itself. -->
+            <xpath expr="//list" position="inside">
+                <field name="state" column_invisible="1" />
+            </xpath>
             <xpath expr="//list" position="attributes">
-                <attribute name="decoration-muted">is_canceled</attribute>
                 <attribute
-                    name="decoration-info"
-                >create_invoice_visibility and not is_canceled</attribute>
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Apply the same lifecycle-state colours to the contract lines shown on
+         the contract form (the recurring-line lists), so the form matches the
+         standalone list. -->
+    <record id="contract_contract_form_line_colors" model="ir.ui.view">
+        <field name="name">contract.contract.form (line state colours)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']//list"
+                position="attributes"
+            >
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']//list"
+                position="attributes"
+            >
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
             </xpath>
         </field>
     </record>
