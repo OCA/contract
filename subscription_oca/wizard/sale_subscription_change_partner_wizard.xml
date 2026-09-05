@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_change_partner_wizard_view" model="ir.ui.view">
+        <field name="name">sale.subscription.change.partner.wizard.form</field>
+        <field name="model">sale.subscription.change.partner.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change customer">
+                <group>
+                    <field
+                        name="partner_id"
+                        domain="[('customer_rank', '>', 0)]"
+                        options="{'no_create': True}"
+                        help="Customer that will own the selected subscriptions from now on. Already issued invoices are not reassigned; future invoices and orders use the new customer."
+                    />
+                    <field
+                        name="update_pricelist"
+                        help="If set, replace each subscription's pricelist with the new customer's sale pricelist."
+                    />
+                    <field
+                        name="update_fiscal_position"
+                        help="If set, recompute the fiscal position from the new customer and the subscription company."
+                    />
+                </group>
+                <group string="Affected subscriptions">
+                    <field name="subscription_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="name" />
+                            <field name="partner_id" />
+                            <field name="stage_id" />
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Apply"
+                        class="btn-primary"
+                    />
+                    <button special="cancel" string="Cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record
+        id="sale_subscription_change_partner_wizard_act_window"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Change customer</field>
+        <field name="res_model">sale.subscription.change.partner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_sale_subscription" />
+        <field name="binding_view_types">list,form</field>
+    </record>
+</odoo>
