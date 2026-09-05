@@ -165,7 +165,7 @@ class TestSubscriptionRecurrenceDates(ProductCommon, BaseCommon):
     # ------------------------------------------------------------------
 
     def test_generate_invoice_advances_recurring_next_date(self):
-        template = self._make_template("months")  # invoicing_mode defaults to draft
+        template = self._make_template("months")  # invoice_state defaults to draft
         sub = self._make_subscription(template, date_start=date(2026, 1, 1))
         sub.recurring_next_date = date(2026, 1, 1)
         self.env["sale.subscription.line"].create(

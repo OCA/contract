@@ -117,14 +117,14 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         cls.tmpl4 = cls.create_sub_template(
             {
                 "recurring_rule_boundary": "limited",
-                "invoicing_mode": "invoice",
+                "invoice_state": "posted",
                 "recurring_rule_type": "years",
             }
         )
         cls.tmpl5 = cls.create_sub_template(
             {
                 "recurring_rule_boundary": "unlimited",
-                "invoicing_mode": "invoice",
+                "invoice_state": "posted",
                 "recurring_rule_type": "days",
             }
         )
@@ -533,13 +533,31 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         subscription.create_invoice()
         self.sub8.journal_id = self.sale_journal
         subscription.create_invoice()
-        self.sub8.template_id.invoicing_mode = "invoice"
+        self.sub8.template_id.write(
+            {
+                "create_sale_order": False,
+                "invoice_state": "posted",
+                "send_invoice": False,
+            }
+        )
         with self.assertRaises(exceptions.UserError):
             subscription.generate_invoice()
-        self.sub8.template_id.invoicing_mode = "invoice_send"
+        self.sub8.template_id.write(
+            {
+                "create_sale_order": False,
+                "invoice_state": "posted",
+                "send_invoice": True,
+            }
+        )
         with self.assertRaises(exceptions.UserError):
             subscription.generate_invoice()
-        self.sub8.template_id.invoicing_mode = "sale_and_invoice"
+        self.sub8.template_id.write(
+            {
+                "create_sale_order": True,
+                "invoice_state": "posted",
+                "send_invoice": False,
+            }
+        )
         with self.assertRaises(exceptions.UserError):
             subscription.generate_invoice()
         # add lines and repeat
@@ -561,11 +579,29 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         subscription.create_invoice()
         subscription.journal_id = self.sale_journal
         subscription.create_invoice()
-        subscription.template_id.invoicing_mode = "invoice"
+        subscription.template_id.write(
+            {
+                "create_sale_order": False,
+                "invoice_state": "posted",
+                "send_invoice": False,
+            }
+        )
         subscription.generate_invoice()
-        subscription.template_id.invoicing_mode = "invoice_send"
+        subscription.template_id.write(
+            {
+                "create_sale_order": False,
+                "invoice_state": "posted",
+                "send_invoice": True,
+            }
+        )
         subscription.generate_invoice()
-        subscription.template_id.invoicing_mode = "sale_and_invoice"
+        subscription.template_id.write(
+            {
+                "create_sale_order": True,
+                "invoice_state": "posted",
+                "send_invoice": False,
+            }
+        )
         order = subscription.create_sale_order()
         order.with_context(uid=1).action_confirm()
         subscription.sale_subscription_line_ids.mapped("product_id").write(

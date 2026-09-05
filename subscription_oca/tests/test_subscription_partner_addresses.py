@@ -39,7 +39,7 @@ class TestSubscriptionPartnerAddresses(AccountTestInvoicingCommon):
                 "code": "ADDR",
                 "recurring_rule_type": "months",
                 "recurring_interval": 1,
-                "invoicing_mode": "draft",
+                "invoice_state": "draft",
             }
         )
         cls.addr_stage = cls.env["sale.subscription.stage"].search(
@@ -112,7 +112,8 @@ class TestSubscriptionPartnerAddresses(AccountTestInvoicingCommon):
         self.assertEqual(invoice.partner_id, other_invoice)
 
     def test_sale_order_carries_addresses(self):
-        self.addr_template.invoicing_mode = "sale_and_invoice"
+        self.addr_template.create_sale_order = True
+        self.addr_template.invoice_state = "posted"
         sub = self._new_subscription(self.addr_customer)
         order = sub.create_sale_order()
         self.assertEqual(order.partner_id, self.addr_customer)
