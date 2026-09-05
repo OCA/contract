@@ -180,8 +180,8 @@
                                         name="recurring_next_date"
                                         column_invisible="True"
                                     />
-                                    <field name="date_start" column_invisible="True" />
-                                    <field name="date_end" />
+                                    <field name="date_start" optional="hide" />
+                                    <field name="date_end" optional="show" />
                                     <field
                                         name="last_date_invoiced"
                                         groups="base.group_no_one"
@@ -264,7 +264,7 @@
                                         column_invisible="True"
                                     />
                                     <field name="date_start" required="1" />
-                                    <field name="date_end" />
+                                    <field name="date_end" optional="show" />
                                     <field
                                         name="recurring_next_date"
                                         required="next_period_date_end"
@@ -479,7 +479,7 @@
                     />
                     <filter
                         name="group_by_date_end"
-                        string="Date End"
+                        string="End Date"
                         domain="[]"
                         context="{'group_by':'date_end'}"
                     />
