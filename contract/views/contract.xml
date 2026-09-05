@@ -414,7 +414,13 @@
         <field name="name">contract.contract list view (in contract)</field>
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <list>
+            <!-- Colour contracts by their term: an expired contract (end date in
+                 the past) is muted, one that has not started yet (start date in
+                 the future) is shown in the info colour, like a draft order. -->
+            <list
+                decoration-muted="date_end and date_end &lt; current_date"
+                decoration-info="date_start and date_start &gt; current_date"
+            >
                 <field name="name" string="Name" />
                 <field name="code" />
                 <field name="journal_id" groups="account.group_account_user" />
