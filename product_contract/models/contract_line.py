@@ -75,3 +75,6 @@ class ContractLine(models.Model):
     )
     def _compute_recurring_interval(self):
         return super()._compute_recurring_interval()
+
+    def _check_set_successor(self):
+        return self.state == "closed"
