@@ -27,6 +27,7 @@ addon | version | maintainers | summary
 [contract_line_successor](contract_line_successor/) | 19.0.1.0.0 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Contract Line Successor
 [contract_payment_mode](contract_payment_mode/) | 19.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_sale](contract_sale/) | 19.0.1.0.0 |  | Contract from Sale
+[contract_termination](contract_termination/) | 19.0.1.0.0 |  | contract_termination
 [contract_update_last_date_invoiced](contract_update_last_date_invoiced/) | 19.0.1.0.0 | <a href='https://github.com/rafaelbn'><img src='https://github.com/rafaelbn.png' width='32' height='32' style='border-radius:50%;' alt='rafaelbn'/></a> <a href='https://github.com/Andrii9090'><img src='https://github.com/Andrii9090.png' width='32' height='32' style='border-radius:50%;' alt='Andrii9090'/></a> | This module allows to update the last date invoiced if invoices are deleted.
 [contract_variable_quantity](contract_variable_quantity/) | 19.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 [subscription_oca](subscription_oca/) | 19.0.1.1.3 |  | Generate recurring invoices.
