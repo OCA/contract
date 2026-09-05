@@ -376,6 +376,38 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         move_res = self.sub_line._prepare_account_move_line()
         self.assertIsInstance(move_res, dict)
 
+    def test_subscription_invoice_without_product_income_account(self):
+        category = self.env["product.category"].create(
+            {"name": "Category without income account"}
+        )
+        category.property_account_income_categ_id = False
+        product = self._create_product(
+            name="product_without_income_account",
+            lst_price=10.0,
+            subscribable=True,
+            categ_id=category.id,
+        )
+        self.assertFalse(product.property_account_income_id)
+        self.assertFalse(product.categ_id.property_account_income_categ_id)
+        journal = self.sale_journal
+        self.assertTrue(journal.default_account_id)
+        subscription = self.create_sub(
+            {
+                "journal_id": journal.id,
+                "template_id": self.tmpl2.id,
+                "date_start": fields.Date.today() - relativedelta(days=10),
+                "recurring_next_date": fields.Date.today() - relativedelta(days=1),
+                "in_progress": True,
+            }
+        )
+        self.create_sub_line(subscription, product.id)
+        invoice = subscription.create_invoice()
+        line = invoice.invoice_line_ids.filtered(
+            lambda move_line: move_line.product_id == product
+        )
+        self.assertEqual(len(line), 1)
+        self.assertEqual(line.account_id, journal.default_account_id)
+
     @patch(
         "odoo.addons.subscription_oca.models.sale_subscription."
         "SaleSubscription.generate_invoice"
