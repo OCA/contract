@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_demo_offset_advance" model="contract.contract">
+        <field name="name">Demo Contract: 1 Month Advance</field>
+        <field name="partner_id" ref="base.res_partner_2" />
+        <field name="recurring_interval">1</field>
+        <field name="recurring_rule_type">monthly</field>
+        <field name="date_start" eval="time.strftime('%Y-%m-01')" />
+        <field name="recurring_invoicing_type">pre-paid</field>
+        <field name="invoicing_offset_type">monthly</field>
+        <field name="invoicing_offset_value">-1</field>
+        <field
+            name="contract_line_ids"
+            eval="[
+            (0, 0, {
+                'name': 'Monthly Service (Advance)',
+                'product_id': ref('product.product_product_4'),
+                'quantity': 1,
+                'price_unit': 100.0,
+                'recurring_interval': 1,
+                'recurring_rule_type': 'monthly',
+                'date_start': time.strftime('%Y-%m-01'),
+            })
+        ]"
+        />
+    </record>
+
+    <record id="contract_demo_offset_delay" model="contract.contract">
+        <field name="name">Demo Contract: 2 Weeks Delay</field>
+        <field name="partner_id" ref="base.res_partner_3" />
+        <field name="recurring_interval">1</field>
+        <field name="recurring_rule_type">monthly</field>
+        <field name="date_start" eval="time.strftime('%Y-%m-01')" />
+        <field name="recurring_invoicing_type">post-paid</field>
+        <field name="invoicing_offset_type">weekly</field>
+        <field name="invoicing_offset_value">2</field>
+        <field
+            name="contract_line_ids"
+            eval="[
+            (0, 0, {
+                'name': 'Monthly Service (Delayed)',
+                'product_id': ref('product.product_product_5'),
+                'quantity': 1,
+                'price_unit': 150.0,
+                'recurring_interval': 1,
+                'recurring_rule_type': 'monthly',
+                'date_start': time.strftime('%Y-%m-01'),
+            })
+        ]"
+        />
+    </record>
+</odoo>
