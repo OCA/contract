@@ -416,15 +416,20 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" string="Name" />
-                <field name="code" />
+                <field name="code" optional="show" />
                 <field name="journal_id" groups="account.group_account_user" />
                 <field name="partner_id" />
+                <field name="payment_term_id" optional="hide" />
                 <field
                     name="tag_ids"
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
                 />
-                <field name="company_id" groups="base.group_multi_company" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
             </list>
         </field>
     </record>
