@@ -24,6 +24,40 @@
                     <button type="object" string="Preview" name="action_preview" />
                 </header>
                 <sheet string="Contract">
+                    <div
+                        class="alert alert-warning d-flex align-items-center"
+                        role="alert"
+                        invisible="not has_invoice_generation_error"
+                    >
+                        <i
+                            class="fa fa-exclamation-triangle me-2"
+                            aria-hidden="true"
+                            title="Warning"
+                        />
+                        <div class="flex-grow-1">
+                            <strong>Recurring invoice generation failed</strong>
+                            <span> on </span>
+                            <field
+                                name="invoice_generation_error_date"
+                                readonly="1"
+                                class="d-inline"
+                            />
+                            <pre class="mb-0 mt-1">
+                                <field
+                                    name="invoice_generation_error"
+                                    readonly="1"
+                                    nolabel="1"
+                                />
+                            </pre>
+                        </div>
+                        <button
+                            name="action_clear_invoice_generation_error"
+                            type="object"
+                            string="Dismiss"
+                            class="btn btn-sm btn-secondary ms-2"
+                        />
+                    </div>
+                    <field name="has_invoice_generation_error" invisible="1" />
                     <div class="oe_button_box" name="button_box">
                         <button
                             name="action_show_invoices"
@@ -414,7 +448,15 @@
         <field name="name">contract.contract list view (in contract)</field>
         <field name="model">contract.contract</field>
         <field name="arch" type="xml">
-            <list>
+            <list decoration-warning="has_invoice_generation_error">
+                <button
+                    name="action_view_invoice_generation_error"
+                    type="object"
+                    icon="fa-exclamation-triangle text-warning"
+                    title="Last scheduled invoicing failed - click for details"
+                    invisible="not has_invoice_generation_error"
+                />
+                <field name="has_invoice_generation_error" column_invisible="True" />
                 <field name="name" string="Name" />
                 <field name="code" />
                 <field name="journal_id" groups="account.group_account_user" />
@@ -454,6 +496,12 @@
                 />
                 <field name="partner_id" />
                 <field name="commercial_partner_id" />
+                <separator />
+                <filter
+                    name="invoice_generation_error"
+                    string="Invoice Generation Failed"
+                    domain="[('has_invoice_generation_error', '=', True)]"
+                />
                 <filter
                     string="Archived"
                     domain="[('active', '=', False)]"
