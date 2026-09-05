@@ -106,8 +106,8 @@
                 <field name="recurring_interval" column_invisible="True" />
                 <field name="recurring_rule_type" column_invisible="True" />
                 <field name="recurring_invoicing_type" column_invisible="True" />
-                <field name="date_start" column_invisible="True" />
-                <field name="date_end" />
+                <field name="date_start" optional="hide" />
+                <field name="date_end" optional="show" />
                 <field name="recurring_next_date" column_invisible="True" />
                 <field name="last_date_invoiced" groups="base.group_no_one" />
                 <field name="create_invoice_visibility" column_invisible="True" />
@@ -154,8 +154,8 @@
                     optional="hide"
                     sum="Total Monthly Recurring"
                 />
-                <field name="date_start" />
-                <field name="date_end" />
+                <field name="date_start" optional="show" />
+                <field name="date_end" optional="show" />
                 <field name="recurring_interval" />
                 <field name="recurring_rule_type" />
                 <field name="recurring_next_date" />
