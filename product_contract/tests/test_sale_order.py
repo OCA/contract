@@ -1,0 +1,814 @@
+# Copyright 2017 LasLabs Inc.
+# Copyright 2018 ACSONE SA/NV
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+
+from odoo import Command, fields
+from odoo.exceptions import ValidationError
+from odoo.fields import Date
+from odoo.tests.common import TransactionCase
+
+
+class TestSaleOrder(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env = cls.env(
+            context=dict(
+                cls.env.context,
+                tracking_disable=True,
+                no_reset_password=True,
+            )
+        )
+        cls.partner = cls.env["res.partner"].create(
+            {
+                "name": "Test partner",
+            }
+        )
+        cls.product1 = cls.env["product.product"].create(
+            {
+                "name": "Contract Product 1",
+                "type": "service",
+                "lst_price": 100.0,
+            }
+        )
+        cls.product2 = cls.env["product.product"].create(
+            {
+                "name": "Contract Product 2",
+                "type": "service",
+                "lst_price": 50.0,
+            }
+        )
+        cls.sale = cls.env["sale.order"].create(
+            {
+                "partner_id": cls.partner.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product1.id,
+                            "product_uom_qty": 1,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product2.id,
+                            "product_uom_qty": 1,
+                        },
+                    ),
+                ],
+            }
+        )
+        cls.account = cls.env["account.account"].create(
+            {
+                "name": "Contract Account",
+                "code": "4000",
+                "account_type": "asset_current",
+                "reconcile": True,
+            }
+        )
+        cls.journal = cls.env["account.journal"].create(
+            {
+                "name": "Contract Journal",
+                "type": "sale",
+                "default_account_id": cls.account.id,
+            }
+        )
+        cls.contract_template1 = cls.env["contract.template"].create(
+            {"name": "Template 1"}
+        )
+        cls.contract_template2 = cls.env["contract.template"].create(
+            {
+                "name": "Template 2",
+                "contract_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product2.id,
+                            "name": "Services from #START# to #END#",
+                            "quantity": 1,
+                            "uom_id": cls.product2.uom_id.id,
+                            "price_unit": 100,
+                            "discount": 50,
+                            "recurring_rule_type": "yearly",
+                            "recurring_interval": 1,
+                        },
+                    )
+                ],
+            }
+        )
+        cls.product1.with_company(cls.sale.company_id).write(
+            {
+                "is_contract": True,
+                "recurrence_number": 12,
+                "recurring_rule_type": "monthlylastday",
+                "recurring_invoicing_type": "post-paid",
+                "property_contract_template_id": cls.contract_template1.id,
+            }
+        )
+        cls.product2.with_company(cls.sale.company_id).write(
+            {
+                "is_contract": True,
+                "property_contract_template_id": cls.contract_template2.id,
+            }
+        )
+        cls.order_line1 = cls.sale.order_line.filtered(
+            lambda line: line.product_id == cls.product1
+        )
+        cls.order_line1.date_start = "2018-01-01"
+        cls.order_line1.recurrence_number = 12
+        pricelist = cls.sale.partner_id.property_product_pricelist.id
+        cls.contract = cls.env["contract.contract"].create(
+            {
+                "name": "Test Contract 2",
+                "partner_id": cls.sale.partner_id.id,
+                "pricelist_id": pricelist,
+                "contract_type": "sale",
+                "line_recurrence": True,
+                "contract_template_id": cls.contract_template1.id,
+                "contract_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product1.id,
+                            "name": "Services from #START# to #END#",
+                            "quantity": 1,
+                            "uom_id": cls.product1.uom_id.id,
+                            "price_unit": 100,
+                            "discount": 50,
+                            "recurring_rule_type": "monthly",
+                            "recurring_interval": 1,
+                            "date_start": "2016-02-15",
+                            "recurring_next_date": "2016-02-29",
+                        },
+                    )
+                ],
+            }
+        )
+        cls.contract_line = cls.contract.contract_line_ids[0]
+        cls.sale.order_line._compute_product_contract_data()
+
+    def test_compute_is_contract(self):
+        """Sale Order should have is_contract true if one of its lines is
+        contract"""
+        self.assertTrue(self.sale.is_contract)
+
+    def test_action_confirm(self):
+        """It should create a contract for each contract template used in
+        order_line"""
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 2)
+        self.assertEqual(
+            self.order_line1.contract_id.contract_template_id,
+            self.contract_template1,
+        )
+        contract_line = self.order_line1.contract_id.contract_line_ids
+        self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
+        self.assertEqual(contract_line.date_end, Date.to_date("2018-12-31"))
+        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-01-31"))
+
+    def test_change_sale_company(self):
+        self.assertTrue(self.sale.company_id)
+        other_company = self.env["res.company"].create(
+            {"name": "other company", "parent_id": self.sale.company_id.id}
+        )
+        self.sale.company_id = other_company
+        self.assertFalse(self.sale.order_line.mapped("contract_template_id"))
+
+    def test_change_sale_company_2(self):
+        """Contract company must be the sale order company."""
+        self.assertTrue(self.sale.company_id)
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(contracts.mapped("company_id"), self.sale.company_id)
+
+    def test_sale_order_invoice_status(self):
+        """
+        sale line linked to contracts must not be invoiced from sale order
+        """
+        self.sale.action_confirm()
+        self.assertEqual(self.order_line1.invoice_status, "no")
+        invoice = self.order_line1.contract_id.recurring_create_invoice()
+        self.assertTrue(invoice)
+        self.assertEqual(
+            self.order_line1.qty_invoiced, self.order_line1.product_uom_qty
+        )
+        self.assertEqual(self.order_line1.qty_to_invoice, 0)
+
+    def test_action_confirm_without_contract_creation(self):
+        """It should create a contract for each contract template used in
+        order_line"""
+        self.sale.company_id.create_contract_at_sale_order_confirmation = False
+        self.sale.action_confirm()
+        self.assertEqual(len(self.sale.order_line.mapped("contract_id")), 0)
+        self.assertTrue(self.sale.need_contract_creation)
+        self.sale.action_create_contract()
+        self.assertEqual(len(self.sale.order_line.mapped("contract_id")), 2)
+        self.assertFalse(self.sale.need_contract_creation)
+        self.assertEqual(
+            self.order_line1.contract_id.contract_template_id,
+            self.contract_template1,
+        )
+        contract_line = self.order_line1.contract_id.contract_line_ids
+        self.assertEqual(contract_line.date_start, Date.to_date("2018-01-01"))
+        self.assertEqual(contract_line.date_end, Date.to_date("2018-12-31"))
+        self.assertEqual(contract_line.recurring_next_date, Date.to_date("2018-01-31"))
+
+    def test_sale_contract_count(self):
+        """It should count contracts as many different contract template used
+        in order_line"""
+        self.sale.action_confirm()
+        self.assertEqual(self.sale.contract_count, 2)
+
+    def test_onchange_product(self):
+        """It should get recurrence invoicing info to the sale line from
+        its product"""
+        self.assertEqual(
+            self.order_line1.recurring_rule_type,
+            self.product1.recurring_rule_type,
+        )
+        self.assertEqual(
+            self.order_line1.recurring_invoicing_type,
+            self.product1.recurring_invoicing_type,
+        )
+        self.assertEqual(self.order_line1.date_end, Date.to_date("2018-12-31"))
+
+    def test_check_contract_sale_partner(self):
+        """Can't link order line to a partner contract different then the
+        order one"""
+        contract2 = self.env["contract.contract"].create(
+            {
+                "name": "Contract",
+                "contract_template_id": self.contract_template2.id,
+                "partner_id": self.sale.partner_id.id,
+                "line_recurrence": True,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.order_line1.contract_id = contract2
+
+    def test_check_contract_sale_contract_template(self):
+        """Can't link order line to a contract with different contract
+        template then the product one"""
+        contract1 = self.env["contract.contract"].create(
+            {
+                "name": "Contract",
+                "partner_id": self.env.user.partner_id.id,
+                "contract_template_id": self.contract_template1.id,
+                "line_recurrence": True,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.order_line1.contract_id = contract1
+
+    def test_no_contract_proudct(self):
+        """it should create contract for only product contract"""
+        self.product1.is_contract = False
+        self.sale.action_confirm()
+        self.assertFalse(self.order_line1.contract_id)
+
+    def test_sale_order_line_invoice_status(self):
+        """Sale order line for contract product should have nothing to
+        invoice as status"""
+        self.sale.action_confirm()
+        self.assertEqual(self.order_line1.invoice_status, "no")
+
+    def test_sale_order_invoice_status_2(self):
+        """Sale order with only contract product should have nothing to
+        invoice status directtly"""
+        self.sale.order_line.filtered(
+            lambda line: not line.product_id.is_contract
+        ).unlink()
+
+        self.sale.action_confirm()
+        self.assertEqual(self.sale.invoice_status, "no")
+
+    def test_sale_order_create_invoice(self):
+        """Should not invoice contract product on sale order create invoice"""
+        self.product2.is_contract = False
+        self.product2.invoice_policy = "order"
+
+        self.sale.action_confirm()
+        self.sale._create_invoices()
+        self.assertEqual(len(self.sale.invoice_ids), 1)
+        invoice_line = self.sale.invoice_ids.invoice_line_ids.filtered(
+            lambda line: line.product_id.is_contract
+        )
+        self.assertEqual(len(invoice_line), 0)
+
+    def test_link_contract_invoice_to_sale_order(self):
+        """It should link contract invoice to sale order"""
+
+        self.sale.action_confirm()
+        invoice = self.order_line1.contract_id.recurring_create_invoice()
+        self.assertTrue(invoice in self.sale.invoice_ids)
+
+    def test_contract_upsell(self):
+        """Should stop contract line at sale order line start date"""
+        self.order_line1.contract_id = self.contract
+        self.order_line1.contract_line_id = self.contract_line
+        self.contract_line.date_end = Date.today() + relativedelta(months=4)
+        self.contract_line.is_auto_renew = True
+        self.order_line1.date_start = "2018-06-01"
+
+        self.sale.action_confirm()
+        self.assertEqual(self.contract_line.date_end, Date.to_date("2018-05-31"))
+        self.assertFalse(self.contract_line.is_auto_renew)
+        new_contract_line = self.env["contract.line"].search(
+            [("sale_order_line_id", "=", self.order_line1.id)]
+        )
+        self.assertEqual(
+            self.contract_line.successor_contract_line_id, new_contract_line
+        )
+        self.assertEqual(
+            new_contract_line.predecessor_contract_line_id, self.contract_line
+        )
+
+    def test_contract_upsell_2(self):
+        """Should stop contract line at sale order line start date"""
+        self.order_line1.contract_id = self.contract
+        self.order_line1.contract_line_id = self.contract_line
+        self.contract_line.write(
+            {
+                "date_start": "2018-06-01",
+                "recurring_next_date": "2018-06-01",
+                "date_end": False,
+            }
+        )
+        self.order_line1.date_start = "2018-06-01"
+
+        self.sale.action_confirm()
+        self.assertFalse(self.contract_line.date_end)
+        self.assertTrue(self.contract_line.is_canceled)
+
+    def test_onchange_product_id_recurring_info(self):
+        self.product2.write(
+            {
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+                "is_auto_renew": True,
+                "recurrence_number": 12,
+                "termination_notice_interval": "6",
+                "termination_notice_rule_type": "weekly",
+            }
+        )
+        self.contract_line.write(
+            {
+                "date_start": Date.today(),
+                "date_end": Date.today() + relativedelta(years=1),
+                "recurring_next_date": Date.today(),
+                "product_id": self.product2.id,
+            }
+        )
+        self.contract_line._onchange_product_id_recurring_info()
+        self.assertEqual(self.contract_line.recurring_rule_type, "monthly")
+        self.assertEqual(self.contract_line.recurring_invoicing_type, "pre-paid")
+        self.assertEqual(self.contract_line.recurring_interval, 1)
+        self.assertEqual(self.contract_line.is_auto_renew, True)
+        self.assertEqual(self.contract_line.auto_renew_interval, 1)
+        self.assertEqual(self.contract_line.auto_renew_rule_type, "yearly")
+        self.assertEqual(self.contract_line.termination_notice_interval, 6)
+        self.assertEqual(self.contract_line.termination_notice_rule_type, "weekly")
+
+    def test_action_show_contracts(self):
+        self.sale.action_confirm()
+        action = self.sale.action_show_contracts()
+        self.assertEqual(
+            self.env["contract.contract"].search(action["domain"]),
+            self.sale.order_line.mapped("contract_id"),
+        )
+
+    def test_check_contact_is_not_terminated(self):
+        self.contract.is_terminated = True
+        with self.assertRaises(ValidationError):
+            self.order_line1.contract_id = self.contract
+
+    def test_check_contact_is_not_terminated_1(self):
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        self.contract.is_terminated = True
+        self.sale._action_cancel()
+        with self.assertRaises(ValidationError):
+            self.sale.action_draft()
+        self.contract.is_terminated = False
+        self.sale.action_draft()
+
+    def test_order_lines_with_the_same_contract_template(self):
+        """It should create one contract with two lines grouped by contract
+        template"""
+        self.product2.with_company(self.sale.company_id).write(
+            {
+                "is_contract": True,
+                "property_contract_template_id": self.contract_template1.id,
+            }
+        )
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 1)
+        self.assertEqual(len(contracts.contract_line_ids), 2)
+        contracts = (
+            self.env["contract.line"]
+            .search([("sale_order_line_id", "in", self.sale.order_line.ids)])
+            .mapped("contract_id")
+        )
+        self.assertEqual(len(contracts), 1)
+
+    def test_order_lines_without_contract_template(self):
+        """It should create one contract with lines without contract
+        template"""
+        self.product1.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        self.product2.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        self.assertFalse(self.sale.order_line.mapped("contract_template_id"))
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 1)
+        self.assertEqual(len(contracts.contract_line_ids), 2)
+        self.assertEqual(contracts.name, self.sale.name)
+        contracts = (
+            self.env["contract.line"]
+            .search([("sale_order_line_id", "in", self.sale.order_line.ids)])
+            .mapped("contract_id")
+        )
+        self.assertEqual(len(contracts), 1)
+
+    def test_order_lines_without_contract_template2(self):
+        """It should create two contracts
+        product1 with contract template
+        product2 without contract template
+        """
+        self.product2.with_company(self.sale.company_id).write(
+            {"is_contract": True, "property_contract_template_id": False}
+        )
+        line_product_1 = self.sale.order_line.filtered(
+            lambda line: line.product_id == self.product1
+        )
+        line_product_2 = self.sale.order_line.filtered(
+            lambda line: line.product_id == self.product2
+        )
+        self.assertEqual(line_product_1.contract_template_id, self.contract_template1)
+        self.assertFalse(line_product_2.contract_template_id)
+        self.sale.action_confirm()
+        contracts = self.sale.order_line.mapped("contract_id")
+        self.assertEqual(len(contracts), 2)
+        self.assertEqual(len(line_product_1.contract_id.contract_line_ids), 1)
+        self.assertEqual(len(line_product_2.contract_id.contract_line_ids), 1)
+        self.assertEqual(
+            line_product_1.contract_id.name,
+            f"{self.contract_template1.name}: {self.sale.name}",
+        )
+        self.assertEqual(line_product_2.contract_id.name, self.sale.name)
+        contracts = (
+            self.env["contract.line"]
+            .search([("sale_order_line_id", "in", self.sale.order_line.ids)])
+            .mapped("contract_id")
+        )
+        self.assertEqual(len(contracts), 2)
+
+    def _create_contract_product(
+        self, recurrence_interval, contract_start_date_method, force_month=False
+    ):
+        product = self.env["product.product"].create(
+            {
+                "name": "Contract Test",
+                "type": "service",
+                "is_contract": True,
+                "recurrence_interval": recurrence_interval,
+                "contract_start_date_method": contract_start_date_method,
+                "property_contract_template_id": self.contract_template1.id,
+            }
+        )
+        if recurrence_interval != "monthly":
+            product[f"force_month_{recurrence_interval}"] = force_month
+        return product
+
+    def _create_and_confirm_sale(self, product):
+        sale = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": product.id,
+                        },
+                    ),
+                ],
+            }
+        )
+        sale.order_line._compute_product_contract_data()
+        sale.action_confirm()
+        return sale
+
+    @freeze_time("2024-08-15")
+    def test_order_line_date_start_confirm(self):
+        # This start no force date
+        contract_month = self._create_contract_product("monthly", "start_this")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-01"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "start_this")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-07-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-07-01"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "start_this")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-07-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-07-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_this")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-01-01"),
+        )
+        # This end no force date
+        contract_month = self._create_contract_product("monthly", "end_this")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "end_this")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-09-30
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-30"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_this")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_this")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        # Next start no force date
+        contract_month = self._create_contract_product("monthly", "start_next")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-09-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-01"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "start_next")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "start_next")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2025-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-01-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_next")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-01-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-01-01"),
+        )
+        # Next end no force date
+        contract_month = self._create_contract_product("monthly", "end_next")
+        sale = self._create_and_confirm_sale(contract_month)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_quarter = self._create_contract_product("quarterly", "end_next")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-09-30
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-09-30"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_next")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_next")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-12-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-12-31"),
+        )
+        # This start force month
+        contract_quarter = self._create_contract_product("quarterly", "start_this", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-01"),
+        )
+        contract_semester = self._create_contract_product(
+            "semesterly", "start_this", "4"
+        )
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_this", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-02-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-02-01"),
+        )
+        # This end force month
+        contract_quarter = self._create_contract_product("quarterly", "end_this", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_this", "4")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_this", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2024-02-29
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-02-29"),
+        )
+        # Next start force month
+        contract_quarter = self._create_contract_product("quarterly", "start_next", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-11-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-11-01"),
+        )
+        contract_semester = self._create_contract_product(
+            "semesterly", "start_next", "4"
+        )
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-01"),
+        )
+        contract_year = self._create_contract_product("yearly", "start_next", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-02-01
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-02-01"),
+        )
+        # Next end force month
+        contract_quarter = self._create_contract_product("quarterly", "end_next", "2")
+        sale = self._create_and_confirm_sale(contract_quarter)
+        # The start date of the contract should be 2024-08-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-08-31"),
+        )
+        contract_semester = self._create_contract_product("semesterly", "end_next", "4")
+        sale = self._create_and_confirm_sale(contract_semester)
+        # The start date of the contract should be 2024-10-31
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2024-10-31"),
+        )
+        contract_year = self._create_contract_product("yearly", "end_next", "2")
+        sale = self._create_and_confirm_sale(contract_year)
+        # The start date of the contract should be 2025-02-28
+        self.assertEqual(
+            sale.order_line.contract_id.contract_line_ids.date_start,
+            fields.Date.to_date("2025-02-28"),
+        )
+
+    def _create_contract_sale_order(self, date_start):
+        """Return a confirmable sale order feeding ``self.contract``."""
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    (0, 0, {"product_id": self.product1.id, "product_uom_qty": 1})
+                ],
+            }
+        )
+        order.order_line._compute_product_contract_data()
+        order.order_line.write(
+            {"date_start": date_start, "contract_id": self.contract.id}
+        )
+        return order
+
+    def test_contract_sale_order_count(self):
+        """The contract counts the sale orders its lines come from."""
+        self.assertEqual(self.contract.sale_order_count, 0)
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        self.contract.invalidate_recordset(["sale_order_count"])
+        self.assertEqual(self.contract.sale_order_count, 1)
+
+    def test_action_view_sales_orders_single(self):
+        """A contract fed by a single sale order opens that order directly."""
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        action = self.contract.action_view_sales_orders()
+        self.assertEqual(action["res_model"], "sale.order")
+        self.assertEqual(action["view_mode"], "form")
+        self.assertEqual(action["res_id"], self.sale.id)
+
+    def test_action_view_sales_orders_multi(self):
+        """A contract fed by several sale orders opens the list."""
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        upsell = self._create_contract_sale_order("2019-01-01")
+        upsell.action_confirm()
+        action = self.contract.action_view_sales_orders()
+        self.assertEqual(action["view_mode"], "list,form")
+        self.assertNotIn("res_id", action)
+        self.assertEqual(
+            self.env["sale.order"].search(action["domain"]),
+            self.sale | upsell,
+        )
+
+    def test_get_auto_renew_rule_type(self):
+        """`monthlylastday` makes no sense to renew on, monthly is used."""
+        self.contract_line.recurring_rule_type = "monthlylastday"
+        self.assertEqual(self.contract_line._get_auto_renew_rule_type(), "monthly")
+        self.contract_line.recurring_rule_type = "yearly"
+        self.assertEqual(self.contract_line._get_auto_renew_rule_type(), "yearly")
+
+    def test_prepare_invoice_line_links_sale_order_line(self):
+        """The invoice line points back at the sale order line, when there is one."""
+        self.assertNotIn("sale_line_ids", self.contract_line._prepare_invoice_line())
+        self.order_line1.contract_id = self.contract
+        self.sale.action_confirm()
+        contract_line = self.env["contract.line"].search(
+            [("sale_order_line_id", "=", self.order_line1.id)]
+        )
+        self.assertEqual(
+            contract_line._prepare_invoice_line()["sale_line_ids"],
+            [Command.set([self.order_line1.id])],
+        )
+
+    def test_action_show_contracts_single(self):
+        """A sale order behind a single contract opens that contract's form."""
+        self.product2.is_contract = False
+        self.sale.action_confirm()
+        action = self.sale.action_show_contracts()
+        self.assertEqual(action["view_mode"], "form")
+        self.assertEqual(action["res_id"], self.order_line1.contract_id.id)
+        self.assertTrue(all(view[1] == "form" for view in action["views"]))
+
+    def test_need_contract_creation_on_draft_order(self):
+        """A draft order has nothing to create yet."""
+        self.assertEqual(self.sale.state, "draft")
+        self.assertFalse(self.sale.need_contract_creation)
+
+    def test_onchange_product_id_recurring_info_non_contract(self):
+        """A non contract product only gets the start date, no renewal info."""
+        self.contract_line.is_auto_renew = False
+        self.product2.is_contract = False
+        self.contract_line.product_id = self.product2
+        self.contract_line._onchange_product_id_recurring_info()
+        self.assertEqual(self.contract_line.date_start, fields.Date.today())
+        self.assertFalse(self.contract_line.is_auto_renew)
