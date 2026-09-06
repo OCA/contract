@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="report_contract_document_hide_detail"
+        inherit_id="contract.report_contract_document"
+        priority="100"
+    >
+        <!-- Accumulate the grand total before the row so it stays correct even
+             when the detail rows of a hidden section are not rendered. -->
+        <xpath expr="//t[@t-as='l']/tr" position="before">
+            <t t-if="not l.display_type">
+                <t t-set="total" t-value="total + l.price_subtotal" />
+            </t>
+        </xpath>
+        <!-- Original in-row accumulation is replaced to avoid double counting;
+             priority set above so this replace stays deterministic. -->
+        <xpath expr="//t[@t-as='l']/tr//t[@t-set='total']" position="replace" />
+        <!-- Hide product and note rows of a section whose details are hidden. -->
+        <xpath expr="//t[@t-as='l']/tr" position="attributes">
+            <attribute
+                name="t-if"
+            >l.display_type == 'line_section' or not current_section or current_section.show_details</attribute>
+        </xpath>
+        <!-- Hide line amounts when the section hides them. -->
+        <xpath
+            expr="//t[@t-as='l']/tr//span[@t-field='l.price_unit']"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >not current_section or current_section.show_line_amount</attribute>
+        </xpath>
+        <xpath
+            expr="//t[@t-as='l']/tr//span[@t-field='l.price_subtotal']"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >not current_section or current_section.show_line_amount</attribute>
+        </xpath>
+        <!-- Section subtotal row: shown when details are visible and the
+             subtotal is enabled, or when details are hidden and the collapsed
+             section subtotal is enabled. -->
+        <xpath expr="//tr[hasclass('is-subtotal', 'text-end')]" position="attributes">
+            <attribute
+                name="t-if"
+            >(current_section.show_details and current_section.show_subtotal) or (not current_section.show_details and current_section.show_section_subtotal)</attribute>
+        </xpath>
+    </template>
+</odoo>

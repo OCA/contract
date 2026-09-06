@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="portal_contract_page_hide_detail"
+        inherit_id="contract.portal_contract_page"
+        priority="100"
+    >
+        <!-- Keep a running section subtotal (the base portal has none). -->
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//t[@t-as='line']/tr"
+            position="before"
+        >
+            <t
+                t-set="current_subtotal"
+                t-value="(current_subtotal or 0) + line.price_subtotal"
+            />
+        </xpath>
+        <!-- Hide product and note rows of a section whose details are hidden. -->
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//t[@t-as='line']/tr"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >line.display_type == 'line_section' or not current_section or current_section.show_details</attribute>
+        </xpath>
+        <!-- Section subtotal row, rendered at the end of each section: shown
+             when details are visible and the subtotal is enabled, or when
+             details are hidden and the collapsed section subtotal is enabled. -->
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//t[@t-as='line']/tr"
+            position="after"
+        >
+            <tr
+                t-if="current_section and (line_last or contract.contract_line_ids[line_index+1].display_type == 'line_section') and ((current_section.show_details and current_section.show_subtotal) or (not current_section.show_details and current_section.show_section_subtotal))"
+                class="is-subtotal"
+            >
+                <td colspan="99" class="text-end">
+                    <strong class="mr16">Subtotal <span
+                        t-field="current_section.name"
+                    /></strong>
+                    <span
+                        t-esc="current_subtotal"
+                        t-options='{"widget": "monetary", "display_currency": contract.currency_id}'
+                    />
+                </td>
+            </tr>
+        </xpath>
+        <!-- Hide line amounts when the section hides them. -->
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//span[@t-field='line.price_unit']"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >not current_section or current_section.show_line_amount</attribute>
+        </xpath>
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//span[@t-field='line.discount']"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >not current_section or current_section.show_line_amount</attribute>
+        </xpath>
+        <xpath
+            expr="//tbody[hasclass('contract_tbody')]//span[@t-field='line.price_subtotal']"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >not current_section or current_section.show_line_amount</attribute>
+        </xpath>
+    </template>
+</odoo>
