@@ -37,3 +37,55 @@ class TestProductTemplate(TransactionCase):
         """
         with self.assertRaises(ValidationError):
             self.consu_product.is_contract = True
+
+    def test_check_recurrence_number_is_strictly_positive(self):
+        """
+        It should raise ValidationError if recurrence_number is not strictly positive
+        for a contract product
+        """
+        self.service_product.is_contract = True
+        self.service_product.property_contract_template_id = self.contract.id
+        with self.assertRaises(ValidationError):
+            self.service_product.recurrence_number = -1
+        with self.assertRaises(ValidationError):
+            self.service_product.recurrence_number = 0
+        self.service_product.recurrence_number = 1
+
+    def test_check_recurring_interval_is_strictly_positive(self):
+        """
+        It should raise ValidationError if recurring_interval is not strictly positive
+        for a contract product
+        """
+        self.service_product.is_contract = True
+        self.service_product.property_contract_template_id = self.contract.id
+        with self.assertRaises(ValidationError):
+            self.service_product.recurring_interval = -1
+        with self.assertRaises(ValidationError):
+            self.service_product.recurring_interval = 0
+        self.service_product.recurring_interval = 1
+
+    def test_check_auto_renew_interval_is_strictly_positive(self):
+        """
+        It should raise ValidationError if auto_renew_interval is not strictly positive
+        for a contract product
+        """
+        self.service_product.is_contract = True
+        self.service_product.is_auto_renew = True
+        self.service_product.property_contract_template_id = self.contract.id
+        with self.assertRaises(ValidationError):
+            self.service_product.auto_renew_interval = -1
+        with self.assertRaises(ValidationError):
+            self.service_product.auto_renew_interval = 0
+        self.service_product.auto_renew_interval = 1
+
+    def test_check_termination_notice_interval_is_positive(self):
+        """
+        It should raise ValidationError if termination_notice_interval is not positive
+        for a contract product
+        """
+        self.service_product.is_contract = True
+        self.service_product.is_auto_renew = True
+        self.service_product.property_contract_template_id = self.contract.id
+        with self.assertRaises(ValidationError):
+            self.service_product.termination_notice_interval = -1
+        self.service_product.termination_notice_interval = 0
