@@ -39,15 +39,23 @@ class ContractContract(models.Model):
         default=lambda self: self.env.user,
     )
     group_id = fields.Many2one(
-        string="Group",
+        string="Analytic Account",
         comodel_name="account.analytic.account",
         compute="_compute_group_id",
         store=True,
         readonly=False,
         ondelete="restrict",
+        help=(
+            "Analytic account shared by every line of this contract. "
+            "Computed from the lines' analytic distribution when all lines "
+            "point at the same account; left empty when the lines use "
+            "different accounts. Stored compute, editable: clearing or "
+            "setting it manually overrides the computed value."
+        ),
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
-    note = fields.Text(string="Notes")
+    color = fields.Integer(string="Color Index")
+    note = fields.Html(string="Notes", sanitize=True)
 
     # === Partner and Commercial Info ===
     partner_id = fields.Many2one(
@@ -124,6 +132,13 @@ class ContractContract(models.Model):
 
     # === Dates ===
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
+    last_date_invoiced = fields.Date(
+        string="Date of Last Invoice",
+        compute="_compute_last_date_invoiced",
+        store=True,
+        readonly=True,
+        copy=False,
+    )
 
     # === Compute Methods ===
 
@@ -209,6 +224,37 @@ class ContractContract(models.Model):
             date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
+
+    @api.constrains("date_start", "date_end")
+    def _check_contract_start_end_dates(self):
+        # When lines are present, the line-level _check_start_end_dates
+        # constraint covers per-line validation, and contract.date_end is
+        # computed from the lines while contract.date_start may legitimately
+        # default to today even for an existing-line contract — so the
+        # contract-level pair is not strictly comparable. An empty date_end
+        # (open-ended contract) is also allowed.
+        for rec in self:
+            if rec.contract_line_ids:
+                continue
+            if rec.date_start and rec.date_end and rec.date_start > rec.date_end:
+                raise ValidationError(
+                    self.env._("Contract end date must be after the start date.")
+                )
+
+    @api.depends(
+        "contract_line_ids.last_date_invoiced",
+        "contract_line_ids.is_canceled",
+    )
+    def _compute_last_date_invoiced(self):
+        for contract in self:
+            dates = contract.contract_line_ids.filtered(
+                lambda line: (
+                    line.last_date_invoiced
+                    and not line.is_canceled
+                    and (not line.display_type or line.is_recurring_note)
+                )
+            ).mapped("last_date_invoiced")
+            contract.last_date_invoiced = max(dates) if dates else False
 
     def _inverse_partner_id(self):
         for rec in self:
@@ -655,6 +701,7 @@ class ContractContract(models.Model):
         self._add_contract_origin(moves)
         self._invoice_followers(moves)
         self._compute_recurring_next_date()
+        self._compute_last_date_invoiced()
         return moves
 
     @api.model

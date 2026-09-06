@@ -533,6 +533,45 @@ class TestContract(TestContractBase):
             "Should not create a new invoice after the last one",
         )
 
+    def test_contract_last_date_invoiced(self):
+        """contract.contract.last_date_invoiced aggregates max of line values,
+        excluding cancelled lines and pure section/note rows."""
+        self.assertFalse(self.acct_line.last_date_invoiced)
+        self.assertFalse(self.contract.last_date_invoiced)
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-01-31"))
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        line2 = self.env["contract.line"].create(
+            dict(self.line_vals, recurring_next_date="2018-04-15")
+        )
+        line2.last_date_invoiced = "2018-03-31"
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-03-31"))
+        line2.is_canceled = True
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "display_type": "line_section",
+                "name": "Header",
+            }
+        )
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+
+    def test_contract_tag_default_color(self):
+        """A tag created without a color gets a random one from the palette."""
+        tag = self.env["contract.tag"].create({"name": "Test tag"})
+        self.assertIn(tag.color, range(1, 12))
+
+    def test_contract_line_display_name(self):
+        """The line display name is prefixed with its start date."""
+        self.assertEqual(
+            self.acct_line.display_name,
+            f"{self.acct_line.date_start} - {self.acct_line.name}",
+        )
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
@@ -568,6 +607,15 @@ class TestContract(TestContractBase):
             self.acct_line.write(
                 {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
             )
+
+    def test_check_contract_start_end_dates(self):
+        """Setting date_end earlier than date_start on the contract record
+        itself must raise a validation error."""
+        contract = self.env["contract.contract"].create(
+            {"name": "Date check", "partner_id": self.partner.id}
+        )
+        with self.assertRaises(ValidationError):
+            contract.write({"date_start": "2025-01-01", "date_end": "2024-12-31"})
 
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""

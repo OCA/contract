@@ -7,15 +7,21 @@
         <field name="arch" type="xml">
             <form string="Contract Template">
                 <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        invisible="active"
+                    />
                     <div class="oe_title">
                         <label for="name" string="Contract Name" class="oe_edit_only" />
-                        <h3>
+                        <h1>
                             <field
                                 name="name"
                                 class="oe_inline"
                                 placeholder="e.g. Contract XYZ"
                             />
-                        </h3>
+                        </h1>
                     </div>
                     <group name="group_main">
                         <group name="group_main_left">
@@ -137,6 +143,12 @@
                 <field name="contract_type" />
                 <field name="pricelist_id" />
                 <field name="journal_id" />
+                <separator />
+                <filter
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                    name="inactive"
+                />
                 <filter
                     name="contract_type"
                     string="Contract Type"
