@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="model">res.config.settings</field>
+        <field
+            name="inherit_id"
+            ref="contract_invoice_auto_validate.res_config_settings_form_view"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='auto_post_contract_invoice']" position="after">
+                <div
+                    class="content-group mt16"
+                    invisible="not auto_post_contract_invoice"
+                >
+                    <field name="auto_send_contract_invoice" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
