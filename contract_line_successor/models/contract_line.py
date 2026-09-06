@@ -399,13 +399,36 @@ class ContractLine(models.Model):
                 }
             )
 
-    def _prepare_value_for_stop(self, date_end, manual_renew_needed):
+    def _prepare_value_for_stop_base(self, date_end, manual_renew_needed):
+        """
+        Values that must always be applied when a line is stopped, whether
+        or not date_end itself is being pushed earlier.
+
+        This is the extension point for any module that needs to set values
+        on stop() even when the line's date_end doesn't move.
+        Modules should override this method to add their own
+        fields here rather , so those fields
+        are set in every case, not only when date_end is shortened.
+        """
         self.ensure_one()
         return {
-            "date_end": date_end,
             "is_auto_renew": False,
             "manual_renew_needed": manual_renew_needed,
         }
+
+    def _prepare_value_for_stop(self, date_end, manual_renew_needed):
+        self.ensure_one()
+        vals = self._prepare_value_for_stop_base(date_end, manual_renew_needed)
+        vals["date_end"] = date_end
+        vals["recurring_next_date"] = self.get_next_invoice_date(
+            self.next_period_date_start,
+            self.recurring_invoicing_type,
+            self.recurring_invoicing_offset,
+            self.recurring_rule_type,
+            self.recurring_interval,
+            max_date_end=date_end,
+        )
+        return vals
 
     def stop(self, date_end, manual_renew_needed=False, post_message=True):
         """
@@ -441,10 +464,7 @@ class ContractLine(models.Model):
                         rec.contract_id.message_post(body=msg)
                 else:
                     rec.write(
-                        {
-                            "is_auto_renew": False,
-                            "manual_renew_needed": manual_renew_needed,
-                        }
+                        rec._prepare_value_for_stop_base(date_end, manual_renew_needed)
                     )
         return True
 
