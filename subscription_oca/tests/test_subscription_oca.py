@@ -683,3 +683,72 @@ class TestSubscriptionOCA(BaseCommon):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    def test_action_confirm_with_crm_context_and_subscribable_product(self):
+        """Test that action_confirm with CRM context doesn't cause FK violation.
+
+        This test verifies that when a sale.order with a subscribable product is
+        confirmed with default_tag_ids in context (as happens when confirming from
+        a CRM opportunity), the subscription is created successfully without
+        a Foreign Key violation.
+
+        The fix ensures that default_tag_ids from CRM context (containing
+        crm.tag IDs) are not applied to sale.subscription.tag_ids (which
+        expects sale.subscription.tag IDs).
+
+        Reproduces the production scenario:
+        1. A sale.order is created with a subscribable product linked to
+           a subscription template
+        2. action_confirm() is called with context containing CRM tag IDs
+           in default_tag_ids
+        3. Without fix: FK constraint violation occurs on
+           sale_subscription_sale_subscription_tag_rel
+        4. With fix: subscription is created successfully, tag_ids remains
+           empty
+        """
+        # Create a crm.tag (represents tags from CRM opportunity)
+        crm_tag = self.env["crm.tag"].create({"name": "Test CRM Tag for SO"})
+
+        # Ensure product_1 has a subscription template linked
+        # (this is needed for subscription to be created on SO confirmation)
+        if not self.product_1.product_tmpl_id.subscription_template_id:
+            self.product_1.product_tmpl_id.subscription_template_id = self.tmpl1.id
+
+        # Create a sale order with a subscribable product
+        sale_order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "partner_invoice_id": self.partner.id,
+                "partner_shipping_id": self.partner.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "name": self.product_1.name,
+                            "product_id": self.product_1.id,
+                            "product_uom_qty": 1,
+                            "product_uom": self.product_1.uom_id.id,
+                            "price_unit": self.product_1.list_price,
+                        }
+                    )
+                ],
+            }
+        )
+
+        # Call action_confirm with context containing crm.tag ID in default_tag_ids
+        # This simulates confirming a quotation from a CRM opportunity with tags
+        # With the fix: subscription should be created without FK violation
+        sale_order.with_context(default_tag_ids=[(6, 0, [crm_tag.id])]).action_confirm()
+
+        # Verify that subscription was created
+        subscriptions = self.env["sale.subscription"].search(
+            [("sale_order_id", "=", sale_order.id)]
+        )
+        self.assertEqual(len(subscriptions), 1, "Subscription should be created")
+
+        # Verify that subscription tag_ids is empty (not polluted by crm.tag)
+        subscription = subscriptions[0]
+        self.assertEqual(
+            len(subscription.tag_ids),
+            0,
+            "subscription.tag_ids should be empty, not contaminated by crm.tag IDs",
+        )
