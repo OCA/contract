@@ -1,4 +1,5 @@
 # Copyright 2023 Domatix - Carlos Martínez
+# Copyright 2026 INVITU (<https://www.invitu.com>)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from collections import defaultdict
 from datetime import date
@@ -65,11 +66,12 @@ class SaleOrder(models.Model):
                     "sale_subscription_line_ids": subscription_lines,
                 }
             )
-            rec.action_start_subscription()
-            rec.recurring_next_date = self.get_next_interval(
-                subscription_tmpl.recurring_rule_type,
-                subscription_tmpl.recurring_interval,
-            )
+            if self.company_id.automatic_subscription_start:
+                rec.action_start_subscription()
+                rec.recurring_next_date = self.get_next_interval(
+                    subscription_tmpl.recurring_rule_type,
+                    subscription_tmpl.recurring_interval,
+                )
 
     def group_subscription_lines(self):
         """

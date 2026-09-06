@@ -24,3 +24,7 @@ To create subscriptions with the sale of a product:
 2.  Create the product and in the sales tab, complete the fields
     *Subscribable product* and *Subscription template*
 3.  Create a sales order with the product and confirm it.
+
+To automatically start subscription when the sale order is confirmed :
+1.  Go to Sales/Configuration/Settings
+2.  Tick the option *Automatic Subscription Start*
