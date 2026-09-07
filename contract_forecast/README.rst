@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 =================
 Contract Forecast
 =================
@@ -17,7 +13,7 @@ Contract Forecast
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -55,6 +51,8 @@ Forecasts are visible directly from the contract in a **pivot view** or
   - Quantity, unit price, discount, and subtotal (untaxed)
 
 - Clean handling of auto-renewing and manually-ended contracts.
+- Option to force forecasts to stop at a contract line's end date, even
+  for auto-renewing lines.
 
 **Table of contents**
 
@@ -72,6 +70,9 @@ Go **General Settings** under the **Contract Forecast** section:
   periods are generated.
 - **Forecast Period Type**: Choose between **Monthly** or **Yearly**
   periods.
+- **Stop forecast at contract line end date**: If enabled, forecast
+  generation always stops at a contract line's end date, even when the
+  line is set to auto-renew (tacit renewal).
 
 Usage
 =====

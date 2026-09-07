@@ -16,3 +16,7 @@ class ResCompany(models.Model):
     enable_contract_forecast = fields.Boolean(
         string="Enable contract forecast", default=True
     )
+    contract_forecast_stop_at_line_date_end = fields.Boolean(
+        string="Stop forecast at contract line end date",
+        default=False,
+    )
