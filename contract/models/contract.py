@@ -161,40 +161,44 @@ class ContractContract(models.Model):
             rec.invoice_count = len(rec._get_related_invoices())
 
     @api.depends(
-        "next_period_date_start",
-        "recurring_invoicing_type",
-        "recurring_invoicing_offset",
-        "recurring_rule_type",
-        "recurring_interval",
-        "date_end",
         "contract_line_ids.recurring_next_date",
         "contract_line_ids.is_canceled",
     )
     def _compute_recurring_next_date(self):
-        for contract in self:
-            recurring_next_date = contract.contract_line_ids.filtered(
-                lambda line: (
-                    line.recurring_next_date
-                    and not line.is_canceled
-                    and (not line.display_type or line.is_recurring_note)
-                )
-            ).mapped("recurring_next_date")
-            # we give priority to computation from date_start if modified
-            if (
-                contract._origin
-                and contract._origin.date_start != contract.date_start
-                or not recurring_next_date
-            ):
-                contract.recurring_next_date = self.get_next_invoice_date(
-                    contract.next_period_date_start,
-                    contract.recurring_invoicing_type,
-                    contract.recurring_invoicing_offset,
-                    contract.recurring_rule_type,
-                    contract.recurring_interval,
-                    max_date_end=contract.date_end,
-                )
-            else:
-                contract.recurring_next_date = min(recurring_next_date)
+        return super()._compute_recurring_next_date()
+
+    def get_next_invoice_date(
+        self,
+        next_period_date_start=None,
+        recurring_invoicing_type=None,
+        recurring_invoicing_offset=None,
+        recurring_rule_type=None,
+        recurring_interval=None,
+        max_date_end=None,
+    ):
+        recurring_next_date = self.contract_line_ids.filtered(
+            lambda line: (
+                line.recurring_next_date
+                and not line.is_canceled
+                and (not line.display_type or line.is_recurring_note)
+            )
+        ).mapped("recurring_next_date")
+        # we give priority to computation from date_start if modified
+        if (
+            self._origin
+            and self._origin.date_start != self.date_start
+            or not recurring_next_date
+        ):
+            return super().get_next_invoice_date(
+                next_period_date_start,
+                recurring_invoicing_type,
+                recurring_invoicing_offset,
+                recurring_rule_type,
+                recurring_interval,
+                max_date_end,
+            )
+        else:
+            return min(recurring_next_date)
 
     @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):

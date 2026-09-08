@@ -78,18 +78,12 @@ class ContractLine(models.Model):
                         )
                         values.append(new_vals)
                     period_date_start = period_date_end + relativedelta(days=1)
-                    period_date_end = self.get_next_period_date_end(
+                    period_date_end = rec.get_next_period_date_end(
                         period_date_start,
-                        rec.recurring_rule_type,
-                        rec.recurring_interval,
                         max_date_end=max_date_end,
                     )
                     recurring_next_date = rec.get_next_invoice_date(
                         period_date_start,
-                        rec.recurring_invoicing_type,
-                        rec.recurring_invoicing_offset,
-                        rec.recurring_rule_type,
-                        rec.recurring_interval,
                         max_date_end=max_date_end,
                     )
 
