@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="contract.res_config_settings_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='contract']" position="inside">
+                <setting
+                    id="contract_to_invoice_domain_setting"
+                    class="col-12 o_setting_box"
+                    company_dependent="1"
+                >
+                    <field name="create_recurring_invoices" />
+                    <div
+                        class="content-group mt16"
+                        invisible="not create_recurring_invoices"
+                    >
+                        <field
+                            name="contract_to_invoice_domain"
+                            widget="domain"
+                            options="{'model': 'contract.contract'}"
+                            class="w-100"
+                        />
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
