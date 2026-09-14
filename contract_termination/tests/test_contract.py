@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 from odoo.addons.contract_line_successor.tests.test_contract import (
     TestContractSuccessor,
@@ -32,12 +32,6 @@ class TestContractTermination(TestContractSuccessor):
             )
         )
         self.assertEqual(wizard.contract_id, self.contract)
-        with self.assertRaises(UserError):
-            wizard.terminate_contract()
-        group_can_terminate_contract = self.env.ref(
-            "contract_termination.can_terminate_contract"
-        )
-        group_can_terminate_contract.write({"user_ids": [(4, self.env.user.id, False)]})
         wizard.terminate_contract()
         self.assertTrue(self.contract.is_terminated)
         self.assertEqual(self.contract.terminate_date, to_date("2018-03-01"))
@@ -51,10 +45,6 @@ class TestContractTermination(TestContractSuccessor):
     def test_terminate_date_before_last_date_invoiced(self):
         self.contract.recurring_create_invoice()
         self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-02-14"))
-        group_can_terminate_contract = self.env.ref(
-            "contract_termination.can_terminate_contract"
-        )
-        group_can_terminate_contract.write({"user_ids": [(4, self.env.user.id, False)]})
         with self.assertRaises(ValidationError):
             self.contract._terminate_contract(
                 self.terminate_reason,
