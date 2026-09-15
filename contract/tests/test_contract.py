@@ -2395,6 +2395,8 @@ class TestContract(TestContractBase):
         self.assertEqual(len(self.contract._get_related_invoices()), 4)
         self.contract.recurring_create_invoice()
         self.assertEqual(len(self.contract._get_related_invoices()), 4)
+        with self.assertRaises(UserError):
+            self.contract.line_recurrence = False
 
     @freeze_time("2023-05-01")
     def test_check_month_name_marker(self):
