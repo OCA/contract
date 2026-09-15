@@ -180,6 +180,17 @@ class ContractContract(models.Model):
         records._set_start_contract_modification()
         return records
 
+    @api.constrains("line_recurrence")
+    def _check_line_recurrence(self):
+        for record in self:
+            if not record.line_recurrence and record.invoice_count > 0:
+                raise UserError(
+                    _(
+                        "You cannot disable the 'Recurrence at line level' option "
+                        "if there are already invoices generated for this contract."
+                    )
+                )
+
     def write(self, vals):
         if "modification_ids" in vals:
             res = super(
