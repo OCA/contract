@@ -728,6 +728,7 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
         test_res.append(sale_order)
         move_id = subscription.create_invoice()
         test_res.append(move_id)
+        subscription.calculate_recurring_next_date(subscription.recurring_next_date)
         res = subscription.manual_invoice()
         test_res.append(res["type"])
         inv_ids = self.env["account.move"].search(
