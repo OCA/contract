@@ -182,7 +182,10 @@ class SaleSubscription(models.Model):
                 subscription.action_start_subscription()
                 subscription.generate_invoice()
 
-    @api.depends("sale_subscription_line_ids")
+    @api.depends(
+        "sale_subscription_line_ids.price_subtotal",
+        "sale_subscription_line_ids.amount_tax_line_amount",
+    )
     def _compute_total(self):
         for record in self:
             recurring_total = amount_tax = 0.0
