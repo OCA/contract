@@ -22,6 +22,7 @@
         "data/ir_cron.xml",
         "data/sale_subscription_data.xml",
         "wizard/close_subscription_wizard.xml",
+        "wizard/sale_subscription_change_partner_wizard.xml",
         "security/subscription_security.xml",
         "security/ir.model.access.csv",
     ],
