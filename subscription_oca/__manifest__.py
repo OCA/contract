@@ -24,6 +24,8 @@
         "wizard/close_subscription_wizard.xml",
         "security/subscription_security.xml",
         "security/ir.model.access.csv",
+        "security/sale_subscription_report_security.xml",
+        "report/sale_subscription_report_views.xml",
     ],
     "installable": True,
     "application": True,
