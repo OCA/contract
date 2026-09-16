@@ -57,6 +57,7 @@ patch(SaleOrderLineProductField.prototype, {
             default_partner_id: this.props.record.model.root.data.partner_id[0],
             default_company_id: this.props.record.model.root.data.company_id[0],
             default_recurrence_number: this.props.record.data.recurrence_number,
+            default_recurrence_interval: this.props.record.data.recurrence_interval,
             default_recurring_rule_type: this.props.record.data.recurring_rule_type,
             default_recurring_invoicing_type:
                 this.props.record.data.recurring_invoicing_type,
