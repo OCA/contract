@@ -22,12 +22,23 @@
                         invisible="not in_progress"
                     />
 
+                    <button
+                        string="Renew"
+                        name="action_prepare_renewal"
+                        type="object"
+                        class="btn-primary"
+                        help="Create a renewal quote of this subscription. Activating the renewal will close the current one."
+                        invisible="stage_type != 'in_progress' or is_renewed"
+                    />
+
                     <field
                         name="stage_id"
                         widget="statusbar"
                         options="{'fold_field': 'fold', 'clickable': '1'}"
                     />
                     <field name="stage_type" invisible="1" />
+                    <field name="is_renewed" invisible="1" />
+                    <field name="parent_subscription_id" invisible="1" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -55,6 +66,32 @@
                                 name="account_invoice_ids_count"
                                 widget="statinfo"
                                 string="Invoices"
+                            />
+                        </button>
+                        <button
+                            name="action_view_parent_subscription"
+                            type="object"
+                            invisible="not parent_subscription_id"
+                            class="oe_stat_button"
+                            icon="fa-arrow-up"
+                            help="Open the subscription this one was renewed from."
+                        >
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Parent</span>
+                                <span class="o_stat_text">contract</span>
+                            </div>
+                        </button>
+                        <button
+                            name="action_view_child_subscriptions"
+                            type="object"
+                            invisible="renewal_count == 0"
+                            class="oe_stat_button"
+                            icon="fa-arrow-down"
+                        >
+                            <field
+                                name="renewal_count"
+                                widget="statinfo"
+                                string="Renewals"
                             />
                         </button>
                     </div>
@@ -353,6 +390,16 @@
                     name="pendingsubs"
                     domain="[('to_renew','=', True)]"
                 />
+                <filter
+                    string="Renewals"
+                    name="renewals_only"
+                    domain="[('parent_subscription_id', '!=', False)]"
+                />
+                <filter
+                    string="Originals"
+                    name="originals_only"
+                    domain="[('parent_subscription_id', '=', False)]"
+                />
                 <separator />
                 <filter
                     name="month_recurring_next_date"
@@ -383,6 +430,12 @@
                         name="groupby_stage_id"
                         domain="[]"
                         context="{'group_by': 'stage_id'}"
+                    />
+                    <filter
+                        string="Parent contract"
+                        name="groupby_parent_subscription_id"
+                        domain="[]"
+                        context="{'group_by': 'parent_subscription_id'}"
                     />
                 </group>
             </search>
