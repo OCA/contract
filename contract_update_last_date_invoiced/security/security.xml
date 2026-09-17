@@ -4,6 +4,7 @@
 <odoo>
     <record id="group_contract_line_update_last_date_invoiced" model="res.groups">
         <field name="name">Contract: Can update last date invoiced</field>
+        <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
     <record model="ir.model.access" id="contract_update_last_date_invoiced_access">
