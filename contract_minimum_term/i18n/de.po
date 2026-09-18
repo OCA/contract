@@ -1,0 +1,410 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* contract_minimum_term
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_line__min_term_notice_date
+msgid ""
+"A termination has to be received at the latest on this date, otherwise the "
+"minimum term is extended by the renewal term."
+msgstr ""
+"Eine Kündigung muss spätestens an diesem Datum eingelangt sein, andernfalls "
+"verlängert sich die Mindestvertragsdauer um die Verlängerungsdauer."
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_contract
+msgid "Contract"
+msgstr "Vertrag"
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_line
+msgid "Contract Line"
+msgstr "Vertragszeile"
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_minimum_term_mixin
+msgid "Contract Minimum Term Mixin"
+msgstr "Vertrag Mindestvertragsdauer Mixin"
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_template
+msgid "Contract Template"
+msgstr "Vertragsvorlage"
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_template_line
+msgid "Contract Template Line"
+msgstr "Vertragsvorlagenzeile"
+
+#. module: contract_minimum_term
+#. odoo-python
+#: code:addons/contract_minimum_term/models/contract_contract.py:0
+msgid ""
+"Contract terminated on %(date)s, before the end of the minimum term / "
+"termination notice (%(earliest)s)."
+msgstr ""
+"Vertrag zum %(date)s gekündigt, vor Ende der Mindestvertragsdauer / "
+"Kündigungsfrist (%(earliest)s)."
+
+#. module: contract_minimum_term
+#: model:ir.actions.server,name:contract_minimum_term.contract_line_cron_minimum_term_renewal_ir_actions_server
+msgid "Contract: Renew minimum terms"
+msgstr "Vertrag: Mindestvertragsdauer verlängern"
+
+#. module: contract_minimum_term
+#: model:res.groups,name:contract_minimum_term.group_early_termination
+msgid "Contract: Terminate Before Minimum Term"
+msgstr "Vertrag: Kündigung vor Ende der Mindestvertragsdauer"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract_terminate__terminate_request_date
+msgid ""
+"Date on which the termination was received. It is used to check the "
+"termination notice."
+msgstr ""
+"Datum, an dem die Kündigung eingelangt ist. Es wird zur Prüfung der "
+"Kündigungsfrist verwendet."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_notice_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_renewal_rule_type__daily
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_rule_type__daily
+msgid "Day(s)"
+msgstr "Tag(e)"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract_terminate__min_term_earliest_date
+msgid "Earliest Termination Date"
+msgstr "Frühestes Kündigungsdatum"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract_terminate__min_term_earliest_date
+msgid ""
+"Earliest possible termination date according to the minimum term and the "
+"termination notice."
+msgstr ""
+"Frühestmögliches Kündigungsdatum laut Mindestvertragsdauer und "
+"Kündigungsfrist."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract__min_term_renewal_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_line__min_term_renewal_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_minimum_term_mixin__min_term_renewal_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template__min_term_renewal_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template_line__min_term_renewal_interval
+msgid ""
+"If the contract is not terminated in time, the minimum term is extended by "
+"this term. Leave 0 to not extend the minimum term: once it is over, the "
+"contract can be terminated at any time respecting the termination notice."
+msgstr ""
+"Wird der Vertrag nicht rechtzeitig gekündigt, verlängert sich die "
+"Mindestvertragsdauer um diese Dauer. 0 bedeutet keine Verlängerung: Nach "
+"Ablauf der Mindestvertragsdauer kann der Vertrag jederzeit unter Einhaltung "
+"der Kündigungsfrist gekündigt werden."
+
+#. module: contract_minimum_term
+#: model_terms:ir.ui.view,arch_db:contract_minimum_term.contract_contract_search_view
+msgid "In Minimum Term"
+msgstr "In Mindestvertragsdauer"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract__min_term_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_line__min_term_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_minimum_term_mixin__min_term_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template__min_term_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template_line__min_term_interval
+msgid ""
+"Initial minimum term, counted from the start date. Leave 0 to disable the "
+"minimum term."
+msgstr ""
+"Anfängliche Mindestvertragsdauer ab dem Startdatum. 0 bedeutet keine "
+"Mindestvertragsdauer."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract__min_term_date_end
+msgid ""
+"Last day of the currently running minimum term (the latest one of all "
+"contract lines)."
+msgstr ""
+"Letzter Tag der laufenden Mindestvertragsdauer (der späteste aller "
+"Vertragszeilen)."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_line__min_term_date_end
+msgid ""
+"Last day of the currently running minimum term. The contract line cannot be "
+"terminated before this date."
+msgstr ""
+"Letzter Tag der laufenden Mindestvertragsdauer. Die Vertragszeile kann nicht"
+" vor diesem Datum gekündigt werden."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_interval
+#: model_terms:ir.ui.view,arch_db:contract_minimum_term.contract_contract_form_view
+#: model_terms:ir.ui.view,arch_db:contract_minimum_term.contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:contract_minimum_term.contract_template_line_form_view
+msgid "Minimum Term"
+msgstr "Mindestvertragsdauer"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_date_end
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_date_end
+msgid "Minimum Term End"
+msgstr "Ende Mindestvertragsdauer"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_rule_type
+msgid "Minimum Term Type"
+msgstr "Einheit Mindestvertragsdauer"
+
+#. module: contract_minimum_term
+#. odoo-python
+#: code:addons/contract_minimum_term/models/contract_line.py:0
+msgid "Minimum term of <strong>%(line)s</strong> renewed until %(date)s."
+msgstr ""
+"Mindestvertragsdauer von <strong>%(line)s</strong> verlängert bis %(date)s."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_notice_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_renewal_rule_type__monthly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_rule_type__monthly
+msgid "Month(s)"
+msgstr "Monat(e)"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_renewal_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_renewal_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_renewal_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_renewal_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_renewal_interval
+msgid "Renewal Term"
+msgstr "Verlängerung"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_renewal_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_renewal_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_renewal_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_renewal_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_renewal_rule_type
+msgid "Renewal Term Type"
+msgstr "Einheit Verlängerung"
+
+#. module: contract_minimum_term
+#: model:ir.model,name:contract_minimum_term.model_contract_contract_terminate
+msgid "Terminate Contract Wizard"
+msgstr "Assistent Vertragskündigung"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__is_terminated_before_min_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract_terminate__is_terminated_before_min_term
+msgid "Terminated Before Minimum Term"
+msgstr "Vor Ende der Mindestvertragsdauer gekündigt"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract_terminate__terminate_date
+msgid "Termination Date"
+msgstr "Kündigungsdatum"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_notice_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_notice_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_notice_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_notice_interval
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_notice_interval
+msgid "Termination Notice"
+msgstr "Kündigungsfrist"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_notice_date
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_notice_date
+msgid "Termination Notice Deadline"
+msgstr "Kündigung spätestens am"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__min_term_notice_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_line__min_term_notice_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_minimum_term_mixin__min_term_notice_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template__min_term_notice_rule_type
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_template_line__min_term_notice_rule_type
+msgid "Termination Notice Type"
+msgstr "Einheit Kündigungsfrist"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract__terminate_request_date
+#: model:ir.model.fields,field_description:contract_minimum_term.field_contract_contract_terminate__terminate_request_date
+msgid "Termination Received On"
+msgstr "Kündigung eingelangt am"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract__min_term_notice_date
+msgid ""
+"Termination notice deadline of the contract line with the latest minimum "
+"term end."
+msgstr ""
+"Kündigungstermin der Vertragszeile mit dem spätesten Ende der "
+"Mindestvertragsdauer."
+
+#. module: contract_minimum_term
+#. odoo-python
+#: code:addons/contract_minimum_term/models/contract_contract.py:0
+msgid ""
+"The contract %(contract)s cannot be terminated before %(date)s (minimum term"
+" and termination notice)."
+msgstr ""
+"Der Vertrag %(contract)s kann nicht vor dem %(date)s gekündigt werden "
+"(Mindestvertragsdauer und Kündigungsfrist)."
+
+#. module: contract_minimum_term
+#: model_terms:ir.ui.view,arch_db:contract_minimum_term.contract_contract_terminate_form_view
+msgid ""
+"The termination date is before the end of the minimum term\n"
+"                    or the termination notice. Only users allowed to terminate\n"
+"                    contracts before the minimum term can confirm it."
+msgstr ""
+"Das Kündigungsdatum liegt vor dem Ende der Mindestvertragsdauer bzw. der "
+"Kündigungsfrist. Nur Benutzer mit der Berechtigung zur Kündigung vor Ende "
+"der Mindestvertragsdauer können die Kündigung bestätigen."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_contract__min_term_notice_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_line__min_term_notice_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_minimum_term_mixin__min_term_notice_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template__min_term_notice_interval
+#: model:ir.model.fields,help:contract_minimum_term.field_contract_template_line__min_term_notice_interval
+msgid ""
+"The termination has to be received at least this long before the end of the "
+"minimum term (or before the termination date once the minimum term is over)."
+msgstr ""
+"Die Kündigung muss mindestens so lange vor Ende der Mindestvertragsdauer "
+"eingelangt sein (bzw. vor dem Kündigungsdatum, wenn die Mindestvertragsdauer"
+" abgelaufen ist)."
+
+#. module: contract_minimum_term
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_notice_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_renewal_rule_type__weekly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_rule_type__weekly
+msgid "Week(s)"
+msgstr "Woche(n)"
+
+#. module: contract_minimum_term
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_contract__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_line__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_minimum_term_mixin__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__contract_template_line__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_contract_configurator__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__product_template__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line__min_term_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_renewal_rule_type__yearly
+#: model:ir.model.fields.selection,name:contract_minimum_term.selection__sale_order_line_contract_mixin__min_term_rule_type__yearly
+msgid "Year(s)"
+msgstr "Jahr(e)"
+
+#. module: contract_minimum_term
+#. odoo-python
+#: code:addons/contract_minimum_term/models/contract_template_line.py:0
+msgid ""
+"The line %(line)s cannot have both a minimum term and an automatic renewal."
+msgstr ""
+"Die Zeile %(line)s kann nicht gleichzeitig eine Mindestvertragsdauer und "
+"eine automatische Erneuerung haben."
