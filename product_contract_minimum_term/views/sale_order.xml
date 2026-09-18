@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="product_contract.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='order_line']/form//label[@for='recurrence_number']"
+                position="before"
+            >
+                <field name="contract_duration_type" widget="radio" />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//label[@for='recurrence_number']"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >contract_duration_type == 'minimum_term'</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='recurrence_number']/.."
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >contract_duration_type == 'minimum_term'</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='date_end']"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >contract_duration_type == 'minimum_term'</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='is_auto_renew']"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >contract_duration_type == 'minimum_term'</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='is_auto_renew']/.."
+                position="after"
+            >
+                <group
+                    name="minimum_term"
+                    invisible="not is_contract or contract_duration_type != 'minimum_term'"
+                >
+                    <label for="min_term_interval" />
+                    <div class="o_row">
+                        <field name="min_term_interval" class="oe_inline" nolabel="1" />
+                        <field
+                            name="min_term_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="min_term_interval"
+                        />
+                    </div>
+                    <label for="min_term_renewal_interval" />
+                    <div class="o_row">
+                        <field
+                            name="min_term_renewal_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                        />
+                        <field
+                            name="min_term_renewal_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="min_term_renewal_interval"
+                        />
+                    </div>
+                    <label for="min_term_notice_interval" />
+                    <div class="o_row">
+                        <field
+                            name="min_term_notice_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                        />
+                        <field
+                            name="min_term_notice_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="min_term_notice_interval"
+                        />
+                    </div>
+                </group>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/list//field[@name='date_end']"
+                position="after"
+            >
+                <field name="contract_duration_type" optional="hide" />
+                <field name="min_term_interval" optional="hide" />
+                <field name="min_term_rule_type" optional="hide" />
+                <field name="min_term_renewal_interval" column_invisible="1" />
+                <field name="min_term_renewal_rule_type" column_invisible="1" />
+                <field name="min_term_notice_interval" column_invisible="1" />
+                <field name="min_term_notice_rule_type" column_invisible="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
