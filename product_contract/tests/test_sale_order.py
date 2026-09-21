@@ -669,3 +669,39 @@ class TestSaleOrder(TransactionCase):
             sale.order_line.contract_id.contract_line_ids.date_start,
             fields.Date.to_date("2025-02-28"),
         )
+
+    def test_check_recurrence_number_is_strictly_positive(self):
+        """
+        It should raise ValidationError if recurrence_number is not strictly positive
+        for a sale order line with a contract product
+        """
+        self.sale.order_line.is_auto_renew = True
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.recurrence_number = -1
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.recurrence_number = 0
+        self.sale.order_line.recurrence_number = 1
+
+    def test_check_recurring_interval_is_strictly_positive(self):
+        """
+        It should raise ValidationError if recurring_interval is not strictly positive
+        for a sale order line with a contract product
+        """
+        self.sale.order_line.is_auto_renew = True
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.recurring_interval = -1
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.recurring_interval = 0
+        self.sale.order_line.recurring_interval = 1
+
+    def test_check_auto_renew_interval_is_strictly_positive(self):
+        """
+        It should raise ValidationError if auto_renew_interval is not strictly positive
+        for a sale order line with a contract product
+        """
+        self.sale.order_line.is_auto_renew = True
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.auto_renew_interval = -1
+        with self.assertRaises(ValidationError):
+            self.sale.order_line.auto_renew_interval = 0
+        self.sale.order_line.auto_renew_interval = 1
