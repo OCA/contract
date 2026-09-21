@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_contract_form_view_defer" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']/list"
+                position="attributes"
+            >
+                <attribute name="decoration-muted">is_deferred</attribute>
+                <attribute
+                    name="decoration-info"
+                    add="not is_deferred"
+                    separator="and"
+                />
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/list" position="attributes">
+                <attribute name="decoration-muted">is_deferred</attribute>
+                <attribute
+                    name="decoration-info"
+                    add="not is_deferred"
+                    separator="and"
+                />
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/list" position="inside">
+                <field name="is_deferred" column_invisible="True" />
+                <button
+                    string="Activate"
+                    name="%(contract_line_activate_wizard_act_window)d"
+                    title="Activate"
+                    type="action"
+                    icon="fa-usd"
+                    invisible="not parent.line_recurrence or not is_deferred"
+                    context="{'default_contract_line_id': id, 'default_date_end': date_end}"
+                />
+                <button
+                    string="Defer"
+                    name="enable_deferred"
+                    confirm="Defer invoicing of this line until manually re-enabled?"
+                    title="Defer Invoicing"
+                    type="object"
+                    icon="fa-clock-o"
+                    invisible="not parent.line_recurrence or is_deferred"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']/list/field[@name='date_start']"
+                position="attributes"
+            >
+                <attribute name="invisible">is_deferred</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']/list/field[@name='recurring_next_date']"
+                position="attributes"
+            >
+                <attribute name="invisible">is_deferred</attribute>
+                <attribute name="required" add="not is_deferred" separator="and" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
