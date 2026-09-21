@@ -9,13 +9,29 @@
             ref="contract.contract_manually_create_invoice_form_view"
         />
         <field name="arch" type="xml">
+            <xpath
+                expr="//group[button[@name='action_show_contract_to_invoice']]"
+                position="attributes"
+            >
+                <attribute name="invisible">True</attribute>
+            </xpath>
             <xpath expr="//form/group[last()]" position="after">
                 <notebook invisible="not invoice_date">
                     <page name="contracts" string="Contracts">
                         <button
                             name="action_show_contract_to_invoice"
-                            position="move"
-                        />
+                            type="object"
+                            class="btn-link"
+                            invisible="contract_to_invoice_count == 0"
+                        >
+                            <field name="contract_to_invoice_count" />
+                            <span invisible="contract_to_invoice_count == 1">
+                                contract to invoice
+                            </span>
+                            <span invisible="contract_to_invoice_count != 1">
+                                contracts to invoice
+                            </span>
+                        </button>
                     </page>
                     <page name="domain" string="Contract Filter">
                         <field
