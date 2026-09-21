@@ -8,6 +8,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     origin = fields.Char(
+        string="Source Document",
         readonly=True,
         tracking=True,
         copy=False,
