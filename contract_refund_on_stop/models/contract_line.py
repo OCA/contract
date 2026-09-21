@@ -21,7 +21,6 @@ class ContractLine(models.Model):
                 to_refund_start_date=date_end,
                 to_refund_end_date=rec.last_date_invoiced,
             )
-            rec.last_date_invoiced = date_end
         return super().stop(
             date_end, manual_renew_needed=manual_renew_needed, post_message=post_message
         )
@@ -31,6 +30,7 @@ class ContractLine(models.Model):
         self.env["account.move"].create(
             self._prepare_refund_on_stop_vals(to_refund_start_date, to_refund_end_date)
         )
+        self.last_date_invoiced = to_refund_start_date
 
     def _prepare_refund_on_stop_vals(self, to_refund_start_date, to_refund_end_date):
         self.ensure_one()
