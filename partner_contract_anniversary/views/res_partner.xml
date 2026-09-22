@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="res_partner_form_view">
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page name="contracts" string="Contracts">
+                    <group name="anniversary" string="Contracts">
+                        <group name="anniversary_left" string="Date">
+                            <field
+                                name="first_contract_line_start_date"
+                                string="First Contract"
+                            />
+                        </group>
+                        <group name="anniversary_right" string="Anniversary Date">
+                            <field
+                                name="contract_anniversary_date"
+                                string="First Contract"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
