@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_report_view_search" model="ir.ui.view">
+        <field name="name">sale.subscription.report.search</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <search string="Subscription Analysis">
+                <field name="subscription_id" />
+                <field name="partner_id" />
+                <field name="product_id" />
+                <field name="template_id" />
+                <filter
+                    string="In progress"
+                    name="in_progress"
+                    domain="[('in_progress', '=', True)]"
+                />
+                <filter
+                    string="Draft"
+                    name="draft"
+                    domain="[('stage_type', '=', 'draft')]"
+                />
+                <filter
+                    string="Ready to start"
+                    name="ready"
+                    domain="[('stage_type', '=', 'pre')]"
+                />
+                <filter
+                    string="Closed"
+                    name="closed"
+                    domain="[('stage_type', '=', 'post')]"
+                />
+                <separator />
+                <filter
+                    string="To renew"
+                    name="to_renew"
+                    domain="[('to_renew', '=', True)]"
+                />
+                <separator />
+                <filter
+                    string="Start date"
+                    name="filter_date_start"
+                    date="date_start"
+                />
+                <group>
+                    <filter
+                        string="Customer"
+                        name="groupby_partner_id"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Subscription template"
+                        name="groupby_template_id"
+                        context="{'group_by': 'template_id'}"
+                    />
+                    <filter
+                        string="Product"
+                        name="groupby_product_id"
+                        context="{'group_by': 'product_id'}"
+                    />
+                    <filter
+                        string="Product Category"
+                        name="groupby_categ_id"
+                        context="{'group_by': 'categ_id'}"
+                    />
+                    <filter
+                        string="Stage"
+                        name="groupby_stage_id"
+                        context="{'group_by': 'stage_id'}"
+                    />
+                    <filter
+                        string="Close Reason"
+                        name="groupby_close_reason_id"
+                        context="{'group_by': 'close_reason_id'}"
+                    />
+                    <filter
+                        string="Commercial agent"
+                        name="groupby_user_id"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        string="Sale team"
+                        name="groupby_crm_team_id"
+                        context="{'group_by': 'crm_team_id'}"
+                    />
+                    <filter
+                        string="Start month"
+                        name="groupby_date_start"
+                        context="{'group_by': 'date_start:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_view_pivot" model="ir.ui.view">
+        <field name="name">sale.subscription.report.pivot</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Subscription Analysis" sample="1">
+                <field name="template_id" type="row" />
+                <field name="recurring_monthly" type="measure" />
+                <field name="recurring_yearly" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_view_graph" model="ir.ui.view">
+        <field name="name">sale.subscription.report.graph</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <graph string="Subscription Analysis" type="bar" sample="1">
+                <field name="template_id" />
+                <field name="recurring_monthly" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_view_graph_timeline" model="ir.ui.view">
+        <field name="name">sale.subscription.report.graph.timeline</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <graph
+                string="MRR Evolution"
+                type="line"
+                sample="1"
+                cumulated="1"
+                cumulated_start="1"
+            >
+                <field name="date_start" interval="month" />
+                <field name="recurring_monthly" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_view_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.report.list</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <list string="Subscription Analysis" create="0" delete="0">
+                <field name="subscription_id" />
+                <field name="partner_id" optional="show" />
+                <field name="template_id" optional="show" />
+                <field name="product_id" optional="hide" />
+                <field name="categ_id" optional="hide" />
+                <field name="stage_id" optional="show" />
+                <field name="close_reason_id" optional="hide" />
+                <field name="user_id" optional="show" />
+                <field name="crm_team_id" optional="hide" />
+                <field name="date_start" optional="show" />
+                <field name="recurring_next_date" optional="hide" />
+                <field name="date_end" optional="hide" />
+                <field name="product_uom_qty" optional="hide" string="Quantity" />
+                <field
+                    name="recurring_monthly"
+                    optional="show"
+                    sum="Sum of Monthly Recurring"
+                />
+                <field
+                    name="recurring_yearly"
+                    optional="hide"
+                    sum="Sum of Annual Recurring"
+                />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company"
+                />
+                <field name="company_currency_id" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_action" model="ir.actions.act_window">
+        <field name="name">Subscriptions Analysis</field>
+        <field name="res_model">sale.subscription.report</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="sale_subscription_report_view_search" />
+        <field name="context">{"search_default_in_progress": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data to analyse yet
+            </p>
+            <p>
+                This analysis aggregates the recurring revenue of your
+                subscriptions per line, so you can group it by customer,
+                template, product or salesperson.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_mrr_action" model="ir.actions.act_window">
+        <field name="name">MRR Breakdown</field>
+        <field name="res_model">sale.subscription.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="sale_subscription_report_view_search" />
+        <field name="context">
+            {"search_default_in_progress": 1,
+             "pivot_measures": ["recurring_monthly"],
+             "pivot_row_groupby": ["template_id", "product_id"],
+             "graph_groupbys": ["template_id"],
+             "graph_measure": "recurring_monthly"}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No recurring revenue yet
+            </p>
+            <p>
+                Breakdown of the monthly recurring revenue of the running
+                subscriptions by template and product.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_timeline_action" model="ir.actions.act_window">
+        <field name="name">MRR Timeline</field>
+        <field name="res_model">sale.subscription.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="sale_subscription_report_view_search" />
+        <field name="context">
+            {"search_default_in_progress": 1,
+             "search_default_groupby_date_start": 1}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No recurring revenue yet
+            </p>
+            <p>
+                Evolution of the monthly recurring revenue over time, accumulated
+                by the month the subscriptions started.
+            </p>
+        </field>
+    </record>
+
+    <record
+        id="sale_subscription_report_timeline_action_graph"
+        model="ir.actions.act_window.view"
+    >
+        <field name="sequence" eval="1" />
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_subscription_report_view_graph_timeline" />
+        <field name="act_window_id" ref="sale_subscription_report_timeline_action" />
+    </record>
+
+    <record
+        id="sale_subscription_report_timeline_action_pivot"
+        model="ir.actions.act_window.view"
+    >
+        <field name="sequence" eval="2" />
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_subscription_report_view_pivot" />
+        <field name="act_window_id" ref="sale_subscription_report_timeline_action" />
+    </record>
+
+    <record id="sale_subscription_report_churn_action" model="ir.actions.act_window">
+        <field name="name">Churn Analysis</field>
+        <field name="res_model">sale.subscription.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="sale_subscription_report_view_search" />
+        <field name="domain">[("stage_type", "=", "post")]</field>
+        <field name="context">
+            {"search_default_groupby_close_reason_id": 1,
+             "pivot_measures": ["recurring_monthly", "__count"],
+             "pivot_row_groupby": ["close_reason_id"]}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No closed subscriptions yet
+            </p>
+            <p>
+                Closed subscriptions and the recurring revenue lost, grouped
+                by close reason.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="sale_subscription_reporting_menu"
+        parent="sale_subscription_root"
+        name="Reporting"
+        sequence="10"
+        groups="sales_team.group_sale_salesman"
+    />
+
+    <menuitem
+        id="sale_subscription_report_menu"
+        parent="sale_subscription_reporting_menu"
+        action="sale_subscription_report_action"
+        sequence="1"
+    />
+
+    <menuitem
+        id="sale_subscription_report_mrr_menu"
+        parent="sale_subscription_reporting_menu"
+        action="sale_subscription_report_mrr_action"
+        sequence="2"
+    />
+
+    <menuitem
+        id="sale_subscription_report_timeline_menu"
+        parent="sale_subscription_reporting_menu"
+        action="sale_subscription_report_timeline_action"
+        sequence="3"
+    />
+
+    <menuitem
+        id="sale_subscription_report_churn_menu"
+        parent="sale_subscription_reporting_menu"
+        action="sale_subscription_report_churn_action"
+        sequence="4"
+    />
+</odoo>
