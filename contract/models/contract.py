@@ -33,6 +33,12 @@ class ContractContract(models.Model):
     active = fields.Boolean(default=True)
     code = fields.Char(string="Reference")
     name = fields.Char()
+    date = fields.Date(
+        required=True,
+        default=lambda self: fields.Date.today(),
+        help="This is the date the contract is taken into account \
+        (e.g.: signature date)",
+    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Responsible",
