@@ -75,6 +75,11 @@ msgstr "<span class=\"o_stat_text\">Abonnementen</span>"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "<span>This subscription is paused.</span>"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid ""
 "A given subscription can be marked as closed when, for example, renewal is "
 "not desired."
@@ -91,6 +96,11 @@ msgstr "Actie nodig"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__active
 msgid "Active"
 msgstr "Actief"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Active and not paused"
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_ids
@@ -156,8 +166,15 @@ msgstr "Grens"
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.close_reason_wizard_view
+#: model_terms:ir.ui.view,arch_db:subscription_oca.pause_subscription_wizard_view
 msgid "Cancel"
 msgstr "Annuleer"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "Cannot pause a closed subscription."
+msgstr ""
 
 #. module: subscription_oca
 #: model_terms:ir.actions.act_window,help:subscription_oca.subscription_stage_action
@@ -249,6 +266,7 @@ msgstr "Genereer factuur"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_uid
@@ -266,6 +284,7 @@ msgstr "Factuur aangemaakt met referentie"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__create_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__create_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_date
@@ -322,6 +341,7 @@ msgstr "Korting (%)"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__display_name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__display_name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__display_name
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__display_name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__display_name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__display_name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__display_name
@@ -400,6 +420,7 @@ msgstr "Heeft een bericht"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__id
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__id
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__id
@@ -426,6 +447,13 @@ msgstr "Als deze optie is ingeschakeld, vereisen nieuwe berichten uw aandacht."
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 "Als deze optie is ingeschakeld dan hebben sommige berichten een aflever fout."
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__paused_until
+msgid ""
+"If set, the cron will automatically resume this subscription on or after "
+"this date."
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__image
@@ -507,6 +535,7 @@ msgstr "Ingevouwen kanban"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_uid
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_uid
@@ -518,6 +547,7 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__write_date
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_tag__write_date
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__write_date
@@ -610,6 +640,13 @@ msgid "Number of messages with delivery error"
 msgstr "Aantal berichten met een afleverfout"
 
 #. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_pause_wizard__paused_until
+msgid ""
+"Optional date on which the subscription is automatically resumed by the "
+"cron. Leave empty to pause indefinitely."
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids
 msgid "Orders"
 msgstr "Verkooporders"
@@ -629,6 +666,35 @@ msgstr "Andere informatie"
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "Partner"
 msgstr "Klant"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.pause_subscription_wizard_view
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Pause"
+msgstr ""
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+#: model_terms:ir.ui.view,arch_db:subscription_oca.pause_subscription_wizard_view
+msgid "Pause subscription"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model,name:subscription_oca.model_sale_subscription_pause_wizard
+msgid "Pause subscription wizard"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Pause the subscription so the cron skips it until resumed."
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__is_paused
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Paused"
+msgstr ""
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
@@ -694,6 +760,22 @@ msgstr "Herhaal iedere"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__activity_user_id
 msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Resume"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__paused_until
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_pause_wizard__paused_until
+msgid "Resume on"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Resume scheduled on"
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__recurring_rule_count
@@ -809,6 +891,30 @@ msgstr "Abonnementsregels"
 #: model:ir.model,name:subscription_oca.model_sale_subscription_line
 msgid "Subscription lines added to a given subscription"
 msgstr "Abonnementsregels toegevoegd aan een bepaald abonnement"
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "Subscription paused until %(date)s."
+msgstr ""
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "Subscription paused."
+msgstr ""
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "Subscription resumed automatically."
+msgstr ""
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "Subscription resumed."
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_sale_subscription_stage
@@ -939,6 +1045,18 @@ msgid ""
 msgstr ""
 
 #. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "This subscription is already paused."
+msgstr ""
+
+#. module: subscription_oca
+#. odoo-python
+#: code:addons/subscription_oca/models/sale_subscription.py:0
+msgid "This subscription is not paused."
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__to_renew
 msgid "To renew"
 msgstr "Te vernieuwen"
@@ -995,6 +1113,13 @@ msgstr "Geschiedenis van website communicatie"
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__weeks
 msgid "Week(s)"
 msgstr "Week(en)"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription__is_paused
+msgid ""
+"When ticked, the recurring cron will skip this subscription until it is "
+"resumed manually or until `paused_until` is reached."
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_type__years
