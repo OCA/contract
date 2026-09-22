@@ -86,34 +86,21 @@ class SaleOrderLine(models.Model):
     def create_contract_line(self, contract):
         contract_line_model = self.env["contract.line"]
         contract_line = self.env["contract.line"]
-        predecessor_contract_line = False
         for rec in self:
-            if rec.contract_line_id:
-                # If the upsell/downsell line start at the same date or before
-                # the contract line to replace supposed to start, we cancel
-                # the one to be replaced. Otherwise we stop it.
-                if rec.date_start <= rec.contract_line_id.date_start:
-                    # The contract will handel the contract line integrity
-                    # An exception will be raised if we try to cancel an
-                    # invoiced contract line
-                    rec.contract_line_id.cancel()
-                elif (
-                    not rec.contract_line_id.date_end
-                    or rec.date_start <= rec.contract_line_id.date_end
-                ):
-                    rec.contract_line_id.stop(rec.date_start - relativedelta(days=1))
-                    predecessor_contract_line = rec.contract_line_id
-            if predecessor_contract_line:
-                new_contract_line = contract_line_model.create(
-                    rec._prepare_contract_line_values(
-                        contract, predecessor_contract_line.id
-                    )
-                )
-                predecessor_contract_line.successor_contract_line_id = new_contract_line
-            else:
-                new_contract_line = contract_line_model.create(
-                    rec._prepare_contract_line_values(contract)
-                )
+            predecessor = self.env["contract.line"]
+
+            if rec.contract_line_id._should_set_successor(rec.date_start):
+                predecessor = rec.contract_line_id
+
+            # The stop method either stops or cancels a contract line.
+            rec.contract_line_id.stop(rec.date_start - relativedelta(days=1))
+
+            new_contract_line = contract_line_model.create(
+                rec._prepare_contract_line_values(contract, predecessor.id)
+            )
+
+            predecessor.successor_contract_line_id = new_contract_line
+
             contract_line |= new_contract_line
         return contract_line
 
