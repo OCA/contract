@@ -1,9 +1,17 @@
 To make a subscription:
 
 1.  Go to *Subscriptions \> Configuration \> Subscription templates*.
-2.  Create the templates you consider, choosing the billing frequency:
-    daily, monthly... and the method of creating the invoice and/or
-    order.
+2.  Create the templates you consider, choosing the billing frequency
+    (daily, monthly...) and how the recurring document is generated. The
+    invoicing behaviour is configured through three independent options:
+    - *Create sale order*: when enabled, a confirmed sale order is
+      generated before the invoice (required for the subscription to show
+      up in Sales analysis reports); when disabled, the invoice is created
+      directly and a warning reminds you that it will not appear there.
+    - *Invoice status*: leave the generated invoice in *Draft* or post it
+      automatically (*Posted*).
+    - *Send invoice by email*: only available for posted invoices; when
+      enabled, the selected *Invoice Email* template is sent automatically.
 3.  Go to *Subscription \> Subscriptions*.
 4.  Create a subscription and indicate the start date. When the
     *Subscriptions Management* cron job is executed, the subscription
@@ -12,9 +20,9 @@ To make a subscription:
     the execution date matches the next invoice date. Additionally, you
     can manually change the subscription status and create an invoice by
     using the *Create Invoice* button. This action creates just an
-    invoice even if the subscription template has the *Sale Order &
-    Invoice* option selected, because the *Invoicing mode* option is
-    triggered through the cron job.
+    invoice even if the subscription template has *Create sale order*
+    enabled, because the configured invoicing options are only applied by
+    the cron job.
 5.  The cron job will also end the subscription if its end date has been
     reached. The end date honours the template recurrence (days, weeks,
     months or years) and the interval, instead of always assuming months.

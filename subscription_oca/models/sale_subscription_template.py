@@ -27,15 +27,21 @@ class SaleSubscriptionTemplate(models.Model):
         string="Duration",
         default="unlimited",
     )
-    invoicing_mode = fields.Selection(
+    create_sale_order = fields.Boolean(
+        string="Create sale order",
+        help="Generate a confirmed sale order before invoicing. Required for the "
+        "subscription to appear in Sales analysis reports.",
+    )
+    invoice_state = fields.Selection(
+        selection=[("draft", "Draft"), ("posted", "Posted")],
+        string="Invoice status",
         default="draft",
-        string="Invoicing mode",
-        selection=[
-            ("draft", "Draft"),
-            ("invoice", "Invoice"),
-            ("invoice_send", "Invoice & send"),
-            ("sale_and_invoice", "Sale order & Invoice"),
-        ],
+        required=True,
+        help="State in which the generated invoice is left.",
+    )
+    send_invoice = fields.Boolean(
+        string="Send invoice by email",
+        help="Send the invoice by email once posted, using the template below.",
     )
     code = fields.Char()
     recurring_rule_count = fields.Integer(default=1, string="Rule count")
