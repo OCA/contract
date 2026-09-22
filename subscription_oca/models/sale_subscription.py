@@ -7,7 +7,8 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
+from odoo.tools.misc import format_date, get_lang
 
 logger = logging.getLogger(__name__)
 
@@ -376,6 +377,31 @@ class SaleSubscription(models.Model):
             values["journal_id"] = self.journal_id.id
         return values
 
+    def _get_existing_invoice_for_period(self, period_start, period_end):
+        self.ensure_one()
+        line = self.env["account.move.line"].search(
+            [
+                ("subscription_id", "=", self.id),
+                ("subscription_period_start", "=", period_start),
+                ("subscription_period_end", "=", period_end),
+                ("move_id.state", "!=", "cancel"),
+            ],
+            limit=1,
+        )
+        return line.move_id
+
+    def _can_create_invoice_for_period(self, period_start, period_end):
+        self.ensure_one()
+        return not self._get_existing_invoice_for_period(period_start, period_end)
+
+    def _format_period_for_message(self, period_start, period_end):
+        self.ensure_one()
+        lang_code = get_lang(self.env, self.partner_id.lang).code
+        return (
+            format_date(self.env, period_start, lang_code=lang_code),
+            format_date(self.env, period_end, lang_code=lang_code),
+        )
+
     def create_invoice(self):
         if not self.env["account.move"].has_access("create"):
             try:
@@ -411,6 +437,19 @@ class SaleSubscription(models.Model):
         return order_id
 
     def generate_invoice(self):
+        period_start, period_end = self._get_invoice_period()
+        if not self._can_create_invoice_for_period(period_start, period_end):
+            start_str, end_str = self._format_period_for_message(
+                period_start, period_end
+            )
+            logger.info(
+                "Subscription %s: an invoice already exists "
+                "for the period %s - %s, skipping",
+                self.id,
+                start_str,
+                end_str,
+            )
+            return False
         invoice_number = ""
         message_body = ""
         msg_static = self.env._("Created invoice with reference")
@@ -449,6 +488,18 @@ class SaleSubscription(models.Model):
         self.message_post(body=Markup(message_body))
 
     def manual_invoice(self):
+        period_start, period_end = self._get_invoice_period()
+        if not self._can_create_invoice_for_period(period_start, period_end):
+            start_str, end_str = self._format_period_for_message(
+                period_start, period_end
+            )
+            raise UserError(
+                self.env._(
+                    "An invoice already exists for the period %(start)s - %(end)s.",
+                    start=start_str,
+                    end=end_str,
+                )
+            )
         invoice_id = self.create_invoice()
         self._set_next_invoice_date_after_invoice()
         context = dict(self.env.context)
