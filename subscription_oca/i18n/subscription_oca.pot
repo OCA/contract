@@ -230,6 +230,11 @@ msgid "Create Invoice"
 msgstr ""
 
 #. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__create_sale_order
+msgid "Create sale order"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_close_reason_wizard__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__create_uid
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_close_reason__create_uid
@@ -320,7 +325,7 @@ msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__draft
-#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__draft
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoice_state__draft
 #: model:sale.subscription.stage,name:subscription_oca.subscription_stage_draft
 msgid "Draft"
 msgstr ""
@@ -368,6 +373,13 @@ msgstr ""
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__recurring_rule_boundary__unlimited
 msgid "Forever"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_template__create_sale_order
+msgid ""
+"Generate a confirmed sale order before invoicing. Required for the "
+"subscription to appear in Sales analysis reports."
 msgstr ""
 
 #. module: subscription_oca
@@ -425,14 +437,8 @@ msgid "In progress"
 msgstr ""
 
 #. module: subscription_oca
-#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
 msgid "Invoice"
-msgstr ""
-
-#. module: subscription_oca
-#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__invoice_send
-msgid "Invoice & send"
 msgstr ""
 
 #. module: subscription_oca
@@ -451,6 +457,11 @@ msgid "Invoice address"
 msgstr ""
 
 #. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoice_state
+msgid "Invoice status"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__invoice_ids
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
 msgid "Invoices"
@@ -459,11 +470,6 @@ msgstr ""
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
 msgid "Invoicing"
-msgstr ""
-
-#. module: subscription_oca
-#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__invoicing_mode
-msgid "Invoicing mode"
 msgstr ""
 
 #. module: subscription_oca
@@ -620,6 +626,11 @@ msgid "Pending subscriptions"
 msgstr ""
 
 #. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoice_state__posted
+msgid "Posted"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__pricelist_id
 msgid "Pricelist"
 msgstr ""
@@ -690,11 +701,6 @@ msgid "Sale Subscription Line"
 msgstr ""
 
 #. module: subscription_oca
-#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_template__invoicing_mode__sale_and_invoice
-msgid "Sale order & Invoice"
-msgstr ""
-
-#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sale_order_ids_count
 msgid "Sale orders"
 msgstr ""
@@ -717,6 +723,16 @@ msgstr ""
 #. module: subscription_oca
 #: model:ir.model,name:subscription_oca.model_sale_order_line
 msgid "Sales Order Line"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_template__send_invoice
+msgid "Send invoice by email"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_template__send_invoice
+msgid "Send the invoice by email once posted, using the template below."
 msgstr ""
 
 #. module: subscription_oca
@@ -743,6 +759,11 @@ msgstr ""
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date_start
 msgid "Start date"
+msgstr ""
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_template__invoice_state
+msgid "State in which the generated invoice is left."
 msgstr ""
 
 #. module: subscription_oca
@@ -838,6 +859,14 @@ msgstr ""
 #. module: subscription_oca
 #: model:ir.actions.server,name:subscription_oca.ir_cron_subscription_management_ir_actions_server
 msgid "Subscriptions management"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
+msgid ""
+"Subscriptions using this template will not\n"
+"                                        generate a sale order, so they will not appear\n"
+"                                        in Sales analysis reports."
 msgstr ""
 
 #. module: subscription_oca
