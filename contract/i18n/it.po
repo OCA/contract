@@ -103,8 +103,8 @@ msgstr ""
 "                <p>Salve <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
 "                <p>Un nuovo contratto è stato creato: </p>\n"
 "\n"
-"                <p style=\"border-left: 1px solid #8e0000; margin-left: "
-"30px;\">\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>RIFERIMENTI</strong><br/>\n"
 "                    &amp;nbsp;&amp;nbsp;Contratto: <strong t-"
 "out=\"object.name\"/><br/>\n"
@@ -145,9 +145,10 @@ msgstr ""
 "line-height: 16px; background-color: #F2F2F2;\">\n"
 "                    <span style=\"color: #222; margin-bottom: 5px; display: "
 "block; \">\n"
-"                        <address t-field=\"object.company_id.sudo()"
-".partner_id\" t-options='{\"widget\": \"contact\", \"fields\": [\"name\", "
-"\"address\"], \"no_marker\": True}'></address>\n"
+"                        <address t-"
+"field=\"object.company_id.sudo().partner_id\" t-options='{\"widget\": "
+"\"contact\", \"fields\": [\"name\", \"address\"], \"no_marker\": True}'></"
+"address>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -812,6 +813,7 @@ msgstr "URL portale cliente"
 #. module: contract
 #. odoo-python
 #: code:addons/contract/controllers/main.py:0
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date
 #: model:ir.model.fields,field_description:contract.field_contract_modification__date
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -1717,6 +1719,13 @@ msgstr "Etichette"
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
 msgid "Technical field for UX purposes."
 msgstr "Campo tecnico per fini UX."
+
+#. module: contract
+#: model:ir.model.fields,help:contract.field_contract_contract__date
+msgid ""
+"This is the date the contract is taken into account         (e.g.: signature "
+"date)"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_report_tree_view
