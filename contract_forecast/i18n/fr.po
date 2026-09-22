@@ -53,12 +53,12 @@ msgid "Contract"
 msgstr "Contrat"
 
 #. module: contract_forecast
-#: code:addons/contract_forecast/models/contract.py:19
+#. odoo-python
+#: code:addons/contract_forecast/models/contract.py:0
 #: model:ir.actions.act_window,name:contract_forecast.action_contract_forecast
 #: model:ir.ui.menu,name:contract_forecast.menu_contract_forecast
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_graph_view
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_pivot_view
-#, python-format
 msgid "Contract Forecast"
 msgstr "Prévisionnel de Contrat"
 
@@ -90,6 +90,11 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: contract_forecast
+#: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__date_end
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_search_view
 msgid "Date End"
@@ -105,6 +110,11 @@ msgstr "Date de Facturation"
 #: model_terms:ir.ui.view,arch_db:contract_forecast.contract_line_forecast_period_search_view
 msgid "Date Start"
 msgstr "Date de début"
+
+#. module: contract_forecast
+#: model:ir.model.fields,help:contract_forecast.field_contract_line_forecast_period__sequence
+msgid "Defines line ordering in the contract."
+msgstr ""
 
 #. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__discount
@@ -162,11 +172,6 @@ msgid "Invoice Date"
 msgstr "Date de facture"
 
 #. module: contract_forecast
-#: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
@@ -177,7 +182,7 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: contract_forecast
-#: selection:res.company,contract_forecast_rule_type:0
+#: model:ir.model.fields.selection,name:contract_forecast.selection__res_company__contract_forecast_rule_type__monthly
 msgid "Month(s)"
 msgstr "Mois"
 
@@ -208,9 +213,17 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: contract_forecast
-#: model:ir.model.fields,help:contract_forecast.field_contract_line_forecast_period__sequence
-msgid "Sequence of the contract line when displaying contracts"
-msgstr "Séquence d'affichage de la ligne du contrat"
+#: model:ir.model.fields,field_description:contract_forecast.field_res_company__contract_forecast_stop_at_line_date_end
+#: model:ir.model.fields,field_description:contract_forecast.field_res_config_settings__contract_forecast_stop_at_line_date_end
+msgid "Stop forecast at contract line end date"
+msgstr ""
+
+#. module: contract_forecast
+#: model_terms:ir.ui.view,arch_db:contract_forecast.res_config_settings_form_view
+msgid ""
+"Stop generating forecasts at the contract line's end date, even if it is set "
+"to auto-renew"
+msgstr ""
 
 #. module: contract_forecast
 #: model:ir.model.fields,field_description:contract_forecast.field_contract_line_forecast_period__price_unit
@@ -218,6 +231,12 @@ msgid "Unit Price"
 msgstr "Prix Unitaire"
 
 #. module: contract_forecast
-#: selection:res.company,contract_forecast_rule_type:0
+#: model:ir.model.fields.selection,name:contract_forecast.selection__res_company__contract_forecast_rule_type__yearly
 msgid "Year(s)"
 msgstr "Année(s)"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"
+
+#~ msgid "Sequence of the contract line when displaying contracts"
+#~ msgstr "Séquence d'affichage de la ligne du contrat"
