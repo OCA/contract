@@ -19,3 +19,5 @@ Forecasts are visible directly from the contract in a **pivot view** or
   - Expected invoice date
   - Quantity, unit price, discount, and subtotal (untaxed)
 - Clean handling of auto-renewing and manually-ended contracts.
+- Option to force forecasts to stop at a contract line's end date, even
+  for auto-renewing lines.

@@ -271,3 +271,21 @@ class TestContractLineForecastPeriod(TestContractBase):
         self.acct_line.write({"date_end": False})
         self.assertTrue(self.acct_line.forecast_period_ids)
         self.assertEqual(len(self.acct_line.forecast_period_ids), 36)
+
+    def test_forecast_period_for_auto_renew_contract_stop_at_date_end(self):
+        company = self.acct_line.contract_id.company_id
+        company.contract_forecast_interval = 36
+        company.contract_forecast_stop_at_line_date_end = True
+        self.acct_line.write(
+            {
+                "date_start": Date.today(),
+                "recurring_next_date": Date.today(),
+                "date_end": Date.today() + relativedelta(years=1),
+                "recurring_rule_type": "monthlylastday",
+                "last_date_invoiced": False,
+                "recurring_invoicing_type": "pre-paid",
+                "is_auto_renew": True,
+            }
+        )
+        self.assertTrue(self.acct_line.forecast_period_ids)
+        self.assertEqual(len(self.acct_line.forecast_period_ids), 13)

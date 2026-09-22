@@ -44,6 +44,22 @@ class ContractLine(models.Model):
             self.contract_id.company_id.contract_forecast_interval,
         )
 
+    def _forecast_ignore_date_end(self):
+        """Whether an auto-renewing line's date_end should be ignored
+        when generating and limiting forecast periods.
+
+        By default, auto-renewing (tacit renewal) lines ignore their
+        date_end and forecast up to the company's forecast horizon.
+        If the company option `contract_forecast_stop_at_line_date_end`
+        is enabled and the line has a date_end, that date_end is
+        honored instead, even for auto-renewing lines.
+        """
+        self.ensure_one()
+        if not self.is_auto_renew:
+            return False
+        company = self.contract_id.company_id
+        return not (company.contract_forecast_stop_at_line_date_end and self.date_end)
+
     def _get_generate_forecast_periods_criteria(self, period_date_end):
         self.ensure_one()
         if not self.contract_id.company_id.enable_contract_forecast:
@@ -51,7 +67,7 @@ class ContractLine(models.Model):
         if self.is_canceled or not self.active:
             return False
         contract_forecast_end_date = self._get_contract_forecast_end_date()
-        if not self.date_end or self.is_auto_renew:
+        if not self.date_end or self._forecast_ignore_date_end():
             return period_date_end < contract_forecast_end_date
         return (
             period_date_end <= self.date_end
@@ -66,7 +82,9 @@ class ContractLine(models.Model):
                 period_date_start = rec.next_period_date_start
                 period_date_end = rec.next_period_date_end
                 recurring_next_date = rec.recurring_next_date
-                max_date_end = rec.date_end if not rec.is_auto_renew else False
+                max_date_end = (
+                    False if rec._forecast_ignore_date_end() else rec.date_end
+                )
                 while period_date_end and rec._get_generate_forecast_periods_criteria(
                     period_date_end
                 ):

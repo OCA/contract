@@ -16,3 +16,7 @@ class ResConfigSettings(models.TransientModel):
     contract_forecast_rule_type = fields.Selection(
         related="company_id.contract_forecast_rule_type", readonly=False
     )
+    contract_forecast_stop_at_line_date_end = fields.Boolean(
+        related="company_id.contract_forecast_stop_at_line_date_end",
+        readonly=False,
+    )

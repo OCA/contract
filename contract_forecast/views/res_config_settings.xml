@@ -22,6 +22,13 @@
                     <field name="contract_forecast_interval" class="oe_inline" />
                     <field name="contract_forecast_rule_type" class="oe_inline" />
                 </setting>
+                <setting
+                    class="col-12 col-lg-6 o_setting_box"
+                    invisible="not enable_contract_forecast"
+                    help="Stop generating forecasts at the contract line's end date, even if it is set to auto-renew"
+                >
+                    <field name="contract_forecast_stop_at_line_date_end" />
+                </setting>
             </xpath>
         </field>
     </record>
