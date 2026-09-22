@@ -791,3 +791,21 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
             10.0,
             "Manual discount was lost after changing the quantity (Bug #1320)",
         )
+
+    def test_recurring_total_recomputes_on_line_price_change(self):
+        """Changing the unit price of an existing line must refresh the stored
+        subscription totals. Regression: ``_compute_total`` only depended on the
+        list of lines, so any later edit to a line's price (pricelist change,
+        manual edit, discount) left ``recurring_total`` stale."""
+        subscription = self.create_sub({})
+        line = self.create_sub_line(subscription)
+        subscription.flush_recordset()
+        before = subscription.recurring_total
+        # Edit the unit price of the already existing line.
+        line.price_unit = 1234.0
+        self.assertEqual(
+            subscription.recurring_total,
+            line.price_subtotal,
+            "Totals were not refreshed after a line price change.",
+        )
+        self.assertNotEqual(before, subscription.recurring_total)
