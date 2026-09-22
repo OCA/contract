@@ -130,6 +130,12 @@ class TestSubscriptionOCA(BaseCommon):
                 "type": "pre",
             }
         )
+        cls.stage_3 = cls.env["sale.subscription.stage"].create(
+            {
+                "name": "Test Sub Stage 3 in progress",
+                "type": "in_progress",
+            }
+        )
         cls.tag = cls.env["sale.subscription.tag"].create(
             {
                 "name": "Test Tag",
@@ -630,6 +636,17 @@ class TestSubscriptionOCA(BaseCommon):
         invoice = self.sub1.create_invoice()
         action = invoice.action_open_subscription()
         self.assertEqual(action["res_id"], self.sub1.id)
+
+    def test_subscription_oca_date_start(self):
+        self.sub6.write({"stage_id": self.stage_3})
+        self.assertEqual(fields.Date.to_string(self.sub6.date_start), "2099-01-01")
+        self.sub3.write({"stage_id": self.stage_3})
+        self.assertEqual(self.sub3.date_start, fields.Date.today())
+
+    def test_subscription_oca_date_start_empty(self):
+        self.sub3.date_start = False
+        self.sub3.write({"stage_id": self.stage_3})
+        self.assertEqual(self.sub3.date_start, fields.Date.today())
 
     def _collect_all_sub_test_results(self, subscription):
         """Creates the invoice of a subscription and returns its data
