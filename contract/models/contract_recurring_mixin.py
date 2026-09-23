@@ -59,12 +59,22 @@ class ContractRecurringMixin(models.AbstractModel):
         ),
     )
     recurring_invoicing_offset = fields.Integer(
-        compute="_compute_recurring_invoicing_offset",
         string="Invoicing offset",
         help=(
             "Number of days to offset the invoice from the period end "
             "date (in post-paid mode) or start date (in pre-paid mode)."
         ),
+    )
+    recurring_invoicing_offset_type = fields.Selection(
+        selection=[
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
+        ],
+        string="Invoicing offset type",
     )
     # === Invoicing Configuration Fields ===
     # Define when and how invoices should be issued within the recurrence.
@@ -109,6 +119,7 @@ class ContractRecurringMixin(models.AbstractModel):
         "next_period_date_start",
         "recurring_invoicing_type",
         "recurring_invoicing_offset",
+        "recurring_invoicing_offset_type",
         "recurring_rule_type",
         "recurring_interval",
         "date_end",
@@ -125,21 +136,14 @@ class ContractRecurringMixin(models.AbstractModel):
                 next_invoice_date=rec.recurring_next_date,
                 recurring_invoicing_type=rec.recurring_invoicing_type,
                 recurring_invoicing_offset=rec.recurring_invoicing_offset,
-            )
-
-    @api.depends("recurring_invoicing_type", "recurring_rule_type")
-    def _compute_recurring_invoicing_offset(self):
-        """Compute the invoicing offset based on type and rule."""
-        for rec in self:
-            method = self._get_default_recurring_invoicing_offset
-            rec.recurring_invoicing_offset = method(
-                rec.recurring_invoicing_type, rec.recurring_rule_type
+                recurring_invoicing_offset_type=rec.recurring_invoicing_offset_type,
             )
 
     @api.depends(
         "next_period_date_start",
         "recurring_invoicing_type",
         "recurring_invoicing_offset",
+        "recurring_invoicing_offset_type",
         "recurring_rule_type",
         "recurring_interval",
         "date_end",
@@ -151,6 +155,7 @@ class ContractRecurringMixin(models.AbstractModel):
                 rec.next_period_date_start,
                 rec.recurring_invoicing_type,
                 rec.recurring_invoicing_offset,
+                rec.recurring_invoicing_offset_type,
                 rec.recurring_rule_type,
                 rec.recurring_interval,
                 max_date_end=rec.date_end,
@@ -186,6 +191,7 @@ class ContractRecurringMixin(models.AbstractModel):
         next_invoice_date=False,
         recurring_invoicing_type=False,
         recurring_invoicing_offset=False,
+        recurring_invoicing_offset_type=False,
     ):
         """Compute the end date for the next period."""
         if not next_period_date_start or (
@@ -202,17 +208,20 @@ class ContractRecurringMixin(models.AbstractModel):
             )
         else:
             # Forced invoice date: back-calculate period end
+            next_period_date_end = (
+                next_invoice_date
+                - self._get_invoicing_offset_relative_delta(
+                    recurring_invoicing_type,
+                    recurring_rule_type,
+                    recurring_invoicing_offset,
+                    recurring_invoicing_offset_type,
+                )
+            )
+
             if recurring_invoicing_type == "pre-paid":
-                next_period_date_end = (
-                    next_invoice_date
-                    - relativedelta(days=recurring_invoicing_offset)
-                    + self.get_relative_delta(recurring_rule_type, recurring_interval)
-                    - relativedelta(days=1)
-                )
-            else:  # post-paid
-                next_period_date_end = next_invoice_date - relativedelta(
-                    days=recurring_invoicing_offset
-                )
+                next_period_date_end += self.get_relative_delta(
+                    recurring_rule_type, recurring_interval
+                ) - relativedelta(days=1)
 
         if max_date_end and next_period_date_end > max_date_end:
             next_period_date_end = max_date_end
@@ -224,6 +233,7 @@ class ContractRecurringMixin(models.AbstractModel):
         next_period_date_start,
         recurring_invoicing_type,
         recurring_invoicing_offset,
+        recurring_invoicing_offset_type,
         recurring_rule_type,
         recurring_interval,
         max_date_end,
@@ -239,20 +249,36 @@ class ContractRecurringMixin(models.AbstractModel):
             return False
 
         if recurring_invoicing_type == "pre-paid":
-            return next_period_date_start + relativedelta(
-                days=recurring_invoicing_offset
-            )
+            next_invoice_date = next_period_date_start
         else:
-            return next_period_date_end + relativedelta(days=recurring_invoicing_offset)
+            next_invoice_date = next_period_date_end
+
+        return next_invoice_date + self._get_invoicing_offset_relative_delta(
+            recurring_invoicing_type,
+            recurring_rule_type,
+            recurring_invoicing_offset,
+            recurring_invoicing_offset_type,
+        )
 
     @api.model
-    def _get_default_recurring_invoicing_offset(
-        self, recurring_invoicing_type, recurring_rule_type
+    def _get_invoicing_offset_relative_delta(
+        self,
+        recurring_invoicing_type,
+        recurring_rule_type,
+        recurring_invoicing_offset,
+        recurring_invoicing_offset_type,
     ):
-        """Return default offset in days based on invoicing type and rule."""
         if (
             recurring_invoicing_type == "pre-paid"
             or recurring_rule_type == "monthlylastday"
         ):
-            return 0
-        return 1
+            invoice_offset = relativedelta()
+        else:
+            invoice_offset = relativedelta(days=1)
+
+        if recurring_invoicing_offset != 0 and recurring_invoicing_offset_type:
+            invoice_offset += self.get_relative_delta(
+                recurring_invoicing_offset_type, recurring_invoicing_offset
+            )
+
+        return invoice_offset
