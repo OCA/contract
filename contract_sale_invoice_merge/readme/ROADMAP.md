@@ -1,0 +1,2 @@
+- When a contract line is invoiced several times in a row, it still creates several invoices. An improvement could be to group these invoices together.
+- Refactor the method _merge_invoices_values to allow flexible configuration of the merged fields.
