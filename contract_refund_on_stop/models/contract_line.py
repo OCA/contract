@@ -107,6 +107,7 @@ class ContractLine(models.Model):
                 to_refund_start_date,
                 self.recurring_invoicing_type,
                 self.recurring_invoicing_offset,
+                self.recurring_invoicing_offset_type,
                 self.recurring_rule_type,
                 self.recurring_interval,
                 max_date_end=next_period_date_end,
