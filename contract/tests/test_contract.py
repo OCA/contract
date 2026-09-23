@@ -670,22 +670,6 @@ class TestContract(TestContractBase):
             "There was an error and the view couldn't be opened.",
         )
 
-    def test_get_default_recurring_invoicing_offset(self):
-        clm = self.env["contract.line"]
-        self.assertEqual(
-            clm._get_default_recurring_invoicing_offset("pre-paid", "monthly"), 0
-        )
-        self.assertEqual(
-            clm._get_default_recurring_invoicing_offset("post-paid", "monthly"), 1
-        )
-        self.assertEqual(
-            clm._get_default_recurring_invoicing_offset("pre-paid", "monthlylastday"), 0
-        )
-        self.assertEqual(
-            clm._get_default_recurring_invoicing_offset("post-paid", "monthlylastday"),
-            0,
-        )
-
     def test_get_next_invoice_date(self):
         """Test different combination to compute recurring_next_date
         Combination format
@@ -705,16 +689,18 @@ class TestContract(TestContractBase):
             date_start,
             recurring_invoicing_type,
             recurring_invoicing_offset,
+            recurring_invoicing_offset_type,
             recurring_rule_type,
             recurring_interval,
             max_date_end,
         ):
             return (
-                "Error in %s-%d every %d %s case, "
+                "Error in %s-%d %s every %d %s case, "
                 "start with %s (max_date_end=%s)"
                 % (
                     recurring_invoicing_type,
                     recurring_invoicing_offset,
+                    recurring_invoicing_offset_type,
                     recurring_interval,
                     recurring_rule_type,
                     date_start,
@@ -725,7 +711,7 @@ class TestContract(TestContractBase):
         combinations = [
             (
                 to_date("2018-01-01"),
-                (to_date("2018-01-01"), "pre-paid", 0, "monthly", 1, False),
+                (to_date("2018-01-01"), "pre-paid", 0, None, "monthly", 1, False),
             ),
             (
                 to_date("2018-01-01"),
@@ -733,6 +719,7 @@ class TestContract(TestContractBase):
                     to_date("2018-01-01"),
                     "pre-paid",
                     0,
+                    None,
                     "monthly",
                     1,
                     to_date("2018-01-15"),
@@ -744,6 +731,7 @@ class TestContract(TestContractBase):
                     to_date("2018-01-16"),
                     "pre-paid",
                     0,
+                    None,
                     "monthly",
                     1,
                     to_date("2018-01-15"),
@@ -751,11 +739,11 @@ class TestContract(TestContractBase):
             ),
             (
                 to_date("2018-01-01"),
-                (to_date("2018-01-01"), "pre-paid", 0, "monthly", 2, False),
+                (to_date("2018-01-01"), "pre-paid", 0, None, "monthly", 2, False),
             ),
             (
                 to_date("2018-02-01"),
-                (to_date("2018-01-01"), "post-paid", 1, "monthly", 1, False),
+                (to_date("2018-01-01"), "post-paid", 1, None, "monthly", 1, False),
             ),
             (
                 to_date("2018-01-16"),
@@ -763,6 +751,7 @@ class TestContract(TestContractBase):
                     to_date("2018-01-01"),
                     "post-paid",
                     1,
+                    None,
                     "monthly",
                     1,
                     to_date("2018-01-15"),
@@ -774,6 +763,7 @@ class TestContract(TestContractBase):
                     to_date("2018-01-16"),
                     "post-paid",
                     1,
+                    None,
                     "monthly",
                     1,
                     to_date("2018-01-15"),
@@ -781,31 +771,63 @@ class TestContract(TestContractBase):
             ),
             (
                 to_date("2018-03-01"),
-                (to_date("2018-01-01"), "post-paid", 1, "monthly", 2, False),
+                (to_date("2018-01-01"), "post-paid", 1, None, "monthly", 2, False),
             ),
             (
                 to_date("2018-01-31"),
-                (to_date("2018-01-05"), "post-paid", 0, "monthlylastday", 1, False),
+                (
+                    to_date("2018-01-05"),
+                    "post-paid",
+                    0,
+                    None,
+                    "monthlylastday",
+                    1,
+                    False,
+                ),
             ),
             (
                 to_date("2018-01-06"),
-                (to_date("2018-01-06"), "pre-paid", 0, "monthlylastday", 1, False),
+                (
+                    to_date("2018-01-06"),
+                    "pre-paid",
+                    0,
+                    None,
+                    "monthlylastday",
+                    1,
+                    False,
+                ),
             ),
             (
                 to_date("2018-02-28"),
-                (to_date("2018-01-05"), "post-paid", 0, "monthlylastday", 2, False),
+                (
+                    to_date("2018-01-05"),
+                    "post-paid",
+                    0,
+                    None,
+                    "monthlylastday",
+                    2,
+                    False,
+                ),
             ),
             (
                 to_date("2018-01-05"),
-                (to_date("2018-01-05"), "pre-paid", 0, "monthlylastday", 2, False),
+                (
+                    to_date("2018-01-05"),
+                    "pre-paid",
+                    0,
+                    None,
+                    "monthlylastday",
+                    2,
+                    False,
+                ),
             ),
             (
                 to_date("2018-01-05"),
-                (to_date("2018-01-05"), "pre-paid", 0, "yearly", 1, False),
+                (to_date("2018-01-05"), "pre-paid", 0, None, "yearly", 1, False),
             ),
             (
                 to_date("2019-01-05"),
-                (to_date("2018-01-05"), "post-paid", 1, "yearly", 1, False),
+                (to_date("2018-01-05"), "post-paid", 1, None, "yearly", 1, False),
             ),
         ]
         contract_line_env = self.env["contract.line"]
@@ -1722,4 +1744,50 @@ class TestContract(TestContractBase):
         expected_total = (expected_qty_period_1 + expected_qty_period_2) * 100.0
         self.assertEqual(
             self.acct_line._get_contract_line_total_value(), expected_total
+        )
+
+    def test_get_next_invoice_date_with_offset_type(self):
+        """Offset values use the selected recurrence unit."""
+        contract_line_env = self.env["contract.line"]
+        date_start = to_date("2018-01-01")
+
+        expected_dates = {
+            "daily": to_date("2018-01-02"),
+            "weekly": to_date("2018-01-08"),
+            "monthly": to_date("2018-02-01"),
+            "quarterly": to_date("2018-04-01"),
+            "semesterly": to_date("2018-07-01"),
+            "yearly": to_date("2019-01-01"),
+        }
+
+        for offset_type, expected_date in expected_dates.items():
+            self.assertEqual(
+                contract_line_env.get_next_invoice_date(
+                    date_start,
+                    "pre-paid",
+                    1,
+                    offset_type,
+                    "monthly",
+                    1,
+                    False,
+                ),
+                expected_date,
+            )
+
+    def test_get_next_period_date_end_with_offset_type(self):
+        """The period end is back-calculated using the offset type."""
+        contract_line_env = self.env["contract.line"]
+
+        self.assertEqual(
+            contract_line_env.get_next_period_date_end(
+                to_date("2018-01-01"),
+                "monthly",
+                1,
+                max_date_end=False,
+                next_invoice_date=to_date("2018-02-08"),
+                recurring_invoicing_type="post-paid",
+                recurring_invoicing_offset=1,
+                recurring_invoicing_offset_type="weekly",
+            ),
+            to_date("2018-01-31"),
         )
