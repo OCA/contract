@@ -37,6 +37,13 @@ class SaleSubscriptionTemplate(models.Model):
             ("sale_and_invoice", "Sale order & Invoice"),
         ],
     )
+    auto_create_payment = fields.Boolean(
+        string="Automatic payment",
+        help="Automatically charge the subscription's saved payment token. "
+        "The invoice is kept in draft and only posted once the payment "
+        "succeeds. Works with every invoicing mode; with Draft mode it "
+        "charges silently (posts on success without sending an email).",
+    )
     code = fields.Char()
     recurring_rule_count = fields.Integer(default=1, string="Rule count")
     invoice_mail_template_id = fields.Many2one(

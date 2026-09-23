@@ -85,6 +85,7 @@ class SaleSubscriptionLine(models.Model):
         for record in self:
             if not record.product_id:
                 record.name = False
+                continue
             lang = get_lang(self.env, record.sale_subscription_id.partner_id.lang).code
             product = record.product_id.with_context(lang=lang)
             record.name = product.with_context(

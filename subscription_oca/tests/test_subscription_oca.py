@@ -344,17 +344,40 @@ class TestSubscriptionOCA(BaseCommon):
         move_res = self.sub_line._prepare_account_move_line()
         self.assertIsInstance(move_res, dict)
 
-    @patch(
-        "odoo.addons.subscription_oca.models.sale_subscription."
-        "SaleSubscription.generate_invoice"
-    )
-    def test_subscription_oca_sub_cron_error(self, generate_invoice_patch):
-        # Simulate something failing in generating an invoice,
-        # we expect something being logged
-        generate_invoice_patch.side_effect = exceptions.UserError("Error")
-        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
-            with self.assertRaises(exceptions.UserError):
-                self.sub1.cron_subscription_management()
+    def test_subscription_oca_sub_cron_error(self):
+        # The cron wraps each subscription in a savepoint and logs errors rather
+        # than re-raising, so one failure never aborts the rest of the batch.
+        sub = self.create_sub(
+            {
+                "date_start": fields.Date.today() - relativedelta(days=10),
+                "in_progress": True,
+            }
+        )
+        self.create_sub_line(sub)
+        sub.recurring_next_date = fields.Date.today() - relativedelta(days=1)
+        SaleSubscription = type(self.env["sale.subscription"])
+        # Limit the cron to only our test subscription so the mock's side-effect
+        # doesn't fire on other in-progress subscriptions that call
+        # generate_invoice() outside the savepoint path.
+        with patch.object(
+            SaleSubscription,
+            "search",
+            return_value=sub,
+        ):
+            with patch.object(
+                SaleSubscription,
+                "generate_invoice",
+                side_effect=exceptions.UserError("Error"),
+            ):
+                with mute_logger(
+                    "odoo.addons.subscription_oca.models.sale_subscription"
+                ):
+                    sub.cron_subscription_management()
+        # No invoice should have been created (the savepoint rolled it back).
+        self.assertEqual(
+            self.env["account.move"].search_count([("subscription_id", "=", sub.id)]),
+            0,
+        )
 
     def test_subscription_oca_sub_cron(self):
         # sale.subscription
@@ -683,3 +706,496 @@ class TestSubscriptionOCA(BaseCommon):
         )
         test_res.append(group_stage_ids)
         return test_res
+
+    # ------------------------------------------------------------------
+    # Automatic payment feature
+    # ------------------------------------------------------------------
+    def _prepare_provider(self):
+        bank_journal = self.env["account.journal"].search(
+            [
+                ("type", "=", "bank"),
+                ("company_id", "=", self.env.ref("base.main_company").id),
+            ],
+            limit=1,
+        )
+        if not bank_journal:
+            bank_journal = self.env["account.journal"].create(
+                {"name": "Test Bank", "type": "bank", "code": "TBNKX"}
+            )
+        provider = self.env["payment.provider"].create(
+            {"name": "Test Provider", "state": "test"}
+        )
+        provider.journal_id = bank_journal
+        # Wire an inbound payment method line so a successful transaction can
+        # create and reconcile a payment during post-processing.
+        if not provider.journal_id.inbound_payment_method_line_ids.filtered(
+            lambda line: line.payment_provider_id == provider
+        ):
+            self.env["account.payment.method.line"].create(
+                {
+                    "name": "Test inbound line",
+                    "payment_method_id": self.env.ref(
+                        "account.account_payment_method_manual_in"
+                    ).id,
+                    "payment_provider_id": provider.id,
+                    "journal_id": provider.journal_id.id,
+                }
+            )
+        return provider
+
+    def _create_payment_token(self, partner, provider):
+        method = self.env["payment.method"].create(
+            {
+                "name": "Test Method",
+                "code": "none",
+                "provider_ids": [Command.set(provider.ids)],
+                "support_tokenization": True,
+            }
+        )
+        return self.env["payment.token"].create(
+            {
+                "partner_id": partner.id,
+                "provider_id": provider.id,
+                "provider_ref": f"tok-{partner.id}",
+                "payment_method_id": method.id,
+            }
+        )
+
+    def _post_subscription_invoice(self, subscription):
+        invoice = subscription.create_invoice()
+        invoice.action_post()
+        return invoice
+
+    def test_payment_no_token(self):
+        invoice = self._post_subscription_invoice(self.sub1)
+        self.assertFalse(self.sub1.create_payment(invoice))
+        self.assertTrue(self.sub1.payment_exception)
+        msgs = self.sub1.message_ids.filtered(
+            lambda m: "No payment token found" in (m.body or "")
+        )
+        self.assertEqual(len(msgs), 1)
+
+    def test_payment_success(self):
+        provider = self._prepare_provider()
+        self.sub1.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = self._post_subscription_invoice(self.sub1)
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "done"
+
+        with (
+            patch.object(tx_model, "_send_payment_request", _fake_send),
+            patch.object(tx_model, "_post_process", lambda tx: None),
+        ):
+            self.assertTrue(self.sub1.create_payment(invoice))
+        self.assertFalse(self.sub1.payment_exception)
+
+    def test_payment_pending_async(self):
+        provider = self._prepare_provider()
+        self.sub1.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = self._post_subscription_invoice(self.sub1)
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "pending"
+
+        with patch.object(tx_model, "_send_payment_request", _fake_send):
+            self.assertTrue(self.sub1.create_payment(invoice))
+        self.assertFalse(self.sub1.payment_exception)
+        self.assertEqual(invoice.transaction_ids.state, "pending")
+        # The "awaiting confirmation" note is posted by generate_invoice, not
+        # create_payment, so a direct charge does not duplicate it.
+        self.assertFalse(
+            self.sub1.message_ids.filtered(
+                lambda m: "awaiting confirmation" in (m.body or "")
+            )
+        )
+
+    def test_payment_reference_falls_back_to_subscription(self):
+        # Charge-before-post: the invoice is still draft (no sequence number),
+        # so the payment reference must fall back to the subscription's own
+        # reference instead of an opaque timestamp.
+        provider = self._prepare_provider()
+        sub = self.create_sub({"code": "AUTOPAYREF"})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = sub.create_invoice()
+        self.assertEqual(invoice.state, "draft")
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "pending"
+
+        with patch.object(tx_model, "_send_payment_request", _fake_send):
+            self.assertTrue(sub.create_payment(invoice))
+        transaction = invoice.transaction_ids
+        self.assertEqual(len(transaction), 1)
+        self.assertIn("AUTOPAYREF", transaction.reference)
+
+    def test_generate_invoice_auto_payment_pending_message(self):
+        # While the charge is pending the invoice stays draft: post a single
+        # clean "submitted; awaiting confirmation" note - no "Draft Invoice"
+        # display name, no "To validate", no bare "False".
+        provider = self._prepare_provider()
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "pending"
+
+        with patch.object(tx_model, "_send_payment_request", _fake_send):
+            sub.generate_invoice()
+        invoice = sub.invoice_ids
+        self.assertEqual(invoice.state, "draft")
+        awaiting = sub.message_ids.filtered(
+            lambda m: "awaiting confirmation" in (m.body or "")
+        )
+        self.assertEqual(len(awaiting), 1)
+        self.assertNotIn("Draft Invoice", awaiting[0].body)
+        self.assertNotIn("False", awaiting[0].body)
+        self.assertFalse(
+            sub.message_ids.filtered(lambda m: "To validate" in (m.body or ""))
+        )
+
+    def test_transaction_cancel_flags_subscription(self):
+        # An accepted (pending) automatic payment that the provider later
+        # cancels or reverses (permanent failure / chargeback) must surface on
+        # the subscription: exception flag + to-do activity. Stage and next
+        # invoice date are intentionally left untouched.
+        provider = self._prepare_provider()
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = sub.create_invoice()
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "pending"
+
+        with patch.object(tx_model, "_send_payment_request", _fake_send):
+            self.assertTrue(sub.create_payment(invoice))
+        self.assertFalse(sub.payment_exception)
+        stage_before = sub.stage_id
+        next_date_before = sub.recurring_next_date
+        # Provider cancels the transaction afterwards.
+        invoice.transaction_ids._set_canceled()
+        self.assertTrue(sub.payment_exception)
+        self.assertTrue(
+            sub.activity_ids.filtered(
+                lambda a: a.summary == sub._payment_failure_activity_summary()
+            )
+        )
+        # Stage and schedule are left as-is (posted invoice stands as the
+        # receivable; the exception flag stops further auto-billing).
+        self.assertEqual(sub.stage_id, stage_before)
+        self.assertEqual(sub.recurring_next_date, next_date_before)
+
+    def test_payment_declined(self):
+        provider = self._prepare_provider()
+        self.sub1.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = self._post_subscription_invoice(self.sub1)
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx.state = "error"
+
+        with patch.object(tx_model, "_send_payment_request", _fake_send):
+            self.assertFalse(self.sub1.create_payment(invoice))
+        self.assertTrue(self.sub1.payment_exception)
+
+    def test_payment_token_partner_constraint(self):
+        provider = self._prepare_provider()
+        token = self._create_payment_token(self.partner_2, provider)
+        with self.assertRaises(exceptions.ValidationError):
+            self.sub1.payment_token_id = token
+
+    def test_onchange_suggest_token(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        provider = self._prepare_provider()
+        token = self._create_payment_token(self.partner, provider)
+        sub = self.env["sale.subscription"].new(
+            {
+                "template_id": template.id,
+                "partner_id": self.partner.id,
+                "company_id": self.env.ref("base.main_company").id,
+            }
+        )
+        sub._onchange_partner_id_payment_token()
+        self.assertEqual(sub.payment_token_id, token)
+
+    def test_generate_invoice_auto_payment_no_token(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        original_next_date = sub.recurring_next_date
+        move_send = type(self.env["account.move.send"])
+        with patch.object(
+            move_send, "_generate_and_send_invoices", return_value=None
+        ) as mock_send:
+            sub.generate_invoice()
+        mock_send.assert_not_called()
+        self.assertTrue(sub.payment_exception)
+        # Invoice is kept in draft (never posted) and the schedule is not
+        # advanced, so the period is retried once the token is fixed.
+        self.assertEqual(len(sub.invoice_ids), 1)
+        self.assertEqual(sub.invoice_ids.state, "draft")
+        self.assertEqual(sub.recurring_next_date, original_next_date)
+        self.assertTrue(
+            sub.activity_ids.filtered(
+                lambda a: a.summary == sub._payment_failure_activity_summary()
+            )
+        )
+
+    def test_auto_payment_reuses_failed_draft(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.generate_invoice()
+        first_invoice = sub.invoice_ids
+        self.assertEqual(len(first_invoice), 1)
+        self.assertEqual(first_invoice.state, "draft")
+        # Second run reuses the lingering failed draft instead of duplicating.
+        sub.generate_invoice()
+        self.assertEqual(sub.invoice_ids, first_invoice)
+
+    def test_generate_invoice_auto_payment_success(self):
+        provider = self._prepare_provider()
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        original_next_date = sub.recurring_next_date
+        tx_model = type(self.env["payment.transaction"])
+        move_send = type(self.env["account.move.send"])
+
+        def _fake_send(tx):
+            tx._set_done()
+
+        with (
+            patch.object(tx_model, "_send_payment_request", _fake_send),
+            patch.object(
+                move_send, "_generate_and_send_invoices", return_value=None
+            ) as mock_send,
+        ):
+            sub.generate_invoice()
+        invoice = sub.invoice_ids
+        self.assertEqual(len(invoice), 1)
+        self.assertEqual(invoice.state, "posted")
+        self.assertIn(invoice.payment_state, ("in_payment", "paid"))
+        mock_send.assert_called_once()
+        self.assertFalse(sub.payment_exception)
+        self.assertNotEqual(sub.recurring_next_date, original_next_date)
+        # A settled charge posts a closing confirmation note with the real
+        # invoice number, and leaves no dangling "awaiting confirmation".
+        confirmation = sub.message_ids.filtered(
+            lambda m: "Automatic payment confirmed for invoice" in (m.body or "")
+            and invoice.name in (m.body or "")
+        )
+        self.assertEqual(len(confirmation), 1)
+        self.assertFalse(
+            sub.message_ids.filtered(
+                lambda m: "awaiting confirmation" in (m.body or "")
+            )
+        )
+
+    def test_generate_invoice_draft_mode_auto_payment_silent(self):
+        provider = self._prepare_provider()
+        template = self.create_sub_template(
+            {"invoicing_mode": "draft", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        tx_model = type(self.env["payment.transaction"])
+        move_send = type(self.env["account.move.send"])
+
+        def _fake_send(tx):
+            tx._set_done()
+
+        with (
+            patch.object(tx_model, "_send_payment_request", _fake_send),
+            patch.object(
+                move_send, "_generate_and_send_invoices", return_value=None
+            ) as mock_send,
+        ):
+            sub.generate_invoice()
+        # Draft mode + automatic payment: the paid invoice is posted but no
+        # email is sent (silent background billing).
+        self.assertEqual(sub.invoice_ids.state, "posted")
+        mock_send.assert_not_called()
+        self.assertFalse(sub.payment_exception)
+
+    def test_generate_invoice_without_auto_payment_sends_email(self):
+        template = self.create_sub_template({"invoicing_mode": "invoice_send"})
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        move_send = type(self.env["account.move.send"])
+        with patch.object(
+            move_send, "_generate_and_send_invoices", return_value=None
+        ) as mock_send:
+            sub.generate_invoice()
+        mock_send.assert_called_once()
+        self.assertFalse(sub.payment_exception)
+
+    def test_cron_skips_payment_exception(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        sub = self.create_sub(
+            {
+                "template_id": template.id,
+                "date_start": fields.Date.today() - relativedelta(days=10),
+                "in_progress": True,
+                "payment_exception": True,
+            }
+        )
+        self.create_sub_line(sub)
+        sub.recurring_next_date = fields.Date.today() - relativedelta(days=1)
+        sub.cron_subscription_management()
+        self.assertEqual(len(sub.invoice_ids), 0)
+
+    def test_so_subscription_token_handoff(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        self.product_1.product_tmpl_id.write(
+            {"subscribable": True, "subscription_template_id": template.id}
+        )
+        provider = self._prepare_provider()
+        token = self._create_payment_token(self.partner, provider)
+        so = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "product_id": self.product_1.id,
+                            "product_uom_qty": 1,
+                        }
+                    )
+                ],
+            }
+        )
+        tx = self.env["payment.transaction"].create(
+            {
+                "provider_id": provider.id,
+                "payment_method_id": token.payment_method_id.id,
+                "token_id": token.id,
+                "operation": "online_token",
+                "reference": "SO-TEST-TOKEN",
+                "amount": 100.0,
+                "currency_id": so.currency_id.id,
+                "partner_id": self.partner.id,
+                "state": "done",
+            }
+        )
+        so.transaction_ids = [Command.link(tx.id)]
+        so.with_context(uid=1).action_confirm()
+        subscription = so.subscription_ids
+        self.assertEqual(len(subscription), 1)
+        self.assertEqual(subscription.payment_token_id, token)
+
+    def test_payment_no_journal_on_provider(self):
+        provider = self._prepare_provider()
+        provider.journal_id = False
+        token = self._create_payment_token(self.partner, provider)
+        self.sub1.payment_token_id = token
+        invoice = self._post_subscription_invoice(self.sub1)
+        self.assertFalse(self.sub1.create_payment(invoice))
+        self.assertTrue(self.sub1.payment_exception)
+        msgs = self.sub1.message_ids.filtered(
+            lambda m: "no payment journal" in (m.body or "")
+        )
+        self.assertEqual(len(msgs), 1)
+
+    def test_payment_send_request_raises(self):
+        provider = self._prepare_provider()
+        self.sub1.payment_token_id = self._create_payment_token(self.partner, provider)
+        invoice = self._post_subscription_invoice(self.sub1)
+        tx_model = type(self.env["payment.transaction"])
+
+        def _raise(tx):
+            raise RuntimeError("network error")
+
+        with (
+            patch.object(tx_model, "_send_payment_request", _raise),
+            mute_logger("odoo.addons.subscription_oca.models.sale_subscription"),
+        ):
+            self.assertFalse(self.sub1.create_payment(invoice))
+        self.assertTrue(self.sub1.payment_exception)
+        msgs = self.sub1.message_ids.filtered(
+            lambda m: "could not be sent" in (m.body or "")
+        )
+        self.assertEqual(len(msgs), 1)
+
+    def test_generate_invoice_sale_and_invoice_auto_payment(self):
+        provider = self._prepare_provider()
+        template = self.create_sub_template(
+            {"invoicing_mode": "sale_and_invoice", "auto_create_payment": True}
+        )
+        sub = self.create_sub({"template_id": template.id})
+        self.create_sub_line(sub)
+        sub.payment_token_id = self._create_payment_token(self.partner, provider)
+        sub.sale_subscription_line_ids.mapped("product_id").write(
+            {"invoice_policy": "order"}
+        )
+        tx_model = type(self.env["payment.transaction"])
+
+        def _fake_send(tx):
+            tx._set_done()
+
+        with (
+            patch.object(tx_model, "_send_payment_request", _fake_send),
+            patch.object(tx_model, "_post_process", lambda tx: None),
+        ):
+            sub.generate_invoice()
+        self.assertFalse(sub.payment_exception)
+
+    def test_onchange_token_skips_when_auto_pay_off(self):
+        template = self.create_sub_template({"invoicing_mode": "invoice_send"})
+        provider = self._prepare_provider()
+        token = self._create_payment_token(self.partner, provider)
+        sub = self.env["sale.subscription"].new(
+            {
+                "template_id": template.id,
+                "partner_id": self.partner.id,
+                "payment_token_id": token.id,
+                "company_id": self.env.ref("base.main_company").id,
+            }
+        )
+        sub._onchange_partner_id_payment_token()
+        self.assertEqual(sub.payment_token_id, token)
+
+    def test_onchange_token_skips_when_token_matches_partner(self):
+        template = self.create_sub_template(
+            {"invoicing_mode": "invoice_send", "auto_create_payment": True}
+        )
+        provider = self._prepare_provider()
+        token = self._create_payment_token(self.partner, provider)
+        sub = self.env["sale.subscription"].new(
+            {
+                "template_id": template.id,
+                "partner_id": self.partner.id,
+                "payment_token_id": token.id,
+                "company_id": self.env.ref("base.main_company").id,
+            }
+        )
+        sub._onchange_partner_id_payment_token()
+        self.assertEqual(sub.payment_token_id, token)
