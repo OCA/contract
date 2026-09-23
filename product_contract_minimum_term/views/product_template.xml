@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="product_template_form_contract_view" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field
+            name="inherit_id"
+            ref="product_contract.product_template_form_contract_view"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='contract']//group[@name='recurrence_info']"
+                position="before"
+            >
+                <group name="contract_duration_type">
+                    <field name="contract_duration_type" widget="radio" />
+                </group>
+            </xpath>
+            <!-- Duration: only for a fixed duration -->
+            <xpath
+                expr="//page[@name='contract']//group[@name='recurrence_info']/group[1]"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >contract_duration_type == 'minimum_term'</attribute>
+            </xpath>
+            <xpath
+                expr="//page[@name='contract']//group[@name='recurrence_info']/group[1]"
+                position="before"
+            >
+                <group
+                    string="Minimum Term"
+                    name="minimum_term"
+                    invisible="contract_duration_type != 'minimum_term'"
+                >
+                    <label for="min_term_interval" />
+                    <div class="o_row">
+                        <field name="min_term_interval" class="oe_inline" nolabel="1" />
+                        <field
+                            name="min_term_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="min_term_interval"
+                        />
+                    </div>
+                </group>
+            </xpath>
+            <!-- Termination notice: also without auto renew, a minimum term
+                 has a notice to respect -->
+            <xpath
+                expr="//page[@name='contract']//group[@name='recurrence_info']/following-sibling::group[1]/group[3]"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >is_auto_renew == False and contract_duration_type != 'minimum_term'</attribute>
+            </xpath>
+            <!-- The start date method uses the duration period -->
+            <xpath expr="//field[@name='contract_start_date_method']" position="after">
+                <field
+                    name="recurrence_interval"
+                    string="Period"
+                    invisible="contract_duration_type != 'minimum_term' or contract_start_date_method == 'manual'"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

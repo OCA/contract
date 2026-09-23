@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_contract_form_view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']" position="after">
+                <page string="Minimum Term" name="minimum_term">
+                    <group name="minimum_term">
+                        <group invisible="line_recurrence">
+                            <label for="min_term_interval" />
+                            <div class="o_row">
+                                <field
+                                    name="min_term_interval"
+                                    class="oe_inline"
+                                    readonly="is_terminated"
+                                />
+                                <field
+                                    name="min_term_rule_type"
+                                    class="oe_inline"
+                                    readonly="is_terminated"
+                                    required="min_term_interval"
+                                />
+                            </div>
+                        </group>
+                        <group>
+                            <field name="min_term_date_end" />
+                            <field name="min_term_notice_date" />
+                            <field
+                                name="terminate_request_date"
+                                invisible="not is_terminated"
+                            />
+                            <field
+                                name="is_terminated_before_min_term"
+                                invisible="not is_terminated"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']//list/field[@name='date_end']"
+                position="after"
+            >
+                <field name="min_term_date_end" optional="show" />
+                <field name="min_term_notice_date" optional="hide" />
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']//list/field[@name='date_end']"
+                position="after"
+            >
+                <field name="min_term_date_end" optional="show" />
+                <field name="min_term_notice_date" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_contract_search_view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='not_finished']" position="before">
+                <filter
+                    name="in_minimum_term"
+                    string="In Minimum Term"
+                    domain="[('min_term_date_end', '&gt;=', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <separator />
+            </xpath>
+        </field>
+    </record>
+</odoo>
