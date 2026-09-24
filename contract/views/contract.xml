@@ -106,12 +106,17 @@
                     <group name="main">
                         <group>
                             <field name="commercial_partner_id" invisible="1" />
+                            <field name="pricelist_id_domain" invisible="1" />
                             <field
                                 name="partner_id"
                                 required="1"
                                 readonly="is_terminated"
                             />
-                            <field name="pricelist_id" readonly="is_terminated" />
+                            <field
+                                name="pricelist_id"
+                                readonly="is_terminated"
+                                domain="pricelist_id_domain"
+                            />
                             <field name="payment_term_id" readonly="is_terminated" />
                             <field name="user_id" readonly="is_terminated" />
                         </group>
