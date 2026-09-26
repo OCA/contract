@@ -4,9 +4,6 @@
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="address">
-                <p id="partner_info">
-                    <strong>Partner:</strong>
-                </p>
                 <div
                     t-field="o.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "mobile", "fax", "email"], "no_marker": true, "phone_icons": true}'
@@ -15,20 +12,36 @@
             </t>
             <div class="page">
                 <div class="oe_structure" id="oe_structure_contract" />
-                <div class="row" id="header_info">
-                    <div class="col-3">
-                        <strong>Responsible: </strong>
-                        <p t-field="o.user_id" />
-                        <strong>Contract: </strong>
-                        <p t-field="o.code" />
+                <h2 class="mt-4">
+                    <span>Contract </span>
+                    <span t-field="o.name" />
+                </h2>
+                <div id="informations" class="row mt-4 mb-4">
+                    <div t-if="o.code" class="col-3 mb-2">
+                        <strong>Reference:</strong>
+                        <p class="m-0" t-field="o.code" />
+                    </div>
+                    <div t-if="o.date_start" class="col-3 mb-2">
+                        <strong>Date Start:</strong>
+                        <p class="m-0" t-field="o.date_start" />
+                    </div>
+                    <div t-if="o.date_end" class="col-3 mb-2">
+                        <strong>Date End:</strong>
+                        <p class="m-0" t-field="o.date_end" />
+                    </div>
+                    <div t-if="o.user_id" class="col-3 mb-2">
+                        <strong>Responsible:</strong>
+                        <p class="m-0" t-field="o.user_id" />
+                    </div>
+                    <div t-if="o.payment_term_id" class="col-3 mb-2">
+                        <strong>Payment Terms:</strong>
+                        <p class="m-0" t-field="o.payment_term_id" />
                     </div>
                 </div>
                 <div id="invoice_info">
                     <t t-set="total" t-value="0" />
                     <div class="col-12">
-                        <p id="services_info">
-                            <strong>Recurring Items</strong>
-                        </p>
+                        <h4 id="services_info" class="mt-4">Recurring Items</h4>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -119,9 +132,7 @@
                 </div>
                 <div id="modification_info" t-if="o.modification_ids">
                     <div class="col-12">
-                        <p id="modification_info_p">
-                            <strong>Modifications</strong>
-                        </p>
+                        <h4 id="modification_info_p" class="mt-4">Modifications</h4>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -169,15 +180,9 @@
                         </table>
                     </div>
                 </div>
-                <div>
-                    <div class="row mt-4" id="note">
-                        <div>
-                            <strong>Notes: </strong>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <p t-field="o.note" />
-                    </div>
+                <div t-if="o.note" id="note">
+                    <h4 class="mt-4">Notes</h4>
+                    <div t-field="o.note" />
                 </div>
             </div>
         </t>
