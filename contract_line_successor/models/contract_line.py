@@ -516,7 +516,7 @@ class ContractLine(models.Model):
                     self.env._("Plan successor not allowed for this line")
                 )
             rec.is_auto_renew = False
-            new_line = self.create(
+            new_line = self.sudo().create(
                 rec._prepare_value_for_plan_successor(
                     date_start, date_end, is_auto_renew, recurring_next_date
                 )
