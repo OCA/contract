@@ -73,3 +73,14 @@ class TestContractPortal(HttpCase, BaseCommon):
         supplier_page = self.url_open(url="/my/contracts?filterby=supplier").text
         self.assertIn(supplier.name, supplier_page)
         self.assertNotIn(customer.name, supplier_page)
+
+    def test_portal_contract_empty_list(self):
+        partner = self.env["res.partner"].create({"name": "partner no contracts"})
+        self._create_new_portal_user(
+            partner_id=partner.id, login="portal_empty", password="portal_empty"
+        )
+        self.authenticate("portal_empty", "portal_empty")
+        http.root.session_store.save(self.session)
+        page = self.url_open(url="/my/contracts").text
+        self.assertIn("alert-warning", page)
+        self.assertNotIn("o_portal_my_doc_table", page)
