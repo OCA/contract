@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
             rec = self.env["sale.subscription"].create(
                 {
                     "partner_id": self.partner_id.id,
-                    "user_id": self.env.context.get("uid", self.env.uid),
+                    "user_id": self.user_id.id or self.env.uid,
                     "template_id": subscription_tmpl.id,
                     "pricelist_id": self.partner_id.property_product_pricelist.id,
                     "date_start": date.today(),
