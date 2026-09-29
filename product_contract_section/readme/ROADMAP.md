@@ -1,0 +1,1 @@
+- contract_sale_generation extension module: pass sections from contract to sales
