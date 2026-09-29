@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 01:12+0000\n"
-"PO-Revision-Date: 2023-11-14 13:36+0000\n"
-"Last-Translator: Thijs van Oers <thijsvanoers@yahoo.com>\n"
+"PO-Revision-Date: 2026-09-29 20:01+0000\n"
+"Last-Translator: Bosd <c5e2fd43-d292-4c90-9d1f-74ff3436329a@anonaddy.me>\n"
 "Language-Team: Dutch (https://www.transifex.com/oca/teams/23907/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -98,11 +98,87 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"                <p>Beste <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
+"                <p>Er is een nieuw contract aangemaakt: </p>\n"
+"\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: "
+"30px;\">\n"
+"                    &amp;nbsp;&amp;nbsp;<strong>REFERENTIES</strong><br/>\n"
+"                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+"out=\"object.name\"/><br/>\n"
+"                    <t t-if=\"object.date_start\">\n"
+"                        &amp;nbsp;&amp;nbsp;Startdatum contract: <t t-"
+"out=\"object.date_start or ''\"/><br/>\n"
+"                    </t>\n"
+"\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                    <t t-if=\"object.user_id.email\">\n"
+"                            &amp;nbsp;&amp;nbsp;Uw contactpersoon: <a t-att-"
+"href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, object.name)"
+"\" t-out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                    <t t-else=\"\">\n"
+"                            &amp;nbsp;&amp;nbsp;Uw contactpersoon: <t t-"
+"out=\"object.user_id.name\"/>\n"
+"                        </t>\n"
+"                </t>\n"
+"                </p>\n"
+"\n"
+"                <br/>\n"
+"                <p>Als u vragen heeft, aarzel dan niet om contact met ons op "
+"te nemen.</p>\n"
+"                <p>Bedankt dat u heeft gekozen voor <t t-"
+"out=\"object.company_id.name or 'ons'\"/>!</p>\n"
+"                <br/>\n"
+"                <br/>\n"
+"                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+"background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-"
+"radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"                    <h3 style=\"margin: 0px; padding: 2px 14px; font-size: "
+"12px; color: #DDD;\">\n"
+"                        <strong style=\"text-transform:uppercase;\" t-"
+"out=\"object.company_id.name\"/>\n"
+"                    </h3>\n"
+"                </div>\n"
+"                <div style=\"width: 347px; margin: 0px; padding: 5px 14px; "
+"line-height: 16px; background-color: #F2F2F2;\">\n"
+"                    <span style=\"color: #222; margin-bottom: 5px; display: "
+"block; \">\n"
+"                        <address t-field=\"object.company_id.sudo()"
+".partner_id\" t-options=\"{&quot;widget&quot;: &quot;contact&quot;, "
+"&quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;], "
+"&quot;no_marker&quot;: True}\"/>\n"
+"                    </span>\n"
+"                    <t t-if=\"object.company_id.phone\">\n"
+"                        <div style=\"margin-top: 0px; margin-right: 0px; "
+"margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+"padding-bottom: 0px; padding-left: 0px; \">\n"
+"                            Telefoon: <t t-out=\"object.company_id.phone\"/>"
+"\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        <div>\n"
+"                            Web: <a t-att-href=\"object.company_id.website\" "
+"t-out=\"object.company_id.website\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </div>\n"
+"                <br/>\n"
+"                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
+"style=\"background-color:#875A7B;padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">Bekijk "
+"contract</a>\n"
+"            </div>\n"
+"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>Details bekijken"
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -128,11 +204,18 @@ msgid ""
 "                                contracts to invoice\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"contract_to_invoice_count &gt; 1\">\n"
+"                                te factureren contract\n"
+"                            </span>\n"
+"                            <span invisible=\"contract_to_invoice_count "
+"&lt;= 1\">\n"
+"                                te factureren contracten\n"
+"                            </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<span>Contract </span>"
-msgstr ""
+msgstr "<span>Contract </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -168,6 +251,10 @@ msgid ""
 "                                    the\n"
 "                                    invoiced period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>\n"
+"                                    : Maandnaam van de\n"
+"                                    gefactureerde\n"
+"                                    periode"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
@@ -175,6 +262,7 @@ msgid ""
 "<strong>#INVOICEMONTHNAME#</strong>: Invoice month name of the invoiced "
 "period"
 msgstr ""
+"<strong>#INVOICEMONTHNAME#</strong>: Maandnaam van de gefactureerde periode"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -195,6 +283,8 @@ msgid ""
 "<strong>#START#</strong>: Start date of the\n"
 "                                        invoiced period"
 msgstr ""
+"<strong>#START#</strong>: Startdatum van de\n"
+"                                        gefactureerde periode"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -244,7 +334,7 @@ msgstr "<strong>Relatie:</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Payment Terms</strong>"
-msgstr ""
+msgstr "<strong>Betalingscondities</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -310,7 +400,7 @@ msgstr "Aktiviteiten"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decoratie activiteit-uitzondering"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_state
@@ -320,7 +410,7 @@ msgstr "Activiteitsstatus"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icoon activiteitstype"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -344,23 +434,23 @@ msgstr "Sectie toevoegen"
 #: model:ir.model.fields,field_description:contract.field_contract_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Toegestane maateenheid"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analytische distributie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analytische precisie"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -382,7 +472,7 @@ msgstr "Aantal bijlagen"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__automatic_price
@@ -408,6 +498,8 @@ msgid ""
 "Check this if you want to control recurrence at the line level instead of "
 "for the whole contract."
 msgstr ""
+"Vink dit aan als je herhaling op regelniveau wilt beheren in plaats van voor "
+"het gehele contract."
 
 #. module: contract
 #: model_terms:ir.actions.act_window,help:contract.contract_template_action
@@ -423,7 +515,7 @@ msgstr "Klik voor het aanmaken van een nieuw contract."
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Kleurindex"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__commercial_partner_id
@@ -509,12 +601,12 @@ msgstr "Contractnaam"
 #. module: contract
 #: model:ir.model,name:contract.model_contract_recurring_mixin
 msgid "Contract Recurring Mixin"
-msgstr ""
+msgstr "Mixin periodiek contract"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Contract Start & End Dates"
-msgstr ""
+msgstr "Start- en einddatums contract"
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_tag
@@ -571,7 +663,7 @@ msgstr "Soort Contract"
 #: model:ir.model.fields,help:contract.field_contract_template__date_start
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_start
 msgid "Contract activation date (first recurrence starts here)"
-msgstr ""
+msgstr "Activeringsdatum contract (eerste herhaling begint hier)"
 
 #. module: contract
 #. odoo-python
@@ -593,7 +685,7 @@ msgstr "Contract regels (vast)"
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "Contract manually invoiced: %(invoice_link)s"
-msgstr ""
+msgstr "Contract handmatig gefactureerd: %(invoice_link)s"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_contract_modification
@@ -690,12 +782,12 @@ msgstr "Klant"
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract_lines
 msgid "Customer Contract Lines"
-msgstr ""
+msgstr "Klantcontractregels"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_customer_contract_line_report
 msgid "Customer Contract lines"
-msgstr ""
+msgstr "Klantcontractregels"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_customer_contract
@@ -761,7 +853,7 @@ msgstr "Datum volgende factuur"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Date start"
-msgstr ""
+msgstr "Startdatum"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__daily
@@ -776,19 +868,19 @@ msgstr "Dag(en)"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__sequence
 #: model:ir.model.fields,help:contract.field_contract_template_line__sequence
 msgid "Defines line ordering in the contract."
-msgstr ""
+msgstr "Definieert de volgorde van regels in het contract."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__generation_type
 #: model:ir.model.fields,help:contract.field_contract_template__generation_type
 msgid "Defines what document is automatically generated by the cron."
-msgstr ""
+msgstr "Definieert welk document automatisch door de cron wordt gegenereerd."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__name
@@ -818,7 +910,7 @@ msgstr "De korting moet kleiner of gelijk aan 100 zijn"
 #: model:ir.model.fields,help:contract.field_contract_line__discount
 #: model:ir.model.fields,help:contract.field_contract_template_line__discount
 msgid "Discount to apply on generated invoices. Must be ≤ 100."
-msgstr ""
+msgstr "Korting die wordt toegepast op gegenereerde facturen. Moet ≤ 100 zijn."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
@@ -843,7 +935,7 @@ msgstr "Weergave type"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Analytische verdeelrekening"
 
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
@@ -864,7 +956,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -889,7 +981,7 @@ msgstr "Volgers (Relaties)"
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font Awesome-icoon bijv. fa-tasks"
 
 #. module: contract
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
@@ -953,6 +1045,8 @@ msgid ""
 "If checked, the price will be taken from the pricelist. Otherwise, it must "
 "be set manually."
 msgstr ""
+"Indien aangevinkt wordt de prijs overgenomen uit de prijslijst. Anders moet "
+"deze handmatig worden ingesteld."
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
@@ -1009,7 +1103,7 @@ msgstr "Facturen"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturatie"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_partner_id
@@ -1043,7 +1137,7 @@ msgstr "Is een volger"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__journal_id
@@ -1061,13 +1155,13 @@ msgstr "Boekingsregel"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__last_date_invoiced
@@ -1109,12 +1203,12 @@ msgstr "Legenda (voor de markeringen binnen een factuurregel omschrijving)"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Lines"
-msgstr ""
+msgstr "Regels"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__manual_currency_id
 msgid "Manual Currency"
-msgstr ""
+msgstr "Handmatige valuta"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.purchase_contract_manually_create_invoice_act_window
@@ -1132,13 +1226,13 @@ msgstr "Handmatig factureren verkoopcontracten"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "March"
-msgstr ""
+msgstr "Maart"
 
 #. module: contract
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
@@ -1177,12 +1271,12 @@ msgstr "Maand(en) laatste dag"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__monthly_recurring
 msgid "Monthly Recurring"
-msgstr ""
+msgstr "Maandelijks terugkerend"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Sleuteldatum mijn activiteit"
 
 #. module: contract
 #. odoo-python
@@ -1235,12 +1329,12 @@ msgstr "Start volgende periode"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 msgid "Next invoice date"
-msgstr ""
+msgstr "Volgende factuurdatum"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_form_view
 msgid "Next period to invoice"
-msgstr ""
+msgstr "Volgende te factureren periode"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__display_type__line_note
@@ -1264,7 +1358,7 @@ msgstr "Rekeningen"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_needaction_counter
@@ -1303,7 +1397,7 @@ msgstr "Aantal berichten met bezorgfout"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__date_end
@@ -1312,7 +1406,7 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__date_end
 #: model:ir.model.fields,help:contract.field_contract_template_line__date_end
 msgid "Optional contract termination date (limits recurrence)"
-msgstr ""
+msgstr "Optionele beëindigingsdatum contract (beperkt herhaling)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1398,7 +1492,7 @@ msgstr "Inkoop Contracten"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Put some note here..."
-msgstr ""
+msgstr "Plaats hier een opmerking..."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__quantity
@@ -1442,7 +1536,7 @@ msgstr "Periodieke facturen"
 #: model:ir.model.fields,field_description:contract.field_contract_line__is_recurring_note
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__is_recurring_note
 msgid "Recurring Note"
-msgstr ""
+msgstr "Periodieke opmerking"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1486,7 +1580,7 @@ msgstr "Omschrijving"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Beveiligingstoken"
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__semesterly
@@ -1495,7 +1589,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:contract.selection__contract_template__recurring_rule_type__semesterly
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__recurring_rule_type__semesterly
 msgid "Semester(s)"
-msgstr ""
+msgstr "Semester(s)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1511,7 +1605,7 @@ msgstr "Verzonden"
 #. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__sequence
@@ -1555,7 +1649,7 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
 msgid "Specify interval for automatic invoice generation."
-msgstr ""
+msgstr "Specificeer interval voor automatische factuurgeneratie."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
@@ -1588,12 +1682,12 @@ msgstr "Leverancier"
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract_lines
 msgid "Supplier Contract Lines"
-msgstr ""
+msgstr "Leverancierscontractregels"
 
 #. module: contract
 #: model:ir.ui.menu,name:contract.menu_supplier_contract_line_report
 msgid "Supplier Contract lines"
-msgstr ""
+msgstr "Leverancierscontractregels"
 
 #. module: contract
 #: model:ir.actions.act_window,name:contract.action_supplier_contract
@@ -1604,13 +1698,13 @@ msgstr "Inkoopcontracten"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Labels"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
 msgid "Technical field for UX purposes."
-msgstr ""
+msgstr "Technisch veld voor UX-doeleinden."
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__date
@@ -1618,17 +1712,19 @@ msgid ""
 "This is the date the contract is taken into account         (e.g.: signature "
 "date)"
 msgstr ""
+"Dit is de datum waarop het contract in aanmerking wordt genomen         "
+"(bijv.: ondertekeningsdatum)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_report_tree_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Total Monthly Recurring"
-msgstr ""
+msgstr "Totaal maandelijks terugkerend"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type van de uitzonderingsactiviteit in het record."
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__price_unit
@@ -1650,7 +1746,7 @@ msgstr "BTW:"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "View Details"
-msgstr ""
+msgstr "Details bekijken"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
@@ -1676,6 +1772,8 @@ msgstr "Week/weken"
 #: model:ir.model.fields,help:contract.field_contract_template_line__note_invoicing_mode
 msgid "When to invoice this note line relative to others."
 msgstr ""
+"Wanneer deze opmerkingsregel gefactureerd moet worden ten opzichte van "
+"andere."
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__with_next_line
@@ -1753,7 +1851,7 @@ msgstr "U moet een volgende factuurdatum opgeven voor contract '%s'"
 #. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "by contract"
-msgstr ""
+msgstr "per contract"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1765,12 +1863,12 @@ msgstr "bijv. Contract ABC"
 #. odoo-python
 #: code:addons/contract/wizards/contract_manually_create_invoice.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: contract
 #: model:mail.template,subject:contract.email_contract_template
 msgid "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/v' }})"
 
 #. module: contract
 #: model:mail.template,subject:contract.mail_template_contract_modification
