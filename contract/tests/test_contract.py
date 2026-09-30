@@ -1189,7 +1189,7 @@ class TestContract(TestContractBase):
             len((good_a | good_b).mapped("contract_line_ids")),
         )
         # The failing contract is flagged, with chatter and an activity.
-        self.assertTrue(bad.has_invoice_generation_error)
+        self.assertTrue(bad.invoice_generation_error)
         self.assertIn("boom", bad.invoice_generation_error)
         self.assertTrue(bad.invoice_generation_error_date)
         self.assertEqual(
@@ -1201,8 +1201,8 @@ class TestContract(TestContractBase):
             1,
         )
         # The healthy ones are not flagged.
-        self.assertFalse(good_a.has_invoice_generation_error)
-        self.assertFalse(good_b.has_invoice_generation_error)
+        self.assertFalse(good_a.invoice_generation_error)
+        self.assertFalse(good_b.invoice_generation_error)
 
     def test_cron_clears_error_on_recovery(self):
         """A successful run clears the error flag and resolves the activity."""
@@ -1216,14 +1216,14 @@ class TestContract(TestContractBase):
             bad._record_invoice_generation_error(
                 RuntimeError("earlier failure"), "invoice"
             )
-        self.assertTrue(bad.has_invoice_generation_error)
+        self.assertTrue(bad.invoice_generation_error)
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
         )
         self.assertEqual(len(open_activities), 1)
         # A clean cron run later should clear the flag.
         self.env["contract.contract"].cron_recurring_create_invoice()
-        self.assertFalse(bad.has_invoice_generation_error)
+        self.assertFalse(bad.invoice_generation_error)
         self.assertFalse(bad.invoice_generation_error)
         self.assertFalse(
             bad.activity_ids.filtered(lambda a: a.summary == "Recurring invoice failed")
@@ -1304,9 +1304,9 @@ class TestContract(TestContractBase):
         bad = self.contract
         with mute_logger("odoo.addons.contract.models.contract"):
             bad._record_invoice_generation_error(RuntimeError("oops"), "invoice")
-        self.assertTrue(bad.has_invoice_generation_error)
+        self.assertTrue(bad.invoice_generation_error)
         bad.action_clear_invoice_generation_error()
-        self.assertFalse(bad.has_invoice_generation_error)
+        self.assertFalse(bad.invoice_generation_error)
         self.assertFalse(bad.invoice_generation_error)
 
     def test_action_view_invoice_generation_error(self):
