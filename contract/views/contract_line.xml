@@ -93,7 +93,11 @@
                 <field name="automatic_price" />
                 <field name="price_unit" readonly="automatic_price" />
                 <field name="specific_price" column_invisible="True" />
-                <field name="discount" />
+                <field
+                    name="discount"
+                    groups="contract.group_discount_per_contract_line"
+                    optional="show"
+                />
                 <field name="price_subtotal" />
                 <field
                     name="monthly_recurring"
