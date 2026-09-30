@@ -1264,6 +1264,34 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(len(relevant_chatter), 1, "Chatter must not duplicate")
 
+    def test_cron_skips_a_company_with_nothing_left_to_invoice(self):
+        """A contract past its end date drops out before the batch runs.
+
+        The domain still selects it, because date_end is not part of it, so
+        the cron has to filter it out itself. When that empties a company's
+        batch there is nothing to create and nothing to report as failed.
+        """
+        Contract = self.env["contract.contract"]
+        contracts = Contract.search(Contract._get_contracts_to_invoice_domain())
+        contracts.write({"date_end": "2015-01-01"})
+        self.assertTrue(
+            contracts,
+            "The fixture must offer the cron something to skip",
+        )
+        invoices_before = self.env["account.move"].search_count([])
+
+        Contract.cron_recurring_create_invoice()
+
+        self.assertEqual(
+            self.env["account.move"].search_count([]),
+            invoices_before,
+            "A contract past its end date must not be invoiced",
+        )
+        self.assertFalse(
+            contracts.filtered("invoice_generation_error"),
+            "Skipping is not failing, so nothing should be flagged",
+        )
+
     def test_cron_uses_batch_fast_path_when_all_succeed(self):
         """Healthy contracts should hit the single-batched create path:
         ``_recurring_create_invoice`` is invoked once per company with the
