@@ -1,0 +1,16 @@
+# Copyright 2026 ACSONE SA/NV
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+{
+    "name": "Contract Invoice Force Date Queue",
+    "summary": """Bridge between contract_invoice_force_date and contract_queue_job""",
+    "version": "18.0.1.0.0",
+    "license": "AGPL-3",
+    "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/contract",
+    "depends": [
+        "contract_invoice_force_date",
+        "contract_queue_job",
+    ],
+    "auto_install": True,
+}
