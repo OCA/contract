@@ -135,12 +135,6 @@ class ContractContract(models.Model):
         readonly=True,
         copy=False,
     )
-    has_invoice_generation_error = fields.Boolean(
-        compute="_compute_has_invoice_generation_error",
-        store=True,
-        help="Set when the last scheduled invoicing run failed for this contract.",
-    )
-
     # === Compute Methods ===
 
     def _compute_access_url(self):
@@ -225,11 +219,6 @@ class ContractContract(models.Model):
             date_end = contract.contract_line_ids.mapped("date_end")
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
-
-    @api.depends("invoice_generation_error")
-    def _compute_has_invoice_generation_error(self):
-        for rec in self:
-            rec.has_invoice_generation_error = bool(rec.invoice_generation_error)
 
     def _inverse_partner_id(self):
         for rec in self:
@@ -701,9 +690,9 @@ class ContractContract(models.Model):
           its whole company batch and SQL-level errors do not poison the
           transaction for the remaining contracts.
 
-        Failed contracts are flagged via
-        :attr:`has_invoice_generation_error`, notified via chatter and a
-        TODO activity, and cleared automatically on the next successful
+        Failed contracts record the reason in
+        :attr:`invoice_generation_error`, are notified via chatter and a
+        TODO activity, and are cleared automatically on the next successful
         run.
         """
         _recurring_create_func = self._get_recurring_create_func(
@@ -808,7 +797,7 @@ class ContractContract(models.Model):
 
     def _clear_invoice_generation_error(self):
         """Clear the error flag and resolve the related activity."""
-        had_error = self.filtered("has_invoice_generation_error")
+        had_error = self.filtered("invoice_generation_error")
         if not had_error:
             return
         had_error.write(
