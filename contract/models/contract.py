@@ -195,11 +195,21 @@ class ContractContract(models.Model):
                 )
             ).mapped("recurring_next_date")
             # we give priority to computation from date_start if modified
-            if (
-                contract._origin
-                and contract._origin.date_start != contract.date_start
-                or not recurring_next_date
-            ):
+            date_start_changed = (
+                contract._origin and contract._origin.date_start != contract.date_start
+            )
+            if not date_start_changed and recurring_next_date:
+                contract.recurring_next_date = min(recurring_next_date)
+            elif not date_start_changed and contract.line_recurrence:
+                # Line-level recurrence but no invoiceable line carries a next
+                # date (only section headers, or every line already invoiced to
+                # its end): nothing is left to invoice, so the header date must
+                # stay empty instead of being synthesized -- otherwise the
+                # contract is picked up by the recurring-invoicing cron every
+                # day and produces nothing. Contract-level recurrence
+                # (line_recurrence=False) still synthesizes below.
+                contract.recurring_next_date = False
+            else:
                 contract.recurring_next_date = self.get_next_invoice_date(
                     contract.next_period_date_start,
                     contract.recurring_invoicing_type,
@@ -208,8 +218,6 @@ class ContractContract(models.Model):
                     contract.recurring_interval,
                     max_date_end=contract.date_end,
                 )
-            else:
-                contract.recurring_next_date = min(recurring_next_date)
 
     @api.depends("contract_line_ids.create_invoice_visibility")
     def _compute_create_invoice_visibility(self):
