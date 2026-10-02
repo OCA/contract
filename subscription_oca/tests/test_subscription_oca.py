@@ -7,7 +7,6 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, exceptions, fields
-from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -130,6 +129,12 @@ class TestSubscriptionOCA(BaseCommon):
                 "type": "pre",
             }
         )
+        cls.stage_in_progress = cls.env["sale.subscription.stage"].create(
+            {
+                "name": "Test Sub Stage In Progress",
+                "type": "in_progress",
+            }
+        )
         cls.tag = cls.env["sale.subscription.tag"].create(
             {
                 "name": "Test Tag",
@@ -176,6 +181,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "pricelist_id": cls.pricelist2.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_in_progress.id,
             }
         )
         cls.sub8 = cls.create_sub(
@@ -184,6 +190,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "pricelist_id": cls.pricelist2.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_in_progress.id,
                 "journal_id": cls.cash_journal.id,
             }
         )
@@ -192,6 +199,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "template_id": cls.tmpl3.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_in_progress.id,
                 "recurring_rule_boundary": True,
             }
         )
@@ -349,12 +357,19 @@ class TestSubscriptionOCA(BaseCommon):
         "SaleSubscription.generate_invoice"
     )
     def test_subscription_oca_sub_cron_error(self, generate_invoice_patch):
-        # Simulate something failing in generating an invoice,
-        # we expect something being logged
+        # When generate_invoice() fails the cron must NOT raise —
+        # it must log the error and continue processing other subscriptions.
         generate_invoice_patch.side_effect = exceptions.UserError("Error")
-        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
-            with self.assertRaises(exceptions.UserError):
-                self.sub1.cron_subscription_management()
+        with self.assertLogs(
+            "odoo.addons.subscription_oca.models.sale_subscription", level="ERROR"
+        ) as log_watcher:
+            self.sub1.cron_subscription_management()
+        self.assertTrue(
+            any(
+                "Error on subscription management for subscription" in msg
+                for msg in log_watcher.output
+            )
+        )
 
     def test_subscription_oca_sub_cron(self):
         # sale.subscription
