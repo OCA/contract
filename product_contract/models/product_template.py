@@ -59,6 +59,24 @@ class ProductTemplate(models.Model):
         help="Define whether invoices are issued before (prepaid) or after (postpaid) "
         "the service period.",
     )
+    recurring_invoicing_offset = fields.Integer(
+        string="Invoicing offset",
+        help=(
+            "Number of days to offset the invoice from the period end "
+            "date (in post-paid mode) or start date (in pre-paid mode)."
+        ),
+    )
+    recurring_invoicing_offset_type = fields.Selection(
+        selection=[
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
+        ],
+        string="Invoicing offset type",
+    )
     is_auto_renew = fields.Boolean(string="Auto Renew", default=False)
     termination_notice_interval = fields.Integer(
         default=1, string="Termination Notice Before"

@@ -80,6 +80,24 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         store=True,
         readonly=False,
     )
+    recurring_invoicing_offset = fields.Integer(
+        string="Invoicing offset",
+        help=(
+            "Number of days to offset the invoice from the period end "
+            "date (in post-paid mode) or start date (in pre-paid mode)."
+        ),
+    )
+    recurring_invoicing_offset_type = fields.Selection(
+        selection=[
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
+        ],
+        string="Invoicing offset type",
+    )
     date_start = fields.Date(
         compute="_compute_contract_line_date_start",
         store=True,
@@ -174,6 +192,8 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                 "recurring_interval": 0,
                 "recurring_rule_type": False,
                 "recurring_invoicing_type": False,
+                "recurring_invoicing_offset": False,
+                "recurring_invoicing_offset_type": False,
                 "recurrence_interval": False,
                 "is_auto_renew": False,
                 "auto_renew_interval": False,
@@ -187,6 +207,8 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                     "recurring_interval": p.recurring_interval,
                     "recurring_rule_type": p.recurring_rule_type,
                     "recurring_invoicing_type": p.recurring_invoicing_type,
+                    "recurring_invoicing_offset": p.recurring_invoicing_offset,
+                    "recurring_invoicing_offset_type": p.recurring_invoicing_offset_type,  # noqa: E501
                     "recurrence_interval": p.recurrence_interval,
                     "is_auto_renew": p.is_auto_renew,
                     "auto_renew_interval": p.auto_renew_interval,
