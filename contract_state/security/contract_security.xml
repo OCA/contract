@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 bosd
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- A draft contract is still being prepared internally and has no
+         business being visible to the customer. Everything else stays
+         visible, so a module adding a state between draft and active (one
+         for sending the contract out to be signed, say) does not have to
+         touch this rule. -->
+    <record id="contract.rule_contract_contract_portal" model="ir.rule">
+        <field
+            name="domain_force"
+        >[('message_partner_ids', 'in', [user.partner_id.id]), ('state', '!=', 'draft')]</field>
+    </record>
+</odoo>

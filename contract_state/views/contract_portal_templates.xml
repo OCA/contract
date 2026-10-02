@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 bosd
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="portal_contract_page_state"
+        inherit_id="contract.portal_contract_page"
+    >
+        <!-- Tell the customer why a contract they can still reach is not
+             running, the way a cancelled quotation does on the sale portal.
+             Without it the page looks like any other contract and the only
+             clue is the absence of anything happening. -->
+        <xpath expr="//div[@id='introduction']" position="after">
+            <div
+                t-if="contract.state == 'cancel'"
+                class="alert alert-danger alert-dismissible d-print-none"
+                role="alert"
+            >
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="close"
+                />
+                <strong>This contract has been cancelled.</strong>
+                <a role="button" href="#discussion">
+                    <i class="fa fa-comment" />
+                    Contact us if you think this is a mistake.
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>
