@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_contract_terminate_form_view">
+        <field name="model">contract.contract.terminate</field>
+        <field
+            name="inherit_id"
+            ref="contract_termination.contract_contract_terminate_form_view"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not is_terminated_before_min_term"
+                >
+                    The termination date is before the end of the minimum term
+                    or the termination notice. Only users allowed to terminate
+                    contracts before the minimum term can confirm it.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='terminate_date']" position="before">
+                <field name="terminate_request_date" />
+                <field
+                    name="min_term_earliest_date"
+                    invisible="not min_term_earliest_date"
+                />
+                <field name="is_terminated_before_min_term" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

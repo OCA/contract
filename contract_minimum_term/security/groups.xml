@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="group_early_termination" model="res.groups">
+        <field name="name">Contract: Terminate Before Minimum Term</field>
+        <field
+            name="implied_ids"
+            eval="[Command.link(ref('contract_termination.can_terminate_contract'))]"
+        />
+    </record>
+</odoo>

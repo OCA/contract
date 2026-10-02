@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_template_line_form_view">
+        <field name="model">contract.template.line</field>
+        <field
+            name="inherit_id"
+            ref="contract_line_successor.contract_template_line_form_view"
+        />
+        <field name="arch" type="xml">
+            <!-- The renewal and the notice apply to the minimum term when
+                 there is one, so they belong on the same page. -->
+            <xpath
+                expr="//page[@name='renewal']//field[@name='auto_renew_interval']/ancestor::group[2]"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >not is_auto_renew and not min_term_interval</attribute>
+            </xpath>
+            <xpath
+                expr="//page[@name='renewal']//field[@name='auto_renew_interval']/ancestor::group[1]"
+                position="attributes"
+            >
+                <attribute name="invisible">not is_auto_renew</attribute>
+            </xpath>
+            <xpath
+                expr="//page[@name='renewal']//field[@name='is_auto_renew']/ancestor::group[1]"
+                position="before"
+            >
+                <group name="minimum_term">
+                    <label for="min_term_interval" />
+                    <div class="o_row">
+                        <field name="min_term_interval" class="oe_inline" />
+                        <field
+                            name="min_term_rule_type"
+                            class="oe_inline"
+                            required="min_term_interval"
+                        />
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
