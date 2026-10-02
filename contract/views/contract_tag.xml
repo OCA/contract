@@ -2,27 +2,12 @@
 <!-- Copyright 2020 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record id="contract_tag_form_view" model="ir.ui.view">
-        <field name="model">contract.tag</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="name" />
-                    <field name="color" />
-                    <field
-                        name="company_id"
-                        options="{'no_create': True}"
-                        groups="base.group_multi_company"
-                    />
-                </group>
-            </form>
-        </field>
-    </record>
     <record model="ir.ui.view" id="contract_tag_tree_view">
         <field name="model">contract.tag</field>
         <field name="arch" type="xml">
-            <list>
+            <list editable="bottom">
                 <field name="name" />
+                <field name="color" widget="color_picker" />
                 <field
                     name="company_id"
                     options="{'no_create': True}"
@@ -34,7 +19,7 @@
     <record model="ir.actions.act_window" id="contract_tag_act_window">
         <field name="name">Contract Tags</field>
         <field name="res_model">contract.tag</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list</field>
         <field name="path">contract-tags</field>
     </record>
     <record model="ir.ui.menu" id="contract_tag_menu">
