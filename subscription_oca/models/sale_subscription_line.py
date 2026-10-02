@@ -304,7 +304,7 @@ class SaleSubscriptionLine(models.Model):
             self.product_id.property_account_income_id
             or self.product_id.categ_id.property_account_income_categ_id
         )
-        return {
+        vals = {
             "product_id": self.product_id.id,
             "name": self.name,
             "quantity": self.product_uom_qty,
@@ -313,6 +313,8 @@ class SaleSubscriptionLine(models.Model):
             "price_subtotal": self.price_subtotal,
             "tax_ids": [Command.set(self.tax_ids.ids)],
             "product_uom_id": self.product_id.uom_id.id,
-            "account_id": account.id,
             "analytic_distribution": self.analytic_distribution,
         }
+        if account:
+            vals["account_id"] = account.id
+        return vals
