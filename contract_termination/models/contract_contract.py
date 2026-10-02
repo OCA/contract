@@ -1,7 +1,7 @@
 # Copyright 2025 ACSONE SA/NV
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -29,6 +29,15 @@ class ContractContract(models.Model):
         copy=False,
         tracking=True,
     )
+
+    @api.model
+    def _get_contracts_to_invoice_domain(self, date_ref=None):
+        # Terminated contracts must never be picked up by the recurring
+        # invoicing cron. A one-off closing invoice after termination is
+        # still possible manually with the "Create invoices" button on the
+        # contract, which does not go through this domain.
+        domain = super()._get_contracts_to_invoice_domain(date_ref)
+        return domain & fields.Domain([("is_terminated", "=", False)])
 
     def action_terminate_contract(self):
         self.ensure_one()
