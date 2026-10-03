@@ -17,7 +17,7 @@ class ContractLine(models.Model):
                 or rec.last_date_invoiced <= date_end
             ):
                 continue
-            rec._create_refund_on_stop(
+            rec.with_context(refund_on_stop=True)._create_refund_on_stop(
                 to_refund_start_date=date_end,
                 to_refund_end_date=rec.last_date_invoiced,
             )
@@ -116,3 +116,9 @@ class ContractLine(models.Model):
             )
             to_refund_start_date = next_period_date_end + relativedelta(days=1)
         return quantity
+
+    def _insert_markers(self, first_date_invoiced, last_date_invoiced):
+        self.ensure_one()
+        if self.env.context.get("refund_on_stop"):
+            return _("Refund of %s", self.name)
+        return super()._insert_markers(first_date_invoiced, last_date_invoiced)
