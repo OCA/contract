@@ -599,14 +599,21 @@ class ContractLine(models.Model):
         lang = lang_obj.search([("code", "=", self.contract_id.partner_id.lang)])
         date_format = lang.date_format or "%m/%d/%Y"
         name = self.name
-        name = name.replace("#START#", first_date_invoiced.strftime(date_format))
-        name = name.replace("#END#", last_date_invoiced.strftime(date_format))
+        # A line without a period (e.g. no next date) leaves its markers empty
         name = name.replace(
-            "#INVOICEMONTHNAME#",
-            self.with_context(lang=lang.code)._translate_marker_month_name(
-                first_date_invoiced.strftime("%m")
-            ),
+            "#START#",
+            first_date_invoiced.strftime(date_format) if first_date_invoiced else "",
         )
+        name = name.replace(
+            "#END#",
+            last_date_invoiced.strftime(date_format) if last_date_invoiced else "",
+        )
+        month_name = ""
+        if first_date_invoiced:
+            month_name = self.with_context(lang=lang.code)._translate_marker_month_name(
+                first_date_invoiced.strftime("%m")
+            )
+        name = name.replace("#INVOICEMONTHNAME#", month_name)
         return name
 
     def _update_recurring_next_date(self):
