@@ -2441,3 +2441,17 @@ class TestContract(TestContractBase):
         # Case 4: two contract lines, each one with one analytic account
         new_contract_line.analytic_distribution = {self.analytic_account_2.id: 100}
         self.assertFalse(self.contract.group_id)
+
+    def test_insert_markers_without_dates(self):
+        """A missing date leaves its markers empty instead of failing."""
+        self.acct_line.name = "#START# - #END# (#INVOICEMONTHNAME#)"
+        self.assertEqual(self.acct_line._insert_markers(False, False), " -  ()")
+        start = to_date("2018-01-01")
+        lang = self.env["res.lang"].search(
+            [("code", "=", self.acct_line.contract_id.partner_id.lang)]
+        )
+        date_format = lang.date_format or "%m/%d/%Y"
+        self.assertEqual(
+            self.acct_line._insert_markers(start, False),
+            "%s -  (January)" % start.strftime(date_format),
+        )
