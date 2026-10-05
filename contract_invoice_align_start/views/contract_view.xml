@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view_inherit_align" model="ir.ui.view">
+        <field name="name">contract.contract.form.inherit.align</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_customer_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[hasclass('o_row')][field[@name='recurring_interval']]"
+                position="after"
+            >
+                <field name="align_billing_cycle" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
