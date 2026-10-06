@@ -12,14 +12,24 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 class PortalContract(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
-        if "contract_count" in counters:
-            contract_model = request.env["contract.contract"]
-            contract_count = (
-                contract_model.search_count([])
-                if contract_model.has_access("read")
+        wanted = {
+            counter: contract_type
+            for counter, contract_type in (
+                ("contract_count", "sale"),
+                ("supplier_contract_count", "purchase"),
+            )
+            if counter in counters
+        }
+        if not wanted:
+            return values
+        contract_model = request.env["contract.contract"]
+        readable = contract_model.has_access("read")
+        for counter, contract_type in wanted.items():
+            values[counter] = (
+                contract_model.search_count([("contract_type", "=", contract_type)])
+                if readable
                 else 0
             )
-            values["contract_count"] = contract_count
         return values
 
     def _contract_get_page_view_values(self, contract, access_token, **kwargs):
@@ -34,6 +44,19 @@ class PortalContract(CustomerPortal):
     def _get_filter_domain(self, kw):
         return []
 
+    def _get_contract_searchbar_filters(self):
+        return {
+            "all": {"label": request.env._("All"), "domain": []},
+            "customer": {
+                "label": request.env._("Your Contracts"),
+                "domain": [("contract_type", "=", "sale")],
+            },
+            "supplier": {
+                "label": request.env._("Our Contracts"),
+                "domain": [("contract_type", "=", "purchase")],
+            },
+        }
+
     @http.route(
         ["/my/contracts", "/my/contracts/page/<int:page>"],
         type="http",
@@ -41,14 +64,23 @@ class PortalContract(CustomerPortal):
         website=True,
     )
     def portal_my_contracts(
-        self, page=1, date_begin=None, date_end=None, sortby=None, **kw
+        self,
+        page=1,
+        date_begin=None,
+        date_end=None,
+        sortby=None,
+        filterby=None,
+        **kw,
     ):
         values = self._prepare_portal_layout_values()
         contract_obj = request.env["contract.contract"]
         # Avoid error if the user does not have access.
         if not contract_obj.has_access("read"):
             return request.redirect("/my")
-        domain = self._get_filter_domain(kw)
+        searchbar_filters = self._get_contract_searchbar_filters()
+        if not filterby or filterby not in searchbar_filters:
+            filterby = "all"
+        domain = self._get_filter_domain(kw) + searchbar_filters[filterby]["domain"]
         searchbar_sortings = {
             "date": {
                 "label": request.env._("Date"),
@@ -70,6 +102,7 @@ class PortalContract(CustomerPortal):
                 "date_begin": date_begin,
                 "date_end": date_end,
                 "sortby": sortby,
+                "filterby": filterby,
             },
             total=contract_count,
             page=page,
@@ -89,6 +122,8 @@ class PortalContract(CustomerPortal):
                 "default_url": "/my/contracts",
                 "searchbar_sortings": searchbar_sortings,
                 "sortby": sortby,
+                "searchbar_filters": searchbar_filters,
+                "filterby": filterby,
             }
         )
         return request.render("contract.portal_my_contracts", values)
