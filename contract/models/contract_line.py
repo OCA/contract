@@ -205,9 +205,7 @@ class ContractLine(models.Model):
 
     def _prepare_invoice_line(self):
         self.ensure_one()
-        dates = self._get_period_to_invoice(
-            self.last_date_invoiced, self.recurring_next_date
-        )
+        dates = self._get_period_to_invoice()
         name = self._insert_markers(dates[0], dates[1])
         return {
             "quantity": self._get_quantity_to_invoice(*dates),
@@ -223,11 +221,15 @@ class ContractLine(models.Model):
         }
 
     def _get_period_to_invoice(
-        self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
+        self, last_date_invoiced=None, recurring_next_date=None, stop_at_date_end=True
     ):
         # TODO this method can now be removed, since
         # TODO self.next_period_date_start/end have the same values
         self.ensure_one()
+        if last_date_invoiced is None:
+            last_date_invoiced = self.last_date_invoiced
+        if recurring_next_date is None:
+            recurring_next_date = self.recurring_next_date
         if not recurring_next_date:
             return False, False, False
         first_date_invoiced = (
@@ -237,8 +239,6 @@ class ContractLine(models.Model):
         )
         last_date_invoiced = self.get_next_period_date_end(
             first_date_invoiced,
-            self.recurring_rule_type,
-            self.recurring_interval,
             max_date_end=(self.date_end if stop_at_date_end else False),
             next_invoice_date=recurring_next_date,
             recurring_invoicing_type=self.recurring_invoicing_type,

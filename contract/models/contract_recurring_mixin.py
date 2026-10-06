@@ -117,11 +117,7 @@ class ContractRecurringMixin(models.AbstractModel):
     def _compute_next_period_date_end(self):
         """Compute the end date of the next billing period."""
         for rec in self:
-            rec.next_period_date_end = self.get_next_period_date_end(
-                rec.next_period_date_start,
-                rec.recurring_rule_type,
-                rec.recurring_interval,
-                max_date_end=rec.date_end,
+            rec.next_period_date_end = rec.get_next_period_date_end(
                 next_invoice_date=rec.recurring_next_date,
                 recurring_invoicing_type=rec.recurring_invoicing_type,
                 recurring_invoicing_offset=rec.recurring_invoicing_offset,
@@ -147,14 +143,7 @@ class ContractRecurringMixin(models.AbstractModel):
     def _compute_recurring_next_date(self):
         """Compute the next invoice date."""
         for rec in self:
-            rec.recurring_next_date = self.get_next_invoice_date(
-                rec.next_period_date_start,
-                rec.recurring_invoicing_type,
-                rec.recurring_invoicing_offset,
-                rec.recurring_rule_type,
-                rec.recurring_interval,
-                max_date_end=rec.date_end,
-            )
+            rec.recurring_next_date = rec.get_next_invoice_date()
 
     # === Utility Methods ===
 
@@ -176,18 +165,26 @@ class ContractRecurringMixin(models.AbstractModel):
         else:  # yearly
             return relativedelta(years=interval)
 
-    @api.model
     def get_next_period_date_end(
         self,
-        next_period_date_start,
-        recurring_rule_type,
-        recurring_interval,
-        max_date_end,
+        next_period_date_start=None,
+        recurring_rule_type=None,
+        recurring_interval=None,
+        max_date_end=None,
         next_invoice_date=False,
         recurring_invoicing_type=False,
         recurring_invoicing_offset=False,
     ):
         """Compute the end date for the next period."""
+        if next_period_date_start is None:
+            next_period_date_start = self.next_period_date_start
+        if recurring_rule_type is None:
+            recurring_rule_type = self.recurring_rule_type
+        if recurring_interval is None:
+            recurring_interval = self.recurring_interval
+        if max_date_end is None:
+            max_date_end = self.date_end
+
         if not next_period_date_start or (
             max_date_end and next_period_date_start > max_date_end
         ):
@@ -218,17 +215,29 @@ class ContractRecurringMixin(models.AbstractModel):
             next_period_date_end = max_date_end
         return next_period_date_end
 
-    @api.model
     def get_next_invoice_date(
         self,
-        next_period_date_start,
-        recurring_invoicing_type,
-        recurring_invoicing_offset,
-        recurring_rule_type,
-        recurring_interval,
-        max_date_end,
+        next_period_date_start=None,
+        recurring_invoicing_type=None,
+        recurring_invoicing_offset=None,
+        recurring_rule_type=None,
+        recurring_interval=None,
+        max_date_end=None,
     ):
         """Compute the date of the next invoice based on all parameters."""
+        if next_period_date_start is None:
+            next_period_date_start = self.next_period_date_start
+        if recurring_invoicing_type is None:
+            recurring_invoicing_type = self.recurring_invoicing_type
+        if recurring_invoicing_offset is None:
+            recurring_invoicing_offset = self.recurring_invoicing_offset
+        if recurring_rule_type is None:
+            recurring_rule_type = self.recurring_rule_type
+        if recurring_interval is None:
+            recurring_interval = self.recurring_interval
+        if max_date_end is None:
+            max_date_end = self.date_end
+
         next_period_date_end = self.get_next_period_date_end(
             next_period_date_start,
             recurring_rule_type,
