@@ -2460,3 +2460,17 @@ class TestContract(TestContractBase):
         self.contract3.contract_line_ids.recurring_next_date = fields.Date.today()
         invoice_id = self.contract3.recurring_create_invoice()
         self.assertEqual(invoice_id.invoice_line_ids[0].name, "Header for May Services")
+
+    def test_insert_markers_without_dates(self):
+        """A missing date leaves its markers empty instead of failing."""
+        self.acct_line.name = "#START# - #END# (#INVOICEMONTHNAME#)"
+        self.assertEqual(self.acct_line._insert_markers(False, False), " -  ()")
+        start = to_date("2018-01-01")
+        lang = self.env["res.lang"].search(
+            [("code", "=", self.acct_line.contract_id.partner_id.lang)]
+        )
+        date_format = lang.date_format or "%m/%d/%Y"
+        self.assertEqual(
+            self.acct_line._insert_markers(start, False),
+            "%s -  (January)" % start.strftime(date_format),
+        )
