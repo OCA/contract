@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2018 ACSONE SA/NV.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form (in product_contract)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="need_contract_creation" invisible="1" />
+                <button
+                    name="action_create_contract"
+                    string="Create Contracts"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="need_contract_creation == False"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_show_contracts"
+                    type="object"
+                    icon="fa-book"
+                    class="oe_stat_button"
+                    insivible="is_contract != True or state not in ['sale', 'done'] or contract_count == 0"
+                >
+                    <field string="Contracts" name="contract_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='order_line']" position="before">
+                <field name="is_contract" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='product_id']"
+                position="after"
+            >
+                <field name="contract_template_id" invisible="1" />
+                <field
+                    name="contract_id"
+                    options='{"no_create": True}'
+                    invisible="not is_contract"
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                       ]"
+                />
+                <field
+                    name="contract_line_id"
+                    invisible="not is_contract"
+                    domain="[('contract_id','=',contract_id)]"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='tax_ids']/parent::group"
+                position="after"
+            >
+                <field name="is_contract" invisible="1" />
+                <separator
+                    colspan="4"
+                    string="Recurrence Invoicing"
+                    invisible="not is_contract"
+                />
+                <group invisible="not is_contract">
+                    <label for="recurrence_number" />
+                    <div class="o_row">
+                        <field name="recurrence_number" />
+                        <field name="recurrence_interval" />
+                    </div>
+                    <label for="recurring_interval" />
+                    <div class="o_row">
+                        <field name="recurring_interval" />
+                        <field name="recurring_rule_type" />
+                    </div>
+                </group>
+                <group invisible="not is_contract">
+                    <field name="recurring_invoicing_type" />
+                </group>
+                <group invisible="not is_contract">
+                    <field name="date_start" required="is_contract" />
+                </group>
+                <group invisible="not is_contract">
+                    <field name="date_end" />
+                </group>
+                <group invisible="not is_contract">
+                    <field name="is_auto_renew" />
+                </group>
+                <group invisible="not is_auto_renew">
+                    <label for="auto_renew_interval" />
+                    <div>
+                        <field
+                            name="auto_renew_interval"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="is_auto_renew"
+                        />
+                        <field
+                            name="auto_renew_rule_type"
+                            class="oe_inline"
+                            nolabel="1"
+                            required="is_auto_renew"
+                        />
+                    </div>
+                </group>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/list//field[@name='price_total']"
+                position="after"
+            >
+                <field name="contract_template_id" column_invisible="1" />
+                <field name="is_contract" column_invisible="1" />
+                <field
+                    name="contract_id"
+                    options='{"no_create": True}'
+                    domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',parent.partner_id), ('is_terminated','=',False),
+                    ]"
+                    optional="hide"
+                />
+                <field
+                    name="contract_line_id"
+                    domain="[('contract_id','=',contract_id)]"
+                    optional="hide"
+                />
+                <field name="recurrence_number" optional="hide" />
+                <field name="recurrence_interval" optional="hide" />
+                <field name="recurring_interval" optional="hide" />
+                <field name="recurring_rule_type" optional="hide" />
+                <field name="recurring_invoicing_type" optional="hide" />
+                <field name="contract_start_date_method" column_invisible="1" />
+                <field
+                    name="date_start"
+                    optional="hide"
+                    required="is_contract and contract_start_date_method == 'manual'"
+                />
+                <field name="date_end" optional="hide" />
+                <field name="is_auto_renew" optional="hide" />
+                <field
+                    name="auto_renew_interval"
+                    class="oe_inline"
+                    nolabel="1"
+                    required="is_auto_renew"
+                    optional="hide"
+                />
+                <field
+                    name="auto_renew_rule_type"
+                    class="oe_inline"
+                    nolabel="1"
+                    required="is_auto_renew"
+                    optional="hide"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
