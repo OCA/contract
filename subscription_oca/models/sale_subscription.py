@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -57,13 +57,19 @@ class SaleSubscription(models.Model):
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist", required=True, string="Pricelist"
     )
-    recurring_next_date = fields.Date(string="Next invoice date", default=date.today())
+    recurring_next_date = fields.Date(
+        string="Next invoice date",
+        default=lambda self: fields.Date.context_today(self),
+    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Commercial agent",
         default=lambda self: self.env.user.id,
     )
-    date_start = fields.Date(string="Start date", default=date.today())
+    date_start = fields.Date(
+        string="Start date",
+        default=lambda self: fields.Date.context_today(self),
+    )
     date = fields.Date(
         string="Finish date",
         compute="_compute_rule_boundary",
@@ -104,6 +110,65 @@ class SaleSubscription(models.Model):
         store=True,
         ondelete="restrict",
     )
+    invoicing_mode = fields.Selection(related="template_id.invoicing_mode")
+    auto_create_payment = fields.Boolean(related="template_id.auto_create_payment")
+    payment_token_id = fields.Many2one(
+        comodel_name="payment.token",
+        string="Payment Token",
+        domain="[('partner_id', '=', partner_id)]",
+        help="Saved payment method used to charge this subscription "
+        "automatically when automatic payment is enabled.",
+    )
+    payment_exception = fields.Boolean(
+        copy=False,
+        help="Set when an automatic payment fails. The scheduled job skips "
+        "subscriptions in this state until it is cleared, once the payment "
+        "method has been fixed.",
+        tracking=True,
+    )
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id_payment_token(self):
+        """Suggest the partner's most recent token without overriding a manual
+        choice. Only relevant when the template enables automatic payment."""
+        for record in self:
+            if not record.auto_create_payment:
+                continue
+            if (
+                record.payment_token_id
+                and record.payment_token_id.partner_id.commercial_partner_id
+                == record.partner_id.commercial_partner_id
+            ):
+                continue
+            record.payment_token_id = (
+                record.env["payment.token"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", record.partner_id.id),
+                        ("company_id", "=", record.company_id.id),
+                    ],
+                    limit=1,
+                    order="write_date desc",
+                )
+            )
+
+    @api.constrains("payment_token_id", "partner_id")
+    def _check_payment_token_partner(self):
+        for record in self:
+            if not record.payment_token_id:
+                continue
+            if (
+                record.payment_token_id.partner_id.commercial_partner_id
+                != record.partner_id.commercial_partner_id
+            ):
+                raise ValidationError(
+                    self.env._(
+                        "Payment token '%s' belongs to a different partner "
+                        "and cannot be used for this subscription."
+                    )
+                    % record.payment_token_id.display_name
+                )
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -145,9 +210,15 @@ class SaleSubscription(models.Model):
                 if (
                     subscription.recurring_next_date <= today
                     and subscription.sale_subscription_line_ids
+                    and not subscription.payment_exception
                 ):
                     try:
-                        subscription.generate_invoice()
+                        # Isolate each subscription so a failure (e.g. a
+                        # rejected charge) rolls back only its own changes and
+                        # never leaves a half-processed invoice behind for the
+                        # rest of the batch.
+                        with self.env.cr.savepoint():
+                            subscription.generate_invoice()
                     except Exception:
                         logger.exception("Error on subscription invoice generate")
                 if (
@@ -326,43 +397,105 @@ class SaleSubscription(models.Model):
         self.write({"sale_order_ids": [Command.link(order_id.id)]})
         return order_id
 
+    def _invoice_chatter_link(self, msg_static, invoice):
+        return (
+            f"<b>{msg_static}</b> "
+            f"<a href=# data-oe-model=account.move data-oe-id={invoice.id}>"
+            f"{invoice.display_name}</a>"
+        )
+
+    def _send_invoice_email(self, invoice):
+        mail_template = self.template_id.invoice_mail_template_id
+        self.env["account.move.send"]._generate_and_send_invoices(
+            invoice, mail_template=mail_template, sending_methods=["email"]
+        )
+
+    def _get_or_create_draft_invoice(self):
+        """Reuse a draft invoice left over from a previous failed automatic
+        payment (so retries don't pile up duplicates), but never reuse one that
+        already has an in-flight or successful transaction."""
+        self.ensure_one()
+        for invoice in self.invoice_ids.filtered(
+            lambda m: m.state == "draft" and m.move_type == "out_invoice"
+        ):
+            if not invoice.transaction_ids.filtered(
+                lambda t: t.state in ("pending", "authorized", "done")
+            ):
+                return invoice
+        return self.create_invoice()
+
     def generate_invoice(self):
         invoice_number = ""
         message_body = ""
         msg_static = self.env._("Created invoice with reference")
-        if self.template_id.invoicing_mode in ["draft", "invoice", "invoice_send"]:
-            invoice = self.create_invoice()
-            if self.template_id.invoicing_mode != "draft":
-                invoice.action_post()
-                mail_template = self.template_id.invoice_mail_template_id
-                self.env["account.move.send"]._generate_and_send_invoices(
-                    invoice, mail_template=mail_template, sending_methods=["email"]
-                )
-                invoice_number = invoice.name
-                message_body = (
-                    f"<b>{msg_static}</b> "
-                    f"<a href=# data-oe-model=account.move data-oe-id={invoice.id}>"
-                    f"{invoice_number}"
-                    "</a>"
-                )
+        mode = self.template_id.invoicing_mode
+        auto_pay = self.template_id.auto_create_payment
+        payment_failed = False
+        auto_pay_invoice = self.env["account.move"]
 
-        if self.template_id.invoicing_mode == "sale_and_invoice":
+        if mode in ["draft", "invoice", "invoice_send"]:
+            if auto_pay:
+                # Charge before posting: the invoice is kept in draft and the
+                # payment flow posts and reconciles it only on success, so a
+                # failed charge never leaves a posted invoice owed or burns an
+                # invoice number.
+                invoice = self._get_or_create_draft_invoice()
+                payment_failed = not self.create_payment(invoice)
+                auto_pay_invoice = invoice
+                if (
+                    invoice.state == "posted"
+                    and mode in ("invoice", "invoice_send")
+                    and invoice.payment_state in ("in_payment", "paid")
+                ):
+                    self._send_invoice_email(invoice)
+            else:
+                invoice = self.create_invoice()
+                if mode != "draft":
+                    invoice.action_post()
+                    self._send_invoice_email(invoice)
+                    invoice_number = invoice.name
+                    message_body = self._invoice_chatter_link(msg_static, invoice)
+
+        if mode == "sale_and_invoice":
             order_id = self.create_sale_order()
             order_id.action_confirm()
             order_id.action_lock()
             new_invoice = order_id._create_invoices()
-            new_invoice.action_post()
             new_invoice.invoice_origin = order_id.name + ", " + self.name
-            invoice_number = new_invoice.name
-            message_body = (
-                "<b>%s</b> <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>"
-                % (msg_static, new_invoice.id, invoice_number)
-            )
-        if not invoice_number:
-            invoice_number = self.env._("To validate")
-            message_body = f"<b>{msg_static}</b> {invoice_number}"
-        self.calculate_recurring_next_date(self.recurring_next_date)
-        self.message_post(body=Markup(message_body))
+            if auto_pay:
+                payment_failed = not self.create_payment(new_invoice)
+                auto_pay_invoice = new_invoice
+            else:
+                new_invoice.action_post()
+                if new_invoice.state == "posted":
+                    invoice_number = new_invoice.name
+                    message_body = self._invoice_chatter_link(msg_static, new_invoice)
+
+        if auto_pay:
+            # Automatic payment posts its own chatter, so skip the generic
+            # "Created invoice" / "To validate" note:
+            #  - a single "submitted; awaiting confirmation" note while the
+            #    charge is still pending (the invoice stays draft),
+            #  - a "confirmed" note with the real invoice number once the
+            #    payment is captured (posted by the payment.transaction
+            #    post-process hook), and
+            #  - a failure note via _register_payment_failure.
+            if not payment_failed and auto_pay_invoice.state != "posted":
+                self.message_post(
+                    body=self.env._(
+                        "Automatic payment submitted; awaiting confirmation."
+                    )
+                )
+        else:
+            if not invoice_number:
+                invoice_number = self.env._("To validate")
+                message_body = f"<b>{msg_static}</b> {invoice_number}"
+            self.message_post(body=Markup(message_body))
+
+        # Keep the schedule on the failed period so the next run (once the
+        # payment method is fixed) retries it instead of skipping ahead.
+        if not payment_failed:
+            self.calculate_recurring_next_date(self.recurring_next_date)
 
     def manual_invoice(self):
         invoice_id = self.create_invoice()
@@ -487,3 +620,110 @@ class SaleSubscription(models.Model):
                     .id
                 )
         return super().create(vals_list)
+
+    def _payment_failure_activity_summary(self):
+        return self.env._("Subscription automatic payment failed")
+
+    def _register_payment_failure(self, message):
+        """Flag the subscription, log a chatter note and schedule a to-do
+        activity (visible in list and kanban) so the failure is surfaced and
+        the scheduler stops retrying until it is resolved."""
+        self.ensure_one()
+        self.payment_exception = True
+        self.message_post(body=message)
+        summary = self._payment_failure_activity_summary()
+        already_open = self.activity_ids.filtered(lambda a: a.summary == summary)
+        if not already_open:
+            self.activity_schedule(
+                "mail.mail_activity_data_todo",
+                summary=summary,
+                note=message,
+                user_id=self.user_id.id or self.env.uid,
+            )
+
+    def _clear_payment_failure(self):
+        """Clear the exception flag and resolve any open payment-failure
+        activity once a charge succeeds or is accepted."""
+        self.ensure_one()
+        self.payment_exception = False
+        summary = self._payment_failure_activity_summary()
+        self.activity_ids.filtered(lambda a: a.summary == summary).unlink()
+
+    def create_payment(self, invoice):
+        """Charge ``invoice`` against the subscription's saved token using an
+        offline (merchant-initiated) payment transaction.
+
+        :return: ``True`` if the charge was captured or accepted for
+            asynchronous capture (e.g. SEPA direct debit), ``False`` on a hard
+            failure.
+        """
+        self.ensure_one()
+        invoice.ensure_one()
+        token = self.payment_token_id
+        if not token:
+            self._register_payment_failure(
+                self.env._("No payment token found for partner %s")
+                % invoice.partner_id.display_name
+            )
+            return False
+        provider = token.provider_id
+        if not provider.journal_id:
+            self._register_payment_failure(
+                self.env._("Payment provider %s has no payment journal configured.")
+                % provider.display_name
+            )
+            return False
+        payment_transaction = self.env["payment.transaction"].sudo()
+        # The invoice is still in draft at charge time (charge-before-post), so
+        # it has no sequence number yet (its name is empty or the "/"
+        # placeholder). Fall back to the subscription's own reference for a
+        # stable, traceable prefix instead of a timestamp.
+        has_number = invoice.name and invoice.name != "/"
+        reference = payment_transaction._compute_reference(
+            provider.code, prefix=invoice.name if has_number else self.name
+        )
+        transaction = payment_transaction.create(
+            {
+                "provider_id": provider.id,
+                "payment_method_id": token.payment_method_id.id,
+                "token_id": token.id,
+                "operation": "offline",
+                "reference": reference,
+                "amount": invoice.amount_total,
+                "currency_id": invoice.currency_id.id,
+                "partner_id": invoice.partner_id.id,
+                "invoice_ids": [Command.set(invoice.ids)],
+            }
+        )
+        try:
+            transaction._send_payment_request()
+        except Exception:
+            logger.exception(
+                "Automatic payment request failed for subscription %s", self.id
+            )
+            self._register_payment_failure(
+                self.env._(
+                    "The automatic payment request could not be sent. "
+                    "Please check the payment method."
+                )
+            )
+            return False
+        if transaction.state == "done":
+            # Skip the sale module's automatic invoice sending so this module
+            # stays the single authority on when the (paid) invoice is emailed.
+            transaction.with_context(skip_sale_auto_invoice_send=True)._post_process()
+            self._clear_payment_failure()
+            return True
+        if transaction.state in ("pending", "authorized"):
+            # Asynchronous capture: the charge has been submitted and the
+            # provider will confirm it later via webhook. The chatter note is
+            # posted by generate_invoice (and the confirmation note by the
+            # payment.transaction post-process hook) to avoid duplicate
+            # messages here.
+            self._clear_payment_failure()
+            return True
+        self._register_payment_failure(
+            self.env._("The automatic payment was declined (state: %s).")
+            % transaction.state
+        )
+        return False
