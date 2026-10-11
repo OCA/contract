@@ -146,6 +146,9 @@ class SaleSubscriptionLine(models.Model):
     )
     def _compute_discount(self):
         for record in self:
+            # Skip recomputation for existing lines that already have a discount
+            if record.id and record.discount:
+                continue
             if not (
                 record.product_id
                 and record.product_id.uom_id
