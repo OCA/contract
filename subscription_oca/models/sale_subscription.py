@@ -453,7 +453,8 @@ class SaleSubscription(models.Model):
                     if record.stage_id.type == "in_progress":
                         record.in_progress = True
                         today = date.today()
-                        record.date_start = today
+                        if not record.date_start:
+                            record.date_start = today
                         record.calculate_recurring_next_date(today)
                     elif record.stage_id.type == "post":
                         record.close_reason_id = values.get("close_reason_id", False)
