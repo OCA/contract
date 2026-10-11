@@ -334,10 +334,11 @@ class SaleSubscription(models.Model):
             invoice = self.create_invoice()
             if self.template_id.invoicing_mode != "draft":
                 invoice.action_post()
-                mail_template = self.template_id.invoice_mail_template_id
-                self.env["account.move.send"]._generate_and_send_invoices(
-                    invoice, mail_template=mail_template, sending_methods=["email"]
-                )
+                if self.template_id.invoicing_mode == "invoice_send":
+                    mail_template = self.template_id.invoice_mail_template_id
+                    self.env["account.move.send"]._generate_and_send_invoices(
+                        invoice, mail_template=mail_template, sending_methods=["email"]
+                    )
                 invoice_number = invoice.name
                 message_body = (
                     f"<b>{msg_static}</b> "
