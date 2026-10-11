@@ -55,7 +55,7 @@ addon | version | maintainers | summary
 [product_contract_recurrence_in_price](product_contract_recurrence_in_price/) | 18.0.1.0.0 |  | Add an option to include the recurrences in the total of a Sale Order Line.
 [product_contract_section](product_contract_section/) | 18.0.1.0.0 |  | Propagate sale order sections and notes to generated contracts
 [product_contract_variable_quantity](product_contract_variable_quantity/) | 18.0.1.0.1 |  | Product contract with variable quantity
-[subscription_oca](subscription_oca/) | 18.0.1.0.0 |  | Generate recurring invoices.
+[subscription_oca](subscription_oca/) | 18.0.1.0.1 |  | Generate recurring invoices.
 
 [//]: # (end addons)
 
