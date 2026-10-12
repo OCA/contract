@@ -5,6 +5,15 @@
         <field name="model">contract.template</field>
         <field name="inherit_id" ref="contract.contract_template_form_view" />
         <field name="arch" type="xml">
+            <!-- Other Information, where the contract form shows it too. -->
+            <xpath
+                expr="//page[@name='info']/group[@name='group_legend']"
+                position="before"
+            >
+                <group>
+                    <field name="skip_zero_qty" />
+                </group>
+            </xpath>
             <xpath
                 expr="//field[@name='contract_line_ids']//field[@name='quantity']"
                 position="before"
