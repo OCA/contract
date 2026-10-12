@@ -42,6 +42,21 @@ class TestContractTermination(TestContractSuccessor):
         self.assertFalse(self.contract.terminate_reason_id)
         self.assertFalse(self.contract.terminate_comment)
 
+    def test_terminated_contract_excluded_from_invoicing_domain(self):
+        """A terminated contract is skipped by the recurring invoicing cron."""
+        contract_model = self.env["contract.contract"]
+        far = to_date("2100-01-01")
+        # Before termination the contract is a candidate for invoicing.
+        domain = contract_model._get_contracts_to_invoice_domain(far)
+        self.assertIn(self.contract, contract_model.search(domain))
+        # After termination it must be excluded from the domain.
+        self.contract._terminate_contract(
+            self.terminate_reason, "terminate_comment", to_date("2018-03-01")
+        )
+        self.assertTrue(self.contract.is_terminated)
+        domain = contract_model._get_contracts_to_invoice_domain(far)
+        self.assertNotIn(self.contract, contract_model.search(domain))
+
     def test_terminate_date_before_last_date_invoiced(self):
         self.contract.recurring_create_invoice()
         self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-02-14"))
