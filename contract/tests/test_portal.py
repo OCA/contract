@@ -4,6 +4,7 @@
 from odoo import http
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
+from odoo.tools.safe_eval import safe_eval, time
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -31,3 +32,30 @@ class TestContractPortal(HttpCase, BaseCommon):
         self.assertEqual(self.url_open(url=url_contract).status_code, 200)
         contract.message_unsubscribe(partner_ids=user_portal.partner_id.ids)
         self.assertEqual(self.url_open(url=url_contract).status_code, 200)
+
+    def test_portal_contract_report(self):
+        """The sidebar "View Details" button renders the contract report."""
+        partner = self.env["res.partner"].create({"name": "partner test report"})
+        contract = self.env["contract.contract"].create(
+            {"name": "Reported Contract", "partner_id": partner.id}
+        )
+        self._create_new_portal_user(
+            partner_id=partner.id, login="portal_report", password="portal_report"
+        )
+        self.authenticate("portal_report", "portal_report")
+        http.root.session_store.save(self.session)
+        response = self.url_open(
+            url=f"/my/contracts/{contract.id}"
+            f"?access_token={contract.access_token}&report_type=html"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Recurring Items", response.text)
+        # The PDF variant names the downloaded file after the contract, and
+        # names it the same way the backend Print action does.
+        filename = contract._get_report_base_filename()
+        self.assertEqual(filename, f"Contract - {contract.display_name}")
+        report = self.env.ref("contract.report_contract")
+        self.assertEqual(
+            safe_eval(report.print_report_name, {"object": contract, "time": time}),
+            filename,
+        )

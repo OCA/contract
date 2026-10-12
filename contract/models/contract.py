@@ -147,6 +147,11 @@ class ContractContract(models.Model):
         for record in self:
             record.access_url = f"/my/contracts/{record.id}"
 
+    def _get_report_base_filename(self):
+        """Name the printed contract, on the backend and on the portal alike."""
+        self.ensure_one()
+        return self.env._("Contract - %(name)s", name=self.display_name)
+
     @api.depends(
         "manual_currency_id",
         "pricelist_id",
