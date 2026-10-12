@@ -30,17 +30,36 @@
         name="Show Contracts"
         inherit_id="portal.portal_my_home"
         customize_show="True"
-        priority="30"
+        priority="35"
     >
-        <div id="portal_common_category" position="inside">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True" />
+            <t t-set="portal_vendor_category_enable" t-value="True" />
+        </xpath>
+        <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t
                     t-set="icon"
                     t-value="'/contract/static/src/img/contract_icon.svg'"
                 />
-                <t t-set="title">Contracts</t>
-                <t t-set="url" t-value="'/my/contracts'" />
+                <t t-set="title">Your Contracts</t>
+                <t t-set="text">Follow the services we invoice you for</t>
+                <t t-set="url" t-value="'/my/contracts?filterby=customer'" />
                 <t t-set="placeholder_count" t-value="'contract_count'" />
+            </t>
+        </div>
+        <div id="portal_vendor_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <!-- The same drawing mirrored, so the two entries read as the
+                     two sides of the same thing. -->
+                <t
+                    t-set="icon"
+                    t-value="'/contract/static/src/img/contract_icon_supplier.svg'"
+                />
+                <t t-set="title">Our Contracts</t>
+                <t t-set="text">Follow the services you invoice us for</t>
+                <t t-set="url" t-value="'/my/contracts?filterby=supplier'" />
+                <t t-set="placeholder_count" t-value="'supplier_contract_count'" />
             </t>
         </div>
     </template>
@@ -50,6 +69,9 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Contracts</t>
             </t>
+            <p t-if="not contracts" class="alert alert-warning">
+                There are currently no contracts for your account.
+            </p>
             <t t-if="contracts" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
