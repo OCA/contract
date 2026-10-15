@@ -412,7 +412,7 @@ class ContractLine(models.Model):
         Put date_end on contract line
         We don't consider contract lines that end's before the new end date
         :param date_end: new date end for contract line
-        :return: True
+        :return: the records that are stopped
         """
         if not all(self.mapped("is_stop_allowed")):
             raise ValidationError(_("Stop not allowed for this line"))
@@ -446,7 +446,7 @@ class ContractLine(models.Model):
                             "manual_renew_needed": manual_renew_needed,
                         }
                     )
-        return True
+        return self
 
     def _prepare_value_for_plan_successor(
         self, date_start, date_end, is_auto_renew, recurring_next_date=False
