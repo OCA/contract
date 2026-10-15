@@ -22,9 +22,7 @@ class ContractLine(models.Model):
 
     def _prepare_sale_line(self, order_id=False, sale_values=False):
         self.ensure_one()
-        dates = self._get_period_to_invoice(
-            self.last_date_invoiced, self.recurring_next_date
-        )
+        dates = self._get_period_to_invoice()
         sale_line_vals = self._prepare_sale_line_vals(dates, order_id=order_id)
 
         order_line = (
