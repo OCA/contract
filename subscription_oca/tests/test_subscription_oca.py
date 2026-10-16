@@ -544,6 +544,33 @@ class TestSubscriptionOCA(BaseCommon):
         # sale.subscription.stage
         self.stage._check_lot_product()  # should not raise
 
+    def test_sale_order_confirm_copies_description_and_team(self):
+        """The subscription gets the sales team and the line texts of the order"""
+        self.product_1.product_tmpl_id.subscription_template_id = self.tmpl1
+        team = self.env["crm.team"].create({"name": "Subscription Team"})
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "team_id": team.id,
+                "order_line": [
+                    Command.create(
+                        {
+                            "product_id": self.product_1.id,
+                            "name": "Custom description",
+                            "product_uom_qty": 1,
+                        }
+                    )
+                ],
+            }
+        )
+        order.with_context(uid=1).action_confirm()
+        subscription = order.subscription_ids
+        self.assertEqual(len(subscription), 1)
+        self.assertEqual(subscription.crm_team_id, team)
+        self.assertEqual(
+            subscription.sale_subscription_line_ids.name, "Custom description"
+        )
+
     def test_x_subscription_oca_pricelist_related(self):
         res = self.partner.read(["subscription_count", "subscription_ids"])
         self.assertEqual(res[0]["subscription_count"], 9)
