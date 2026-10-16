@@ -1,0 +1,8 @@
+- [Tecnativa](https://www.tecnativa.com):
+  - Carlos Dauden
+  - Carolina Fernandez
+  - Pedro M. Baeza
+  - Juan José Seguí
+- [Acsone](https://www.acsone.eu)
+  - Souheil Bejaoui
+  - Tobias Zehntner
