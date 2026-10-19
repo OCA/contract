@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ====================
 Contract Termination
 ====================
@@ -17,7 +13,7 @@ Contract Termination
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -101,6 +97,10 @@ Usage
 5. If necessary, you can **Update Termination Details** or **Cancel
    Contract Termination** to reactivate the contract.
 
+Terminated contracts are excluded from the *In progress* filter of the
+contract list, whatever their end date is, and a *Terminated* filter is
+available to list them.
+
 Bug Tracker
 ===========
 
@@ -123,6 +123,7 @@ Contributors
 ------------
 
 - Souheil Bejaoui souheil.bejaoui@acsone.eu (ACSONE SA/NV)
+- Marcos Mendez <m@pop.coop>
 
 Maintainers
 -----------
