@@ -90,7 +90,11 @@ Usage
    price list and lines when creating a contract. To use it, just select
    the template on the contract and fields will be filled automatically.
 
-- Contracts appear in portal to following users in every contract:
+- Contracts appear in portal to following users in every contract.
+  Customer contracts are listed under *Your Contracts* and supplier
+  contracts under *Our Contracts*, so a partner that is both never has
+  to read one list to find the other. An entry only shows up when that
+  partner actually has contracts of that kind:
 
 |image|
 
