@@ -62,6 +62,7 @@ class SaleOrder(models.Model):
                     "pricelist_id": self.partner_id.property_product_pricelist.id,
                     "date_start": date.today(),
                     "sale_order_id": self.id,
+                    "crm_team_id": self.team_id.id,
                     "sale_subscription_line_ids": subscription_lines,
                 }
             )
