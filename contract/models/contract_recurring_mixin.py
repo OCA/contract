@@ -19,12 +19,15 @@ class ContractRecurringMixin(models.AbstractModel):
     _description = "Contract Recurring Mixin"
 
     date_start = fields.Date(
+        string="Start Date",
         index=True,
         default=lambda self: fields.Date.context_today(self),
         help="Contract activation date (first recurrence starts here)",
     )
     date_end = fields.Date(
-        index=True, help="Optional contract termination date (limits recurrence)"
+        string="End Date",
+        index=True,
+        help="Optional contract termination date (limits recurrence)",
     )
 
     # === Recurrence Rule Fields ===
