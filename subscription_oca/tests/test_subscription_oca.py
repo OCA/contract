@@ -7,7 +7,6 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, exceptions, fields
-from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseCommon
 
@@ -182,6 +181,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "pricelist_id": cls.pricelist2.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_3.id,
             }
         )
         cls.sub8 = cls.create_sub(
@@ -190,6 +190,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "pricelist_id": cls.pricelist2.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_3.id,
                 "journal_id": cls.cash_journal.id,
             }
         )
@@ -198,6 +199,7 @@ class TestSubscriptionOCA(BaseCommon):
                 "template_id": cls.tmpl3.id,
                 "date_start": fields.Date.today() - relativedelta(days=100),
                 "in_progress": True,
+                "stage_id": cls.stage_3.id,
                 "recurring_rule_boundary": True,
             }
         )
@@ -355,12 +357,34 @@ class TestSubscriptionOCA(BaseCommon):
         "SaleSubscription.generate_invoice"
     )
     def test_subscription_oca_sub_cron_error(self, generate_invoice_patch):
-        # Simulate something failing in generating an invoice,
-        # we expect something being logged
+        # When generate_invoice() fails the cron must not raise:
+        # it must log the error and continue processing other subscriptions.
         generate_invoice_patch.side_effect = exceptions.UserError("Error")
-        with mute_logger("odoo.addons.subscription_oca.models.sale_subscription"):
-            with self.assertRaises(exceptions.UserError):
-                self.sub1.cron_subscription_management()
+        with self.assertLogs(
+            "odoo.addons.subscription_oca.models.sale_subscription", level="ERROR"
+        ) as log_watcher:
+            self.sub1.cron_subscription_management()
+        self.assertTrue(
+            any(
+                "Error on subscription management for subscription" in msg
+                for msg in log_watcher.output
+            )
+        )
+        # Legacy data with an empty next date (forced with raw SQL) must be
+        # skipped by the cron, not raise on the date comparison.
+        self.env.cr.execute(
+            "UPDATE sale_subscription SET recurring_next_date = NULL " "WHERE id = %s",
+            (self.sub7.id,),
+        )
+        self.sub7.invalidate_recordset(["recurring_next_date"])
+        with self.assertLogs(
+            "odoo.addons.subscription_oca.models.sale_subscription", level="ERROR"
+        ) as legacy_watcher:
+            self.sub7.cron_subscription_management()
+        # The other subscriptions still fail, but sub7 must not be among them:
+        # were its date comparison to raise, the error would name sub7 here.
+        self.assertNotIn(self.sub7.display_name, "".join(legacy_watcher.output))
+        self.assertFalse(self.sub7.invoice_ids)
 
     def test_subscription_oca_sub_cron(self):
         # sale.subscription
@@ -472,6 +496,15 @@ class TestSubscriptionOCA(BaseCommon):
         )
         self.assertEqual(res[10], self.partner_2.property_product_pricelist.id)
         self.assertFalse(res[11])
+        # Re-opening must recompute the next date and set in_progress.
+        self.sub7.close_subscription()
+        self.sub7.action_start_subscription()
+        # in_progress without a next invoice date must be rejected.
+        with self.assertRaises(exceptions.ValidationError):
+            self.sub7.write({"recurring_next_date": False})
+        # in_progress is only valid on an in-progress stage.
+        with self.assertRaises(exceptions.ValidationError):
+            self.sub7.write({"stage_id": self.stage_2.id, "in_progress": True})
 
     def test_subscription_oca_sub8_workflow(self):
         subscription = self.sub8

@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -139,27 +139,35 @@ class SaleSubscription(models.Model):
     @api.model
     def cron_subscription_management(self):
         today = date.today()
-        for subscription in self.search([], order="recurring_next_date asc"):
+        domain = [("stage_id.type", "in", ["pre", "in_progress"])]
+        for subscription in self.search(domain, order="recurring_next_date asc"):
             subscription = subscription.with_company(subscription.company_id)
-            if subscription.in_progress:
-                if (
-                    subscription.recurring_next_date <= today
-                    and subscription.sale_subscription_line_ids
-                ):
-                    try:
+            try:
+                with self.env.cr.savepoint():
+                    if subscription.in_progress:
+                        if (
+                            subscription.recurring_next_date
+                            and subscription.recurring_next_date <= today
+                            and subscription.sale_subscription_line_ids
+                        ):
+                            subscription.generate_invoice()
+                        if (
+                            not subscription.recurring_rule_boundary
+                            and subscription.date
+                            and subscription.date <= today
+                        ):
+                            subscription.close_subscription()
+                    elif (
+                        subscription.date_start <= today
+                        and subscription.stage_id.type == "pre"
+                    ):
+                        subscription.action_start_subscription()
                         subscription.generate_invoice()
-                    except Exception:
-                        logger.exception("Error on subscription invoice generate")
-                if (
-                    not subscription.recurring_rule_boundary
-                    and subscription.date <= today
-                ):
-                    subscription.close_subscription()
-            elif (
-                subscription.date_start <= today and subscription.stage_id.type == "pre"
-            ):
-                subscription.action_start_subscription()
-                subscription.generate_invoice()
+            except Exception:
+                logger.exception(
+                    "Error on subscription management for subscription %s",
+                    subscription.display_name,
+                )
 
     @api.depends("sale_subscription_line_ids")
     def _compute_total(self):
@@ -197,6 +205,28 @@ class SaleSubscription(models.Model):
                 )
                 record.recurring_rule_boundary = False
 
+    @api.constrains("in_progress", "stage_id", "recurring_next_date")
+    def _check_in_progress_consistency(self):
+        for record in self:
+            if record.in_progress and record.stage_id.type != "in_progress":
+                raise ValidationError(
+                    self.env._(
+                        "Subscription '%s': in_progress=True requires a stage of "
+                        "type 'in_progress' (current stage type: '%s').",
+                        record.display_name,
+                        record.stage_id.type,
+                    )
+                )
+            if record.in_progress and not record.recurring_next_date:
+                raise ValidationError(
+                    self.env._(
+                        "Subscription '%s' is marked as in-progress but has no "
+                        "next invoice date. Set a recurring next date before "
+                        "activating the subscription.",
+                        record.display_name,
+                    )
+                )
+
     @api.depends("template_id")
     def _compute_terms(self):
         for record in self:
@@ -213,14 +243,14 @@ class SaleSubscription(models.Model):
             self.calculate_recurring_next_date(today)
 
     def calculate_recurring_next_date(self, start_date):
+        self.recurring_next_date = self._get_recurring_next_date(start_date)
+
+    def _get_recurring_next_date(self, start_date):
         if self.account_invoice_ids_count == 0:
-            self.recurring_next_date = date.today()
-        else:
-            type_interval = self.template_id.recurring_rule_type
-            interval = int(self.template_id.recurring_interval)
-            self.recurring_next_date = start_date + relativedelta(
-                **{type_interval: interval}
-            )
+            return date.today()
+        type_interval = self.template_id.recurring_rule_type
+        interval = int(self.template_id.recurring_interval)
+        return start_date + relativedelta(**{type_interval: interval})
 
     @api.onchange("partner_id")
     def onchange_partner_id(self):
@@ -253,14 +283,15 @@ class SaleSubscription(models.Model):
 
     def close_subscription(self, close_reason_id=False):
         self.ensure_one()
-        self.recurring_next_date = False
         closed_stage = self.env["sale.subscription.stage"].search(
             [("type", "=", "post")], limit=1
         )
         self.write(
             {
+                "in_progress": False,
+                "recurring_next_date": False,
                 "close_reason_id": close_reason_id,
-                "stage_id": closed_stage,
+                "stage_id": closed_stage.id,
             }
         )
 
@@ -446,16 +477,30 @@ class SaleSubscription(models.Model):
         return False
 
     def write(self, values):
+        values = dict(values)
+        if "stage_id" in values and "in_progress" not in values:
+            stage = values["stage_id"]
+            if isinstance(stage, int):
+                stage = self.env["sale.subscription.stage"].browse(stage)
+            if stage.type != "in_progress":
+                values["in_progress"] = False
         res = super().write(values)
         if "stage_id" in values:
             for record in self:
                 if record.stage_id:
                     if record.stage_id.type == "in_progress":
-                        record.in_progress = True
                         today = date.today()
                         if not record.date_start:
                             record.date_start = today
-                        record.calculate_recurring_next_date(today)
+                        recurring_next_date = record._get_recurring_next_date(today)
+                        # One write for both fields: the constraint rejects
+                        # in_progress without a next invoice date.
+                        record.write(
+                            {
+                                "in_progress": True,
+                                "recurring_next_date": recurring_next_date,
+                            }
+                        )
                     elif record.stage_id.type == "post":
                         record.close_reason_id = values.get("close_reason_id", False)
                         record.in_progress = False
