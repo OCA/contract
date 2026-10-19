@@ -1,7 +1,9 @@
 # Copyright 2021 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import Command
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields
 from odoo.tools import mute_logger
 
 from .test_contract import TestContractBase
@@ -34,50 +36,62 @@ class ContractMulticompanyCase(TestContractBase):
                     "pricelist_id": cls.partner.property_product_pricelist.id,
                     "line_recurrence": True,
                     "contract_type": "purchase",
-                    "contract_line_ids": [
-                        Command.create(
-                            {
-                                "product_id": cls.product_1.id,
-                                "name": "Services from #START# to #END#",
-                                "quantity": 1,
-                                "uom_id": cls.product_1.uom_id.id,
-                                "price_unit": 100,
-                                "discount": 50,
-                                "recurring_rule_type": "monthly",
-                                "recurring_interval": 1,
-                                "date_start": "2018-02-15",
-                                "recurring_next_date": "2018-02-22",
-                            },
-                        )
-                    ],
                 }
             )
         )
-        cls.line_vals = {
-            "contract_id": cls.contract_mc.id,
-            "product_id": cls.product_1.id,
-            "name": "Services from #START# to #END#",
-            "quantity": 1,
-            "uom_id": cls.product_1.uom_id.id,
-            "price_unit": 100,
-            "discount": 50,
-            "recurring_rule_type": "monthly",
-            "recurring_interval": 1,
-            "date_start": "2018-01-01",
-            "recurring_next_date": "2018-01-15",
-        }
+        cls.line_vals = [
+            {
+                "contract_id": cls.contract_mc.id,
+                "product_id": cls.product_1.id,
+                "name": "Services from #START# to #END#",
+                "quantity": 1,
+                "uom_id": cls.product_1.uom_id.id,
+                "price_unit": 100,
+                "discount": 50,
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "date_start": "2018-02-15",
+                "recurring_next_date": "2018-02-22",
+            },
+            {
+                "contract_id": cls.contract_mc.id,
+                "product_id": cls.product_1.id,
+                "name": "Services from #START# to #END#",
+                "quantity": 1,
+                "uom_id": cls.product_1.uom_id.id,
+                "price_unit": 100,
+                "discount": 50,
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "date_start": "2018-01-01",
+                "recurring_next_date": "2018-01-15",
+            },
+        ]
         cls.acct_line_mc = (
             cls.env["contract.line"].with_company(cls.company_2).create(cls.line_vals)
         )
 
     def test_cron_recurring_create_invoice_multi_company(self):
+        today = fields.Date.context_today(self.contract2)
+
         self.acct_line.date_start = "2018-01-01"
         self.acct_line.recurring_invoicing_type = "post-paid"
         self.acct_line.date_end = "2018-03-15"
 
-        self.acct_line_mc.date_start = "2018-01-01"
-        self.acct_line_mc.recurring_invoicing_type = "post-paid"
-        self.acct_line_mc.date_end = "2018-03-15"
+        self.acct_line_mc[0].date_start = today - relativedelta(months=2, days=15)
+        self.acct_line_mc[0].recurring_invoicing_type = "post-paid"
+        self.acct_line_mc[0].date_end = today + relativedelta(months=4, days=15)
+
+        self.acct_line_mc[1].date_start = today - relativedelta(months=3, days=15)
+        self.acct_line_mc[1].recurring_invoicing_type = "post-paid"
+        self.acct_line_mc[1].date_end = today + relativedelta(months=3, days=15)
+
+        self.contract2.contract_line_ids.write(
+            {
+                "date_start": today - relativedelta(months=1, days=15),
+                "date_end": today + relativedelta(months=11, days=15),
+            }
+        )
 
         contracts = self.contract2
         contracts_company_2 = self.env["contract.contract"].browse()
@@ -107,9 +121,10 @@ class ContractMulticompanyCase(TestContractBase):
             ]
         )
         self.assertEqual(
-            len(contracts.mapped("contract_line_ids")), len(invoice_lines_company_1)
+            32,  # 2 for contract2 + 3 for each contract copy (x10)
+            len(invoice_lines_company_1),
         )
         self.assertEqual(
-            len(contracts_company_2.mapped("contract_line_ids")),
+            50,  # (2 for acct_line_mc[0] + 3 for acct_line_mc[1]) x10
             len(invoice_lines_company_2),
         )
