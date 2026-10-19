@@ -18,7 +18,8 @@
       of next period)
 4.  The "Generate Recurring Invoices from Contracts" cron runs daily to
     generate the invoices. If you are in debug mode, you can click on
-    the invoice creation button.
+    the invoice creation button. When there is nothing left to invoice, a
+    warning notification is displayed instead of creating an invoice.
 5.  The *Show recurring invoices* shortcut on contracts shows all
     invoices created from the contract.
 6.  The contract report can be printed from the Print menu
