@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 n
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="product_contract_configurator_form_view">
+        <field name="model">product.contract.configurator</field>
+        <field
+            name="inherit_id"
+            ref="product_contract.product_contract_configurator_form"
+        />
+        <field name="arch" type="xml">
+            <field name="date_start" position="before">
+                <field name="is_deferred" />
+            </field>
+            <field name="date_start" position="attributes">
+                <attribute name="invisible">is_deferred</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
