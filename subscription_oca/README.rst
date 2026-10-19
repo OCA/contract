@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 =======================
 Subscription management
 =======================
@@ -17,7 +13,7 @@ Subscription management
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -71,6 +67,11 @@ To create subscriptions with the sale of a product:
    *Subscribable product* and *Subscription template*
 3. Create a sales order with the product and confirm it.
 
+To automatically start subscription when the sale order is confirmed :
+
+1. Go to Sales/Configuration/Settings
+2. Tick the option *Automatic Subscription Start*
+
 Known issues / Roadmap
 ======================
 
@@ -113,6 +114,7 @@ Contributors
   - Alberto Martínez
 
 - Dennis Sluijk <d.sluijk@onestein.nl>
+- Cyril Vinh-Tung <cyril@invitu.com>
 
 Maintainers
 -----------
