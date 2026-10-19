@@ -59,7 +59,11 @@ class ContractSaleCommon(TransactionCase):
         # and making mandatory to link a project to that product or to the sale order
         cls.product_1 = cls.env.ref("product.product_product_2")
         cls.product_1.taxes_id += cls.env["account.tax"].search(
-            [("type_tax_use", "=", "sale")], limit=1
+            [
+                ("type_tax_use", "=", "sale"),
+                ("company_id", "=", cls.env.company.id),
+            ],
+            limit=1,
         )
         cls.product_1.description_sale = "Test description sale"
         cls.line_template_vals = {
