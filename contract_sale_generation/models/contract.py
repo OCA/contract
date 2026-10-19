@@ -8,6 +8,8 @@
 # Copyright 2018 Therp BV <https://therp.nl>.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from markupsafe import Markup
+
 from odoo import Command, api, fields, models
 
 
@@ -69,16 +71,10 @@ class ContractContract(models.Model):
         """
         sales = self._recurring_create_sale()
         for sale_rec in sales:
-            sale_rec.message_post(
-                body=self.env._(
-                    "Contract manually sale order: "
-                    '<a href="#" data-oe-model="%(model)s" data-oe-id="%(id)s">'
-                    "Sale Order"
-                    "</a>",
-                    model=sale_rec._name,
-                    id=sale_rec.id,
-                )
-            )
+            body = Markup(
+                self.env._("Contract manually sale ordered: %(sale_order_link)s")
+            ) % {"sale_order_link": sale_rec._get_html_link(title=sale_rec.name)}
+            self.message_post(body=body)
         return sales
 
     def _prepare_recurring_sales_values(self, date_ref=False):
