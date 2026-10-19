@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 bosd
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="action_activate"
+                    type="object"
+                    string="Activate"
+                    class="oe_highlight"
+                    invisible="state == 'active'"
+                />
+                <button
+                    name="action_draft"
+                    type="object"
+                    string="Set to Draft"
+                    invisible="state == 'draft'"
+                />
+                <button
+                    name="action_cancel"
+                    type="object"
+                    string="Cancel"
+                    invisible="state == 'cancel'"
+                />
+                <field
+                    name="state"
+                    widget="statusbar"
+                    statusbar_visible="draft,active"
+                />
+            </header>
+        </field>
+    </record>
+
+    <record id="contract_contract_tree_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="state" widget="badge" optional="show" />
+            </field>
+            <!-- Colour by state on top of the colouring the base view already
+                 does by term: draft in the info colour and cancelled muted,
+                 the way a sale order reads. A cancelled contract is cancelled
+                 first and foremost, so it does not also pick up the info
+                 colour of one that has not started yet. -->
+            <list position="attributes">
+                <attribute
+                    name="decoration-info"
+                >state == 'draft' or (state != 'cancel' and date_start and date_start &gt; current_date)</attribute>
+                <attribute
+                    name="decoration-muted"
+                >state == 'cancel' or (date_end and date_end &lt; current_date)</attribute>
+            </list>
+        </field>
+    </record>
+
+    <record id="contract_contract_search_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_search_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <filter
+                    name="filter_draft"
+                    string="Draft"
+                    domain="[('state', '=', 'draft')]"
+                />
+                <filter
+                    name="filter_active"
+                    string="Active"
+                    domain="[('state', '=', 'active')]"
+                />
+                <separator />
+            </field>
+        </field>
+    </record>
+</odoo>
