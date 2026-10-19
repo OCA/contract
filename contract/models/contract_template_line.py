@@ -253,12 +253,6 @@ class ContractTemplateLine(models.Model):
     def _compute_date_start(self):
         self._set_recurrence_field("date_start")
 
-    @api.depends("contract_id.line_recurrence")
-    def _compute_recurring_next_date(self):
-        res = super()._compute_recurring_next_date()
-        self._set_recurrence_field("recurring_next_date")
-        return res
-
     # === Constraints & Onchange ===
 
     @api.constrains("discount")
