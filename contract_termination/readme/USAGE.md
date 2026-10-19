@@ -5,3 +5,7 @@
    - The contract becomes read-only.
    - An alert banner shows the termination details.
 5. If necessary, you can **Update Termination Details** or **Cancel Contract Termination** to reactivate the contract.
+
+Terminated contracts are excluded from the *In progress* filter of the
+contract list, whatever their end date is, and a *Terminated* filter is
+available to list them.
