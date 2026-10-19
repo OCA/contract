@@ -201,6 +201,26 @@ class TestContractBase(BaseCommon):
 
 
 class TestContract(TestContractBase):
+    def test_recurring_next_date_empty_when_nothing_to_invoice(self):
+        """A fully invoiced contract keeps an empty next date.
+
+        Once the line is invoiced to its end date it carries no next date,
+        so with line-level recurrence the contract has nothing left to
+        invoice and must keep an empty header date instead of a synthesized
+        one -- otherwise the recurring-invoicing cron picks it up every day
+        and produces nothing.
+        """
+        self.assertTrue(self.contract.line_recurrence)
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "pre-paid"
+        self.acct_line.date_end = "2018-03-15"
+        for _i in range(3):
+            self.contract.recurring_create_invoice()
+        self.assertFalse(self.acct_line.recurring_next_date)
+        self.assertFalse(self.contract.recurring_next_date)
+        domain = self.contract._get_contracts_to_invoice_domain()
+        self.assertNotIn(self.contract, self.env["contract.contract"].search(domain))
+
     def _add_template_line(self, overrides=None):
         if overrides is None:
             overrides = {}
