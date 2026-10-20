@@ -81,6 +81,7 @@ Contributors
   - Bhavesh Heliconia
 
 - Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+- Mario Castillo López <@mcastillol14>
 
 Maintainers
 -----------
