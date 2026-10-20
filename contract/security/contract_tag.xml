@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2019 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_tag_access" model="ir.access">
+        <field name="name">contract.tag access</field>
+        <field name="model_id" ref="model_contract_tag" />
+        <field name="group_id" ref="account.group_account_invoice" />
+        <field name="operation">crud</field>
+    </record>
+    <record id="contract_tag_multi_company_rule" model="ir.access">
+        <field name="name">Contract tag multi-company</field>
+        <field name="model_id" ref="model_contract_tag" />
+        <field name="operation">crud</field>
+        <field name="domain">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>
