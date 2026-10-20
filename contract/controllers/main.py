@@ -10,17 +10,10 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class PortalContract(CustomerPortal):
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if "contract_count" in counters:
-            contract_model = request.env["contract.contract"]
-            contract_count = (
-                contract_model.search_count([])
-                if contract_model.has_access("read")
-                else 0
-            )
-            values["contract_count"] = contract_count
-        return values
+    def _prepare_portal_counter_values(self, counter):
+        if counter == "contract_count":
+            return "contract.contract", [], "read"
+        return super()._prepare_portal_counter_values(counter)
 
     def _contract_get_page_view_values(self, contract, access_token, **kwargs):
         values = {
