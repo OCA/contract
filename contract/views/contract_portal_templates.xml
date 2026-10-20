@@ -25,25 +25,6 @@
             </li>
         </xpath>
     </template>
-    <template
-        id="portal_my_home_contract"
-        name="Show Contracts"
-        inherit_id="portal.portal_my_home"
-        customize_show="True"
-        priority="30"
-    >
-        <div id="portal_common_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t
-                    t-set="icon"
-                    t-value="'/contract/static/src/img/contract_icon.svg'"
-                />
-                <t t-set="title">Contracts</t>
-                <t t-set="url" t-value="'/my/contracts'" />
-                <t t-set="placeholder_count" t-value="'contract_count'" />
-            </t>
-        </div>
-    </template>
     <template id="portal_my_contracts" name="My Contracts">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True" />

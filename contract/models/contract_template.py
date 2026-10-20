@@ -6,6 +6,8 @@
 # Copyright 2018 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from typing import ClassVar
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -17,28 +19,25 @@ class ContractTemplate(models.Model):
     _check_company_auto = True
 
     # Fields not synced to the actual contract
-    NO_SYNC = ["name", "partner_id", "company_id"]
+    NO_SYNC: ClassVar[list[str]] = ["name", "partner_id", "company_id"]
 
     # === Basic Info ===
 
     name = fields.Char(required=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         index=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
-    pricelist_id_domain = fields.Binary(
+    pricelist_id_domain = fields.Json(
         compute="_compute_pricelist_id_domain", readonly=True, store=False
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
     )
 
     # === Contract Settings ===
@@ -60,7 +59,6 @@ class ContractTemplate(models.Model):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         domain="[('type', '=', contract_type)]",
         compute="_compute_journal_id",
         store=True,

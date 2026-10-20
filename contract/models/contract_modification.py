@@ -12,7 +12,6 @@ class ContractModification(models.Model):
     date = fields.Date(required=True)
     description = fields.Text(required=True)
     contract_id = fields.Many2one(
-        string="Contract",
         comodel_name="contract.contract",
         required=True,
         ondelete="cascade",

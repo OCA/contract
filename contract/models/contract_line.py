@@ -5,6 +5,7 @@
 
 
 import warnings
+from typing import ClassVar
 
 from dateutil.relativedelta import relativedelta
 
@@ -26,7 +27,7 @@ _MONTHS_PER_RULE = {
 class ContractLine(models.Model):
     _name = "contract.line"
     _description = "Contract Line"
-    _inherit = [
+    _inherit: ClassVar[list[str]] = [
         "contract.template.line",
         "analytic.mixin",
     ]
@@ -35,7 +36,6 @@ class ContractLine(models.Model):
     sequence = fields.Integer()
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
-        string="Contract",
         required=True,
         index=True,
         bypass_search_access=True,
@@ -108,15 +108,18 @@ class ContractLine(models.Model):
                 or not line.recurring_next_date
             ):
                 continue
-            if line.date_start and line.recurring_next_date:
-                if line.date_start > line.recurring_next_date:
-                    raise ValidationError(
-                        self.env._(
-                            "You can't have a date of next invoice anterior "
-                            "to the start of the contract line '%s'",
-                            line.name,
-                        )
+            if (
+                line.date_start
+                and line.recurring_next_date
+                and line.date_start > line.recurring_next_date
+            ):
+                raise ValidationError(
+                    self.env._(
+                        "You can't have a date of next invoice anterior "
+                        "to the start of the contract line '%s'",
+                        line.name,
                     )
+                )
 
     @api.constrains(
         "date_start", "date_end", "last_date_invoiced", "recurring_next_date"
@@ -171,15 +174,13 @@ class ContractLine(models.Model):
     @api.constrains("date_start", "date_end")
     def _check_start_end_dates(self):
         for line in self.filtered("date_end"):
-            if line.date_start and line.date_end:
-                if line.date_start > line.date_end:
-                    raise ValidationError(
-                        self.env._(
-                            "Contract line '%s' start date can't be later than "
-                            "end date",
-                            line.name,
-                        )
+            if line.date_start and line.date_end and line.date_start > line.date_end:
+                raise ValidationError(
+                    self.env._(
+                        "Contract line '%s' start date can't be later than end date",
+                        line.name,
                     )
+                )
 
     @api.depends(
         "display_type",

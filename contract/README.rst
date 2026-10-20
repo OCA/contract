@@ -21,13 +21,13 @@ Recurring - Contracts Management
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/19.0/contract
+    :target: https://github.com/OCA/contract/tree/20.0/contract
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-19-0/contract-19-0-contract
+    :target: https://translation.odoo-community.org/projects/contract-20-0/contract-20-0-contract
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=19.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=20.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -61,22 +61,22 @@ Usage
 2. When creating a contract, fill fields for selecting the invoicing
    parameters:
 
-   - a journal
-   - a price list (optional)
+   -  a journal
+   -  a price list (optional)
 
 3. And add the lines to be invoiced with:
 
-   - the product with a description, a quantity and a price
-   - the recurrence parameters: interval (days, weeks, months, months
-     last day or years), start date, date of next invoice (automatically
-     computed, can be modified) and end date (optional)
-   - auto-price, for having a price automatically obtained from the
-     price list
-   - #START# - #END# or #INVOICEMONTHNAME# in the description field to
-     display the start/end date or the start month of the invoiced
-     period in the invoice line description
-   - pre-paid (invoice at period start) or post-paid (invoice at start
-     of next period)
+   -  the product with a description, a quantity and a price
+   -  the recurrence parameters: interval (days, weeks, months, months
+      last day or years), start date, date of next invoice
+      (automatically computed, can be modified) and end date (optional)
+   -  auto-price, for having a price automatically obtained from the
+      price list
+   -  #START# - #END# or #INVOICEMONTHNAME# in the description field to
+      display the start/end date or the start month of the invoiced
+      period in the invoice line description
+   -  pre-paid (invoice at period start) or post-paid (invoice at start
+      of next period)
 
 4. The "Generate Recurring Invoices from Contracts" cron runs daily to
    generate the invoices. If you are in debug mode, you can click on the
@@ -90,7 +90,7 @@ Usage
    price list and lines when creating a contract. To use it, just select
    the template on the contract and fields will be filled automatically.
 
-- Contracts appear in portal to following users in every contract:
+-  Contracts appear in portal to following users in every contract:
 
 |image|
 
@@ -98,15 +98,15 @@ Usage
 
 |image2|
 
-.. |image| image:: https://raw.githubusercontent.com/OCA/contract/19.0/contract/static/src/screenshots/portal-my.png
-.. |image1| image:: https://raw.githubusercontent.com/OCA/contract/19.0/contract/static/src/screenshots/portal-list.png
-.. |image2| image:: https://raw.githubusercontent.com/OCA/contract/19.0/contract/static/src/screenshots/portal-detail.png
+.. |image| image:: https://raw.githubusercontent.com/OCA/contract/20.0/contract/static/src/screenshots/portal-my.png
+.. |image1| image:: https://raw.githubusercontent.com/OCA/contract/20.0/contract/static/src/screenshots/portal-list.png
+.. |image2| image:: https://raw.githubusercontent.com/OCA/contract/20.0/contract/static/src/screenshots/portal-detail.png
 
 Known issues / Roadmap
 ======================
 
-- Recover states and others functional fields in Contracts.
-- Add recurrence flag at template level.
+-  Recover states and others functional fields in Contracts.
+-  Add recurrence flag at template level.
 
 Bug Tracker
 ===========
@@ -114,7 +114,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20contract%0Aversion:%2020.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -130,37 +130,37 @@ Authors
 Contributors
 ------------
 
-- Angel Moya <angel.moya@domatix.com>
+-  Angel Moya <angel.moya@domatix.com>
 
-- Dave Lasley <dave@laslabs.com>
+-  Dave Lasley <dave@laslabs.com>
 
-- Miquel Raïch <miquel.raich@eficent.com>
+-  Miquel Raïch <miquel.raich@eficent.com>
 
-- Souheil Bejaoui <souheil.bejaoui@acsone.eu>
+-  Souheil Bejaoui <souheil.bejaoui@acsone.eu>
 
-- Thomas Binsfeld <thomas.binsfeld@acsone.eu>
+-  Thomas Binsfeld <thomas.binsfeld@acsone.eu>
 
-- Guillaume Vandamme <guillaume.vandamme@acsone.eu>
+-  Guillaume Vandamme <guillaume.vandamme@acsone.eu>
 
-- Raphaël Reverdy <raphael.reverdy@akretion.com>
+-  Raphaël Reverdy <raphael.reverdy@akretion.com>
 
-- `Tecnativa <https://www.tecnativa.com>`__:
+-  `Tecnativa <https://www.tecnativa.com>`__:
 
-     - Pedro M. Baeza
-     - Carlos Dauden
-     - Vicent Cubells
-     - Rafael Blasco
-     - Víctor Martínez
+      -  Pedro M. Baeza
+      -  Carlos Dauden
+      -  Vicent Cubells
+      -  Rafael Blasco
+      -  Víctor Martínez
 
-- Iván Antón <ozono@ozonomultimedia.com>
+-  Iván Antón <ozono@ozonomultimedia.com>
 
-- `APSL <https://www.apsl.tech>`__:
+-  `APSL <https://www.apsl.tech>`__:
 
-     - Antoni Marroig <amarroig@apsl.net>
+      -  Antoni Marroig <amarroig@apsl.net>
 
-- `Heliconia Solutions Pvt. Ltd. <https://www.heliconia.io>`__
+-  `Heliconia Solutions Pvt. Ltd. <https://www.heliconia.io>`__
 
-     - Bhavesh Heliconia
+      -  Bhavesh Heliconia
 
 Maintainers
 -----------
@@ -175,6 +175,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/19.0/contract>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/20.0/contract>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.

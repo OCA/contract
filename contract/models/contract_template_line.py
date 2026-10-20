@@ -22,7 +22,6 @@ class ContractTemplateLine(models.Model):
     )
     contract_id = fields.Many2one(
         comodel_name="contract.template",
-        string="Contract",
         required=True,
         ondelete="cascade",
     )
@@ -35,7 +34,6 @@ class ContractTemplateLine(models.Model):
     # === Product & UOM ===
     product_id = fields.Many2one(
         "product.product",
-        string="Product",
         domain=[("active", "=", True)],
     )
     name = fields.Text(
