@@ -718,10 +718,12 @@ class ContractContract(models.Model):
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
             contracts_to_invoice = contracts.filtered(
-                lambda contract, comp=company: contract.company_id == comp
-                and (
-                    not contract.date_end
-                    or contract.recurring_next_date <= contract.date_end
+                lambda contract, comp=company: (
+                    contract.company_id == comp
+                    and (
+                        not contract.date_end
+                        or contract.recurring_next_date <= contract.date_end
+                    )
                 )
             ).with_company(company)
             if not contracts_to_invoice:
@@ -791,8 +793,9 @@ class ContractContract(models.Model):
             "mail.mail_activity_data_todo", raise_if_not_found=False
         )
         if activity_type and not self.activity_ids.filtered(
-            lambda a, t=activity_type: a.activity_type_id == t
-            and a.summary == "Recurring invoice failed"
+            lambda a, t=activity_type: (
+                a.activity_type_id == t and a.summary == "Recurring invoice failed"
+            )
         ):
             self.activity_schedule(
                 "mail.mail_activity_data_todo",
@@ -817,8 +820,9 @@ class ContractContract(models.Model):
         )
         if activity_type:
             stale = had_error.activity_ids.filtered(
-                lambda a, t=activity_type: a.activity_type_id == t
-                and a.summary == "Recurring invoice failed"
+                lambda a, t=activity_type: (
+                    a.activity_type_id == t and a.summary == "Recurring invoice failed"
+                )
             )
             if stale:
                 stale.action_feedback(

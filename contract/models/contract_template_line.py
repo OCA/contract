@@ -175,8 +175,9 @@ class ContractTemplateLine(models.Model):
     def _compute_automatic_price(self):
         """Reset automatic price if contract is switched to 'purchase'."""
         self.filtered(
-            lambda line: line.contract_id.contract_type == "purchase"
-            and line.automatic_price
+            lambda line: (
+                line.contract_id.contract_type == "purchase" and line.automatic_price
+            )
         ).automatic_price = False
 
     @api.depends("display_type", "note_invoicing_mode")

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="report_contract_document">
         <t t-call="web.external_layout">
@@ -14,8 +14,8 @@
                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat" /></p>
             </t>
             <div class="page">
-                <div class="oe_structure" id="oe_structure_contract" />
-                <div class="row" id="header_info">
+                <div id="oe_structure_contract" class="oe_structure" />
+                <div id="header_info" class="row">
                     <div class="col-3">
                         <strong>Responsible: </strong>
                         <p t-field="o.user_id" />
@@ -106,7 +106,7 @@
                                             <td colspan="99">
                                                 <strong class="mr16">Subtotal</strong>
                                                 <span
-                                                    t-esc="current_subtotal"
+                                                    t-out="current_subtotal"
                                                     t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                                 />
                                             </td>
@@ -117,7 +117,7 @@
                         </table>
                     </div>
                 </div>
-                <div id="modification_info" t-if="o.modification_ids">
+                <div t-if="o.modification_ids" id="modification_info">
                     <div class="col-12">
                         <p id="modification_info_p">
                             <strong>Modifications</strong>
@@ -161,7 +161,7 @@
                                 </td>
                                 <td class="text-end">
                                     <span
-                                        t-esc="total"
+                                        t-out="total"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                     />
                                 </td>
@@ -170,7 +170,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="row mt-4" id="note">
+                    <div id="note" class="row mt-4">
                         <div>
                             <strong>Notes: </strong>
                         </div>
