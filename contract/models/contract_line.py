@@ -4,12 +4,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-import warnings
-
-from dateutil.relativedelta import relativedelta
+from typing import ClassVar
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.tools import format_date
 
 # Months equivalent per recurrence unit (to normalise amounts to monthly)
 _MONTHS_PER_RULE = {
@@ -26,7 +26,7 @@ _MONTHS_PER_RULE = {
 class ContractLine(models.Model):
     _name = "contract.line"
     _description = "Contract Line"
-    _inherit = [
+    _inherit: ClassVar[list[str]] = [
         "contract.template.line",
         "analytic.mixin",
     ]
@@ -35,7 +35,6 @@ class ContractLine(models.Model):
     sequence = fields.Integer()
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
-        string="Contract",
         required=True,
         index=True,
         bypass_search_access=True,
@@ -59,26 +58,6 @@ class ContractLine(models.Model):
     def _compute_display_name(self):
         for rec in self:
             rec.display_name = f"{rec.date_start} - {rec.name}"
-
-    @api.model
-    def _compute_first_recurring_next_date(
-        self,
-        date_start,
-        recurring_invoicing_type,
-        recurring_rule_type,
-        recurring_interval,
-    ):
-        # deprecated method for backward compatibility
-        return self.get_next_invoice_date(
-            date_start,
-            recurring_invoicing_type,
-            self._get_default_recurring_invoicing_offset(
-                recurring_invoicing_type, recurring_rule_type
-            ),
-            recurring_rule_type,
-            recurring_interval,
-            max_date_end=False,
-        )
 
     def _get_analytic_distribution_arguments(self):
         self.ensure_one()
@@ -108,15 +87,18 @@ class ContractLine(models.Model):
                 or not line.recurring_next_date
             ):
                 continue
-            if line.date_start and line.recurring_next_date:
-                if line.date_start > line.recurring_next_date:
-                    raise ValidationError(
-                        self.env._(
-                            "You can't have a date of next invoice anterior "
-                            "to the start of the contract line '%s'",
-                            line.name,
-                        )
+            if (
+                line.date_start
+                and line.recurring_next_date
+                and line.date_start > line.recurring_next_date
+            ):
+                raise ValidationError(
+                    self.env._(
+                        "You can't have a date of next invoice anterior "
+                        "to the start of the contract line '%s'",
+                        line.name,
                     )
+                )
 
     @api.constrains(
         "date_start", "date_end", "last_date_invoiced", "recurring_next_date"
@@ -171,15 +153,13 @@ class ContractLine(models.Model):
     @api.constrains("date_start", "date_end")
     def _check_start_end_dates(self):
         for line in self.filtered("date_end"):
-            if line.date_start and line.date_end:
-                if line.date_start > line.date_end:
-                    raise ValidationError(
-                        self.env._(
-                            "Contract line '%s' start date can't be later than "
-                            "end date",
-                            line.name,
-                        )
+            if line.date_start and line.date_end and line.date_start > line.date_end:
+                raise ValidationError(
+                    self.env._(
+                        "Contract line '%s' start date can't be later than end date",
+                        line.name,
                     )
+                )
 
     @api.depends(
         "display_type",
@@ -204,12 +184,14 @@ class ContractLine(models.Model):
 
     def _prepare_invoice_line(self):
         self.ensure_one()
-        dates = self._get_period_to_invoice(
-            self.last_date_invoiced, self.recurring_next_date
+        period = (
+            self.next_period_date_start,
+            self.next_period_date_end,
+            self.recurring_next_date,
         )
-        name = self._insert_markers(dates[0], dates[1])
+        name = self._insert_markers(period[0], period[1])
         return {
-            "quantity": self._get_quantity_to_invoice(*dates),
+            "quantity": self._get_quantity_to_invoice(*period),
             "product_uom_id": self.uom_id.id,
             "discount": self.discount,
             "contract_line_id": self.id,
@@ -221,51 +203,12 @@ class ContractLine(models.Model):
             "product_id": self.product_id.id,
         }
 
-    def _get_period_to_invoice(
-        self, last_date_invoiced, recurring_next_date, stop_at_date_end=True
-    ):
-        # TODO this method can now be removed, since
-        # TODO self.next_period_date_start/end have the same values
-        self.ensure_one()
-        if not recurring_next_date:
-            return False, False, False
-        first_date_invoiced = (
-            last_date_invoiced + relativedelta(days=1)
-            if last_date_invoiced
-            else self.date_start
-        )
-        last_date_invoiced = self.get_next_period_date_end(
-            first_date_invoiced,
-            self.recurring_rule_type,
-            self.recurring_interval,
-            max_date_end=(self.date_end if stop_at_date_end else False),
-            next_invoice_date=recurring_next_date,
-            recurring_invoicing_type=self.recurring_invoicing_type,
-            recurring_invoicing_offset=self.recurring_invoicing_offset,
-        )
-        return first_date_invoiced, last_date_invoiced, recurring_next_date
-
-    def _translate_marker_month_name(self, month_name):
-        months = {
-            "01": self.env._("January"),
-            "02": self.env._("February"),
-            "03": self.env._("March"),
-            "04": self.env._("April"),
-            "05": self.env._("May"),
-            "06": self.env._("June"),
-            "07": self.env._("July"),
-            "08": self.env._("August"),
-            "09": self.env._("September"),
-            "10": self.env._("October"),
-            "11": self.env._("November"),
-            "12": self.env._("December"),
-        }
-        return months[month_name]
-
     def _insert_markers(self, first_date_invoiced, last_date_invoiced):
         self.ensure_one()
         lang_obj = self.env["res.lang"]
-        lang = lang_obj.search([("code", "=", self.contract_id.partner_id.lang)])
+        lang = lang_obj.search(
+            Domain("code", "=", self.contract_id.partner_id.lang), limit=1
+        )
         date_format = lang.date_format or "%m/%d/%Y"
         name = self.name
         # A line without a period (e.g. no next date) leaves its markers empty
@@ -279,20 +222,14 @@ class ContractLine(models.Model):
         )
         month_name = ""
         if first_date_invoiced:
-            month_name = self.with_context(lang=lang.code)._translate_marker_month_name(
-                first_date_invoiced.strftime("%m")
+            month_name = format_date(
+                self.env,
+                first_date_invoiced,
+                date_format="MMMM",
+                lang_code=lang.code,
             )
         name = name.replace("#INVOICEMONTHNAME#", month_name)
         return name
-
-    def _update_recurring_next_date(self):
-        warnings.warn(
-            "Deprecated _update_recurring_next_date, "
-            "use _update_last_date_invoiced instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._update_last_date_invoiced()
 
     def _update_last_date_invoiced(self):
         for rec in self:
