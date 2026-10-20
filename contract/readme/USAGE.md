@@ -16,6 +16,8 @@
       period in the invoice line description
     - pre-paid (invoice at period start) or post-paid (invoice at start
       of next period)
+    - an invoicing offset, to move the invoice away from that date (see
+      below)
 4.  The "Generate Recurring Invoices from Contracts" cron runs daily to
     generate the invoices. If you are in debug mode, you can click on
     the invoice creation button.
@@ -36,3 +38,31 @@
 ![image](../static/src/screenshots/portal-list.png)
 
 ![image](../static/src/screenshots/portal-detail.png)
+
+## Shifting the invoice date
+
+*Invoicing type* says whether a period is billed at its start (pre-paid)
+or after it has run (post-paid). *Invoicing offset* moves that date, in
+the unit chosen next to it.
+
+A positive offset delays the invoice. A negative one issues it earlier,
+which is how you invoice up front: set `-1` with *Month(s)* on a pre-paid
+monthly line and the invoice for March is raised on 1 February.
+
+For a period running from 1 to 31 March, billed monthly:
+
+| Invoicing type | Offset | Unit    | Invoice issued |
+|----------------|-------:|---------|----------------|
+| Pre-paid       |      0 | Day(s)  | 1 March        |
+| Pre-paid       |     -1 | Month(s)| 1 February     |
+| Pre-paid       |     15 | Day(s)  | 16 March       |
+| Post-paid      |      0 | Day(s)  | 1 April        |
+| Post-paid      |      2 | Week(s) | 15 April       |
+| Post-paid      |    -10 | Day(s)  | 22 March       |
+
+Post-paid already includes the day after the period ends, which is why an
+offset of 0 lands on 1 April rather than 31 March.
+
+The quickest way to check a setting is to watch *Date of Next Invoice* on
+the line. It recomputes as soon as the offset changes, so the effect is
+visible before anything is invoiced.
