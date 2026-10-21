@@ -29,6 +29,8 @@
     just select the template on the contract and fields will be filled
     automatically.
 
+- If you are an Accounting Administrator, you can merge Contracts together by selecting them, and then Actions > Merge.
+  Note that all the selected contracts must be for the same partner.
 - Contracts appear in portal to following users in every contract:
 
 ![image](../static/src/screenshots/portal-my.png)
