@@ -20,6 +20,18 @@ msgstr ""
 "X-Generator: Weblate 5.15.2\n"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid "%(type_label)s generation failed"
+msgstr "Échec de la génération récurrente : %(type_label)s"
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid "%(type_label)s generation succeeded"
+msgstr "Génération récurrente réussie : %(type_label)s"
+
+#. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
 msgid ""
 "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
@@ -227,6 +239,11 @@ msgstr ""
 "                            </span>"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "<span> on </span>"
+msgstr "<span> le </span>"
+
+#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<span>Contract </span>"
 msgstr "<span>Contrat </span>"
@@ -367,15 +384,6 @@ msgstr "<strong>Quantité</strong>"
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Recurring Items</strong>"
 msgstr "<strong>Eléments récurrents</strong>"
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
-msgid ""
-"<strong>Recurring invoice generation failed</strong>\n"
-"                            <span> on </span>"
-msgstr ""
-"<strong>Échec de la génération des factures récurrentes</strong>\n"
-"                            <span> le </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
@@ -981,9 +989,9 @@ msgid "Email Contract Template"
 msgstr "Modèle de mail de Contrat"
 
 #. module: contract
-#: model:ir.model.fields,help:contract.field_contract_contract__invoice_generation_error
-msgid "Error message from the most recent failed scheduled invoicing run."
-msgstr "Message d'erreur de la dernière facturation planifiée en échec."
+#: model:ir.model.fields,help:contract.field_contract_contract__last_generation_error
+msgid "Error message from the most recent failed scheduled generation run."
+msgstr "Message d'erreur de la dernière génération planifiée en échec."
 
 #. module: contract
 #. odoo-python
@@ -1030,6 +1038,11 @@ msgstr "Icône Font awesome e.g. fa-tasks"
 #: model:ir.actions.server,name:contract.contract_cron_for_invoice_ir_actions_server
 msgid "Generate Recurring Invoices from Contracts"
 msgstr "Générer les factures récurrentes pour les contrats"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "Generation Failed"
+msgstr "Échec de la génération"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__generation_type
@@ -1123,19 +1136,14 @@ msgid "Invoice Every"
 msgstr "Facturer tous les"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_generation_error
-msgid "Invoice Generation Error"
-msgstr "Erreur de génération des factures"
+#: model:ir.model.fields,field_description:contract.field_contract_contract__last_generation_error
+msgid "Last Generation Error"
+msgstr "Dernière erreur de génération"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_generation_error_date
-msgid "Invoice Generation Error Date"
-msgstr "Date de l'erreur de génération des factures"
-
-#. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Invoice Generation Failed"
-msgstr "Échec de la génération des factures"
+#: model:ir.model.fields,field_description:contract.field_contract_contract__last_generation_error_date
+msgid "Last Generation Error Date"
+msgstr "Date de la dernière erreur de génération"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_invoice_created
@@ -1254,9 +1262,9 @@ msgstr "Dernière mise à jour le"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_tree_view
-msgid "Last scheduled invoicing failed - click for details"
+msgid "Last scheduled generation failed - click for details"
 msgstr ""
-"La dernière facturation planifiée a échoué - cliquez pour voir les détails"
+"La dernière génération planifiée a échoué - cliquez pour voir les détails"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1925,6 +1933,11 @@ msgstr "par contrat"
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "e.g. Contract XYZ"
 msgstr "par ex. Contrat XYZ"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
+msgid "generation failed"
+msgstr ": échec de la génération"
 
 #. module: contract
 #. odoo-python

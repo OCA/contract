@@ -28,3 +28,5 @@
 
 - [Heliconia Solutions Pvt. Ltd.](https://www.heliconia.io)
   > - Bhavesh Heliconia
+
+- Stéphane Mangin \<<stephane.mangin@acsone.eu>\>

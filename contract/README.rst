@@ -162,6 +162,8 @@ Contributors
 
      - Bhavesh Heliconia
 
+- Stéphane Mangin <stephane.mangin@acsone.eu>
+
 Maintainers
 -----------
 

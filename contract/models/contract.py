@@ -147,12 +147,12 @@ class ContractContract(models.Model):
     )
 
     # === Cron status ===
-    invoice_generation_error = fields.Text(
+    last_generation_error = fields.Text(
         readonly=True,
         copy=False,
-        help="Error message from the most recent failed scheduled invoicing run.",
+        help="Error message from the most recent failed scheduled generation run.",
     )
-    invoice_generation_error_date = fields.Datetime(
+    last_generation_error_date = fields.Datetime(
         readonly=True,
         copy=False,
     )
@@ -744,7 +744,7 @@ class ContractContract(models.Model):
           transaction for the remaining contracts.
 
         Failed contracts record the reason in
-        :attr:`invoice_generation_error`, are notified via chatter and a
+        :attr:`last_generation_error`, are notified via chatter and a
         TODO activity, and are cleared automatically on the next successful
         run.
         """
@@ -777,7 +777,7 @@ class ContractContract(models.Model):
             try:
                 with self.env.cr.savepoint():
                     _recurring_create_func(contracts_to_invoice, date_ref)
-                contracts_to_invoice._clear_invoice_generation_error()
+                contracts_to_invoice._clear_generation_error()
             except Exception:
                 _logger.warning(
                     "Batched %s generation failed for %d contract(s) in %s; "
@@ -792,12 +792,33 @@ class ContractContract(models.Model):
                     try:
                         with self.env.cr.savepoint():
                             _recurring_create_func(contract, date_ref)
-                        contract._clear_invoice_generation_error()
+                        contract._clear_generation_error()
                     except Exception as exc:
-                        contract._record_invoice_generation_error(exc, create_type)
+                        contract._record_generation_error(exc, create_type)
         return True
 
-    def _record_invoice_generation_error(self, exc, create_type):
+    def _get_generation_type_label(self, create_type):
+        labels = dict(self._fields["generation_type"]._description_selection(self.env))
+        if create_type not in labels:
+            raise ValueError(f"Unknown generation type: {create_type}")
+        return labels[create_type]
+
+    def _get_generation_error_summary(self, create_type):
+        return f"Recurring {create_type} failed"
+
+    def _get_generation_error_message(self, create_type):
+        return self.env._(
+            "%(type_label)s generation failed",
+            type_label=self._get_generation_type_label(create_type),
+        )
+
+    def _get_generation_success_message(self, create_type):
+        return self.env._(
+            "%(type_label)s generation succeeded",
+            type_label=self._get_generation_type_label(create_type),
+        )
+
+    def _record_generation_error(self, exc, create_type):
         """Flag the contract, log, post chatter, and schedule a TODO activity.
 
         Chatter and activity creation are de-duplicated so that a contract
@@ -806,10 +827,12 @@ class ContractContract(models.Model):
         """
         self.ensure_one()
         message = f"{type(exc).__name__}: {exc}"
+        summary = self._get_generation_error_summary(create_type)
+        title = self._get_generation_error_message(create_type)
         self.write(
             {
-                "invoice_generation_error": message,
-                "invoice_generation_error_date": fields.Datetime.now(),
+                "last_generation_error": message,
+                "last_generation_error_date": fields.Datetime.now(),
             }
         )
         # Use ``exc_info=exc`` rather than ``_logger.exception`` so the
@@ -828,56 +851,58 @@ class ContractContract(models.Model):
         last_body = self.message_ids[:1].body or ""
         if message not in last_body:
             self.message_post(
-                body=Markup(
-                    "<b>⚠ Recurring invoice generation failed</b><br/><pre>%s</pre>"
-                )
-                % message,
+                body=Markup("<b>⚠ %s</b><br/><pre>%s</pre>") % (title, message),
             )
         # One open todo per failure; do not duplicate while it is pending.
         activity_type = self.env.ref(
             "mail.mail_activity_data_todo", raise_if_not_found=False
         )
         if activity_type and not self.activity_ids.filtered(
-            lambda a, t=activity_type: a.activity_type_id == t
-            and a.summary == "Recurring invoice failed"
+            lambda a, t=activity_type: a.activity_type_id == t and a.summary == summary
         ):
             self.activity_schedule(
                 "mail.mail_activity_data_todo",
-                summary="Recurring invoice failed",
-                note=Markup("<pre>%s</pre>") % message,
+                summary=summary,
+                note=Markup("<p>%s</p><pre>%s</pre>") % (title, message),
                 user_id=(self.user_id or self.env.user).id,
             )
 
-    def _clear_invoice_generation_error(self):
+    def _clear_generation_error(self):
         """Clear the error flag and resolve the related activity."""
-        had_error = self.filtered("invoice_generation_error")
+        had_error = self.filtered("last_generation_error")
         if not had_error:
             return
         had_error.write(
             {
-                "invoice_generation_error": False,
-                "invoice_generation_error_date": False,
+                "last_generation_error": False,
+                "last_generation_error_date": False,
             }
         )
         activity_type = self.env.ref(
             "mail.mail_activity_data_todo", raise_if_not_found=False
         )
         if activity_type:
-            stale = had_error.activity_ids.filtered(
-                lambda a, t=activity_type: a.activity_type_id == t
-                and a.summary == "Recurring invoice failed"
-            )
-            if stale:
-                stale.action_feedback(
-                    feedback="Recurring invoice generated successfully."
+            for contract in had_error:
+                summary = contract._get_generation_error_summary(
+                    contract.generation_type
                 )
+                stale = contract.activity_ids.filtered(
+                    lambda a, t=activity_type, s=summary: a.activity_type_id == t
+                    and a.summary == s
+                )
+                if stale:
+                    stale.action_feedback(
+                        feedback=contract._get_generation_success_message(
+                            contract.generation_type
+                        )
+                    )
 
-    def action_clear_invoice_generation_error(self):
-        """Manually dismiss the invoice-generation error flag."""
-        self._clear_invoice_generation_error()
+    def action_clear_generation_error(self):
+        """Manually dismiss the generation error flag."""
+        self._clear_generation_error()
         return True
 
-    def action_view_invoice_generation_error(self):
+    def action_view_generation_error(self):
         """Open the contract form so the user can inspect the error."""
         self.ensure_one()
         return {
