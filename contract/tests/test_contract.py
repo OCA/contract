@@ -535,6 +535,45 @@ class TestContract(TestContractBase):
             "Should not create a new invoice after the last one",
         )
 
+    def test_contract_last_date_invoiced(self):
+        """contract.contract.last_date_invoiced aggregates max of line values,
+        excluding cancelled lines and pure section/note rows."""
+        self.assertFalse(self.acct_line.last_date_invoiced)
+        self.assertFalse(self.contract.last_date_invoiced)
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-01-31"))
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        line2 = self.env["contract.line"].create(
+            dict(self.line_vals, recurring_next_date="2018-04-15")
+        )
+        line2.last_date_invoiced = "2018-03-31"
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-03-31"))
+        line2.is_canceled = True
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "display_type": "line_section",
+                "name": "Header",
+            }
+        )
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+
+    def test_contract_tag_default_color(self):
+        """A tag created without a color gets a random one from the palette."""
+        tag = self.env["contract.tag"].create({"name": "Test tag"})
+        self.assertIn(tag.color, range(1, 12))
+
+    def test_contract_line_display_name(self):
+        """The line display name is prefixed with its start date."""
+        self.assertEqual(
+            self.acct_line.display_name,
+            f"{self.acct_line.date_start} - {self.acct_line.name}",
+        )
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
@@ -570,6 +609,15 @@ class TestContract(TestContractBase):
             self.acct_line.write(
                 {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
             )
+
+    def test_check_contract_start_end_dates(self):
+        """Setting date_end earlier than date_start on the contract record
+        itself must raise a validation error."""
+        contract = self.env["contract.contract"].create(
+            {"name": "Date check", "partner_id": self.partner.id}
+        )
+        with self.assertRaises(ValidationError):
+            contract.write({"date_start": "2025-01-01", "date_end": "2024-12-31"})
 
     def test_onchange_contract_template_id(self):
         """It should change the contract values to match the template."""
@@ -1189,9 +1237,9 @@ class TestContract(TestContractBase):
             len((good_a | good_b).mapped("contract_line_ids")),
         )
         # The failing contract is flagged, with chatter and an activity.
-        self.assertTrue(bad.invoice_generation_error)
-        self.assertIn("boom", bad.invoice_generation_error)
-        self.assertTrue(bad.invoice_generation_error_date)
+        self.assertTrue(bad.last_generation_error)
+        self.assertIn("boom", bad.last_generation_error)
+        self.assertTrue(bad.last_generation_error_date)
         self.assertEqual(
             len(
                 bad.activity_ids.filtered(
@@ -1201,8 +1249,8 @@ class TestContract(TestContractBase):
             1,
         )
         # The healthy ones are not flagged.
-        self.assertFalse(good_a.invoice_generation_error)
-        self.assertFalse(good_b.invoice_generation_error)
+        self.assertFalse(good_a.last_generation_error)
+        self.assertFalse(good_b.last_generation_error)
 
     def test_cron_clears_error_on_recovery(self):
         """A successful run clears the error flag and resolves the activity."""
@@ -1213,18 +1261,15 @@ class TestContract(TestContractBase):
         # Simulate a previous failure so the contract is flagged. Mute the
         # expected ERROR log -- ``checklog-odoo`` would otherwise fail CI.
         with mute_logger("odoo.addons.contract.models.contract"):
-            bad._record_invoice_generation_error(
-                RuntimeError("earlier failure"), "invoice"
-            )
-        self.assertTrue(bad.invoice_generation_error)
+            bad._record_generation_error(RuntimeError("earlier failure"), "invoice")
+        self.assertTrue(bad.last_generation_error)
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
         )
         self.assertEqual(len(open_activities), 1)
         # A clean cron run later should clear the flag.
         self.env["contract.contract"].cron_recurring_create_invoice()
-        self.assertFalse(bad.invoice_generation_error)
-        self.assertFalse(bad.invoice_generation_error)
+        self.assertFalse(bad.last_generation_error)
         self.assertFalse(
             bad.activity_ids.filtered(lambda a: a.summary == "Recurring invoice failed")
         )
@@ -1260,7 +1305,7 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(len(open_activities), 1, "Activity must not duplicate")
         relevant_chatter = bad.message_ids.filtered(
-            lambda m: m.body and "Recurring invoice generation failed" in m.body
+            lambda m: m.body and "Invoice generation failed" in m.body
         )
         self.assertEqual(len(relevant_chatter), 1, "Chatter must not duplicate")
 
@@ -1288,7 +1333,7 @@ class TestContract(TestContractBase):
             "A contract past its end date must not be invoiced",
         )
         self.assertFalse(
-            contracts.filtered("invoice_generation_error"),
+            contracts.filtered("last_generation_error"),
             "Skipping is not failing, so nothing should be flagged",
         )
 
@@ -1327,23 +1372,26 @@ class TestContract(TestContractBase):
             "Batch should include all healthy contracts",
         )
 
-    def test_action_clear_invoice_generation_error(self):
+    def test_action_clear_generation_error(self):
         """The dismiss button clears the flag without running the cron."""
         bad = self.contract
         with mute_logger("odoo.addons.contract.models.contract"):
-            bad._record_invoice_generation_error(RuntimeError("oops"), "invoice")
-        self.assertTrue(bad.invoice_generation_error)
-        bad.action_clear_invoice_generation_error()
-        self.assertFalse(bad.invoice_generation_error)
-        self.assertFalse(bad.invoice_generation_error)
+            bad._record_generation_error(RuntimeError("oops"), "invoice")
+        self.assertTrue(bad.last_generation_error)
+        bad.action_clear_generation_error()
+        self.assertFalse(bad.last_generation_error)
 
-    def test_action_view_invoice_generation_error(self):
+    def test_action_view_generation_error(self):
         """The error smart-action opens the contract form view."""
-        action = self.contract.action_view_invoice_generation_error()
+        action = self.contract.action_view_generation_error()
         self.assertEqual(action["type"], "ir.actions.act_window")
         self.assertEqual(action["res_model"], "contract.contract")
         self.assertEqual(action["res_id"], self.contract.id)
         self.assertEqual(action["view_mode"], "form")
+
+    def test_generation_type_label_rejects_unknown_type(self):
+        with self.assertRaises(ValueError):
+            self.contract._get_generation_type_label("unknown")
 
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = "2018-01-05"
