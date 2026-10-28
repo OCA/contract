@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_contract_configurator_form" model="ir.ui.view">
+        <field name="model">product.contract.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="product_contract_configurator_form">
+                <group>
+                    <field name="product_id" invisible="1" />
+                    <field name="partner_id" invisible="1" />
+                    <field name="contract_template_id" invisible="1" />
+                    <group colspan="2">
+                        <field name="product_uom_qty" />
+                    </group>
+                </group>
+                <group name="recurrence_info">
+                    <group string="Duration">
+                        <label for="recurrence_number" />
+                        <div class="o_row">
+                            <field
+                                name="recurrence_number"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                            <field
+                                name="recurrence_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                        </div>
+                        <field name="contract_start_date_method" />
+                    </group>
+                    <group string="Invoicing">
+                        <label for="recurring_interval" string="Invoice Every" />
+                        <div class="o_row">
+                            <field
+                                name="recurring_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                            <field
+                                name="recurring_rule_type"
+                                class="oe_inline"
+                                nolabel="1"
+                            />
+                        </div>
+                        <field name="recurring_invoicing_type" />
+                    </group>
+                </group>
+
+                <group string="Renewal">
+                    <group>
+                        <field name="is_auto_renew" />
+                    </group>
+                    <group invisible="is_auto_renew == False">
+                        <label for="auto_renew_interval" />
+                        <div>
+                            <field
+                                name="auto_renew_interval"
+                                class="oe_inline"
+                                nolabel="1"
+                                required="is_auto_renew == True"
+                            />
+                            <field
+                                name="auto_renew_rule_type"
+                                class="oe_inline"
+                                nolabel="1"
+                                required="is_auto_renew == True"
+                            />
+                        </div>
+                    </group>
+                </group>
+                <group
+                    string="Dates"
+                    invisible="contract_start_date_method != 'manual'"
+                >
+                    <group>
+                        <field
+                            name="date_start"
+                            required="contract_start_date_method == 'manual'"
+                        />
+                    </group>
+                    <group>
+                        <field name="date_end" />
+                    </group>
+                </group>
+                <group string="Contract">
+                    <group>
+                        <field
+                            name="contract_id"
+                            options='{"no_create": True}'
+                            domain="['|',('contract_template_id','=',contract_template_id), ('contract_template_id','=',False), ('partner_id','=',partner_id), ('is_terminated','=',False),
+                        ]"
+                        />
+                    </group>
+                    <group>
+                        <field
+                            name="contract_line_id"
+                            domain="[('contract_id','=',contract_id)]"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        string="Ok"
+                        class="btn-primary"
+                        special="save"
+                        data-hotkey="q"
+                    />
+                    <button
+                        string="Cancel"
+                        class="btn-secondary"
+                        special="cancel"
+                        data-hotkey="x"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_contract_configurator_action" model="ir.actions.act_window">
+        <field name="name">Configure a contract</field>
+        <field name="res_model">product.contract.configurator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="product_contract_configurator_form" />
+    </record>
+</odoo>
