@@ -371,8 +371,8 @@ CRITERIA_ALLOWED_DICT = {
 }
 criteria_allowed_dict = {}
 
-for c in CRITERIA_ALLOWED_DICT:
-    _add(criteria_allowed_dict, c, CRITERIA_ALLOWED_DICT[c])
+for c, v in CRITERIA_ALLOWED_DICT.items():
+    _add(criteria_allowed_dict, c, v)
 
 
 def compute_when(date_start, date_end):

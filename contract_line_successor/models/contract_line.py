@@ -22,7 +22,6 @@ class ContractLine(models.Model):
     )
     successor_contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Successor Contract Line",
         required=False,
         readonly=True,
         index=True,
@@ -32,7 +31,6 @@ class ContractLine(models.Model):
     )
     predecessor_contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Predecessor Contract Line",
         required=False,
         readonly=True,
         index=True,
@@ -162,11 +160,14 @@ class ContractLine(models.Model):
     @api.constrains("successor_contract_line_id", "date_end")
     def _check_overlap_successor(self):
         for rec in self:
-            if rec.date_end and rec.successor_contract_line_id:
-                if rec.date_end >= rec.successor_contract_line_id.date_start:
-                    raise ValidationError(
-                        self.env._("Contract line and its successor overlapped")
-                    )
+            if (
+                rec.date_end
+                and rec.successor_contract_line_id
+                and rec.date_end >= rec.successor_contract_line_id.date_start
+            ):
+                raise ValidationError(
+                    self.env._("Contract line and its successor overlapped")
+                )
 
     @api.constrains("predecessor_contract_line_id", "date_start")
     def _check_overlap_predecessor(self):
@@ -174,11 +175,11 @@ class ContractLine(models.Model):
             if (
                 rec.predecessor_contract_line_id
                 and rec.predecessor_contract_line_id.date_end
+                and rec.date_start <= rec.predecessor_contract_line_id.date_end
             ):
-                if rec.date_start <= rec.predecessor_contract_line_id.date_end:
-                    raise ValidationError(
-                        self.env._("Contract line and its predecessor overlapped")
-                    )
+                raise ValidationError(
+                    self.env._("Contract line and its predecessor overlapped")
+                )
 
     @api.depends(
         "is_canceled",
