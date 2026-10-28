@@ -1,7 +1,7 @@
 # Copyright 2020 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ContractContract(models.Model):
@@ -14,3 +14,8 @@ class ContractContract(models.Model):
         if self.transmit_method_id:
             invoice_vals["transmit_method_id"] = self.transmit_method_id.id
         return invoice_vals
+
+    @api.onchange("contract_template_id")
+    def _onchange_contract_template_id(self):
+        self.transmit_method_id = self.contract_template_id.transmit_method_id
+        return super()._onchange_contract_template_id()
