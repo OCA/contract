@@ -23,8 +23,9 @@ class SaleOrderLine(models.Model):
     def _prepare_contract_line_values(
         self, contract, predecessor_contract_line_id=False
     ):
+        # positional: other modules name the second argument differently
         values = super()._prepare_contract_line_values(
-            contract, predecessor_contract_line_id=predecessor_contract_line_id
+            contract, predecessor_contract_line_id
         )
         if self._is_contract_minimum_term():
             values.update({fname: self[fname] for fname in MINIMUM_TERM_FIELDS})
