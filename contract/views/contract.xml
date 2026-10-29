@@ -105,6 +105,7 @@
                     <group name="main">
                         <group>
                             <field name="commercial_partner_id" invisible="1" />
+                            <field name="pricelist_id_domain" invisible="1" />
                             <field
                                 name="partner_id"
                                 required="1"
@@ -113,6 +114,7 @@
                             <field
                                 name="pricelist_id"
                                 attrs="{'readonly': [('is_terminated','=',True)]}"
+                                domain="pricelist_id_domain"
                             />
                             <field
                                 name="payment_term_id"
