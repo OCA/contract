@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2025 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_line_form_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="state" widget="statusbar" />
+            </header>
+            <xpath expr="//page[@name='renewal']" position="inside">
+                <group>
+                    <field
+                        name="termination_notice_date"
+                        readonly="True"
+                        invisible="not is_auto_renew"
+                    />
+                    <field name="manual_renew_needed" invisible="not is_auto_renew" />
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Predecessor &amp; Successor Lines"
+                    groups="base.group_no_one"
+                    invisible="display_type"
+                >
+                    <group>
+                        <field name="predecessor_contract_line_id" />
+                        <field name="successor_contract_line_id" />
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute name="required">is_auto_renew</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="contract_line_tree_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="is_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_plan_successor_allowed" column_invisible="True" />
+                <field name="is_stop_allowed" column_invisible="True" />
+                <field name="is_cancel_allowed" column_invisible="True" />
+                <field name="is_un_cancel_allowed" column_invisible="True" />
+                <field name="is_auto_renew" column_invisible="True" />
+                <field name="is_canceled" column_invisible="True" />
+                <button
+                    name="action_plan_successor"
+                    title="Plan Start"
+                    type="object"
+                    icon="calendar_today"
+                    icon_class="text-success"
+                    invisible="not is_plan_successor_allowed"
+                />
+                <button
+                    name="action_stop_plan_successor"
+                    title="Stop Plan Successor"
+                    type="object"
+                    icon="pause"
+                    icon_class="text-muted"
+                    invisible="not is_stop_plan_successor_allowed"
+                />
+                <button
+                    name="action_stop"
+                    title="Stop"
+                    type="object"
+                    icon="stop"
+                    icon_class="text-danger"
+                    invisible="not is_stop_allowed"
+                />
+                <button
+                    name="cancel"
+                    title="Cancel"
+                    type="object"
+                    icon="block"
+                    icon_class="text-danger"
+                    confirm="Are you sure you want to cancel this line"
+                    invisible="not is_cancel_allowed"
+                />
+                <button
+                    name="action_uncancel"
+                    title="Un-cancel"
+                    type="object"
+                    icon="block"
+                    icon_class="text-success"
+                    invisible="not is_un_cancel_allowed"
+                />
+                <button
+                    name="renew"
+                    title="Renew"
+                    type="object"
+                    icon="fast_forward"
+                    icon_class="text-success"
+                    groups="base.group_no_one"
+                    invisible="not is_auto_renew"
+                />
+            </xpath>
+            <!-- Colour the contract lines by lifecycle state, mirroring the
+                 contract list and Odoo's own draft/expired conventions:
+                 upcoming -> info (blue, like a draft order), to renew / about to
+                 close -> primary (purple: needs attention, but not an error),
+                 closed / canceled -> muted. An in-progress line keeps the normal
+                 colour. Warning (orange) is deliberately left free so it keeps
+                 meaning a genuine problem, as it does on the contract itself. -->
+            <xpath expr="//list" position="inside">
+                <field name="state" column_invisible="1" />
+            </xpath>
+            <xpath expr="//list" position="attributes">
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Apply the same lifecycle-state colours to the contract lines shown on
+         the contract form (the recurring-line lists), so the form matches the
+         standalone list. -->
+    <record id="contract_contract_form_line_colors" model="ir.ui.view">
+        <field name="name">contract.contract.form (line state colours)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='contract_line_fixed_ids']//list"
+                position="attributes"
+            >
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='contract_line_ids']//list"
+                position="attributes"
+            >
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="contract_line_report_tree_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_report_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="is_auto_renew" optional="hide" />
+                <field name="is_canceled" optional="hide" />
+                <!-- State is the reason for the row colour, so it is worth a
+                     column of its own here, as a badge like Odoo uses on
+                     invoices and sale orders. -->
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'upcoming'"
+                    decoration-primary="state in ('to-renew', 'upcoming-close')"
+                    decoration-muted="state in ('closed', 'canceled')"
+                />
+            </xpath>
+            <!-- Same lifecycle colours as the contract form and the standalone
+                 contract line list. -->
+            <xpath expr="//list" position="attributes">
+                <attribute
+                    name="decoration-muted"
+                >state in ('closed', 'canceled')</attribute>
+                <attribute name="decoration-info">state == 'upcoming'</attribute>
+                <attribute
+                    name="decoration-primary"
+                >state in ('to-renew', 'upcoming-close')</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="contract_line_search_view" model="ir.ui.view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator" position="after">
+                <filter
+                    string="Canceled"
+                    name="is_canceled"
+                    domain="[('is_canceled', '=', True)]"
+                />
+                <filter
+                    string="Auto-renew"
+                    name="is_auto_renew"
+                    domain="[('is_auto_renew', '=', True)]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
