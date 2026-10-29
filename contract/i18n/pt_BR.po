@@ -205,8 +205,8 @@ msgstr ""
 "<span attrs=\"{'invisible': [('contract_to_invoice_count', '&gt;', 1)]}\">\n"
 "                                contrato para faturar\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible': ["
-"('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
+"                            <span attrs=\"{'invisible': "
+"[('contract_to_invoice_count', '&lt;=', 1)]}\">\n"
 "                                contratos para faturar\n"
 "                            </span>"
 
@@ -834,8 +834,8 @@ msgid ""
 msgstr ""
 "Linha de contrato para <strong>%(product)s</strong>\n"
 "                            encerrada: <br/>\n"
-"                            - <strong>Fim</strong>: %(old_end)s -- %(new_end)"
-"s\n"
+"                            - <strong>Fim</strong>: %(old_end)s -- "
+"%(new_end)s\n"
 "                            "
 
 #. module: contract
@@ -1031,6 +1031,13 @@ msgstr "Criado em"
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__currency_id
 msgid "Currency"
 msgstr "Moeda"
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/models/abstract_contract.py:0
+#, python-format
+msgid "Currency should be same for the Journal and the Pricelist in a Contract"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_abstract_contract_line__note_invoicing_mode__custom
@@ -1913,6 +1920,13 @@ msgstr "Preço Unitário"
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Pricelist"
 msgstr "Lista de preço"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_abstract_contract__pricelist_id_domain
+#: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id_domain
+#: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id_domain
+msgid "Pricelist Id Domain"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_abstract_contract_line__product_id
