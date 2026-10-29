@@ -31,6 +31,8 @@ addon | version | maintainers | summary
 [contract_invoice_manually](contract_invoice_manually/) | 18.0.1.0.1 |  | Option on contracts to invoice them manually
 [contract_invoice_start_end_dates](contract_invoice_start_end_dates/) | 18.0.1.0.0 | <a href='https://github.com/florian-dacosta'><img src='https://github.com/florian-dacosta.png' width='32' height='32' style='border-radius:50%;' alt='florian-dacosta'/></a> | Contract Invoice Start End Dates
 [contract_layout_category_hide_detail](contract_layout_category_hide_detail/) | 18.0.1.0.0 |  | Hide details for sections in contracts and their reports, portal and generated invoices
+[contract_line_defer](contract_line_defer/) | 18.0.1.0.0 |  | Defer Contract Lines to avoid invoicing while start date unknown
+[contract_line_defer_successor](contract_line_defer_successor/) | 18.0.1.0.0 |  | Bridge Module contract_line_defer / contract_line_successor
 [contract_line_successor](contract_line_successor/) | 18.0.1.0.3 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Contract Line Successor
 [contract_mandate](contract_mandate/) | 18.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 18.0.1.0.0 |  | Payment mode in contracts and their invoices
@@ -52,6 +54,7 @@ addon | version | maintainers | summary
 [contract_variable_quantity](contract_variable_quantity/) | 18.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 [partner_contract_anniversary](partner_contract_anniversary/) | 18.0.1.0.1 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | This addon add a field for first contract line start date and compute contract anniversary date
 [product_contract](product_contract/) | 18.0.1.1.9 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Recurring - Product Contract
+[product_contract_line_defer](product_contract_line_defer/) | 18.0.1.0.0 |  | Bridge between product_contract and contract_line_defer
 [product_contract_recurrence_in_price](product_contract_recurrence_in_price/) | 18.0.1.0.0 |  | Add an option to include the recurrences in the total of a Sale Order Line.
 [product_contract_section](product_contract_section/) | 18.0.1.0.0 |  | Propagate sale order sections and notes to generated contracts
 [product_contract_variable_quantity](product_contract_variable_quantity/) | 18.0.1.0.1 |  | Product contract with variable quantity
