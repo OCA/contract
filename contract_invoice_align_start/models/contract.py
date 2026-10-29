@@ -7,16 +7,7 @@ from odoo import api, models
 class ContractContract(models.Model):
     _inherit = "contract.contract"
 
-    @api.depends(
-        "next_period_date_start",
-        "recurring_invoicing_type",
-        "recurring_invoicing_offset",
-        "recurring_rule_type",
-        "recurring_interval",
-        "date_end",
-        "recurring_next_date",
-        "align_billing_cycle",
-    )
+    @api.depends("align_billing_cycle")
     def _compute_next_period_date_end(self):
         for rec in self:
             rec.next_period_date_end = self.get_next_period_date_end(
@@ -30,17 +21,7 @@ class ContractContract(models.Model):
                 align_billing_cycle=rec.align_billing_cycle,
             )
 
-    @api.depends(
-        "next_period_date_start",
-        "recurring_invoicing_type",
-        "recurring_invoicing_offset",
-        "recurring_rule_type",
-        "recurring_interval",
-        "date_end",
-        "contract_line_ids.recurring_next_date",
-        "contract_line_ids.is_canceled",
-        "align_billing_cycle",
-    )
+    @api.depends("align_billing_cycle")
     def _compute_recurring_next_date(self):
         for contract in self:
             recurring_next_date = contract.contract_line_ids.filtered(
