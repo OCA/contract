@@ -8,10 +8,11 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from .contract_line_constraints import get_allowed
 
+# Months equivalent per recurrence unit (to normalise amounts to monthly)
 _MONTHS_PER_RULE = {
     "daily": 1.0 / 30.0,
     "weekly": 7.0 / 30.0,
@@ -43,6 +44,8 @@ class ContractLine(models.Model):
         ondelete="cascade",
     )
     company_id = fields.Many2one(related="contract_id.company_id")
+    # replace from abstract to add the store=True
+    partner_id = fields.Many2one(store=True)
     currency_id = fields.Many2one(related="contract_id.currency_id")
     date_start = fields.Date(required=True)
     date_end = fields.Date(index=True)
@@ -434,6 +437,26 @@ class ContractLine(models.Model):
                 raise ValidationError(
                     _("A canceled contract line can't be set to auto-renew")
                 )
+
+    def _get_analytic_distribution_arguments(self):
+        self.ensure_one()
+        partner_categ_ids = self.contract_id.partner_id.category_id.ids
+        return {
+            "product_id": self.product_id.id,
+            "product_categ_id": self.product_id.categ_id.id,
+            "partner_id": self.contract_id.partner_id.id,
+            "partner_category_id": partner_categ_ids,
+            "company_id": self.company_id.id,
+        }
+
+    @api.depends("contract_id.partner_id", "product_id")
+    def _compute_analytic_distribution(self):
+        for line in self:
+            if not line.display_type:
+                distribution = line.env[
+                    "account.analytic.distribution.model"
+                ]._get_distribution(line._get_analytic_distribution_arguments())
+                line.analytic_distribution = distribution or line.analytic_distribution
 
     @api.constrains("recurring_next_date", "date_start")
     def _check_recurring_next_date_start_date(self):
@@ -1087,6 +1110,15 @@ class ContractLine(models.Model):
         to_renew = self.search(domain)
         to_renew.renew()
 
+    def _can_be_invoiced(self, date_ref):
+        self.ensure_one()
+        return (
+            not self.is_canceled
+            and self.recurring_next_date
+            and self.recurring_next_date <= date_ref
+            and self.next_period_date_start
+        )
+
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
         default_contract_type = self.env.context.get("default_contract_type")
@@ -1133,3 +1165,48 @@ class ContractLine(models.Model):
     ):
         self.ensure_one()
         return self.quantity if not self.display_type else 0.0
+
+    def _get_contract_line_total_value(self):
+        """Return the total value of this contract line over its full period.
+
+        Raises UserError if the line has no date_end, since a
+        total cannot be computed without a known end date.
+        """
+        self.ensure_one()
+        if not self.date_end:
+            raise UserError(
+                _(
+                    "Cannot compute total value for contract line '%s': "
+                    "no end date is set.",
+                    self.display_name,
+                )
+            )
+
+        period_length = self.get_relative_delta(
+            self.recurring_rule_type, self.recurring_interval
+        )
+        currency = (
+            self.contract_id.pricelist_id.currency_id
+            if self.contract_id.pricelist_id
+            else self.currency_id
+        )
+
+        current_period_start = self.date_start
+        total_amount = 0.0
+        while current_period_start <= self.date_end:
+            current_period_end = (
+                current_period_start + period_length - relativedelta(days=1)
+            )
+            if current_period_end > self.date_end:
+                current_period_end = self.date_end
+            qty = self._get_quantity_to_invoice(
+                current_period_start,
+                current_period_end,
+                current_period_start,  # Mock an invoice date at period start
+            )
+            subtotal = qty * self.price_unit * (1 - (self.discount / 100.0))
+            if currency:
+                subtotal = currency.round(subtotal)
+            total_amount += subtotal
+            current_period_start += period_length
+        return total_amount

@@ -34,9 +34,18 @@ class ContractContract(models.Model):
     code = fields.Char(
         string="Reference",
     )
+    date = fields.Date(
+        required=True,
+        default=lambda self: fields.Date.today(),
+        help="This is the date the contract is taken into account \
+        (e.g.: signature date)",
+    )
     group_id = fields.Many2one(
         string="Group",
         comodel_name="account.analytic.account",
+        compute="_compute_group_id",
+        store=True,
+        readonly=False,
         ondelete="restrict",
     )
     currency_id = fields.Many2one(
@@ -232,9 +241,6 @@ class ContractContract(models.Model):
             )
             .mapped("move_id")
         )
-        # we are forced to always search for this for not losing possible <=v11
-        # generated invoices
-        invoices |= self.env["account.move"].search([("old_contract_id", "=", self.id)])
         return invoices
 
     def _get_computed_currency(self):
@@ -341,6 +347,32 @@ class ContractContract(models.Model):
                 contract.contract_line_ids.mapped("create_invoice_visibility")
             )
 
+    @api.depends(
+        "contract_line_ids",
+        "contract_line_ids.analytic_distribution",
+        "contract_line_fixed_ids",
+        "contract_line_fixed_ids.analytic_distribution",
+    )
+    def _compute_group_id(self):
+        """Compute the group_id based on the analytic_distribution
+        in the contract lines.
+        If all contract lines have the same analytic account, set it as group_id.
+        Otherwise, set group_id to False.
+        """
+        for record in self:
+            record.group_id = False
+            all_analytic_accounts = []
+            contract_lines = record.contract_line_ids | record.contract_line_fixed_ids
+            for line in contract_lines:
+                if line.analytic_distribution:
+                    all_analytic_accounts.extend(
+                        int(acc_id)
+                        for account_ids in line.analytic_distribution.keys()
+                        for acc_id in account_ids.split(",")
+                    )
+            if len(set(all_analytic_accounts)) == 1:
+                record.group_id = all_analytic_accounts[0]
+
     @api.onchange("contract_template_id")
     def _onchange_contract_template_id(self):
         """Update the contract fields with that of the template.
@@ -367,7 +399,10 @@ class ContractContract(models.Model):
                     field.name in self.NO_SYNC,
                 )
             ):
-                if self.contract_template_id[field_name]:
+                if (
+                    self.contract_template_id[field_name]
+                    and self.contract_template_id[field_name] != self[field_name]
+                ):
                     self[field_name] = self.contract_template_id[field_name]
 
     @api.onchange("partner_id", "company_id")
@@ -509,14 +544,6 @@ class ContractContract(models.Model):
         """
         self.ensure_one()
 
-        def can_be_invoiced(contract_line):
-            return (
-                not contract_line.is_canceled
-                and contract_line.recurring_next_date
-                and contract_line.recurring_next_date <= date_ref
-                and contract_line.next_period_date_start
-            )
-
         lines2invoice = previous = self.env["contract.line"]
         current_section = current_note = False
         for line in self.contract_line_ids:
@@ -530,7 +557,7 @@ class ContractContract(models.Model):
                 elif line.note_invoicing_mode == "with_next_line":
                     current_note = line
             elif line.is_recurring_note or not line.display_type:
-                if can_be_invoiced(line):
+                if line._can_be_invoiced(date_ref):
                     if current_section:
                         lines2invoice |= current_section
                         current_section = False
@@ -550,17 +577,17 @@ class ContractContract(models.Model):
         """
         invoices_values = []
         for contract in self:
-            if not date_ref:
-                date_ref = contract.recurring_next_date
-            if not date_ref:
+            contract_date_ref = date_ref
+            if not contract_date_ref:
+                contract_date_ref = contract.recurring_next_date
+            if not contract_date_ref:
                 # this use case is possible when recurring_create_invoice is
                 # called for a finished contract
                 continue
-            contract_lines = contract._get_lines_to_invoice(date_ref)
+            contract_lines = contract._get_lines_to_invoice(contract_date_ref)
             if not contract_lines:
                 continue
-            invoice_vals = contract._prepare_invoice(date_ref)
-            invoice_vals["invoice_line_ids"] = []
+            invoice_vals = contract._prepare_invoice(contract_date_ref)
             for line in contract_lines:
                 invoice_line_vals = line._prepare_invoice_line()
                 if invoice_line_vals:
@@ -580,9 +607,11 @@ class ContractContract(models.Model):
 
     def recurring_create_invoice(self):
         """
+        Button action
         This method triggers the creation of the next invoices of the contracts
         even if their next invoicing date is in the future.
         """
+        self.ensure_one()
         invoices = self._recurring_create_invoice()
         for invoice in invoices:
             self.message_post(
