@@ -5,6 +5,7 @@ import uuid
 from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import Command, exceptions, fields
 from odoo.tools import mute_logger
@@ -642,6 +643,14 @@ class TestSubscriptionOCA(BaseCommon):
         self.assertEqual(fields.Date.to_string(self.sub6.date_start), "2099-01-01")
         self.sub3.write({"stage_id": self.stage_3})
         self.assertEqual(self.sub3.date_start, fields.Date.today())
+
+    def test_subscription_oca_default_dates(self):
+        # The default dates are the day the subscription is created, not the
+        # day the server was started
+        with freeze_time("2030-02-15"):
+            sub = self.create_sub({"template_id": self.tmpl2.id})
+        self.assertEqual(fields.Date.to_string(sub.date_start), "2030-02-15")
+        self.assertEqual(fields.Date.to_string(sub.recurring_next_date), "2030-02-15")
 
     def test_subscription_oca_date_start_empty(self):
         self.sub3.date_start = False
