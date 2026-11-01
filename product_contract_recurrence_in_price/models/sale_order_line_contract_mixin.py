@@ -47,7 +47,7 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                 rec.recurring_invoicing_number = 0
                 continue
             days_total = (rec.date_end - rec.date_start).days
-            if rec.recurring_rule_type == "dayly":
+            if rec.recurring_rule_type == "daily":
                 interval_number = days_total
             elif rec.recurring_rule_type == "weekly":
                 interval_number = days_total / 7
