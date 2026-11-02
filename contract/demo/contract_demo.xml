@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 OCA - bosd
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!--Tags-->
+    <record id="contract_tag_premium" model="contract.tag">
+        <field name="name">Premium</field>
+        <field name="color" eval="2" />
+    </record>
+    <record id="contract_tag_renewal" model="contract.tag">
+        <field name="name">Renewal Required</field>
+        <field name="color" eval="3" />
+    </record>
+    <record id="contract_tag_internal" model="contract.tag">
+        <field name="name">Internal</field>
+        <field name="color" eval="5" />
+    </record>
+
+    <!--Contract Template-->
+    <record id="contract_template_monthly_demo" model="contract.template">
+        <field name="name">Monthly Subscription Template</field>
+        <field name="contract_type">sale</field>
+        <field name="recurring_rule_type">monthly</field>
+        <field name="recurring_invoicing_type">post-paid</field>
+        <field name="recurring_interval">1</field>
+        <field
+            name="contract_line_ids"
+            eval="[
+            Command.create({
+                'display_type': 'line_section',
+                'name': 'Subscription services',
+            }),
+            Command.create({
+                'product_id': ref('product.product_product_5'),
+                'name': 'Service from #START# to #END# (#INVOICEMONTHNAME#)',
+                'quantity': 1,
+                'price_unit': 75.0,
+            }),
+            Command.create({
+                'display_type': 'line_note',
+                'name': 'Cancellation requires 30 days written notice.',
+            }),
+        ]"
+        />
+    </record>
+
+    <!--Running contract: started 6 months ago, ends 6 months from now-->
+    <record id="contract_running_demo" model="contract.contract">
+        <field name="name">Demo Running Contract</field>
+        <field name="code">DEMO/RUN/0001</field>
+        <field name="partner_id" ref="base.res_partner_2" />
+        <field name="contract_type">sale</field>
+        <field name="line_recurrence">True</field>
+        <field
+            name="date_start"
+            eval="(DateTime.now() - relativedelta(months=6)).strftime('%Y-%m-%d')"
+        />
+        <field name="tag_ids" eval="[(6, 0, [ref('contract_tag_premium')])]" />
+        <field
+            name="contract_line_ids"
+            eval="[
+            Command.create({
+                'display_type': 'line_section',
+                'name': 'Recurring services',
+            }),
+            Command.create({
+                'product_id': ref('product.product_product_5'),
+                'name': 'Hosting from #START# to #END# (#INVOICEMONTHNAME#)',
+                'quantity': 1,
+                'price_unit': 120.0,
+                'recurring_rule_type': 'monthly',
+                'recurring_invoicing_type': 'post-paid',
+                'recurring_interval': 1,
+                'date_start': (DateTime.now() - relativedelta(months=6)).strftime('%Y-%m-%d'),
+                'date_end': (DateTime.now() + relativedelta(months=6)).strftime('%Y-%m-%d'),
+                'recurring_next_date': (DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-01'),
+            }),
+        ]"
+        />
+    </record>
+
+    <!--Expired contract: ended last month-->
+    <record id="contract_expired_demo" model="contract.contract">
+        <field name="name">Demo Expired Contract</field>
+        <field name="code">DEMO/EXP/0001</field>
+        <field name="partner_id" ref="base.res_partner_3" />
+        <field name="contract_type">sale</field>
+        <field name="line_recurrence">True</field>
+        <field
+            name="date_start"
+            eval="(DateTime.now() - relativedelta(months=12)).strftime('%Y-%m-%d')"
+        />
+        <field name="tag_ids" eval="[(6, 0, [ref('contract_tag_renewal')])]" />
+        <field
+            name="contract_line_ids"
+            eval="[
+            Command.create({
+                'product_id': ref('product.product_product_5'),
+                'name': 'Service from #START# to #END# (#INVOICEMONTHNAME#)',
+                'quantity': 1,
+                'price_unit': 80.0,
+                'recurring_rule_type': 'monthly',
+                'recurring_invoicing_type': 'post-paid',
+                'recurring_interval': 1,
+                'date_start': (DateTime.now() - relativedelta(months=12)).strftime('%Y-%m-%d'),
+                'date_end': (DateTime.now() - relativedelta(months=1)).strftime('%Y-%m-%d'),
+            }),
+        ]"
+        />
+    </record>
+
+    <!--Upcoming contract: starts next month-->
+    <record id="contract_upcoming_demo" model="contract.contract">
+        <field name="name">Demo Upcoming Contract</field>
+        <field name="code">DEMO/UP/0001</field>
+        <field name="partner_id" ref="base.res_partner_4" />
+        <field name="contract_type">sale</field>
+        <field name="line_recurrence">True</field>
+        <field name="contract_template_id" ref="contract_template_monthly_demo" />
+        <field
+            name="date_start"
+            eval="(DateTime.now() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d')"
+        />
+        <field
+            name="tag_ids"
+            eval="[(6, 0, [ref('contract_tag_premium'), ref('contract_tag_internal')])]"
+        />
+        <field
+            name="contract_line_ids"
+            eval="[
+            Command.create({
+                'product_id': ref('product.product_product_5'),
+                'name': 'Service from #START# to #END# (#INVOICEMONTHNAME#)',
+                'quantity': 2,
+                'price_unit': 100.0,
+                'recurring_rule_type': 'monthly',
+                'recurring_invoicing_type': 'pre-paid',
+                'recurring_interval': 1,
+                'date_start': (DateTime.now() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d'),
+                'date_end': (DateTime.now() + relativedelta(months=13)).strftime('%Y-%m-%d'),
+            }),
+        ]"
+        />
+    </record>
+</odoo>
