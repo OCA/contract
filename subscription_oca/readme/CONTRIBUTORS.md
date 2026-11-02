@@ -7,3 +7,4 @@
   - Valentin Vinagre
   - Alberto Martínez
 - Dennis Sluijk \<<d.sluijk@onestein.nl>\>
+- Cyril Vinh-Tung \<<cyril@invitu.com>\>
