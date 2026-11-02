@@ -67,8 +67,8 @@ msgstr ""
 "\n"
 "        La etapa final de una suscripción. Hay dos formas de marcar una "
 "suscripción como cerrada. La más sencilla es utilizar las funciones de "
-"movimiento de tarjetas Kanban, pulsando el botón \"Cerrar "
-"suscripción\" (sólo disponible si una suscripción está en curso).\n"
+"movimiento de tarjetas Kanban, pulsando el botón \"Cerrar suscripción\" "
+"(sólo disponible si una suscripción está en curso).\n"
 "      "
 
 #. module: subscription_oca
@@ -126,6 +126,21 @@ msgid "Activity Type Icon"
 msgstr "Tipo de Icono de Actividad"
 
 #. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Add a line"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Add a note"
+msgstr ""
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_form
+msgid "Add a section"
+msgstr ""
+
+#. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.view_subscription_stage_form
 msgid "Add new description..."
 msgstr "Añadir nueva descripción..."
@@ -139,6 +154,11 @@ msgstr "Importe del Impuesto"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__amount_total
 msgid "Amount Total"
 msgstr "Importe Total"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Archived"
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_attachment_count
@@ -289,6 +309,7 @@ msgstr "Borrar"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__description
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__name
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__description
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_line_form
 msgid "Description"
 msgstr "Descripción"
 
@@ -308,9 +329,19 @@ msgid "Display Name"
 msgstr "Mostrar Nombre"
 
 #. module: subscription_oca
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__display_type
+msgid "Display Type"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__display_name
 msgid "Display name"
 msgstr "Mostrar nombre"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_line__sequence
+msgid "Display order on the subscription."
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__draft
@@ -333,6 +364,11 @@ msgstr "Editar"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__stage_str
 msgid "Etapa"
 msgstr "Etapa"
+
+#. module: subscription_oca
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
+msgid "Expired"
+msgstr ""
 
 #. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__date
@@ -420,6 +456,7 @@ msgstr "Imagen"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__in_progress
 #: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_stage__type__in_progress
 #: model:sale.subscription.stage,name:subscription_oca.subscription_stage_in_progress
+#: model_terms:ir.ui.view,arch_db:subscription_oca.view_sale_order_pending_filter
 msgid "In progress"
 msgstr "En progreso"
 
@@ -583,6 +620,12 @@ msgid "Next invoice date"
 msgstr "Fecha siguiente factura"
 
 #. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_line_form
+msgid "Note"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Número de acciones"
@@ -729,7 +772,14 @@ msgid "Sales Order Line"
 msgstr "Línea de Orden de Venta"
 
 #. module: subscription_oca
+#: model:ir.model.fields.selection,name:subscription_oca.selection__sale_subscription_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_line_form
+msgid "Section"
+msgstr ""
+
+#. module: subscription_oca
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription__sequence
+#: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__sequence
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_stage__sequence
 msgid "Sequence"
 msgstr "Secuencia"
@@ -899,6 +949,11 @@ msgstr "Impuestos"
 #: model:ir.model.fields,field_description:subscription_oca.field_sale_subscription_line__amount_tax_line_amount
 msgid "Taxes Amount"
 msgstr "Importe de impuestos"
+
+#. module: subscription_oca
+#: model:ir.model.fields,help:subscription_oca.field_sale_subscription_line__display_type
+msgid "Technical field for sorting lines in UI."
+msgstr ""
 
 #. module: subscription_oca
 #: model_terms:ir.ui.view,arch_db:subscription_oca.sale_subscription_template_form
