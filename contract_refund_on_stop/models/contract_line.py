@@ -17,7 +17,7 @@ class ContractLine(models.Model):
                 or rec.last_date_invoiced <= date_end
             ):
                 continue
-            rec._create_refund_on_stop(
+            rec.with_context(refund_on_stop=True)._create_refund_on_stop(
                 to_refund_start_date=date_end,
                 to_refund_end_date=rec.last_date_invoiced,
             )
@@ -113,3 +113,15 @@ class ContractLine(models.Model):
             )
             to_refund_start_date = next_period_date_end + relativedelta(days=1)
         return quantity
+
+    def _insert_markers(self, first_date_invoiced, last_date_invoiced):
+        # On the refund-on-stop path the refund line name is replaced right
+        # after by _get_refund_on_stop_line_name(), so the markers of the
+        # original line are not needed. Skipping them also avoids crashing on a
+        # fully-invoiced line, which has no recurring_next_date: the base
+        # _insert_markers would then call strftime() on a False date and raise
+        # AttributeError.
+        self.ensure_one()
+        if self.env.context.get("refund_on_stop"):
+            return self.name
+        return super()._insert_markers(first_date_invoiced, last_date_invoiced)
