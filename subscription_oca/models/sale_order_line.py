@@ -9,7 +9,7 @@ class SaleOrderLine(models.Model):
     def get_subscription_line_values(self):
         return {
             "product_id": self.product_id.id,
-            "name": self.product_id.name,
+            "name": self.name,
             "product_uom_qty": self.product_uom_qty,
             "price_unit": self.price_unit,
             "discount": self.discount,
