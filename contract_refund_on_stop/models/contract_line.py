@@ -105,10 +105,6 @@ class ContractLine(models.Model):
             )
             invoice_date = self.get_next_invoice_date(
                 to_refund_start_date,
-                self.recurring_invoicing_type,
-                self.recurring_invoicing_offset,
-                self.recurring_rule_type,
-                self.recurring_interval,
                 max_date_end=next_period_date_end,
             )
             quantity += self.quantity * self.compute_prorated(
