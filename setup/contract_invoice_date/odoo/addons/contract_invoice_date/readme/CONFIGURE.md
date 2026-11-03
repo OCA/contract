@@ -1,0 +1,2 @@
+- Go to Accounting > Customers/Suppliers > Contracts
+- On the selected contract, 
