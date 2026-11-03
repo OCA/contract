@@ -75,3 +75,12 @@ class ContractLine(models.Model):
     )
     def _compute_recurring_interval(self):
         return super()._compute_recurring_interval()
+
+    def _should_set_successor(self, date_start):
+        if not (self and date_start):
+            return False
+
+        if self.date_start >= date_start:  # self will be canceled
+            return False
+
+        return not self.date_end or date_start <= self.date_end

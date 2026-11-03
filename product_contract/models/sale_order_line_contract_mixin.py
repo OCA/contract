@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrderLineContractMixin(models.AbstractModel):
@@ -36,7 +37,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             ("semesterly", "Semester(s)"),
             ("yearly", "Year(s)"),
         ],
-        default="monthly",
         help="Specify Interval for contract duration.",
         compute="_compute_product_contract_data",
         precompute=True,
@@ -44,7 +44,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         readonly=False,
     )
     recurring_interval = fields.Integer(
-        default=1,
         string="Invoice Every",
         help="Invoice every (Days/Week/Month/Year)",
         compute="_compute_product_contract_data",
@@ -62,7 +61,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             ("semesterly", "Semester(s)"),
             ("yearly", "Year(s)"),
         ],
-        default="monthly",
         string="Recurrence",
         help="Specify Interval for automatic invoice generation.",
         compute="_compute_product_contract_data",
@@ -72,7 +70,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
     )
     recurring_invoicing_type = fields.Selection(
         [("pre-paid", "Pre-paid"), ("post-paid", "Post-paid")],
-        default="pre-paid",
         string="Invoicing type",
         help=(
             "Specify if the invoice must be generated at the beginning "
@@ -104,12 +101,10 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         string="Auto Renew",
         compute="_compute_product_contract_data",
         precompute=True,
-        default=False,
         store=True,
         readonly=False,
     )
     auto_renew_interval = fields.Integer(
-        default=1,
         string="Renew Every",
         compute="_compute_product_contract_data",
         precompute=True,
@@ -124,7 +119,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             ("monthly", "Month(s)"),
             ("yearly", "Year(s)"),
         ],
-        default="yearly",
         compute="_compute_product_contract_data",
         precompute=True,
         store=True,
@@ -141,7 +135,6 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             ("end_next", "End of next period"),
         ],
         "Start Date Method",
-        default="manual",
         help="""This field allows to define how the start date of the contract will
         be calculated:
 
@@ -224,3 +217,42 @@ class SaleOrderLineContractMixin(models.AbstractModel):
             - relativedelta(days=1)
         )
         return date_end
+
+    @api.constrains("recurrence_number")
+    def _check_recurrence_number_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract:
+                return
+            if line.recurrence_number <= 0:
+                raise ValidationError(
+                    self.env._(
+                        "Value of %r should be strictly positive",
+                        line._fields["recurrence_number"].string,
+                    )
+                )
+
+    @api.constrains("recurring_interval")
+    def _check_recurring_interval_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract:
+                return
+            if line.recurring_interval <= 0:
+                raise ValidationError(
+                    self.env._(
+                        "Value of %r should be strictly positive",
+                        line._fields["recurring_interval"].string,
+                    )
+                )
+
+    @api.constrains("auto_renew_interval")
+    def _check_auto_renew_interval_is_strictly_positive(self):
+        for line in self:
+            if not line.is_contract or not line.is_auto_renew:
+                return
+            if line.auto_renew_interval <= 0:
+                raise ValidationError(
+                    self.env._(
+                        "Value of %r should be strictly positive",
+                        line._fields["auto_renew_interval"].string,
+                    )
+                )
