@@ -7,6 +7,11 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestContractLine(BaseCommon):
+    _test_user_groups = (
+        "account.group_account_manager",
+        "contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced",
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

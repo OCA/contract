@@ -10,7 +10,6 @@ class PrgEditLastDateInvoicedWizard(models.TransientModel):
 
     contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Contract Line",
         required=True,
         ondelete="cascade",
     )

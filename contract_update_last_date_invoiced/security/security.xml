@@ -7,7 +7,7 @@
         <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]" />
     </record>
 
-    <record id="contract_update_last_date_invoiced_access" model="ir.model.access">
+    <record id="contract_update_last_date_invoiced_access" model="ir.access">
         <field
             name="name"
         >contract.update.last.date.invoiced.access (in contract_update_last_date_invoiced)</field>
@@ -19,9 +19,6 @@
             name="group_id"
             ref="contract_update_last_date_invoiced.group_contract_line_update_last_date_invoiced"
         />
-        <field name="perm_read" eval="1" />
-        <field name="perm_create" eval="1" />
-        <field name="perm_write" eval="1" />
-        <field name="perm_unlink" eval="1" />
+        <field name="operation">crud</field>
     </record>
 </odoo>
