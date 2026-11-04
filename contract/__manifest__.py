@@ -30,6 +30,7 @@
         "data/mail_message_subtype.xml",
         "data/ir_ui_menu.xml",
         "wizards/contract_manually_create_invoice.xml",
+        "wizards/merge_views.xml",
         "views/contract_tag.xml",
         "views/contract_template.xml",
         "views/contract_template_line.xml",
