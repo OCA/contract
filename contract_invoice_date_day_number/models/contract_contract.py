@@ -4,8 +4,7 @@ import calendar
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 
 
 class ContractContract(models.Model):
@@ -16,17 +15,6 @@ class ContractContract(models.Model):
         compute="_compute_next_fixed_invoice_date",
         readonly=True,
     )
-
-    @api.constrains("fixed_invoice_day_number")
-    def _check_fixed_invoice_date_number(self):
-        for contract in self:
-            if (
-                contract.fixed_invoice_day_number > 31
-                or contract.fixed_invoice_day_number < 1
-            ):
-                raise ValidationError(
-                    _("The Fixed Invoice Date Number value should be between 1 and 31")
-                )
 
     def _recurring_create_invoice(self, date_ref=False):
         moves = self.env["account.move"].browse()
