@@ -19,6 +19,7 @@ class TestContractDate(BaseCommon):
         cls._create_contract()
         cls._create_contract_2()
         cls._create_contract_3()
+        cls._create_contract_4()
 
     @classmethod
     @freeze_time("2026-10-02")
@@ -88,11 +89,41 @@ class TestContractDate(BaseCommon):
             }
         )
 
+    @classmethod
+    @freeze_time("2026-01-31")
+    def _create_contract_4(cls):
+        cls.contract_4 = cls.env["contract.contract"].create(
+            {
+                "name": "test 4",
+                "partner_id": cls.partner.id,
+                "recurring_interval": 1,
+                "recurring_invoicing_type": "post-paid",
+                "recurring_rule_type": "monthly",
+                "contract_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": cls.product.id,
+                            "name": cls.product.name,
+                            "quantity": 1.0,
+                        }
+                    )
+                ],
+            }
+        )
+
     @freeze_time("2026-11-01")
     def test_invoice_date(self):
         self.assertEqual(
             fields.Date.from_string("2026-10-10"),
             self.contract.next_fixed_invoice_date,
+        )
+
+    @freeze_time("2026-01-31")
+    def test_invoice_date_february(self):
+        self.contract_4.fixed_invoice_day_number = 30
+        self.assertEqual(
+            fields.Date.from_string("2026-02-28"),
+            self.contract_4.next_fixed_invoice_date,
         )
 
     @freeze_time("2026-11-12")
