@@ -8,14 +8,8 @@
         <field name="inherit_id" ref="contract.contract_contract_form_view" />
         <field name="arch" type="xml">
             <field name="recurring_invoicing_type" position="after">
-                <field
-                    name="fixed_invoice_day_number"
-                    attrs="{'required': [('line_recurrence', '=', False)]}"
-                />
-                <field
-                    name="next_fixed_invoice_date"
-                    attrs="{'required': [('line_recurrence', '=', False)]}"
-                />
+                <field name="fixed_invoice_day_number" />
+                <field name="next_fixed_invoice_date" />
             </field>
         </field>
     </record>
