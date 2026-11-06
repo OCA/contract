@@ -23,7 +23,8 @@ class ContractContract(models.Model):
                 moves |= super(ContractContract, contracts)._recurring_create_invoice(
                     date_ref=date
                 )
-        return moves
+            return moves
+        return super()._recurring_create_invoice(date_ref=date_ref)
 
     @api.depends("recurring_next_date", "fixed_invoice_day_number")
     def _compute_next_fixed_invoice_date(self):
