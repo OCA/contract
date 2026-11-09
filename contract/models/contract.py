@@ -45,7 +45,6 @@ class ContractContract(models.Model):
         default=lambda self: self.env.user,
     )
     group_id = fields.Many2one(
-        string="Group",
         comodel_name="account.analytic.account",
         compute="_compute_group_id",
         store=True,
@@ -81,7 +80,6 @@ class ContractContract(models.Model):
         compute="_compute_currency_id",
         inverse="_inverse_currency_id",
         comodel_name="res.currency",
-        string="Currency",
     )
     manual_currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -94,7 +92,6 @@ class ContractContract(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         ondelete="restrict",
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
@@ -104,7 +101,6 @@ class ContractContract(models.Model):
 
     # === Contract Template and Lines ===
     contract_template_id = fields.Many2one(
-        string="Contract Template",
         comodel_name="contract.template",
     )
     contract_line_ids = fields.One2many(

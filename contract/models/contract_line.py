@@ -35,7 +35,6 @@ class ContractLine(models.Model):
     sequence = fields.Integer()
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
-        string="Contract",
         required=True,
         index=True,
         bypass_search_access=True,

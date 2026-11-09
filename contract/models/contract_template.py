@@ -24,12 +24,10 @@ class ContractTemplate(models.Model):
     name = fields.Char(required=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         index=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -38,7 +36,6 @@ class ContractTemplate(models.Model):
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
     )
 
     # === Contract Settings ===
@@ -60,7 +57,6 @@ class ContractTemplate(models.Model):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         domain="[('type', '=', contract_type)]",
         compute="_compute_journal_id",
         store=True,
