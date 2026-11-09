@@ -54,6 +54,7 @@ class ContractLine(models.Model):
         readonly=True,
     )
     product_id = fields.Many2one(index=True)
+    product_categ_id = fields.Many2one(related="product_id.categ_id", store=True)
 
     @api.depends("name", "date_start")
     def _compute_display_name(self):
