@@ -10,7 +10,6 @@ class ContractContractTerminate(models.TransientModel):
 
     contract_id = fields.Many2one(
         comodel_name="contract.contract",
-        string="Contract",
         required=True,
         ondelete="cascade",
     )

@@ -22,7 +22,6 @@ class ContractLine(models.Model):
     )
     successor_contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Successor Contract Line",
         required=False,
         readonly=True,
         index=True,
@@ -32,7 +31,6 @@ class ContractLine(models.Model):
     )
     predecessor_contract_line_id = fields.Many2one(
         comodel_name="contract.line",
-        string="Predecessor Contract Line",
         required=False,
         readonly=True,
         index=True,

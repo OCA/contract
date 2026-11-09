@@ -12,7 +12,6 @@ class SaleSubscriptionLine(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         domain=[("sale_ok", "=", True)],
-        string="Product",
     )
     currency_id = fields.Many2one(
         "res.currency",
