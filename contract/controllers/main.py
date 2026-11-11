@@ -99,12 +99,26 @@ class PortalContract(CustomerPortal):
         auth="public",
         website=True,
     )
-    def portal_my_contract_detail(self, contract_contract_id, access_token=None, **kw):
+    def portal_my_contract_detail(
+        self,
+        contract_contract_id,
+        access_token=None,
+        report_type=None,
+        download=False,
+        **kw,
+    ):
         try:
             contract_sudo = self._document_check_access(
                 "contract.contract", contract_contract_id, access_token
             )
         except (AccessError, MissingError):
             return request.redirect("/my")
+        if report_type in ("html", "pdf", "text"):
+            return self._show_report(
+                model=contract_sudo,
+                report_type=report_type,
+                report_ref="contract.report_contract",
+                download=download,
+            )
         values = self._contract_get_page_view_values(contract_sudo, access_token, **kw)
         return request.render("contract.portal_contract_page", values)
