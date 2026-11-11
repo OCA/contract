@@ -19,6 +19,7 @@
     "depends": ["base", "account", "product", "portal"],
     "development_status": "Production/Stable",
     "data": [
+        "security/contract_groups.xml",
         "security/contract_tag.xml",
         "security/ir.model.access.csv",
         "security/contract_security.xml",
