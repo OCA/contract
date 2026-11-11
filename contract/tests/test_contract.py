@@ -1763,23 +1763,24 @@ class TestContract(TestContractBase):
         pricelist_eur = self.env["product.pricelist"].create(
             {"name": "Test pricelist EUR", "currency_id": currency_eur.id}
         )
+        company_clause = ("company_id", "in", (self.contract2.company_id.id, False))
         with Form(self.contract2) as contract_form:
             contract_form.journal_id = journal_eur
             self.assertEqual(
                 contract_form.pricelist_id_domain,
-                [("currency_id", "=", currency_eur.id)],
+                [("currency_id", "=", currency_eur.id), company_clause],
             )
             contract_form.pricelist_id = pricelist_eur
             # Switching to a journal with another currency resets the pricelist
             contract_form.journal_id = journal_cad
             self.assertEqual(
                 contract_form.pricelist_id_domain,
-                [("currency_id", "=", currency_cad.id)],
+                [("currency_id", "=", currency_cad.id), company_clause],
             )
             self.assertFalse(contract_form.pricelist_id)
-            # A journal without currency means no restriction at all
+            # A journal without currency leaves only the company restriction
             contract_form.journal_id = journal_no_currency
-            self.assertEqual(contract_form.pricelist_id_domain, [])
+            self.assertEqual(contract_form.pricelist_id_domain, [company_clause])
 
     def test_contract_action_preview(self):
         action = self.contract.action_preview()
