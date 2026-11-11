@@ -383,12 +383,8 @@ class ContractLine(models.Model):
                 new_date_end = rec.date_end + delay_delta
             else:
                 new_date_end = False
-            new_recurring_next_date = self.get_next_invoice_date(
+            new_recurring_next_date = rec.get_next_invoice_date(
                 new_date_start,
-                rec.recurring_invoicing_type,
-                rec.recurring_invoicing_offset,
-                rec.recurring_rule_type,
-                rec.recurring_interval,
                 max_date_end=new_date_end,
             )
             rec.write(
@@ -455,10 +451,6 @@ class ContractLine(models.Model):
         if not recurring_next_date:
             recurring_next_date = self.get_next_invoice_date(
                 date_start,
-                self.recurring_invoicing_type,
-                self.recurring_invoicing_offset,
-                self.recurring_rule_type,
-                self.recurring_interval,
                 max_date_end=date_end,
             )
         new_vals = self.read()[0]
