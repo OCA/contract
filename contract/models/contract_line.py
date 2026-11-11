@@ -60,26 +60,6 @@ class ContractLine(models.Model):
         for rec in self:
             rec.display_name = f"{rec.date_start} - {rec.name}"
 
-    @api.model
-    def _compute_first_recurring_next_date(
-        self,
-        date_start,
-        recurring_invoicing_type,
-        recurring_rule_type,
-        recurring_interval,
-    ):
-        # deprecated method for backward compatibility
-        return self.get_next_invoice_date(
-            date_start,
-            recurring_invoicing_type,
-            self._get_default_recurring_invoicing_offset(
-                recurring_invoicing_type, recurring_rule_type
-            ),
-            recurring_rule_type,
-            recurring_interval,
-            max_date_end=False,
-        )
-
     def _get_analytic_distribution_arguments(self):
         self.ensure_one()
         partner_categ_ids = self.contract_id.partner_id.category_id.ids
@@ -100,7 +80,12 @@ class ContractLine(models.Model):
                 ]._get_distribution(line._get_analytic_distribution_arguments())
                 line.analytic_distribution = distribution or line.analytic_distribution
 
-    @api.constrains("recurring_next_date", "date_start")
+    @api.constrains(
+        "recurring_next_date",
+        "date_start",
+        "recurring_invoicing_offset",
+        "recurring_invoicing_offset_type",
+    )
     def _check_recurring_next_date_start_date(self):
         for line in self:
             if (
@@ -109,7 +94,16 @@ class ContractLine(models.Model):
             ):
                 continue
             if line.date_start and line.recurring_next_date:
-                if line.date_start > line.recurring_next_date:
+                if (
+                    line.date_start
+                    + self._get_invoicing_offset_relative_delta(
+                        line.recurring_invoicing_type,
+                        line.recurring_rule_type,
+                        line.recurring_invoicing_offset,
+                        line.recurring_invoicing_offset_type,
+                    )
+                    > line.recurring_next_date
+                ):
                     raise ValidationError(
                         self.env._(
                             "You can't have a date of next invoice anterior "
@@ -163,8 +157,7 @@ class ContractLine(models.Model):
             ):
                 raise ValidationError(
                     self.env._(
-                        "You must supply a date of next invoice for contract "
-                        "line '%s'"
+                        "You must supply a date of next invoice for contract line '%s'"
                     )
                     % rec.name
                 )
@@ -176,8 +169,7 @@ class ContractLine(models.Model):
                 if line.date_start > line.date_end:
                     raise ValidationError(
                         self.env._(
-                            "Contract line '%s' start date can't be later than"
-                            " end date"
+                            "Contract line '%s' start date can't be later than end date"
                         )
                         % line.name
                     )
@@ -243,6 +235,7 @@ class ContractLine(models.Model):
             next_invoice_date=recurring_next_date,
             recurring_invoicing_type=self.recurring_invoicing_type,
             recurring_invoicing_offset=self.recurring_invoicing_offset,
+            recurring_invoicing_offset_type=self.recurring_invoicing_offset_type,
         )
         return first_date_invoiced, last_date_invoiced, recurring_next_date
 

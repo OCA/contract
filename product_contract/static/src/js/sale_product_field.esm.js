@@ -61,6 +61,10 @@ patch(SaleOrderLineProductField.prototype, {
             default_recurring_rule_type: this.props.record.data.recurring_rule_type,
             default_recurring_invoicing_type:
                 this.props.record.data.recurring_invoicing_type,
+            default_recurring_invoicing_offset:
+                this.props.record.data.recurring_invoicing_offset,
+            default_recurring_invoicing_offset_type:
+                this.props.record.data.recurring_invoicing_offset_type,
             default_product_uom_qty: this.props.record.data.product_uom_qty,
             default_contract_id: this.props.record.data.contract_id[0],
             default_recurring_interval: this.props.record.data.recurring_interval,
