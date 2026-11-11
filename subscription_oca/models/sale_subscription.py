@@ -26,14 +26,11 @@ class SaleSubscription(models.Model):
     sequence = fields.Integer()
     company_id = fields.Many2one(
         "res.company",
-        "Company",
         required=True,
         index=True,
         default=lambda self: self.env.company,
     )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner", required=True, string="Partner", index=True
-    )
+    partner_id = fields.Many2one(comodel_name="res.partner", required=True, index=True)
     partner_invoice_id = fields.Many2one(
         comodel_name="res.partner",
         string="Invoice address",
@@ -54,7 +51,6 @@ class SaleSubscription(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         "account.fiscal.position",
-        string="Fiscal Position",
         domain="[('company_id', '=', company_id)]",
         check_company=True,
     )
@@ -72,9 +68,7 @@ class SaleSubscription(models.Model):
     recurring_rule_boundary = fields.Boolean(
         string="Boundary", compute="_compute_rule_boundary", store=True
     )
-    pricelist_id = fields.Many2one(
-        comodel_name="product.pricelist", required=True, string="Pricelist"
-    )
+    pricelist_id = fields.Many2one(comodel_name="product.pricelist", required=True)
     recurring_next_date = fields.Date(string="Next invoice date", default=date.today())
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -115,7 +109,7 @@ class SaleSubscription(models.Model):
     amount_total = fields.Monetary(compute="_compute_total", store=True)
     tag_ids = fields.Many2many(comodel_name="sale.subscription.tag", string="Tags")
     image = fields.Binary("Image", related="user_id.image_512", store=True)
-    journal_id = fields.Many2one(comodel_name="account.journal", string="Journal")
+    journal_id = fields.Many2one(comodel_name="account.journal")
     currency_id = fields.Many2one(
         related="pricelist_id.currency_id",
         depends=["pricelist_id"],
@@ -130,7 +124,6 @@ class SaleSubscription(models.Model):
 
     stage_id = fields.Many2one(
         comodel_name="sale.subscription.stage",
-        string="Stage",
         tracking=True,
         group_expand="_read_group_stage_ids",
         store=True,
@@ -148,9 +141,7 @@ class SaleSubscription(models.Model):
     account_invoice_ids_count = fields.Integer(
         compute="_compute_account_invoice_ids_count", string="Invoice Count"
     )
-    close_reason_id = fields.Many2one(
-        comodel_name="sale.subscription.close.reason", string="Close Reason"
-    )
+    close_reason_id = fields.Many2one(comodel_name="sale.subscription.close.reason")
     crm_team_id = fields.Many2one(comodel_name="crm.team", string="Sale team")
     to_renew = fields.Boolean(default=False, string="To renew")
     is_paused = fields.Boolean(

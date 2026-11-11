@@ -12,7 +12,6 @@ class ContractLine(models.Model):
 
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
-        string="Sale Order Line",
         required=False,
         copy=False,
     )

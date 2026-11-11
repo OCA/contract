@@ -18,10 +18,9 @@ class SaleOrderLineContractMixin(models.AbstractModel):
     partner_id = fields.Many2one("res.partner")
     company_id = fields.Many2one("res.company")
     product_uom_qty = fields.Float("Quantity")
-    contract_id = fields.Many2one(comodel_name="contract.contract", string="Contract")
+    contract_id = fields.Many2one(comodel_name="contract.contract")
     contract_template_id = fields.Many2one(
         comodel_name="contract.template",
-        string="Contract Template",
         compute="_compute_contract_template_id",
     )
     recurrence_number = fields.Integer(
