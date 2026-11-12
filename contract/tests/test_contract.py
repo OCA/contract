@@ -1534,6 +1534,31 @@ class TestContract(TestContractBase):
         )
         self.assertFalse(new_line)
 
+    def test_stop_plan_successor_contract_line_date_intermediate(self):
+        """
+        We should be able to stop and plan a successor for a current line
+        and invoice it when the recurring next date is in the middle of period.
+        """
+        self.acct_line.stop(fields.Date.from_string("2018-01-31"))
+        successor_line = self.acct_line.copy(
+            {
+                "date_start": "2018-02-01",
+                "recurring_next_date": "2018-02-15",
+                "date_end": False,
+            }
+        )
+        self.acct_line.write(
+            {
+                "successor_contract_line_id": successor_line.id,
+                "is_auto_renew": False,
+            }
+        )
+        invoice = self.acct_line.contract_id.recurring_create_invoice()
+        self.assertTrue(invoice)
+        self.assertEqual(
+            invoice.invoice_line_ids.date, fields.Date.from_string("2018-01-15")
+        )
+
     def test_stop_plan_successor_wizard(self):
         suspension_start = self.today + relativedelta(months=2)
         suspension_end = self.today + relativedelta(months=3)
