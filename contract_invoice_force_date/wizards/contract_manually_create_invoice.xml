@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 ACSONE SA/NV
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_manually_create_invoice_form_view">
+        <field name="model">contract.manually.create.invoice</field>
+        <field
+            name="inherit_id"
+            ref="contract.contract_manually_create_invoice_form_view"
+        />
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field
+                    name="invoice_date_forced"
+                    invisible="not contract_to_invoice_count"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
