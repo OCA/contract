@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Callino - Wolfgang Pichler
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="contract_line_form_view">
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='minimum_term']" position="inside">
+                <field name="min_term_date_end" widget="remaining_days" />
+                <field name="min_term_notice_date" widget="remaining_days" />
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="contract_line_successor_form_view">
+        <field name="model">contract.line</field>
+        <field
+            name="inherit_id"
+            ref="contract_line_successor.contract_line_form_view"
+        />
+        <field name="arch" type="xml">
+            <!-- A line with a minimum term renews the term, not an end date -->
+            <xpath expr="//field[@name='date_end']" position="attributes">
+                <attribute
+                    name="required"
+                >is_auto_renew and not min_term_interval</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
