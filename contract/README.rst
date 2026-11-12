@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ================================
 Recurring - Contracts Management
 ================================
@@ -17,7 +13,7 @@ Recurring - Contracts Management
 .. |badge1| image:: https://img.shields.io/badge/maturity-Production%2FStable-green.png
     :target: https://odoo-community.org/page/development-status
     :alt: Production/Stable
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
@@ -90,6 +86,9 @@ Usage
    price list and lines when creating a contract. To use it, just select
    the template on the contract and fields will be filled automatically.
 
+- If you are an Accounting Administrator, you can merge Contracts
+  together by selecting them, and then Actions > Merge. Note that all
+  the selected contracts must be for the same partner.
 - Contracts appear in portal to following users in every contract:
 
 |image|
@@ -157,6 +156,10 @@ Contributors
 - `APSL <https://www.apsl.tech>`__:
 
      - Antoni Marroig <amarroig@apsl.net>
+
+- `PyTech <https://www.pytech.it>`__:
+
+  - Simone Rubino <simone.rubino@pytech.it>
 
 Maintainers
 -----------
