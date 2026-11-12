@@ -17,22 +17,24 @@ Agreement Legal Sale
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fcontract-lightgray.png?logo=github
-    :target: https://github.com/OCA/contract/tree/14.0/agreement_legal_sale
+    :target: https://github.com/OCA/contract/tree/18.0/agreement_legal_sale
     :alt: OCA/contract
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/contract-14-0/contract-14-0-agreement_legal_sale
+    :target: https://translation.odoo-community.org/projects/contract-18-0/contract-18-0-agreement_legal_sale
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=14.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/contract&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-Odoo Sales App does not support the management of legal content for agreements
-and contracts. It's also not integrated with the Agreement App.
+Odoo Sales App does not support the management of legal content for
+agreements and contracts. It's also not integrated with the Agreement
+App.
 
-This module is for companies that needs their customer to sign an agreement
-with all the legal information based on the selected agreement template.
+This module is for companies that needs their customer to sign an
+agreement with all the legal information based on the selected agreement
+template.
 
 **Table of contents**
 
@@ -44,28 +46,32 @@ Configuration
 
 To configure this module:
 
-* Go to Agreement > Configuration > Templates
-* Create a new template with sections and clauses and their respective content
-* Go to Agreement > Configuration > Stages
-* Create and reorder stages to match your process
+- Go to Agreement > Configuration > Templates
+- Create a new template with sections and clauses and their respective
+  content
+- Go to Agreement > Configuration > Stages
+- Create and reorder stages to match your process
 
 Usage
 =====
 
 To use this module:
 
-* Go to Sales
-* Create or select a quotation
-* Set the agreement template and add some products
-* Confirm the quotation. An agreement is created and linked to the sales order:
+- Go to Sales
+- Create or select a quotation
+- Set the agreement template and add some products
+- Confirm the quotation. An agreement is created and linked to the sales
+  order:
 
-  * the agreement template is copied into an agreement with a copy of the
-    sections, clauses, recitals and appendices
-  * all the sales order lines are added as agreement lines
-  * the service products (with is_serviceprofile = True) on the SO are added as service profile on the agreement
-  * the customer information is set from the sales order
-  * the eventual analytic account linked to the sales order is set on the agreement
-  * the agreement is linked to the sales order and vice versa
+  - the agreement template is copied into an agreement with a copy of
+    the sections, clauses, recitals and appendices
+  - all the sales order lines are added as agreement lines
+  - the service products (with is_serviceprofile = True) on the SO are
+    added as service profile on the agreement
+  - the customer information is set from the sales order
+  - the eventual analytic account linked to the sales order is set on
+    the agreement
+  - the agreement is linked to the sales order and vice versa
 
 Known issues / Roadmap
 ======================
@@ -78,7 +84,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/contract/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/contract/issues/new?body=module:%20agreement_legal_sale%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/contract/issues/new?body=module:%20agreement_legal_sale%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -86,27 +92,27 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Open Source Integrators
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Steven Campbell <scampbell@opensourceintegrators.com>
-* Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
-* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
+- Steven Campbell <scampbell@opensourceintegrators.com>
+- Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+- Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
 
 Other credits
-~~~~~~~~~~~~~
+-------------
 
 The development of this module has been financially supported by:
 
-* Pavlov Media
-* Open Source Integrators
+- Pavlov Media
+- Open Source Integrators
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
 This module is maintained by the OCA.
 
@@ -129,6 +135,6 @@ Current `maintainers <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-osi-scampbell| |maintainer-max3903| 
 
-This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/14.0/agreement_legal_sale>`_ project on GitHub.
+This module is part of the `OCA/contract <https://github.com/OCA/contract/tree/18.0/agreement_legal_sale>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
