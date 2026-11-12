@@ -1121,6 +1121,15 @@ class TestContract(TestContractBase):
         self.acct_line.date_start = "2018-01-01"
         self.acct_line.recurring_invoicing_type = "post-paid"
         self.acct_line.date_end = "2018-03-15"
+
+        today = fields.Date.context_today(self.contract2)
+        self.contract2.contract_line_ids.write(
+            {
+                "date_start": today - relativedelta(months=1, days=15),
+                "date_end": today + relativedelta(months=11, days=15),
+            }
+        )
+
         contracts = self.contract2
         for _i in range(10):
             contracts |= self.contract.copy()
@@ -1129,8 +1138,20 @@ class TestContract(TestContractBase):
             [("contract_line_id", "in", contracts.mapped("contract_line_ids").ids)]
         )
         self.assertEqual(
-            len(contracts.mapped("contract_line_ids")),
+            32,  # 2 for contract2 + 3 for each contract copy (x10)
             len(invoice_lines),
+            "All recurring occurrences for each contract line up to date_ref "
+            "should be invoiced together into the generated invoice lines.",
+        )
+
+        invoice_lines_by_contract_line = invoice_lines.grouped("contract_line_id")
+        invoice_lines_contract2 = invoice_lines_by_contract_line[
+            self.contract2.contract_line_ids
+        ]
+        self.assertEqual(
+            2,
+            len(invoice_lines_contract2),
+            "cron_recurring_create_invoice should invoice until date of today.",
         )
 
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
