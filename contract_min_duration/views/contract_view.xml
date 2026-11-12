@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view_inherit" model="ir.ui.view">
+        <field name="name">contract.contract.form.inherit.min.duration</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_customer_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_end']" position="after">
+                <field name="min_contract_end_date" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
