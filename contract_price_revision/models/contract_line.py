@@ -58,8 +58,8 @@ class ContractLine(models.Model):
         """Wrap contract function to prepare values for new contract line
         adding the new price as parameter
         """
-        values = self._prepare_value_for_plan_successor(
+        values = super()._prepare_value_for_plan_successor(
             date_start, date_end, is_auto_renew, recurring_next_date=recurring_next_date
         )
-        values["price_unit"] = price
+        values.update({"price_unit": price})
         return values

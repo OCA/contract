@@ -13,7 +13,7 @@ class TestContractPriceRevision(TestContractBase):
         # beginning of next period (should not have a gap)
         self.wizard = self.env["contract.price.revision.wizard"].create(
             {
-                "date_start": "2018-02-01",
+                "date_start": "2018-02-15",
                 "variation_type": v_type,
                 "variation_percent": value,
                 "fixed_price": value,
@@ -59,6 +59,19 @@ class TestContractPriceRevision(TestContractBase):
         self.assertEqual(len(lines), 1)
 
     def test_contract_price_revision_invoicing(self):
+        """
+        Contract with:
+        - One normal line at 100.0
+
+        Copy the line with automatic price (product at 30.75)
+
+        Revise the price with 100% increase.
+        The price will be revised for the normal line at 200.0
+        The original line will be stopped
+
+
+
+        """
         self.acct_line.copy({"automatic_price": True})
         self._create_wizard(value=100.0)
         self.execute_wizard()
