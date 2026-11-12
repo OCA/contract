@@ -60,7 +60,7 @@ class SaleOrder(models.Model):
             "line_recurrence": True,
         }
 
-    def action_create_contract(self):
+    def _create_contracts(self):
         contract_model = self.env["contract.contract"]
         contracts = []
         for rec in self.filtered("is_contract"):
@@ -110,11 +110,36 @@ class SaleOrder(models.Model):
                 line.create_contract_line(line.contract_id)
         return contract_model.browse(contracts)
 
+    def action_create_contract(self):
+        contracts = self._create_contracts()
+        message = _("Contract %(contract)s was created.")
+        for order in self:
+            for contract in order.order_line.contract_id & contracts:
+                order.message_post(
+                    body=message % {"contract": contract._get_html_link()}
+                )
+        if not contracts:
+            return False
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "contract.action_customer_contract"
+        )
+        if len(contracts) == 1:
+            action.update(
+                {
+                    "res_id": contracts.id,
+                    "view_mode": "form",
+                    "views": [view for view in action["views"] if view[1] == "form"],
+                }
+            )
+        else:
+            action["domain"] = [("id", "in", contracts.ids)]
+        return action
+
     def action_confirm(self):
         """If we have a contract in the order, set it up"""
         self.filtered(
             lambda order: (order.company_id.create_contract_at_sale_order_confirmation)
-        ).action_create_contract()
+        )._create_contracts()
         return super().action_confirm()
 
     @api.depends("order_line")
