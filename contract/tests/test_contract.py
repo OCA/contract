@@ -64,6 +64,7 @@ class TestContractBase(common.TransactionCase):
             "discount": 50,
             "recurring_rule_type": "yearly",
             "recurring_interval": 1,
+            "recurring_invoicing_type": "post-paid",
         }
         cls.section_template_vals = {
             "display_type": "line_section",
@@ -547,6 +548,7 @@ class TestContract(TestContractBase):
                         "discount": 50,
                         "recurring_rule_type": "yearly",
                         "recurring_interval": 1,
+                        "recurring_invoicing_type": "post-paid",
                     },
                 ),
             ]
