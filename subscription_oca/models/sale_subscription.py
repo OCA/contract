@@ -105,6 +105,9 @@ class SaleSubscription(models.Model):
     recurring_total = fields.Monetary(
         compute="_compute_total", string="Recurring price", store=True
     )
+    non_recurring_total = fields.Monetary(
+        compute="_compute_total", string="Non-recurring", store=True
+    )
     amount_tax = fields.Monetary(compute="_compute_total", store=True)
     amount_total = fields.Monetary(compute="_compute_total", store=True)
     tag_ids = fields.Many2many(comodel_name="sale.subscription.tag", string="Tags")
@@ -174,7 +177,9 @@ class SaleSubscription(models.Model):
             if subscription.in_progress:
                 if (
                     subscription.recurring_next_date <= today
-                    and subscription.sale_subscription_line_ids
+                    and subscription.sale_subscription_line_ids.filtered(
+                        lambda line: not line.display_type
+                    )
                 ):
                     try:
                         subscription.generate_invoice()
@@ -186,7 +191,11 @@ class SaleSubscription(models.Model):
                 ):
                     subscription.close_subscription()
             elif (
-                subscription.date_start <= today and subscription.stage_id.type == "pre"
+                subscription.date_start <= today
+                and subscription.stage_id.type == "pre"
+                and subscription.sale_subscription_line_ids.filtered(
+                    lambda line: not line.display_type
+                )
             ):
                 subscription.action_start_subscription()
                 subscription.generate_invoice()
@@ -209,18 +218,33 @@ class SaleSubscription(models.Model):
                     "Error resuming paused subscription %s", subscription.id
                 )
 
-    @api.depends("sale_subscription_line_ids")
+    @api.depends(
+        "sale_subscription_line_ids.price_subtotal",
+        "sale_subscription_line_ids.amount_tax_line_amount",
+        "sale_subscription_line_ids.display_type",
+        "sale_subscription_line_ids.invoice_once",
+    )
     def _compute_total(self):
         for record in self:
-            recurring_total = amount_tax = 0.0
-            for order_line in record.sale_subscription_line_ids:
-                recurring_total += order_line.price_subtotal
-                amount_tax += order_line.amount_tax_line_amount
+            recurring_total = non_recurring_total = amount_tax = 0.0
+            current_section_invoice_once = False
+            for line in record.sale_subscription_line_ids:
+                if line.display_type == "line_section":
+                    current_section_invoice_once = line.invoice_once
+                    continue
+                if line.display_type:
+                    continue
+                if current_section_invoice_once:
+                    non_recurring_total += line.price_subtotal
+                else:
+                    recurring_total += line.price_subtotal
+                amount_tax += line.amount_tax_line_amount
             record.update(
                 {
                     "recurring_total": recurring_total,
+                    "non_recurring_total": non_recurring_total,
                     "amount_tax": amount_tax,
-                    "amount_total": recurring_total + amount_tax,
+                    "amount_total": recurring_total + non_recurring_total + amount_tax,
                 }
             )
 
@@ -437,6 +461,19 @@ class SaleSubscription(models.Model):
             values["journal_id"] = self.journal_id.id
         return values
 
+    def _get_one_time_lines(self):
+        self.ensure_one()
+        one_time_lines = self.env["sale.subscription.line"]
+        current_section = self.env["sale.subscription.line"]
+        for line in self.sale_subscription_line_ids:
+            if line.display_type == "line_section":
+                current_section = (
+                    line if line.invoice_once else self.env["sale.subscription.line"]
+                )
+            if current_section:
+                one_time_lines |= line
+        return one_time_lines
+
     def create_invoice(self):
         if not self.env["account.move"].has_access("create"):
             try:
@@ -454,6 +491,7 @@ class SaleSubscription(models.Model):
             .with_context(default_move_type="out_invoice", journal_type="sale")
             .create(invoice_values)
         )
+        self._get_one_time_lines().unlink()
         return invoice_id
 
     def create_sale_order(self):
@@ -469,6 +507,7 @@ class SaleSubscription(models.Model):
         values = self._prepare_sale_order(line_ids)
         order_id = self.env["sale.order"].sudo().create(values)
         self.write({"sale_order_ids": [Command.link(order_id.id)]})
+        self._get_one_time_lines().unlink()
         return order_id
 
     def generate_invoice(self):
@@ -631,3 +670,35 @@ class SaleSubscription(models.Model):
                     .id
                 )
         return super().create(vals_list)
+
+    def _get_document_tax_totals(self):
+        """Return the amounts used by the subscription report and portal.
+
+        The structure mimics ``tax_totals`` used by the sales documents so the
+        subscription can be rendered with the same layout.
+        """
+        self.ensure_one()
+        groups = {}
+        for line in self.sale_subscription_line_ids:
+            if line.display_type or not line.tax_ids:
+                continue
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.tax_ids.compute_all(
+                price,
+                line.currency_id,
+                line.product_uom_qty,
+                product=line.product_id,
+                partner=self.partner_id,
+            )
+            for tax in taxes.get("taxes", []):
+                tax_record = self.env["account.tax"].browse(tax["id"])
+                name = tax_record.tax_group_id.name or tax_record.name
+                groups[name] = groups.get(name, 0.0) + tax["amount"]
+        return {
+            "recurring": self.recurring_total,
+            "non_recurring": self.non_recurring_total,
+            "tax_groups": [
+                {"name": name, "amount": amount} for name, amount in groups.items()
+            ],
+            "total": self.amount_total,
+        }
