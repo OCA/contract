@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 bosd
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="contract_contract_form_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_state.contract_contract_form_view" />
+        <field name="arch" type="xml">
+            <!-- Terminating is done with the termination wizard and undone with
+                 its own button, so the state buttons stay out of the way. -->
+            <!-- Added to the existing condition (not replacing it) so other
+                 modules hiding these buttons keep their part. -->
+            <xpath expr="//button[@name='action_activate']" position="attributes">
+                <attribute
+                    name="invisible"
+                    add="state == 'terminated'"
+                    separator=" or "
+                />
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="attributes">
+                <attribute
+                    name="invisible"
+                    add="state == 'terminated'"
+                    separator=" or "
+                />
+            </xpath>
+            <field name="state" position="attributes">
+                <attribute name="statusbar_visible">draft,active,terminated</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="contract_contract_termination_form_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field
+            name="inherit_id"
+            ref="contract_termination.contract_contract_form_view"
+        />
+        <field name="arch" type="xml">
+            <!-- Only a running contract can be terminated; a draft one is
+                 cancelled instead. -->
+            <xpath
+                expr="//button[@name='action_terminate_contract'][@invisible='is_terminated']"
+                position="attributes"
+            >
+                <attribute name="invisible" add="state != 'active'" separator=" or " />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="contract_contract_search_view" model="ir.ui.view">
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract_state.contract_contract_search_view" />
+        <field name="arch" type="xml">
+            <filter name="filter_active" position="after">
+                <filter
+                    name="filter_terminated"
+                    string="Terminated"
+                    domain="[('state', '=', 'terminated')]"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>
