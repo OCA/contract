@@ -1597,6 +1597,15 @@ class TestContract(TestContractBase):
         self.contract.recurring_create_invoice()
         self.assertEqual(len(self.contract._get_related_invoices()), 4)
 
+    def test_enable_line_recurrence_with_invoices(self):
+        self.contract3.recurring_create_invoice()
+        self.assertTrue(self.contract3.invoice_count)
+        with Form(self.contract3) as contract_form:
+            contract_form.line_recurrence = True
+        self.assertTrue(self.contract3.line_recurrence)
+        with self.assertRaises(ValidationError):
+            self.contract3.line_recurrence = False
+
     @freeze_time("2023-05-01")
     def test_check_month_name_marker(self):
         """Set fixed date to check test correctly."""
