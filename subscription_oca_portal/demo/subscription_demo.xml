@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Domatix
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="demo_partner" model="res.partner">
+        <field name="name">Subscription portal demo customer</field>
+    </record>
+
+    <record id="demo_pricelist" model="product.pricelist">
+        <field name="name">Subscription portal demo pricelist</field>
+    </record>
+
+    <record id="demo_template" model="sale.subscription.template">
+        <field name="name">Subscription portal demo template</field>
+        <field name="code">PORTAL-DEMO</field>
+        <field name="recurring_rule_type">months</field>
+        <field name="recurring_interval">1</field>
+    </record>
+
+    <record id="demo_product" model="product.product">
+        <field name="name">Subscription portal demo product</field>
+        <field name="type">service</field>
+        <field name="list_price">100.0</field>
+    </record>
+
+    <record id="demo_subscription" model="sale.subscription">
+        <field name="partner_id" ref="demo_partner" />
+        <field name="pricelist_id" ref="demo_pricelist" />
+        <field name="template_id" ref="demo_template" />
+        <field name="sale_subscription_line_ids" eval="[
+            (0, 0, {
+                'display_type': 'line_section',
+                'name': 'One-time',
+                'invoice_once': True,
+                'sequence': 1,
+            }),
+            (0, 0, {
+                'product_id': ref('demo_product'),
+                'sequence': 2,
+            }),
+            (0, 0, {
+                'display_type': 'line_section',
+                'name': 'Recurring',
+                'sequence': 3,
+            }),
+            (0, 0, {
+                'product_id': ref('demo_product'),
+                'sequence': 4,
+            }),
+        ]" />
+    </record>
+</odoo>

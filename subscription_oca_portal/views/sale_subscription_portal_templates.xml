@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Domatix
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="portal_subscription_breadcrumbs"
+        name="Portal layout: subscription menu entries"
+        inherit_id="portal.portal_breadcrumbs"
+        priority="40"
+    >
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li
+                t-if="page_name == 'Subscriptions'"
+                class="breadcrumb-item"
+            >
+                Subscriptions
+            </li>
+            <li
+                t-if="page_name == 'Subscriptions' and subscription"
+                class="breadcrumb-item active"
+            >
+                <t t-out="subscription.name" />
+            </li>
+        </xpath>
+    </template>
+
+    <template
+        id="portal_subscription_page"
+        name="My Subscription"
+        inherit_id="portal.portal_sidebar"
+        primary="True"
+    >
+        <t t-call="portal.portal_layout" position="inside">
+            <t
+                t-set="o_portal_fullwidth_alert"
+                groups="sales_team.group_sale_salesman"
+            >
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t
+                        t-set="backend_url"
+                        t-value="'/web#return_label=Website&amp;model=sale.subscription&amp;id=%s&amp;view_type=form' % (subscription.id)"
+                    />
+                </t>
+            </t>
+        </t>
+
+        <xpath
+            expr="//div[hasclass('o_portal_sidebar')]"
+            position="inside"
+        >
+            <div
+                class="row o_portal_subscription_sidebar"
+                t-att-data-subscription-amount-total="subscription.amount_total"
+            >
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t
+                        t-set="classes"
+                        t-value="'col-lg-4 col-xxl-3 d-print-none'"
+                    />
+                    <t t-set="title">
+                        <h2
+                            t-field="subscription.amount_total"
+                            class="mb-0 text-break"
+                        />
+                    </t>
+                    <t t-set="entries">
+                        <div class="d-flex flex-column gap-4 mt-3">
+                            <div
+                                class="d-flex flex-column gap-2"
+                                id="subscription_sidebar_button"
+                            >
+                                <a
+                                    class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1"
+                                    t-att-href="subscription.get_portal_url(report_type='pdf')"
+                                    id="print_subscription_report"
+                                    title="View Details"
+                                    role="button"
+                                    target="_blank"
+                                >
+                                    <i class="fa fa-print me-1" />View Details
+                                </a>
+                            </div>
+                            <div
+                                class="navspy flex-grow-1 ps-0"
+                                t-ignore="true"
+                                role="complementary"
+                            >
+                                <ul class="nav flex-column bs-sidenav" />
+                            </div>
+                            <div t-if="subscription.user_id">
+                                <h6>
+                                    <small class="text-muted">Your contact</small>
+                                </h6>
+                                <t t-call="portal.portal_my_contact">
+                                    <t
+                                        t-set="_contactAvatar"
+                                        t-value="image_data_uri(subscription.user_id.avatar_128)"
+                                    />
+                                    <t
+                                        t-set="_contactName"
+                                        t-value="subscription.user_id.name"
+                                    />
+                                    <t t-set="_contactLink" t-value="True" />
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- Page content -->
+                <div
+                    id="quote_content"
+                    class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0"
+                >
+                    <div>
+                        <t
+                            t-call="subscription_oca_portal.portal_subscription_content"
+                        />
+                    </div>
+
+                    <!-- chatter -->
+                    <hr />
+                    <div id="subscription_communication">
+                        <h3>Communication history</h3>
+                        <t t-call="portal.message_thread" />
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="portal_subscription_content" name="Subscription Portal Content">
+        <!-- Intro -->
+        <div
+            id="introduction"
+            t-attf-class="#{'border-bottom-0 pt-0 pb-3' if report_type == 'html' else ''}"
+        >
+            <div class="d-flex gap-2" id="intro_row">
+                <h2>
+                    Subscription -
+                    <em t-out="subscription.name" />
+                </h2>
+            </div>
+        </div>
+        <div id="content">
+            <div id="informations" class="row">
+                <!-- Information -->
+                <div id="sale_info" class="col-12 col-lg-6 mb-4">
+                    <span id="sale_info_title">
+                        <h5 class="mb-1">Subscription Information</h5>
+                        <hr class="mt-1 mb-2" />
+                    </span>
+                    <table class="table table-borderless table-sm">
+                        <tbody style="white-space:nowrap" id="sale_info_table">
+                            <tr t-if="subscription.date_start">
+                                <th class="ps-0 pb-0">Start Date:</th>
+                                <td class="w-100 pb-0 text-wrap">
+                                    <span
+                                        t-field="subscription.date_start"
+                                        t-options='{"widget": "date"}'
+                                    />
+                                </td>
+                            </tr>
+                            <tr t-if="subscription.recurring_next_date">
+                                <th class="ps-0 pb-0">Next Invoice:</th>
+                                <td class="w-100 pb-0 text-wrap">
+                                    <span
+                                        t-field="subscription.recurring_next_date"
+                                        t-options='{"widget": "date"}'
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Customer Information -->
+                <div id="customer_info" class="col-12 col-lg-6 mb-4">
+                    <h5 class="mb-1">Invoicing Address</h5>
+                    <hr class="mt-1 mb-2" />
+                    <div
+                        t-field="subscription.partner_invoice_id"
+                        t-options='{"widget": "contact", "fields": ["name", "address", "phone", "email"]}'
+                    />
+                </div>
+            </div>
+
+            <section id="details" style="page-break-inside: auto;">
+                <t
+                    t-set="lines_to_report"
+                    t-value="subscription.sale_subscription_line_ids.filtered(lambda line: line.display_type != 'line_note' or line.name)"
+                />
+                <t
+                    t-set="display_discount"
+                    t-value="any(line.discount &gt; 0 for line in lines_to_report)"
+                />
+                <t
+                    t-set="display_taxes"
+                    t-value="any(line.tax_ids for line in lines_to_report)"
+                />
+
+                <div name="sol_table" class="table-responsive">
+                    <table
+                        class="table table-sm"
+                        id="subscription_lines"
+                        style="table-layout: fixed;"
+                    >
+                        <colgroup>
+                            <col
+                                t-attf-style="width: #{34 if display_discount else 40}%;"
+                            />
+                            <col
+                                t-attf-style="width: #{14 if display_discount else 16}%;"
+                            />
+                            <col
+                                t-attf-style="width: #{13 if display_discount else 15}%;"
+                            />
+                            <col t-if="display_discount" style="width: 10%;" />
+                            <col t-if="display_taxes" style="width: 15%;" />
+                            <col
+                                t-attf-style="width: #{14 if display_taxes else 29}%;"
+                            />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="text-start" id="product_name_header">Products</th>
+                                <th class="text-end" id="product_qty_header">
+                                    Quantity
+                                </th>
+                                <th
+                                    class="text-end d-none d-sm-table-cell"
+                                    id="product_unit_price_header"
+                                >
+                                    Unit Price
+                                </th>
+                                <th
+                                    t-if="display_discount"
+                                    class="text-end d-none d-sm-table-cell"
+                                    id="product_discount_header"
+                                >
+                                    <span>Disc.%</span>
+                                </th>
+                                <th
+                                    t-if="display_taxes"
+                                    class="text-end d-none d-md-table-cell"
+                                    id="taxes_header"
+                                >
+                                    <span class="text-nowrap">Taxes</span>
+                                </th>
+                                <th class="text-end" id="subtotal_header">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="lines_to_report" t-as="line">
+                                <t
+                                    t-set="is_note"
+                                    t-value="line.display_type == 'line_note'"
+                                />
+                                <t
+                                    t-set="is_section"
+                                    t-value="line.display_type == 'line_section'"
+                                />
+                                <tr
+                                    t-if="is_section"
+                                    name="tr_section"
+                                    class="fw-bolder o_line_section"
+                                >
+                                    <td name="td_section_name" colspan="99">
+                                        <span t-field="line.name" />
+                                        <span
+                                            t-if="line.invoice_once"
+                                            class="badge text-bg-info ms-2"
+                                        >Invoice once</span>
+                                    </td>
+                                </tr>
+                                <tr
+                                    t-elif="is_note"
+                                    name="tr_note"
+                                    class="fst-italic o_line_note"
+                                >
+                                    <td name="td_note_name" colspan="99">
+                                        <span t-field="line.name" />
+                                    </td>
+                                </tr>
+                                <tr t-else="" name="tr_product">
+                                    <td
+                                        name="td_product_name"
+                                        style="white-space: pre-line;"
+                                    >
+                                        <span
+                                            name="span_product_name"
+                                            t-field="line.name"
+                                        />
+                                    </td>
+                                    <td name="td_product_quantity" class="text-end">
+                                        <div>
+                                            <span
+                                                t-field="line.product_uom_qty"
+                                                t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                            />
+                                            <span t-field="line.product_id.uom_id" />
+                                        </div>
+                                    </td>
+                                    <td
+                                        name="td_product_priceunit"
+                                        t-attf-class="text-end text-nowrap {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}"
+                                    >
+                                        <span
+                                            t-field="line.price_unit"
+                                            t-options='{"widget": "monetary", "display_currency": subscription.currency_id}'
+                                        />
+                                    </td>
+                                    <td
+                                        t-if="display_discount"
+                                        name="td_product_discount"
+                                        t-attf-class="text-end text-nowrap {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}"
+                                    >
+                                        <strong t-if="line.discount &gt; 0" class="text-info">
+                                            <t
+                                                t-out="((line.discount % 1) and '%s' or '%d') % line.discount"
+                                            />%
+                                        </strong>
+                                    </td>
+                                    <td
+                                        t-if="display_taxes"
+                                        name="td_product_taxes"
+                                        t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"
+                                    >
+                                        <span
+                                            t-out="', '.join(map(lambda x: (x.name), line.tax_ids))"
+                                        />
+                                    </td>
+                                    <td name="td_product_subtotal" class="text-end text-nowrap">
+                                        <span t-field="line.price_subtotal" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <t
+                    t-set="portal_tax_totals"
+                    t-value="subscription._get_document_tax_totals()"
+                />
+                <div id="total" name="total" style="page-break-inside: avoid;">
+                    <div class="col-xs-7 col-md-5 ms-auto">
+                        <table class="table table-sm" name="sale_order_totals_table">
+                            <tbody>
+                                <tr class="o_subtotal">
+                                    <td>
+                                        <span>Recurring</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span
+                                            t-out="portal_tax_totals['recurring']"
+                                            t-options='{"widget": "monetary", "display_currency": subscription.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                                <tr
+                                    t-if="portal_tax_totals['non_recurring']"
+                                    class="o_subtotal"
+                                >
+                                    <td>
+                                        <span>Non-recurring</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span
+                                            t-out="portal_tax_totals['non_recurring']"
+                                            t-options='{"widget": "monetary", "display_currency": subscription.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                                <tr
+                                    t-foreach="portal_tax_totals['tax_groups']"
+                                    t-as="tax_group"
+                                    class="o_taxes"
+                                >
+                                    <td>
+                                        <span t-out="tax_group['name']" />
+                                    </td>
+                                    <td class="text-end o_price_total">
+                                        <span
+                                            class="text-nowrap"
+                                            t-out="tax_group['amount']"
+                                            t-options='{"widget": "monetary", "display_currency": subscription.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                                <tr class="o_total">
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong
+                                            t-out="portal_tax_totals['total']"
+                                            t-options='{"widget": "monetary", "display_currency": subscription.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section t-if="subscription.terms" id="terms" class="mt-4">
+                <h4>Terms &amp; Conditions</h4>
+                <hr class="mt-0 mb-1" />
+                <em t-field="subscription.terms" style="white-space: pre-line;" />
+            </section>
+        </div>
+    </template>
+</odoo>
