@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="rule_contract_contract_multi_company" model="ir.access">
+        <field name="name">Contract contract multi-company</field>
+        <field name="model_id" ref="model_contract_contract" />
+        <field name="operation">crud</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_contract_contract_portal" model="ir.access">
+        <field name="name">Contract contract portal</field>
+        <field name="model_id" ref="model_contract_contract" />
+        <field name="operation">r</field>
+        <field
+            name="domain"
+        >[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="group_id" ref="base.group_portal" />
+    </record>
+    <record id="rule_contract_line_multi_company" model="ir.access">
+        <field name="name">Contract line multi-company</field>
+        <field name="model_id" ref="model_contract_line" />
+        <field name="operation">crud</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_contract_template_multi_company" model="ir.access">
+        <field name="name">Contract template multi-company</field>
+        <field name="model_id" ref="model_contract_template" />
+        <field name="operation">crud</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_contract_template_line_multi_company" model="ir.access">
+        <field name="name">Contract template line multi-company</field>
+        <field name="model_id" ref="model_contract_template_line" />
+        <field name="operation">crud</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <!-- For the sake of the OCA ecosystem, please do not remove this rule, as
+       it is used in other modules as contract_sale and maintenance_equipment_contract-->
+    <record id="contract_contract_see_all" model="ir.access">
+        <field name="name">See All Contracts</field>
+        <field name="model_id" ref="contract.model_contract_contract" />
+        <field name="operation">crud</field>
+        <field name="domain">[(1, '=', 1)]</field>
+        <field name="group_id" ref="account.group_account_invoice" />
+    </record>
+</odoo>
