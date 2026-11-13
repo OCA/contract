@@ -554,6 +554,20 @@ class TestContract(TestContractBase):
         del self.template_vals["name"]
         self.assertDictEqual(res, self.template_vals)
 
+    def test_onchange_contract_template_unlinked(self):
+        """
+        Check if a deleted contract (1) has the same id as the template,
+        and as both template lines and contract lines have the same "contract_id"
+        field, that the contract_id is void in onchanges.
+        """
+        self.contract.browse(self.template.id).unlink()
+        with Form(self.env["contract.contract"]) as contract_form:
+            contract_form.contract_template_id = self.template
+            contract_form.name = "Test Contract"
+            contract_form.partner_id = self.partner
+        contract = contract_form.save()
+        self.assertTrue(contract)
+
     def test_onchange_contract_template_id_lines(self):
         """It should create invoice lines for the contract lines."""
         self.acct_line.cancel()
