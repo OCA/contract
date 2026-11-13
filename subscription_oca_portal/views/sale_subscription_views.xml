@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Domatix
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="sale_subscription_form_portal" model="ir.ui.view">
+        <field name="name">sale.subscription.form.portal</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_form" />
+        <field name="arch" type="xml">
+            <button name="manual_invoice" position="after">
+                <button
+                    string="Preview"
+                    name="action_preview"
+                    type="object"
+                    class="btn-secondary"
+                    invisible="not id"
+                />
+            </button>
+        </field>
+    </record>
+</odoo>
