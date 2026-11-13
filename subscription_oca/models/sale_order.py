@@ -7,6 +7,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, api, fields, models
+from odoo.tools import clean_context
 
 
 class SaleOrder(models.Model):
@@ -55,16 +56,25 @@ class SaleOrder(models.Model):
             subscription_lines = [
                 Command.create(line.get_subscription_line_values()) for line in lines
             ]
-            rec = self.env["sale.subscription"].create(
-                {
-                    "partner_id": self.partner_id.id,
-                    "user_id": self.env.context.get("uid", self.env.uid),
-                    "template_id": subscription_tmpl.id,
-                    "pricelist_id": self.partner_id.property_product_pricelist.id,
-                    "date_start": date.today(),
-                    "sale_order_id": self.id,
-                    "sale_subscription_line_ids": subscription_lines,
-                }
+            # Strip all default_* keys from context to prevent cross-model context
+            # pollution. sale_crm injects default_tag_ids with crm.tag IDs which
+            # would otherwise be applied by default_get() to sale.subscription.tag_ids,
+            # causing a FK constraint violation.
+            # pylint: disable=context-overridden
+            rec = (
+                self.env["sale.subscription"]
+                .with_context(clean_context(self.env.context))
+                .create(
+                    {
+                        "partner_id": self.partner_id.id,
+                        "user_id": self.env.context.get("uid", self.env.uid),
+                        "template_id": subscription_tmpl.id,
+                        "pricelist_id": self.partner_id.property_product_pricelist.id,
+                        "date_start": date.today(),
+                        "sale_order_id": self.id,
+                        "sale_subscription_line_ids": subscription_lines,
+                    }
+                )
             )
             if self.company_id.automatic_subscription_start:
                 rec.action_start_subscription()
