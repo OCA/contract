@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Domatix
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+    <t
+        t-name="subscription_oca.SectionAndNoteRecordRow"
+        t-inherit="account.SectionAndNoteListRenderer.RecordRow"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//span[text()='Add a note']/.." position="after">
+            <DropdownItem
+                t-if="record.data.invoice_once !== undefined"
+                onSelected="() => this.toggleInvoiceOnce(record)"
+            >
+                <i
+                    class="me-1 fa fa-fw"
+                    t-att-class="record.data.invoice_once ? 'fa-check-square-o' : 'fa-square-o'"
+                />
+                <span>Invoice once</span>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

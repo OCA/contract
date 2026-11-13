@@ -791,3 +791,124 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
             10.0,
             "Manual discount was lost after changing the quantity (Bug #1320)",
         )
+
+    def _create_subscription_section(self, subscription, invoice_once, sequence):
+        return self.env["sale.subscription.line"].create(
+            {
+                "sale_subscription_id": subscription.id,
+                "display_type": "line_section",
+                "name": "One-time" if invoice_once else "Recurring",
+                "invoice_once": invoice_once,
+                "sequence": sequence,
+            }
+        )
+
+    def _create_subscription_product_line(self, subscription, product, sequence):
+        return self.env["sale.subscription.line"].create(
+            {
+                "sale_subscription_id": subscription.id,
+                "product_id": product.id,
+                "sequence": sequence,
+            }
+        )
+
+    def test_subscription_section_totals(self):
+        subscription = self.create_sub({})
+        one_time_section = self._create_subscription_section(subscription, True, 1)
+        one_time_line = self._create_subscription_product_line(
+            subscription, self.product_1, 2
+        )
+        self._create_subscription_section(subscription, False, 3)
+        recurring_line = self._create_subscription_product_line(
+            subscription, self.product_2, 4
+        )
+
+        self.assertEqual(one_time_section.product_uom_qty, 0.0)
+        self.assertEqual(one_time_section.price_subtotal, 0.0)
+        self.assertAlmostEqual(subscription.non_recurring_total, 27.95, 2)
+        self.assertAlmostEqual(subscription.recurring_total, 38.25, 2)
+        self.assertAlmostEqual(subscription.amount_tax, 2.8, 2)
+        self.assertAlmostEqual(subscription.amount_total, 69.0, 2)
+        self.assertAlmostEqual(
+            subscription.non_recurring_total, one_time_line.price_subtotal, 2
+        )
+        self.assertAlmostEqual(
+            subscription.recurring_total, recurring_line.price_subtotal, 2
+        )
+
+    def test_subscription_section_one_time_invoice(self):
+        subscription = self.create_sub({})
+        self._create_subscription_section(subscription, True, 1)
+        one_time_line = self._create_subscription_product_line(
+            subscription, self.product_1, 2
+        )
+        self._create_subscription_section(subscription, False, 3)
+        recurring_line = self._create_subscription_product_line(
+            subscription, self.product_2, 4
+        )
+
+        invoice = subscription.create_invoice()
+        self.assertTrue(
+            invoice.invoice_line_ids.filtered(
+                lambda line: line.display_type == "line_section"
+            )
+        )
+        self.assertTrue(
+            invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == self.product_1
+            )
+        )
+        self.assertTrue(
+            invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == self.product_2
+            )
+        )
+
+        self.assertFalse(one_time_line.exists())
+        self.assertTrue(recurring_line.exists())
+        self.assertFalse(
+            subscription.sale_subscription_line_ids.filtered(
+                lambda line: line.invoice_once
+            )
+        )
+
+        second_invoice = subscription.create_invoice()
+        self.assertFalse(
+            second_invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == self.product_1
+            )
+        )
+        self.assertTrue(
+            second_invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == self.product_2
+            )
+        )
+
+    def test_subscription_section_one_time_sale_and_invoice(self):
+        template = self.create_sub_template({"invoicing_mode": "sale_and_invoice"})
+        subscription = self.create_sub({"template_id": template.id})
+        self.product_1.invoice_policy = "order"
+        self.product_2.invoice_policy = "order"
+        self._create_subscription_section(subscription, True, 1)
+        one_time_line = self._create_subscription_product_line(
+            subscription, self.product_1, 2
+        )
+        self._create_subscription_section(subscription, False, 3)
+        recurring_line = self._create_subscription_product_line(
+            subscription, self.product_2, 4
+        )
+
+        subscription.generate_invoice()
+
+        order = subscription.sale_order_ids
+        self.assertEqual(len(order), 1)
+        self.assertTrue(
+            order.order_line.filtered(lambda line: line.display_type == "line_section")
+        )
+        self.assertTrue(
+            order.invoice_ids.invoice_line_ids.filtered(
+                lambda line: line.display_type == "line_section"
+            )
+        )
+        self.assertFalse(one_time_line.exists())
+        self.assertTrue(recurring_line.exists())
