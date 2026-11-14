@@ -279,6 +279,11 @@ class TestContract(TestContractBase):
         self.assertTrue(self.inv_line.tax_ids)
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.invoice_monthly.user_id)
+        with self.assertRaises(ValidationError):
+            self.contract.unlink()
+        self.contract.active = False
+        with self.assertRaises(ValidationError):
+            self.contract.unlink()
 
     def test_contract_level_recurrence(self):
         self.contract3.recurring_create_invoice()
