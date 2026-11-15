@@ -16,6 +16,13 @@ class ContractContract(models.Model):
 
     sale_count = fields.Integer(compute="_compute_sale_count")
 
+    @api.constrains(
+        "generation_type",
+    )
+    def _constrain_sale_generation_type_line_product(self):
+        """If the contract generates a sale, its lines must comply with sale order lines."""
+        self.contract_line_ids._constrain_sale_product_display()
+
     def _prepare_sale(self, date_ref):
         self.ensure_one()
         sale = self.env["sale.order"].new(
