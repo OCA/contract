@@ -57,13 +57,15 @@ class SaleSubscription(models.Model):
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist", required=True, string="Pricelist"
     )
-    recurring_next_date = fields.Date(string="Next invoice date", default=date.today())
+    recurring_next_date = fields.Date(
+        string="Next invoice date", default=fields.Date.context_today
+    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Commercial agent",
         default=lambda self: self.env.user.id,
     )
-    date_start = fields.Date(string="Start date", default=date.today())
+    date_start = fields.Date(string="Start date", default=fields.Date.context_today)
     date = fields.Date(
         string="Finish date",
         compute="_compute_rule_boundary",
