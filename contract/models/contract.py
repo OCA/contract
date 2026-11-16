@@ -159,6 +159,22 @@ class ContractContract(models.Model):
             res = super(ContractContract, self).write(vals)
         return res
 
+    @api.ondelete(at_uninstall=False)
+    def _check_invoice_link(self):
+        """
+        Check if contract is linked to existing invoices.
+        """
+        lines = self.env["account.move.line"].search(
+            [("contract_line_id", "in", self.contract_line_ids.ids)]
+        )
+        if lines:
+            raise ValidationError(
+                _(
+                    "You cannot delete Contract(s) that have existing Invoice(s)! "
+                    "Please archive it/them instead."
+                )
+            )
+
     @api.model
     def _set_start_contract_modification(self):
         subtype_id = self.env.ref("contract.mail_message_subtype_contract_modification")
