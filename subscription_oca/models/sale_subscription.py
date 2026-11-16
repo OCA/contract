@@ -177,9 +177,15 @@ class SaleSubscription(models.Model):
                     and subscription.sale_subscription_line_ids
                 ):
                     try:
-                        subscription.generate_invoice()
+                        # Savepoint: a DB error on one subscription must not
+                        # abort the cron transaction for the others.
+                        with self.env.cr.savepoint():
+                            subscription.generate_invoice()
                     except Exception:
-                        logger.exception("Error on subscription invoice generate")
+                        logger.exception(
+                            "Error on subscription %s invoice generate",
+                            subscription.id,
+                        )
                 if (
                     not subscription.recurring_rule_boundary
                     and subscription.date <= today
@@ -188,8 +194,12 @@ class SaleSubscription(models.Model):
             elif (
                 subscription.date_start <= today and subscription.stage_id.type == "pre"
             ):
-                subscription.action_start_subscription()
-                subscription.generate_invoice()
+                try:
+                    with self.env.cr.savepoint():
+                        subscription.action_start_subscription()
+                        subscription.generate_invoice()
+                except Exception:
+                    logger.exception("Error starting subscription %s", subscription.id)
 
     @api.model
     def _cron_resume_due_subscriptions(self, limit=None):
@@ -432,6 +442,7 @@ class SaleSubscription(models.Model):
             "partner_bank_id": self.company_id.partner_id.bank_ids[:1].id,
             "invoice_line_ids": line_ids,
             "subscription_id": self.id,
+            "currency_id": self.pricelist_id.currency_id.id,
         }
         if self.journal_id:
             values["journal_id"] = self.journal_id.id
@@ -443,13 +454,14 @@ class SaleSubscription(models.Model):
                 self.check_access("write")
             except AccessError:
                 return self.env["account.move"]
+        new_self = self.with_company(self.company_id)
         line_ids = []
-        for line in self.sale_subscription_line_ids:
+        for line in new_self.sale_subscription_line_ids:
             line_values = line._prepare_account_move_line()
             line_ids.append(Command.create(line_values))
-        invoice_values = self._prepare_account_move(line_ids)
+        invoice_values = new_self._prepare_account_move(line_ids)
         invoice_id = (
-            self.env["account.move"]
+            new_self.env["account.move"]
             .sudo()
             .with_context(default_move_type="out_invoice", journal_type="sale")
             .create(invoice_values)
