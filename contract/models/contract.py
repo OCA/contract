@@ -393,8 +393,8 @@ class ContractContract(models.Model):
         contract_line_model = self.env["contract.line"]
         for contract_line in contract.contract_line_ids:
             vals = contract_line._convert_to_write(contract_line.read()[0])
-            # Remove template link field
-            vals.pop("contract_template_id", False)
+            # Remove template link field (it is the same field in contract.line model)
+            vals.pop("contract_id", False)
             vals["date_start"] = fields.Date.context_today(contract_line)
             vals["recurring_next_date"] = fields.Date.context_today(contract_line)
             new_lines += contract_line_model.new(vals)
