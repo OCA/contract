@@ -25,6 +25,7 @@
         "wizard/pause_subscription_wizard.xml",
         "security/subscription_security.xml",
         "security/ir.model.access.csv",
+        "security/security.xml",
     ],
     "installable": True,
     "application": True,

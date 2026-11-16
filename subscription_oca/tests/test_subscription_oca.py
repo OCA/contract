@@ -791,3 +791,58 @@ class TestSubscriptionOCA(ProductCommon, BaseCommon):
             10.0,
             "Manual discount was lost after changing the quantity (Bug #1320)",
         )
+
+    def test_prepare_account_move_sets_pricelist_currency(self):
+        """Test that the invoice currency matches
+        the subscription pricelist currency."""
+        subscription = self.create_sub(
+            {
+                "pricelist_id": self.pricelist2.id,
+            }
+        )
+        vals = subscription._prepare_account_move([])
+        expected_currency_id = subscription.pricelist_id.currency_id.id
+        self.assertIn("currency_id", vals)
+        self.assertEqual(
+            vals["currency_id"],
+            expected_currency_id,
+            "The currency_id field must be equal to the currency of the pricelist.",
+        )
+
+    def test_create_invoice_uses_subscription_company(self):
+        """Test that the invoice is created in the subscription's company
+        and with the correct currency."""
+        company_alt = self.env["res.company"].create(
+            {"name": "Another Company", "currency_id": self.env.ref("base.USD").id}
+        )
+        sale_journal_alt = self.env["account.journal"].create(
+            {
+                "name": "Sale Journal Alt",
+                "type": "sale",
+                "code": "SALT",
+                "company_id": company_alt.id,
+            }
+        )
+        pricelist = self.env["product.pricelist"].create(
+            {"name": "Pricelist EUR", "currency_id": self.env.ref("base.EUR").id}
+        )
+        subscription = self.create_sub(
+            {
+                "company_id": company_alt.id,
+                "pricelist_id": pricelist.id,
+                "journal_id": sale_journal_alt.id,
+            }
+        )
+        invoice = subscription.create_invoice()
+        self.assertTrue(invoice, "The invoice should have been created successfully.")
+        self.assertEqual(
+            invoice.company_id,
+            subscription.company_id,
+            "The invoice must belong to the subscription's company (with_company).",
+        )
+        self.assertEqual(
+            invoice.currency_id,
+            subscription.pricelist_id.currency_id,
+            """The invoice must have the currency of the pricelist
+            defined in the subscription.""",
+        )
