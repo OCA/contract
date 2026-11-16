@@ -461,6 +461,7 @@ msgstr "Preu automàtic?"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_manually_create_invoice_form_view
+#: model_terms:ir.ui.view,arch_db:contract.contract_merge_view_form
 msgid "Cancel"
 msgstr "Cancel·lar"
 
@@ -531,6 +532,11 @@ msgstr "Empresa"
 #: code:addons/contract/models/contract.py:0
 msgid "Compose Email"
 msgstr "Redacta Email"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_merge_view_form
+msgid "Confirm?"
+msgstr ""
 
 #. module: contract
 #: model:ir.model,name:contract.model_res_partner
@@ -744,6 +750,7 @@ msgstr "Generar factures"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_uid
 #: model:ir.model.fields,field_description:contract.field_contract_line__create_uid
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__create_uid
+#: model:ir.model.fields,field_description:contract.field_contract_merge__create_uid
 #: model:ir.model.fields,field_description:contract.field_contract_modification__create_uid
 #: model:ir.model.fields,field_description:contract.field_contract_tag__create_uid
 #: model:ir.model.fields,field_description:contract.field_contract_template__create_uid
@@ -755,6 +762,7 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__create_date
 #: model:ir.model.fields,field_description:contract.field_contract_line__create_date
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__create_date
+#: model:ir.model.fields,field_description:contract.field_contract_merge__create_date
 #: model:ir.model.fields,field_description:contract.field_contract_modification__create_date
 #: model:ir.model.fields,field_description:contract.field_contract_tag__create_date
 #: model:ir.model.fields,field_description:contract.field_contract_template__create_date
@@ -926,6 +934,7 @@ msgstr "El descompte a aplicar a les factures generades ha de ser ≤ 100."
 #: model:ir.model.fields,field_description:contract.field_contract_contract__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_line__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__display_name
+#: model:ir.model.fields,field_description:contract.field_contract_merge__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_modification__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_tag__display_name
 #: model:ir.model.fields,field_description:contract.field_contract_template__display_name
@@ -1021,6 +1030,7 @@ msgstr "Té missatges"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__id
 #: model:ir.model.fields,field_description:contract.field_contract_line__id
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__id
+#: model:ir.model.fields,field_description:contract.field_contract_merge__id
 #: model:ir.model.fields,field_description:contract.field_contract_modification__id
 #: model:ir.model.fields,field_description:contract.field_contract_tag__id
 #: model:ir.model.fields,field_description:contract.field_contract_template__id
@@ -1186,6 +1196,7 @@ msgstr "Darrera Data de Facturació"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_line__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__write_uid
+#: model:ir.model.fields,field_description:contract.field_contract_merge__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_modification__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_tag__write_uid
 #: model:ir.model.fields,field_description:contract.field_contract_template__write_uid
@@ -1197,6 +1208,7 @@ msgstr "Darrera Actualització per"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__write_date
 #: model:ir.model.fields,field_description:contract.field_contract_line__write_date
 #: model:ir.model.fields,field_description:contract.field_contract_manually_create_invoice__write_date
+#: model:ir.model.fields,field_description:contract.field_contract_merge__write_date
 #: model:ir.model.fields,field_description:contract.field_contract_modification__write_date
 #: model:ir.model.fields,field_description:contract.field_contract_tag__write_date
 #: model:ir.model.fields,field_description:contract.field_contract_template__write_date
@@ -1243,6 +1255,16 @@ msgstr "Març"
 #: code:addons/contract/models/contract_line.py:0
 msgid "May"
 msgstr "Maig"
+
+#. module: contract
+#: model:ir.actions.act_window,name:contract.contract_merge_action
+msgid "Merge"
+msgstr ""
+
+#. module: contract
+#: model:ir.model,name:contract.model_contract_merge
+msgid "Merge contracts"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__message_has_error
@@ -1448,6 +1470,12 @@ msgstr ""
 "Si us plau definiu a %(contract_type)s diari per a l'empresa '%(company)s'."
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/wizards/merge.py:0
+msgid "Please select at least 2 contracts to merge"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_url
 msgid "Portal Access URL"
 msgstr "URL d'accés al portal"
@@ -1585,6 +1613,11 @@ msgid "Responsible User"
 msgstr "Usuari Responsable"
 
 #. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.contract_merge_view_form
+msgid "Run"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_res_partner__sale_contract_count
 #: model:ir.model.fields,field_description:contract.field_res_users__sale_contract_count
 #: model_terms:ir.ui.view,arch_db:contract.view_partner_form
@@ -1602,6 +1635,12 @@ msgstr "Secció"
 #: model:ir.model.fields,field_description:contract.field_contract_contract__access_token
 msgid "Security Token"
 msgstr "Token de seguretat"
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/wizards/merge.py:0
+msgid "Selected contracts must have the same partner"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_contract__recurring_rule_type__semesterly
