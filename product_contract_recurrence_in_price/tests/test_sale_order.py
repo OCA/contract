@@ -39,3 +39,20 @@ class TestSaleOrder(TestSaleOrderBase):
         self.assertEqual(self.order_line1.price_subtotal, 6000)
         self.assertEqual(self.order_line1.price_tax, 600)
         self.assertEqual(self.order_line1.price_total, 6600)
+
+    def test_compute_amount_daily(self):
+        """A SO line recurrent over 1 month (January) and invoiced every day
+        will be invoiced 30 times in total."""
+        self.order_line1.update(
+            {
+                "price_unit": 10,
+                "product_uom_qty": 1,
+                "recurrence_number": 1,
+                "recurrence_interval": "monthly",
+                "recurring_interval": 1,
+                "recurring_rule_type": "daily",
+                "include_recurrence_in_price": True,
+            }
+        )
+        self.assertEqual(self.order_line1.recurring_invoicing_number, 30)
+        self.assertEqual(self.order_line1.price_subtotal, 300)
