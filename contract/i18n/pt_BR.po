@@ -34,7 +34,7 @@ msgid ""
 "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
 "out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+"                        &amp;nbsp;&amp;nbsp;Contract Start Date: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
@@ -216,11 +216,6 @@ msgid "<strong>Customer:</strong>"
 msgstr "<strong>Cliente:</strong>"
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-msgid "<strong>Date Start</strong>"
-msgstr "<strong>Data Inicial</strong>"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
 msgstr "<strong>Data final</strong>"
@@ -291,6 +286,11 @@ msgstr "<strong>Responsável: </strong>"
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
 msgstr "<strong>Responsável:</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Start Date</strong>"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -742,25 +742,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Date End"
-msgstr "Data Final"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
-msgid "Date Start"
-msgstr "Data Inicial"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
@@ -876,6 +857,16 @@ msgstr ""
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
 msgstr "Modelo de E-mail do contrato"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "End Date"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__invoice_generation_error
@@ -1614,6 +1605,15 @@ msgid "Specify interval for automatic invoice generation."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1845,6 +1845,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contrato (Ref {{ object.name or 'n/a' }}) - "
 "Modificações"
+
+#~ msgid "<strong>Date Start</strong>"
+#~ msgstr "<strong>Data Inicial</strong>"
+
+#~ msgid "Date End"
+#~ msgstr "Data Final"
+
+#~ msgid "Date Start"
+#~ msgstr "Data Inicial"
 
 #~ msgid "Category"
 #~ msgstr "Categoria"
