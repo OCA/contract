@@ -33,7 +33,7 @@ addon | version | maintainers | summary
 [contract_layout_category_hide_detail](contract_layout_category_hide_detail/) | 18.0.1.0.0 |  | Hide details for sections in contracts and their reports, portal and generated invoices
 [contract_line_defer](contract_line_defer/) | 18.0.1.0.0 |  | Defer Contract Lines to avoid invoicing while start date unknown
 [contract_line_defer_successor](contract_line_defer_successor/) | 18.0.1.0.0 |  | Bridge Module contract_line_defer / contract_line_successor
-[contract_line_successor](contract_line_successor/) | 18.0.1.0.3 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Contract Line Successor
+[contract_line_successor](contract_line_successor/) | 18.0.1.1.0 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Contract Line Successor
 [contract_mandate](contract_mandate/) | 18.0.1.0.0 |  | Mandate in contracts and their invoices
 [contract_payment_mode](contract_payment_mode/) | 18.0.1.0.0 |  | Payment mode in contracts and their invoices
 [contract_price_revision](contract_price_revision/) | 18.0.1.0.0 | <a href='https://github.com/carlosdauden'><img src='https://github.com/carlosdauden.png' width='32' height='32' style='border-radius:50%;' alt='carlosdauden'/></a> | Easy revision of contract prices
