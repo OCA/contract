@@ -2176,6 +2176,72 @@ class TestContract(TestContractBase):
                 }
             )
 
+    def test_stop_plan_successor_contract_line_invoice_post_paid(self):
+        """
+        Create a post-paid contract and a line at 2018-11-10
+
+        Create a successor at 2019-01-01
+
+        Create two invoices (for the line until 2018-12-31).
+
+        Check that the next recurring date on the first line is not set.
+
+        """
+        self.contract_post_paid = self.env["contract.contract"].create(
+            {
+                "name": "Test Contract",
+                "partner_id": self.partner.id,
+                "pricelist_id": self.partner.property_product_pricelist.id,
+                "line_recurrence": False,
+                "recurring_invoicing_type": "post-paid",
+                "date_start": "2018-11-10",
+            }
+        )
+        self.line_vals = {
+            "contract_id": self.contract_post_paid.id,
+            "product_id": self.product_1.id,
+            "name": "Services from #START# to #END#",
+            "quantity": 1,
+            "uom_id": self.product_1.uom_id.id,
+            "price_unit": 100,
+            "discount": 50,
+            "recurring_rule_type": "monthly",
+            "recurring_interval": 1,
+            "date_start": "2018-11-10",
+            "is_auto_renew": False,
+        }
+        self.line = self.env["contract.line"].create(self.line_vals)
+
+        # Manage successor
+        self.line.stop(fields.Date.from_string("2018-12-31"))
+        new_line = self.line.copy(
+            {
+                "date_start": "2019-01-01",
+                "recurring_next_date": "2019-01-10",
+                "date_end": False,
+                "price_unit": 110,
+            }
+        )
+        self.line.update({"successor_contract_line_id": new_line.id})
+
+        self.assertEqual(len(self.contract_post_paid.contract_line_ids), 2)
+        invoice = self.contract_post_paid._recurring_create_invoice()
+        self.assertEqual(invoice.invoice_line_ids.price_unit, 100.0)
+        self.assertEqual(
+            fields.Date.from_string("2018-12-10"),
+            self.line.recurring_next_date,
+        )
+        self.assertEqual(
+            fields.Date.from_string("2019-01-10"),
+            new_line.recurring_next_date,
+        )
+        invoice = self.contract_post_paid._recurring_create_invoice()
+        self.assertEqual(invoice.invoice_line_ids.price_unit, 100.0)
+        self.assertEqual(
+            False,
+            self.line.recurring_next_date,
+        )
+
     def test_check_last_date_invoiced_1(self):
         """
         start end can't be before the date of last invoice
