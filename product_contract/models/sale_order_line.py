@@ -196,58 +196,47 @@ class SaleOrderLine(models.Model):
         "recurring_invoicing_type",
     )
     def _compute_name(self):
-        res = super()._compute_name()
-        for line in self:
-            if line.is_contract:
-                lang = line.order_id._get_lang()
-                if lang != self.env.lang:
-                    line = line.with_context(lang=lang)
-                if line.contract_start_date_method == "manual":
-                    date_text = f"{line.date_start}"
-                    if line.date_end:
-                        date_text += f" -> {line.date_end}"
-                else:
-                    field_info = dict(
-                        line._fields["contract_start_date_method"].get_description(
-                            self.env
-                        )
-                    )
-                    field_selection = dict(field_info.get("selection"))
-                    start_method_label = field_selection.get(
-                        line.contract_start_date_method
-                    )
-                    date_text = f"{start_method_label}"
-                    if (
-                        line.recurrence_interval != "monthly"
-                        and line.product_id[f"force_month_{line.recurrence_interval}"]
-                    ):
-                        field_info = dict(
-                            self.env["product.template"]
-                            ._fields[f"force_month_{line.recurrence_interval}"]
-                            .get_description(self.env)
-                        )
-                        field_selection = dict(field_info.get("selection"))
-                        force_month_label = field_selection.get(
-                            line.product_id[f"force_month_{line.recurrence_interval}"]
-                        )
-                        date_text += f" ({force_month_label})"
+        # Only adds the contract dependencies, the description is built in
+        # _get_sale_order_line_multiline_description_sale()
+        return super()._compute_name()
 
+    def _get_sale_order_line_multiline_description_sale(self):
+        self.ensure_one()
+        if not self.is_contract:
+            return super()._get_sale_order_line_multiline_description_sale()
+        if self.contract_start_date_method == "manual":
+            date_text = f"{self.date_start}"
+            if self.date_end:
+                date_text += f" -> {self.date_end}"
+        else:
+            field_info = dict(
+                self._fields["contract_start_date_method"].get_description(self.env)
+            )
+            field_selection = dict(field_info.get("selection"))
+            date_text = f"{field_selection.get(self.contract_start_date_method)}"
+            force_field = f"force_month_{self.recurrence_interval}"
+            if self.recurrence_interval != "monthly" and self.product_id[force_field]:
                 field_info = dict(
-                    self._fields["recurrence_interval"].get_description(self.env)
+                    self.env["product.template"]
+                    ._fields[force_field]
+                    .get_description(self.env)
                 )
                 field_selection = dict(field_info.get("selection"))
-                recurring_rule_label = field_selection.get(line.recurring_rule_type)
-                field_info = dict(
-                    self._fields["recurring_invoicing_type"].get_description(self.env)
-                )
-                field_selection = dict(field_info.get("selection"))
-                invoicing_type_label = field_selection.get(
-                    line.recurring_invoicing_type
-                )
-                line.name = line._get_contract_name(
-                    date_text, recurring_rule_label, invoicing_type_label
-                )
-        return res
+                date_text += f" ({field_selection.get(self.product_id[force_field])})"
+
+        field_info = dict(self._fields["recurrence_interval"].get_description(self.env))
+        recurring_rule_label = dict(field_info.get("selection")).get(
+            self.recurring_rule_type
+        )
+        field_info = dict(
+            self._fields["recurring_invoicing_type"].get_description(self.env)
+        )
+        invoicing_type_label = dict(field_info.get("selection")).get(
+            self.recurring_invoicing_type
+        )
+        return self._get_contract_name(
+            date_text, recurring_rule_label, invoicing_type_label
+        )
 
     def _get_contract_name(self, date_text, recurring_rule_label, invoicing_type_label):
         self.ensure_one()
