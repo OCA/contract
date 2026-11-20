@@ -34,7 +34,7 @@ msgid ""
 "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
 "out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+"                        &amp;nbsp;&amp;nbsp;Contract Start Date: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
@@ -204,11 +204,6 @@ msgid "<strong>Customer:</strong>"
 msgstr ""
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-msgid "<strong>Date Start</strong>"
-msgstr "<strong>开始日期</strong>"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
 msgstr ""
@@ -279,6 +274,11 @@ msgstr "<strong>负责人：</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Start Date</strong>"
 msgstr ""
 
 #. module: contract
@@ -738,25 +738,6 @@ msgid "Date"
 msgstr ""
 
 #. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Date End"
-msgstr "结束于"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
-msgid "Date Start"
-msgstr "开始日期"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Date end"
@@ -872,6 +853,16 @@ msgstr ""
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "End Date"
 msgstr ""
 
 #. module: contract
@@ -1611,6 +1602,15 @@ msgid "Specify interval for automatic invoice generation."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1832,6 +1832,15 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+
+#~ msgid "<strong>Date Start</strong>"
+#~ msgstr "<strong>开始日期</strong>"
+
+#~ msgid "Date End"
+#~ msgstr "结束于"
+
+#~ msgid "Date Start"
+#~ msgstr "开始日期"
 
 #~ msgid "Group By..."
 #~ msgstr "分组..."
