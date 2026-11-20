@@ -80,6 +80,37 @@ class SaleOrderLineContractMixin(models.AbstractModel):
         store=True,
         readonly=False,
     )
+    recurring_invoicing_offset = fields.Integer(
+        string="Invoicing offset",
+        help=(
+            "Shift the invoice away from the start of the period (pre-paid) "
+            "or the end of it (post-paid), counted in the unit selected next "
+            "to this field.\n"
+            "A positive value delays the invoice, a negative one issues it "
+            "earlier: -1 with Month(s) invoices one month up front."
+        ),
+        compute="_compute_product_contract_data",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
+    recurring_invoicing_offset_type = fields.Selection(
+        selection=[
+            ("daily", "Day(s)"),
+            ("weekly", "Week(s)"),
+            ("monthly", "Month(s)"),
+            ("quarterly", "Quarter(s)"),
+            ("semesterly", "Semester(s)"),
+            ("yearly", "Year(s)"),
+        ],
+        string="Invoicing offset unit",
+        default="daily",
+        required=True,
+        compute="_compute_product_contract_data",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
     date_start = fields.Date(
         compute="_compute_contract_line_date_start",
         store=True,
@@ -174,6 +205,8 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                 "recurring_interval": 0,
                 "recurring_rule_type": False,
                 "recurring_invoicing_type": False,
+                "recurring_invoicing_offset": False,
+                "recurring_invoicing_offset_type": "daily",
                 "recurrence_interval": False,
                 "is_auto_renew": False,
                 "auto_renew_interval": False,
@@ -187,6 +220,8 @@ class SaleOrderLineContractMixin(models.AbstractModel):
                     "recurring_interval": p.recurring_interval,
                     "recurring_rule_type": p.recurring_rule_type,
                     "recurring_invoicing_type": p.recurring_invoicing_type,
+                    "recurring_invoicing_offset": p.recurring_invoicing_offset,
+                    "recurring_invoicing_offset_type": p.recurring_invoicing_offset_type,  # noqa: E501
                     "recurrence_interval": p.recurrence_interval,
                     "is_auto_renew": p.is_auto_renew,
                     "auto_renew_interval": p.auto_renew_interval,
