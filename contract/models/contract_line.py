@@ -626,11 +626,26 @@ class ContractLine(models.Model):
         # e.g.: _update_last_date_invoiced()
         for rec in self:
             last_date_invoiced = rec.next_period_date_end
-            rec.write(
-                {
-                    "last_date_invoiced": last_date_invoiced,
-                }
-            )
+            # As next_recurring_date depends on non stored fields, updating the
+            # last_date_invoiced is not sufficent to have a correct recurring_next_date
+            # Change value only if it has changed
+            if rec.last_date_invoiced != last_date_invoiced:
+                rec.write(
+                    {
+                        "last_date_invoiced": last_date_invoiced,
+                    }
+                )
+                recurring_next_date = rec.get_next_invoice_date(
+                    rec.next_period_date_start,
+                    rec.recurring_invoicing_type,
+                    rec.recurring_invoicing_offset,
+                    rec.recurring_rule_type,
+                    rec.recurring_interval,
+                    max_date_end=rec.date_end,
+                )
+                # Write the value only if it has changed
+                if rec.recurring_next_date != recurring_next_date:
+                    rec.write({"recurring_next_date": recurring_next_date})
 
     def _delay(self, delay_delta):
         """
