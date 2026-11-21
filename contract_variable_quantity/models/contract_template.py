@@ -6,8 +6,15 @@
 from odoo import fields, models
 
 
-class ContractContract(models.Model):
-    _inherit = "contract.contract"
+class ContractTemplate(models.Model):
+    """Hold the setting on the template so it can be preset.
+
+    ``contract.contract`` inherits ``contract.template``, so it keeps the
+    field, and ``_onchange_contract_template_id`` copies the value over when
+    a template is selected.
+    """
+
+    _inherit = "contract.template"
 
     skip_zero_qty = fields.Boolean(
         string="Skip Zero Qty Lines",

@@ -71,6 +71,19 @@ class TestContractVariableQuantity(BaseCommon):
         invoice = self.contract._get_related_invoices()
         self.assertEqual(invoice.invoice_line_ids[0].quantity, 12)
 
+    def test_skip_zero_qty_comes_from_the_template(self):
+        """The setting is on the template, so selecting one carries it over."""
+        template = self.env["contract.template"].create(
+            {"name": "Skip zero qty", "skip_zero_qty": True}
+        )
+        contract = self.env["contract.contract"].create(
+            {"name": "From template", "partner_id": self.partner.id}
+        )
+        self.assertFalse(contract.skip_zero_qty)
+        contract.contract_template_id = template
+        contract._onchange_contract_template_id()
+        self.assertTrue(contract.skip_zero_qty)
+
     def test_check_skip_zero_qty(self):
         self.formula.code = "result=0"
         self.contract.skip_zero_qty = True
