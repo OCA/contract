@@ -4,3 +4,4 @@ from . import test_merge
 from . import test_portal
 from . import test_multicompany
 from . import test_security
+from . import test_res_config_settings
