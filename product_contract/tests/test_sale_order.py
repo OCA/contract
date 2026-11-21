@@ -102,6 +102,11 @@ class TestSaleOrder(TransactionCase):
         cls.contract_line = cls.contract.contract_line_ids[0]
         cls.sale.order_line._compute_product_contract_data()
 
+    def test_contract_line_name_search(self):
+        """Contract lines can be searched by name, e.g. in many2one fields"""
+        result = self.env["contract.line"].name_search("from #START#")
+        self.assertIn(self.contract_line.id, [line_id for line_id, _name in result])
+
     def test_compute_is_contract(self):
         """Sale Order should have is_contract true if one of its lines is
         contract"""
