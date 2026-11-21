@@ -10,9 +10,7 @@ class ContractLine(models.Model):
     def _prepare_invoice_line(self):
         vals = super()._prepare_invoice_line()
         if self.product_id.must_have_dates:
-            dates = self._get_period_to_invoice(
-                self.last_date_invoiced, self.recurring_next_date
-            )
+            dates = self._get_period_to_invoice()
             vals.update(
                 {
                     "start_date": dates[0],
