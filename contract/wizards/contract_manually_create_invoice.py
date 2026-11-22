@@ -9,6 +9,7 @@ from odoo.exceptions import (
     UserError,
     ValidationError,
 )
+from odoo.fields import Domain
 
 
 class ContractManuallyCreateInvoice(models.TransientModel):
@@ -33,13 +34,14 @@ class ContractManuallyCreateInvoice(models.TransientModel):
     def _compute_contract_to_invoice_ids(self):
         if not self.invoice_date:
             # trick to show no invoice when no date has been entered yet
-            contract_to_invoice_domain = [("id", "=", False)]
+            contract_to_invoice_domain = Domain.FALSE
         else:
             contract_to_invoice_domain = self.env[
                 "contract.contract"
             ]._get_contracts_to_invoice_domain(self.invoice_date)
         self.contract_to_invoice_ids = self.env["contract.contract"].search(
-            contract_to_invoice_domain + [("contract_type", "=", self.contract_type)]
+            contract_to_invoice_domain
+            & Domain("contract_type", "=", self.contract_type)
         )
         self.contract_to_invoice_count = len(self.contract_to_invoice_ids)
 
@@ -49,7 +51,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
             "type": "ir.actions.act_window",
             "name": self.env._("Contracts to invoice"),
             "res_model": "contract.contract",
-            "domain": [("id", "in", self.contract_to_invoice_ids.ids)],
+            "domain": Domain("id", "in", self.contract_to_invoice_ids.ids),
             "view_mode": "list,form",
             "context": self.env.context,
         }
@@ -83,7 +85,7 @@ class ContractManuallyCreateInvoice(models.TransientModel):
             "type": "ir.actions.act_window",
             "name": self.env._("Invoices"),
             "res_model": "account.move",
-            "domain": [("id", "in", invoices.ids)],
+            "domain": Domain("id", "in", invoices.ids),
             "view_mode": "list,form",
             "context": self.env.context,
         }

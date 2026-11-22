@@ -13,6 +13,7 @@ from markupsafe import Markup
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -254,7 +255,7 @@ class ContractContract(models.Model):
                 if line.analytic_distribution:
                     all_analytic_accounts.extend(
                         int(acc_id)
-                        for account_ids in line.analytic_distribution.keys()
+                        for account_ids in line.analytic_distribution
                         for acc_id in account_ids.split(",")
                     )
             if len(set(all_analytic_accounts)) == 1:
@@ -378,13 +379,13 @@ class ContractContract(models.Model):
         self.ensure_one()
         template = self.env.ref("contract.email_contract_template", False)
         compose_form = self.env.ref("mail.email_compose_message_wizard_form")
-        ctx = dict(
-            default_model="contract.contract",
-            default_res_ids=self.ids,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            default_composition_mode="comment",
-        )
+        ctx = {
+            "default_model": "contract.contract",
+            "default_res_ids": self.ids,
+            "default_use_template": bool(template),
+            "default_template_id": template and template.id or False,
+            "default_composition_mode": "comment",
+        }
         return {
             "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
@@ -467,15 +468,7 @@ class ContractContract(models.Model):
 
         invoices = (
             self.env["account.move.line"]
-            .search(
-                [
-                    (
-                        "contract_line_id",
-                        "in",
-                        self.contract_line_ids.ids,
-                    )
-                ]
-            )
+            .search(Domain("contract_line_id", "in", self.contract_line_ids.ids))
             .mapped("move_id")
         )
         return invoices
@@ -518,10 +511,12 @@ class ContractContract(models.Model):
                 self.journal_id
                 if self.journal_id.type == self.contract_type
                 else self.env["account.journal"].search(
-                    [
-                        ("type", "=", self.contract_type),
-                        ("company_id", "=", self.company_id.id),
-                    ],
+                    Domain.AND(
+                        [
+                            Domain("type", "=", self.contract_type),
+                            Domain("company_id", "=", self.company_id.id),
+                        ]
+                    ),
                     limit=1,
                 )
             )
@@ -578,7 +573,7 @@ class ContractContract(models.Model):
         """
         if not date_ref:
             date_ref = fields.Date.context_today(self)
-        domain = fields.Domain([("recurring_next_date", "<=", date_ref)])
+        domain = Domain("recurring_next_date", "<=", date_ref)
         return domain
 
     def _get_lines_to_invoice(self, date_ref):
@@ -602,15 +597,16 @@ class ContractContract(models.Model):
                     current_note = False
                 elif line.note_invoicing_mode == "with_next_line":
                     current_note = line
-            elif line.is_recurring_note or not line.display_type:
-                if line._can_be_invoiced(date_ref):
-                    if current_section:
-                        lines2invoice |= current_section
-                        current_section = False
-                    if current_note:
-                        lines2invoice |= current_note
-                    lines2invoice |= line
-                    current_note = False
+            elif (
+                line.is_recurring_note or not line.display_type
+            ) and line._can_be_invoiced(date_ref):
+                if current_section:
+                    lines2invoice |= current_section
+                    current_section = False
+                if current_note:
+                    lines2invoice |= current_note
+                lines2invoice |= line
+                current_note = False
             previous = line
         return lines2invoice.sorted()
 
@@ -719,10 +715,10 @@ class ContractContract(models.Model):
         if not date_ref:
             date_ref = fields.Date.context_today(self)
         domain = self._get_contracts_to_invoice_domain(date_ref)
-        domain = fields.Domain.AND(
+        domain = Domain.AND(
             [
                 domain,
-                [("generation_type", "=", create_type)],
+                Domain("generation_type", "=", create_type),
             ]
         )
         contracts = self.search(domain)
@@ -745,7 +741,7 @@ class ContractContract(models.Model):
                 with self.env.cr.savepoint():
                     _recurring_create_func(contracts_to_invoice, date_ref)
                 contracts_to_invoice._clear_invoice_generation_error()
-            except Exception:
+            except Exception:  # noqa: BLE001
                 _logger.warning(
                     "Batched %s generation failed for %d contract(s) in %s; "
                     "retrying contracts individually",
@@ -760,7 +756,7 @@ class ContractContract(models.Model):
                         with self.env.cr.savepoint():
                             _recurring_create_func(contract, date_ref)
                         contract._clear_invoice_generation_error()
-                    except Exception as exc:
+                    except Exception as exc:  # noqa: BLE001
                         contract._record_invoice_generation_error(exc, create_type)
         return True
 

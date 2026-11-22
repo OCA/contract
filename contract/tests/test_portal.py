@@ -3,16 +3,29 @@
 
 import json
 
-from odoo import http
+from odoo.fields import Domain
+from odoo.http.session import session_store
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, time
 
 from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.contract.controllers.main import PortalContract
 
 
 @tagged("post_install", "-at_install")
 class TestContractPortal(HttpCase, BaseCommon):
+    _test_user_groups = (
+        "account.group_account_manager",
+        "base.group_partner_manager",
+    )
+
+    def test_contract_counter_configuration(self):
+        self.assertEqual(
+            PortalContract()._prepare_portal_counter_values("contract_count"),
+            ("contract.contract", Domain("contract_type", "=", "sale"), "read"),
+        )
+
     @mute_logger(
         "odoo.addons.contract.tests.test_portal.TestContractPortal.test_tour.browser"
     )
@@ -24,10 +37,11 @@ class TestContractPortal(HttpCase, BaseCommon):
         user_portal = self._create_new_portal_user(
             partner_id=partner.id, login="portal_contract", password="portal_contract"
         )
-        self.start_tour("/", "contract_portal_tour", login="portal_contract")
+        self.start_tour(
+            "/my/contracts", "contract_portal_tour", login="portal_contract"
+        )
         # Contract access
         self.authenticate("portal_contract", "portal_contract")
-        http.root.session_store.save(self.session)
         url_contract = (
             f"/my/contracts/{contract.id}?access_token={contract.access_token}"
         )
@@ -56,21 +70,22 @@ class TestContractPortal(HttpCase, BaseCommon):
             partner_id=partner.id, login="portal_split", password="portal_split"
         )
         self.authenticate("portal_split", "portal_split")
-        http.root.session_store.save(self.session)
-
         counters = self.url_open(
             url="/my/counters",
             data=json.dumps(
-                {"params": {"counters": ["contract_count", "supplier_contract_count"]}}
+                {
+                    "params": {
+                        "counters": {
+                            "contract_count": "sale",
+                            "supplier_contract_count": "purchase",
+                        }
+                    }
+                }
             ),
             headers={"Content-Type": "application/json"},
         ).json()["result"]
         self.assertEqual(counters["contract_count"], 1)
         self.assertEqual(counters["supplier_contract_count"], 1)
-        home = self.url_open(url="/my").text
-        self.assertIn("Your Contracts", home)
-        self.assertIn("Our Contracts", home)
-
         customer_page = self.url_open(url="/my/contracts?filterby=customer").text
         self.assertIn(customer.name, customer_page)
         self.assertNotIn(supplier.name, customer_page)
@@ -84,7 +99,6 @@ class TestContractPortal(HttpCase, BaseCommon):
             partner_id=partner.id, login="portal_empty", password="portal_empty"
         )
         self.authenticate("portal_empty", "portal_empty")
-        http.root.session_store.save(self.session)
         page = self.url_open(url="/my/contracts").text
         self.assertIn("alert-warning", page)
         self.assertNotIn("o_portal_my_doc_table", page)
@@ -109,7 +123,7 @@ class TestContractPortal(HttpCase, BaseCommon):
         self.assertIn("Recurring Items", response.text)
         # Logged-in portal user
         self.authenticate("portal_report", "portal_report")
-        http.root.session_store.save(self.session)
+        session_store().save(self.session)
         response = self.url_open(url=url_report)
         self.assertEqual(response.status_code, 200)
         self.assertIn("Recurring Items", response.text)

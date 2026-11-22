@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.http import request
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -10,31 +11,16 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class PortalContract(CustomerPortal):
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        wanted = {
-            counter: contract_type
-            for counter, contract_type in (
-                ("contract_count", "sale"),
-                ("supplier_contract_count", "purchase"),
+    def _prepare_portal_counter_values(self, counter):
+        if counter == "contract_count":
+            return "contract.contract", Domain("contract_type", "=", "sale"), "read"
+        if counter == "supplier_contract_count":
+            return (
+                "contract.contract",
+                Domain("contract_type", "=", "purchase"),
+                "read",
             )
-            if counter in counters
-        }
-        if not wanted:
-            return values
-        contract_model = request.env["contract.contract"]
-        counts = {}
-        if contract_model.has_access("read"):
-            counts = dict(
-                contract_model._read_group(
-                    [("contract_type", "in", list(wanted.values()))],
-                    ["contract_type"],
-                    ["__count"],
-                )
-            )
-        for counter, contract_type in wanted.items():
-            values[counter] = counts.get(contract_type, 0)
-        return values
+        return super()._prepare_portal_counter_values(counter)
 
     def _contract_get_page_view_values(self, contract, access_token, **kwargs):
         values = {
@@ -46,18 +32,18 @@ class PortalContract(CustomerPortal):
         )
 
     def _get_filter_domain(self, kw):
-        return []
+        return Domain.TRUE
 
     def _get_contract_searchbar_filters(self):
         return {
-            "all": {"label": request.env._("All"), "domain": []},
+            "all": {"label": request.env._("All"), "domain": Domain.TRUE},
             "customer": {
                 "label": request.env._("Your Contracts"),
-                "domain": [("contract_type", "=", "sale")],
+                "domain": Domain("contract_type", "=", "sale"),
             },
             "supplier": {
                 "label": request.env._("Our Contracts"),
-                "domain": [("contract_type", "=", "purchase")],
+                "domain": Domain("contract_type", "=", "purchase"),
             },
         }
 
@@ -84,7 +70,7 @@ class PortalContract(CustomerPortal):
         searchbar_filters = self._get_contract_searchbar_filters()
         if not filterby or filterby not in searchbar_filters:
             filterby = "all"
-        domain = self._get_filter_domain(kw) + searchbar_filters[filterby]["domain"]
+        domain = self._get_filter_domain(kw) & searchbar_filters[filterby]["domain"]
         searchbar_sortings = {
             "date": {
                 "label": request.env._("Date"),

@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -24,12 +25,12 @@ class ResPartner(models.Model):
     )
 
     def _get_partner_contract_domain(self):
-        return [("partner_id", "child_of", self.ids)]
+        return Domain("partner_id", "child_of", self.ids)
 
     def _compute_contract_count(self):
         contract_model = self.env["contract.contract"]
         fetch_data = contract_model.formatted_read_group(
-            domain=[("partner_id", "in", self.ids)],
+            domain=Domain("partner_id", "in", self.ids),
             groupby=["partner_id", "contract_type"],
             aggregates=["__count"],
         )
@@ -60,9 +61,8 @@ class ResPartner(models.Model):
         action_context["default_partner_id"] = self.id
         action_context["default_pricelist_id"] = self.property_product_pricelist.id
         res["context"] = action_context
-        res["domain"] = (
-            literal_eval(res["domain"]) + self._get_partner_contract_domain()
-        )
+        partner_domain = self._get_partner_contract_domain()
+        res["domain"] = Domain(literal_eval(res["domain"])) & partner_domain
         return res
 
     def _get_act_window_contract_xml(self, contract_type):

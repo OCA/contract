@@ -30,7 +30,8 @@
                         invisible="not invoice_generation_error"
                     >
                         <i
-                            class="fa fa-exclamation-triangle me-2"
+                            class="oi me-2"
+                            data-icon="warning"
                             aria-hidden="true"
                             title="Warning"
                         />
@@ -61,7 +62,7 @@
                         <button
                             name="action_show_invoices"
                             type="object"
-                            icon="fa-list"
+                            icon="list"
                             class="oe_stat_button"
                             invisible="generation_type != 'invoice'"
                         >
@@ -167,14 +168,10 @@
                                     <field name="sequence" widget="handle" />
                                     <field
                                         name="product_id"
-                                        widget="product_label_section_and_note_field"
+                                        widget="account_product_field"
                                         context="{'active_test': True}"
                                     />
-                                    <field
-                                        name="name"
-                                        widget="section_and_note_text"
-                                        optional="show"
-                                    />
+                                    <field name="name" widget="text" optional="show" />
 
                                     <field
                                         name="analytic_distribution"
@@ -257,14 +254,10 @@
                                     <field name="sequence" widget="handle" />
                                     <field
                                         name="product_id"
-                                        widget="product_label_section_and_note_field"
+                                        widget="account_product_field"
                                         context="{'active_test': True}"
                                     />
-                                    <field
-                                        name="name"
-                                        widget="section_and_note_text"
-                                        optional="show"
-                                    />
+                                    <field name="name" widget="text" optional="show" />
 
                                     <field
                                         name="analytic_distribution"
@@ -464,7 +457,8 @@
                 <button
                     name="action_view_invoice_generation_error"
                     type="object"
-                    icon="fa-exclamation-triangle text-warning"
+                    icon="warning"
+                    icon_class="text-warning"
                     title="Last scheduled invoicing failed - click for details"
                     invisible="not invoice_generation_error"
                 />
