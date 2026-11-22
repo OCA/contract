@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!--FORM view-->
     <record id="contract_line_form_view" model="ir.ui.view">
@@ -270,13 +270,13 @@
         <field name="view_id" ref="contract_line_report_tree_view" />
     </record>
 
-    <record model="ir.ui.menu" id="menu_customer_contract_line_report">
+    <record id="menu_customer_contract_line_report" model="ir.ui.menu">
         <field name="name">Customer Contract lines</field>
         <field name="parent_id" ref="contract.menu_contract_reporting" />
         <field name="action" ref="contract.action_customer_contract_lines" />
         <field name="sequence" eval="10" />
     </record>
-    <record model="ir.ui.menu" id="menu_supplier_contract_line_report">
+    <record id="menu_supplier_contract_line_report" model="ir.ui.menu">
         <field name="name">Supplier Contract lines</field>
         <field name="parent_id" ref="contract.menu_contract_reporting" />
         <field name="action" ref="contract.action_supplier_contract_lines" />

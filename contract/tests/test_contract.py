@@ -681,12 +681,10 @@ class TestContract(TestContractBase):
             show_contract,
             {
                 **show_contract,
-                **{
-                    "name": "Customer Contracts",
-                    "type": "ir.actions.act_window",
-                    "res_model": "contract.contract",
-                    "xml_id": "contract.action_customer_contract",
-                },
+                "name": "Customer Contracts",
+                "type": "ir.actions.act_window",
+                "res_model": "contract.contract",
+                "xml_id": "contract.action_customer_contract",
             },
             "There was an error and the view couldn't be opened.",
         )
@@ -1166,13 +1164,15 @@ class TestContract(TestContractBase):
             return original(self, date_ref)
 
         Contract = self.env["contract.contract"]
-        with mock.patch.object(
-            Contract.__class__,
-            "_prepare_recurring_invoices_values",
-            patched,
+        with (
+            mock.patch.object(
+                Contract.__class__,
+                "_prepare_recurring_invoices_values",
+                patched,
+            ),
+            mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"),
         ):
-            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
-                Contract.cron_recurring_create_invoice()
+            Contract.cron_recurring_create_invoice()
 
         # The two healthy contracts still got their invoice lines.
         good_lines = self.env["account.move.line"].search(
@@ -1246,14 +1246,16 @@ class TestContract(TestContractBase):
             return original(self, date_ref)
 
         Contract = self.env["contract.contract"]
-        with mock.patch.object(
-            Contract.__class__,
-            "_prepare_recurring_invoices_values",
-            patched,
+        with (
+            mock.patch.object(
+                Contract.__class__,
+                "_prepare_recurring_invoices_values",
+                patched,
+            ),
+            mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"),
         ):
-            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
-                Contract.cron_recurring_create_invoice()
-                Contract.cron_recurring_create_invoice()
+            Contract.cron_recurring_create_invoice()
+            Contract.cron_recurring_create_invoice()
 
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
