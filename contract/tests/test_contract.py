@@ -323,6 +323,13 @@ class TestContract(TestContractBase):
         self.assertAlmostEqual(self.inv_line.price_subtotal, 50.0)
         self.assertEqual(self.contract.user_id, self.invoice_monthly.user_id)
 
+    def test_report_contract_renders(self):
+        html, _ = self.env["ir.actions.report"]._render_qweb_html(
+            "contract.report_contract_template", self.contract.ids
+        )
+        self.assertIn(self.contract.name.encode(), html)
+        self.assertIn(b"Recurring Items", html)
+
     def test_contract_level_recurrence(self):
         self.contract3.recurring_create_invoice()
         self.contract3.flush_recordset()
