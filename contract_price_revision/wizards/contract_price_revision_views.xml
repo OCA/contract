@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_line_duplicate_wizard_view" model="ir.ui.view">
+        <field name="name">Create Revision Line</field>
+        <field name="model">contract.price.revision.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    Set new start date and variation percent to duplicate.
+                    This process set start date previous day as end date of
+                    origin record.
+                    <br />
+                    <br />
+                </div>
+                <group>
+                    <group>
+                        <field name="date_start" />
+                        <field name="date_end" />
+                        <field name="variation_type" />
+                    </group>
+                    <group name="percentage" invisible="variation_type != 'percentage'">
+                        <field name="variation_percent" />
+                    </group>
+                    <group name="fixed" invisible="variation_type != 'fixed'">
+                        <field name="fixed_price" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        string="Apply"
+                        name="action_apply"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="contract_line_duplicate_wizard_action" model="ir.actions.act_window">
+        <field name="name">Create revision of contract lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">contract.price.revision.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="contract.model_contract_contract" />
+    </record>
+</odoo>
