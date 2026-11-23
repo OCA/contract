@@ -18,13 +18,13 @@ class ContractContract(models.Model):
 
     def _recurring_create_invoice(self, date_ref=False):
         moves = self.env["account.move"].browse()
-        if not date_ref:
-            for date, contracts in self.partition("next_fixed_invoice_date").items():
-                moves |= super(ContractContract, contracts)._recurring_create_invoice(
-                    date_ref=date
-                )
-            return moves
-        return super()._recurring_create_invoice(date_ref=date_ref)
+        for date, contracts in self.partition("next_fixed_invoice_date").items():
+            if not date and date_ref:
+                date = date_ref
+            moves |= super(ContractContract, contracts)._recurring_create_invoice(
+                date_ref=date
+            )
+        return moves
 
     @api.depends("recurring_next_date", "fixed_invoice_day_number")
     def _compute_next_fixed_invoice_date(self):

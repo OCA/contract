@@ -152,3 +152,11 @@ class TestContractDate(BaseCommon):
 
         with self.assertRaises(ValidationError):
             self.contract.fixed_invoice_day_number = -1
+
+    @freeze_time("2026-10-10")
+    def test_cron_recurring_create_invoice(self):
+        self.assertFalse(self.contract._get_related_invoices())
+        self.env["contract.contract"].cron_recurring_create_invoice()
+        invoices = self.contract._get_related_invoices()
+        self.assertTrue(invoices)
+        self.assertEqual(fields.Date.from_string("2026-10-10"), invoices.date)
