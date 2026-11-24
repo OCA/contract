@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Domatix
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="action_report_sale_subscription" model="ir.actions.report">
+        <field name="name">Subscription</field>
+        <field name="model">sale.subscription</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">subscription_oca.report_sale_subscription</field>
+        <field name="report_file">subscription_oca.report_sale_subscription</field>
+        <field name="print_report_name">'Subscription - %s' % object.name</field>
+        <field name="binding_model_id" ref="subscription_oca.model_sale_subscription" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_sale_subscription">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t
+                    t-call="subscription_oca.report_sale_subscription_document"
+                    t-lang="doc.partner_id.lang"
+                />
+            </t>
+        </t>
+    </template>
+
+    <template id="report_sale_subscription_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="doc" />
+            <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat" />
+            <t t-set="address">
+                <div
+                    t-field="doc.partner_invoice_id"
+                    class="mb-0"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'
+                />
+                <p t-if="doc.partner_invoice_id.vat" class="mb-0">
+                    Tax ID:
+                    <span t-field="doc.partner_invoice_id.vat" />
+                </p>
+            </t>
+            <t t-set="layout_document_title">
+                Subscription -
+                <span t-field="doc.name" />
+            </t>
+
+            <div class="page">
+                <div class="row mb-4" id="informations">
+                    <div t-if="doc.date_start" class="col">
+                        <strong>Start Date</strong>
+                        <div t-field="doc.date_start" t-options='{"widget": "date"}' />
+                    </div>
+                    <div t-if="doc.recurring_next_date" class="col">
+                        <strong>Next Invoice</strong>
+                        <div
+                            t-field="doc.recurring_next_date"
+                            t-options='{"widget": "date"}'
+                        />
+                    </div>
+                    <div t-if="doc.user_id" class="col">
+                        <strong>Salesperson</strong>
+                        <div t-field="doc.user_id" />
+                    </div>
+                </div>
+
+                <t t-set="lines_to_report" t-value="doc.sale_subscription_line_ids" />
+                <t
+                    t-set="display_discount"
+                    t-value="any(line.discount &gt; 0 for line in lines_to_report)"
+                />
+                <t
+                    t-set="display_taxes"
+                    t-value="any(line.tax_ids for line in lines_to_report)"
+                />
+
+                <table class="o_has_total_table table o_main_table table-borderless">
+                    <thead style="display: table-row-group">
+                        <tr>
+                            <th name="th_description" class="text-start">
+                                Description
+                            </th>
+                            <th name="th_quantity" class="text-end text-nowrap">
+                                Quantity
+                            </th>
+                            <th name="th_priceunit" class="text-end text-nowrap">
+                                Unit Price
+                            </th>
+                            <th
+                                name="th_discount"
+                                t-if="display_discount"
+                                class="text-end"
+                            >
+                                <span>Disc.%</span>
+                            </th>
+                            <th name="th_taxes" t-if="display_taxes" class="text-end">
+                                <span>Taxes</span>
+                            </th>
+                            <th name="th_subtotal" class="text-end">
+                                <span>Amount</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+                        <t t-foreach="lines_to_report" t-as="line">
+                            <tr
+                                t-if="line.display_type == 'line_section'"
+                                name="tr_section"
+                                class="fw-bolder o_line_section"
+                            >
+                                <td name="td_section_name" colspan="99">
+                                    <span t-field="line.name" />
+                                    <span
+                                        t-if="line.invoice_once"
+                                        class="badge text-bg-info ms-2"
+                                    >Invoice once</span>
+                                </td>
+                            </tr>
+                            <tr
+                                t-elif="line.display_type == 'line_note'"
+                                name="tr_note"
+                                class="fst-italic o_line_note"
+                            >
+                                <td name="td_note_name" colspan="99">
+                                    <span t-field="line.name" />
+                                </td>
+                            </tr>
+                            <tr t-else="" name="tr_product">
+                                <td name="td_product_name">
+                                    <span t-field="line.name" />
+                                </td>
+                                <td
+                                    name="td_product_quantity"
+                                    class="o_td_quantity text-end"
+                                >
+                                    <span
+                                        t-field="line.product_uom_qty"
+                                        class="text-nowrap"
+                                        t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                    />
+                                    <span t-field="line.product_id.uom_id" />
+                                </td>
+                                <td
+                                    name="td_product_priceunit"
+                                    class="text-end text-nowrap"
+                                >
+                                    <span
+                                        t-field="line.price_unit"
+                                        t-options='{"widget": "float", "decimal_precision": "Product Price"}'
+                                    />
+                                </td>
+                                <td
+                                    t-if="display_discount"
+                                    name="td_product_discount"
+                                    class="text-end"
+                                >
+                                    <span t-field="line.discount" />
+                                </td>
+                                <td
+                                    t-if="display_taxes"
+                                    name="td_product_taxes"
+                                    class="text-end text-nowrap"
+                                >
+                                    <span
+                                        t-out="', '.join(tax.tax_label or tax.name for tax in line.tax_ids)"
+                                    />
+                                </td>
+                                <td
+                                    name="td_product_subtotal"
+                                    class="text-end o_price_total"
+                                >
+                                    <span t-field="line.price_subtotal" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <t t-set="portal_tax_totals" t-value="doc._get_document_tax_totals()" />
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row mt-n3" name="total">
+                        <div class="col-6 ms-auto">
+                            <table class="o_total_table table table-borderless">
+                                <tbody>
+                                    <tr class="o_subtotal">
+                                        <td>Recurring</td>
+                                        <td class="text-end">
+                                            <span
+                                                t-out="portal_tax_totals['recurring']"
+                                                t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        t-if="portal_tax_totals['non_recurring']"
+                                        class="o_subtotal"
+                                    >
+                                        <td>Non-recurring</td>
+                                        <td class="text-end">
+                                            <span
+                                                t-out="portal_tax_totals['non_recurring']"
+                                                t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        t-foreach="portal_tax_totals['tax_groups']"
+                                        t-as="tax_group"
+                                        class="o_taxes"
+                                    >
+                                        <td>
+                                            <span t-out="tax_group['name']" />
+                                        </td>
+                                        <td class="text-end o_price_total">
+                                            <span
+                                                class="text-nowrap"
+                                                t-out="tax_group['amount']"
+                                                t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr class="o_total">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong
+                                                t-out="portal_tax_totals['total']"
+                                                t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="doc.terms">
+                    <span
+                        t-field="doc.terms"
+                        style="text-align:justify;text-justify:inter-word;"
+                    />
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
