@@ -8,7 +8,6 @@ from odoo import Command, api, fields, models
 
 class ContractLine(models.Model):
     _inherit = "contract.line"
-    _rec_name = "display_name"
 
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
