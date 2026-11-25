@@ -136,3 +136,25 @@ class TestContractRefund(TestContractBase):
         self.contract.recurring_create_invoice()
         self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-12-31"))
         self._test_refund_quantity_prorated(to_date("2018-06-30"), 0.51)
+
+    def test_stop_fully_invoiced_line_does_not_crash(self):
+        """Stopping a line invoiced to its end must not crash building markers.
+
+        A fully-invoiced line has no ``recurring_next_date``, so
+        ``_get_period_to_invoice`` returns ``(False, False, False)`` and the base
+        ``_insert_markers`` would call ``strftime()`` on a ``False`` date and
+        raise ``AttributeError``. The refund path has to skip marker
+        interpolation (the refund line name is set by
+        ``_get_refund_on_stop_line_name`` anyway).
+        """
+        self.acct_line.date_end = "2018-01-31"
+        self.contract.recurring_create_invoice()
+        # The line is now invoiced to its end: nothing left to invoice.
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-01-31"))
+        self.assertFalse(self.acct_line.recurring_next_date)
+        # Must not raise "'bool' object has no attribute 'strftime'".
+        self.acct_line.stop(to_date("2018-01-15"))
+        refund = self._get_contract_invoices().filtered(
+            lambda m: m.move_type == "out_refund"
+        )
+        self.assertTrue(refund)
