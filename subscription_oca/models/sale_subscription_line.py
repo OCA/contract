@@ -8,7 +8,21 @@ class SaleSubscriptionLine(models.Model):
     _name = "sale.subscription.line"
     _description = "Subscription lines added to a given subscription"
     _inherit = "analytic.mixin"
+    _order = "sequence, id"
 
+    display_type = fields.Selection(
+        selection=[
+            ("line_section", "Section"),
+            ("line_note", "Note"),
+        ],
+        default=False,
+    )
+    invoice_once = fields.Boolean(
+        string="Invoice once",
+        help="If checked, the lines below this section are invoiced only in the "
+        "next invoice and removed afterwards.",
+    )
+    sequence = fields.Integer(default=10)
     product_id = fields.Many2one(
         comodel_name="product.product",
         domain=[("sale_ok", "=", True)],
@@ -58,9 +72,25 @@ class SaleSubscriptionLine(models.Model):
         index=True,
     )
 
-    @api.depends("product_id", "price_unit", "product_uom_qty", "discount", "tax_ids")
+    @api.depends(
+        "display_type",
+        "product_id",
+        "price_unit",
+        "product_uom_qty",
+        "discount",
+        "tax_ids",
+    )
     def _compute_subtotal(self):
         for record in self:
+            if record.display_type:
+                record.update(
+                    {
+                        "amount_tax_line_amount": 0.0,
+                        "price_total": 0.0,
+                        "price_subtotal": 0.0,
+                    }
+                )
+                continue
             price = record.price_unit * (1 - (record.discount or 0.0) / 100.0)
             taxes = record.tax_ids.compute_all(
                 price,
@@ -79,20 +109,28 @@ class SaleSubscriptionLine(models.Model):
                 }
             )
 
-    @api.depends("product_id")
+    @api.depends("display_type", "product_id")
     def _compute_name(self):
         for record in self:
+            if record.display_type:
+                continue
             if not record.product_id:
                 record.name = False
+                continue
             lang = get_lang(self.env, record.sale_subscription_id.partner_id.lang).code
             product = record.product_id.with_context(lang=lang)
             record.name = product.with_context(
                 lang=lang
             ).get_product_multiline_description_sale()
 
-    @api.depends("product_id", "sale_subscription_id.fiscal_position_id")
+    @api.depends(
+        "display_type", "product_id", "sale_subscription_id.fiscal_position_id"
+    )
     def _compute_tax_ids(self):
         for line in self:
+            if line.display_type:
+                line.tax_ids = False
+                continue
             fpos = (
                 line.sale_subscription_id.fiscal_position_id
                 or line.sale_subscription_id.fiscal_position_id._get_fiscal_position(
@@ -106,13 +144,14 @@ class SaleSubscriptionLine(models.Model):
             line.tax_ids = fpos.map_tax(taxes)
 
     @api.depends(
+        "display_type",
         "product_id",
         "sale_subscription_id.partner_id",
         "sale_subscription_id.pricelist_id",
     )
     def _compute_price_unit(self):
         for record in self:
-            if not record.product_id:
+            if record.display_type or not record.product_id:
                 continue
             if (
                 record.sale_subscription_id.pricelist_id
@@ -136,6 +175,7 @@ class SaleSubscriptionLine(models.Model):
                 )
 
     @api.depends(
+        "display_type",
         "product_id",
         "price_unit",
         "product_uom_qty",
@@ -145,6 +185,9 @@ class SaleSubscriptionLine(models.Model):
     )
     def _compute_discount(self):
         for record in self:
+            if record.display_type:
+                record.discount = 0.0
+                continue
             if record.discount and not self.env.context.get("force_pricelist_discount"):
                 continue
 
@@ -283,8 +326,21 @@ class SaleSubscriptionLine(models.Model):
             )
         return max(base_price, final_price)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("display_type"):
+                vals["product_uom_qty"] = 0.0
+        return super().create(vals_list)
+
     def _prepare_sale_order_line(self):
         self.ensure_one()
+        if self.display_type:
+            return {
+                "display_type": self.display_type,
+                "name": self.name,
+                "sequence": self.sequence,
+            }
         return {
             "product_id": self.product_id.id,
             "name": self.name,
@@ -295,10 +351,19 @@ class SaleSubscriptionLine(models.Model):
             "tax_ids": self.tax_ids,
             "product_uom_id": self.product_id.uom_id.id,
             "analytic_distribution": self.analytic_distribution,
+            "sequence": self.sequence,
         }
 
     def _prepare_account_move_line(self):
         self.ensure_one()
+        if self.display_type:
+            return {
+                "display_type": self.display_type,
+                "name": self.name,
+                "sequence": self.sequence,
+                "quantity": 0.0,
+                "price_unit": 0.0,
+            }
         account = (
             self.product_id.property_account_income_id
             or self.product_id.categ_id.property_account_income_categ_id
@@ -314,4 +379,5 @@ class SaleSubscriptionLine(models.Model):
             "product_uom_id": self.product_id.uom_id.id,
             "account_id": account.id,
             "analytic_distribution": self.analytic_distribution,
+            "sequence": self.sequence,
         }
