@@ -3,7 +3,7 @@
 # Copyright 2017 Angel Moya <angel.moya@pesol.es>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields
+from odoo import exceptions, fields
 from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase
 
@@ -112,3 +112,38 @@ class TestContractSale(ContractSaleCommon, SavepointCase):
         orders = self.env["sale.order"].browse()
         orders |= self.contract.recurring_create_sale()
         self.assertEqual(self.analytic_account, orders.mapped("analytic_account_id"))
+
+    def test_constrain_sale_contract_line(self):
+        """If the contract generates a sale, its lines must have a product."""
+        # Arrange
+        contract = self.contract.copy(
+            default={
+                "generation_type": "sale",
+            }
+        )
+        # pre-condition
+        self.assertEqual(contract.generation_type, "sale")
+
+        # Act
+        with self.assertRaises(exceptions.ValidationError) as ve:
+            contract.contract_line_ids.product_id = False
+
+        # Assert
+        exc_message = ve.exception.args[0]
+        self.assertIn("must set a Product", exc_message)
+
+    def test_constrain_sale_contract(self):
+        """If the lines do not have a product, the contract cannot generate sales."""
+        # Arrange
+        contract = self.contract
+        contract.contract_line_ids.product_id = False
+        # pre-condition
+        self.assertNotEqual(contract.generation_type, "sale")
+
+        # Act
+        with self.assertRaises(exceptions.ValidationError) as ve:
+            contract.generation_type = "sale"
+
+        # Assert
+        exc_message = ve.exception.args[0]
+        self.assertIn("must set a Product", exc_message)
