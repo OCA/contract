@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_contract_minimum_term
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_contract_configurator__contract_duration_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_product__contract_duration_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_template__contract_duration_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line__contract_duration_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line_contract_mixin__contract_duration_type
+msgid "Contract Duration"
+msgstr "Vertragsdauer"
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__product_contract_configurator__contract_duration_type__fixed
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__product_template__contract_duration_type__fixed
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__sale_order_line__contract_duration_type__fixed
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__sale_order_line_contract_mixin__contract_duration_type__fixed
+msgid "Fixed Duration"
+msgstr "Feste Laufzeit"
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields,help:product_contract_minimum_term.field_product_product__contract_duration_type
+#: model:ir.model.fields,help:product_contract_minimum_term.field_product_template__contract_duration_type
+msgid ""
+"Fixed Duration: the contract line ends after the duration, and is renewed with a new end date when it is set to auto renew.\n"
+"Minimum Term: the contract line is open-ended, it cannot be terminated before the end of the minimum term. When it is set to auto renew, the minimum term itself is renewed if the contract is not terminated within the termination notice."
+msgstr ""
+"Feste Laufzeit: Die Vertragszeile endet nach der Laufzeit und bekommt bei automatischer Erneuerung ein neues Enddatum.\n"
+"Mindestvertragsdauer: Die Vertragszeile ist unbefristet und kann nicht vor Ende der Mindestvertragsdauer gekündigt werden. Bei automatischer Erneuerung verlängert sich die Mindestvertragsdauer selbst, wenn nicht innerhalb der Kündigungsfrist gekündigt wird."
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields,help:product_contract_minimum_term.field_product_contract_configurator__min_term_interval
+#: model:ir.model.fields,help:product_contract_minimum_term.field_product_template__min_term_interval
+#: model:ir.model.fields,help:product_contract_minimum_term.field_sale_order_line__min_term_interval
+#: model:ir.model.fields,help:product_contract_minimum_term.field_sale_order_line_contract_mixin__min_term_interval
+msgid ""
+"Initial minimum term, counted from the start date. The contract cannot be "
+"terminated before the end of this term. Leave 0 to disable the minimum term."
+msgstr ""
+"Anfängliche Mindestvertragsdauer ab dem Startdatum. Vor deren Ende kann der "
+"Vertrag nicht gekündigt werden. 0 bedeutet keine Mindestvertragsdauer."
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_contract_configurator__min_term_interval
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_template__min_term_interval
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line__min_term_interval
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line_contract_mixin__min_term_interval
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__product_contract_configurator__contract_duration_type__minimum_term
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__product_template__contract_duration_type__minimum_term
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__sale_order_line__contract_duration_type__minimum_term
+#: model:ir.model.fields.selection,name:product_contract_minimum_term.selection__sale_order_line_contract_mixin__contract_duration_type__minimum_term
+#: model_terms:ir.ui.view,arch_db:product_contract_minimum_term.product_contract_configurator_form
+#: model_terms:ir.ui.view,arch_db:product_contract_minimum_term.product_template_form_contract_view
+msgid "Minimum Term"
+msgstr "Mindestvertragsdauer"
+
+#. module: product_contract_minimum_term
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_contract_configurator__min_term_rule_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_product__min_term_rule_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_product_template__min_term_rule_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line__min_term_rule_type
+#: model:ir.model.fields,field_description:product_contract_minimum_term.field_sale_order_line_contract_mixin__min_term_rule_type
+msgid "Minimum Term Type"
+msgstr "Einheit Mindestvertragsdauer"
+
+#. module: product_contract_minimum_term
+#: model_terms:ir.ui.view,arch_db:product_contract_minimum_term.product_template_form_contract_view
+msgid "Period"
+msgstr "Periode"
+
+#. module: product_contract_minimum_term
+#: model:ir.model,name:product_contract_minimum_term.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: product_contract_minimum_term
+#: model:ir.model,name:product_contract_minimum_term.model_sale_order_line_contract_mixin
+msgid "Sale Order Line Contract Mixin"
+msgstr "Auftragszeile Vertrag Mixin"
+
+#. module: product_contract_minimum_term
+#: model:ir.model,name:product_contract_minimum_term.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Auftragszeile"
