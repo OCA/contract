@@ -4,6 +4,7 @@
 import uuid
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import exceptions, fields
 from odoo.tests import TransactionCase
@@ -619,6 +620,14 @@ class TestSubscriptionOCA(TransactionCase):
         self.assertEqual(
             stage.display_name, "Updated Test Stage", "display_name not computed"
         )
+
+    def test_subscription_oca_default_dates(self):
+        # The default dates are the day the subscription is created, not the
+        # day the server was started
+        with freeze_time("2030-02-15"):
+            sub = self.create_sub({"template_id": self.tmpl2.id})
+        self.assertEqual(fields.Date.to_string(sub.date_start), "2030-02-15")
+        self.assertEqual(fields.Date.to_string(sub.recurring_next_date), "2030-02-15")
 
     def _collect_all_sub_test_results(self, subscription):
         """Creates the invoice of a subscription and returns its data
