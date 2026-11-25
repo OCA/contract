@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contract_contract_form_view_inherit" model="ir.ui.view">
+        <field name="name">contract.contract.form.inherit</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_customer_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[hasclass('o_row')][field[@name='recurring_interval']]"
+                position="after"
+            >
+                <label for="invoicing_offset_value" />
+                <div class="o_row">
+                    <field
+                        name="invoicing_offset_value"
+                        class="oe_inline"
+                        nolabel="1"
+                    />
+                    <field
+                        name="invoicing_offset_type"
+                        required="not line_recurrence"
+                        class="oe_inline"
+                        nolabel="1"
+                    />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add offset fields to contract line form view -->
+    <record id="contract_line_form_view_inherit" model="ir.ui.view">
+        <field name="name">contract.line.form.inherit.offset</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoicing_type']" position="after">
+                <label for="invoicing_offset_value" />
+                <div class="o_row">
+                    <field name="invoicing_offset_value" />
+                    <field name="invoicing_offset_type" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add offset fields to contract line tree view (inside contract form) -->
+    <record id="contract_line_tree_view_inherit" model="ir.ui.view">
+        <field name="name">contract.line.tree.inherit.offset</field>
+        <field name="model">contract.line</field>
+        <field name="inherit_id" ref="contract.contract_line_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_next_date']" position="after">
+                <field name="invoicing_offset_type" optional="hide" />
+                <field name="invoicing_offset_value" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
