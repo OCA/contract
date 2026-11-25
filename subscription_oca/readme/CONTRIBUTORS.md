@@ -9,3 +9,5 @@
 - Dennis Sluijk \<<d.sluijk@onestein.nl>\>
 - [IKU Solutions](https://www.iku.solutions):
   - Yan Chirino  \<<yan.chirino@iku.solutions>\>
+- [Domatix](https://www.domatix.com):
+  - Germán

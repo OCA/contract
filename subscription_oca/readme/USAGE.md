@@ -46,3 +46,13 @@ To pause and resume a subscription:
 3.  Press *Resume* to reactivate it manually. If a *Resume on* date was
     set, the cron resumes the subscription automatically once that date
     is reached. Leaving the date empty pauses it indefinitely.
+
+Subscription lines can be organized with sections and notes. Use *Add a
+section* or *Add a note* in the subscription lines list.
+
+A section can be marked as *Invoice once*. The lines below that section
+are invoiced only in the next invoice generated for the subscription and
+are removed from the subscription afterwards. This is useful for setup
+fees or any other one-time charge that must be billed together with the
+recurring amount. The subscription totals show the recurring and
+non-recurring amounts separately.
