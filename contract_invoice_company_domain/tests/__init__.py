@@ -1,0 +1,1 @@
+from . import test_contract_invoice_company_domain
