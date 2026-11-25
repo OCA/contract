@@ -48,14 +48,6 @@ class SaleOrderLine(models.Model):
         :return: new contract line dict
         """
         self.ensure_one()
-        recurring_next_date = self.env[
-            "contract.line"
-        ]._compute_first_recurring_next_date(
-            self.date_start or fields.Date.today(),
-            self.recurring_invoicing_type,
-            self.recurring_rule_type,
-            1,
-        )
         termination_notice_interval = self.product_id.termination_notice_interval
         termination_notice_rule_type = self.product_id.termination_notice_rule_type
         return {
@@ -68,10 +60,11 @@ class SaleOrderLine(models.Model):
             "discount": self.discount,
             "date_end": self.date_end,
             "date_start": self.date_start or fields.Date.today(),
-            "recurring_next_date": recurring_next_date,
             "recurring_interval": self.recurring_interval,
             "recurring_invoicing_type": self.recurring_invoicing_type,
             "recurring_rule_type": self.recurring_rule_type,
+            "recurring_invoicing_offset": self.recurring_invoicing_offset,
+            "recurring_invoicing_offset_type": self.recurring_invoicing_offset_type,
             "is_auto_renew": self.is_auto_renew,
             "auto_renew_interval": self.auto_renew_interval,
             "auto_renew_rule_type": self.auto_renew_rule_type,
