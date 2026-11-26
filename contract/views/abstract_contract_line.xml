@@ -19,6 +19,7 @@
                         <field
                             name="product_id"
                             attrs="{'required': [('display_type', '=', 'product')],'invisible': [('display_type', '!=', False)]}"
+                            context="{'active_test': True}"
                         />
                     </group>
                     <group attrs="{'invisible': [('display_type', '!=', False)]}">
@@ -35,6 +36,7 @@
                                 name="uom_id"
                                 groups="uom.group_uom"
                                 attrs="{'required': [('display_type', '=', False)]}"
+                                context="{'active_test': True}"
                             />
                             <field
                                 name="discount"

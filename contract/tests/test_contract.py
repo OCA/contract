@@ -12,6 +12,7 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Date
 from odoo.tests import Form, common, tagged
 
 
@@ -2523,4 +2524,169 @@ class TestContract(TestContractBase):
         self.assertEqual(
             self.acct_line._insert_markers(start, False),
             "%s -  (January)" % start.strftime(date_format),
+        )
+
+    def test_analytic_account(self):
+        """Tests the automatic setting of the analytic account on the contract
+        depending on the analytic accounts set on the contract lines.
+        # Case 1: only one contract line with one analytic account
+            => the analytic account is set on the contract
+        # Case 2: only one contract line with two analytic accounts
+            => the analytic account is not set on the contract
+        # Case 3: two contract lines, with the same analytic account
+            => the analytic account is set on the contract
+        # Case 4: two contract lines, each one with one analytic account
+            => the analytic account is not set on the contract
+        """
+        plan = self.env["account.analytic.plan"].create({"name": "Test plan contract"})
+        self.analytic_account_1 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 1", "plan_id": plan.id}
+        )
+        self.analytic_account_2 = self.env["account.analytic.account"].create(
+            {"name": "Test account contract 2", "plan_id": plan.id}
+        )
+        # Case 1: only one contract line with one analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 2: only one contract line with two analytic accounts
+        self.acct_line.analytic_distribution = {
+            self.analytic_account_1.id: 50,
+            self.analytic_account_2.id: 50,
+        }
+        self.assertFalse(self.contract.group_id)
+        # Case 3: two contract lines, with the same analytic account
+        self.acct_line.analytic_distribution = {self.analytic_account_1.id: 100}
+        new_contract_line = self.acct_line.copy()
+        self.assertEqual(self.contract.group_id, self.analytic_account_1)
+        # Case 4: two contract lines, each one with one analytic account
+        new_contract_line.analytic_distribution = {self.analytic_account_2.id: 100}
+        self.assertFalse(self.contract.group_id)
+
+    def test_analytic_distribution(self):
+        # Create an analytic distribution model for product 1
+        analytic_plan = self.env["account.analytic.plan"].create({"name": "Plan"})
+        analytic_account = self.env["account.analytic.account"].create(
+            {"name": "Test", "plan_id": analytic_plan.id}
+        )
+        self.env["account.analytic.distribution.model"].create(
+            {
+                "product_id": self.product_1.id,
+                "analytic_distribution": {str(analytic_account.id): 100},
+            }
+        )
+        new_contract_line = self.env["contract.line"].create(self.line_vals)
+        self.assertEqual(
+            new_contract_line.analytic_distribution, {str(analytic_account.id): 100}
+        )
+
+    def test_get_contract_line_total_value_basic(self):
+        """Total value = quantity × price_unit over the full period."""
+        self.acct_line.write(
+            {
+                "quantity": 3,
+                "price_unit": 400.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+        # 12 months * (3 * 400.0) = 14,400.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 14400.0)
+
+    def test_get_contract_line_total_value_single_unit(self):
+        self.acct_line.write(
+            {
+                "quantity": 1,
+                "price_unit": 1200.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+        # 12 months * 1200.0 = 14,400.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 14400.0)
+
+    def test_get_contract_line_total_value_zero_price(self):
+        self.acct_line.write(
+            {
+                "quantity": 5,
+                "price_unit": 0.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-06-30",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 0.0)
+
+    def test_get_contract_line_total_value_no_date_end_raises(self):
+        """A line without date_end cannot compute a total: UserError expected."""
+        line = self.env["contract.line"].new(
+            {
+                "contract_id": self.contract.id,
+                "product_id": self.product_1.id,
+                "name": "Test",
+                "quantity": 1,
+                "price_unit": 1000.0,
+                "discount": 0.0,
+                "date_start": to_date("2026-01-01"),
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+                "uom_id": self.product_1.uom_id.id,
+            }
+        )
+        line.date_end = False
+        with self.assertRaises(UserError):
+            line._get_contract_line_total_value()
+
+    def test_get_contract_line_total_value_with_discount(self):
+        self.acct_line.write(
+            {
+                "quantity": 2,
+                "price_unit": 100.0,
+                "discount": 10.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-12-31",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+        # Per period: 2 * 100 * 0.90 = 180.0
+        # Total (12 periods): 2160.0
+        self.assertEqual(self.acct_line._get_contract_line_total_value(), 2160.0)
+
+    def test_contract_line_total_value_period_prorata(self):
+        """Test a contract that terminates mid-way through an invoicing period."""
+        self.acct_line.write(
+            {
+                "quantity": 1,
+                "price_unit": 100.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-02-15",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+            }
+        )
+
+        expected_qty_period_1 = self.acct_line._get_quantity_to_invoice(
+            Date.to_date("2026-01-01"),
+            Date.to_date("2026-01-31"),
+            Date.to_date("2026-01-01"),
+        )
+        expected_qty_period_2 = self.acct_line._get_quantity_to_invoice(
+            Date.to_date("2026-02-01"),
+            Date.to_date("2026-02-15"),
+            Date.to_date("2026-02-01"),
+        )
+
+        expected_total = (expected_qty_period_1 + expected_qty_period_2) * 100.0
+        self.assertEqual(
+            self.acct_line._get_contract_line_total_value(), expected_total
         )
