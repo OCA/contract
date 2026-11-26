@@ -1770,6 +1770,57 @@ class TestContract(TestContractBase):
             self.acct_line._get_contract_line_total_value(), expected_total
         )
 
+    def _set_uom_precision(self, digits):
+        precision = self.env["decimal.precision"].search(
+            [("name", "=", "Product Unit of Measure")], limit=1
+        )
+        precision.digits = digits
+
+    def _prepare_fractional_quantity_line(self):
+        self.acct_line.write(
+            {
+                "quantity": 0.333,
+                "price_unit": 60.0,
+                "discount": 0.0,
+                "date_start": "2026-01-01",
+                "date_end": "2026-01-31",
+                "recurring_next_date": "2026-01-01",
+                "recurring_interval": 1,
+                "recurring_rule_type": "monthly",
+                "recurring_invoicing_type": "pre-paid",
+            }
+        )
+
+    def _get_quantity_digits(self):
+        aml = self.env["account.move.line"]
+        return aml._fields["quantity"].get_digits(self.env)[1]
+
+    def test_get_contract_line_total_value_rounded_quantity(self):
+        self._set_uom_precision(2)
+        self._prepare_fractional_quantity_line()
+        digits = self._get_quantity_digits()
+        self.assertEqual(digits, 2)  # guards the precondition of the test
+        invoice = self.contract.recurring_create_invoice()
+        invoiced = sum(invoice.invoice_line_ids.mapped("price_subtotal"))
+        # With 2 digits, 0.33 : 0.33 * 60 = 19.80
+        self.assertAlmostEqual(invoiced, 19.80)
+        self.assertAlmostEqual(
+            self.acct_line._get_contract_line_total_value(), invoiced
+        )
+
+    def test_get_contract_line_total_value_follows_quantity_digits(self):
+        """The rounding must follow the digits of the invoice line quantity,
+        not a hardcoded precision."""
+        self._set_uom_precision(3)
+        self._prepare_fractional_quantity_line()
+        invoice = self.contract.recurring_create_invoice()
+        invoiced = sum(invoice.invoice_line_ids.mapped("price_subtotal"))
+        # With 3 digits, 0.333 is kept as is: 0.333 * 60 = 19.98
+        self.assertAlmostEqual(invoiced, 19.98)
+        self.assertAlmostEqual(
+            self.acct_line._get_contract_line_total_value(), invoiced
+        )
+
     def test_insert_markers_without_dates(self):
         """A missing date leaves its markers empty instead of failing."""
         self.acct_line.name = "#START# - #END# (#INVOICEMONTHNAME#)"

@@ -391,6 +391,11 @@ class ContractLine(models.Model):
                 current_period_end,
                 current_period_start,  # Mock an invoice date at period start
             )
+            AccountMoveLine = self.env["account.move.line"]
+            quantity_field = AccountMoveLine._fields["quantity"]
+            # Same conversion as the ORM applies on account.move.line.quantity,
+            # so that the total matches what will actually be invoiced
+            qty = quantity_field.convert_to_cache(qty, AccountMoveLine)
             subtotal = qty * self.price_unit * (1 - (self.discount / 100.0))
             if currency:
                 subtotal = currency.round(subtotal)
