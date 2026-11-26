@@ -160,6 +160,17 @@ class ContractLine(models.Model):
                 or not rec.last_date_invoiced
                 or rec.last_date_invoiced < rec.date_end
             ):
+                contract = rec.contract_id
+                if (
+                    contract.date_start
+                    and contract.date_end
+                    and contract.date_start > contract.date_end
+                ):
+                    # The next date is empty because the contract ends before
+                    # it starts: say so instead of asking for a next date.
+                    raise ValidationError(
+                        self.env._("Contract end date must be after the start date.")
+                    )
                 raise ValidationError(
                     self.env._(
                         "You must supply a date of next invoice for contract line '%s'",
