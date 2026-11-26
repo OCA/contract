@@ -369,6 +369,11 @@ class ContractContract(models.Model):
             ):
                 if self.contract_template_id[field_name]:
                     self[field_name] = self.contract_template_id[field_name]
+        recurring_invoicing_type = set(
+            self.contract_line_ids.mapped("recurring_invoicing_type")
+        )
+        if len(recurring_invoicing_type) == 1:
+            self.recurring_invoicing_type = next(iter(recurring_invoicing_type))
 
     @api.onchange("partner_id", "company_id")
     def _onchange_partner_id(self):
