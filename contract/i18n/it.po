@@ -20,6 +20,11 @@ msgstr ""
 "X-Generator: Weblate 2026.11.2\n"
 
 #. module: contract
+#: model:ir.actions.report,print_report_name:contract.report_contract
+msgid "(object._get_report_base_filename())"
+msgstr ""
+
+#. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
 msgid ""
 "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
@@ -103,8 +108,8 @@ msgstr ""
 "                <p>Salve <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
 "                <p>Un nuovo contratto è stato creato: </p>\n"
 "\n"
-"                <p style=\"border-left: 1px solid #8e0000; margin-left: "
-"30px;\">\n"
+"                <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;"
+"\">\n"
 "                    &amp;nbsp;&amp;nbsp;<strong>RIFERIMENTI</strong><br/>\n"
 "                    &amp;nbsp;&amp;nbsp;Contratto: <strong t-"
 "out=\"object.name\"/><br/>\n"
@@ -145,9 +150,10 @@ msgstr ""
 "line-height: 16px; background-color: #F2F2F2;\">\n"
 "                    <span style=\"color: #222; margin-bottom: 5px; display: "
 "block; \">\n"
-"                        <address t-field=\"object.company_id.sudo()"
-".partner_id\" t-options='{\"widget\": \"contact\", \"fields\": [\"name\", "
-"\"address\"], \"no_marker\": True}'></address>\n"
+"                        <address t-"
+"field=\"object.company_id.sudo().partner_id\" t-options='{\"widget\": "
+"\"contact\", \"fields\": [\"name\", \"address\"], \"no_marker\": True}'></"
+"address>\n"
 "                    </span>\n"
 "                    <t t-if=\"object.company_id.phone\">\n"
 "                        <div style=\"margin-top: 0px; margin-right: 0px; "
@@ -588,6 +594,12 @@ msgstr "Contratto"
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
 msgid "Contract #"
 msgstr "N° contratto"
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid "Contract - %(name)s"
+msgstr ""
 
 #. module: contract
 #: model:ir.model,name:contract.model_contract_line
