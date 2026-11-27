@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mail_template_subscription_rating_request" model="mail.template">
+        <field name="name">Subscription: Rating request</field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field
+            name="email_from"
+        >{{ (object._rating_get_operator().email_formatted if object._rating_get_operator() else user.email_formatted) }}</field>
+        <field name="partner_to">{{ object._rating_get_partner().id }}</field>
+        <field
+            name="subject"
+        >How would you rate your {{ object.template_id.name }} subscription?</field>
+        <field name="body_html" type="html">
+            <t t-set="access_token" t-value="object._rating_get_access_token()" />
+            <t t-set="partner" t-value="object._rating_get_partner()" />
+            <div style="margin: 0px; padding: 0px;">
+                <p>
+                    Hello
+                    <t t-out="partner.name or ''" />,
+                </p>
+                <p>
+                    We would like to know how you feel about your subscription
+                    (<t t-out="object.name or ''" />).
+                    Please rate your experience by clicking one of the smileys below.
+                </p>
+                <table summary="Rating" style="margin: 16px 0;">
+                    <tr>
+                        <td style="padding: 0 8px;">
+                            <a
+                                t-attf-href="/rate/{{ access_token }}/5"
+                                title="Satisfied"
+                            >😊</a>
+                        </td>
+                        <td style="padding: 0 8px;">
+                            <a
+                                t-attf-href="/rate/{{ access_token }}/3"
+                                title="Okay"
+                            >😐</a>
+                        </td>
+                        <td style="padding: 0 8px;">
+                            <a
+                                t-attf-href="/rate/{{ access_token }}/1"
+                                title="Dissatisfied"
+                            >😞</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+        <field name="lang">{{ object._rating_get_partner().lang }}</field>
+        <field name="auto_delete" eval="True" />
+    </record>
+</odoo>
