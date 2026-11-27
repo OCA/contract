@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sale_subscription_form" model="ir.ui.view">
+        <field name="name">sale.subscription.form - payments</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_form" />
+        <field name="arch" type="xml">
+            <button name="manual_invoice" position="after">
+                <button
+                    string="Retry payment"
+                    name="action_retry_payment"
+                    type="object"
+                    invisible="not payment_exception"
+                />
+            </button>
+            <group name="right_group" position="inside">
+                <field name="auto_create_payment" invisible="1" />
+                <field name="commercial_partner_id" invisible="1" />
+                <field
+                    name="payment_token_id"
+                    invisible="not auto_create_payment or not partner_id"
+                />
+                <field name="payment_exception" invisible="not auto_create_payment" />
+                <field
+                    name="payment_exception_transaction_id"
+                    invisible="not payment_exception_transaction_id"
+                />
+            </group>
+        </field>
+    </record>
+
+    <record id="sale_subscription_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.list - payments</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_tree" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="payment_exception" optional="hide" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sale_order_pending_filter" model="ir.ui.view">
+        <field name="name">sale.subscription.search - payments</field>
+        <field name="model">sale.subscription</field>
+        <field
+            name="inherit_id"
+            ref="subscription_oca.view_sale_order_pending_filter"
+        />
+        <field name="arch" type="xml">
+            <filter name="pendingsubs" position="after">
+                <filter
+                    string="Payment exception"
+                    name="payment_exception"
+                    domain="[('payment_exception', '=', True)]"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>
