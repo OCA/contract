@@ -38,6 +38,7 @@ addon | version | maintainers | summary
 [contract_variable_quantity](contract_variable_quantity/) | 19.0.1.0.0 |  | Variable quantity in contract recurrent invoicing
 [product_contract](product_contract/) | 19.0.2.0.1 | <a href='https://github.com/sbejaoui'><img src='https://github.com/sbejaoui.png' width='32' height='32' style='border-radius:50%;' alt='sbejaoui'/></a> | Recurring - Product Contract
 [subscription_oca](subscription_oca/) | 19.0.1.1.5 |  | Generate recurring invoices.
+[subscription_oca_rating](subscription_oca_rating/) | 19.0.1.0.0 |  | Collect customer ratings on subscriptions.
 
 [//]: # (end addons)
 
