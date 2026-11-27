@@ -1607,8 +1607,9 @@ class TestContract(TestContractBase):
         parent_partner = self.env["res.partner"].create(
             {"name": "parent partner", "is_company": True}
         )
-        # Assume contract 2 is for company 2
-        self.contract2.company_id = company2
+        # Assume contract 2 is for company 2; its company-1 pricelist cannot
+        # follow it there.
+        self.contract2.write({"company_id": company2.id, "pricelist_id": False})
         # Update the partner attached to both contracts
         self.partner.with_user(unprivileged_user).with_company(company2).with_context(
             company_id=company2.id
@@ -1763,23 +1764,32 @@ class TestContract(TestContractBase):
         pricelist_eur = self.env["product.pricelist"].create(
             {"name": "Test pricelist EUR", "currency_id": currency_eur.id}
         )
+        company_clause = ("company_id", "in", (self.contract2.company_id.id, False))
         with Form(self.contract2) as contract_form:
             contract_form.journal_id = journal_eur
             self.assertEqual(
                 contract_form.pricelist_id_domain,
-                [("currency_id", "=", currency_eur.id)],
+                [("currency_id", "=", currency_eur.id), company_clause],
             )
             contract_form.pricelist_id = pricelist_eur
             # Switching to a journal with another currency resets the pricelist
             contract_form.journal_id = journal_cad
             self.assertEqual(
                 contract_form.pricelist_id_domain,
-                [("currency_id", "=", currency_cad.id)],
+                [("currency_id", "=", currency_cad.id), company_clause],
             )
             self.assertFalse(contract_form.pricelist_id)
-            # A journal without currency means no restriction at all
+            # A journal without currency leaves only the company restriction
             contract_form.journal_id = journal_no_currency
-            self.assertEqual(contract_form.pricelist_id_domain, [])
+            self.assertEqual(contract_form.pricelist_id_domain, [company_clause])
+
+    def test_pricelist_other_company_rejected(self):
+        other_company = self.env["res.company"].create({"name": "Other Co"})
+        other_pricelist = self.env["product.pricelist"].create(
+            {"name": "Other Co pricelist", "company_id": other_company.id}
+        )
+        with self.assertRaises(UserError):
+            self.contract2.pricelist_id = other_pricelist
 
     def test_contract_action_preview(self):
         action = self.contract.action_preview()
