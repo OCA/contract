@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="portal_contract" model="portal.entry">
+        <field name="name">Your Contracts</field>
+        <field name="description">Follow the services we invoice you for</field>
+        <field name="url">/my/contracts?filterby=customer</field>
+        <field
+            name="image"
+            type="bytes"
+            file="contract/static/src/img/contract_icon.svg"
+        />
+        <field name="placeholder_count">contract_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="50" />
+    </record>
+    <record id="portal_contract_supplier" model="portal.entry">
+        <field name="name">Our Contracts</field>
+        <field name="description">Follow the services you invoice us for</field>
+        <field name="url">/my/contracts?filterby=supplier</field>
+        <field
+            name="image"
+            type="bytes"
+            file="contract/static/src/img/contract_icon.svg"
+        />
+        <field name="placeholder_count">supplier_contract_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="130" />
+    </record>
+</odoo>
