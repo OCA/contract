@@ -1133,6 +1133,32 @@ class TestContract(TestContractBase):
             len(invoice_lines),
         )
 
+    def test_cron_invoices_last_postpaid_period_of_ending_contract(self):
+        """A post-paid period is invoiced the day after it ends, so the last
+        period of a contract with an end date has its invoice date after that
+        end date. The cron must still invoice it."""
+        contract = self.contract.copy()
+        line = contract.contract_line_ids
+        line.write(
+            {
+                "date_start": "2018-01-01",
+                "recurring_invoicing_type": "post-paid",
+                "recurring_rule_type": "monthly",
+                "recurring_interval": 1,
+                "date_end": "2018-03-31",
+            }
+        )
+        for date_ref in ("2018-02-01", "2018-03-01", "2018-04-01", "2018-05-01"):
+            self.env["contract.contract"].cron_recurring_create_invoice(
+                to_date(date_ref)
+            )
+        invoice_lines = self.env["account.move.line"].search(
+            [("contract_line_id", "=", line.id)]
+        )
+        self.assertEqual(len(invoice_lines), 3)
+        self.assertEqual(line.last_date_invoiced, to_date("2018-03-31"))
+        self.assertFalse(line.recurring_next_date)
+
     def test_get_period_to_invoice_monthlylastday_postpaid(self):
         self.acct_line.date_start = "2018-01-05"
         self.acct_line.recurring_invoicing_type = "post-paid"

@@ -708,12 +708,12 @@ class ContractContract(models.Model):
         companies = set(contracts.mapped("company_id"))
         # Invoice by companies, so assignation emails get correct context
         for company in companies:
+            # No filter on date_end: a post-paid period is invoiced after it
+            # ends, so the last one of an ending contract has its invoice date
+            # after date_end. The lines decide (_can_be_invoiced), and a
+            # contract with nothing left to invoice is skipped.
             contracts_to_invoice = contracts.filtered(
                 lambda contract, comp=company: contract.company_id == comp
-                and (
-                    not contract.date_end
-                    or contract.recurring_next_date <= contract.date_end
-                )
             ).with_company(company)
             _recurring_create_func(contracts_to_invoice, date_ref)
         return True
